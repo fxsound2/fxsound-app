@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <title>Oval</title>
+  <desc>Created with Sketch.</desc>
+  <defs>
+    <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="linearGradient-1">
+      <stop stop-color="#383838" offset="0"/>
+      <stop stop-color="#232323" offset="1"/>
+    </linearGradient>
+    <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="linearGradient-2">
+      <stop stop-color="#414141" offset="0"/>
+      <stop stop-color="#161616" offset="1"/>
+    </linearGradient>
+  </defs>
+  <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="App/Dark_Small_off" transform="translate(-150.000000, -102.000000)" fill="url(#linearGradient-1)" stroke="url(#linearGradient-2)" stroke-width="2">
+      <g id="Group-3-Copy-5">
+        <g id="Group" transform="translate(135.000000, 87.000000)">
+          <circle id="Oval" cx="65" cy="65" r="49"/>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g id="g-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="matrix(1, 0, 0, 1, 39.053429, 36.100986)">
+    <g id="Power_icon" fill="#FFFFFF" fill-rule="nonzero" transform="matrix(1, 0, 0, 1, -0.333333, 2.11111)">
+      <path d="M14.43648,2.51384 C14.662896,1.995584 15.266544,1.758992 15.7848,1.985408 C19.856016,3.763952 22.54392,7.791632 22.54392,12.311792 C22.54392,18.532544 17.50032,23.575808 11.279904,23.575808 C5.058816,23.575808 0.015888,18.53288 0.015888,12.311792 C0.015888,7.792688 2.702688,3.7652 6.77256,1.9856 C7.29072,1.758992 7.894464,1.995392 8.121024,2.513552 C8.347632,3.031712 8.111232,3.635456 7.593072,3.862016 C4.262256,5.318528 2.063856,8.613872 2.063856,12.31184 C2.063856,17.401856 6.18984,21.52784 11.279856,21.52784 C16.3692,21.52784 20.495856,17.401472 20.495856,12.31184 C20.495856,8.613056 18.296688,5.317712 14.964912,3.86216 C14.446656,3.635744 14.210064,3.032096 14.43648,2.51384 Z M11.279472,9.50350909e-14 C11.845008,9.50350909e-14 12.303504,0.458448 12.303456,1.024032 L12.303456,1.024032 L12.303456,10.240032 C12.303456,10.805568 11.845008,11.264016 11.279472,11.264016 C10.713936,11.264016 10.255488,10.80552 10.255488,10.239984 L10.255488,10.239984 L10.255488,1.023984 C10.255488,0.458448 10.713936,9.50350909e-14 11.279472,9.50350909e-14 Z" id="Combined-Shape"/>
+    </g>
+  </g>
+</svg>
