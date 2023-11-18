@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7685E345-0410-4F72-A8F7-A08D85C2E7CE}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>audiopassthru</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\lib\$(Configuration)-$(PlatformShortName)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\lib\$(Configuration)-$(PlatformShortName)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>..\lib\$(Configuration)-$(PlatformShortName)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>..\lib\$(Configuration)-$(PlatformShortName)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)..\dsp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)..\dsp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)..\dsp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)..\dsp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\AudioPassthru\AudioPassthru.cpp" />
+    <ClCompile Include="src\AudioPassthru\AudioPassthruPrivate.cpp" />
+    <ClCompile Include="src\FILE\FileDate.cpp" />
+    <ClCompile Include="src\FILE\FileGeneral.cpp" />
+    <ClCompile Include="src\FILE\fileWin32Handle.cpp" />
+    <ClCompile Include="src\MRY\Mry.cpp" />
+    <ClCompile Include="src\MTH\MthBuffer.cpp" />
+    <ClCompile Include="src\MTH\Mthcrypt.cpp" />
+    <ClCompile Include="src\MTH\Mthfreq.cpp" />
+    <ClCompile Include="src\MTH\MthLinearRegression.cpp" />
+    <ClCompile Include="src\MTH\MthRand.cpp" />
+    <ClCompile Include="src\MTH\MthRegion.cpp" />
+    <ClCompile Include="src\MTH\MthStat.cpp" />
+    <ClCompile Include="src\MTH\MthTrig.cpp" />
+    <ClCompile Include="src\MTH\MthUtil.cpp" />
+    <ClCompile Include="src\MTH\MthWarp.cpp" />
+    <ClCompile Include="src\operatingSystem\operatingSystem.cpp" />
+    <ClCompile Include="src\operatingSystem\operatingSystemMouse.cpp" />
+    <ClCompile Include="src\operatingSystem\operatingSystemSounds.cpp" />
+    <ClCompile Include="src\pstr\pstr.cpp" />
+    <ClCompile Include="src\pstr\pstrArray.cpp" />
+    <ClCompile Include="src\pstr\pstrArraySort.cpp" />
+    <ClCompile Include="src\pstr\pstrCompare.cpp" />
+    <ClCompile Include="src\pstr\pstrExtension.cpp" />
+    <ClCompile Include="src\pstr\pstrHidden.cpp" />
+    <ClCompile Include="src\pstr\pstrTimeDisplay.cpp" />
+    <ClCompile Include="src\pstr\pstrURL.cpp" />
+    <ClCompile Include="src\pstr\pstrUserLibraryFilename.cpp" />
+    <ClCompile Include="src\pstr\pstrWide.cpp" />
+    <ClCompile Include="src\pstr\pstrXML.cpp" />
+    <ClCompile Include="src\ptime\Ptime.cpp" />
+    <ClCompile Include="src\reg\regRecursiveDelete.cpp" />
+    <ClCompile Include="src\reg\regWithKeyname.cpp" />
+    <ClCompile Include="src\reg\regWithoutKeyname.cpp" />
+    <ClCompile Include="src\SLOUT\Slout.cpp" />
+    <ClCompile Include="src\sndDevices\sndDevicesDeviceCallbacks.cpp" />
+    <ClCompile Include="src\sndDevices\sndDevicesDoCapture.cpp" />
+    <ClCompile Include="src\sndDevices\sndDevicesDoPlayback.cpp" />
+    <ClCompile Include="src\sndDevices\sndDevicesGet.cpp" />
+    <ClCompile Include="src\sndDevices\sndDevicesImplementDeviceRules.cpp" />
+    <ClCompile Include="src\sndDevices\sndDevicesInit.cpp" />
+    <ClCompile Include="src\sndDevices\sndDevicesReg.cpp" />
+    <ClCompile Include="src\sndDevices\sndDevicesReInit.cpp" />
+    <ClCompile Include="src\sndDevices\sndDevicesSet.cpp" />
+    <ClCompile Include="src\sndDevices\sndDevicesSetupDevices.cpp" />
+    <ClCompile Include="src\sndDevices\sndDevicesVolCallbacks.cpp" />
+    <ClCompile Include="src\sndDevices\sndDevices_GetAll.cpp" />
+    <ClCompile Include="src\sndDevices\sndDevices_Utils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\fxsound-support-library-audiopassthru-dist\include\AudioPassthru.h" />
+    <ClInclude Include="include\codedefs.h" />
+    <ClInclude Include="include\File.h" />
+    <ClInclude Include="include\mry.h" />
+    <ClInclude Include="include\mth.h" />
+    <ClInclude Include="include\operatingSystem.h" />
+    <ClInclude Include="include\pstr.h" />
+    <ClInclude Include="include\pt_defs.h" />
+    <ClInclude Include="include\reg.h" />
+    <ClInclude Include="include\slout.h" />
+    <ClInclude Include="include\sndDevices.h" />
+    <ClInclude Include="include\u_AudioPassthru.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

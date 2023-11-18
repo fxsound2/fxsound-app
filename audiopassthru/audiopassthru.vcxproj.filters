@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\ptutil">
+      <UniqueIdentifier>{992dc103-69e0-4cf3-84d9-3ddb97faea22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil">
+      <UniqueIdentifier>{c2eeeed3-8c91-43d9-931c-00cf37b65c75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\operatingSystem">
+      <UniqueIdentifier>{5d6b3820-8a2a-4cef-b89b-86fb9871dce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\pstr">
+      <UniqueIdentifier>{7cc4c21b-b05a-443b-b96c-cea42a7b3f18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\ptime">
+      <UniqueIdentifier>{aa2356dd-eee9-408a-9bb4-fa4e45e259d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\reg">
+      <UniqueIdentifier>{4c7a79c4-904c-43e8-9d8f-9ed66605882e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\Slout">
+      <UniqueIdentifier>{dc61e985-fc2b-45de-bde4-2e99d08c6749}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\sndDevices">
+      <UniqueIdentifier>{e311ce6a-5f0e-4d2c-804f-9ad62b7d7774}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\File">
+      <UniqueIdentifier>{97f6a82e-afab-4f7c-af07-f2232e6e2254}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\Mry">
+      <UniqueIdentifier>{5d2e12df-ab32-47eb-b8c9-af2b123974e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\Mth">
+      <UniqueIdentifier>{3794123d-0e7d-49b1-9fb6-c178780360b7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\FILE\FileDate.cpp">
+      <Filter>Source Files\ptutil\File</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FILE\FileGeneral.cpp">
+      <Filter>Source Files\ptutil\File</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FILE\fileWin32Handle.cpp">
+      <Filter>Source Files\ptutil\File</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MRY\Mry.cpp">
+      <Filter>Source Files\ptutil\Mry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MTH\MthBuffer.cpp">
+      <Filter>Source Files\ptutil\Mth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MTH\Mthcrypt.cpp">
+      <Filter>Source Files\ptutil\Mth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MTH\Mthfreq.cpp">
+      <Filter>Source Files\ptutil\Mth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MTH\MthLinearRegression.cpp">
+      <Filter>Source Files\ptutil\Mth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MTH\MthRand.cpp">
+      <Filter>Source Files\ptutil\Mth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MTH\MthRegion.cpp">
+      <Filter>Source Files\ptutil\Mth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MTH\MthStat.cpp">
+      <Filter>Source Files\ptutil\Mth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MTH\MthTrig.cpp">
+      <Filter>Source Files\ptutil\Mth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MTH\MthUtil.cpp">
+      <Filter>Source Files\ptutil\Mth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MTH\MthWarp.cpp">
+      <Filter>Source Files\ptutil\Mth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sndDevices\sndDevices_GetAll.cpp">
+      <Filter>Source Files\ptutil\sndDevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sndDevices\sndDevices_Utils.cpp">
+      <Filter>Source Files\ptutil\sndDevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sndDevices\sndDevicesDeviceCallbacks.cpp">
+      <Filter>Source Files\ptutil\sndDevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sndDevices\sndDevicesDoCapture.cpp">
+      <Filter>Source Files\ptutil\sndDevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sndDevices\sndDevicesDoPlayback.cpp">
+      <Filter>Source Files\ptutil\sndDevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sndDevices\sndDevicesGet.cpp">
+      <Filter>Source Files\ptutil\sndDevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sndDevices\sndDevicesImplementDeviceRules.cpp">
+      <Filter>Source Files\ptutil\sndDevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sndDevices\sndDevicesInit.cpp">
+      <Filter>Source Files\ptutil\sndDevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sndDevices\sndDevicesReg.cpp">
+      <Filter>Source Files\ptutil\sndDevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sndDevices\sndDevicesReInit.cpp">
+      <Filter>Source Files\ptutil\sndDevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sndDevices\sndDevicesSet.cpp">
+      <Filter>Source Files\ptutil\sndDevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sndDevices\sndDevicesSetupDevices.cpp">
+      <Filter>Source Files\ptutil\sndDevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sndDevices\sndDevicesVolCallbacks.cpp">
+      <Filter>Source Files\ptutil\sndDevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SLOUT\Slout.cpp">
+      <Filter>Source Files\ptutil\Slout</Filter>
+    </ClCompile>
+    <ClCompile Include="src\reg\regRecursiveDelete.cpp">
+      <Filter>Source Files\ptutil\reg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\reg\regWithKeyname.cpp">
+      <Filter>Source Files\ptutil\reg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\reg\regWithoutKeyname.cpp">
+      <Filter>Source Files\ptutil\reg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ptime\Ptime.cpp">
+      <Filter>Source Files\ptutil\ptime</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pstr\pstr.cpp">
+      <Filter>Source Files\ptutil\pstr</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pstr\pstrArray.cpp">
+      <Filter>Source Files\ptutil\pstr</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pstr\pstrArraySort.cpp">
+      <Filter>Source Files\ptutil\pstr</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pstr\pstrCompare.cpp">
+      <Filter>Source Files\ptutil\pstr</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pstr\pstrExtension.cpp">
+      <Filter>Source Files\ptutil\pstr</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pstr\pstrHidden.cpp">
+      <Filter>Source Files\ptutil\pstr</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pstr\pstrTimeDisplay.cpp">
+      <Filter>Source Files\ptutil\pstr</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pstr\pstrURL.cpp">
+      <Filter>Source Files\ptutil\pstr</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pstr\pstrUserLibraryFilename.cpp">
+      <Filter>Source Files\ptutil\pstr</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pstr\pstrWide.cpp">
+      <Filter>Source Files\ptutil\pstr</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pstr\pstrXML.cpp">
+      <Filter>Source Files\ptutil\pstr</Filter>
+    </ClCompile>
+    <ClCompile Include="src\operatingSystem\operatingSystem.cpp">
+      <Filter>Source Files\ptutil\operatingSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\operatingSystem\operatingSystemMouse.cpp">
+      <Filter>Source Files\ptutil\operatingSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\operatingSystem\operatingSystemSounds.cpp">
+      <Filter>Source Files\ptutil\operatingSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AudioPassthru\AudioPassthru.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AudioPassthru\AudioPassthruPrivate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\File.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mry.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mth.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="include\operatingSystem.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pstr.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="include\reg.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="include\slout.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sndDevices.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="include\u_AudioPassthru.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\fxsound-support-library-audiopassthru-dist\include\AudioPassthru.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\codedefs.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pt_defs.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
