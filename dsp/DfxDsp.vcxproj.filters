@@ -1,0 +1,570 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\ptutil">
+      <UniqueIdentifier>{a7957204-47bb-4afd-80cb-209052b323b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\Prelst">
+      <UniqueIdentifier>{2011de82-8290-46ae-8416-8aabb054927b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\Vals">
+      <UniqueIdentifier>{2b7245d3-01a3-4094-aee7-3caff9e87852}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\Qnt">
+      <UniqueIdentifier>{152c39fe-eabd-47c8-bfa7-f7d535ba4526}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\Filt">
+      <UniqueIdentifier>{95e89262-7c27-44a5-8935-dc78f5e7701e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\DspUtil">
+      <UniqueIdentifier>{d32b1a34-a8aa-4374-a601-1da249f0d717}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\DspUtil\GraphicEq">
+      <UniqueIdentifier>{a24b254b-eae9-49a3-86a7-c649d21cc951}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\Sos">
+      <UniqueIdentifier>{a068e7c0-4eb7-4ddb-9a7a-a4243589c957}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\dfxSharedUtil">
+      <UniqueIdentifier>{697fa283-470c-4bf5-80d7-2cf1e730ccdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\DspUtil\BinauralSync">
+      <UniqueIdentifier>{8bcf24a5-3388-4548-bc30-abdbdf4e36b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\DspUtil\SurroundSync">
+      <UniqueIdentifier>{e36dddb0-78f3-4733-8c9f-5ecdc30a36c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\dfxp">
+      <UniqueIdentifier>{3cda326c-5384-4356-bcb2-50f32d13ad5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ptutil">
+      <UniqueIdentifier>{54eafed2-16ae-45ec-aeff-4427c17de41d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\COM">
+      <UniqueIdentifier>{170b101a-707a-41ef-bb20-1fddcc57a9b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\DspUtil\spectrum">
+      <UniqueIdentifier>{48562e00-1475-41b2-a512-71080ff4e03b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\pwav">
+      <UniqueIdentifier>{4525e0d0-ae44-473c-9d89-1f4b7282dbb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptutil\realSample">
+      <UniqueIdentifier>{90ad41a3-2925-4ea1-ac40-2b5a288ab73e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptComSftDfx">
+      <UniqueIdentifier>{7a65580c-98ed-482b-97ec-55aa95e9cb65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp">
+      <UniqueIdentifier>{5ed4e849-657f-4c2a-8136-e45835678731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\DspUtil">
+      <UniqueIdentifier>{2260ff97-d5ac-4175-bb98-a9a45c9b12d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\DspUtil\ProtoVals">
+      <UniqueIdentifier>{3600ff52-39d4-44a4-a0f9-02b42aaebc8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp">
+      <UniqueIdentifier>{524cfd2c-688f-4257-834e-fcff5905c9a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp\Apit">
+      <UniqueIdentifier>{0a336784-37ce-4e0f-a964-4f526d5932a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp\Aural">
+      <UniqueIdentifier>{09166881-ce10-4777-9c44-7d9057b62cfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp\Chorus">
+      <UniqueIdentifier>{ba44be34-4547-4c9a-adc2-b7aaf54de768}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp\Comp">
+      <UniqueIdentifier>{dfaf00a1-8d68-4f9a-ac73-5e97fb9617fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp\Delays">
+      <UniqueIdentifier>{68a86311-c9b6-4834-bd50-12478d9b8a8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp\Flange">
+      <UniqueIdentifier>{313ab90c-8ed4-4359-aab3-bcb08314c8f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp\LexReverb">
+      <UniqueIdentifier>{f467fc72-fdd0-433a-bc8d-4106ce2fa1f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp\Maximizer">
+      <UniqueIdentifier>{60448bda-621d-43da-a711-7f9349deec4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp\Pan">
+      <UniqueIdentifier>{72e8f9e7-61e9-4d4a-a815-0e709ad8aee6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp\Peq">
+      <UniqueIdentifier>{f6986751-39cb-495d-b3a4-c217f46b9123}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp\Pitch">
+      <UniqueIdentifier>{ef65020d-e76b-49b7-8076-144270f755c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp\Play">
+      <UniqueIdentifier>{efc85ece-21a0-4899-aefb-c631e7c628d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp\Proto1">
+      <UniqueIdentifier>{faea6cf2-2517-4387-87f9-5b0e3f63a94a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp\Reverbs">
+      <UniqueIdentifier>{a912c7b5-a37e-4603-9d49-64ed4e3e627e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp\Tremolo">
+      <UniqueIdentifier>{6a304d7b-f89e-46b9-bad5-55207faf597c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ptechDsp\Dsp\Wide">
+      <UniqueIdentifier>{c2818b03-6214-448c-98e6-2ffa1f70f017}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+    <Text Include="ptutil\DspUtil\BinauralSync\BinauralSynNotes.txt">
+      <Filter>Source Files\ptutil\DspUtil\BinauralSync</Filter>
+    </Text>
+    <Text Include="ptutil\DspUtil\spectrum\SpectrumDelayNotes.txt">
+      <Filter>Source Files\ptutil\DspUtil\spectrum</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ptutil\VALS\U_vals.h">
+      <Filter>Source Files\ptutil\Vals</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\PRELST\U_prelst.h">
+      <Filter>Source Files\ptutil\Prelst</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\dfxp\u_dfxp.h">
+      <Filter>Source Files\ptutil\dfxp</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\BinauralSyn.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\boardrv1.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\c_aural.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\c_dly1.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\c_dsps.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\c_lex.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\c_max.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\c_play.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\c_wid.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\com.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\comSftwr.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\CWaveFile.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\daw.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\dfxp.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\DfxSdk.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\dfxSharedGlobals.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\dfxSharedUtil.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\dspfxp.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\dspfxp_studioverb.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\dynamic_build_defines.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\filt.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\GraphicEq.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\midi.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\platform.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\Prelst.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\pt_ipc.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\qnt.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\realSample.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\slipBuffer.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\sos.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\spectrum.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\SurroundSyn.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\vals.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\COM\u_com.h">
+      <Filter>Source Files\ptutil\COM</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\DspUtil\SurroundSyn\u_SurroundSyn.h">
+      <Filter>Source Files\ptutil\DspUtil\SurroundSync</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\DspUtil\spectrum\u_spectrum.h">
+      <Filter>Source Files\ptutil\DspUtil\spectrum</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\PWAV\U_pwav.h">
+      <Filter>Source Files\ptutil\pwav</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\realSample\u_realSample.h">
+      <Filter>Source Files\ptutil\realSample</Filter>
+    </ClInclude>
+    <ClInclude Include="u_DfxDsp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\fxsound-support-library-dfx-dsp-dist\include\DfxDsp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\pt_defs.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\dfxpDefs.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptComSftDfx\u_comSftwr.h">
+      <Filter>Source Files\ptComSftDfx</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\codedefs.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="ptutil\include\slout.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DfxDsp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DfxDspEq.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DfxDspPreset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DfxDspRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\VALS\Vals.cpp">
+      <Filter>Source Files\ptutil\Vals</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\VALS\Valscfg.cpp">
+      <Filter>Source Files\ptutil\Vals</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\VALS\Valsfile.cpp">
+      <Filter>Source Files\ptutil\Vals</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\VALS\Valsget.cpp">
+      <Filter>Source Files\ptutil\Vals</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\VALS\Valsset.cpp">
+      <Filter>Source Files\ptutil\Vals</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\VALS\Valswarp.cpp">
+      <Filter>Source Files\ptutil\Vals</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\PRELST\Prelst.cpp">
+      <Filter>Source Files\ptutil\Prelst</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Qnt\Qnt.cpp">
+      <Filter>Source Files\ptutil\Qnt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Qnt\Qnt2But.cpp">
+      <Filter>Source Files\ptutil\Qnt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Qnt\QntitoBoostCut.cpp">
+      <Filter>Source Files\ptutil\Qnt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Qnt\Qntitol.cpp">
+      <Filter>Source Files\ptutil\Qnt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Qnt\Qntitor.cpp">
+      <Filter>Source Files\ptutil\Qnt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Qnt\Qntitor2.cpp">
+      <Filter>Source Files\ptutil\Qnt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Qnt\Qntrtoi.cpp">
+      <Filter>Source Files\ptutil\Qnt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Qnt\Qntrtol.cpp">
+      <Filter>Source Files\ptutil\Qnt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Qnt\Qntrtor.cpp">
+      <Filter>Source Files\ptutil\Qnt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Filt\Fil12But.cpp">
+      <Filter>Source Files\ptutil\Filt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Filt\FiltbiqdSos.cpp">
+      <Filter>Source Files\ptutil\Filt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Filt\FiltCalcBiqd.cpp">
+      <Filter>Source Files\ptutil\Filt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Filt\FiltCalcFilterResponse.cpp">
+      <Filter>Source Files\ptutil\Filt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Filt\Filtpoly.cpp">
+      <Filter>Source Files\ptutil\Filt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Filt\FiltRun.cpp">
+      <Filter>Source Files\ptutil\Filt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\GraphicEq\GraphicEqGet.cpp">
+      <Filter>Source Files\ptutil\DspUtil\GraphicEq</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\GraphicEq\GraphicEqInit.cpp">
+      <Filter>Source Files\ptutil\DspUtil\GraphicEq</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\GraphicEq\GraphicEqInitBands.cpp">
+      <Filter>Source Files\ptutil\DspUtil\GraphicEq</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\GraphicEq\GraphicEqInitSections.cpp">
+      <Filter>Source Files\ptutil\DspUtil\GraphicEq</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\GraphicEq\GraphicEqProcess.cpp">
+      <Filter>Source Files\ptutil\DspUtil\GraphicEq</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\GraphicEq\GraphicEqSet.cpp">
+      <Filter>Source Files\ptutil\DspUtil\GraphicEq</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\SOS\Sos.cpp">
+      <Filter>Source Files\ptutil\Sos</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\SOS\SosGet.cpp">
+      <Filter>Source Files\ptutil\Sos</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\SOS\SosProcess.cpp">
+      <Filter>Source Files\ptutil\Sos</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\SOS\SosSet.cpp">
+      <Filter>Source Files\ptutil\Sos</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\dfxSharedUtil\dfxSharedUtil.cpp">
+      <Filter>Source Files\ptutil\dfxSharedUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\BinauralSync\BinauralSynGet.cpp">
+      <Filter>Source Files\ptutil\DspUtil\BinauralSync</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\BinauralSync\BinauralSynInit.cpp">
+      <Filter>Source Files\ptutil\DspUtil\BinauralSync</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\BinauralSync\BinauralSynProcess.cpp">
+      <Filter>Source Files\ptutil\DspUtil\BinauralSync</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\BinauralSync\BinauralSynSet.cpp">
+      <Filter>Source Files\ptutil\DspUtil\BinauralSync</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\dfxp\dfxpComm.cpp">
+      <Filter>Source Files\ptutil\dfxp</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\dfxp\dfxpEq.cpp">
+      <Filter>Source Files\ptutil\dfxp</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\dfxp\dfxpGet.cpp">
+      <Filter>Source Files\ptutil\dfxp</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\dfxp\dfxpInit.cpp">
+      <Filter>Source Files\ptutil\dfxp</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\dfxp\dfxpProcess.cpp">
+      <Filter>Source Files\ptutil\dfxp</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\dfxp\dfxpProcessClear.cpp">
+      <Filter>Source Files\ptutil\dfxp</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\dfxp\dfxpProcessInt.cpp">
+      <Filter>Source Files\ptutil\dfxp</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\dfxp\dfxpProcessReal.cpp">
+      <Filter>Source Files\ptutil\dfxp</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\dfxp\dfxpQnt.cpp">
+      <Filter>Source Files\ptutil\dfxp</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\dfxp\dfxpQuit.cpp">
+      <Filter>Source Files\ptutil\dfxp</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\dfxp\dfxpRegistryStandard.cpp">
+      <Filter>Source Files\ptutil\dfxp</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\dfxp\dfxpSession.cpp">
+      <Filter>Source Files\ptutil\dfxp</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\dfxp\dfxpSet.cpp">
+      <Filter>Source Files\ptutil\dfxp</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\dfxp\dfxpSpectrum.cpp">
+      <Filter>Source Files\ptutil\dfxp</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\dfxp\dfxpUniversal.cpp">
+      <Filter>Source Files\ptutil\dfxp</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\COM\Com.cpp">
+      <Filter>Source Files\ptutil\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\COM\Comeprom.cpp">
+      <Filter>Source Files\ptutil\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\COM\Comget.cpp">
+      <Filter>Source Files\ptutil\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\COM\ComMem.cpp">
+      <Filter>Source Files\ptutil\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\COM\Compass.cpp">
+      <Filter>Source Files\ptutil\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\COM\Comread.cpp">
+      <Filter>Source Files\ptutil\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\COM\Comwrite.cpp">
+      <Filter>Source Files\ptutil\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\SurroundSyn\SurroundSynInit.cpp">
+      <Filter>Source Files\ptutil\DspUtil\SurroundSync</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\SurroundSyn\SurroundSynProcess.cpp">
+      <Filter>Source Files\ptutil\DspUtil\SurroundSync</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\spectrum\spectrumGet.cpp">
+      <Filter>Source Files\ptutil\DspUtil\spectrum</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\spectrum\spectrumInit.cpp">
+      <Filter>Source Files\ptutil\DspUtil\spectrum</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\spectrum\spectrumMessageValues.cpp">
+      <Filter>Source Files\ptutil\DspUtil\spectrum</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\spectrum\spectrumProcess.cpp">
+      <Filter>Source Files\ptutil\DspUtil\spectrum</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\spectrum\spectrumReset.cpp">
+      <Filter>Source Files\ptutil\DspUtil\spectrum</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\spectrum\spectrumSet.cpp">
+      <Filter>Source Files\ptutil\DspUtil\spectrum</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\COM\Comwave.cpp">
+      <Filter>Source Files\ptutil\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\PWAV\Pwav.cpp">
+      <Filter>Source Files\ptutil\pwav</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\PWAV\PwavConvert.cpp">
+      <Filter>Source Files\ptutil\pwav</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\PWAV\PwavIO.cpp">
+      <Filter>Source Files\ptutil\pwav</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\PWAV\PwavUtil.cpp">
+      <Filter>Source Files\ptutil\pwav</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\realSample\realSampleForceLegalValues.cpp">
+      <Filter>Source Files\ptutil\realSample</Filter>
+    </ClCompile>
+    <ClCompile Include="DfxDspPrivate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ptComSftDfx\Comsftwr.c">
+      <Filter>Source Files\ptComSftDfx</Filter>
+    </ClCompile>
+    <ClCompile Include="ptComSftDfx\ComsftwrCPP.cpp">
+      <Filter>Source Files\ptComSftDfx</Filter>
+    </ClCompile>
+    <ClCompile Include="ptechDsp\Peq\Peq8\peq8p.c">
+      <Filter>Source Files\ptechDsp\Dsp\Peq</Filter>
+    </ClCompile>
+    <ClCompile Include="ptechDsp\Peq\Peq832\peq8p32.c">
+      <Filter>Source Files\ptechDsp\Dsp\Peq</Filter>
+    </ClCompile>
+    <ClCompile Include="ptechDsp\Aural\Aural032\Auralp32.c">
+      <Filter>Source Files\ptechDsp\Dsp\Aural</Filter>
+    </ClCompile>
+    <ClCompile Include="ptechDsp\Maximizer\Maxi32\Maxi32.c">
+      <Filter>Source Files\ptechDsp\Dsp\Maximizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ptechDsp\Lex\Lex32\Lex32.c">
+      <Filter>Source Files\ptechDsp\Dsp\LexReverb</Filter>
+    </ClCompile>
+    <ClCompile Include="ptechDsp\Play\Play16\Play16.c">
+      <Filter>Source Files\ptechDsp\Dsp\Play</Filter>
+    </ClCompile>
+    <ClCompile Include="ptechDsp\Play\Play32\Play32.c">
+      <Filter>Source Files\ptechDsp\Dsp\Play</Filter>
+    </ClCompile>
+    <ClCompile Include="ptechDsp\wide\Wide32\Wide32.c">
+      <Filter>Source Files\ptechDsp\Dsp\Wide</Filter>
+    </ClCompile>
+    <ClCompile Include="ptechDsp\Dly32\Dly832\dly8p32.c">
+      <Filter>Source Files\ptechDsp\Dsp\Delays</Filter>
+    </ClCompile>
+    <ClCompile Include="ptechDsp\Dly8\Dly8p.c">
+      <Filter>Source Files\ptechDsp\Dsp\Delays</Filter>
+    </ClCompile>
+    <ClCompile Include="ptechDsp\Aural\Aural0\Auralp.c">
+      <Filter>Source Files\ptechDsp\Dsp\Aural</Filter>
+    </ClCompile>
+    <ClCompile Include="ptechDsp\Maximizer\Maxi16\Maxi16.c">
+      <Filter>Source Files\ptechDsp\Dsp\Maximizer</Filter>
+    </ClCompile>
+    <ClCompile Include="ptechDsp\Lex\Lex16\Lex16.c">
+      <Filter>Source Files\ptechDsp\Dsp\LexReverb</Filter>
+    </ClCompile>
+    <ClCompile Include="ptechDsp\wide\Wide16\Wide16.c">
+      <Filter>Source Files\ptechDsp\Dsp\Wide</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

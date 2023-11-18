@@ -1,0 +1,32 @@
+Notes on Binaural Synthesis
+
+The best sounding coeffs for front speakers in the 1057 set are:
+#define FRONT_FILE L"C:\\tmp\\BinauralDemos\\IRC_1058\\RAW\\WAV\\IRC_1057_C\\IRC_1057_C_R0195_T015_P015.wav"
+These were compensated as can be seen in the FSpectrum include files. Note the T015_P000 version has a
+nastier uncompensated frequency response and was harder to compensate well, so with with P015 ones.
+
+Note that compensation is a little tricky in that the two channels are summing at lower frequencies,
+making it prone to have too much bass response. Thus the final composite compensation curve was manipulated
+both by eye and by ear for appropriate bass response.
+
+The DC gain correction corrects both sets of coeffs to yield the targeted gain. Setting for a composite
+gain of 1.0 was pulling up the curve too much above 0hz, so it was tweaked done to 0.5 composite.
+
+When using these trimmed IRC files, a 96 coeff length seems ok.
+#define FRONT_FILE L"C:\\tmp\\BinauralDemos\\IRC_1057\\RAW\\WAV\\IRC_1057_R\\IRC_1057_R_R0195_T015_P000TrimComp2DC.wav"
+#define REAR_FILE  L"C:\\tmp\\BinauralDemos\\IRC_1057\\RAW\\WAV\\IRC_1057_R\\IRC_1057_R_R0195_T165_P000TrimComp2.wav"
+#define SIDE_FILE  L"C:\\tmp\\BinauralDemos\\IRC_1057\\RAW\\WAV\\IRC_1057_R\\IRC_1057_R_R0195_T090_P000TrimComp2.wav"
+
+Notes on 44.1 to 48 sample rate conversion - SoundForge conversion seems to work ok based on spectrums,
+but is introducing some additional gain, approximately .817dB or a gain of 1.0986 .
+Adjusted for this gain in SF by multiplying after rate conversion by 1/1.0986 = 0.9102
+(Note, mouse scroll wheel on slider in SF volume adjustment gives you finer adjustment).
+The anti-aliasing option was not used.
+
+Another HRTF source, Earlab/ CIPIC from UC Davis, link below is from Boston U., same data:
+http://earlab.bu.edu/databases/collections/cipic/Default.aspx
+
+CIPIC coeffs appear to be uncompensated, they are very harsh.
+
+Logitech Notes - it appears that with their Dolby mode off, they don't process any input to their sub channel.
+Their sub channel appears to have special bass treatment.

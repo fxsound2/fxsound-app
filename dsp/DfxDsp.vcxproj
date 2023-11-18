@@ -1,0 +1,319 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F72F101C-13C0-4638-9FFA-BF15861D6F67}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>DfxDsp</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\lib\$(Configuration)-$(PlatformShortName)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\lib\$(Configuration)-$(PlatformShortName)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>..\lib\$(Configuration)-$(PlatformShortName)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>..\lib\$(Configuration)-$(PlatformShortName)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;PT_NON_MFC;DSPSOFT_TARGET;PT_DSP_BUILD=PT_DSP_DFX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>ptutil\include;$(ProjectDir)include;$(ProjectDir)..\audiopassthru\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_LIB;PT_NON_MFC;DSPSOFT_TARGET;PT_DSP_BUILD=PT_DSP_DFX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>ptutil\include;..\fxsound-support-library-dfx-dsp-dist\include;..\fxsound-support-library-audiopassthru-dist\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;PT_NON_MFC;DSPSOFT_TARGET;PT_DSP_BUILD=PT_DSP_DFX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>ptutil\include;..\fxsound-support-library-dfx-dsp-dist\include;..\fxsound-support-library-audiopassthru-dist\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShowIncludes>false</ShowIncludes>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;PT_NON_MFC;DSPSOFT_TARGET;PT_DSP_BUILD=PT_DSP_DFX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>ptutil\include;$(ProjectDir)include;$(ProjectDir)..\audiopassthru\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ptutil\DspUtil\BinauralSync\BinauralSynNotes.txt" />
+    <Text Include="ptutil\DspUtil\spectrum\SpectrumDelayNotes.txt" />
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\fxsound-support-library-dfx-dsp-dist\include\DfxDsp.h" />
+    <ClInclude Include="ptComSftDfx\u_comSftwr.h" />
+    <ClInclude Include="ptutil\COM\u_com.h" />
+    <ClInclude Include="ptutil\dfxp\u_dfxp.h" />
+    <ClInclude Include="ptutil\DspUtil\spectrum\u_spectrum.h" />
+    <ClInclude Include="ptutil\DspUtil\SurroundSyn\u_SurroundSyn.h" />
+    <ClInclude Include="ptutil\include\BinauralSyn.h" />
+    <ClInclude Include="ptutil\include\boardrv1.h" />
+    <ClInclude Include="ptutil\include\codedefs.h" />
+    <ClInclude Include="ptutil\include\com.h" />
+    <ClInclude Include="ptutil\include\comSftwr.h" />
+    <ClInclude Include="ptutil\include\CWaveFile.h" />
+    <ClInclude Include="ptutil\include\c_aural.h" />
+    <ClInclude Include="ptutil\include\c_dly1.h" />
+    <ClInclude Include="ptutil\include\c_dsps.h" />
+    <ClInclude Include="ptutil\include\c_lex.h" />
+    <ClInclude Include="ptutil\include\c_max.h" />
+    <ClInclude Include="ptutil\include\c_play.h" />
+    <ClInclude Include="ptutil\include\c_wid.h" />
+    <ClInclude Include="ptutil\include\daw.h" />
+    <ClInclude Include="ptutil\include\dfxp.h" />
+    <ClInclude Include="ptutil\include\dfxpDefs.h" />
+    <ClInclude Include="ptutil\include\DfxSdk.h" />
+    <ClInclude Include="ptutil\include\dfxSharedGlobals.h" />
+    <ClInclude Include="ptutil\include\dfxSharedUtil.h" />
+    <ClInclude Include="ptutil\include\dspfxp.h" />
+    <ClInclude Include="ptutil\include\dspfxp_studioverb.h" />
+    <ClInclude Include="ptutil\include\dynamic_build_defines.h" />
+    <ClInclude Include="ptutil\include\filt.h" />
+    <ClInclude Include="ptutil\include\GraphicEq.h" />
+    <ClInclude Include="ptutil\include\midi.h" />
+    <ClInclude Include="ptutil\include\platform.h" />
+    <ClInclude Include="ptutil\include\Prelst.h" />
+    <ClInclude Include="ptutil\include\pt_defs.h" />
+    <ClInclude Include="ptutil\include\pt_ipc.h" />
+    <ClInclude Include="ptutil\include\qnt.h" />
+    <ClInclude Include="ptutil\include\realSample.h" />
+    <ClInclude Include="ptutil\include\slipBuffer.h" />
+    <ClInclude Include="ptutil\include\slout.h" />
+    <ClInclude Include="ptutil\include\sos.h" />
+    <ClInclude Include="ptutil\include\spectrum.h" />
+    <ClInclude Include="ptutil\include\SurroundSyn.h" />
+    <ClInclude Include="ptutil\include\vals.h" />
+    <ClInclude Include="ptutil\PRELST\U_prelst.h" />
+    <ClInclude Include="ptutil\PWAV\U_pwav.h" />
+    <ClInclude Include="ptutil\realSample\u_realSample.h" />
+    <ClInclude Include="ptutil\VALS\U_vals.h" />
+    <ClInclude Include="u_DfxDsp.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DfxDsp.cpp" />
+    <ClCompile Include="DfxDspEq.cpp" />
+    <ClCompile Include="DfxDspPreset.cpp" />
+    <ClCompile Include="DfxDspPrivate.cpp" />
+    <ClCompile Include="DfxDspRegistry.cpp" />
+    <ClCompile Include="ptComSftDfx\Comsftwr.c" />
+    <ClCompile Include="ptComSftDfx\ComsftwrCPP.cpp" />
+    <ClCompile Include="ptechDsp\Aural\Aural032\Auralp32.c" />
+    <ClCompile Include="ptechDsp\Aural\Aural0\Auralp.c" />
+    <ClCompile Include="ptechDsp\Dly32\Dly832\dly8p32.c" />
+    <ClCompile Include="ptechDsp\Dly8\Dly8p.c" />
+    <ClCompile Include="ptechDsp\Lex\Lex16\Lex16.c" />
+    <ClCompile Include="ptechDsp\Lex\Lex32\Lex32.c" />
+    <ClCompile Include="ptechDsp\Maximizer\Maxi16\Maxi16.c" />
+    <ClCompile Include="ptechDsp\Maximizer\Maxi32\Maxi32.c" />
+    <ClCompile Include="ptechDsp\Peq\Peq832\peq8p32.c" />
+    <ClCompile Include="ptechDsp\Peq\Peq8\peq8p.c" />
+    <ClCompile Include="ptechDsp\Play\Play16\Play16.c">
+      <SDLCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SDLCheck>
+      <SDLCheck Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</SDLCheck>
+      <SDLCheck Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</SDLCheck>
+      <SDLCheck Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="ptechDsp\Play\Play32\Play32.c">
+      <SDLCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SDLCheck>
+      <SDLCheck Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</SDLCheck>
+      <SDLCheck Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</SDLCheck>
+      <SDLCheck Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="ptechDsp\wide\Wide16\Wide16.c" />
+    <ClCompile Include="ptechDsp\wide\Wide32\Wide32.c" />
+    <ClCompile Include="ptutil\COM\Com.cpp" />
+    <ClCompile Include="ptutil\COM\Comeprom.cpp" />
+    <ClCompile Include="ptutil\COM\Comget.cpp" />
+    <ClCompile Include="ptutil\COM\ComMem.cpp" />
+    <ClCompile Include="ptutil\COM\Compass.cpp" />
+    <ClCompile Include="ptutil\COM\Comread.cpp" />
+    <ClCompile Include="ptutil\COM\Comwave.cpp" />
+    <ClCompile Include="ptutil\COM\Comwrite.cpp" />
+    <ClCompile Include="ptutil\dfxp\dfxpComm.cpp" />
+    <ClCompile Include="ptutil\dfxp\dfxpEq.cpp" />
+    <ClCompile Include="ptutil\dfxp\dfxpGet.cpp" />
+    <ClCompile Include="ptutil\dfxp\dfxpInit.cpp" />
+    <ClCompile Include="ptutil\dfxp\dfxpProcess.cpp" />
+    <ClCompile Include="ptutil\dfxp\dfxpProcessClear.cpp" />
+    <ClCompile Include="ptutil\dfxp\dfxpProcessInt.cpp" />
+    <ClCompile Include="ptutil\dfxp\dfxpProcessReal.cpp" />
+    <ClCompile Include="ptutil\dfxp\dfxpQnt.cpp" />
+    <ClCompile Include="ptutil\dfxp\dfxpQuit.cpp" />
+    <ClCompile Include="ptutil\dfxp\dfxpRegistryStandard.cpp" />
+    <ClCompile Include="ptutil\dfxp\dfxpSession.cpp" />
+    <ClCompile Include="ptutil\dfxp\dfxpSet.cpp" />
+    <ClCompile Include="ptutil\dfxp\dfxpSpectrum.cpp" />
+    <ClCompile Include="ptutil\dfxp\dfxpUniversal.cpp" />
+    <ClCompile Include="ptutil\dfxSharedUtil\dfxSharedUtil.cpp" />
+    <ClCompile Include="ptutil\DspUtil\BinauralSync\BinauralSynGet.cpp" />
+    <ClCompile Include="ptutil\DspUtil\BinauralSync\BinauralSynInit.cpp" />
+    <ClCompile Include="ptutil\DspUtil\BinauralSync\BinauralSynProcess.cpp" />
+    <ClCompile Include="ptutil\DspUtil\BinauralSync\BinauralSynSet.cpp" />
+    <ClCompile Include="ptutil\DspUtil\GraphicEq\GraphicEqGet.cpp" />
+    <ClCompile Include="ptutil\DspUtil\GraphicEq\GraphicEqInit.cpp" />
+    <ClCompile Include="ptutil\DspUtil\GraphicEq\GraphicEqInitBands.cpp" />
+    <ClCompile Include="ptutil\DspUtil\GraphicEq\GraphicEqInitSections.cpp" />
+    <ClCompile Include="ptutil\DspUtil\GraphicEq\GraphicEqProcess.cpp" />
+    <ClCompile Include="ptutil\DspUtil\GraphicEq\GraphicEqSet.cpp" />
+    <ClCompile Include="ptutil\DspUtil\spectrum\spectrumGet.cpp" />
+    <ClCompile Include="ptutil\DspUtil\spectrum\spectrumInit.cpp" />
+    <ClCompile Include="ptutil\DspUtil\spectrum\spectrumMessageValues.cpp" />
+    <ClCompile Include="ptutil\DspUtil\spectrum\spectrumProcess.cpp" />
+    <ClCompile Include="ptutil\DspUtil\spectrum\spectrumReset.cpp" />
+    <ClCompile Include="ptutil\DspUtil\spectrum\spectrumSet.cpp" />
+    <ClCompile Include="ptutil\DspUtil\SurroundSyn\SurroundSynInit.cpp" />
+    <ClCompile Include="ptutil\DspUtil\SurroundSyn\SurroundSynProcess.cpp" />
+    <ClCompile Include="ptutil\Filt\Fil12But.cpp" />
+    <ClCompile Include="ptutil\Filt\FiltbiqdSos.cpp" />
+    <ClCompile Include="ptutil\Filt\FiltCalcBiqd.cpp" />
+    <ClCompile Include="ptutil\Filt\FiltCalcFilterResponse.cpp" />
+    <ClCompile Include="ptutil\Filt\Filtpoly.cpp" />
+    <ClCompile Include="ptutil\Filt\FiltRun.cpp" />
+    <ClCompile Include="ptutil\PRELST\Prelst.cpp" />
+    <ClCompile Include="ptutil\PWAV\Pwav.cpp" />
+    <ClCompile Include="ptutil\PWAV\PwavConvert.cpp" />
+    <ClCompile Include="ptutil\PWAV\PwavIO.cpp" />
+    <ClCompile Include="ptutil\PWAV\PwavUtil.cpp" />
+    <ClCompile Include="ptutil\Qnt\Qnt.cpp" />
+    <ClCompile Include="ptutil\Qnt\Qnt2But.cpp" />
+    <ClCompile Include="ptutil\Qnt\QntitoBoostCut.cpp" />
+    <ClCompile Include="ptutil\Qnt\Qntitol.cpp" />
+    <ClCompile Include="ptutil\Qnt\Qntitor.cpp" />
+    <ClCompile Include="ptutil\Qnt\Qntitor2.cpp" />
+    <ClCompile Include="ptutil\Qnt\Qntrtoi.cpp" />
+    <ClCompile Include="ptutil\Qnt\Qntrtol.cpp" />
+    <ClCompile Include="ptutil\Qnt\Qntrtor.cpp" />
+    <ClCompile Include="ptutil\realSample\realSampleForceLegalValues.cpp" />
+    <ClCompile Include="ptutil\SOS\Sos.cpp" />
+    <ClCompile Include="ptutil\SOS\SosGet.cpp" />
+    <ClCompile Include="ptutil\SOS\SosProcess.cpp" />
+    <ClCompile Include="ptutil\SOS\SosSet.cpp" />
+    <ClCompile Include="ptutil\VALS\Vals.cpp" />
+    <ClCompile Include="ptutil\VALS\Valscfg.cpp" />
+    <ClCompile Include="ptutil\VALS\Valsfile.cpp" />
+    <ClCompile Include="ptutil\VALS\Valsget.cpp" />
+    <ClCompile Include="ptutil\VALS\Valsset.cpp" />
+    <ClCompile Include="ptutil\VALS\Valswarp.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,20 @@
+With targeted buffer size set to 40ms, spectral update set to 40 ms
+
+
+WMP RESULTS
+On Win XP with built in Dell sound card or DFX Adapter, with 128/320kpbs mp3 and .wav files,
+0.93 secs is a good spectral delay setting.
+
+On Vista 32 machine with built in sound card or DFX Adapter, 0.20 secs is a good setting.
+
+
+WINAMP RESULTS
+Winamp 5.541 on XP, with .mp3 and .wav 1.9 seconds delay was good.
+This was using the default NullSoft DirectSound Output output plug-in, with default
+buffering setting of 2000ms.
+
+This setting also worked well with the NullSoft WaveOut output plug-in with default
+buffer setting of 2000ms.
+
+The same results were obtained on the Vista machine.
+

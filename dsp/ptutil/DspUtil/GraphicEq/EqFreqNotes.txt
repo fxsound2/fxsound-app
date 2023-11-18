@@ -1,0 +1,6 @@
+ISO center freqs for a ten band EQ are--
+
+(16), 31.5, 63, 125, 250, 500, 1000, 2000, 4000, 8000, 16000
+
+For an octave equalizer, the best Q values tend to be in the range of 0.707
+to 2.0. Typically use Q = 1.414.
