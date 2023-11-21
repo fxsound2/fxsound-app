@@ -205,7 +205,7 @@
     <ClCompile Include="src\sndDevices\sndDevices_Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\fxsound-support-library-audiopassthru-dist\include\AudioPassthru.h" />
+    <ClInclude Include="include\AudioPassthru.h" />
     <ClInclude Include="include\codedefs.h" />
     <ClInclude Include="include\File.h" />
     <ClInclude Include="include\mry.h" />
