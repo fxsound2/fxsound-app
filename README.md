@@ -22,7 +22,19 @@ While building with JUCE 7.x.x version we ran into an issue that the application
 ### Build FxSound from Visual Studio
 * Open [fxsound/Project/FxSound.sln](https://github.com/fxsound2/fxsound-app/blob/main/fxsound/Project/FxSound.sln) in Visual Studio
 * Build the required configuration and platform and run
-  
+
+### Build after exporting the project form Projucer
+FxSound application has three components. 
+1. FxSound GUI application which uses JUCE framework
+2. Audiopassthru module which is used by the application to interact with the audio devices
+3. DfxDsp module which is the DSP for processing audio
+
+Due to the some limitations with Projucer, after exporting the Visual Studio solution from Projucer, few changes have to be made in the solution to build FxSound.
+1. Since the audiopassthru and DfxDsp dependency projects cannot be added to the solution when FxSound.sln is exported, open fxsound/Project/FxSound.sln in Visual Studio and add the existing projects audiopassthru/audiopassthru.vcxproj, dsp/DfxDsp.vcxproj.
+2. From FxSound_App project, add reference to audiopassthru and DfxDsp.
+3. By default obly x64 platform configuration is created in the exported FxSound_App project. To build 32 bit, add a 32 bit Win32 configuration from Visual Studio Configuration Manager as a new platform and choose x64 in the "Copy settings from:" option.
+4. If you run FxSound from Visual Studio, to let the application to use the presets, set the Working Directory to ```$(SolutionDir)..\..\bin\$(PlatformTarget)``` in FxSound_App Project->Properties->Debugging setting.
+   
 ## Contribution Guidelines
 
 ## License
