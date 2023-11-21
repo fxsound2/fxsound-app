@@ -36,6 +36,8 @@ Due to the some limitations with Projucer, after exporting the Visual Studio sol
 4. If you run FxSound from Visual Studio, to let the application to use the presets, set the Working Directory to ```$(SolutionDir)..\..\bin\$(PlatformTarget)``` in FxSound_App Project->Properties->Debugging setting.
    
 ## Contribution Guidelines
+Issues are tracked in [GitHub issues](https://github.com/fxsound2/fxsound-app/issues). To make contributions to the project create a branch from an issue and submit a Pull Request with your code changes.
+Please follow the coding style as per the module (FxSound_App, audiopassthru, DfxDsp) that you are contributing to. FxSound_App which is developed in C++ follows [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
 
 ## License
 [GPL v3.0](https://github.com/fxsound2/fxsound-app/blob/main/LICENSE)
