@@ -377,7 +377,7 @@ void FxMainWindow::showMenu()
 	}
 
 	auto power_state = model.getPowerState();
-	popup_menu.addSubMenu(TRANS("Save New Preset"), save_menu, model.isPresetModified() && model.getUserPresetCount() < 10 && power_state);
+	popup_menu.addSubMenu(TRANS("Save New Preset"), save_menu, model.isPresetModified() && power_state);
 	popup_menu.addItem(overwrite_menu_name, model.isPresetModified() && user_preset && power_state, false, overwriteClicked);
 	popup_menu.addItem(TRANS("Undo Preset Changes"), model.isPresetModified() && power_state, false, undoClicked);
 	popup_menu.addSubMenu(TRANS("Rename Preset"), rename_menu, !model.isPresetModified() && user_preset && power_state);

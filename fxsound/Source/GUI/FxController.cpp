@@ -681,12 +681,6 @@ void FxController::savePreset(const String& preset_name)
 		setPreset(selected_preset);
 
 		model.pushMessage(FormatString(TRANS("New preset %s is saved."), preset_name));
-
-		if (model.getUserPresetCount() == 10)
-		{
-			Thread::sleep(2000);
-			model.pushMessage(TRANS("Reached the limit on new presets."));
-		}
 	}
 
 	model.setPresetModified(false);
