@@ -171,9 +171,9 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	StringArray languages = { String(L"English"), String(L"\u4e2d\u6587"), String(L"Espa\u00f1ol"), String(L"Ti\u1ebfng Vi\u1ec7t"),
 							  String(L"Portugu\u00eas"), String(L"\u0e44\u0e17\u0e22"), String(L"T\u00fcrk"), String(L"\u0440\u0443\u0441\u0441\u043a\u0438\u0439"), String(L"\ud55c\uad6d\uc5b4"),
 							  String(L"\u65e5\u672c\u8a9e"), String(L"Fran\u00e7ais"), String(L"Italiano"), String(L"Deutsche"), String(L"Polskie"), String(L"Magyar"), String(L"\u0e41\u0e1a\u0e1a\u0e44\u0e17\u0e22"), String(L"Nederlands")};
-	StringArray hotKeySettingsKeys = { FxController::HK_CMD_ON_OFF, FxController::HK_CMD_OPEN_CLOSE, FxController::HK_CMD_NEXT_PRESET, FxController::HK_CMD_NEXT_OUTPUT };
+	StringArray hotKeySettingsKeys = { FxController::HK_CMD_ON_OFF, FxController::HK_CMD_OPEN_CLOSE, FxController::HK_CMD_NEXT_PRESET, FxController::HK_CMD_PREVIOUS_PRESET, FxController::HK_CMD_NEXT_OUTPUT };
 	StringArray hotkey_names = { TRANS("Turn FxSound On/Off"), TRANS("Open/Close FxSound"),
-								   TRANS("Change Preset"), TRANS("Change Playback Device") };
+								   TRANS("Use Next Preset"), TRANS("Use Previous Preset"), TRANS("Change Playback Device")};
 
 	setFocusContainer(true);
 
@@ -194,7 +194,7 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	hotkeys_toggle_.setWantsKeyboardFocus(true);
 
 	bool hotkey_enabled = FxModel::getModel().getHotkeySupport();
-	for (int i=0; i<4; i++)
+	for (int i=0; i<hotkey_names.size(); i++)
 	{
 		auto label = new FxHotkeyLabel(hotkey_names[i], hotKeySettingsKeys[i]);
 		label->setEnabled(hotkey_enabled);

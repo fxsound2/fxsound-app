@@ -37,7 +37,8 @@ public:
     static constexpr int NUM_SPECTRUM_BANDS = 10;
 	static constexpr char HK_CMD_ON_OFF[] = "cmd_on_off";
 	static constexpr char HK_CMD_OPEN_CLOSE[] = "cmd_open_close";
-	static constexpr char HK_CMD_NEXT_PRESET[] = "cmd_change_preset";
+	static constexpr char HK_CMD_NEXT_PRESET[] = "cmd_next_preset";
+	static constexpr char HK_CMD_PREVIOUS_PRESET[] = "cmd_previous_preset";
 	static constexpr char HK_CMD_NEXT_OUTPUT[] = "cmd_change_output";
 	
 	static FxController& getInstance()
@@ -152,7 +153,8 @@ private:
 	static constexpr UINT CMD_ON_OFF = 1001;
 	static constexpr UINT CMD_OPEN_CLOSE = 1002;
 	static constexpr UINT CMD_NEXT_PRESET = 1003;
-	static constexpr UINT CMD_NEXT_OUTPUT = 1004;
+	static constexpr UINT CMD_PREVIOUS_PRESET = 1004;
+	static constexpr UINT CMD_NEXT_OUTPUT = 1005;
 
 	FxController();
 
