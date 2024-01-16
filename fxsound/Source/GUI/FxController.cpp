@@ -1079,7 +1079,7 @@ void FxController::setEqBandBoostCut(int band_num, float boost)
 LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, const WPARAM w_param, const LPARAM l_param)
 {
 	FxController* controller = (FxController*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-	
+
 	switch (message)
 	{
 		case WM_HOTKEY:
@@ -1116,6 +1116,26 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 					else
 					{
 						preset_index = 0;
+					}
+					if (controller->setPreset(preset_index))
+					{
+						FxModel::getModel().pushMessage(TRANS("Preset: ") + FxModel::getModel().getPreset(preset_index).name);
+					}
+				}
+			}
+			if (w_param == CMD_PREVIOUS_PRESET && FxModel::getModel().getPowerState())
+			{
+				auto preset_index = FxModel::getModel().getSelectedPreset();
+				auto preset_count = FxModel::getModel().getPresetCount();
+				if (preset_count > 1)
+				{
+					if (preset_index != 0)
+					{
+						preset_index--;
+					}
+					else
+					{
+						preset_index = preset_count - 1;
 					}
 					if (controller->setPreset(preset_index))
 					{
@@ -1270,7 +1290,7 @@ bool FxController::getHotkey(String cmdKey, int& mod, int& vk)
 
 bool FxController::setHotkey(const String& command, int new_mod, int new_vk)
 {
-	StringArray hotkey_cmds = { HK_CMD_ON_OFF, HK_CMD_OPEN_CLOSE, HK_CMD_NEXT_PRESET, HK_CMD_NEXT_OUTPUT };
+	StringArray hotkey_cmds = { HK_CMD_ON_OFF, HK_CMD_OPEN_CLOSE, HK_CMD_NEXT_PRESET, HK_CMD_PREVIOUS_PRESET, HK_CMD_NEXT_OUTPUT };
 
 	for (int i = 0; i < hotkey_cmds.size(); i++)
 	{
@@ -1310,6 +1330,13 @@ bool FxController::setHotkey(const String& command, int new_mod, int new_vk)
 	{
 		::UnregisterHotKey(message_window_.getHandle(), CMD_NEXT_PRESET);
 		::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_PRESET, new_mod, new_vk);
+		return true;
+	}
+
+	if (command == HK_CMD_PREVIOUS_PRESET)
+	{
+		::UnregisterHotKey(message_window_.getHandle(), CMD_PREVIOUS_PRESET);
+		::RegisterHotKey(message_window_.getHandle(), CMD_PREVIOUS_PRESET, new_mod, new_vk);
 		return true;
 	}
 
@@ -1549,6 +1576,11 @@ void FxController::registerHotkeys()
 			::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_PRESET, mod, vk);
 		}
 
+		if (getHotkey(HK_CMD_PREVIOUS_PRESET, mod, vk))
+		{
+			::RegisterHotKey(message_window_.getHandle(), CMD_PREVIOUS_PRESET, mod, vk);
+		}
+
 		if (getHotkey(HK_CMD_NEXT_OUTPUT, mod, vk))
 		{
 			::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_OUTPUT, mod, vk);
@@ -1565,6 +1597,7 @@ void FxController::unregisterHotkeys()
 		::UnregisterHotKey(message_window_.getHandle(), CMD_ON_OFF);
 		::UnregisterHotKey(message_window_.getHandle(), CMD_OPEN_CLOSE);
 		::UnregisterHotKey(message_window_.getHandle(), CMD_NEXT_PRESET);
+		::UnregisterHotKey(message_window_.getHandle(), CMD_PREVIOUS_PRESET);
 		::UnregisterHotKey(message_window_.getHandle(), CMD_NEXT_OUTPUT);
 		hotkeys_registered_ = false;
 	}
