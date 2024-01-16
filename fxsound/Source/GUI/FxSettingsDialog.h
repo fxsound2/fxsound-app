@@ -100,9 +100,11 @@ private:
 		static constexpr int LANGUAGE_LIST_WIDTH = 120;
 		static constexpr int LANGUAGE_LIST_HEIGHT = 30;
 		static constexpr int BUTTON_WIDTH = 220;
-		static constexpr int BUTTON_HEIGHT = 30;
-       
+		static constexpr int BUTTON_HEIGHT = 24;
+		static constexpr int MAX_BUTTON_WIDTH = 315;
+
         void setText();
+		void resizeResetButton(int x, int y);
 
         ToggleButton launch_toggle_;
         ToggleButton auto_select_output_toggle_;
@@ -152,7 +154,7 @@ private:
 	{
 	public:
         static constexpr int WIDTH = 600;
-        static constexpr int HEIGHT = 435;
+        static constexpr int HEIGHT = 477;
 
 		SettingsComponent();
         ~SettingsComponent() = default;
