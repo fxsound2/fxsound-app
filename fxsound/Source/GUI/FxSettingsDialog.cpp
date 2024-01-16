@@ -272,14 +272,7 @@ void FxSettingsDialog::GeneralSettingsPane::resized()
 		y += HOTKEY_LABEL_HEIGHT + 10;
 	}
 	
-    if (reset_presets_button_.getButtonText().contains("\n"))
-    {
-        reset_presets_button_.setBounds(X_MARGIN, y + 10, BUTTON_WIDTH, BUTTON_HEIGHT+20);
-    }
-    else
-    {
-        reset_presets_button_.setBounds(X_MARGIN, y + 10, BUTTON_WIDTH, BUTTON_HEIGHT);
-    }
+	resizeResetButton(X_MARGIN, y + 10);
 }
 
 void FxSettingsDialog::GeneralSettingsPane::paint(Graphics& g)
@@ -301,14 +294,36 @@ void FxSettingsDialog::GeneralSettingsPane::setText()
     hide_help_tips_toggle_.setButtonText(TRANS("Hide help tips for audio controls"));
     hotkeys_toggle_.setButtonText(TRANS("Disable keyboard shortcuts"));
     reset_presets_button_.setButtonText(TRANS("Reset presets to factory defaults"));
-    if (reset_presets_button_.getButtonText().contains("\n"))
-    {
-        reset_presets_button_.setSize(BUTTON_WIDTH, BUTTON_HEIGHT + 20);
-    }
-    else
-    {
-        reset_presets_button_.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-    } 
+	
+	resizeResetButton(reset_presets_button_.getX(), reset_presets_button_.getY());
+}
+
+void FxSettingsDialog::GeneralSettingsPane::resizeResetButton(int x, int y)
+{
+	String buttonText = reset_presets_button_.getButtonText();
+	
+	int index = 0;
+	int lineCount = 1;
+	do {
+		index = buttonText.indexOfChar(index, L'\n');
+		if (index >= 0)
+		{
+			index++;
+			lineCount++;
+		}
+		else
+		{
+			break;
+		}
+	} while (lineCount <= 3); // Resize the button height for upto 3 lines of text
+
+	int buttonWidth = min(reset_presets_button_.getBestWidthForHeight(BUTTON_HEIGHT * lineCount), MAX_BUTTON_WIDTH);
+	if (buttonWidth < BUTTON_WIDTH)
+	{
+		buttonWidth = BUTTON_WIDTH;
+	}
+
+	reset_presets_button_.setBounds(x, y, buttonWidth, BUTTON_HEIGHT * lineCount);
 }
 
 FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), debug_log_toggle_(TRANS("Disable debug logging"))
