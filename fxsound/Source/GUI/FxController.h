@@ -103,6 +103,7 @@ public:
     String getLanguage() const;
     void setLanguage(String language_code);
     String getLanguageName(String language_code) const;
+	int getMaxUserPresets() const;
 
 	void logMessage(const String& message)
 	{
@@ -204,6 +205,7 @@ private:
 	bool subscription_validity_tip_;
     bool survey_tip_;
     bool subscription_unverified_tip_;
+	int max_user_presets_;
 
 	DWORD session_id_;
 };

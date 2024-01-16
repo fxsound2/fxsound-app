@@ -170,7 +170,11 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
     hide_help_tooltips_ = settings_.getBool("hide_help_tooltips");
     output_device_id_ = settings_.getString("output_device_id");
     output_device_name_ = settings_.getString("output_device_name");
-    
+	max_user_presets_ = settings_.getInt("max_user_presets");
+	if (max_user_presets_ < 10 || max_user_presets_ > 100)
+	{
+		max_user_presets_ = 20;
+	}
 	SetWindowLongPtr(message_window_.getHandle(), GWLP_USERDATA, (LONG_PTR)this);
 
 	session_id_ = 0;
@@ -682,7 +686,7 @@ void FxController::savePreset(const String& preset_name)
 
 		model.pushMessage(FormatString(TRANS("New preset %s is saved."), preset_name));
 
-		if (model.getUserPresetCount() == 10)
+		if (model.getUserPresetCount() == FxController::getInstance().getMaxUserPresets())
 		{
 			Thread::sleep(2000);
 			model.pushMessage(TRANS("Reached the limit on new presets."));
@@ -1505,6 +1509,11 @@ String FxController::getLanguageName(String language_code) const
 
 
     return "English";
+}
+
+int FxController::getMaxUserPresets() const
+{
+	return max_user_presets_;
 }
 
 bool FxController::isOutputAutoSelect()
