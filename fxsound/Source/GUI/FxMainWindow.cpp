@@ -213,6 +213,7 @@ private:
 //==============================================================================
 FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"menuButton", DrawableButton::ButtonStyle::ImageFitted), resize_button_(L"resizeButton", DrawableButton::ButtonStyle::ImageFitted), donate_button_(TRANS("Donate"))
 {
+	setName("FxSound");
 	setOpaque(false);
     enableShadow(false);
 
