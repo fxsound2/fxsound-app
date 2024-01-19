@@ -180,6 +180,7 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	launch_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
 	launch_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	launch_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	launch_toggle_.setWantsKeyboardFocus(true);
     auto_select_output_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
     auto_select_output_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
     auto_select_output_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
@@ -223,6 +224,9 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 											}
 										};
 
+	launch_toggle_.setToggleState(FxController::getInstance().isLaunchOnStartup(), NotificationType::dontSendNotification);
+	launch_toggle_.onClick = [this]() { FxController::getInstance().setLaunchOnStartup(launch_toggle_.getToggleState()); };
+
     auto_select_output_toggle_.setToggleState(FxController::getInstance().isOutputAutoSelect(), NotificationType::dontSendNotification);
     auto_select_output_toggle_.onClick = [this]() { FxController::getInstance().setOutputAutoSelect(auto_select_output_toggle_.getToggleState()); };
 
@@ -237,7 +241,7 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 		reset_presets_button_.setEnabled(false);
 	};
 
-	addChildComponent(&launch_toggle_);
+	addAndMakeVisible(&launch_toggle_);
     addAndMakeVisible(&auto_select_output_toggle_);
     addAndMakeVisible(&hide_help_tips_toggle_);
 	addAndMakeVisible(&hotkeys_toggle_);
@@ -256,13 +260,15 @@ void FxSettingsDialog::GeneralSettingsPane::resized()
     language_switch_.setBounds(X_MARGIN, LANGUAGE_SWITCH_Y, FxLanguage::WIDTH, FxLanguage::HEIGHT);
 
     int y = language_switch_.getBottom() + 20;
-    auto_select_output_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
+	launch_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
+
+	y = launch_toggle_.getBottom() + 20;
+	auto_select_output_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 
     y = auto_select_output_toggle_.getBottom() + 10;
     hide_help_tips_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 
     y = hide_help_tips_toggle_.getBottom() + 10;
-
 	hotkeys_toggle_.setBounds(X_MARGIN, y, getWidth()-X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 
 	y = hotkeys_toggle_.getBottom() + 5;
