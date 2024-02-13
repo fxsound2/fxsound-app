@@ -29,14 +29,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /*
 */
 
-class FxSystemTrayView : public SystemTrayIconComponent, public FxModel::Listener
+class FxSystemTrayView : public Component, public FxModel::Listener
 {
 public:
 	FxSystemTrayView();
     ~FxSystemTrayView();
-
-	void mouseDown(const MouseEvent& event) override;
-	void mouseUp(const MouseEvent&) override;
 
 	void modelChanged(FxModel::Event model_event) override;
 
@@ -48,13 +45,18 @@ private:
 	static constexpr int MENU_ID_EXIT = 5;
 	static constexpr int PRESET_MENU_ID_START = 101;
 	static constexpr int OUTPUT_MENU_ID_START = 201;
+	static constexpr int WMAPP_FXTRAYICON = WM_APP + 1;
+	static const GUID trayIconGuid_;
 
-	void showNotification();
+	static LRESULT CALLBACK wndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-	PopupMenu context_menu_;
-	bool left_click_;
+	void showContextMenu();
+	void showNotification();	
+	void setTooltip(wchar_t* tooltip);
+
 	bool custom_notification_;
 	FxNotification notification_;
+	WNDPROC componentWndProc_;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxSystemTrayView)
 };

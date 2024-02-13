@@ -56,12 +56,6 @@ public:
             main_window_ = std::make_unique<FxMainWindow>();
             system_tray_view_.reset(new FxSystemTrayView());
 
-            auto icon = ImageCache::getFromMemory(BinaryData::fxsound_png, BinaryData::fxsound_pngSize);
-            system_tray_view_->setIconImage(icon, icon);
-            system_tray_view_->setIconTooltip(L"FxSound");
-            system_tray_view_->addToDesktop(0);
-            system_tray_view_->setVisible(true);
-
             FxController::getInstance().init(main_window_.get(), audio_passthru_.get());
         }
         catch (const std::exception& e)
