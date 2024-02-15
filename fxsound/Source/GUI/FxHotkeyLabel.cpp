@@ -92,6 +92,45 @@ bool FxHotkeyEditor::keyPressed(const KeyPress& key)
 		vk = static_cast<int>(keyCode);
 	}
 
+	int saved_mod;
+	int saved_vk;
+	auto& controller = FxController::getInstance();
+	if (controller.getHotkey(FxController::HK_CMD_ON_OFF, saved_mod, saved_vk))
+	{
+		if (mod == saved_mod && vk == saved_vk)
+		{
+			return false;
+		}
+	}
+	if (controller.getHotkey(FxController::HK_CMD_OPEN_CLOSE, saved_mod, saved_vk))
+	{
+		if (mod == saved_mod && vk == saved_vk)
+		{
+			return false;
+		}
+	}
+	if (controller.getHotkey(FxController::HK_CMD_NEXT_PRESET, saved_mod, saved_vk))
+	{
+		if (mod == saved_mod && vk == saved_vk)
+		{
+			return false;
+		}
+	}
+	if (controller.getHotkey(FxController::HK_CMD_PREVIOUS_PRESET, saved_mod, saved_vk))
+	{
+		if (mod == saved_mod && vk == saved_vk)
+		{
+			return false;
+		}
+	}
+	if (controller.getHotkey(FxController::HK_CMD_NEXT_OUTPUT, saved_mod, saved_vk))
+	{
+		if (mod == saved_mod && vk == saved_vk)
+		{
+			return false;
+		}
+	}
+
 	if (vk != 0)
 	{
 		mod_ = mod;
@@ -138,7 +177,14 @@ void FxHotkeyEditor::paint(juce::Graphics& g)
 	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
 	if (isEnabled())
 	{
-		setColour(Label::textColourId, theme.findColour(TextButton::buttonColourId));
+		if (FxController::getInstance().isValidHotkey(mod_, vk_))
+		{
+			setColour(Label::textColourId, theme.findColour(TextButton::buttonColourId));
+		}
+		else
+		{
+			setColour(Label::textColourId, theme.findColour(TextEditor::textColourId));
+		}
 	}
 	else
 	{

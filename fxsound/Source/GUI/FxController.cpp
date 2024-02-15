@@ -1315,39 +1315,85 @@ bool FxController::setHotkey(const String& command, int new_mod, int new_vk)
 	if (command == HK_CMD_ON_OFF)
 	{
 		::UnregisterHotKey(message_window_.getHandle(), CMD_ON_OFF);
-		::RegisterHotKey(message_window_.getHandle(), CMD_ON_OFF, new_mod, new_vk);
+		if (isValidHotkey(new_mod, new_vk))
+		{
+			::RegisterHotKey(message_window_.getHandle(), CMD_ON_OFF, new_mod, new_vk);
+		}		
 		return true;
 	}
 
 	if (command == HK_CMD_OPEN_CLOSE)
 	{
 		::UnregisterHotKey(message_window_.getHandle(), CMD_OPEN_CLOSE);
-		::RegisterHotKey(message_window_.getHandle(), CMD_OPEN_CLOSE, new_mod, new_vk);
+		if (isValidHotkey(new_mod, new_vk))
+		{
+			::RegisterHotKey(message_window_.getHandle(), CMD_OPEN_CLOSE, new_mod, new_vk);
+		}		
 		return true;
 	}
 
 	if (command == HK_CMD_NEXT_PRESET)
 	{
 		::UnregisterHotKey(message_window_.getHandle(), CMD_NEXT_PRESET);
-		::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_PRESET, new_mod, new_vk);
+		if (isValidHotkey(new_mod, new_vk))
+		{
+			::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_PRESET, new_mod, new_vk);
+		}		
 		return true;
 	}
 
 	if (command == HK_CMD_PREVIOUS_PRESET)
 	{
 		::UnregisterHotKey(message_window_.getHandle(), CMD_PREVIOUS_PRESET);
-		::RegisterHotKey(message_window_.getHandle(), CMD_PREVIOUS_PRESET, new_mod, new_vk);
+		if (isValidHotkey(new_mod, new_vk))
+		{
+			::RegisterHotKey(message_window_.getHandle(), CMD_PREVIOUS_PRESET, new_mod, new_vk);
+		}		
 		return true;
 	}
 
 	if (command == HK_CMD_NEXT_OUTPUT)
 	{
 		::UnregisterHotKey(message_window_.getHandle(), CMD_NEXT_OUTPUT);
-		::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_OUTPUT, new_mod, new_vk);
+		if (isValidHotkey(new_mod, new_vk))
+		{
+			::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_OUTPUT, new_mod, new_vk);
+		}		
 		return true;
 	}
 
 	return false;
+}
+
+bool FxController::isValidHotkey(int mod, int vk)
+{
+	if ((mod & MOD_CONTROL) == 0)
+	{
+		return false;
+	}
+		
+	HKL hkl = GetKeyboardLayout(0);
+	BYTE kbd_state[256] = { 0 };
+	kbd_state[VK_CONTROL] = 0x80;
+
+	if ((mod & MOD_ALT) != 0)
+	{
+		kbd_state[VK_MENU] = 0x80;
+	}
+	if ((mod & MOD_SHIFT) != 0)
+	{
+		kbd_state[VK_SHIFT] = 0x80;
+	}
+	
+	WCHAR output[3] = { 0 };
+
+	int len = ToUnicodeEx(vk, 0, kbd_state, output, 3, 0, hkl);
+	if (len > 0 && output[0] >= 0x20) // The hotkey combination generates a non-control character
+	{
+		return false;
+	}
+
+	return true;
 }
 
 bool FxController::isHelpTooltipsHidden()
@@ -1563,27 +1609,45 @@ void FxController::registerHotkeys()
 
 		if (getHotkey(HK_CMD_ON_OFF, mod, vk))
 		{
-			::RegisterHotKey(message_window_.getHandle(), CMD_ON_OFF, mod, vk);
+			if (isValidHotkey(mod, vk))
+			{
+				::RegisterHotKey(message_window_.getHandle(), CMD_ON_OFF, mod, vk);
+			}			
 		}
 		
 		if (getHotkey(HK_CMD_OPEN_CLOSE, mod, vk))
 		{
-			::RegisterHotKey(message_window_.getHandle(), CMD_OPEN_CLOSE, mod, vk);
+			if (isValidHotkey(mod, vk))
+			{
+				::RegisterHotKey(message_window_.getHandle(), CMD_OPEN_CLOSE, mod, vk);
+			}
+			
 		}
 
 		if (getHotkey(HK_CMD_NEXT_PRESET, mod, vk))
 		{
-			::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_PRESET, mod, vk);
+			if (isValidHotkey(mod, vk))
+			{
+				::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_PRESET, mod, vk);
+			}
+			
 		}
 
 		if (getHotkey(HK_CMD_PREVIOUS_PRESET, mod, vk))
 		{
-			::RegisterHotKey(message_window_.getHandle(), CMD_PREVIOUS_PRESET, mod, vk);
+			if (isValidHotkey(mod, vk))
+			{
+				::RegisterHotKey(message_window_.getHandle(), CMD_PREVIOUS_PRESET, mod, vk);
+			}
+			
 		}
 
 		if (getHotkey(HK_CMD_NEXT_OUTPUT, mod, vk))
 		{
-			::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_OUTPUT, mod, vk);
+			if (isValidHotkey(mod, vk))
+			{
+				::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_OUTPUT, mod, vk);
+			}			
 		}
 		
 		hotkeys_registered_ = true;

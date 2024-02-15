@@ -93,7 +93,8 @@ public:
 
 	void enableHotkeys(bool enable);
 	bool getHotkey(String cmdKey, int& mod, int& vk);
-	bool setHotkey(const String& command, int new_mod, int new_vk);
+	bool setHotkey(const String& command, int new_mod, int vk);
+	bool isValidHotkey(int mod, int new_vk);
 
     bool isOutputAutoSelect();
     void setOutputAutoSelect(bool auto_select);
