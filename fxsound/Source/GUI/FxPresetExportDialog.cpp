@@ -27,6 +27,18 @@ FxPresetExportDialog::FxPresetExportDialog() : FxWindow("Export Presets")
     toFront(true);
 }
 
+bool FxPresetExportDialog::keyPressed(const KeyPress& key)
+{
+    if (key == KeyPress::escapeKey)
+    {
+        exitModalState(0);
+        removeFromDesktop();
+        return true;
+    }
+
+    return Component::keyPressed(key);
+}
+
 void FxPresetExportDialog::closeButtonPressed()
 {
     exitModalState(0);
