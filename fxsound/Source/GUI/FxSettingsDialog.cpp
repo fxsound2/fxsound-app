@@ -75,6 +75,18 @@ void FxSettingsDialog::SettingsButton::paint(Graphics& g)
 	g.drawText(TRANS(getName()), juce::Rectangle<int>(bounds.getHeight()+5, 0, w, bounds.getHeight()), Justification::centredLeft);
 }
 
+bool FxSettingsDialog::keyPressed(const KeyPress& key)
+{
+	if (key == KeyPress::escapeKey)
+	{
+		exitModalState(0);
+		removeFromDesktop();
+		return true;
+	}
+
+	return Component::keyPressed(key);
+}
+
 FxSettingsDialog::SettingsComponent::SettingsComponent()
     : donate_button_("Donate")
 {

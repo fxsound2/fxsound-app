@@ -34,6 +34,8 @@ public:
     FxPresetImportDialog();
     ~FxPresetImportDialog() = default;
 
+    bool keyPressed(const KeyPress& key) override;
+
     void closeButtonPressed() override;
 
 private:

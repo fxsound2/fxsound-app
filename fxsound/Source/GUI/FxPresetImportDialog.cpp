@@ -176,6 +176,18 @@ FxPresetImportDialog::FxPresetImportDialog() : FxWindow("Import Presets")
     toFront(true);
 }
 
+bool FxPresetImportDialog::keyPressed(const KeyPress& key)
+{
+    if (key == KeyPress::escapeKey)
+    {
+        exitModalState(0);
+        removeFromDesktop();
+        return true;
+    }
+
+    return Component::keyPressed(key);
+}
+
 void FxPresetImportDialog::closeButtonPressed()
 {
     exitModalState(0);
