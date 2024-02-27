@@ -84,10 +84,10 @@ namespace BinaryData
     const int            minimize_hover_svgSize = 963;
 
     extern const char*   power_off_svg;
-    const int            power_off_svgSize = 2199;
+    const int            power_off_svgSize = 2218;
 
     extern const char*   power_on_svg;
-    const int            power_on_svgSize = 2199;
+    const int            power_on_svgSize = 2218;
 
     extern const char*   question_svg;
     const int            question_svgSize = 1252;
