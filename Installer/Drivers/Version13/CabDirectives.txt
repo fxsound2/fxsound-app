@@ -1,0 +1,16 @@
+.OPTION EXPLICIT       
+ 
+.Set CabinetNameTemplate=DriverPackages.CAB 
+ 
+.Set Cabinet=on
+.Set Compress=on
+ 
+.Set DestinationDir=Driversx64
+dfx12ntamd64.cat
+dfx12x64.inf
+dfx12x64.sys
+ 
+.Set DestinationDir=Driversx32
+dfx12ntx86.cat
+dfx12.inf
+dfx12.sys
