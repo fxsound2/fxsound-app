@@ -27,8 +27,6 @@ public:
 	enum Event { Notification=1, Subscription, PresetSelected, PresetListUpdated, PresetModified, OutputSelected, OutputListUpdated, OutputError, Other };
 	enum PresetType { AppPreset=1, UserPreset=2 };
 
-	static constexpr wchar_t* SUBSCRIBE_URL = L"https://fxsound.com/pricing";
-
 	struct AccountInfo final
 	{
 		String email;

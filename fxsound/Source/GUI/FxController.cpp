@@ -326,10 +326,15 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		auto selected_preset = FxModel::getModel().selectPreset(preset_name, false);
 		setPreset(selected_preset);
 
-        if (settings_.getString("version") != JUCEApplication::getInstance()->getApplicationVersion())
+		auto app_version = JUCEApplication::getInstance()->getApplicationVersion();
+        if (settings_.getString("version") != app_version)
         {
-            FxModel::getModel().pushMessage(" ", { TRANS("Click here to see what's new on this version!"), "https://www.fxsound.com/changelog" });
-            settings_.setString("version", JUCEApplication::getInstance()->getApplicationVersion());
+            FxModel::getModel().pushMessage(" ", { TRANS("Click here to see what's new on this version!"), "https://www.fxsound.com/changelog" });			
+            settings_.setString("version", app_version);
+			if (app_version.startsWith("1.1.2"))
+			{
+				FxMessage::showMessage(TRANS("FxSound is now open-source"), { TRANS("GitHub"), "https://github.com/fxsound2/fxsound-app" });
+			}
             view_ = ViewType::Pro;
             settings_.setBool("run_minimized", false);
         }
