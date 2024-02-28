@@ -313,6 +313,41 @@ void FxMainWindow::setResizeImage()
 	resize_button_.setImages(resize_image_.get(), resize_hover_image_.get());
 }
 
+void FxMainWindow::setIcon(bool power, bool processing)
+{
+	HINSTANCE hInst = GetModuleHandle(NULL);
+	HWND hWnd = (HWND)getWindowHandle();
+
+	HICON curr_icon = (HICON)SendMessage(hWnd, WM_GETICON, ICON_SMALL, 0);
+	HICON icon = NULL;
+
+	if (power)
+	{
+		if (processing)
+		{
+			icon = LoadIcon(hInst, L"IDI_LOGO_RED");
+		}
+		else
+		{
+			icon = LoadIcon(hInst, L"IDI_LOGO_WHITE");
+		}
+	}
+	else
+	{
+		icon = LoadIcon(hInst, L"IDI_LOGO_GRAY");
+	}
+
+	if (icon != NULL)
+	{
+		SendMessage(hWnd, WM_SETICON, ICON_SMALL, (LPARAM)icon);
+	}
+
+	if (curr_icon != NULL)
+	{
+		DestroyIcon(curr_icon);
+	}
+}
+
 void FxMainWindow::showMenu()
 {
 	auto settingsClicked = [this]() {

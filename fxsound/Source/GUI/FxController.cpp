@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "FxController.h"
 #include "FxMainWindow.h"
+#include "FxSystemTrayView.h"
 #include "FxMessage.h"
 #include "FxEffects.h"
 #include "../Utils/SysInfo/SysInfo.h"
@@ -238,12 +239,13 @@ void FxController::config(const String& commandline)
     setLanguage(language);
 }
 
-void FxController::init(FxMainWindow* main_window, AudioPassthru* audio_passthru)
+void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray_view, AudioPassthru* audio_passthru)
 {
 	if (!isTimerRunning())
 	{
 		main_window_ = main_window;
 		audio_passthru_ = audio_passthru;
+		system_tray_view_ = system_tray_view;
 
         auto_select_output_ = !settings_.getBool("disable_auto_switch_output");
         output_device_id_ = settings_.getString("output_device_id");
@@ -512,6 +514,9 @@ void FxController::setPowerState(bool power_state)
 	FxModel::getModel().setPowerState(power_state);
 	dfx_dsp_.powerOn(power_state);
 	settings_.setBool("power", power_state);
+
+	system_tray_view_->setStatus(power_state, false);
+	main_window_->setIcon(power_state, false);
 }
 
 bool FxController::setPreset(int selected_preset)
@@ -1216,6 +1221,8 @@ void FxController::timerCallback()
 	if (audio_process_on_counter_ == 5 && !audio_process_on_)
 	{
 		audio_process_on_ = true;
+		system_tray_view_->setStatus(true, true);
+		main_window_->setIcon(true, true);
 		main_window_->startLogoAnimation();
         if (view_ == ViewType::Pro)
         {
@@ -1226,6 +1233,8 @@ void FxController::timerCallback()
 	if (audio_process_off_counter_ == 5 && audio_process_on_)
 	{
 		audio_process_on_ = false;
+		system_tray_view_->setStatus(true, false);
+		main_window_->setIcon(true, false);
 		main_window_->stopLogoAnimation();
         if (view_ == ViewType::Pro)
         {

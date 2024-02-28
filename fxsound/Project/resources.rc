@@ -9,18 +9,18 @@
 #include <windows.h>
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION  1,1,20,0
+FILEVERSION  1,1,21,0
 BEGIN
   BLOCK "StringFileInfo"
   BEGIN
     BLOCK "040904E4"
     BEGIN
       VALUE "CompanyName",  "FxSound LLC\0"
-      VALUE "LegalCopyright",  "2023 FxSound™\0"
+      VALUE "LegalCopyright",  "2024 FxSound™\0"
       VALUE "FileDescription",  "FxSound\0"
-      VALUE "FileVersion",  "1.1.20.0\0"
+      VALUE "FileVersion",  "1.1.21.0\0"
       VALUE "ProductName",  "FxSound\0"
-      VALUE "ProductVersion",  "1.1.20.0\0"
+      VALUE "ProductVersion",  "1.1.21.0\0"
     END
   END
 
@@ -34,3 +34,6 @@ END
 
 IDI_ICON1 ICON DISCARDABLE "icon.ico"
 IDI_ICON2 ICON DISCARDABLE "icon.ico"
+IDI_LOGO_WHITE ICON DISCARDABLE "white_logo.ico"
+IDI_LOGO_RED ICON DISCARDABLE "red_logo.ico"
+IDI_LOGO_GRAY ICON DISCARDABLE "gray_logo.ico"

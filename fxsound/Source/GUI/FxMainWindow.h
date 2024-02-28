@@ -42,6 +42,7 @@ public:
     void pauseVisualizer();
 
     void setResizeImage();
+    void setIcon(bool power, bool processing);
 
 private:
     static constexpr int BUTTON_WIDTH = 24;

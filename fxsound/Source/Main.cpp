@@ -56,7 +56,7 @@ public:
             main_window_ = std::make_unique<FxMainWindow>();
             system_tray_view_.reset(new FxSystemTrayView());
 
-            FxController::getInstance().init(main_window_.get(), audio_passthru_.get());
+            FxController::getInstance().init(main_window_.get(), system_tray_view_.get(), audio_passthru_.get());
         }
         catch (const std::exception& e)
         {

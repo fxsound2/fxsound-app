@@ -4140,58 +4140,58 @@ const char* minimize_hover_svg = (const char*) temp_binary_data_24;
 
 //================== power_off.svg ==================
 static const unsigned char temp_binary_data_25[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<svg width=\"30px\" height=\"31px\" viewBox=\"0 0 30 31\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
-"    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->\n"
-"    <title>switch</title>\n"
-"    <desc>Created with Sketch.</desc>\n"
-"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n"
-"        <g id=\"FXS-WEB-HOME-DARK_r02_lighter\" transform=\"translate(-1182.000000, -419.000000)\" fill=\"#FFFFFF\" fill-rule=\"nonzero\">\n"
-"            <g id=\"Top\">\n"
-"                <g id=\"Group-3-Copy-5\" transform=\"translate(948.000000, 245.000000)\">\n"
-"                    <g id=\"Group\" transform=\"translate(168.682500, 108.706500)\">\n"
-"                        <g id=\"switch\" transform=\"translate(66.223500, 66.223500)\">\n"
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+"<svg width=\"30px\" height=\"31px\" viewBox=\"0 0 30 31\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
+"    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->\r\n"
+"    <title>switch</title>\r\n"
+"    <desc>Created with Sketch.</desc>\r\n"
+"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\r\n"
+"        <g id=\"FXS-WEB-HOME-DARK_r02_lighter\" transform=\"translate(-1182.000000, -419.000000)\" fill=\"#FFFFFF\" fill-rule=\"nonzero\">\r\n"
+"            <g id=\"Top\">\r\n"
+"                <g id=\"Group-3-Copy-5\" transform=\"translate(948.000000, 245.000000)\">\r\n"
+"                    <g id=\"Group\" transform=\"translate(168.682500, 108.706500)\">\r\n"
+"                        <g id=\"switch\" transform=\"translate(66.223500, 66.223500)\">\r\n"
 "                            <path d=\"M19.7231076,2.4807673 C19.0755467,2.1978605 18.3212886,2.49348221 18.0383818,3.14104308 C17.755475,3.78860395 18.0510967,4.54286213 18.6986575,4.82576892 C22.8617117,6.64448114 25.6095721,10.7620135 25.6095721,15"
 ".3836441 C25.6095721,21.7431393 20.4533154,26.8990361 14.0941801,26.8990361 C7.73420508,26.8990361 2.57878807,21.7436191 2.57878807,15.3836441 C2.57878807,10.7630331 5.32568887,6.64550074 9.48754346,4.82558899 C10.1349844,4.54250227 10.4303662,3.7881"
 "2414 10.1472195,3.14068322 C9.86413277,2.4932423 9.10975464,2.1978605 8.46231372,2.4810072 C3.37700866,4.7046174 0.019852056,9.73696366 0.019852056,15.3835841 C0.019852056,23.1568336 6.32099059,29.4579721 14.09424,29.4579721 C21.8666498,29.4579721 28"
-".168628,23.1564137 28.168628,15.3835841 C28.168628,9.73564418 24.810092,4.70305802 19.7231076,2.4807673 Z\" id=\"Path\"></path>\n"
+".168628,23.1564137 28.168628,15.3835841 C28.168628,9.73564418 24.810092,4.70305802 19.7231076,2.4807673 Z\" id=\"Path\"></path>\r\n"
 "                            <path d=\"M14.0937003,14.074388 C14.8003375,14.074388 15.3731683,13.5015572 15.3731683,12.79492 L15.3731683,1.27952798 C15.3732282,0.572830776 14.8003375,-1.42051704e-13 14.0937003,-1.42051704e-13 C13.387063,-1.42051704e-1"
-"3 12.8142323,0.572830776 12.8142323,1.27946801 L12.8142323,12.79486 C12.8142323,13.5014972 13.387063,14.074388 14.0937003,14.074388 Z\" id=\"Path\"></path>\n"
-"                        </g>\n"
-"                    </g>\n"
-"                </g>\n"
-"            </g>\n"
-"        </g>\n"
-"    </g>\n"
+"3 12.8142323,0.572830776 12.8142323,1.27946801 L12.8142323,12.79486 C12.8142323,13.5014972 13.387063,14.074388 14.0937003,14.074388 Z\" id=\"Path\"></path>\r\n"
+"                        </g>\r\n"
+"                    </g>\r\n"
+"                </g>\r\n"
+"            </g>\r\n"
+"        </g>\r\n"
+"    </g>\r\n"
 "</svg>";
 
 const char* power_off_svg = (const char*) temp_binary_data_25;
 
 //================== power_on.svg ==================
 static const unsigned char temp_binary_data_26[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<svg width=\"30px\" height=\"31px\" viewBox=\"0 0 30 31\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
-"    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->\n"
-"    <title>switch</title>\n"
-"    <desc>Created with Sketch.</desc>\n"
-"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n"
-"        <g id=\"FXS-WEB-HOME-DARK_r02_lighter\" transform=\"translate(-1182.000000, -419.000000)\" fill=\"#E63462\" fill-rule=\"nonzero\">\n"
-"            <g id=\"Top\">\n"
-"                <g id=\"Group-3-Copy-5\" transform=\"translate(948.000000, 245.000000)\">\n"
-"                    <g id=\"Group\" transform=\"translate(168.682500, 108.706500)\">\n"
-"                        <g id=\"switch\" transform=\"translate(66.223500, 66.223500)\">\n"
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+"<svg width=\"30px\" height=\"31px\" viewBox=\"0 0 30 31\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
+"    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->\r\n"
+"    <title>switch</title>\r\n"
+"    <desc>Created with Sketch.</desc>\r\n"
+"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\r\n"
+"        <g id=\"FXS-WEB-HOME-DARK_r02_lighter\" transform=\"translate(-1182.000000, -419.000000)\" fill=\"#E63462\" fill-rule=\"nonzero\">\r\n"
+"            <g id=\"Top\">\r\n"
+"                <g id=\"Group-3-Copy-5\" transform=\"translate(948.000000, 245.000000)\">\r\n"
+"                    <g id=\"Group\" transform=\"translate(168.682500, 108.706500)\">\r\n"
+"                        <g id=\"switch\" transform=\"translate(66.223500, 66.223500)\">\r\n"
 "                            <path d=\"M19.7231076,2.4807673 C19.0755467,2.1978605 18.3212886,2.49348221 18.0383818,3.14104308 C17.755475,3.78860395 18.0510967,4.54286213 18.6986575,4.82576892 C22.8617117,6.64448114 25.6095721,10.7620135 25.6095721,15"
 ".3836441 C25.6095721,21.7431393 20.4533154,26.8990361 14.0941801,26.8990361 C7.73420508,26.8990361 2.57878807,21.7436191 2.57878807,15.3836441 C2.57878807,10.7630331 5.32568887,6.64550074 9.48754346,4.82558899 C10.1349844,4.54250227 10.4303662,3.7881"
 "2414 10.1472195,3.14068322 C9.86413277,2.4932423 9.10975464,2.1978605 8.46231372,2.4810072 C3.37700866,4.7046174 0.019852056,9.73696366 0.019852056,15.3835841 C0.019852056,23.1568336 6.32099059,29.4579721 14.09424,29.4579721 C21.8666498,29.4579721 28"
-".168628,23.1564137 28.168628,15.3835841 C28.168628,9.73564418 24.810092,4.70305802 19.7231076,2.4807673 Z\" id=\"Path\"></path>\n"
+".168628,23.1564137 28.168628,15.3835841 C28.168628,9.73564418 24.810092,4.70305802 19.7231076,2.4807673 Z\" id=\"Path\"></path>\r\n"
 "                            <path d=\"M14.0937003,14.074388 C14.8003375,14.074388 15.3731683,13.5015572 15.3731683,12.79492 L15.3731683,1.27952798 C15.3732282,0.572830776 14.8003375,-1.42051704e-13 14.0937003,-1.42051704e-13 C13.387063,-1.42051704e-1"
-"3 12.8142323,0.572830776 12.8142323,1.27946801 L12.8142323,12.79486 C12.8142323,13.5014972 13.387063,14.074388 14.0937003,14.074388 Z\" id=\"Path\"></path>\n"
-"                        </g>\n"
-"                    </g>\n"
-"                </g>\n"
-"            </g>\n"
-"        </g>\n"
-"    </g>\n"
+"3 12.8142323,0.572830776 12.8142323,1.27946801 L12.8142323,12.79486 C12.8142323,13.5014972 13.387063,14.074388 14.0937003,14.074388 Z\" id=\"Path\"></path>\r\n"
+"                        </g>\r\n"
+"                    </g>\r\n"
+"                </g>\r\n"
+"            </g>\r\n"
+"        </g>\r\n"
+"    </g>\r\n"
 "</svg>";
 
 const char* power_on_svg = (const char*) temp_binary_data_26;
@@ -7213,8 +7213,8 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
         case 0xa297de01:  numBytes = 669; return menu_hover_svg;
         case 0xe34ab543:  numBytes = 951; return minimize_svg;
         case 0xfa21cc80:  numBytes = 963; return minimize_hover_svg;
-        case 0x7d57a65a:  numBytes = 2199; return power_off_svg;
-        case 0xa160287e:  numBytes = 2199; return power_on_svg;
+        case 0x7d57a65a:  numBytes = 2218; return power_off_svg;
+        case 0xa160287e:  numBytes = 2218; return power_on_svg;
         case 0xf5c2c68b:  numBytes = 1252; return question_svg;
         case 0x1fdee048:  numBytes = 1396; return settings_svg;
         case 0x9eeab69d:  numBytes = 4894; return Slider_Thumb_svg;

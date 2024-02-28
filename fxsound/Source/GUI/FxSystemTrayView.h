@@ -36,6 +36,7 @@ public:
     ~FxSystemTrayView();
 
 	void modelChanged(FxModel::Event model_event) override;
+	void setStatus(bool power, bool processing);
 
 private:
 	static constexpr int MENU_ID_OPEN = 1;
@@ -52,7 +53,6 @@ private:
 
 	void showContextMenu();
 	void showNotification();	
-	void setTooltip(wchar_t* tooltip);
 
 	bool custom_notification_;
 	FxNotification notification_;

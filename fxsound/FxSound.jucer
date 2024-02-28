@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.1.20.0"
+<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.1.21.0"
               displaySplashScreen="1" jucerFormatVersion="1" companyName="FxSound LLC"
-              companyWebsite="https://www.fxsound.com" companyCopyright="2023 FxSound&#8482;"
-              defines="UNICODE">
+              companyWebsite="https://www.fxsound.com" companyCopyright="2024 FxSound&#8482;"
+              defines="UNICODE" postExportShellCommandWin="type %%1%%\Project\status_icons.rc &gt;&gt; %%1%%\Project\resources.rc">
   <MAINGROUP id="fy4sG5" name="FxSound">
     <GROUP id="{9737D476-EEC4-7E5E-0B04-48E2783CC448}" name="Fonts">
       <FILE id="Z6Zv1m" name="Gilroy-Bold.ttf" compile="0" resource="1" file="Fonts/Gilroy-Bold.ttf"/>

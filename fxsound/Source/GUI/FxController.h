@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class FxMainWindow;
 class FxWindow;
+class FxSystemTrayView;
 
 enum ViewType { Lite = 1, Pro = 2 };
 
@@ -52,7 +53,7 @@ public:
 	void operator=(FxController&) = delete;
 
     void config(const String& commandline);
-	void init(FxMainWindow* main_window, AudioPassthru* audio_passthru);
+	void init(FxMainWindow* main_window, FxSystemTrayView* system_tray_view, AudioPassthru* audio_passthru);
 	void initPresets();
 
 	void showView();
@@ -181,6 +182,7 @@ private:
 	bool hotkeys_registered_;
 
 	FxMainWindow* main_window_;
+	FxSystemTrayView* system_tray_view_;
 	AudioPassthru* audio_passthru_;
 	DfxDsp dfx_dsp_;
 	FxSound::Settings settings_;

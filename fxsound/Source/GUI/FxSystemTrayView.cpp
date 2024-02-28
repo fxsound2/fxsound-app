@@ -53,7 +53,7 @@ FxSystemTrayView::FxSystemTrayView()
     nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE | NIF_SHOWTIP | NIF_GUID;
     nid.guidItem = trayIconGuid_;
     nid.uCallbackMessage = WMAPP_FXTRAYICON;
-    nid.hIcon = LoadIcon(hInst, L"IDI_ICON1");
+    nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_WHITE");
     nid.hWnd = hWnd;
     lstrcpy(nid.szTip, L"FxSound");
     Shell_NotifyIcon(NIM_ADD, &nid);
@@ -86,13 +86,45 @@ void FxSystemTrayView::modelChanged(FxModel::Event model_event)
     {
         showNotification();
     }
+}
 
-    String param = FxModel::getModel().getPowerState() ? TRANS(L"on") : TRANS(L"off");
+void FxSystemTrayView::setStatus(bool power, bool processing)
+{
+    HINSTANCE hInst = GetModuleHandle(NULL);
 
-    wchar_t buffer[1024];
-    swprintf_s(buffer, String(TRANS("FxSound is %s.")).toWideCharPointer(), param.toWideCharPointer());
-    
-    setTooltip(buffer);    
+    String param = power ? TRANS(L"on") : TRANS(L"off");
+
+    wchar_t tool_tip[1024];
+    swprintf_s(tool_tip, String(TRANS("FxSound is %s.")).toWideCharPointer(), param.toWideCharPointer());
+
+    NOTIFYICONDATA nid = { sizeof(nid) };
+
+    nid.uFlags = NIF_ICON | NIF_TIP | NIF_SHOWTIP | NIF_GUID;
+    nid.guidItem = trayIconGuid_;
+    if (power)
+    {
+        if (processing)
+        {
+            nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_RED");
+        }
+        else
+        {
+            nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_WHITE");
+        }
+    }
+    else
+    {
+        nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_GRAY");
+    }
+
+    if (nid.hIcon == NULL)
+    {
+        return;
+    }
+
+    lstrcpy(nid.szTip, tool_tip);
+
+    Shell_NotifyIcon(NIM_MODIFY, &nid);
 }
 
 void FxSystemTrayView::showContextMenu()
@@ -285,17 +317,6 @@ void FxSystemTrayView::showNotification()
             Shell_NotifyIcon(NIM_MODIFY, &nid);
         }
     }
-}
-
-void FxSystemTrayView::setTooltip(wchar_t* tooltip)
-{
-    NOTIFYICONDATA nid = {sizeof(nid)};
-
-    nid.uFlags = NIF_TIP | NIF_SHOWTIP | NIF_GUID;
-    nid.guidItem = trayIconGuid_;
-    lstrcpy(nid.szTip, tooltip);
-
-    Shell_NotifyIcon(NIM_MODIFY, &nid);
 }
 
 LRESULT CALLBACK FxSystemTrayView::wndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
