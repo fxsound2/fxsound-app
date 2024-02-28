@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROPERTIES>
+  <VALUE name="power" val="1"/>
+  <VALUE name="hotkeys" val="1"/>
+  <VALUE name="preset" val="General"/>
+  <VALUE name="cmd_on_off" val="393297"/>
+  <VALUE name="cmd_open_close" val="393285"/>
+  <VALUE name="cmd_next_preset" val="393281"/>
+  <VALUE name="cmd_previous_preset" val="393306"/>
+  <VALUE name="cmd_change_output" val="393303"/>
+</PROPERTIES>

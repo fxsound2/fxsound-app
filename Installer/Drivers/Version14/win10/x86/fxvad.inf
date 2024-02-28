@@ -1,0 +1,164 @@
+;
+;fxvad.inf
+;
+
+[Version]
+Signature="$CHICAGO$"
+Class=MEDIA
+Provider=%FXMN%
+ClassGUID={4d36e96c-e325-11ce-bfc1-08002be10318}
+DriverVer = 03/17/2021,14.1.0.0
+CatalogFile.NTx86=fxvadNTx86.cat
+CatalogFile.NTAMD64=fxvadNTAMD64.cat
+PnpLockDown=1
+
+[Manufacturer]
+%MfgName%=DFX,NTamd64,NTx86
+
+[DFX.NTx86]
+%DFX_Device.DeviceDesc%=DFX_Device,Root\%DEV_NAME%,*%DEV_NAME%
+
+[DFX.NTamd64]
+%DFX_Device.DeviceDesc%=DFX_Device,Root\%DEV_NAME%,*%DEV_NAME%
+
+;-----------------------------------------------------------------------------
+;
+; 2k+ Installation
+;
+;-----------------------------------------------------------------------------
+[DFX_Device.NT]
+Include=ks.inf,wdmaudio.inf
+Needs=KS.Registration, WDMAUDIO.Registration
+CopyFiles=DFX_Device.CopyList
+AddReg=DFX_Device.AddReg
+AddProperty=DFX_1AddPropertySection
+
+[DFX_Device.NT.Interfaces]
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Wave%,DFX_Device.I.Wave
+AddInterface=%KSCATEGORY_RENDER%,%KSNAME_Wave%,DFX_Device.I.Wave
+;AddInterface=%KSCATEGORY_CAPTURE%,%KSNAME_Wave%,DFX_Device.I.Wave
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Topology%,DFX_Device.I.Topo
+
+[DFX_Device.NT.Services]
+AddService=%DEV_NAME%,0x00000002,DFX_Device_Service_Inst
+
+[DFX_Device_Service_Inst]
+DisplayName=%DFX_Device.SvcDesc%
+ServiceType=1
+StartType=3
+ErrorControl=1
+ServiceBinary=%10%\system32\drivers\fxvad.sys
+;-----------------------------------------------------------------------------
+;
+; Common registry data
+;
+;-----------------------------------------------------------------------------
+[DFX_Device.AddReg]
+HKR,,AssociatedFilters,,"wdmaud,swmidi,redbook"
+HKR,,Driver,,fxvad.sys
+HKR,Drivers,SubClasses,,"wave,midi,mixer"
+
+HKR,Drivers\wave\wdmaud.drv,Driver,,wdmaud.drv
+HKR,Drivers\midi\wdmaud.drv,Driver,,wdmaud.drv
+HKR,Drivers\mixer\wdmaud.drv,Driver,,wdmaud.drv
+
+HKR,Drivers\wave\wdmaud.drv,Description,,%DFX_Device.DeviceDesc%
+HKR,Drivers\midi\wdmaud.drv,Description,,%DFX_Device_MIDI%
+HKR,Drivers\mixer\wdmaud.drv,Description,,%DFX_Device.DeviceDesc%
+
+HKLM,%MediaCategories%\%GUID.DSPEAKERS%,Name,,%Name.DSPEAKERS%
+
+[DFX_Device.I.Wave]
+AddReg=DFX_Device.I.Wave.AddReg
+
+[DFX_Device.I.Wave.AddReg]
+HKR,,CLSID,,%Proxy.CLSID%
+HKR,,FriendlyName,,%DFX_Device.Wave.szPname%
+
+[DFX_Device.I.Topo]
+AddReg=DFX_Device.I.Topo.AddReg, OEMSettingsOverride.AddReg
+
+[DFX_Device.I.Topo.AddReg]
+HKR,,CLSID,,%Proxy.CLSID%
+HKR,,FriendlyName,,%DFX_Device.Topo.szPname%
+
+[DFX_1AddPropertySection]
+;PT added. Currently small icons are getting set but not the icons shown in sound panel.
+DeviceIcon,,,,%DFX_1_Icon_File%
+DeviceBrandingIcon,,,,%DFX_1_Icon_File%
+DeviceVendorWebSite,,,,"http://www.fxsound.com";
+
+;;
+;; All EP\\0 entries in the same grouping
+;;
+;; Set default format to 48kHz, 16-bit, Stereo
+;; Add endpoint extension property page
+;;
+[OEMSettingsOverride.AddReg]
+HKR,"EP\\0", %PKEY_AudioEndpoint_Association%,,%KSNODETYPE_SPEAKER%
+; Should set 48khz, 2 channel, 16 bits
+;HKR,"EP\\0", %PKEY_AudioEngine_OEMFormat%, 0x00000001, 41,00,00,00,28,00,00,00,FE,FF,02,00,80,BB,00,00,00,EE,02,00,04,00,10,00,16,00,10,00,03,00,00,00,01,00,00,00,00,00,10,00,80,00,00,AA,00,38,9B,71
+;HKR,"EP\\0", %PKEY_AudioEndpoint_ControlPanelProvider%,,%AUDIOENDPOINT_EXT_UI_CLSID%
+; Set icon and "friendly" name
+;HKR,"EP\\0", %PKEY_AudioEndpoint_NamePlus%,,%DFX_1_Device_Name%
+;HKR,"EP\\0", %PKEY_AudioEndpoint_IconPlus%,,%DFX_1_Icon_File%
+
+;-----------------------------------------------------------------------------
+;
+; Files
+;
+;-----------------------------------------------------------------------------
+[SourceDisksNames]
+222="FxSound Driver Disc","",222
+
+[SourceDisksFiles]
+fxvad.sys=222
+
+[SourceDisksFiles.x86]
+fxvad.sys=222
+
+[SourceDisksFiles.amd64]
+fxvad.sys=222
+
+[DestinationDirs]
+DFX_Device.CopyList=10,system32\drivers
+
+[DFX_Device.CopyList]
+fxvad.sys
+;======================================================
+;  Strings
+;======================================================
+[Strings]
+FXMN="FxSound"
+MfgName="FxSound"
+
+DEV_NAME="FXVAD"
+DFX_Device.DeviceDesc="FxSound Audio Enhancer"
+DFX_Device.SvcDesc="FxSound Audio Enhancer"
+
+DFX_1_Icon_File="%10%\fxvad.sys,-101"
+
+DFX_Device.Wave.szPname="FxSound Audio Enhancer"
+DFX_Device.Topo.szPname="FxSound Audio Enhancer Topology"
+DFX_Device_MIDI="FxSound Audio Enhancer -> Midi Device"
+
+Proxy.CLSID="{17CCA71B-ECD7-11D0-B908-00A0C9223196}"
+KSCATEGORY_AUDIO="{6994AD04-93EF-11D0-A3CC-00A0C9223196}"
+KSCATEGORY_RENDER="{65E8773E-8F56-11D0-A3B9-00A0C9223196}"
+KSCATEGORY_CAPTURE="{65E8773D-8F56-11D0-A3B9-00A0C9223196}"
+
+KSNAME_Wave="FxSound Wave"
+KSNAME_Topology="FxSound Topology"
+
+GUID.DSPEAKERS="{6518B5E9-772E-48E2-B110-1752F65934E8}"
+Name.DSPEAKERS="FxSound Speakers"
+MediaCategories="SYSTEM\CurrentControlSet\Control\MediaCategories"
+
+REG_BINARY="0x00000001"
+KSNODETYPE_SPEAKER  = "{DFF21CE1-F70F-11D0-B917-00A0C9223196}"
+PKEY_AudioEndpoint_ControlPanelProvider = "{1DA5D803-D492-4EDD-8C23-E0C0FFEE7F0E},1"
+PKEY_AudioEndpoint_Association          = "{1DA5D803-D492-4EDD-8C23-E0C0FFEE7F0E},2"
+PKEY_AudioEngine_OEMFormat              = "{E4870E26-3CC5-4CD2-BA46-CA0A9A70ED04},3"
+
+AUDIOENDPOINT_EXT_UI_CLSID = "{6C57B2A2-91F5-4b90-93D5-FAB82485ECA6}"
+;AUDIOENDPOINT_EXT_UI_CLSID = "{31A53A7B-E0D8-4f99-B950-F6C8F25E6731}"
