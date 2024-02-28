@@ -30,30 +30,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class FxMessage : public FxWindow
 {
 public:
-	FxMessage(String title, String message);
+	FxMessage(String message, const std::pair<String, String>& link);
 	~FxMessage() = default;
 
+    bool keyPressed(const KeyPress& key) override;
+
 	void closeButtonPressed() override;
+
+
+    static void showMessage(String message, const std::pair<String, String>& link);
 
 private:
 	class MessageComponent : public Component
 	{
 	public:
-		MessageComponent(String title, String message);
+		MessageComponent(String message, const std::pair<String, String>& link);
 		~MessageComponent() = default;
 
 		void resized() override;
 
 	private:
-		static constexpr int WIDTH = 400;
-		static constexpr int HEIGHT = 228;
-		static constexpr int TITLE_HEIGHT = 30;
-		static constexpr int MESSAGE_HEIGHT = (24 + 2) * 4;
+		static constexpr int WIDTH = 300;
+		static constexpr int HEIGHT = 80;
+		static constexpr int MESSAGE_HEIGHT = (24 + 2);
 		static constexpr int HYPERLINK_HEIGHT = 24;
 
-		Label title_;
 		Label message_;
-		FxHyperlink subscribe_link_;
+		FxHyperlink link_;
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MessageComponent)
 	};

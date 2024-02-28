@@ -19,12 +19,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxMessage.h"
 #include "FxModel.h"
 
-FxMessage::FxMessage(String title, String message) : message_content_(title, message)
+FxMessage::FxMessage(String message, const std::pair<String, String>& link) : message_content_(message, link)
 {
 	setContent(&message_content_);
 	centreWithSize(getWidth(), getHeight());
 	addToDesktop(ComponentPeer::windowAppearsOnTaskbar);
 	toFront(true);
+	setAlwaysOnTop(true);
+}
+
+bool FxMessage::keyPressed(const KeyPress& key)
+{
+	if (key == KeyPress::escapeKey)
+	{
+		exitModalState(0);
+		removeFromDesktop();
+		return true;
+	}
+
+	return Component::keyPressed(key);
 }
 
 void FxMessage::closeButtonPressed()
@@ -33,26 +46,29 @@ void FxMessage::closeButtonPressed()
 	removeFromDesktop();
 }
 
-FxMessage::MessageComponent::MessageComponent(String title, String message)
+void FxMessage::showMessage(String message, const std::pair<String, String>& link)
+{
+	FxMessage message_window(TRANS("FxSound is now open-source"), { TRANS("GitHub"), "https://github.com/fxsound2/fxsound-app" });
+	message_window.runModalLoop();
+}
+
+FxMessage::MessageComponent::MessageComponent(String message, const std::pair<String, String>& link)
 {
 	auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
 
-	title_.setText(title, NotificationType::dontSendNotification);
-	title_.setFont(theme.getTitleFont().withHeight(TITLE_HEIGHT));
-	title_.setColour(Label::ColourIds::textColourId, theme.getCurrentColourScheme().getUIColour(LookAndFeel_V4::ColourScheme::highlightedText));
-	title_.setJustificationType(Justification::centredTop);
-	addAndMakeVisible(title_);
-
 	message_.setText(message, NotificationType::dontSendNotification);
 	message_.setFont(theme.getSmallFont().withHeight(17.0f));
-	message_.setJustificationType(Justification::topLeft);
+	message_.setJustificationType(Justification::centredTop);
 	addAndMakeVisible(message_);
 
-	subscribe_link_.setButtonText(TRANS("SUBSCRIBE NOW"));
-	subscribe_link_.setURL(URL(FxModel::SUBSCRIBE_URL));
-	subscribe_link_.setJustificationType(Justification::centredTop);
-	addAndMakeVisible(subscribe_link_);
-
+	if (link.first.isNotEmpty() && link.second.isNotEmpty())
+	{
+		link_.setButtonText(TRANS(link.first));
+		link_.setURL(URL(link.second));
+		link_.setJustificationType(Justification::centredTop);
+		addAndMakeVisible(link_);
+	}
+	
 	setSize(WIDTH, HEIGHT);
 }
 
@@ -65,15 +81,14 @@ void FxMessage::MessageComponent::resized()
 	RectanglePlacement placement(RectanglePlacement::xMid
 		| RectanglePlacement::yTop
 		| RectanglePlacement::doNotResize);
-
-	auto component_area = juce::Rectangle<int>(0, 0, bounds.getWidth(), TITLE_HEIGHT);
-	title_.setBounds(placement.appliedTo(component_area, bounds));
-
-	bounds.setTop(title_.getBottom() + 20);
-	component_area = juce::Rectangle<int>(0, 0, bounds.getWidth(), MESSAGE_HEIGHT);
+	
+	auto component_area = juce::Rectangle<int>(0, 0, bounds.getWidth(), MESSAGE_HEIGHT);
 	message_.setBounds(placement.appliedTo(component_area, bounds));
 
-	bounds.setTop(message_.getBottom() + 20);
-	component_area = juce::Rectangle<int>(0, 0, bounds.getWidth(), HYPERLINK_HEIGHT);
-	subscribe_link_.setBounds(placement.appliedTo(component_area, bounds));
+	if (link_.getButtonText().isNotEmpty())
+	{
+		bounds.setTop(message_.getBottom() + 10);
+		component_area = juce::Rectangle<int>(0, 0, bounds.getWidth(), HYPERLINK_HEIGHT);
+		link_.setBounds(placement.appliedTo(component_area, bounds));
+	}	
 }
