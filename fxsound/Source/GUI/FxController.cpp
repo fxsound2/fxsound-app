@@ -352,6 +352,8 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
         {
             hideMainWindow();
         }
+
+		main_window_->setIcon(FxModel::getModel().getPowerState(), false);
 	}
 }
 
@@ -520,8 +522,8 @@ void FxController::setPowerState(bool power_state)
 	dfx_dsp_.powerOn(power_state);
 	settings_.setBool("power", power_state);
 
-	system_tray_view_->setStatus(power_state, false);
-	main_window_->setIcon(power_state, false);
+	system_tray_view_->setStatus(power_state, audio_process_on_);
+	main_window_->setIcon(power_state, audio_process_on_);
 }
 
 bool FxController::setPreset(int selected_preset)
@@ -1223,11 +1225,12 @@ void FxController::timerCallback()
 		audio_process_on_counter_ = 0;
 	}
 
+	auto power = FxModel::getModel().getPowerState();
 	if (audio_process_on_counter_ == 5 && !audio_process_on_)
 	{
 		audio_process_on_ = true;
-		system_tray_view_->setStatus(true, true);
-		main_window_->setIcon(true, true);
+		system_tray_view_->setStatus(power, true);
+		main_window_->setIcon(power, true);
 		main_window_->startLogoAnimation();
         if (view_ == ViewType::Pro)
         {
@@ -1238,8 +1241,8 @@ void FxController::timerCallback()
 	if (audio_process_off_counter_ == 5 && audio_process_on_)
 	{
 		audio_process_on_ = false;
-		system_tray_view_->setStatus(true, false);
-		main_window_->setIcon(true, false);
+		system_tray_view_->setStatus(power, false);
+		main_window_->setIcon(power, false);
 		main_window_->stopLogoAnimation();
         if (view_ == ViewType::Pro)
         {

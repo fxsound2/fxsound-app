@@ -53,7 +53,14 @@ FxSystemTrayView::FxSystemTrayView()
     nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE | NIF_SHOWTIP | NIF_GUID;
     nid.guidItem = trayIconGuid_;
     nid.uCallbackMessage = WMAPP_FXTRAYICON;
-    nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_WHITE");
+    if (FxModel::getModel().getPowerState())
+    {
+        nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_WHITE");
+    }
+    else
+    {
+        nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_GRAY");
+    }
     nid.hWnd = hWnd;
     lstrcpy(nid.szTip, L"FxSound");
     Shell_NotifyIcon(NIM_ADD, &nid);
