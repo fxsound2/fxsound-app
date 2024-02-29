@@ -49,8 +49,10 @@ public:
 private:
 	static constexpr int HOTKEY_LABEL_WIDTH = 170;
 
-	void resized();
+	void resized() override;
+	void paint(Graphics& g) override;
 
+	String name_;
 	Label label_;
 	FxHotkeyEditor hotkey_editor_;
 };

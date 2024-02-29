@@ -185,8 +185,8 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 							  String(L"\u65e5\u672c\u8a9e"), String(L"Fran\u00e7ais"), String(L"Italiano"), String(L"Deutsche"), String(L"Polskie"), String(L"Magyar"), String(L"\u0e41\u0e1a\u0e1a\u0e44\u0e17\u0e22"), 
 							  String(L"Nederlands"), String(L"\u65e5\u672c\u8a9e"), String(L"\u0639\u0631\u0628\u064a")};
 	StringArray hotKeySettingsKeys = { FxController::HK_CMD_ON_OFF, FxController::HK_CMD_OPEN_CLOSE, FxController::HK_CMD_NEXT_PRESET, FxController::HK_CMD_PREVIOUS_PRESET, FxController::HK_CMD_NEXT_OUTPUT };
-	StringArray hotkey_names = { TRANS("Turn FxSound On/Off"), TRANS("Open/Close FxSound"),
-								   TRANS("Use Next Preset"), TRANS("Use Previous Preset"), TRANS("Change Playback Device")};
+	StringArray hotkey_names = { "Turn FxSound On/Off", "Open/Close FxSound",
+								   "Use Next Preset", "Use Previous Preset", "Change Playback Device"};
 
 	setFocusContainer(true);
 

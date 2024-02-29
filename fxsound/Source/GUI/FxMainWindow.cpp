@@ -245,7 +245,7 @@ FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"men
 
 	auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
 	donate_button_.setMouseCursor(MouseCursor::PointingHandCursor);
-	donate_button_.setButtonText(TRANS("Donate"));
+	donate_button_.setName(L"Donate");
 	donate_button_.setSize(DONATE_BUTTON_WIDTH, DONATE_BUTTON_HEIGHT);
 	donate_button_.onClick = [this]() {
 		URL url("https://www.paypal.com/donate/?hosted_button_id=JVNQGYXCQ2GPG");

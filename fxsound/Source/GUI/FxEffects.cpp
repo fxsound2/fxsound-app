@@ -162,7 +162,7 @@ void FxEffects::FxEffectSlider::resized()
 {
 	Slider::resized();
 
-	value_label_.setBounds(0, (getHeight() - LABEL_HEIGHT) / 2, FxTheme::SLIDER_THUMB_RADIUS * 3, LABEL_HEIGHT);
+	value_label_.setBounds(value_label_.getX(), (getHeight() - LABEL_HEIGHT) / 2, FxTheme::SLIDER_THUMB_RADIUS * 3, LABEL_HEIGHT);
 }
 
 void FxEffects::FxEffectSlider::valueChanged()
