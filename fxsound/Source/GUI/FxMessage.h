@@ -50,7 +50,7 @@ private:
 		void resized() override;
 
 	private:
-		static constexpr int WIDTH = 300;
+		static constexpr int WIDTH = 400;
 		static constexpr int HEIGHT = 80;
 		static constexpr int MESSAGE_HEIGHT = (24 + 2);
 		static constexpr int HYPERLINK_HEIGHT = 24;

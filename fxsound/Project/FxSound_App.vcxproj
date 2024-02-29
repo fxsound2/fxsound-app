@@ -2124,6 +2124,7 @@
     <None Include="..\..\Strings\Strings\fxsound.hu.txt" />
     <None Include="..\..\Strings\Strings\FxSound.id.txt" />
     <None Include="..\..\Strings\Strings\FxSound.it.txt" />
+    <None Include="..\..\Strings\Strings\FxSound.ja.txt" />
     <None Include="..\..\Strings\Strings\FxSound.ko.txt" />
     <None Include="..\..\Strings\Strings\FxSound.nl.txt" />
     <None Include="..\..\Strings\Strings\FxSound.pl.txt" />

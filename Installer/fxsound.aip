@@ -17,6 +17,7 @@
     <ROW Property="ARPNOREPAIR" MultiBuildValue="DefaultBuild:1"/>
     <ROW Property="ARPURLINFOABOUT" Value="https://forum.fxsound.com"/>
     <ROW Property="ARPURLUPDATEINFO" Value="https://www.fxsound.com/changelog"/>
+    <ROW Property="AiFeatIcoMainFeature" Value="fxsound.exe" Type="8"/>
     <ROW Property="AiSkipExitDlg" Value="1"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="DFX_VERSION" Value="12.0.0.0"/>
@@ -167,6 +168,12 @@
     <ROW File="NotoSansThaiMedium.ttf" Component_="NotoSansThaiMedium.ttf" FileName="NOTOSA~1.TTF|NotoSansThai-Medium.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansThai-Medium.ttf" SelfReg="false"/>
     <ROW File="NotoSansThaiRegular.ttf" Component_="NotoSansThaiMedium.ttf" FileName="NOTOSA~2.TTF|NotoSansThai-Regular.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansThai-Regular.ttf" SelfReg="false"/>
     <ROW File="Default.fac" Component_="Default.fac" FileName="Default.fac" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\Factsoft\Default.fac" SelfReg="false"/>
+    <ROW File="NotoSansArabicBold.ttf" Component_="NotoSansThaiMedium.ttf" FileName="NOTOSA~3.TTF|NotoSansArabic-Bold.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansArabic-Bold.ttf" SelfReg="false"/>
+    <ROW File="NotoSansArabicMedium.ttf" Component_="NotoSansThaiMedium.ttf" FileName="NOTOSA~4.TTF|NotoSansArabic-Medium.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansArabic-Medium.ttf" SelfReg="false"/>
+    <ROW File="NotoSansArabicRegular.ttf" Component_="NotoSansThaiMedium.ttf" FileName="NOTOSA~5.TTF|NotoSansArabic-Regular.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansArabic-Regular.ttf" SelfReg="false"/>
+    <ROW File="NotoSansJPBold.ttf" Component_="NotoSansThaiMedium.ttf" FileName="NOTOSA~6.TTF|NotoSansJP-Bold.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansJP-Bold.ttf" SelfReg="false"/>
+    <ROW File="NotoSansJPMedium.ttf" Component_="NotoSansThaiMedium.ttf" FileName="NOTOSA~7.TTF|NotoSansJP-Medium.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansJP-Medium.ttf" SelfReg="false"/>
+    <ROW File="NotoSansJPRegular.ttf" Component_="NotoSansThaiMedium.ttf" FileName="NOTOSA~8.TTF|NotoSansJP-Regular.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansJP-Regular.ttf" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BootstrOptComponent">
     <ROW BootstrOptKey="GlobalOptions" GeneralOptions="b" DownloadFolder="[AppDataFolder][|Manufacturer]\[|ProductName]\prerequisites" Options="2"/>
@@ -179,7 +186,7 @@
     <ROW Path="&lt;AI_DICTS&gt;ui_en.ail"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.DigCertStoreComponent">
-    <ROW TimeStampUrl="http://timestamp.digicert.com" SignerDescription="[|ProductName]" SignOptions="0" SignTool="0" SignDelay="500" UseSha256="1" Thumbprint="913a9cb96d6560245dec2055995cef6441ea4b9f Subject: FxSound, LLC&#10;Issuer: DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1&#10;Valid from 05/09/2023 to 05/09/2024&#10;User\MY" Subject="CN=&quot;FxSound, LLC&quot;, O=&quot;FxSound, LLC&quot;, L=Mill Valley, S=California, C=US, SERIALNUMBER=201721910237, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=California, OID.1.3.6.1.4.1.311.60.2.1.3=US"/>
+    <ROW TimeStampUrl="http://timestamp.digicert.com" SignerDescription="[|ProductName]" SignOptions="7" SignTool="0" SignDelay="500" UseSha256="1" Thumbprint="913a9cb96d6560245dec2055995cef6441ea4b9f Subject: FxSound, LLC&#10;Issuer: DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1&#10;Valid from 05/09/2023 to 05/09/2024&#10;User\MY" Subject="CN=&quot;FxSound, LLC&quot;, O=&quot;FxSound, LLC&quot;, L=Mill Valley, S=California, C=US, SERIALNUMBER=201721910237, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=California, OID.1.3.6.1.4.1.311.60.2.1.3=US"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.DynamicPropertyComponent">
     <ROW Property="ProductVersion" Type="2" SourcePath="FxSound.exe"/>

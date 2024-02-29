@@ -353,7 +353,9 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
             hideMainWindow();
         }
 
-		main_window_->setIcon(FxModel::getModel().getPowerState(), false);
+		auto power = FxModel::getModel().getPowerState();
+		main_window_->setIcon(power, false);
+		system_tray_view_->setStatus(power, false);
 	}
 }
 
@@ -1509,6 +1511,14 @@ void FxController::setLanguage(String language_code)
 	{
 		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_nl_txt, BinaryData::FxSound_nl_txtSize), false));
 	}
+	else if (language_.startsWithIgnoreCase("ja"))
+	{
+		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ja_txt, BinaryData::FxSound_ja_txtSize), false));
+	}
+	else if (language_.startsWithIgnoreCase("ar"))
+	{
+		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ar_txt, BinaryData::FxSound_ar_txtSize), false));
+	}
 
     auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
     theme.loadFont(language_);
@@ -1596,7 +1606,14 @@ String FxController::getLanguageName(String language_code) const
 	{
 		return L"Nederlands";
 	}
-
+	else if (language_code.startsWithIgnoreCase("ja"))
+	{
+		return L"\u65e5\u672c\u8a9e";
+	}
+	else if (language_code.startsWithIgnoreCase("ar"))
+	{
+		return L"\u0639\u0631\u0628\u064a";
+	}
 
     return "English";
 }
