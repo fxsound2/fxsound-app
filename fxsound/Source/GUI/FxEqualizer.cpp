@@ -352,7 +352,7 @@ void FxEqualizer::FxEqSlider::enablementChanged()
 void FxEqualizer::FxEqSlider::resized()
 {
     Slider::resized();
-    gain_label_.setBounds(0, 0, getWidth(), LABEL_HEIGHT);
+    gain_label_.setBounds(gain_label_.getX(), gain_label_.getY(), getWidth(), LABEL_HEIGHT);
 }
 
 void FxEqualizer::FxEqSlider::valueChanged()

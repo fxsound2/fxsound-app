@@ -239,6 +239,18 @@ void FxWindow::TitleBar::addToolbarButton(Button* toolbarButton)
 {
 	if (toolbarButton != nullptr)
 	{
+		// If translated text is added to the text button in the toolbar, it doesn't change on language change
+		// So, the text button is added to the toolbar with button name in English and then button text is translated from button name
+		// On repaint, the translated button text is updated
+		if (TextButton* text_button = dynamic_cast<TextButton*>(toolbarButton))
+		{
+			auto& text = text_button->getName();
+			if (text.isNotEmpty())
+			{
+				text_button->setButtonText(TRANS(text));
+			}
+		}
+
 		if (!getWantsKeyboardFocus())
 		{
 			setWantsKeyboardFocus(true);
@@ -258,6 +270,18 @@ void FxWindow::TitleBar::paint(Graphics& g)
     auto font = theme.getNormalFont();
     title_.setFont(font);
     title_.setSize(font.getStringWidth(TRANS(name_)) * 2, (int)font.getHeight());
+
+	for (auto* button : toolbar_buttons_)
+	{
+		if (TextButton* text_button = dynamic_cast<TextButton*>(button))
+		{
+			auto& text = text_button->getName();
+			if (text.isNotEmpty())
+			{
+				text_button->setButtonText(TRANS(text));
+			}
+		}
+	}
 }
 
 void FxWindow::TitleBar::resized()

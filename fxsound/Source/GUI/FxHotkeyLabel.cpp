@@ -19,13 +19,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxController.h"
 #include "FxTheme.h"
 
-FxHotkeyLabel::FxHotkeyLabel(const String& name, const String& command) : hotkey_editor_(command)
+FxHotkeyLabel::FxHotkeyLabel(const String& name, const String& command) : name_(name), hotkey_editor_(command)
 {
 	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
 
 	label_.setJustificationType(Justification::topLeft);
 	label_.setFont(theme.getSmallFont());
-	label_.setText(name, NotificationType::dontSendNotification);
+	label_.setText(TRANS(name_), NotificationType::dontSendNotification);
 
 	addAndMakeVisible(label_);
 	addAndMakeVisible(hotkey_editor_);
@@ -40,6 +40,17 @@ void FxHotkeyLabel::resized()
 	editor_bounds.setX(label_.getRight());
 	editor_bounds.setY(label_.getY());
 	hotkey_editor_.setBounds(editor_bounds);
+}
+
+void FxHotkeyLabel::paint(Graphics& g)
+{
+	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
+
+	label_.setJustificationType(Justification::topLeft);
+	label_.setFont(theme.getSmallFont());
+	label_.setText(TRANS(name_), NotificationType::dontSendNotification);
+
+	Component::paint(g);
 }
 
 FxHotkeyEditor::FxHotkeyEditor(const String& command)
