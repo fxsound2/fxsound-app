@@ -1,0 +1,14 @@
+version 1.1.21.0
+----------------
+
+1. Arabic and Japanese language support added
+2. zero processing Default preset added
+3. Notifications on/off settings on Windows 10 now remain unchanged after reboot/relogin
+4. Hotkeys which conflict with any valid character typing shortcuts are not enabled
+5. Default hotkey combinations are modified to Ctrl+Shift+key
+6. Maximum user defined preset limit is increased to 20 by default
+7. User defined preset limit can be configured in the FxSound.settings file by adding the value for <max_user_presets> which can be in the range of 10 to 100
+8. Hotkey options now available to switch to next and previous preset
+9. Settings dialog, Import presets dialog and Export presets dialog can be closed with ESC key
+10. System tray icon changes according to FxSound status on/off/processing
+11. open-source annoucement displayed on first launch after installation
