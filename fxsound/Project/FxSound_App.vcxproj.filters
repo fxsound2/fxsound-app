@@ -3295,6 +3295,9 @@
     <None Include="..\..\Strings\Strings\FxSound.it.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
+    <None Include="..\..\Strings\Strings\FxSound.ja.txt">
+      <Filter>FxSound\Strings</Filter>
+    </None>
     <None Include="..\..\Strings\Strings\FxSound.ko.txt">
       <Filter>FxSound\Strings</Filter>
     </None>

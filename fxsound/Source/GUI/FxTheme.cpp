@@ -336,13 +336,25 @@ void FxTheme::loadFont(String language)
         font_600_ = loadTypeface("MontserratAlternates-Medium.ttf");
         font_700_ = loadTypeface("MontserratAlternates-Bold.ttf");
     }
+	else if (language.startsWithIgnoreCase("ja"))
+	{
+		font_400_ = loadTypeface("NotoSansJP-Regular.ttf");
+		font_600_ = loadTypeface("NotoSansJP-Medium.ttf");
+		font_700_ = loadTypeface("NotoSansJP-Bold.ttf");
+	}
+	else if (language.startsWithIgnoreCase("ar"))
+	{
+		font_400_ = loadTypeface("NotoSansArabic-Regular.ttf");
+		font_600_ = loadTypeface("NotoSansArabic-Medium.ttf");
+		font_700_ = loadTypeface("NotoSansArabic-Bold.ttf");
+	}
     else
     {
         font_400_ = Typeface::createSystemTypefaceFor(BinaryData::GilroyRegular_ttf, BinaryData::GilroyRegular_ttfSize);
         font_600_ = Typeface::createSystemTypefaceFor(BinaryData::GilroySemibold_ttf, BinaryData::GilroySemibold_ttfSize);
         font_700_ = Typeface::createSystemTypefaceFor(BinaryData::GilroyBold_ttf, BinaryData::GilroyBold_ttfSize);
     }
-
+	
     if (font_400_ == nullptr)
     {
         font_400_ = Typeface::createSystemTypefaceFor(BinaryData::GilroyRegular_ttf, BinaryData::GilroyRegular_ttfSize);
