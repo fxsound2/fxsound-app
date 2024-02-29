@@ -344,9 +344,9 @@ void FxTheme::loadFont(String language)
 	}
 	else if (language.startsWithIgnoreCase("ar"))
 	{
-		font_400_ = loadTypeface("NotoSansArabic-Regular.ttf");
-		font_600_ = loadTypeface("NotoSansArabic-Medium.ttf");
-		font_700_ = loadTypeface("NotoSansArabic-Bold.ttf");
+		font_400_ = loadTypeface("IBMPlexSansArabic-Regular.ttf");
+		font_600_ = loadTypeface("IBMPlexSansArabic-Medium.ttf");
+		font_700_ = loadTypeface("IBMPlexSansArabic-Bold.ttf");
 	}
     else
     {
