@@ -254,15 +254,20 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 		reset_presets_button_.setEnabled(false);
 	};
 
-	addAndMakeVisible(&launch_toggle_);
-    addAndMakeVisible(&auto_select_output_toggle_);
-    addAndMakeVisible(&hide_help_tips_toggle_);
+  auto os = SystemStats::getOperatingSystemType();
+	if (os == SystemStats::OperatingSystemType::Windows7)
+	{
+		addAndMakeVisible(&launch_toggle_);
+	}
+	
+  addAndMakeVisible(&auto_select_output_toggle_);
+  addAndMakeVisible(&hide_help_tips_toggle_);
 	addAndMakeVisible(&hotkeys_toggle_);
 	addAndMakeVisible(&reset_presets_button_);
 	addAndMakeVisible(&language_switch_);
 	addChildComponent(&language_list_);
 
-    setText();
+  setText();
 }
 
 void FxSettingsDialog::GeneralSettingsPane::resized()
@@ -273,9 +278,12 @@ void FxSettingsDialog::GeneralSettingsPane::resized()
     language_switch_.setBounds(X_MARGIN, LANGUAGE_SWITCH_Y, FxLanguage::WIDTH, FxLanguage::HEIGHT);
 
     int y = language_switch_.getBottom() + 20;
-	launch_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
-
-	y = launch_toggle_.getBottom() + 20;
+	if (launch_toggle_.isVisible())
+	{
+		launch_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
+		y = launch_toggle_.getBottom() + 20;
+	}
+		
 	auto_select_output_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 
     y = auto_select_output_toggle_.getBottom() + 10;
