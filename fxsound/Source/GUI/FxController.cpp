@@ -1634,6 +1634,37 @@ void FxController::setOutputAutoSelect(bool auto_select)
     settings_.setBool("disable_auto_switch_output", !auto_select);
 }
 
+bool FxController::isLaunchOnStartup()
+{
+	HKEY hkey;
+	RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_QUERY_VALUE, &hkey);
+	DWORD type;
+	DWORD size = 0;
+	RegQueryValueEx(hkey, L"FxSound", NULL, &type, NULL, &size);
+	RegCloseKey(hkey);
+
+	return size > 0;
+}
+
+void FxController::setLaunchOnStartup(bool launch_on_startup)
+{
+	wchar_t szPath[MAX_PATH];
+	GetModuleFileName(NULL, szPath, MAX_PATH);
+	HKEY hkey;
+	RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_SET_VALUE, &hkey);
+
+	if (launch_on_startup)
+	{
+		RegSetValueEx(hkey, L"FxSound", 0, REG_SZ, (BYTE*)szPath, sizeof(szPath));
+	}
+	else
+	{
+		RegDeleteValue(hkey, L"FxSound");
+	}
+
+	RegCloseKey(hkey);
+}
+
 void FxController::registerHotkeys()
 {
 	if (!hotkeys_registered_)
