@@ -100,6 +100,9 @@ public:
     bool isOutputAutoSelect();
     void setOutputAutoSelect(bool auto_select);
 
+	bool isLaunchOnStartup();
+	void setLaunchOnStartup(bool launch_on_startup);
+
     bool isHelpTooltipsHidden();
     void setHelpTooltipsHidden(bool status);
 

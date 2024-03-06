@@ -254,20 +254,20 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 		reset_presets_button_.setEnabled(false);
 	};
 
-	auto os = SystemStats::getOperatingSystemType();
+  auto os = SystemStats::getOperatingSystemType();
 	if (os == SystemStats::OperatingSystemType::Windows7)
 	{
 		addAndMakeVisible(&launch_toggle_);
 	}
 	
-    addAndMakeVisible(&auto_select_output_toggle_);
-    addAndMakeVisible(&hide_help_tips_toggle_);
+  addAndMakeVisible(&auto_select_output_toggle_);
+  addAndMakeVisible(&hide_help_tips_toggle_);
 	addAndMakeVisible(&hotkeys_toggle_);
 	addAndMakeVisible(&reset_presets_button_);
 	addAndMakeVisible(&language_switch_);
 	addChildComponent(&language_list_);
 
-    setText();
+  setText();
 }
 
 void FxSettingsDialog::GeneralSettingsPane::resized()
