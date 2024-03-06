@@ -144,7 +144,7 @@ namespace BinaryData
     const int            FxSound_ro_txtSize = 10350;
 
     extern const char*   FxSound_ru_txt;
-    const int            FxSound_ru_txtSize = 13769;
+    const int            FxSound_ru_txtSize = 13767;
 
     extern const char*   FxSound_sv_txt;
     const int            FxSound_sv_txtSize = 10069;
