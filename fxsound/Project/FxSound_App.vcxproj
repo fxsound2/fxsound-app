@@ -2149,10 +2149,10 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y</Command>
     <ResourceCompile Include=".\resources.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\FxSound\fxsound-app\audiopassthru\audiopassthru.vcxproj">
+    <ProjectReference Include="..\..\audiopassthru\audiopassthru.vcxproj">
       <Project>{7685e345-0410-4f72-a8f7-a08d85c2e7ce}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\FxSound\fxsound-app\dsp\DfxDsp.vcxproj">
+    <ProjectReference Include="..\..\dsp\DfxDsp.vcxproj">
       <Project>{f72f101c-13c0-4638-9ffa-bf15861d6f67}</Project>
     </ProjectReference>
   </ItemGroup>
