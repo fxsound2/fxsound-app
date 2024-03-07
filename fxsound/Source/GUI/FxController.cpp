@@ -174,7 +174,8 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 	max_user_presets_ = settings_.getInt("max_user_presets");
 	if (max_user_presets_ < 10 || max_user_presets_ > 100)
 	{
-		max_user_presets_ = 20;
+		settings_.setInt("max_user_presets", 20);
+		max_user_presets_ = 20;		
 	}
 	SetWindowLongPtr(message_window_.getHandle(), GWLP_USERDATA, (LONG_PTR)this);
 
