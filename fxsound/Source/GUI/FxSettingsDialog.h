@@ -136,6 +136,7 @@ private:
 		static constexpr int TEXT_HEIGHT = 20;
 		static constexpr int HYPERLINK_HEIGHT = 24;
 		static constexpr int TOGGLE_BUTTON_HEIGHT = 24;
+		static constexpr int BUTTON_WIDTH = 220;
 
         void setText();
         
@@ -148,7 +149,7 @@ private:
 		FxHyperlink submitlogs_link_;
 		FxHyperlink helpcenter_link_;
 		FxHyperlink feedback_link_;
-		FxHyperlink updates_link_;
+		TextButton updates_button_;
 		ToggleButton debug_log_toggle_;
 	};
 
