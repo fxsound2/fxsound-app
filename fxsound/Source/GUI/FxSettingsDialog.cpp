@@ -371,8 +371,6 @@ FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), d
 	helpcenter_link_.setJustificationType(Justification::topLeft);
     feedback_link_.setURL(URL("https://james722808.typeform.com/to/QfEP5QrP"));
 	feedback_link_.setJustificationType(Justification::topLeft);
-	updates_link_.setURL(URL(L"https://www.fxsound.com/changelog"));
-	updates_link_.setJustificationType(Justification::topLeft);
 
 	debug_log_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
 	debug_log_toggle_.setToggleState(!FxModel::getModel().getDebugLogging(), NotificationType::dontSendNotification);
@@ -389,8 +387,7 @@ FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), d
 	addChildComponent(quicktour_link_);
 	addChildComponent(submitlogs_link_);
 	addAndMakeVisible(helpcenter_link_);
-	//addAndMakeVisible(feedback_link_);
-	addAndMakeVisible(updates_link_);
+	addAndMakeVisible(updates_button_);
 	addChildComponent(debug_log_toggle_);
 }
 
@@ -405,7 +402,7 @@ void FxSettingsDialog::HelpSettingsPane::resized()
 	support_title_.setBounds(X_MARGIN, changelog_link_.getBottom()+20, getWidth()-X_MARGIN, TITLE_HEIGHT);
 	helpcenter_link_.setBounds(X_MARGIN+5, support_title_.getBottom()+10, getWidth()-X_MARGIN, HYPERLINK_HEIGHT);
 	maintenance_title_.setBounds(X_MARGIN, helpcenter_link_.getBottom()+20, getWidth()-X_MARGIN, TITLE_HEIGHT);
-	updates_link_.setBounds(X_MARGIN+5, maintenance_title_.getBottom()+10, getWidth()-X_MARGIN, HYPERLINK_HEIGHT);
+	updates_button_.setBounds(X_MARGIN+5, maintenance_title_.getBottom()+10, BUTTON_WIDTH, HYPERLINK_HEIGHT);
 }
 
 void FxSettingsDialog::HelpSettingsPane::paint(Graphics& g)
@@ -438,7 +435,12 @@ void FxSettingsDialog::HelpSettingsPane::setText()
     submitlogs_link_.setButtonText(TRANS("Submit debug logs"));    
     helpcenter_link_.setButtonText(TRANS("Help center"));        
     feedback_link_.setButtonText(TRANS("Feedback"));    
-    updates_link_.setButtonText(TRANS("Check for updates"));
+    updates_button_.setButtonText(TRANS("Check for updates"));
+
+	updates_button_.onClick = [this]() {
+		ChildProcess child_process;
+		child_process.start("updater.exe /checknow");
+	};
 }
 
 void FxSettingsDialog::HelpSettingsPane::buttonStateChanged(Button* button)
