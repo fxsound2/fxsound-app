@@ -285,7 +285,7 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		}
 
 		FxModel::getModel().setPowerState(dfx_enabled_ && settings_.getBool("power"));
-		dfx_dsp_.powerOn(FxModel::getModel().getPowerState());
+		dfx_dsp_.powerOn(FxModel::getModel().getPowerState() && !FxModel::getModel().isMonoOutputSelected());
 
 		FxModel::getModel().setEmail(settings_.getSecure("email").toLowerCase());
 
@@ -522,7 +522,7 @@ bool FxController::exit()
 void FxController::setPowerState(bool power_state)
 {	
 	FxModel::getModel().setPowerState(power_state);
-	dfx_dsp_.powerOn(power_state);
+	dfx_dsp_.powerOn(power_state && !FxModel::getModel().isMonoOutputSelected());
 	settings_.setBool("power", power_state);
 
 	system_tray_view_->setStatus(power_state, audio_process_on_);
@@ -587,6 +587,11 @@ void FxController::setOutput(int output)
 
 	int i = 0;
     bool output_found = false;
+	SoundDevice selected_sound_device = {};
+	if (output < sound_devices.size())
+	{
+		selected_sound_device = sound_devices[output];
+	}
 	for (auto sound_device : sound_devices)
 	{
 		if (sound_device.isRealDevice)
@@ -607,6 +612,8 @@ void FxController::setOutput(int output)
                 if (!sound_device.isTargetedRealPlaybackDevice)
                 {
                     audio_passthru_->setAsPlaybackDevice(sound_device);
+					selected_sound_device = sound_device;
+
                     output_changed_ = true;
                 }
 
@@ -626,16 +633,21 @@ void FxController::setOutput(int output)
     }
     else
     {
+		auto mono_device = selected_sound_device.deviceNumChannel < 2;
         if (FxModel::getModel().getPowerState())
         {
-            dfx_dsp_.powerOn(true);
+            dfx_dsp_.powerOn(true && !mono_device);
             audio_passthru_->mute(false);
         }
         
-        FxModel::getModel().pushMessage(TRANS("Output: ") + output_device_name_);
+		FxModel::getModel().pushMessage(TRANS("Output: ") + output_device_name_);
+		if (mono_device)
+		{
+			FxModel::getModel().pushMessage(TRANS("FxSound does not support mono devices, so FxSound processing had been disabled for this device."));
+		}
     }
 
-	FxModel::getModel().setSelectedOutput(output);
+	FxModel::getModel().setSelectedOutput(output, selected_sound_device);
 }
 
 void FxController::selectOutput()
@@ -645,7 +657,7 @@ void FxController::selectOutput()
     if (output_device_id_.isNotEmpty() &&
         (index = output_ids_.indexOf(output_device_id_)) >= 0)
     {
-        FxModel::getModel().setSelectedOutput(index);                
+        FxModel::getModel().setSelectedOutput(index, output_devices_[index]);
     }
     else
     {
@@ -657,7 +669,7 @@ void FxController::selectOutput()
             settings_.setString("output_device_id", output_device_id_);
             settings_.setString("output_device_name", output_device_name_);
 
-            FxModel::getModel().setSelectedOutput(0);
+            FxModel::getModel().setSelectedOutput(0, output_devices_[index]);
         }
         else
         {
@@ -897,13 +909,15 @@ void FxController::initOutputs(const std::vector<SoundDevice>& sound_devices)
     
     dfx_enabled_ = false;
     output_ids_.clear();
+	output_devices_.clear();
     for (auto sound_device : sound_devices)
     {
         if (sound_device.isRealDevice)
         {
             output_names.add(sound_device.deviceFriendlyName.c_str());
             output_ids_.add(sound_device.pwszID.c_str());
-            
+			output_devices_.push_back(sound_device);
+
             if (output_device_id_.isEmpty() &&
                 output_device_name_ == sound_device.deviceFriendlyName.c_str())
             {
@@ -918,7 +932,7 @@ void FxController::initOutputs(const std::vector<SoundDevice>& sound_devices)
         }
     }
 
-    FxModel::getModel().initOutputNames(output_names);
+    FxModel::getModel().initOutputs(output_devices_);
     selectOutput();
 }
 
@@ -945,7 +959,8 @@ void FxController::updateOutputs(const std::vector<SoundDevice>& sound_devices)
         }
 
         // clear the cached device id list for updating with the new list
-        output_ids_.clear();        
+        output_ids_.clear();
+		output_devices_.clear();
     }    
 
     auto i = 0;
@@ -959,6 +974,7 @@ void FxController::updateOutputs(const std::vector<SoundDevice>& sound_devices)
             output_names.add(sound_device.deviceFriendlyName.c_str());
             // This is for caching the device id list
 			output_ids_.add(sound_device.pwszID.c_str());
+			output_devices_.push_back(sound_device);
 
             if (output_device_id_.isEmpty() &&
                 output_device_name_ == sound_device.deviceFriendlyName.c_str())
@@ -984,7 +1000,7 @@ void FxController::updateOutputs(const std::vector<SoundDevice>& sound_devices)
 	}
 
     // Update the playack device names in the UI
-    FxModel::getModel().initOutputNames(output_names);
+    FxModel::getModel().initOutputs(output_devices_);
 
     auto current_output_id = output_device_id_;    
     if (output_names.size())
@@ -1015,7 +1031,7 @@ void FxController::updateOutputs(const std::vector<SoundDevice>& sound_devices)
         settings_.setString("output_device_id", output_device_id_);
         settings_.setString("output_device_name", output_device_name_);
 
-        FxModel::getModel().setSelectedOutput(index);
+        FxModel::getModel().setSelectedOutput(index, output_devices_[index]);
 
         // Reset audio only if the device selection changes
         if (current_output_id != output_device_id_ || current_index != index)
@@ -1228,7 +1244,7 @@ void FxController::timerCallback()
 		audio_process_on_counter_ = 0;
 	}
 
-	auto power = FxModel::getModel().getPowerState();
+	auto power = FxModel::getModel().getPowerState() && !FxModel::getModel().isMonoOutputSelected();
 	if (audio_process_on_counter_ == 5 && !audio_process_on_)
 	{
 		audio_process_on_ = true;

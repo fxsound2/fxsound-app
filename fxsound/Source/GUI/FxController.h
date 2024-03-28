@@ -198,6 +198,7 @@ private:
 	String output_device_id_;
     String output_device_name_;
     StringArray output_ids_;
+	std::vector<SoundDevice> output_devices_;
     bool auto_select_output_;
     bool hide_help_tooltips_;
     

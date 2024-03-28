@@ -28,12 +28,27 @@ FxModel::FxModel()
 	hotkey_support_ = true;
 	language_ = 1;
 	debug_logging_ = false;
+
+	selected_output_device_ = {};
 }
 
-void FxModel::initOutputNames(const StringArray& output_names)
+void FxModel::initOutputs(const std::vector<SoundDevice>& output_devices)
 {
 	output_names_.clear();
-	output_names_.addArray(output_names);
+	output_devices_ = output_devices;
+
+	for (auto output_device : output_devices_)
+	{
+		if (output_device.deviceNumChannel < 2)
+		{
+			output_names_.add(String(output_device.deviceFriendlyName.c_str()) + String(" [Mono]"));
+		}
+		else
+		{
+			output_names_.add(output_device.deviceFriendlyName.c_str());
+		}
+	}
+	
 
 	notifyListeners(Event::OutputListUpdated);
 }
