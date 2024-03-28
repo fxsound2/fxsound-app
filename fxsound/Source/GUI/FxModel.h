@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define FXMODEL_H
 
 #include <JuceHeader.h>
+#include "AudioPassthru.h"
 
 class FxModel final
 {
@@ -65,7 +66,7 @@ public:
 	FxModel(const FxModel&) = delete;
 	void operator=(const FxModel&) = delete;
 
-	void initOutputNames(const StringArray& output_names);
+	void initOutputs(const std::vector<SoundDevice>& output_devices);
 
 	void initPresets(const Array<Preset>& presets);
 	int  addPreset(const Preset& preset);
@@ -101,10 +102,16 @@ public:
 		return selected_output_;
 	}
 
-	void setSelectedOutput(int selected_output)
+	void setSelectedOutput(int selected_output, const SoundDevice& sound_device)
 	{
 		selected_output_ = selected_output;
+		selected_output_device_ = sound_device;
 		notifyListeners(Event::OutputSelected);
+	}
+
+	bool isMonoOutputSelected()
+	{
+		return selected_output_device_.deviceNumChannel < 2;
 	}
 
     void notifyOutputError()
@@ -218,6 +225,8 @@ private:
 	bool menu_clicked_;
 	int language_;
 	bool debug_logging_;
+	std::vector<SoundDevice> output_devices_;
+	SoundDevice selected_output_device_;
 
 	String message_;
 	std::pair<String, String> message_link_;

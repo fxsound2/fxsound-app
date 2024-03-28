@@ -100,12 +100,12 @@ void FxProView::paint(Graphics& g)
 	g.setFillType(FillType(Colour(0x0).withAlpha(0.2f)));
 	g.fillRoundedRectangle(20, 16, 920, 330+visualizer_offset, 8);
 
-    auto power_state = FxModel::getModel().getPowerState();
+    auto enable_controls = FxModel::getModel().getPowerState() && !FxModel::getModel().isMonoOutputSelected();
 
-    preset_list_.setEnabled(power_state);
-    effects_.setEnabled(power_state);
-    equalizer_.setEnabled(power_state);
-	visualizer_.setEnabled(power_state);
+    preset_list_.setEnabled(enable_controls);
+    effects_.setEnabled(enable_controls);
+    equalizer_.setEnabled(enable_controls);
+	visualizer_.setEnabled(enable_controls);
 }
 
 void FxProView::comboBoxChanged(ComboBox* combobox)
