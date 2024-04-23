@@ -2852,8 +2852,40 @@ static const unsigned char temp_binary_data_2[] =
 
 const char* GilroySemibold_ttf = (const char*) temp_binary_data_2;
 
-//================== arrow_next_bw.svg ==================
+//================== min_window.svg ==================
 static const unsigned char temp_binary_data_3[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+"<svg width=\"14px\" height=\"10px\" viewBox=\"0 0 14 10\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
+"    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
+"    <title>min_window</title>\r\n"
+"    <desc>Created with Sketch.</desc>\r\n"
+"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\r\n"
+"        <g id=\"min_window\" stroke=\"#FFFFFF\">\r\n"
+"            <path d=\"M0,5 L14,5\" id=\"Combined-Shape\"></path>\r\n"
+"        </g>\r\n"
+"    </g>\r\n"
+"</svg>";
+
+const char* min_window_svg = (const char*) temp_binary_data_3;
+
+//================== min_window_hover.svg ==================
+static const unsigned char temp_binary_data_4[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+"<svg width=\"14px\" height=\"10px\" viewBox=\"0 0 14 10\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
+"    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
+"    <title>min_window_hover</title>\r\n"
+"    <desc>Created with Sketch.</desc>\r\n"
+"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\r\n"
+"        <g id=\"min_window_hover\" fill=\"#E63462\" fill-rule=\"nonzero\">\r\n"
+"            <path d=\"M14,4.5 L14,5.5 L0,5.5 L0,4.5 L14,4.5\" id=\"Combined-Shape\"></path>\r\n"
+"        </g>\r\n"
+"    </g>\r\n"
+"</svg>";
+
+const char* min_window_hover_svg = (const char*) temp_binary_data_4;
+
+//================== arrow_next_bw.svg ==================
+static const unsigned char temp_binary_data_5[] =
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
 "<svg viewBox=\"0 0 7 11\" width=\"7\" height=\"11\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" transform=\"matrix(0, -1, 1, 0, 0.1, 11.300002)\">\r\n"
@@ -2867,10 +2899,10 @@ static const unsigned char temp_binary_data_3[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* arrow_next_bw_svg = (const char*) temp_binary_data_3;
+const char* arrow_next_bw_svg = (const char*) temp_binary_data_5;
 
 //================== arrow_prev.svg ==================
-static const unsigned char temp_binary_data_4[] =
+static const unsigned char temp_binary_data_6[] =
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
 "<svg viewBox=\"0 0 7 11\" width=\"7\" height=\"11\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" transform=\"matrix(0, 1, -1, 0, 7.057106, -0.296447)\">\r\n"
@@ -2880,10 +2912,10 @@ static const unsigned char temp_binary_data_4[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* arrow_prev_svg = (const char*) temp_binary_data_4;
+const char* arrow_prev_svg = (const char*) temp_binary_data_6;
 
 //================== arrow_next.svg ==================
-static const unsigned char temp_binary_data_5[] =
+static const unsigned char temp_binary_data_7[] =
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
 "<svg viewBox=\"0 0 7 11\" width=\"7\" height=\"11\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" transform=\"matrix(0, -1, 1, 0, -0.096447, 11.303554)\">\r\n"
@@ -2893,10 +2925,10 @@ static const unsigned char temp_binary_data_5[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* arrow_next_svg = (const char*) temp_binary_data_5;
+const char* arrow_next_svg = (const char*) temp_binary_data_7;
 
 //================== arrow_prev_bw.svg ==================
-static const unsigned char temp_binary_data_6[] =
+static const unsigned char temp_binary_data_8[] =
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
 "<svg viewBox=\"0 0 7 11\" width=\"7\" height=\"11\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" transform=\"matrix(0, 1, -1, 0, 6.9, -0.3)\">\r\n"
@@ -2910,10 +2942,10 @@ static const unsigned char temp_binary_data_6[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* arrow_prev_bw_svg = (const char*) temp_binary_data_6;
+const char* arrow_prev_bw_svg = (const char*) temp_binary_data_8;
 
 //================== Button_OFF.svg ==================
-static const unsigned char temp_binary_data_7[] =
+static const unsigned char temp_binary_data_9[] =
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
 "<svg width=\"100px\" height=\"100px\" viewBox=\"0 0 100 100\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <title>Oval</title>\r\n"
@@ -2948,10 +2980,10 @@ static const unsigned char temp_binary_data_7[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* Button_OFF_svg = (const char*) temp_binary_data_7;
+const char* Button_OFF_svg = (const char*) temp_binary_data_9;
 
 //================== Button_ON.svg ==================
-static const unsigned char temp_binary_data_8[] =
+static const unsigned char temp_binary_data_10[] =
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
 "<svg width=\"102px\" height=\"102px\" viewBox=\"0 0 102 102\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <title>Oval</title>\r\n"
@@ -2997,10 +3029,10 @@ static const unsigned char temp_binary_data_8[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* Button_ON_svg = (const char*) temp_binary_data_8;
+const char* Button_ON_svg = (const char*) temp_binary_data_10;
 
 //================== dropdown_arrow_bw.svg ==================
-static const unsigned char temp_binary_data_9[] =
+static const unsigned char temp_binary_data_11[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"11px\" height=\"7px\" viewBox=\"0 0 11 7\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <title>chevron-down</title>\r\n"
@@ -3015,10 +3047,10 @@ static const unsigned char temp_binary_data_9[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* dropdown_arrow_bw_svg = (const char*) temp_binary_data_9;
+const char* dropdown_arrow_bw_svg = (const char*) temp_binary_data_11;
 
 //================== dropdown_arrow_hover.svg ==================
-static const unsigned char temp_binary_data_10[] =
+static const unsigned char temp_binary_data_12[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"11px\" height=\"7px\" viewBox=\"0 0 11 7\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3031,10 +3063,10 @@ static const unsigned char temp_binary_data_10[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* dropdown_arrow_hover_svg = (const char*) temp_binary_data_10;
+const char* dropdown_arrow_hover_svg = (const char*) temp_binary_data_12;
 
 //================== FxSound Logo White.png ==================
-static const unsigned char temp_binary_data_11[] =
+static const unsigned char temp_binary_data_13[] =
 { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,2,189,0,0,0,101,8,6,0,0,0,64,214,91,179,0,0,0,9,112,72,89,115,0,0,11,18,0,0,11,18,1,210,221,126,252,0,0,24,224,73,68,65,84,120,156,237,157,251,145,26,73,214,197,75,19,243,63,124,22,128,44,128,177,160,
 145,5,205,88,208,200,2,33,11,26,89,32,100,65,211,22,8,89,32,176,64,96,193,128,5,3,22,244,6,27,55,119,114,248,120,84,85,158,155,121,179,234,252,34,136,153,221,232,129,122,228,227,228,125,190,123,123,123,43,8,33,132,16,66,8,49,206,72,62,85,88,20,69,177,
 59,253,61,69,47,33,132,16,66,8,177,206,188,40,138,79,53,175,113,93,20,197,148,162,151,16,66,8,33,132,88,166,95,20,197,95,129,215,183,254,141,175,152,16,66,8,33,132,24,102,12,184,180,7,138,94,66,8,33,132,16,98,153,46,226,218,40,122,9,33,132,16,66,72,227,
@@ -3127,10 +3159,10 @@ static const unsigned char temp_binary_data_11[] =
 222,166,69,245,79,135,222,1,34,212,147,225,98,68,151,222,115,108,19,67,89,23,134,178,238,95,219,103,14,222,179,89,101,188,70,14,107,236,111,22,231,213,173,119,117,141,131,193,241,237,27,4,70,129,7,218,173,119,0,11,185,207,58,218,225,191,99,196,23,189,
 132,16,66,174,227,68,252,173,5,215,109,190,77,60,148,133,208,247,12,30,197,141,103,232,63,183,156,133,27,33,77,197,137,121,127,14,95,50,112,184,185,235,132,124,250,131,73,81,20,255,1,227,61,175,107,245,169,97,223,0,0,0,0,73,69,78,68,174,66,96,130,0,0 };
 
-const char* FxSound_Logo_White_png = (const char*) temp_binary_data_11;
+const char* FxSound_Logo_White_png = (const char*) temp_binary_data_13;
 
 //================== FxSound Logo.svg ==================
-static const unsigned char temp_binary_data_12[] =
+static const unsigned char temp_binary_data_14[] =
 "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 526.19 75.15\"><defs><style>.cls-1{fill:#fff;}</style></defs><g id=\"Layer_2\" data-name=\"Layer 2\"><g id=\"Layer_1-2\" data-name=\"Layer 1\"><rect class=\"cls-1\" x=\"80\" y=\"46.8\" width=\"1"
 "3.48\" height=\"27.36\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"60\" y=\"24.8\" width=\"13.48\" height=\"49.35\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"40\" y=\"5.79\" width=\"13.48\" height=\"68.36\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"20\" y=\"24"
 ".8\" width=\"13.48\" height=\"49.35\" rx=\"2.83\"/><rect class=\"cls-1\" y=\"46.79\" width=\"13.48\" height=\"27.36\" rx=\"2.83\"/><path class=\"cls-1\" d=\"M118.51,9.36A2,2,0,0,1,119,7.85a2,2,0,0,1,1.37-.56h42.75q2.07,0,2.07,2.16v7.83a2.22,2.22,0,0,"
@@ -3162,10 +3194,10 @@ static const unsigned char temp_binary_data_12[] =
 "6.64,1.4,16.55,16.55,0,0,0,6.71-1.38,17.45,17.45,0,0,0,5.49-3.73,18.21,18.21,0,0,0,3.71-5.49A17.67,17.67,0,0,0,514,46v-.32a17.55,17.55,0,0,0-1.35-6.8A18.48,18.48,0,0,0,509,33.14a17.92,17.92,0,0,0-5.51-3.91,16,16,0,0,0-6.82-1.46A15.05,15.05,0,0,0,490,"
 "29.23a17.29,17.29,0,0,0-5.28,3.91,18,18,0,0,0-3.51,5.69A18.65,18.65,0,0,0,480,45.63Z\"/></g></g></svg>";
 
-const char* FxSound_Logo_svg = (const char*) temp_binary_data_12;
+const char* FxSound_Logo_svg = (const char*) temp_binary_data_14;
 
 //================== FxSound White Bars.png ==================
-static const unsigned char temp_binary_data_13[] =
+static const unsigned char temp_binary_data_15[] =
 { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,1,44,0,0,0,220,8,6,0,0,0,202,152,156,216,0,0,0,9,112,72,89,115,0,0,11,18,0,0,11,18,1,210,221,126,252,0,0,4,121,73,68,65,84,120,156,237,216,221,109,28,85,24,128,225,47,40,247,118,9,238,32,238,0,151,144,
 14,48,21,36,29,144,18,156,14,66,7,161,3,167,131,208,65,210,129,169,192,104,240,4,113,129,144,37,118,228,243,198,207,35,173,246,238,236,119,230,231,221,217,125,113,127,127,63,60,123,55,51,243,102,241,131,240,126,102,222,46,48,7,79,232,7,7,255,217,123,
 23,136,213,236,51,94,47,48,7,79,72,176,184,10,29,1,193,122,230,4,11,200,16,44,32,67,176,128,12,193,2,50,4,11,200,16,44,32,67,176,128,12,193,2,50,4,11,200,16,44,32,67,176,128,12,193,2,50,4,11,200,16,44,32,67,176,128,12,193,2,50,4,11,200,16,44,32,67,176,
@@ -3184,18 +3216,18 @@ static const unsigned char temp_binary_data_13[] =
 107,91,243,98,63,24,23,139,14,251,241,224,111,130,243,125,255,151,7,126,198,255,113,123,208,211,197,55,171,239,255,243,65,79,215,255,116,117,208,23,194,41,124,217,247,127,228,211,224,118,238,183,135,151,21,109,251,191,157,153,47,127,2,122,78,71,107,131,
 79,70,114,0,0,0,0,73,69,78,68,174,66,96,130,0,0 };
 
-const char* FxSound_White_Bars_png = (const char*) temp_binary_data_13;
+const char* FxSound_White_Bars_png = (const char*) temp_binary_data_15;
 
 //================== FxSound White Bars.svg ==================
-static const unsigned char temp_binary_data_14[] =
+static const unsigned char temp_binary_data_16[] =
 "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 299.83 219.26\"><defs><style>.cls-1{fill:#fff;}</style></defs><g id=\"Layer_2\" data-name=\"Layer 2\"><g id=\"Layer_1-2\" data-name=\"Layer 1\"><rect class=\"cls-1\" x=\"256.61\" y=\"131.52\" wi"
 "dth=\"43.22\" height=\"87.75\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"192.46\" y=\"60.97\" width=\"43.22\" height=\"158.29\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"128.31\" width=\"43.22\" height=\"219.26\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"64.1"
 "6\" y=\"60.96\" width=\"43.22\" height=\"158.3\" rx=\"2.83\"/><rect class=\"cls-1\" y=\"131.51\" width=\"43.22\" height=\"87.75\" rx=\"2.83\"/></g></g></svg>";
 
-const char* FxSound_White_Bars_svg = (const char*) temp_binary_data_14;
+const char* FxSound_White_Bars_svg = (const char*) temp_binary_data_16;
 
 //================== fxsound.png ==================
-static const unsigned char temp_binary_data_15[] =
+static const unsigned char temp_binary_data_17[] =
 { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,32,0,0,0,32,8,6,0,0,0,115,122,122,244,0,0,0,9,112,72,89,115,0,0,11,18,0,0,11,18,1,210,221,126,252,0,0,1,54,73,68,65,84,88,133,237,87,219,141,131,48,16,156,228,82,128,75,128,191,251,52,29,80,130,75,112,
 9,148,224,14,40,193,37,152,14,104,129,18,232,0,58,240,105,173,24,57,22,247,8,38,56,39,49,210,42,246,176,222,25,161,213,18,35,64,13,192,0,176,47,14,115,215,122,128,60,64,56,14,233,13,212,25,196,125,212,31,0,90,0,159,241,43,57,8,236,114,119,146,13,215,
 156,226,132,205,6,24,99,208,90,187,160,117,10,54,53,144,49,198,122,208,122,107,157,164,55,176,182,126,22,255,183,7,14,53,208,182,45,172,181,152,166,9,69,81,124,155,71,207,40,135,114,149,82,127,54,241,107,163,132,80,74,57,174,239,251,133,165,53,113,244,
@@ -3203,10 +3235,10 @@ static const unsigned char temp_binary_data_15[] =
 218,30,241,104,20,66,184,209,218,52,205,194,113,206,221,55,159,70,45,99,204,113,244,171,181,118,17,114,148,67,185,116,198,159,151,82,186,154,84,59,214,59,255,19,158,6,200,192,62,3,127,27,156,118,214,171,153,183,157,245,114,234,113,252,245,28,192,23,38,
 203,148,221,53,152,2,5,0,0,0,0,73,69,78,68,174,66,96,130,0,0 };
 
-const char* fxsound_png = (const char*) temp_binary_data_15;
+const char* fxsound_png = (const char*) temp_binary_data_17;
 
 //================== fxsound_large.png ==================
-static const unsigned char temp_binary_data_16[] =
+static const unsigned char temp_binary_data_18[] =
 { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,1,0,0,0,1,0,8,6,0,0,0,92,114,168,102,0,0,0,9,112,72,89,115,0,0,11,18,0,0,11,18,1,210,221,126,252,0,0,12,184,73,68,65,84,120,156,237,221,63,114,219,72,22,199,241,39,143,115,195,39,16,148,109,38,204,9,200,
 57,129,184,225,70,226,132,27,137,115,2,107,79,192,73,55,162,125,2,81,39,32,149,109,70,234,4,164,194,137,200,116,35,110,61,108,195,69,211,164,248,7,221,64,3,239,251,169,234,82,149,45,129,141,70,247,15,221,0,72,94,73,92,18,17,201,68,164,43,34,215,34,146,
 110,21,160,105,150,91,229,77,68,166,34,50,23,145,117,44,251,17,67,0,244,68,164,227,6,125,22,65,125,128,208,230,46,12,94,68,100,92,103,107,215,21,0,58,232,239,220,207,164,166,58,0,49,88,187,16,120,174,35,12,170,12,0,29,232,3,17,185,23,166,244,192,62,186,
@@ -3254,10 +3286,10 @@ static const unsigned char temp_binary_data_16[] =
 224,206,253,228,105,66,88,86,124,20,255,115,29,31,201,95,87,0,108,211,16,232,184,107,5,60,80,4,11,230,238,138,254,75,221,223,195,17,67,0,108,75,92,8,104,24,92,187,165,66,202,146,1,13,165,83,250,162,188,185,65,175,131,63,142,59,100,34,242,63,172,144,216,
 108,214,152,214,2,0,0,0,0,73,69,78,68,174,66,96,130,0,0 };
 
-const char* fxsound_large_png = (const char*) temp_binary_data_16;
+const char* fxsound_large_png = (const char*) temp_binary_data_18;
 
 //================== logo-red.png ==================
-static const unsigned char temp_binary_data_17[] =
+static const unsigned char temp_binary_data_19[] =
 { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,1,10,0,0,0,40,8,6,0,0,0,6,216,180,64,0,0,1,133,105,67,67,80,73,67,67,32,112,114,111,102,105,108,101,0,0,40,145,125,145,61,72,195,64,28,197,95,83,165,34,21,21,43,136,56,100,168,226,96,65,84,196,81,170,
 88,4,11,165,173,208,170,131,201,165,31,66,147,134,36,197,197,81,112,45,56,248,177,88,117,112,113,214,213,193,85,16,4,63,64,156,28,157,20,93,164,196,255,37,133,22,49,30,28,247,227,221,189,199,221,59,64,168,149,152,106,182,141,3,170,102,25,201,88,84,204,
 100,87,196,192,43,2,232,71,47,122,48,42,49,83,143,167,22,210,240,28,95,247,240,241,245,46,194,179,188,207,253,57,186,148,156,201,0,159,72,60,203,116,195,34,94,39,158,222,180,116,206,251,196,33,86,148,20,226,115,226,49,131,46,72,252,200,117,217,229,55,
@@ -3628,10 +3660,10 @@ static const unsigned char temp_binary_data_17[] =
 228,180,226,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,230,28,76,2,0,0,0,17,0,0,0,60,0,0,0,58,0,0,0,42,0,0,0,26,0,0,0,9,0,0,0,248,0,0,0,224,0,0,0,200,0,0,0,182,0,0,0,217,26,228,180,251,0,0,0,0,0,0,0,0,230,28,76,3,
 0,0,0,50,0,0,0,30,0,0,0,1,0,0,0,0,0,0,0,247,0,0,0,196,223,5,44,41,18,40,211,93,0,0,0,0,73,69,78,68,174,66,96,130,0,0 };
 
-const char* logored_png = (const char*) temp_binary_data_17;
+const char* logored_png = (const char*) temp_binary_data_19;
 
 //================== logo-white.png ==================
-static const unsigned char temp_binary_data_18[] =
+static const unsigned char temp_binary_data_20[] =
 { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,1,10,0,0,0,40,8,6,0,0,0,6,216,180,64,0,0,1,133,105,67,67,80,73,67,67,32,112,114,111,102,105,108,101,0,0,40,145,125,145,61,72,195,64,28,197,95,83,165,34,21,17,43,136,136,100,168,78,22,68,69,196,73,170,
 88,4,11,165,173,208,170,131,201,165,31,66,147,134,36,197,197,81,112,45,56,248,177,88,117,112,113,214,213,193,85,16,4,63,64,156,28,157,20,93,164,196,255,37,133,22,49,30,28,247,227,221,189,199,221,59,64,168,149,152,106,182,141,1,170,102,25,201,88,84,204,
 100,87,196,192,43,2,232,67,15,134,48,35,49,83,143,167,22,210,240,28,95,247,240,241,245,46,194,179,188,207,253,57,186,148,156,201,0,159,72,60,203,116,195,34,94,39,158,218,180,116,206,251,196,33,86,148,20,226,115,226,81,131,46,72,252,200,117,217,229,55,
@@ -4034,10 +4066,10 @@ static const unsigned char temp_binary_data_18[] =
 0,0,255,255,255,5,0,0,0,59,0,0,0,67,0,0,0,44,0,0,0,27,0,0,0,11,0,0,0,250,0,0,0,229,0,0,0,204,0,0,0,175,1,1,1,209,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,255,255,36,0,0,0,42,0,0,0,1,0,0,0,0,0,0,0,253,0,0,0,196,88,126,27,148,254,161,37,243,0,0,0,0,73,69,78,
 68,174,66,96,130,0,0 };
 
-const char* logowhite_png = (const char*) temp_binary_data_18;
+const char* logowhite_png = (const char*) temp_binary_data_20;
 
 //================== maximize.svg ==================
-static const unsigned char temp_binary_data_19[] =
+static const unsigned char temp_binary_data_21[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -4051,10 +4083,10 @@ static const unsigned char temp_binary_data_19[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* maximize_svg = (const char*) temp_binary_data_19;
+const char* maximize_svg = (const char*) temp_binary_data_21;
 
 //================== maximize_hover.svg ==================
-static const unsigned char temp_binary_data_20[] =
+static const unsigned char temp_binary_data_22[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -4068,10 +4100,10 @@ static const unsigned char temp_binary_data_20[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* maximize_hover_svg = (const char*) temp_binary_data_20;
+const char* maximize_hover_svg = (const char*) temp_binary_data_22;
 
 //================== menu.svg ==================
-static const unsigned char temp_binary_data_21[] =
+static const unsigned char temp_binary_data_23[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"14px\" height=\"10px\" viewBox=\"0 0 14 10\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -4084,10 +4116,10 @@ static const unsigned char temp_binary_data_21[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* menu_svg = (const char*) temp_binary_data_21;
+const char* menu_svg = (const char*) temp_binary_data_23;
 
 //================== menu_hover.svg ==================
-static const unsigned char temp_binary_data_22[] =
+static const unsigned char temp_binary_data_24[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"14px\" height=\"10px\" viewBox=\"0 0 14 10\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -4100,10 +4132,10 @@ static const unsigned char temp_binary_data_22[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* menu_hover_svg = (const char*) temp_binary_data_22;
+const char* menu_hover_svg = (const char*) temp_binary_data_24;
 
 //================== minimize.svg ==================
-static const unsigned char temp_binary_data_23[] =
+static const unsigned char temp_binary_data_25[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"18px\" height=\"18px\" viewBox=\"0 0 18 18\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -4118,10 +4150,10 @@ static const unsigned char temp_binary_data_23[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* minimize_svg = (const char*) temp_binary_data_23;
+const char* minimize_svg = (const char*) temp_binary_data_25;
 
 //================== minimize_hover.svg ==================
-static const unsigned char temp_binary_data_24[] =
+static const unsigned char temp_binary_data_26[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"18px\" height=\"18px\" viewBox=\"0 0 18 18\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -4136,10 +4168,10 @@ static const unsigned char temp_binary_data_24[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* minimize_hover_svg = (const char*) temp_binary_data_24;
+const char* minimize_hover_svg = (const char*) temp_binary_data_26;
 
 //================== power_off.svg ==================
-static const unsigned char temp_binary_data_25[] =
+static const unsigned char temp_binary_data_27[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"30px\" height=\"31px\" viewBox=\"0 0 30 31\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->\r\n"
@@ -4165,10 +4197,10 @@ static const unsigned char temp_binary_data_25[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* power_off_svg = (const char*) temp_binary_data_25;
+const char* power_off_svg = (const char*) temp_binary_data_27;
 
 //================== power_on.svg ==================
-static const unsigned char temp_binary_data_26[] =
+static const unsigned char temp_binary_data_28[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"30px\" height=\"31px\" viewBox=\"0 0 30 31\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->\r\n"
@@ -4194,10 +4226,10 @@ static const unsigned char temp_binary_data_26[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* power_on_svg = (const char*) temp_binary_data_26;
+const char* power_on_svg = (const char*) temp_binary_data_28;
 
 //================== question.svg ==================
-static const unsigned char temp_binary_data_27[] =
+static const unsigned char temp_binary_data_29[] =
 "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "<g id=\"24 / chatting / question\">\r\n"
 "<path id=\"Path\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M12 22C13.7246 22 15.387 21.562 16.8595 20.7418L21.0947 21.0947L20.7418 16.8595C21.562 15.387 22 13.7246 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 1"
@@ -4208,10 +4240,10 @@ static const unsigned char temp_binary_data_27[] =
 "</g>\r\n"
 "</svg>\r\n";
 
-const char* question_svg = (const char*) temp_binary_data_27;
+const char* question_svg = (const char*) temp_binary_data_29;
 
 //================== settings.svg ==================
-static const unsigned char temp_binary_data_28[] =
+static const unsigned char temp_binary_data_30[] =
 "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "<g id=\"24 / basic / settings\">\r\n"
 "<path id=\"icon\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M18.6562 20.897L20.8733 18.6798L20.0925 15.843L20.4327 15.0305L23 13.5818V10.4464L20.44 8.99173L20.1055 8.18067L20.8961 5.34235L18.6774 3.12683L15.8403 3.90748L15.0296 3.56758L13.5808 "
@@ -4223,10 +4255,10 @@ static const unsigned char temp_binary_data_28[] =
 "</g>\r\n"
 "</svg>\r\n";
 
-const char* settings_svg = (const char*) temp_binary_data_28;
+const char* settings_svg = (const char*) temp_binary_data_30;
 
 //================== Slider_Thumb.svg ==================
-static const unsigned char temp_binary_data_29[] =
+static const unsigned char temp_binary_data_31[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"64px\" height=\"64px\" viewBox=\"0 0 64 64\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <title>E5470804-7859-4DCC-BEE7-06AD729626EC</title>\r\n"
@@ -4286,10 +4318,10 @@ static const unsigned char temp_binary_data_29[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* Slider_Thumb_svg = (const char*) temp_binary_data_29;
+const char* Slider_Thumb_svg = (const char*) temp_binary_data_31;
 
 //================== Slider_Thumb_bw.svg ==================
-static const unsigned char temp_binary_data_30[] =
+static const unsigned char temp_binary_data_32[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <title>oval</title>\r\n"
@@ -4342,10 +4374,10 @@ static const unsigned char temp_binary_data_30[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* Slider_Thumb_bw_svg = (const char*) temp_binary_data_30;
+const char* Slider_Thumb_bw_svg = (const char*) temp_binary_data_32;
 
 //================== FxSound.ar.txt ==================
-static const unsigned char temp_binary_data_31[] =
+static const unsigned char temp_binary_data_33[] =
 { 108,97,110,103,117,97,103,101,58,32,65,114,97,98,105,99,13,10,99,111,117,110,116,114,105,101,115,58,32,69,71,32,115,97,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,
 114,32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,
 104,114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,79,111,112,115,33,32,217,135,217,134,216,167,217,131,32,217,133,216,180,217,131,217,132,216,169,32,217,129,217,138,32,216,165,216,185,216,175,216,167,216,175,216,167,216,170,32,216,172,217,135,
@@ -4536,10 +4568,10 @@ static const unsigned char temp_binary_data_31[] =
 217,132,216,165,216,185,216,175,216,167,216,175,216,167,216,170,33,34,13,10,34,70,120,83,111,117,110,100,32,105,115,32,110,111,119,32,111,112,101,110,45,115,111,117,114,99,101,34,32,61,32,34,216,163,216,181,216,168,216,173,32,70,120,83,111,117,110,100,
 32,216,167,217,132,216,162,217,134,32,217,133,217,129,216,170,217,136,216,173,32,216,167,217,132,217,133,216,181,216,175,216,177,34,0,0 };
 
-const char* FxSound_ar_txt = (const char*) temp_binary_data_31;
+const char* FxSound_ar_txt = (const char*) temp_binary_data_33;
 
 //================== FxSound.de.txt ==================
-static const unsigned char temp_binary_data_32[] =
+static const unsigned char temp_binary_data_34[] =
 "language: German\r\n"
 "countries: de at ch\r\n"
 "\r\n"
@@ -4664,10 +4696,10 @@ static const unsigned char temp_binary_data_32[] =
 "\"Settings file not found!\" = \"Einstellungsdatei nicht gefunden!\"\r\n"
 "\"FxSound is now open-source\" = \"FxSound ist jetzt Open Source\"\r\n";
 
-const char* FxSound_de_txt = (const char*) temp_binary_data_32;
+const char* FxSound_de_txt = (const char*) temp_binary_data_34;
 
 //================== FxSound.es.txt ==================
-static const unsigned char temp_binary_data_33[] =
+static const unsigned char temp_binary_data_35[] =
 "language: Spanish\r\n"
 "countries: es ar mx\r\n"
 "\r\n"
@@ -4788,10 +4820,10 @@ static const unsigned char temp_binary_data_33[] =
 "\"Settings file not found!\" = \"\xc2\xa1""Archivo de configuraci\xc3\xb3n no encontrado!\"\r\n"
 "\"FxSound is now open-source\" = \"FxSound ahora es de c\xc3\xb3""digo abierto\"\r\n";
 
-const char* FxSound_es_txt = (const char*) temp_binary_data_33;
+const char* FxSound_es_txt = (const char*) temp_binary_data_35;
 
 //================== FxSound.fr.txt ==================
-static const unsigned char temp_binary_data_34[] =
+static const unsigned char temp_binary_data_36[] =
 "language: French\r\n"
 "countries: fr\r\n"
 "\r\n"
@@ -4917,10 +4949,10 @@ static const unsigned char temp_binary_data_34[] =
 "\"Settings file not found!\" = \"Fichier param\xc3\xa8tres introuvable !\"\r\n"
 "\"FxSound is now open-source\" = \"FxSound est d\xc3\xa9sormais open source\"\r\n";
 
-const char* FxSound_fr_txt = (const char*) temp_binary_data_34;
+const char* FxSound_fr_txt = (const char*) temp_binary_data_36;
 
 //================== fxsound.hu.txt ==================
-static const unsigned char temp_binary_data_35[] =
+static const unsigned char temp_binary_data_37[] =
 "language: [Hungarian]\r\n"
 "countries: [hu]\r\n"
 "\r\n"
@@ -5049,10 +5081,10 @@ static const unsigned char temp_binary_data_35[] =
 "\"Settings file not found!\" = \"A be\xc3\xa1ll\xc3\xadt\xc3\xa1s f\xc3\xa1jl nem tal\xc3\xa1lhat\xc3\xb3!\"\r\n"
 "\"FxSound is now open-source\" = \"Az FxSound most ny\xc3\xadlt forr\xc3\xa1sk\xc3\xb3""d\xc3\xba\"\r\n";
 
-const char* fxsound_hu_txt = (const char*) temp_binary_data_35;
+const char* fxsound_hu_txt = (const char*) temp_binary_data_37;
 
 //================== FxSound.id.txt ==================
-static const unsigned char temp_binary_data_36[] =
+static const unsigned char temp_binary_data_38[] =
 "language: Indonesian\r\n"
 "countries: id\r\n"
 "\r\n"
@@ -5172,10 +5204,10 @@ static const unsigned char temp_binary_data_36[] =
 "\"Settings file not found!\" = \"File pengaturan tidak ditemukan!\"\r\n"
 "\"FxSound is now open-source\" = \"FxSound sekarang menjadi sumber terbuka\"\r\n";
 
-const char* FxSound_id_txt = (const char*) temp_binary_data_36;
+const char* FxSound_id_txt = (const char*) temp_binary_data_38;
 
 //================== FxSound.it.txt ==================
-static const unsigned char temp_binary_data_37[] =
+static const unsigned char temp_binary_data_39[] =
 "language: Italiano\r\n"
 "countries: it\r\n"
 "\r\n"
@@ -5299,10 +5331,10 @@ static const unsigned char temp_binary_data_37[] =
 "\"FxSound is now open-source\" = \"FxSound \xc3\xa8 ora open source\"\r\n"
 "\r\n";
 
-const char* FxSound_it_txt = (const char*) temp_binary_data_37;
+const char* FxSound_it_txt = (const char*) temp_binary_data_39;
 
 //================== FxSound.ja.txt ==================
-static const unsigned char temp_binary_data_38[] =
+static const unsigned char temp_binary_data_40[] =
 { 108,97,110,103,117,97,103,101,58,32,74,97,112,97,110,101,115,101,13,10,99,111,117,110,116,114,105,101,115,58,32,106,97,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,
 114,32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,
 104,114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,227,129,138,227,129,163,227,129,168,239,188,129,229,134,141,231,148,159,227,131,135,227,131,144,227,130,164,227,130,185,227,129,174,232,168,173,229,174,154,227,129,171,229,149,143,233,161,140,227,
@@ -5478,10 +5510,10 @@ static const unsigned char temp_binary_data_38[] =
 188,129,34,13,10,34,70,120,83,111,117,110,100,32,105,115,32,110,111,119,32,111,112,101,110,45,115,111,117,114,99,101,34,32,61,32,34,70,120,83,111,117,110,100,32,227,129,140,227,130,170,227,131,188,227,131,151,227,131,179,227,130,189,227,131,188,227,130,
 185,227,129,171,227,129,170,227,130,138,227,129,190,227,129,151,227,129,159,34,13,10,0,0 };
 
-const char* FxSound_ja_txt = (const char*) temp_binary_data_38;
+const char* FxSound_ja_txt = (const char*) temp_binary_data_40;
 
 //================== FxSound.ko.txt ==================
-static const unsigned char temp_binary_data_39[] =
+static const unsigned char temp_binary_data_41[] =
 { 108,97,110,103,117,97,103,101,58,32,75,111,114,101,97,110,13,10,99,111,117,110,116,114,105,101,115,58,32,107,114,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,114,32,
 112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,104,114,
 111,117,103,104,32,116,104,101,32,34,32,61,32,34,236,157,180,235,159,176,33,32,236,158,172,236,131,157,32,236,158,165,236,185,152,32,236,132,164,236,160,149,236,151,144,32,235,172,184,236,160,156,234,176,128,32,235,176,156,236,131,157,237,150,136,236,
@@ -5641,10 +5673,10 @@ static const unsigned char temp_binary_data_39[] =
 32,105,115,32,110,111,119,32,111,112,101,110,45,115,111,117,114,99,101,34,32,61,32,34,70,120,83,111,117,110,100,235,138,148,32,236,157,180,236,160,156,32,236,152,164,237,148,136,32,236,134,140,236,138,164,236,158,133,235,139,136,235,139,164,46,34,13,
 10,13,10,0,0 };
 
-const char* FxSound_ko_txt = (const char*) temp_binary_data_39;
+const char* FxSound_ko_txt = (const char*) temp_binary_data_41;
 
 //================== FxSound.nl.txt ==================
-static const unsigned char temp_binary_data_40[] =
+static const unsigned char temp_binary_data_42[] =
 "language: Dutch\r\n"
 "countries: nl be\r\n"
 "\r\n"
@@ -5765,10 +5797,10 @@ static const unsigned char temp_binary_data_40[] =
 "\"Settings file not found!\" = \"Instellingen bestand niet gevonden!\"\r\n"
 "\"FxSound is now open-source\" = \"FxSound is nu open source\"\r\n";
 
-const char* FxSound_nl_txt = (const char*) temp_binary_data_40;
+const char* FxSound_nl_txt = (const char*) temp_binary_data_42;
 
 //================== FxSound.pl.txt ==================
-static const unsigned char temp_binary_data_41[] =
+static const unsigned char temp_binary_data_43[] =
 "language: Polish\r\n"
 "countries: pl\r\n"
 "\r\n"
@@ -5898,10 +5930,10 @@ static const unsigned char temp_binary_data_41[] =
 "\"FxSound is now open-source\" = \"FxSound jest teraz oprogramowaniem typu open source\"\r\n"
 "\r\n";
 
-const char* FxSound_pl_txt = (const char*) temp_binary_data_41;
+const char* FxSound_pl_txt = (const char*) temp_binary_data_43;
 
 //================== FxSound.pt-br.txt ==================
-static const unsigned char temp_binary_data_42[] =
+static const unsigned char temp_binary_data_44[] =
 "language: Brazilian Portuguese \r\n"
 "countries: br\r\n"
 "\r\n"
@@ -6023,10 +6055,10 @@ static const unsigned char temp_binary_data_42[] =
 "\"Settings file not found!\" = \"Arquivo de configura\xc3\xa7\xc3\xb5""es n\xc3\xa3o encontrado!\"\r\n"
 "\"FxSound is now open-source\" = \"FxSound agora \xc3\xa9 de c\xc3\xb3""digo aberto\"";
 
-const char* FxSound_ptbr_txt = (const char*) temp_binary_data_42;
+const char* FxSound_ptbr_txt = (const char*) temp_binary_data_44;
 
 //================== FxSound.pt.txt ==================
-static const unsigned char temp_binary_data_43[] =
+static const unsigned char temp_binary_data_45[] =
 "language: Portuguese \r\n"
 "countries: pt\r\n"
 "\r\n"
@@ -6148,10 +6180,10 @@ static const unsigned char temp_binary_data_43[] =
 "\"Settings file not found!\" = \"Arquivo de configura\xc3\xa7\xc3\xb5""es n\xc3\xa3o encontrado!\"\r\n"
 "\"FxSound is now open-source\" = \"FxSound agora \xc3\xa9 de c\xc3\xb3""digo aberto\"\r\n";
 
-const char* FxSound_pt_txt = (const char*) temp_binary_data_43;
+const char* FxSound_pt_txt = (const char*) temp_binary_data_45;
 
 //================== FxSound.ro.txt ==================
-static const unsigned char temp_binary_data_44[] =
+static const unsigned char temp_binary_data_46[] =
 "language: Romanian\r\n"
 "countries: ro\r\n"
 "\r\n"
@@ -6277,10 +6309,10 @@ static const unsigned char temp_binary_data_44[] =
 "\"Settings file not found!\" = \"Fi\xc8\x99ierul de set\xc4\x83ri nu a fost g\xc4\x83sit!\"\r\n"
 "\"FxSound is now open-source\" = \"FxSound este acum open-source\"\r\n";
 
-const char* FxSound_ro_txt = (const char*) temp_binary_data_44;
+const char* FxSound_ro_txt = (const char*) temp_binary_data_46;
 
 //================== FxSound.ru.txt ==================
-static const unsigned char temp_binary_data_45[] =
+static const unsigned char temp_binary_data_47[] =
 { 108,97,110,103,117,97,103,101,58,32,82,117,115,115,105,97,110,13,10,99,111,117,110,116,114,105,101,115,58,32,114,117,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,114,
 32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,104,
 114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,208,158,208,185,33,32,209,131,32,208,178,208,176,209,129,32,208,191,209,128,208,190,208,177,208,187,208,181,208,188,209,139,32,209,129,32,209,131,209,129,209,130,209,128,208,190,208,185,209,129,209,
@@ -6490,10 +6522,10 @@ static const unsigned char temp_binary_data_45[] =
 208,189,33,34,13,10,34,70,120,83,111,117,110,100,32,105,115,32,110,111,119,32,111,112,101,110,45,115,111,117,114,99,101,34,32,61,32,34,70,120,83,111,117,110,100,32,209,130,208,181,208,191,208,181,209,128,209,140,32,209,129,32,208,190,209,130,208,186,
 209,128,209,139,209,130,209,139,208,188,32,208,184,209,129,209,133,208,190,208,180,208,189,209,139,208,188,32,208,186,208,190,208,180,208,190,208,188,34,13,10,0,0 };
 
-const char* FxSound_ru_txt = (const char*) temp_binary_data_45;
+const char* FxSound_ru_txt = (const char*) temp_binary_data_47;
 
 //================== FxSound.sv.txt ==================
-static const unsigned char temp_binary_data_46[] =
+static const unsigned char temp_binary_data_48[] =
 "language: Swedish\r\n"
 "countries: se\r\n"
 "\r\n"
@@ -6616,10 +6648,10 @@ static const unsigned char temp_binary_data_46[] =
 "\"Settings file not found!\" = \"Inst\xc3\xa4llningsfilen hittades inte.\"\r\n"
 "\"FxSound is now open-source\" = \"FxSound \xc3\xa4r nu \xc3\xb6ppen k\xc3\xa4llkod\"\r\n";
 
-const char* FxSound_sv_txt = (const char*) temp_binary_data_46;
+const char* FxSound_sv_txt = (const char*) temp_binary_data_48;
 
 //================== FxSound.th.txt ==================
-static const unsigned char temp_binary_data_47[] =
+static const unsigned char temp_binary_data_49[] =
 { 108,97,110,103,117,97,103,101,58,32,84,104,97,105,13,10,99,111,117,110,116,114,105,101,115,58,32,116,104,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,114,32,112,108,
 97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,104,114,111,117,
 103,104,32,116,104,101,32,34,32,61,32,34,224,184,173,224,185,138,224,184,176,33,32,224,184,161,224,184,181,224,184,155,224,184,177,224,184,141,224,184,171,224,184,178,224,185,128,224,184,129,224,184,181,224,185,136,224,184,162,224,184,167,224,184,129,
@@ -6876,10 +6908,10 @@ static const unsigned char temp_binary_data_47[] =
 184,149,224,184,177,224,185,137,224,184,135,224,184,132,224,185,136,224,184,178,33,34,13,10,34,70,120,83,111,117,110,100,32,105,115,32,110,111,119,32,111,112,101,110,45,115,111,117,114,99,101,34,32,61,32,34,70,120,83,111,117,110,100,32,224,185,128,224,
 184,155,224,185,135,224,184,153,224,185,130,224,184,173,224,185,128,224,184,158,224,185,136,224,184,153,224,184,139,224,184,173,224,184,163,224,185,140,224,184,170,224,185,129,224,184,165,224,185,137,224,184,167,34,13,10,0,0 };
 
-const char* FxSound_th_txt = (const char*) temp_binary_data_47;
+const char* FxSound_th_txt = (const char*) temp_binary_data_49;
 
 //================== FxSound.tr.txt ==================
-static const unsigned char temp_binary_data_48[] =
+static const unsigned char temp_binary_data_50[] =
 "language: Turkish\r\n"
 "countries: tr\r\n"
 "\r\n"
@@ -7006,10 +7038,10 @@ static const unsigned char temp_binary_data_48[] =
 "\"Settings file not found!\" = \"Ayarlar dosyas\xc4\xb1 bulunamad\xc4\xb1!\"\r\n"
 "\"FxSound is now open-source\" = \"FxSound art\xc4\xb1k a\xc3\xa7\xc4\xb1k kaynakl\xc4\xb1\"\r\n";
 
-const char* FxSound_tr_txt = (const char*) temp_binary_data_48;
+const char* FxSound_tr_txt = (const char*) temp_binary_data_50;
 
 //================== FxSound.txt ==================
-static const unsigned char temp_binary_data_49[] =
+static const unsigned char temp_binary_data_51[] =
 "language: [enter full name of the language here!]\r\n"
 "countries: [enter list of 2-character country codes here!]\r\n"
 "\r\n"
@@ -7129,10 +7161,10 @@ static const unsigned char temp_binary_data_49[] =
 "\"FxSound is now open-source\" = \"FxSound is now open-source\"\r\n"
 "\"Press Ctrl + Alt/Shift + 0-9/A-Z to change the hotkey\" = \"Press Ctrl + Alt/Shift + 0-9/A-Z to change the hotkey\"";
 
-const char* FxSound_txt = (const char*) temp_binary_data_49;
+const char* FxSound_txt = (const char*) temp_binary_data_51;
 
 //================== FxSound.vi.txt ==================
-static const unsigned char temp_binary_data_50[] =
+static const unsigned char temp_binary_data_52[] =
 "language: Vietnamese\r\n"
 "countries: vn\r\n"
 "\r\n"
@@ -7275,10 +7307,10 @@ static const unsigned char temp_binary_data_50[] =
 "\"Settings file not found!\" = \"Kh\xc3\xb4ng t\xc3\xacm th\xe1\xba\xa5y t\xe1\xbb\x87p tin thi\xe1\xba\xbft l\xe1\xba\xadp!\"\r\n"
 "\"FxSound is now open-source\" = \"FxSound hi\xe1\xbb\x87n l\xc3\xa0 ngu\xe1\xbb\x93n m\xe1\xbb\x9f\"\r\n";
 
-const char* FxSound_vi_txt = (const char*) temp_binary_data_50;
+const char* FxSound_vi_txt = (const char*) temp_binary_data_52;
 
 //================== FxSound.zh-CN.txt ==================
-static const unsigned char temp_binary_data_51[] =
+static const unsigned char temp_binary_data_53[] =
 { 108,97,110,103,117,97,103,101,58,32,67,104,105,110,101,115,101,32,40,83,105,109,112,108,105,102,105,101,100,41,13,10,99,111,117,110,116,114,105,101,115,58,32,99,110,32,115,103,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,
 115,115,117,101,32,119,105,116,104,32,121,111,117,114,32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,
 100,44,32,112,108,101,97,115,101,32,103,111,32,116,104,114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,229,147,142,229,145,128,239,188,129,230,130,168,231,154,132,230,146,173,230,148,190,232,174,190,229,164,135,232,174,190,231,189,174,230,156,137,
@@ -7412,7 +7444,7 @@ static const unsigned char temp_binary_data_51[] =
 168,231,154,132,232,174,190,231,189,174,227,128,130,34,13,10,34,83,101,116,116,105,110,103,115,32,102,105,108,101,32,110,111,116,32,102,111,117,110,100,33,34,32,61,32,34,230,156,170,230,137,190,229,136,176,232,174,190,231,189,174,230,150,135,228,187,
 182,239,188,129,34,13,10,34,70,120,83,111,117,110,100,32,105,115,32,110,111,119,32,111,112,101,110,45,115,111,117,114,99,101,34,32,61,32,34,70,120,83,111,117,110,100,32,231,143,190,229,183,178,233,150,139,230,186,144,34,13,10,13,10,0,0 };
 
-const char* FxSound_zhCN_txt = (const char*) temp_binary_data_51;
+const char* FxSound_zhCN_txt = (const char*) temp_binary_data_53;
 
 
 const char* getNamedResource (const char* resourceNameUTF8, int& numBytes);
@@ -7429,6 +7461,8 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
         case 0x7b153d3e:  numBytes = 83456; return GilroyBold_ttf;
         case 0x9fd3b571:  numBytes = 84300; return GilroyRegular_ttf;
         case 0xf4a365ac:  numBytes = 83948; return GilroySemibold_ttf;
+        case 0xfd6939a2:  numBytes = 542; return min_window_svg;
+        case 0xddbd4d9f:  numBytes = 599; return min_window_hover_svg;
         case 0xecc59f10:  numBytes = 644; return arrow_next_bw_svg;
         case 0x0f3f75ce:  numBytes = 506; return arrow_prev_svg;
         case 0xb01bfe8e:  numBytes = 507; return arrow_next_svg;
@@ -7490,6 +7524,8 @@ const char* namedResourceList[] =
     "GilroyBold_ttf",
     "GilroyRegular_ttf",
     "GilroySemibold_ttf",
+    "min_window_svg",
+    "min_window_hover_svg",
     "arrow_next_bw_svg",
     "arrow_prev_svg",
     "arrow_next_svg",
@@ -7546,6 +7582,8 @@ const char* originalFilenames[] =
     "Gilroy-Bold.ttf",
     "Gilroy-Regular.ttf",
     "Gilroy-Semibold.ttf",
+    "min_window.svg",
+    "min_window_hover.svg",
     "arrow_next_bw.svg",
     "arrow_prev.svg",
     "arrow_next.svg",
