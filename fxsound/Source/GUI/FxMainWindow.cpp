@@ -211,7 +211,7 @@ private:
 };
 
 //==============================================================================
-FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"menuButton", DrawableButton::ButtonStyle::ImageFitted), resize_button_(L"resizeButton", DrawableButton::ButtonStyle::ImageFitted), donate_button_(TRANS("Donate"))
+FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"menuButton", DrawableButton::ButtonStyle::ImageFitted), resize_button_(L"resizeButton", DrawableButton::ButtonStyle::ImageFitted), donate_button_(TRANS("Donate")), minimize_button_(L"minimizeButton", DrawableButton::ButtonStyle::ImageFitted)
 {
 	setName("FxSound");
 	setOpaque(false);
@@ -252,11 +252,21 @@ FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"men
 		url.launchInDefaultBrowser();
 	};
 
+	minimize_button_.setMouseCursor(MouseCursor::PointingHandCursor);
+	minimize_button_.setSize(BUTTON_WIDTH + 2, BUTTON_WIDTH + 6);
+	minimize_button_.setHelpText(TRANS("Minimize Button"));
+	minimize_image_ = Drawable::createFromImageData(BinaryData::min_window_svg, BinaryData::min_window_svgSize);
+	minimize_hover_image_ = Drawable::createFromImageData(BinaryData::min_window_hover_svg, BinaryData::min_window_hover_svgSize);
+	minimize_button_.setImages(minimize_image_.get(), minimize_hover_image_.get());
+	minimize_button_.setWantsKeyboardFocus(true);
+	minimize_button_.addListener(this);
+
 	help_bubble_.addToDesktop(0);
 	help_bubble_.setColour(BubbleComponent::ColourIds::backgroundColourId, Colour(0x0).withAlpha(1.0f));
 	help_bubble_.setColour(BubbleComponent::ColourIds::outlineColourId, theme.findColour(TextEditor::textColourId));
 	help_bubble_.setAlwaysOnTop(true);
 
+	addToolbarButton(&minimize_button_);
 	addToolbarButton(&resize_button_);
 	addToolbarButton(&menu_button_);
 	addToolbarButton(&power_button_);
@@ -451,6 +461,13 @@ void FxMainWindow::buttonClicked(Button* button)
 	{
 		FxController::getInstance().switchView();
 		setResizeImage();
+	}
+	else if (button == &minimize_button_)
+	{
+		if (isOnDesktop())
+		{
+			ShowWindow((HWND)getWindowHandle(), SW_MINIMIZE);
+		}
 	}
 }
 

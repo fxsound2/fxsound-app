@@ -17,6 +17,12 @@ namespace BinaryData
     extern const char*   GilroySemibold_ttf;
     const int            GilroySemibold_ttfSize = 83948;
 
+    extern const char*   min_window_svg;
+    const int            min_window_svgSize = 542;
+
+    extern const char*   min_window_hover_svg;
+    const int            min_window_hover_svgSize = 599;
+
     extern const char*   arrow_next_bw_svg;
     const int            arrow_next_bw_svgSize = 644;
 
@@ -165,7 +171,7 @@ namespace BinaryData
     const int            FxSound_zhCN_txtSize = 8874;
 
     // Number of elements in the namedResourceList and originalFileNames arrays.
-    const int namedResourceListSize = 52;
+    const int namedResourceListSize = 54;
 
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];
