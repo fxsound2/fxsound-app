@@ -224,8 +224,7 @@ void FxController::config(const String& commandline)
 
     if (output_device.isNotEmpty())
     {
-        settings_.setString("output_device_name", output_device);
-        settings_.setString("output_device_id", "");
+		setSelectedOutput("", output_device);
     }
 
     if (language.isEmpty())
@@ -328,11 +327,12 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		setPreset(selected_preset);
 
 		auto app_version = JUCEApplication::getInstance()->getApplicationVersion();
-        if (settings_.getString("version") != app_version)
+		auto prev_version = settings_.getString("version");
+        if (prev_version != app_version)
         {
             FxModel::getModel().pushMessage(" ", { TRANS("Click here to see what's new on this version!"), "https://www.fxsound.com/changelog" });			
             settings_.setString("version", app_version);
-			if (app_version.startsWith("1.1.2"))
+			if (!prev_version.startsWith("1.1.2") && app_version.startsWith("1.1.2"))
 			{
 				FxMessage::showMessage(TRANS("FxSound is now open-source"), { TRANS("GitHub"), "https://github.com/fxsound2/fxsound-app" });
 			}
@@ -576,7 +576,7 @@ bool FxController::setPreset(int selected_preset)
 	return true;
 }
 
-void FxController::setOutput(int output)
+void FxController::setOutput(int output, bool notify)
 {
 	if (!isTimerRunning())
 	{
@@ -605,8 +605,7 @@ void FxController::setOutput(int output)
                     output_device_id_ = sound_device.pwszID.c_str();
                     output_device_name_ = sound_device.deviceFriendlyName.c_str();
 
-                    settings_.setString("output_device_id", output_device_id_);
-                    settings_.setString("output_device_name", output_device_name_);
+					setSelectedOutput(output_device_id_, output_device_name_);
                 }
 
                 if (!sound_device.isTargetedRealPlaybackDevice)
@@ -629,7 +628,6 @@ void FxController::setOutput(int output)
         dfx_dsp_.powerOn(false);
 
         FxModel::getModel().pushMessage(TRANS("Output Disconnected"));
-        
     }
     else
     {
@@ -647,7 +645,7 @@ void FxController::setOutput(int output)
 		}
     }
 
-	FxModel::getModel().setSelectedOutput(output, selected_sound_device);
+	FxModel::getModel().setSelectedOutput(output, selected_sound_device, notify);
 }
 
 void FxController::selectOutput()
@@ -666,18 +664,16 @@ void FxController::selectOutput()
             output_device_id_ = output_ids_[0];
             output_device_name_ = FxModel::getModel().getOutputNames()[0];
 
-            settings_.setString("output_device_id", output_device_id_);
-            settings_.setString("output_device_name", output_device_name_);
+			setSelectedOutput(output_device_id_, output_device_name_);
 
-            FxModel::getModel().setSelectedOutput(0, output_devices_[index]);
+            FxModel::getModel().setSelectedOutput(0, output_devices_[0]);
         }
         else
         {
             output_device_id_ = "";
             output_device_name_ = "";
 
-            settings_.setString("output_device_id", output_device_id_);
-            settings_.setString("output_device_name", output_device_name_);
+			setSelectedOutput(output_device_id_, output_device_name_);
         }
     }
 }
@@ -932,8 +928,37 @@ void FxController::initOutputs(const std::vector<SoundDevice>& sound_devices)
         }
     }
 
+	addPreferredOutput(output_devices_);
+	
     FxModel::getModel().initOutputs(output_devices_);
     selectOutput();
+}
+
+void FxController::addPreferredOutput(std::vector<SoundDevice>& sound_devices)
+{
+	auto pref_device_id = settings_.getString("preferred_device_id");
+	auto pref_device_name = settings_.getString("preferred_device_name");
+
+	if (pref_device_id.isNotEmpty() && pref_device_name.isNotEmpty())
+	{
+		bool found = false;
+		for (auto sound_device : sound_devices)
+		{
+			if (sound_device.pwszID == pref_device_id.toWideCharPointer())
+			{
+				found = true;
+			}
+		}
+
+		if (!found)
+		{
+			SoundDevice device;
+			device.pwszID = pref_device_id.toWideCharPointer();
+			device.deviceFriendlyName = pref_device_name.toWideCharPointer();
+
+			sound_devices.push_back(device);
+		}
+	}
 }
 
 void FxController::updateOutputs(const std::vector<SoundDevice>& sound_devices)
@@ -965,6 +990,7 @@ void FxController::updateOutputs(const std::vector<SoundDevice>& sound_devices)
 
     auto i = 0;
     auto output_selected = -1;
+	auto pref_output_id = getPreferredOutputId();
 	dfx_enabled_ = false;
 	for (auto sound_device : sound_devices)
 	{
@@ -975,6 +1001,14 @@ void FxController::updateOutputs(const std::vector<SoundDevice>& sound_devices)
             // This is for caching the device id list
 			output_ids_.add(sound_device.pwszID.c_str());
 			output_devices_.push_back(sound_device);
+
+			// Preferred device is found, and it becomes the output device
+			if (pref_output_id.isNotEmpty() &&
+				pref_output_id == sound_device.pwszID.c_str())
+			{
+				output_device_id_ = sound_device.pwszID.c_str();
+				output_device_name_ = sound_device.deviceFriendlyName.c_str();
+			}
 
             if (output_device_id_.isEmpty() &&
                 output_device_name_ == sound_device.deviceFriendlyName.c_str())
@@ -999,6 +1033,8 @@ void FxController::updateOutputs(const std::vector<SoundDevice>& sound_devices)
 		}
 	}
 
+	addPreferredOutput(output_devices_);
+
     // Update the playack device names in the UI
     FxModel::getModel().initOutputs(output_devices_);
 
@@ -1011,6 +1047,11 @@ void FxController::updateOutputs(const std::vector<SoundDevice>& sound_devices)
         {
             if (!auto_select_output_)
             {
+				audio_passthru_->mute(true);
+				dfx_dsp_.powerOn(false);
+
+				FxModel::getModel().pushMessage(TRANS("Output Disconnected"));
+
                 return;
             }
             output_device_id_ = output_ids_[0];
@@ -1028,23 +1069,23 @@ void FxController::updateOutputs(const std::vector<SoundDevice>& sound_devices)
         auto index = output_ids_.indexOf(output_device_id_);
         output_device_name_ = output_names[index];
 
-        settings_.setString("output_device_id", output_device_id_);
-        settings_.setString("output_device_name", output_device_name_);
+		setSelectedOutput(output_device_id_, output_device_name_);
 
         FxModel::getModel().setSelectedOutput(index, output_devices_[index]);
 
-        // Reset audio only if the device selection changes
-        if (current_output_id != output_device_id_ || current_index != index)
-        {
-            setOutput(index);
-            if (FxModel::getModel().getPowerState())
-            {
-                setPowerState(false);
-                Thread::sleep(200);
-                setPowerState(true);
-            }
-        }        
+		setOutput(index);       
     }
+}
+
+void FxController::setSelectedOutput(String id, String name)
+{
+	auto preferred_device_id = getPreferredOutputId();
+	// If preferred output is set, then do not change the output device in settings
+	if (preferred_device_id.isEmpty() || preferred_device_id == id)
+	{
+		settings_.setString("output_device_name", id);
+		settings_.setString("output_device_id", name);
+	}
 }
 
 float FxController::getEffectValue(FxEffects::EffectType effect)
@@ -1273,6 +1314,8 @@ void FxController::timerCallback()
 
 void FxController::onSoundDeviceChange(std::vector<SoundDevice> sound_devices)
 {
+	ScopedLock auto_lock(lock_);
+
     auto available = audio_passthru_->isPlaybackDeviceAvailable();
     if (available != playback_device_available_)
     {
@@ -1638,6 +1681,26 @@ String FxController::getLanguageName(String language_code) const
 int FxController::getMaxUserPresets() const
 {
 	return max_user_presets_;
+}
+
+String FxController::getPreferredOutputId()
+{
+	auto pref_device_id = settings_.getString("preferred_device_id");
+	return pref_device_id;
+}
+
+String FxController::getPreferredOutputName()
+{
+	auto pref_device_name = settings_.getString("preferred_device_name");
+	return pref_device_name;
+}
+
+void FxController::setPreferredOutput(String id, String name)
+{
+	settings_.setString("preferred_device_id", id);
+	settings_.setString("preferred_device_name", name);
+
+	setSelectedOutput(id, name);
 }
 
 bool FxController::isOutputAutoSelect()
