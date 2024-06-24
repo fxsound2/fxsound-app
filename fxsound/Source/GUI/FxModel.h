@@ -97,16 +97,24 @@ public:
 		return output_names_;
 	}
 
+	std::vector<SoundDevice> getOutputDevices() const
+	{
+		return output_devices_;
+	}
+
 	int getSelectedOutput()
 	{
 		return selected_output_;
 	}
 
-	void setSelectedOutput(int selected_output, const SoundDevice& sound_device)
+	void setSelectedOutput(int selected_output, const SoundDevice& sound_device, bool notify=true)
 	{
 		selected_output_ = selected_output;
 		selected_output_device_ = sound_device;
-		notifyListeners(Event::OutputSelected);
+		if (notify)
+		{
+			notifyListeners(Event::OutputSelected);
+		}
 	}
 
 	bool isMonoOutputSelected()

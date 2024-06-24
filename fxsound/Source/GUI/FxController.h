@@ -68,7 +68,7 @@ public:
 
 	void setPowerState(bool power_state);
 	bool setPreset(int selected_preset);
-	void setOutput(int output);
+	void setOutput(int output, bool notify=true);
     
     bool isPlaybackDeviceAvailable();
 
@@ -99,6 +99,9 @@ public:
 
     bool isOutputAutoSelect();
     void setOutputAutoSelect(bool auto_select);
+	String getPreferredOutputId();
+	String getPreferredOutputName();
+	void setPreferredOutput(String id, String name);
 
 	bool isLaunchOnStartup();
 	void setLaunchOnStartup(bool launch_on_startup);
@@ -170,8 +173,10 @@ private:
 	void onSoundDeviceChange(std::vector<SoundDevice> sound_devices) override;
 	
     void initOutputs(const std::vector<SoundDevice>& sound_devices);
+	void addPreferredOutput(std::vector<SoundDevice>& sound_devices);
     void selectOutput();
 	void updateOutputs(const std::vector<SoundDevice>& sound_devices);
+	void setSelectedOutput(String id, String name);
 
 	void registerHotkeys();
 	void unregisterHotkeys();
@@ -217,4 +222,6 @@ private:
 	int max_user_presets_;
 
 	DWORD session_id_;
+
+	CriticalSection lock_;
 };

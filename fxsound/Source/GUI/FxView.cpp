@@ -70,13 +70,17 @@ void FxView::showErrorNotification(bool show)
 
 void FxView::comboBoxChanged(ComboBox* combobox)
 {
-	if (combobox == &preset_list_)
+	auto index = combobox->getSelectedItemIndex();
+	if (index >= 0 && index < combobox->getNumItems())
 	{
-		FxController::getInstance().setPreset(combobox->getSelectedItemIndex());
-	}
-	else if (combobox == &endpoint_list_)
-	{
-		FxController::getInstance().setOutput(combobox->getSelectedItemIndex());
+		if (combobox == &preset_list_)
+		{
+			FxController::getInstance().setPreset(index);
+		}
+		else if (combobox == &endpoint_list_)
+		{
+			FxController::getInstance().setOutput(index, false);
+		}
 	}
 }
 
