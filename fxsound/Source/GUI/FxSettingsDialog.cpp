@@ -183,7 +183,7 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	StringArray languages = { String(L"English"), String(L"\u4e2d\u6587"), String(L"Espa\u00f1ol"), String(L"Ti\u1ebfng Vi\u1ec7t"),
 							  String(L"Portugu\u00eas"), String(L"\u0e44\u0e17\u0e22"), String(L"T\u00fcrk"), String(L"\u0440\u0443\u0441\u0441\u043a\u0438\u0439"), String(L"\ud55c\uad6d\uc5b4"),
 							  String(L"\u65e5\u672c\u8a9e"), String(L"Fran\u00e7ais"), String(L"Italiano"), String(L"Deutsche"), String(L"Polskie"), String(L"Magyar"), String(L"\u0e41\u0e1a\u0e1a\u0e44\u0e17\u0e22"), 
-							  String(L"Nederlands"), String(L"\u65e5\u672c\u8a9e"), String(L"\u0639\u0631\u0628\u064a")};
+							  String(L"Nederlands"), String(L"\u65e5\u672c\u8a9e"), String(L"\u0639\u0631\u0628\u064a"), String(L"hrvatski"), String(L"bosanski")};
 	StringArray hotKeySettingsKeys = { FxController::HK_CMD_ON_OFF, FxController::HK_CMD_OPEN_CLOSE, FxController::HK_CMD_NEXT_PRESET, FxController::HK_CMD_PREVIOUS_PRESET, FxController::HK_CMD_NEXT_OUTPUT };
 	StringArray hotkey_names = { "Turn FxSound On/Off", "Open/Close FxSound",
 								   "Use Next Preset", "Use Previous Preset", "Change Playback Device"};

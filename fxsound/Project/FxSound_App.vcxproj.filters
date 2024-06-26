@@ -3283,6 +3283,9 @@
     <None Include="..\..\Strings\Strings\FxSound.ar.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
+    <None Include="..\..\Strings\Strings\FxSound.ba.txt">
+      <Filter>FxSound\Strings</Filter>
+    </None>
     <None Include="..\..\Strings\Strings\FxSound.de.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
@@ -3290,6 +3293,9 @@
       <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.fr.txt">
+      <Filter>FxSound\Strings</Filter>
+    </None>
+    <None Include="..\..\Strings\Strings\FxSound.hr.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\fxsound.hu.txt">
