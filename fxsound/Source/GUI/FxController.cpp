@@ -1660,7 +1660,7 @@ String FxController::getLanguageName(String language_code) const
     }
     else if (language_code.startsWithIgnoreCase("de"))
     {
-        return L"Deutsche";
+        return L"Deutsch";
     }
 	else if (language_code.startsWithIgnoreCase("hu"))
 	{
