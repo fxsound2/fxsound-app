@@ -151,9 +151,11 @@
     </GROUP>
     <GROUP id="{AAFAFD7C-41A7-0774-9216-95AEBD0117C0}" name="Strings">
       <FILE id="C8J1b9" name="FxSound.ar.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.ar.txt"/>
+      <FILE id="KrQ5Ag" name="FxSound.ba.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.ba.txt"/>
       <FILE id="hty94N" name="FxSound.de.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.de.txt"/>
       <FILE id="h8UpMu" name="FxSound.es.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.es.txt"/>
       <FILE id="uY5651" name="FxSound.fr.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.fr.txt"/>
+      <FILE id="JQxWxW" name="FxSound.hr.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.hr.txt"/>
       <FILE id="P6YSQX" name="fxsound.hu.txt" compile="0" resource="1" file="../Strings/Strings/fxsound.hu.txt"/>
       <FILE id="sGe1HR" name="FxSound.id.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.id.txt"/>
       <FILE id="SCrfsv" name="FxSound.it.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.it.txt"/>

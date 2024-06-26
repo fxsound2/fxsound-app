@@ -1579,6 +1579,14 @@ void FxController::setLanguage(String language_code)
 	{
 		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ar_txt, BinaryData::FxSound_ar_txtSize), false));
 	}
+	else if (language_.startsWithIgnoreCase("hr"))
+	{
+		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_hr_txt, BinaryData::FxSound_hr_txtSize), false));
+	}
+	else if (language_.startsWithIgnoreCase("ba"))
+	{
+		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ba_txt, BinaryData::FxSound_ba_txtSize), false));
+	}
 
     auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
     theme.loadFont(language_);
@@ -1673,6 +1681,14 @@ String FxController::getLanguageName(String language_code) const
 	else if (language_code.startsWithIgnoreCase("ar"))
 	{
 		return L"\u0639\u0631\u0628\u064a";
+	}
+	else if (language_code.startsWithIgnoreCase("hr"))
+	{
+		return L"hrvatski";
+	}
+	else if (language_code.startsWithIgnoreCase("ba"))
+	{
+		return L"bosanski";
 	}
 
     return "English";
