@@ -1,3 +1,12 @@
+version 1.1.23.0
+----------------
+1. Added support for mono playback devices. Mono devices can be selected now, but FxSound does not process mono audio.
+2. Minimize button added to minimize FxSound to taskbar
+3. A preferred device can be selected from settings.
+4. Check for updates in settings, updates to a new version
+5. Croatian and Bosnian language support added.
+6. Translation corrections and improvements in Chinese, Spanish, Russian and German
+
 version 1.1.22.0
 ----------------
 1. Fixed the issue - .ttf files in Windows start menu · Issue #79 (https://github.com/fxsound2/fxsound-app/issues/79)
