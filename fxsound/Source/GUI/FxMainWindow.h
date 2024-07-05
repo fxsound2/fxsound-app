@@ -61,6 +61,7 @@ private:
     FxPowerButton power_button_;
     DrawableButton menu_button_;
     DrawableButton resize_button_;
+    DrawableButton minimize_button_;
     TextButton donate_button_;
     BubbleMessageComponent help_bubble_;
 
@@ -68,6 +69,8 @@ private:
     std::unique_ptr<Drawable> menu_hover_image_;
     std::unique_ptr<Drawable> resize_image_;
     std::unique_ptr<Drawable> resize_hover_image_;
+    std::unique_ptr<Drawable> minimize_image_;
+    std::unique_ptr<Drawable> minimize_hover_image_;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FxMainWindow)
 };

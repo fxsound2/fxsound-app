@@ -76,7 +76,7 @@ private:
         void paint(Graphics& g) override;
 
 		static constexpr int X_MARGIN = 25;
-		static constexpr int Y_MARGIN = 20;
+		static constexpr int Y_MARGIN = 5;
 		static constexpr int TITLE_HEIGHT = 24;
 
         Label title_;
@@ -84,7 +84,7 @@ private:
 		String name_;
 	};
 
-	class GeneralSettingsPane : public SettingsPane
+	class GeneralSettingsPane : public SettingsPane, public FxModel::Listener
 	{
 	public:
 		GeneralSettingsPane();
@@ -94,19 +94,24 @@ private:
 		void paint(Graphics& g) override;
 
 	private:
-		static constexpr int LANGUAGE_SWITCH_Y = 80;
+		static constexpr int LANGUAGE_SWITCH_Y = 50;
 		static constexpr int TOGGLE_BUTTON_HEIGHT = 30;
 		static constexpr int HOTKEY_LABEL_X = X_MARGIN + 25;
 		static constexpr int HOTKEY_LABEL_HEIGHT = 20;
 		static constexpr int LANGUAGE_LABEL_HEIGHT = 24;
 		static constexpr int LANGUAGE_LIST_WIDTH = 120;
 		static constexpr int LANGUAGE_LIST_HEIGHT = 30;
+		static constexpr int ENDPOINT_LABEL_WIDTH = 120;
+		static constexpr int ENDPOINT_LIST_HEIGHT = 30;
 		static constexpr int BUTTON_WIDTH = 220;
 		static constexpr int BUTTON_HEIGHT = 24;
 		static constexpr int MAX_BUTTON_WIDTH = 315;
+		static constexpr int ENDPOINT_GROUP_HEIGHT = 20 + TOGGLE_BUTTON_HEIGHT + 20 + ENDPOINT_LIST_HEIGHT + 20;
 
         void setText();
 		void resizeResetButton(int x, int y);
+		void modelChanged(FxModel::Event model_event);
+		void updateEndpointList();
 
         ToggleButton launch_toggle_;
         ToggleButton auto_select_output_toggle_;
@@ -116,6 +121,9 @@ private:
 		OwnedArray<FxHotkeyLabel> hotkey_labels_;
 		FxLanguage language_switch_;
 		ComboBox language_list_;
+		ComboBox preferred_endpoint_;
+		Label endpoint_title_;
+		GroupComponent endpoint_group_;
 	};
 
 	class HelpSettingsPane : public SettingsPane, public ToggleButton::Listener
@@ -131,11 +139,12 @@ private:
 		void buttonStateChanged(Button* button) override;
 
 	private:
-		static constexpr int TEXT_Y = 80;
+		static constexpr int TEXT_Y = 50;
 		static constexpr int TITLE_HEIGHT = 24;
 		static constexpr int TEXT_HEIGHT = 20;
 		static constexpr int HYPERLINK_HEIGHT = 24;
 		static constexpr int TOGGLE_BUTTON_HEIGHT = 24;
+		static constexpr int BUTTON_WIDTH = 220;
 
         void setText();
         
@@ -148,7 +157,7 @@ private:
 		FxHyperlink submitlogs_link_;
 		FxHyperlink helpcenter_link_;
 		FxHyperlink feedback_link_;
-		FxHyperlink updates_link_;
+		TextButton updates_button_;
 		ToggleButton debug_log_toggle_;
 	};
 
@@ -156,7 +165,7 @@ private:
 	{
 	public:
         static constexpr int WIDTH = 600;
-        static constexpr int HEIGHT = 515;
+        static constexpr int HEIGHT = 580;
 
 		SettingsComponent();
         ~SettingsComponent() = default;
@@ -168,7 +177,7 @@ private:
 
 	private:
 		static constexpr int BUTTON_X = 20;
-		static constexpr int BUTTON_Y = 80;
+		static constexpr int BUTTON_Y = 50;
 		static constexpr int BUTTON_WIDTH = 150;
 		static constexpr int BUTTON_HEIGHT = 40;
         static constexpr int DONATE_BUTTON_WIDTH = 100;

@@ -48,7 +48,7 @@ void FxMessage::closeButtonPressed()
 
 void FxMessage::showMessage(String message, const std::pair<String, String>& link)
 {
-	FxMessage message_window(TRANS("FxSound is now open-source"), { TRANS("GitHub"), "https://github.com/fxsound2/fxsound-app" });
+	FxMessage message_window(message, link);
 	message_window.runModalLoop();
 }
 

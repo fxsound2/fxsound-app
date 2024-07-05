@@ -183,10 +183,12 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	StringArray languages = { String(L"English"), String(L"\u4e2d\u6587"), String(L"Espa\u00f1ol"), String(L"Ti\u1ebfng Vi\u1ec7t"),
 							  String(L"Portugu\u00eas"), String(L"\u0e44\u0e17\u0e22"), String(L"T\u00fcrk"), String(L"\u0440\u0443\u0441\u0441\u043a\u0438\u0439"), String(L"\ud55c\uad6d\uc5b4"),
 							  String(L"\u65e5\u672c\u8a9e"), String(L"Fran\u00e7ais"), String(L"Italiano"), String(L"Deutsche"), String(L"Polskie"), String(L"Magyar"), String(L"\u0e41\u0e1a\u0e1a\u0e44\u0e17\u0e22"), 
-							  String(L"Nederlands"), String(L"\u65e5\u672c\u8a9e"), String(L"\u0639\u0631\u0628\u064a")};
+							  String(L"Nederlands"), String(L"\u65e5\u672c\u8a9e"), String(L"\u0639\u0631\u0628\u064a"), String(L"hrvatski"), String(L"bosanski")};
 	StringArray hotKeySettingsKeys = { FxController::HK_CMD_ON_OFF, FxController::HK_CMD_OPEN_CLOSE, FxController::HK_CMD_NEXT_PRESET, FxController::HK_CMD_PREVIOUS_PRESET, FxController::HK_CMD_NEXT_OUTPUT };
 	StringArray hotkey_names = { "Turn FxSound On/Off", "Open/Close FxSound",
 								   "Use Next Preset", "Use Previous Preset", "Change Playback Device"};
+
+	FxModel::getModel().addListener(this);
 
 	setFocusContainer(true);
 
@@ -194,10 +196,33 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	launch_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	launch_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	launch_toggle_.setWantsKeyboardFocus(true);
+	endpoint_group_.setText(TRANS("Output device"));
+	endpoint_group_.setTextLabelPosition(juce::Justification::topLeft);
     auto_select_output_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
     auto_select_output_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
     auto_select_output_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	auto_select_output_toggle_.setWantsKeyboardFocus(true);
+	endpoint_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	endpoint_title_.setJustificationType(Justification::centredLeft);
+	preferred_endpoint_.setMouseCursor(MouseCursor::PointingHandCursor);
+	preferred_endpoint_.setWantsKeyboardFocus(true);
+	preferred_endpoint_.setEnabled(!FxController::getInstance().isOutputAutoSelect());
+	preferred_endpoint_.setTextWhenNothingSelected(TRANS("Select preferred output"));
+	preferred_endpoint_.onChange = [this]() {
+										auto endpoints = FxModel::getModel().getOutputDevices();
+										auto id = preferred_endpoint_.getSelectedId();
+										if (id > 0 && id <= endpoints.size())
+										{
+											auto pref_device_id = endpoints[id - 1].pwszID;
+											auto pref_device_name = endpoints[id - 1].deviceFriendlyName;
+											FxController::getInstance().setPreferredOutput(pref_device_id.c_str(), pref_device_name.c_str());
+											FxController::getInstance().setOutput(id - 1);
+										}
+										else
+										{
+											FxController::getInstance().setPreferredOutput("", "None");
+										}
+									};
 	hide_help_tips_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
     hide_help_tips_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
     hide_help_tips_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
@@ -218,6 +243,8 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	
 	language_list_.addItemList(languages, 1);
 	language_list_.setSelectedId(FxModel::getModel().getLanguage());
+
+	updateEndpointList();
 
     if (SysInfo::canSupportHotkeys())
     {
@@ -241,7 +268,12 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	launch_toggle_.onClick = [this]() { FxController::getInstance().setLaunchOnStartup(launch_toggle_.getToggleState()); };
 
     auto_select_output_toggle_.setToggleState(FxController::getInstance().isOutputAutoSelect(), NotificationType::dontSendNotification);
-    auto_select_output_toggle_.onClick = [this]() { FxController::getInstance().setOutputAutoSelect(auto_select_output_toggle_.getToggleState()); };
+    auto_select_output_toggle_.onClick = [this]() { 
+		FxController::getInstance().setOutputAutoSelect(auto_select_output_toggle_.getToggleState());
+		preferred_endpoint_.setEnabled(!auto_select_output_toggle_.getToggleState());
+		FxController::getInstance().setPreferredOutput("", "");
+		preferred_endpoint_.setSelectedId(0, NotificationType::dontSendNotification);
+	};
 
     hide_help_tips_toggle_.setToggleState(FxController::getInstance().isHelpTooltipsHidden(), NotificationType::dontSendNotification);
     hide_help_tips_toggle_.onClick = [this]() { FxController::getInstance().setHelpTooltipsHidden(hide_help_tips_toggle_.getToggleState()); };
@@ -260,7 +292,10 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 		addAndMakeVisible(&launch_toggle_);
 	}
 	
+	addAndMakeVisible(&endpoint_group_);
 	addAndMakeVisible(&auto_select_output_toggle_);
+	addAndMakeVisible(&endpoint_title_);
+	addAndMakeVisible(&preferred_endpoint_);
 	addAndMakeVisible(&hide_help_tips_toggle_);
 	addAndMakeVisible(&hotkeys_toggle_);
 	addAndMakeVisible(&reset_presets_button_);
@@ -284,9 +319,17 @@ void FxSettingsDialog::GeneralSettingsPane::resized()
 		y = launch_toggle_.getBottom() + 20;
 	}
 		
-	auto_select_output_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
+	endpoint_group_.setBounds(X_MARGIN, y, getWidth() - (X_MARGIN*2), ENDPOINT_GROUP_HEIGHT);
 
-    y = auto_select_output_toggle_.getBottom() + 10;
+	y += 20;
+	auto_select_output_toggle_.setBounds(X_MARGIN+10, y, getWidth() - ((X_MARGIN + 10) * 2), TOGGLE_BUTTON_HEIGHT);
+
+    y = auto_select_output_toggle_.getBottom() + 20;
+	endpoint_title_.setBounds(X_MARGIN+10, y, ENDPOINT_LABEL_WIDTH, ENDPOINT_LIST_HEIGHT);
+	auto width = getWidth() - ((X_MARGIN + 10) * 2) - ENDPOINT_LABEL_WIDTH - 5;
+	preferred_endpoint_.setBounds(ENDPOINT_LABEL_WIDTH+X_MARGIN+15, y, width, ENDPOINT_LIST_HEIGHT);
+
+	y = endpoint_group_.getBottom() + 15;
     hide_help_tips_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 
     y = hide_help_tips_toggle_.getBottom() + 10;
@@ -321,6 +364,8 @@ void FxSettingsDialog::GeneralSettingsPane::setText()
     hide_help_tips_toggle_.setButtonText(TRANS("Hide help tips for audio controls"));
     hotkeys_toggle_.setButtonText(TRANS("Disable keyboard shortcuts"));
     reset_presets_button_.setButtonText(TRANS("Reset presets to factory defaults"));
+	endpoint_title_.setText(TRANS("Preferred output:"), NotificationType::dontSendNotification);
+	endpoint_title_.setFont(theme.getNormalFont());
 	
 	resizeResetButton(reset_presets_button_.getX(), reset_presets_button_.getY());
 }
@@ -353,6 +398,40 @@ void FxSettingsDialog::GeneralSettingsPane::resizeResetButton(int x, int y)
 	reset_presets_button_.setBounds(x, y, buttonWidth, BUTTON_HEIGHT * lineCount);
 }
 
+void FxSettingsDialog::GeneralSettingsPane::modelChanged(FxModel::Event model_event)
+{
+	if (model_event == FxModel::Event::OutputListUpdated)
+	{
+		updateEndpointList();
+	}
+}
+
+void FxSettingsDialog::GeneralSettingsPane::updateEndpointList()
+{
+	auto& controller = FxController::getInstance();
+	auto endpoints = FxModel::getModel().getOutputDevices();
+	auto i = 1;
+	auto pref_device_index = 0;
+
+	preferred_endpoint_.clear();
+	for (auto endpoint : endpoints)
+	{
+		preferred_endpoint_.addItem(endpoint.deviceFriendlyName.c_str(), i);
+		if (endpoint.pwszID == controller.getPreferredOutputId().toWideCharPointer())
+		{
+			pref_device_index = i;
+		}
+		i++;
+	}
+	preferred_endpoint_.addItem(TRANS("None"), i);
+
+	if (controller.getPreferredOutputName().equalsIgnoreCase(L"None"))
+	{
+		pref_device_index = i;
+	}
+	preferred_endpoint_.setSelectedId(pref_device_index, NotificationType::dontSendNotification);
+}
+
 FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), debug_log_toggle_(TRANS("Disable debug logging"))
 {	
 	version_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
@@ -371,8 +450,6 @@ FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), d
 	helpcenter_link_.setJustificationType(Justification::topLeft);
     feedback_link_.setURL(URL("https://james722808.typeform.com/to/QfEP5QrP"));
 	feedback_link_.setJustificationType(Justification::topLeft);
-	updates_link_.setURL(URL(L"https://www.fxsound.com/changelog"));
-	updates_link_.setJustificationType(Justification::topLeft);
 
 	debug_log_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
 	debug_log_toggle_.setToggleState(!FxModel::getModel().getDebugLogging(), NotificationType::dontSendNotification);
@@ -389,8 +466,7 @@ FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), d
 	addChildComponent(quicktour_link_);
 	addChildComponent(submitlogs_link_);
 	addAndMakeVisible(helpcenter_link_);
-	//addAndMakeVisible(feedback_link_);
-	addAndMakeVisible(updates_link_);
+	addAndMakeVisible(updates_button_);
 	addChildComponent(debug_log_toggle_);
 }
 
@@ -405,7 +481,7 @@ void FxSettingsDialog::HelpSettingsPane::resized()
 	support_title_.setBounds(X_MARGIN, changelog_link_.getBottom()+20, getWidth()-X_MARGIN, TITLE_HEIGHT);
 	helpcenter_link_.setBounds(X_MARGIN+5, support_title_.getBottom()+10, getWidth()-X_MARGIN, HYPERLINK_HEIGHT);
 	maintenance_title_.setBounds(X_MARGIN, helpcenter_link_.getBottom()+20, getWidth()-X_MARGIN, TITLE_HEIGHT);
-	updates_link_.setBounds(X_MARGIN+5, maintenance_title_.getBottom()+10, getWidth()-X_MARGIN, HYPERLINK_HEIGHT);
+	updates_button_.setBounds(X_MARGIN+5, maintenance_title_.getBottom()+10, BUTTON_WIDTH, HYPERLINK_HEIGHT);
 }
 
 void FxSettingsDialog::HelpSettingsPane::paint(Graphics& g)
@@ -438,7 +514,12 @@ void FxSettingsDialog::HelpSettingsPane::setText()
     submitlogs_link_.setButtonText(TRANS("Submit debug logs"));    
     helpcenter_link_.setButtonText(TRANS("Help center"));        
     feedback_link_.setButtonText(TRANS("Feedback"));    
-    updates_link_.setButtonText(TRANS("Check for updates"));
+    updates_button_.setButtonText(TRANS("Check for updates"));
+
+	updates_button_.onClick = [this]() {
+		ChildProcess child_process;
+		child_process.start("updater.exe /checknow");
+	};
 }
 
 void FxSettingsDialog::HelpSettingsPane::buttonStateChanged(Button* button)

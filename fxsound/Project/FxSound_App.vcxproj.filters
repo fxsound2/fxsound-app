@@ -3190,6 +3190,12 @@
     <None Include="..\Fonts\Gilroy-Semibold.ttf">
       <Filter>FxSound\Fonts</Filter>
     </None>
+    <None Include="..\Images\min_window.svg">
+      <Filter>FxSound\Images</Filter>
+    </None>
+    <None Include="..\Images\min_window_hover.svg">
+      <Filter>FxSound\Images</Filter>
+    </None>
     <None Include="..\Images\arrow_next_bw.svg">
       <Filter>FxSound\Images</Filter>
     </None>
@@ -3277,6 +3283,9 @@
     <None Include="..\..\Strings\Strings\FxSound.ar.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
+    <None Include="..\..\Strings\Strings\FxSound.ba.txt">
+      <Filter>FxSound\Strings</Filter>
+    </None>
     <None Include="..\..\Strings\Strings\FxSound.de.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
@@ -3284,6 +3293,9 @@
       <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.fr.txt">
+      <Filter>FxSound\Strings</Filter>
+    </None>
+    <None Include="..\..\Strings\Strings\FxSound.hr.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\fxsound.hu.txt">

@@ -5,9 +5,9 @@ VisualStudioVersion = 17.6.33712.159
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FxSound_App", "FxSound_App.vcxproj", "{7A8BC8D1-8FA6-3204-17E8-DA0BF486BB4E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audiopassthru", "..\..\..\FxSound\fxsound-app\audiopassthru\audiopassthru.vcxproj", "{7685E345-0410-4F72-A8F7-A08D85C2E7CE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audiopassthru", "..\..\audiopassthru\audiopassthru.vcxproj", "{7685E345-0410-4F72-A8F7-A08D85C2E7CE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DfxDsp", "..\..\..\FxSound\fxsound-app\dsp\DfxDsp.vcxproj", "{F72F101C-13C0-4638-9FFA-BF15861D6F67}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DfxDsp", "..\..\dsp\DfxDsp.vcxproj", "{F72F101C-13C0-4638-9FFA-BF15861D6F67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,5 +58,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BB73392D-E0FB-4DD8-B1C8-21ACD51D8CB6}
 	EndGlobalSection
 EndGlobal
