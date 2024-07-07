@@ -493,7 +493,7 @@ void FxMainWindow::modelChanged(FxModel::Event model_event)
 
 void FxMainWindow::userTriedToCloseWindow()
 {
-	FxController::getInstance().exit();
+	FxController::getInstance().hideMainWindow();
 }
 
 void FxMainWindow::closeButtonPressed()
