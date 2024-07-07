@@ -88,7 +88,7 @@ private:
 	{
 	public:
 		GeneralSettingsPane();
-		~GeneralSettingsPane() = default;
+		~GeneralSettingsPane();
 
 		void resized() override;
 		void paint(Graphics& g) override;

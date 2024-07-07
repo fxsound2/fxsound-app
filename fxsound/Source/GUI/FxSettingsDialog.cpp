@@ -196,7 +196,6 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	launch_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	launch_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	launch_toggle_.setWantsKeyboardFocus(true);
-	endpoint_group_.setText(TRANS("Output device"));
 	endpoint_group_.setTextLabelPosition(juce::Justification::topLeft);
     auto_select_output_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
     auto_select_output_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
@@ -207,7 +206,6 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	preferred_endpoint_.setMouseCursor(MouseCursor::PointingHandCursor);
 	preferred_endpoint_.setWantsKeyboardFocus(true);
 	preferred_endpoint_.setEnabled(!FxController::getInstance().isOutputAutoSelect());
-	preferred_endpoint_.setTextWhenNothingSelected(TRANS("Select preferred output"));
 	preferred_endpoint_.onChange = [this]() {
 										auto endpoints = FxModel::getModel().getOutputDevices();
 										auto id = preferred_endpoint_.getSelectedId();
@@ -243,8 +241,6 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	
 	language_list_.addItemList(languages, 1);
 	language_list_.setSelectedId(FxModel::getModel().getLanguage());
-
-	updateEndpointList();
 
     if (SysInfo::canSupportHotkeys())
     {
@@ -305,6 +301,11 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	setText();
 }
 
+FxSettingsDialog::GeneralSettingsPane::~GeneralSettingsPane()
+{
+	FxModel::getModel().removeListener(this);
+}
+
 void FxSettingsDialog::GeneralSettingsPane::resized()
 {
 	auto bounds = getLocalBounds().withLeft(X_MARGIN).withTop(Y_MARGIN).withHeight(TITLE_HEIGHT);
@@ -360,12 +361,16 @@ void FxSettingsDialog::GeneralSettingsPane::setText()
 
     int height = FxSettingsDialog::SettingsComponent::HEIGHT;
     launch_toggle_.setButtonText(TRANS("Launch on system startup"));
+	endpoint_group_.setText(TRANS("Output device"));
     auto_select_output_toggle_.setButtonText(TRANS("Automatically switch to newly connected output device"));
     hide_help_tips_toggle_.setButtonText(TRANS("Hide help tips for audio controls"));
     hotkeys_toggle_.setButtonText(TRANS("Disable keyboard shortcuts"));
     reset_presets_button_.setButtonText(TRANS("Reset presets to factory defaults"));
 	endpoint_title_.setText(TRANS("Preferred output:"), NotificationType::dontSendNotification);
 	endpoint_title_.setFont(theme.getNormalFont());
+	preferred_endpoint_.setTextWhenNothingSelected(TRANS("Select preferred output"));
+
+	updateEndpointList();
 	
 	resizeResetButton(reset_presets_button_.getX(), reset_presets_button_.getY());
 }
