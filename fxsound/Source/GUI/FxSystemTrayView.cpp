@@ -252,7 +252,6 @@ void FxSystemTrayView::showNotification()
 
     HWND hWnd = (HWND)getWindowHandle();
 
-
     if (message.isNotEmpty())
     {
         if (custom_notification_ || link.first.isNotEmpty())

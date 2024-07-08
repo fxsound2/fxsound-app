@@ -303,6 +303,8 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 
 FxSettingsDialog::GeneralSettingsPane::~GeneralSettingsPane()
 {
+	preferred_endpoint_.onChange = nullptr;
+
 	FxModel::getModel().removeListener(this);
 }
 
@@ -418,7 +420,7 @@ void FxSettingsDialog::GeneralSettingsPane::updateEndpointList()
 	auto i = 1;
 	auto pref_device_index = 0;
 
-	preferred_endpoint_.clear();
+	preferred_endpoint_.clear(NotificationType::dontSendNotification);
 	for (auto endpoint : endpoints)
 	{
 		preferred_endpoint_.addItem(endpoint.deviceFriendlyName.c_str(), i);

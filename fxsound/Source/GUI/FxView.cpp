@@ -90,7 +90,7 @@ void FxView::modelChanged(FxModel::Event model_event)
 	{
 		StringArray output_names = FxModel::getModel().getOutputNames();
 
-		endpoint_list_.clear();
+		endpoint_list_.clear(NotificationType::dontSendNotification);
 		int id = 1;
 		for (auto name : output_names)
 		{
@@ -136,7 +136,7 @@ void FxView::modelChanged(FxModel::Event model_event)
 
 	if (model_event == FxModel::Event::PresetListUpdated)
 	{
-		preset_list_.clear();
+		preset_list_.clear(NotificationType::dontSendNotification);
 		
 		auto count = FxModel::getModel().getPresetCount();
 		auto preset_type = FxModel::PresetType::AppPreset;
