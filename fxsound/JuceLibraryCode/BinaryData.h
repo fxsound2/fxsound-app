@@ -174,7 +174,7 @@ namespace BinaryData
     const int            FxSound_vi_txtSize = 11704;
 
     extern const char*   FxSound_zhCN_txt;
-    const int            FxSound_zhCN_txtSize = 9351;
+    const int            FxSound_zhCN_txtSize = 9323;
 
     // Number of elements in the namedResourceList and originalFileNames arrays.
     const int namedResourceListSize = 56;
