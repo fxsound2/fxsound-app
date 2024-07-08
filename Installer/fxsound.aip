@@ -28,11 +28,11 @@
     <ROW Property="MSIFASTINSTALL" MultiBuildValue="DefaultBuild:2"/>
     <ROW Property="Manufacturer" Value="FxSound LLC"/>
     <ROW Property="MsiLogging" MultiBuildValue="DefaultBuild:vp"/>
-    <ROW Property="ProductCode" Value="1033:{ECAF712E-B39B-4FF8-B4FB-48B2E2FC88BD} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{E38B16E4-60BC-4327-B5EC-ADB16370C9CC} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="FxSound"/>
     <ROW Property="ProductName_32" Value="[|ProductName]"/>
-    <ROW Property="ProductVersion" Value="1.1.22.0" Options="16"/>
+    <ROW Property="ProductVersion" Value="1.1.24.0" Options="16"/>
     <ROW Property="REBOOT" MultiBuildValue="DefaultBuild:Suppress"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
@@ -76,11 +76,10 @@
     <ROW Component="Default.fac" ComponentId="{F5A2B0DB-CB99-4992-B717-1F1AE09C0996}" Directory_="Factsoft_Dir" Attributes="0" KeyPath="Default.fac" Type="0"/>
     <ROW Component="DfxInstall.dll" ComponentId="{4B4A298D-1A3A-448C-AF9A-692D7EAFC327}" Directory_="Apps_Dir" Attributes="0" KeyPath="DfxInstall.dll"/>
     <ROW Component="DfxSetupDrv.exe" ComponentId="{E6F40D13-6200-4931-A7A2-6142F7821778}" Directory_="Apps_Dir" Attributes="0" KeyPath="DfxSetupDrv.exe"/>
-    <ROW Component="Fonts" ComponentId="{0A343273-3DDC-4B4A-B36C-610FD174FD0A}" Directory_="APPDIR" Attributes="0"/>
+    <ROW Component="Fonts" ComponentId="{A2EF6825-EECB-4179-8F5E-78090FB01E63}" Directory_="APPDIR" Attributes="0" Type="0"/>
     <ROW Component="FxSound.exe" ComponentId="{82E872A6-8D59-4785-92C3-8BBFF79EB0E4}" Directory_="APPDIR" Attributes="256" Condition="VersionNT64" KeyPath="FxSound.exe"/>
     <ROW Component="FxSound.exe_2" ComponentId="{0ABA4B50-FBDF-43EE-9C5B-A5F296F063CB}" Directory_="x86_Dir" Attributes="0" Condition="NOT VersionNT64" KeyPath="FxSound.exe_2"/>
     <ROW Component="FxSound.settings" ComponentId="{F8459A73-F385-4ED6-809A-50204A74B04F}" Directory_="FxSound_Dir" Attributes="0" KeyPath="FxSound.settings" Type="0"/>
-    <ROW Component="NotoSansThaiMedium.ttf" ComponentId="{A2EF6825-EECB-4179-8F5E-78090FB01E63}" Directory_="APPDIR" Attributes="0" Type="0"/>
     <ROW Component="Path" ComponentId="{19CFBC28-C762-407F-9344-86A957870300}" Directory_="APPDIR" Attributes="260" Condition="VersionNT64" KeyPath="Path"/>
     <ROW Component="Path_32" ComponentId="{9BF41759-B09E-4CA3-B63B-7A8FAD49A847}" Directory_="APPDIR" Attributes="4" Condition="NOT VersionNT64" KeyPath="Path_1"/>
     <ROW Component="ProductInformation" ComponentId="{8CD532CB-F65E-4D43-B32A-4D0DA210189B}" Directory_="APPDIR" Attributes="260" Condition="VersionNT64" KeyPath="Version"/>
@@ -157,15 +156,15 @@
     <ROW File="NotoSansSCBold.otf" Component_="Fonts" FileName="NOTOSA~4.OTF|NotoSansSC-Bold.otf" Attributes="0" SourcePath="Resources\Fonts\NotoSansSC-Bold.otf" SelfReg="false"/>
     <ROW File="NotoSansSCMedium.otf" Component_="Fonts" FileName="NOTOSA~5.OTF|NotoSansSC-Medium.otf" Attributes="0" SourcePath="Resources\Fonts\NotoSansSC-Medium.otf" SelfReg="false"/>
     <ROW File="NotoSansSCRegular.otf" Component_="Fonts" FileName="NOTOSA~6.OTF|NotoSansSC-Regular.otf" Attributes="0" SourcePath="Resources\Fonts\NotoSansSC-Regular.otf" SelfReg="false"/>
-    <ROW File="NotoSansThaiMedium.ttf" Component_="NotoSansThaiMedium.ttf" FileName="NOTOSA~1.TTF|NotoSansThai-Medium.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansThai-Medium.ttf" SelfReg="false"/>
-    <ROW File="NotoSansThaiRegular.ttf" Component_="NotoSansThaiMedium.ttf" FileName="NOTOSA~2.TTF|NotoSansThai-Regular.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansThai-Regular.ttf" SelfReg="false"/>
+    <ROW File="NotoSansThaiMedium.ttf" Component_="Fonts" FileName="NOTOSA~1.TTF|NotoSansThai-Medium.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansThai-Medium.ttf" SelfReg="false"/>
+    <ROW File="NotoSansThaiRegular.ttf" Component_="Fonts" FileName="NOTOSA~2.TTF|NotoSansThai-Regular.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansThai-Regular.ttf" SelfReg="false"/>
     <ROW File="Default.fac" Component_="Default.fac" FileName="Default.fac" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\Factsoft\Default.fac" SelfReg="false"/>
-    <ROW File="NotoSansJPBold.ttf" Component_="NotoSansThaiMedium.ttf" FileName="NOTOSA~6.TTF|NotoSansJP-Bold.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansJP-Bold.ttf" SelfReg="false"/>
-    <ROW File="NotoSansJPMedium.ttf" Component_="NotoSansThaiMedium.ttf" FileName="NOTOSA~7.TTF|NotoSansJP-Medium.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansJP-Medium.ttf" SelfReg="false"/>
-    <ROW File="NotoSansJPRegular.ttf" Component_="NotoSansThaiMedium.ttf" FileName="NOTOSA~8.TTF|NotoSansJP-Regular.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansJP-Regular.ttf" SelfReg="false"/>
-    <ROW File="IBMPlexSansArabicBold.ttf" Component_="NotoSansThaiMedium.ttf" FileName="IBMPLE~1.TTF|IBMPlexSansArabic-Bold.ttf" Attributes="0" SourcePath="Resources\Fonts\IBMPlexSansArabic-Bold.ttf" SelfReg="false"/>
-    <ROW File="IBMPlexSansArabicMedium.ttf" Component_="NotoSansThaiMedium.ttf" FileName="IBMPLE~2.TTF|IBMPlexSansArabic-Medium.ttf" Attributes="0" SourcePath="Resources\Fonts\IBMPlexSansArabic-Medium.ttf" SelfReg="false"/>
-    <ROW File="IBMPlexSansArabicRegular.ttf" Component_="NotoSansThaiMedium.ttf" FileName="IBMPLE~3.TTF|IBMPlexSansArabic-Regular.ttf" Attributes="0" SourcePath="Resources\Fonts\IBMPlexSansArabic-Regular.ttf" SelfReg="false"/>
+    <ROW File="NotoSansJPBold.ttf" Component_="Fonts" FileName="NOTOSA~6.TTF|NotoSansJP-Bold.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansJP-Bold.ttf" SelfReg="false"/>
+    <ROW File="NotoSansJPMedium.ttf" Component_="Fonts" FileName="NOTOSA~7.TTF|NotoSansJP-Medium.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansJP-Medium.ttf" SelfReg="false"/>
+    <ROW File="NotoSansJPRegular.ttf" Component_="Fonts" FileName="NOTOSA~8.TTF|NotoSansJP-Regular.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansJP-Regular.ttf" SelfReg="false"/>
+    <ROW File="IBMPlexSansArabicBold.ttf" Component_="Fonts" FileName="IBMPLE~1.TTF|IBMPlexSansArabic-Bold.ttf" Attributes="0" SourcePath="Resources\Fonts\IBMPlexSansArabic-Bold.ttf" SelfReg="false"/>
+    <ROW File="IBMPlexSansArabicMedium.ttf" Component_="Fonts" FileName="IBMPLE~2.TTF|IBMPlexSansArabic-Medium.ttf" Attributes="0" SourcePath="Resources\Fonts\IBMPlexSansArabic-Medium.ttf" SelfReg="false"/>
+    <ROW File="IBMPlexSansArabicRegular.ttf" Component_="Fonts" FileName="IBMPLE~3.TTF|IBMPlexSansArabic-Regular.ttf" Attributes="0" SourcePath="Resources\Fonts\IBMPlexSansArabic-Regular.ttf" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BootstrOptComponent">
     <ROW BootstrOptKey="GlobalOptions" GeneralOptions="b" DownloadFolder="[AppDataFolder][|Manufacturer]\[|ProductName]\prerequisites" Options="2"/>
@@ -178,7 +177,7 @@
     <ROW Path="&lt;AI_DICTS&gt;ui_en.ail"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.DigCertStoreComponent">
-    <ROW TimeStampUrl="http://timestamp.digicert.com" SignerDescription="[|ProductName]" SignOptions="7" SignTool="0" SignDelay="500" UseSha256="1" Thumbprint="913a9cb96d6560245dec2055995cef6441ea4b9f Subject: FxSound, LLC&#10;Issuer: DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1&#10;Valid from 05/09/2023 to 05/09/2024&#10;User\MY" Subject="CN=&quot;FxSound, LLC&quot;, O=&quot;FxSound, LLC&quot;, L=Mill Valley, S=California, C=US, SERIALNUMBER=201721910237, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=California, OID.1.3.6.1.4.1.311.60.2.1.3=US"/>
+    <ROW TimeStampUrl="http://timestamp.digicert.com" SignerDescription="[|ProductName]" SignOptions="7" SignTool="0" SignDelay="500" UseSha256="1" Thumbprint="4bfe2feb31d00b184e85a59e1f2b77b7f3443852 Subject: FxSound, LLC&#10;Issuer: DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1&#10;Valid from 07/05/2024 to 05/08/2025&#10;User\MY" Subject="CN=&quot;FxSound, LLC&quot;, O=&quot;FxSound, LLC&quot;, L=Mill Valley, S=California, C=US, SERIALNUMBER=201721910237, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=California, OID.1.3.6.1.4.1.311.60.2.1.3=US"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.DynamicPropertyComponent">
     <ROW Property="ProductVersion" Type="2" SourcePath="FxSound.exe"/>
@@ -328,8 +327,7 @@
     <ROW Feature_="AIOtherFiles" Component_="fxvad.inf"/>
     <ROW Feature_="AIOtherFiles" Component_="fxvad.inf_1"/>
     <ROW Feature_="AIOtherFiles" Component_="fac"/>
-    <ROW Feature_="AI64BitFiles" Component_="Fonts"/>
-    <ROW Feature_="AIOtherFiles" Component_="NotoSansThaiMedium.ttf"/>
+    <ROW Feature_="AIOtherFiles" Component_="Fonts"/>
     <ROW Feature_="AIOtherFiles" Component_="Default.fac"/>
     <ROW Feature_="AI32BitFiles" Component_="x86"/>
   </COMPONENT>
