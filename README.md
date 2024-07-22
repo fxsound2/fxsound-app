@@ -41,6 +41,7 @@ We welcome anyone who wants to contribute to this project. For more details on h
 
 ## Acknowledgements
 Our special thanks to Advanced Installer for supporting us with Advanced Installer Professional license to build our installer.
+
 [![image](https://github.com/user-attachments/assets/c133fe06-619c-4c17-bce9-f1cf051c5265)](https://www.advancedinstaller.com)
 
 ## License
