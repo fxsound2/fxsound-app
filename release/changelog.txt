@@ -1,0 +1,43 @@
+version 1.1.25.0
+----------------
+1. Fixed the issue that caused fonts and presets to not load in Windows 7 startup
+2. Fixed the issue of mono devices getting selected when auto switch is enabled 
+
+version 1.1.24.0
+----------------
+1. Fixed the application crash issues
+2. Added the missing fonts in 32 bit installation
+3. Fixed issue #113 - application closing from Alt+Tab switching
+
+version 1.1.23.0
+----------------
+1. Added support for mono playback devices. Mono devices can be selected now, but FxSound does not process mono audio.
+2. Minimize button added to minimize FxSound to taskbar
+3. A preferred device can be selected from settings.
+4. Check for updates in settings, updates to a new version
+5. Croatian and Bosnian language support added.
+6. Translation corrections and improvements in Chinese, Spanish, Russian and German
+
+version 1.1.22.0
+----------------
+1. Fixed the issue - .ttf files in Windows start menu · Issue #79 (https://github.com/fxsound2/fxsound-app/issues/79)
+2. Removed the auto start disable option in Windows 10/11
+3. Increased Setttings dialog height to avoid partial display of reset presets button
+4. vorige changed to Vorige in Nederlands settings
+5. Changed Donate button string in Russian
+
+version 1.1.21.0
+----------------
+
+1. Arabic and Japanese language support added
+2. zero processing Default preset added
+3. Notifications on/off settings on Windows 10 now remain unchanged after reboot/relogin
+4. Hotkeys which conflict with any valid character typing shortcuts are not enabled
+5. Default hotkey combinations are modified to Ctrl+Shift+key
+6. Maximum user defined preset limit is increased to 20 by default
+7. User defined preset limit can be configured in the FxSound.settings file by adding the value for <max_user_presets> which can be in the range of 10 to 100
+8. Hotkey options now available to switch to next and previous preset
+9. Settings dialog, Import presets dialog and Export presets dialog can be closed with ESC key
+10. System tray icon changes according to FxSound status on/off/processing
+11. open-source announcement displayed on first launch after installation
+12. FxSound window title can be displayed in AutoIt Window Info Tool
