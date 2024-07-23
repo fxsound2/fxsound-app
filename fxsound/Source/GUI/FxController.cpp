@@ -898,10 +898,14 @@ bool FxController::importPresets(const Array<File>& preset_files, StringArray& i
     return false;
 }
 
-void FxController::initOutputs(const std::vector<SoundDevice>& sound_devices)
+void FxController::initOutputs(std::vector<SoundDevice>& sound_devices)
 {
     StringArray output_names;
     int i = 0;
+
+	std::sort(sound_devices.begin(), sound_devices.end(), [](const SoundDevice& a, const SoundDevice& b) {
+		return a.deviceNumChannel > b.deviceNumChannel;
+		});
     
     dfx_enabled_ = false;
     output_ids_.clear();
@@ -961,11 +965,15 @@ void FxController::addPreferredOutput(std::vector<SoundDevice>& sound_devices)
 	}
 }
 
-void FxController::updateOutputs(const std::vector<SoundDevice>& sound_devices)
+void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 {
     StringArray output_names;
     StringArray new_device_ids;
     int current_index = -1;
+
+	std::sort(sound_devices.begin(), sound_devices.end(), [](const SoundDevice& a, const SoundDevice& b) {
+		return a.deviceNumChannel > b.deviceNumChannel;
+		});
 
     // If the playback devices are enumerated due to a change in the list,
     // find the newly connected device ids

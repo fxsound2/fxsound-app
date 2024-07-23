@@ -48,6 +48,8 @@ public:
                     RPC_C_IMP_LEVEL_IMPERSONATE, NULL, EOAC_NONE, NULL);
             }
             
+            setWorkingDirectory();
+
             LookAndFeel::setDefaultLookAndFeel(&theme_);
 
             FxController::getInstance().config(commandline);
@@ -109,6 +111,21 @@ public:
 
 private:
     FxTheme theme_;
+
+    void setWorkingDirectory()
+    {
+        wchar_t module_file[MAX_PATH];
+        DWORD length = GetModuleFileName(NULL, module_file, MAX_PATH);
+        if (length > 0)
+        {
+            std::wstring path(module_file);
+            size_t pos = path.find_last_of(L"\\/");
+            if (pos != std::string::npos)
+            {
+                SetCurrentDirectory(path.substr(0, pos).c_str());
+            }
+        }
+    };
 
     std::unique_ptr<FxMainWindow> main_window_;
     

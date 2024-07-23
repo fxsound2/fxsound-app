@@ -172,10 +172,10 @@ private:
 
 	void onSoundDeviceChange(std::vector<SoundDevice> sound_devices) override;
 	
-    void initOutputs(const std::vector<SoundDevice>& sound_devices);
+    void initOutputs(std::vector<SoundDevice>& sound_devices);
 	void addPreferredOutput(std::vector<SoundDevice>& sound_devices);
     void selectOutput();
-	void updateOutputs(const std::vector<SoundDevice>& sound_devices);
+	void updateOutputs(std::vector<SoundDevice>& sound_devices);
 	void setSelectedOutput(String id, String name);
 
 	void registerHotkeys();
