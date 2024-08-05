@@ -167,7 +167,6 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 	FxModel::getModel().setMenuClicked(settings_.getBool("menu_clicked"));
 
     free_plan_ = settings_.getBool("free_plan");
-    auto_select_output_ = !settings_.getBool("disable_auto_switch_output");
     hide_help_tooltips_ = settings_.getBool("hide_help_tooltips");
     output_device_id_ = settings_.getString("output_device_id");
     output_device_name_ = settings_.getString("output_device_name");
@@ -224,7 +223,7 @@ void FxController::config(const String& commandline)
 
     if (output_device.isNotEmpty())
     {
-		setSelectedOutput("", output_device);
+		setPreferredOutput("", output_device);
     }
 
     if (language.isEmpty())
@@ -247,7 +246,6 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		audio_passthru_ = audio_passthru;
 		system_tray_view_ = system_tray_view;
 
-        auto_select_output_ = !settings_.getBool("disable_auto_switch_output");
         output_device_id_ = settings_.getString("output_device_id");
         output_device_name_ = settings_.getString("output_device_name");
        
@@ -902,14 +900,14 @@ void FxController::initOutputs(std::vector<SoundDevice>& sound_devices)
 {
     StringArray output_names;
     int i = 0;
-
-	std::sort(sound_devices.begin(), sound_devices.end(), [](const SoundDevice& a, const SoundDevice& b) {
-		return a.deviceNumChannel > b.deviceNumChannel;
-		});
     
     dfx_enabled_ = false;
     output_ids_.clear();
 	output_devices_.clear();
+	
+	auto pref_device_id = settings_.getString("preferred_device_id");
+	auto pref_device_name = settings_.getString("preferred_device_name");
+
     for (auto sound_device : sound_devices)
     {
         if (sound_device.isRealDevice)
@@ -923,6 +921,12 @@ void FxController::initOutputs(std::vector<SoundDevice>& sound_devices)
             {
                 output_device_id_ = sound_device.pwszID.c_str();
             }
+
+			if (pref_device_id.isEmpty() &&
+				pref_device_name == sound_device.deviceFriendlyName.c_str())
+			{
+				settings_.setString("preferred_device_id", sound_device.pwszID.c_str());
+			}
 
             i++;
         }
@@ -948,7 +952,8 @@ void FxController::addPreferredOutput(std::vector<SoundDevice>& sound_devices)
 		bool found = false;
 		for (auto sound_device : sound_devices)
 		{
-			if (sound_device.pwszID == pref_device_id.toWideCharPointer())
+			if (sound_device.pwszID == pref_device_id.toWideCharPointer() ||
+				sound_device.deviceFriendlyName == pref_device_name.toWideCharPointer())
 			{
 				found = true;
 			}
@@ -970,10 +975,6 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
     StringArray output_names;
     StringArray new_device_ids;
     int current_index = -1;
-
-	std::sort(sound_devices.begin(), sound_devices.end(), [](const SoundDevice& a, const SoundDevice& b) {
-		return a.deviceNumChannel > b.deviceNumChannel;
-		});
 
     // If the playback devices are enumerated due to a change in the list,
     // find the newly connected device ids
@@ -1053,25 +1054,27 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
         // or a selected playback device is disconnected
         if (output_selected < 0)
         {
-            if (!auto_select_output_)
-            {
-				audio_passthru_->mute(true);
-				dfx_dsp_.powerOn(false);
+			// If previously selected output has been disconnected then, select a newly connected device
+			if (!new_device_ids.isEmpty())
+			{
+				output_device_id_ = new_device_ids[0];
+			}
+			else 
+			{
+				// If there is no new device select the first available device
+				if (!output_ids_.isEmpty())
+				{
+					output_device_id_ = output_ids_[0];
+				}
+				else
+				{
+					// In the rare case that there is no output device available, turn off processing
+					audio_passthru_->mute(true);
+					dfx_dsp_.powerOn(false);
 
-				FxModel::getModel().pushMessage(TRANS("Output Disconnected"));
-
-                return;
-            }
-            output_device_id_ = output_ids_[0];
-        }
-
-        if (auto_select_output_)
-        {
-            // New device is connected, so override the previous output selection
-            if (!new_device_ids.isEmpty())
-            {
-                output_device_id_ = new_device_ids[0];
-            }
+					FxModel::getModel().pushMessage(TRANS("Output Disconnected"));
+				}
+			}
         }
 
         auto index = output_ids_.indexOf(output_device_id_);
@@ -1087,12 +1090,18 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 
 void FxController::setSelectedOutput(String id, String name)
 {
-	auto preferred_device_id = getPreferredOutputId();
+	auto pref_device_id = getPreferredOutputId();
+
 	// If preferred output is set, then do not change the output device in settings
-	if (preferred_device_id.isEmpty() || preferred_device_id == id)
+	if (pref_device_id.isNotEmpty() && id != pref_device_id)
 	{
-		settings_.setString("output_device_name", id);
-		settings_.setString("output_device_id", name);
+		return;
+	}
+
+	if (id.isNotEmpty() || name.isNotEmpty())
+	{
+		settings_.setString("output_device_id", id);
+		settings_.setString("output_device_name", name);
 	}
 }
 
@@ -1725,17 +1734,6 @@ void FxController::setPreferredOutput(String id, String name)
 	settings_.setString("preferred_device_name", name);
 
 	setSelectedOutput(id, name);
-}
-
-bool FxController::isOutputAutoSelect()
-{
-    return !settings_.getBool("disable_auto_switch_output");
-}
-
-void FxController::setOutputAutoSelect(bool auto_select)
-{
-    auto_select_output_ = auto_select;
-    settings_.setBool("disable_auto_switch_output", !auto_select);
 }
 
 bool FxController::isLaunchOnStartup()

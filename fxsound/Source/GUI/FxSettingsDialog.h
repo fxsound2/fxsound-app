@@ -106,7 +106,6 @@ private:
 		static constexpr int BUTTON_WIDTH = 220;
 		static constexpr int BUTTON_HEIGHT = 24;
 		static constexpr int MAX_BUTTON_WIDTH = 315;
-		static constexpr int ENDPOINT_GROUP_HEIGHT = 20 + TOGGLE_BUTTON_HEIGHT + 20 + ENDPOINT_LIST_HEIGHT + 20;
 
         void setText();
 		void resizeResetButton(int x, int y);
@@ -114,7 +113,6 @@ private:
 		void updateEndpointList();
 
         ToggleButton launch_toggle_;
-        ToggleButton auto_select_output_toggle_;
         ToggleButton hide_help_tips_toggle_;
 		ToggleButton hotkeys_toggle_;
 		TextButton reset_presets_button_;
@@ -123,7 +121,6 @@ private:
 		ComboBox language_list_;
 		ComboBox preferred_endpoint_;
 		Label endpoint_title_;
-		GroupComponent endpoint_group_;
 	};
 
 	class HelpSettingsPane : public SettingsPane, public ToggleButton::Listener
@@ -165,7 +162,7 @@ private:
 	{
 	public:
         static constexpr int WIDTH = 600;
-        static constexpr int HEIGHT = 580;
+        static constexpr int HEIGHT = 510;
 
 		SettingsComponent();
         ~SettingsComponent() = default;
