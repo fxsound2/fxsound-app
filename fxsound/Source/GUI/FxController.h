@@ -97,8 +97,6 @@ public:
 	bool setHotkey(const String& command, int new_mod, int vk);
 	bool isValidHotkey(int mod, int new_vk);
 
-    bool isOutputAutoSelect();
-    void setOutputAutoSelect(bool auto_select);
 	String getPreferredOutputId();
 	String getPreferredOutputName();
 	void setPreferredOutput(String id, String name);
@@ -204,7 +202,6 @@ private:
     String output_device_name_;
     StringArray output_ids_;
 	std::vector<SoundDevice> output_devices_;
-    bool auto_select_output_;
     bool hide_help_tooltips_;
     
 	unsigned long audio_process_time_;
