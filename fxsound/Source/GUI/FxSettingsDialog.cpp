@@ -175,7 +175,6 @@ void FxSettingsDialog::SettingsPane::paint(Graphics&)
 FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
     SettingsPane("General Preferences"),
     launch_toggle_(TRANS("Launch on system startup")),
-    auto_select_output_toggle_(TRANS("Automatically switch to newly connected output device")),
     hide_help_tips_toggle_(TRANS("Hide help tips for audio controls")),
 	hotkeys_toggle_(TRANS("Disable keyboard shortcuts")),
 	reset_presets_button_(TRANS("Reset presets to factory defaults"))
@@ -196,16 +195,11 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	launch_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	launch_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	launch_toggle_.setWantsKeyboardFocus(true);
-	endpoint_group_.setTextLabelPosition(juce::Justification::topLeft);
-    auto_select_output_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
-    auto_select_output_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-    auto_select_output_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-	auto_select_output_toggle_.setWantsKeyboardFocus(true);
 	endpoint_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	endpoint_title_.setJustificationType(Justification::centredLeft);
 	preferred_endpoint_.setMouseCursor(MouseCursor::PointingHandCursor);
 	preferred_endpoint_.setWantsKeyboardFocus(true);
-	preferred_endpoint_.setEnabled(!FxController::getInstance().isOutputAutoSelect());
+	preferred_endpoint_.setEnabled(true);
 	preferred_endpoint_.onChange = [this]() {
 										auto endpoints = FxModel::getModel().getOutputDevices();
 										auto id = preferred_endpoint_.getSelectedId();
@@ -263,14 +257,6 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	launch_toggle_.setToggleState(FxController::getInstance().isLaunchOnStartup(), NotificationType::dontSendNotification);
 	launch_toggle_.onClick = [this]() { FxController::getInstance().setLaunchOnStartup(launch_toggle_.getToggleState()); };
 
-    auto_select_output_toggle_.setToggleState(FxController::getInstance().isOutputAutoSelect(), NotificationType::dontSendNotification);
-    auto_select_output_toggle_.onClick = [this]() { 
-		FxController::getInstance().setOutputAutoSelect(auto_select_output_toggle_.getToggleState());
-		preferred_endpoint_.setEnabled(!auto_select_output_toggle_.getToggleState());
-		FxController::getInstance().setPreferredOutput("", "");
-		preferred_endpoint_.setSelectedId(0, NotificationType::dontSendNotification);
-	};
-
     hide_help_tips_toggle_.setToggleState(FxController::getInstance().isHelpTooltipsHidden(), NotificationType::dontSendNotification);
     hide_help_tips_toggle_.onClick = [this]() { FxController::getInstance().setHelpTooltipsHidden(hide_help_tips_toggle_.getToggleState()); };
 	
@@ -288,8 +274,6 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 		addAndMakeVisible(&launch_toggle_);
 	}
 	
-	addAndMakeVisible(&endpoint_group_);
-	addAndMakeVisible(&auto_select_output_toggle_);
 	addAndMakeVisible(&endpoint_title_);
 	addAndMakeVisible(&preferred_endpoint_);
 	addAndMakeVisible(&hide_help_tips_toggle_);
@@ -321,18 +305,12 @@ void FxSettingsDialog::GeneralSettingsPane::resized()
 		launch_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 		y = launch_toggle_.getBottom() + 20;
 	}
-		
-	endpoint_group_.setBounds(X_MARGIN, y, getWidth() - (X_MARGIN*2), ENDPOINT_GROUP_HEIGHT);
 
-	y += 20;
-	auto_select_output_toggle_.setBounds(X_MARGIN+10, y, getWidth() - ((X_MARGIN + 10) * 2), TOGGLE_BUTTON_HEIGHT);
+	endpoint_title_.setBounds(X_MARGIN, y, ENDPOINT_LABEL_WIDTH, ENDPOINT_LIST_HEIGHT);
+	auto width = getWidth() - ((X_MARGIN + 5) * 2) - ENDPOINT_LABEL_WIDTH;
+	preferred_endpoint_.setBounds(ENDPOINT_LABEL_WIDTH + X_MARGIN + 15, y, width, ENDPOINT_LIST_HEIGHT);
 
-    y = auto_select_output_toggle_.getBottom() + 20;
-	endpoint_title_.setBounds(X_MARGIN+10, y, ENDPOINT_LABEL_WIDTH, ENDPOINT_LIST_HEIGHT);
-	auto width = getWidth() - ((X_MARGIN + 10) * 2) - ENDPOINT_LABEL_WIDTH - 5;
-	preferred_endpoint_.setBounds(ENDPOINT_LABEL_WIDTH+X_MARGIN+15, y, width, ENDPOINT_LIST_HEIGHT);
-
-	y = endpoint_group_.getBottom() + 15;
+	y = preferred_endpoint_.getBottom() + 20;
     hide_help_tips_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 
     y = hide_help_tips_toggle_.getBottom() + 10;
@@ -363,8 +341,6 @@ void FxSettingsDialog::GeneralSettingsPane::setText()
 
     int height = FxSettingsDialog::SettingsComponent::HEIGHT;
     launch_toggle_.setButtonText(TRANS("Launch on system startup"));
-	endpoint_group_.setText(TRANS("Output device"));
-    auto_select_output_toggle_.setButtonText(TRANS("Automatically switch to newly connected output device"));
     hide_help_tips_toggle_.setButtonText(TRANS("Hide help tips for audio controls"));
     hotkeys_toggle_.setButtonText(TRANS("Disable keyboard shortcuts"));
     reset_presets_button_.setButtonText(TRANS("Reset presets to factory defaults"));

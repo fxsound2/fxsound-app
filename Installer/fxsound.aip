@@ -24,11 +24,11 @@
     <ROW Property="MSIFASTINSTALL" MultiBuildValue="DefaultBuild:2"/>
     <ROW Property="Manufacturer" Value="FxSound LLC"/>
     <ROW Property="MsiLogging" MultiBuildValue="DefaultBuild:vp"/>
-    <ROW Property="ProductCode" Value="1033:{D9705B4A-30BD-426E-A2D2-E48D54C55F2E} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{2B3787CA-E1AE-4A79-A083-2F3C3D2F2E90} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="FxSound"/>
     <ROW Property="ProductName_32" Value="[|ProductName]"/>
-    <ROW Property="ProductVersion" Value="1.1.25.0" Options="20"/>
+    <ROW Property="ProductVersion" Value="1.1.26.0" Options="20"/>
     <ROW Property="REBOOT" MultiBuildValue="DefaultBuild:Suppress"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
@@ -180,7 +180,7 @@
     <ROW Path="&lt;AI_DICTS&gt;ui_en.ail"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.DigCertStoreComponent">
-    <ROW TimeStampUrl="http://timestamp.digicert.com" SignerDescription="[|ProductName]" SignOptions="7" SignTool="0" SignDelay="500" UseSha256="1" Thumbprint="4BFE2FEB31D00B184E85A59E1F2B77B7F3443852 Subject: FxSound, LLC&#10;Issuer: DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1&#10;Valid from 07/05/2024 to 05/08/2025" Subject="CN=&quot;FxSound, LLC&quot;, O=&quot;FxSound, LLC&quot;, L=Mill Valley, S=California, C=US, SERIALNUMBER=201721910237, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=California, OID.1.3.6.1.4.1.311.60.2.1.3=US" Store="User\MY"/>
+    <ROW TimeStampUrl="http://timestamp.digicert.com" SignerDescription="[|ProductName]" SignOptions="7" SignTool="0" SignDelay="500" UseSha256="1" Subject="CN=&quot;FxSound, LLC&quot;, O=&quot;FxSound, LLC&quot;, L=Mill Valley, S=California, C=US, SERIALNUMBER=201721910237, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=California, OID.1.3.6.1.4.1.311.60.2.1.3=US"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.DynamicPropertyComponent">
     <ROW Property="ProductVersion" Type="2" SourcePath="FxSound.exe"/>
