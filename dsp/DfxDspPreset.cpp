@@ -114,6 +114,26 @@ int DfxDspPrivate::savePreset(std::wstring preset_name, std::wstring preset_file
 	return(OKAY);
 }
 
+int DfxDspPrivate::exportPreset(std::wstring preset_source_file_full_path, std::wstring preset_name, std::wstring preset_export_path)
+{
+	PT_HANDLE* vals_hdl;
+
+	if (valsRead(&preset_source_file_full_path[0], IS_FALSE, NULL, &vals_hdl) != OKAY)
+		return(NOT_OKAY);
+
+	if (getStateInfoFromVals(vals_hdl, true) != OKAY)
+		return(NOT_OKAY);
+
+	preset_name.append(L".fac");
+	if (valsSave(vals_hdl, &preset_export_path[0], &preset_name[0]) != OKAY)
+		return(NOT_OKAY);
+
+	if (valsFreeUp(&vals_hdl) != OKAY)
+		return(NOT_OKAY);
+
+	return(OKAY);
+}
+
 /*
 * Modeled after dfxg_GetStateInfoFromVals() in dfxgPreset.cpp.
 */

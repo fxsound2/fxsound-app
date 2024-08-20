@@ -59,6 +59,11 @@ int DfxDsp::savePreset(std::wstring preset_name, std::wstring preset_file_full_p
 	return data_->savePreset(preset_name, preset_file_full_path);
 }
 
+int DfxDsp::exportPreset(std::wstring preset_source_file_full_path, std::wstring preset_name, std::wstring preset_export_path)
+{
+	return data_->exportPreset(preset_source_file_full_path, preset_name, preset_export_path);
+}
+
 void DfxDsp::eqOn(bool on)
 {
 	data_->eqOn(on);
