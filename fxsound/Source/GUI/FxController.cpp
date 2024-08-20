@@ -961,7 +961,7 @@ void FxController::addPreferredOutput(std::vector<SoundDevice>& sound_devices)
 
 		if (!found)
 		{
-			SoundDevice device;
+			SoundDevice device = {};
 			device.pwszID = pref_device_id.toWideCharPointer();
 			device.deviceFriendlyName = pref_device_name.toWideCharPointer();
 
