@@ -44,6 +44,8 @@ public:
     void setResizeImage();
     void setIcon(bool power, bool processing);
 
+    bool keyPressed(const KeyPress& key) override;
+
 private:
     static constexpr int BUTTON_WIDTH = 24;
     static constexpr int DONATE_BUTTON_WIDTH = 80;
