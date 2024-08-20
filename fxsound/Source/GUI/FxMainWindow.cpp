@@ -217,6 +217,8 @@ FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"men
 	setOpaque(false);
     enableShadow(false);
 
+	setWantsKeyboardFocus(true);
+
 	FxModel::getModel().addListener(this);
 
 	power_button_.setPowerState(FxModel::getModel().getPowerState());
@@ -356,6 +358,18 @@ void FxMainWindow::setIcon(bool power, bool processing)
 	{
 		DestroyIcon(curr_icon);
 	}
+}
+
+bool FxMainWindow::keyPressed(const KeyPress& key)
+{
+	if (key.getModifiers().isAltDown() && key.getKeyCode() == juce::KeyPress::returnKey)
+	{
+		FxController::getInstance().setMenuClicked(true);
+		showMenu();
+		return true;
+	}
+
+	return Component::keyPressed(key);
 }
 
 void FxMainWindow::showMenu()
