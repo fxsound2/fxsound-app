@@ -77,7 +77,7 @@ public:
 	void deletePreset();
 	void undoPreset();
 	void resetPresets();
-    bool exportPresets(const StringArray& preset_names);
+    bool exportPresets(const Array< FxModel::Preset>& presets);
     bool importPresets(const Array<File>& preset_files, StringArray& imported_presets, StringArray& skipped_presets);
 
 	float getEffectValue(FxEffects::EffectType effect);

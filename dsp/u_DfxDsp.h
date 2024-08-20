@@ -81,6 +81,7 @@ public:
 	int setSignalFormat(int i_bps, int i_nch, int i_srate, int i_valid_bits);
 	int loadPreset(std::wstring preset_file_full_path);
 	int savePreset(std::wstring preset_name, std::wstring preset_file_full_path);
+	int exportPreset(std::wstring preset_source_file_full_path, std::wstring preset_name, std::wstring preset_export_path);
 	int resetEQ();
 	void eqOn(bool on);
 	int getNumEqBands();
