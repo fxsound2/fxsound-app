@@ -156,7 +156,7 @@ namespace BinaryData
     const int            FxSound_ro_txtSize = 10912;
 
     extern const char*   FxSound_ru_txt;
-    const int            FxSound_ru_txtSize = 14573;
+    const int            FxSound_ru_txtSize = 14544;
 
     extern const char*   FxSound_sv_txt;
     const int            FxSound_sv_txtSize = 10581;
@@ -176,8 +176,11 @@ namespace BinaryData
     extern const char*   FxSound_zhCN_txt;
     const int            FxSound_zhCN_txtSize = 9323;
 
+    extern const char*   FxSound_zhTW_txt;
+    const int            FxSound_zhTW_txtSize = 9324;
+
     // Number of elements in the namedResourceList and originalFileNames arrays.
-    const int namedResourceListSize = 56;
+    const int namedResourceListSize = 57;
 
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];
