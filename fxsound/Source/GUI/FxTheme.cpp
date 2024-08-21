@@ -318,11 +318,17 @@ void FxTheme::loadFont(String language)
         font_600_ = loadTypeface("NotoSansKR-Medium.otf");
         font_700_ = loadTypeface("NotoSansKR-Medium.otf");
     }
-    else if (language.startsWithIgnoreCase("zh"))
+	else if (language.startsWithIgnoreCase("zh-CN"))
+	{
+		font_400_ = loadTypeface("NotoSansSC-Regular.otf");
+		font_600_ = loadTypeface("NotoSansSC-Medium.otf");
+		font_700_ = loadTypeface("NotoSansSC-Medium.otf");
+	}
+    else if (language.startsWithIgnoreCase("zh-TW"))
     {
-        font_400_ = loadTypeface("NotoSansSC-Regular.otf");
-        font_600_ = loadTypeface("NotoSansSC-Medium.otf");
-        font_700_ = loadTypeface("NotoSansSC-Medium.otf");
+        font_400_ = loadTypeface("NotoSansTC-Regular.ttf");
+        font_600_ = loadTypeface("NotoSansTC-Medium.ttf");
+        font_700_ = loadTypeface("NotoSansTC-Medium.ttf");
     }
 	else if (language.startsWithIgnoreCase("th"))
 	{

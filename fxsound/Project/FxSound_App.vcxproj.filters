@@ -3349,6 +3349,9 @@
     <None Include="..\..\Strings\Strings\FxSound.zh-CN.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
+    <None Include="..\..\Strings\Strings\FxSound.zh-TW.txt">
+      <Filter>FxSound\Strings</Filter>
+    </None>
     <None Include="..\..\..\..\..\..\..\JUCE\modules\juce_core\native\java\README.txt">
       <Filter>JUCE Modules\juce_core\native\java</Filter>
     </None>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.1.26.0"
+<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.1.27.0"
               displaySplashScreen="1" jucerFormatVersion="1" companyName="FxSound LLC"
               companyWebsite="https://www.fxsound.com" companyCopyright="2024 FxSound&#8482;"
               defines="UNICODE" postExportShellCommandWin="type %%1%%\Project\status_icons.rc &gt;&gt; %%1%%\Project\resources.rc">
@@ -175,6 +175,8 @@
       <FILE id="mIhelm" name="FxSound.vi.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.vi.txt"/>
       <FILE id="PIqwHI" name="FxSound.zh-CN.txt" compile="0" resource="1"
             file="../Strings/Strings/FxSound.zh-CN.txt"/>
+      <FILE id="gqOoeq" name="FxSound.zh-TW.txt" compile="0" resource="1"
+            file="../Strings/Strings/FxSound.zh-TW.txt"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

@@ -1540,10 +1540,14 @@ void FxController::setLanguage(String language_code)
     {
         LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_es_txt, BinaryData::FxSound_es_txtSize), false));
     }
-    else if (language_.startsWithIgnoreCase("zh"))
+    else if (language_.startsWithIgnoreCase("zh-CN"))
     {
         LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_zhCN_txt, BinaryData::FxSound_zhCN_txtSize), false));
-    } 
+    }
+	else if (language_.startsWithIgnoreCase("zh-TW"))
+	{
+		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_zhTW_txt, BinaryData::FxSound_zhTW_txtSize), false));
+	}
     else if (language_.startsWithIgnoreCase("fr"))
     {
         LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_fr_txt, BinaryData::FxSound_fr_txtSize), false));
@@ -1644,10 +1648,14 @@ String FxController::getLanguageName(String language_code) const
     {
         return L"Espa\u00f1ol";
     }    
-    else if (language_code.startsWithIgnoreCase("zh"))
+    else if (language_code.startsWithIgnoreCase("zh-CN"))
     {
-        return L"\u4e2d\u6587";
+        return L"\u7b80\u4f53\u4e2d\u6587";
     }
+	else if (language_code.startsWithIgnoreCase("zh-TW"))
+	{
+		return L"\u7e41\u9ad4\u4e2d\u6587";
+	}
     else if (language_code.startsWithIgnoreCase("sv"))
     {
         return L"svenska";
