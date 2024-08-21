@@ -1634,7 +1634,7 @@ String FxController::getLanguageName(String language_code) const
     }
     else if (language_code.startsWithIgnoreCase("pt-br"))
     {
-        return L"Portugues do Brasil";
+        return L"portugu\u00eas brasileiro";
     }
     else if (language_code.startsWithIgnoreCase("pt"))
     {
