@@ -118,7 +118,6 @@ private:
 		TextButton reset_presets_button_;
 		OwnedArray<FxHotkeyLabel> hotkey_labels_;
 		FxLanguage language_switch_;
-		ComboBox language_list_;
 		ComboBox preferred_endpoint_;
 		Label endpoint_title_;
 	};
