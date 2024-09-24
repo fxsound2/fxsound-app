@@ -1,0 +1,15 @@
+#include <Windows.h>
+#include <initguid.h>
+#include <psapi.h>
+#include <atlcomcli.h>
+#include <mmdeviceapi.h>
+#include <audioclient.h>
+#include <endpointvolume.h>
+#include <audiopolicy.h>
+#include <FunctionDiscoveryKeys_devpkey.h>
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
