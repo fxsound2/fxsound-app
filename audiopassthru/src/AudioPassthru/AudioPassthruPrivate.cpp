@@ -164,7 +164,7 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices()
 		// Skip mono devices if SND_DEVICES_MONO_BUG_SKIP_MONO_DEVICES is IS_TRUE
 		if (SND_DEVICES_MONO_BUG_SKIP_MONO_DEVICES && sound_device.deviceNumChannel == 1)
 		{
-			continue;
+			//continue;
 		}
 
 		// Figure out if this is a real device or not
