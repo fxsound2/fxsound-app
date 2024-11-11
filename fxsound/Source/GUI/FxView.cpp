@@ -95,6 +95,10 @@ void FxView::modelChanged(FxModel::Event model_event)
 		for (auto name : output_names)
 		{
 			endpoint_list_.addItem(name, id);
+			if (name.endsWith("[Mono]"))
+			{
+				endpoint_list_.setItemEnabled(id, false);
+			}
 
             id++;
 		}
