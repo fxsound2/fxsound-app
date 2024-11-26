@@ -23,6 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "GUI/FxTheme.h"
 #include "GUI/FxMainWindow.h"
 #include "AudioPassthru.h"
+#include <dbghelp.h>
+
+#pragma comment(lib, "dbghelp.lib")
 
 //==============================================================================
 class FxSoundApplication : public JUCEApplication
@@ -41,6 +44,8 @@ public:
         // This method is where you should put your application's initialisation code..
         try
         {
+            SetUnhandledExceptionFilter(unhandledExceptionFilter);
+
             HRESULT hRes = CoInitializeEx(0, COINIT_MULTITHREADED);
             if (SUCCEEDED(hRes))
             {
@@ -111,6 +116,69 @@ public:
 
 private:
     FxTheme theme_;
+    static constexpr int MAX_FRAMES = 64;
+
+    static LONG WINAPI unhandledExceptionFilter(EXCEPTION_POINTERS* exception_info)
+    {
+        String message = String::formatted("Unhandled exception\nException code: 0x%X\nException flags: 0x%X\nException address: 0x%p\n",
+            exception_info->ExceptionRecord->ExceptionCode,
+            exception_info->ExceptionRecord->ExceptionFlags,
+            exception_info->ExceptionRecord->ExceptionAddress);
+
+        auto& controller = FxController::getInstance();
+        controller.logMessage("\n"+message);
+
+        void* stack[MAX_FRAMES];
+        HANDLE process = GetCurrentProcess();
+        String stacktrace_info;
+
+        WORD frames = CaptureStackBackTrace(0, MAX_FRAMES, stack, nullptr);
+
+        SymInitialize(process, nullptr, TRUE);
+
+        for (WORD i = 0; i < frames; i++)
+        {
+            DWORD64 address = (DWORD64)(stack[i]);
+
+            char symbol_buffer[sizeof(SYMBOL_INFO) + 256] = { 0 };
+            SYMBOL_INFO* symbol = (SYMBOL_INFO*)symbol_buffer;
+            symbol->MaxNameLen = 255;
+            symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+
+            if (SymFromAddr(process, address, nullptr, symbol))
+            {
+                DWORD lineDisplacement;
+                IMAGEHLP_LINE64 lineInfo = { 0 };
+                lineInfo.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
+
+                stacktrace_info += String::formatted("%S at 0x%llX\n", symbol->Name, symbol->Address);
+
+                if (SymGetLineFromAddr64(process, address, &lineDisplacement, &lineInfo))
+                {
+                    char* path = std::strrchr(lineInfo.FileName, '\\');
+                    char* file_name;
+                    if (path != nullptr)
+                    {
+                        file_name = path + 1;
+                    }
+                    else
+                    {
+                        file_name = lineInfo.FileName;
+                    }
+
+                    stacktrace_info += String::formatted("    File: %S, Line: %d\n", file_name, lineInfo.LineNumber);
+                }
+            }
+        }
+
+        SymCleanup(process);
+
+        controller.logMessage(stacktrace_info);
+
+        MessageBox(NULL, message.toWideCharPointer(), L"FxSound", MB_ICONERROR | MB_OK);
+
+        return EXCEPTION_EXECUTE_HANDLER;
+    }
 
     void setWorkingDirectory()
     {
