@@ -97,6 +97,7 @@ public:
 	bool setHotkey(const String& command, int new_mod, int vk);
 	bool isValidHotkey(int mod, int new_vk);
 
+	std::tuple<String, String> getPreferredOutput();
 	String getPreferredOutputId();
 	String getPreferredOutputName();
 	void setPreferredOutput(String id, String name);

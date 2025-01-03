@@ -39,7 +39,7 @@ void FxModel::initOutputs(const std::vector<SoundDevice>& output_devices)
 
 	for (auto output_device : output_devices_)
 	{
-		if (output_device.deviceNumChannel < 2)
+		if (output_device.deviceNumChannel == 1)
 		{
 			output_names_.add(String(output_device.deviceFriendlyName.c_str()) + String(" [Mono]"));
 		}
