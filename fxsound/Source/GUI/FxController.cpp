@@ -590,6 +590,14 @@ void FxController::setOutput(int output, bool notify)
 	{
 		selected_sound_device = sound_devices[output];
 	}
+
+	// Do not allow mono device to be set as output device
+	auto mono_device = selected_sound_device.deviceNumChannel < 2;
+	if (mono_device)
+	{
+		return;
+	}
+
 	for (auto sound_device : sound_devices)
 	{
 		if (sound_device.isRealDevice)
@@ -629,18 +637,14 @@ void FxController::setOutput(int output, bool notify)
     }
     else
     {
-		auto mono_device = selected_sound_device.deviceNumChannel < 2;
         if (FxModel::getModel().getPowerState())
         {
-            dfx_dsp_.powerOn(true && !mono_device);
-            audio_passthru_->mute(false);
+			if (!dfx_dsp_.isPowerOn())
+			{
+				dfx_dsp_.powerOn(true);
+				audio_passthru_->mute(false);
+			}
         }
-        
-		FxModel::getModel().pushMessage(TRANS("Output: ") + output_device_name_);
-		if (mono_device)
-		{
-			FxModel::getModel().pushMessage(TRANS("FxSound does not support mono devices, so FxSound processing had been disabled for this device."));
-		}
     }
 
 	FxModel::getModel().setSelectedOutput(output, selected_sound_device, notify);
@@ -905,8 +909,7 @@ void FxController::initOutputs(std::vector<SoundDevice>& sound_devices)
     output_ids_.clear();
 	output_devices_.clear();
 	
-	auto pref_device_id = settings_.getString("preferred_device_id");
-	auto pref_device_name = settings_.getString("preferred_device_name");
+	auto [pref_device_id, pref_device_name] = getPreferredOutput();
 
     for (auto sound_device : sound_devices)
     {
@@ -944,8 +947,7 @@ void FxController::initOutputs(std::vector<SoundDevice>& sound_devices)
 
 void FxController::addPreferredOutput(std::vector<SoundDevice>& sound_devices)
 {
-	auto pref_device_id = settings_.getString("preferred_device_id");
-	auto pref_device_name = settings_.getString("preferred_device_name");
+	auto [pref_device_id, pref_device_name] = getPreferredOutput();
 
 	if (pref_device_id.isNotEmpty() && pref_device_name.isNotEmpty())
 	{
@@ -983,7 +985,7 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
         current_index = output_ids_.indexOf(output_device_id_);
         for (auto sound_device : sound_devices)
         {
-            if (sound_device.isRealDevice)
+            if (sound_device.isRealDevice && sound_device.deviceNumChannel >= 2)
             {
                 if (output_ids_.indexOf(String(sound_device.pwszID.c_str())) < 0)
                 {
@@ -999,17 +1001,26 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 
     auto i = 0;
     auto output_selected = -1;
-	auto pref_output_id = getPreferredOutputId();
+	auto [pref_output_id, pref_output_name] = getPreferredOutput();
 	dfx_enabled_ = false;
 	for (auto sound_device : sound_devices)
 	{
-		if (sound_device.isRealDevice)
+		if (sound_device.isRealDevice && sound_device.deviceNumChannel >= 2)
 		{
             // This is for updating the device names in the UI
             output_names.add(sound_device.deviceFriendlyName.c_str());
             // This is for caching the device id list
 			output_ids_.add(sound_device.pwszID.c_str());
 			output_devices_.push_back(sound_device);
+
+			if (pref_output_name.compareIgnoreCase("Auto") == 0)
+			{
+				if (new_device_ids.contains(String(sound_device.pwszID.c_str())))
+				{
+					output_device_id_ = sound_device.pwszID.c_str();
+					output_device_name_ = sound_device.deviceFriendlyName.c_str();
+				}
+			}
 
 			// Preferred device is found, and it becomes the output device
 			if (pref_output_id.isNotEmpty() &&
@@ -1235,10 +1246,11 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 			if (w_param == CMD_NEXT_OUTPUT)
 			{
 				auto output_index = FxModel::getModel().getSelectedOutput();
-				auto output_names = FxModel::getModel().getOutputNames();
-				if (output_names.size() > 1)
+				int count = 0;
+				while (count < controller->output_devices_.size())
 				{
-					if (output_index < output_names.size() - 1)
+					count++;
+					if (output_index < controller->output_devices_.size() - 1)
 					{
 						output_index++;
 					}
@@ -1246,7 +1258,12 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 					{
 						output_index = 0;
 					}
-					controller->setOutput(output_index);
+
+					if (controller->output_devices_[output_index].deviceNumChannel >= 2)
+					{
+						controller->setOutput(output_index);
+						break;
+					}
 				}
 			}
 		}
@@ -1722,6 +1739,14 @@ String FxController::getLanguageName(String language_code) const
 int FxController::getMaxUserPresets() const
 {
 	return max_user_presets_;
+}
+
+std::tuple<String, String> FxController::getPreferredOutput()
+{
+	auto pref_device_id = settings_.getString("preferred_device_id");
+	auto pref_device_name = settings_.getString("preferred_device_name");
+
+	return {pref_device_id, pref_device_name};
 }
 
 String FxController::getPreferredOutputId()

@@ -174,6 +174,11 @@ void FxSystemTrayView::showContextMenu()
     {
         PopupMenu::Item menu_item(name);
         menu_item.setID(id);
+        if (name.endsWith("[Mono]"))
+        {
+            menu_item.setEnabled(false);
+        }
+
         if (id - OUTPUT_MENU_ID_START == FxModel::getModel().getSelectedOutput())
         {
             menu_item.setTicked(true);
