@@ -1625,7 +1625,10 @@ void FxController::setLanguage(String language_code)
 	{
 		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ba_txt, BinaryData::FxSound_ba_txtSize), false));
 	}
-
+	else if (language_.startsWithIgnoreCase("fa"))
+	{
+		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ir_txt, BinaryData::FxSound_ir_txtSize), false));
+	}
     auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
     theme.loadFont(language_);
 
@@ -1637,73 +1640,73 @@ void FxController::setLanguage(String language_code)
 
 String FxController::getLanguageName(String language_code) const
 {
-    if (language_code.startsWithIgnoreCase("en"))
-    {
-        return "English";
-    }
-    else if (language_code.startsWithIgnoreCase("ko"))
-    {
-        return L"\ud55c\uad6d\uc5b4";
-    }
-    else if (language_code.startsWithIgnoreCase("vi"))
-    {
-        return L"Ti\u1ebfng Vi\u1ec7t";
-    }
-    else if (language_code.startsWithIgnoreCase("id"))
-    {
-        return L"bahasa Indonesia";
-    }
-    else if (language_code.startsWithIgnoreCase("pt-br"))
-    {
-        return L"portugu\u00eas brasileiro";
-    }
-    else if (language_code.startsWithIgnoreCase("pt"))
-    {
-        return L"Portugu\u00eas";
-    }
-    else if (language_code.startsWithIgnoreCase("es"))
-    {
-        return L"Espa\u00f1ol";
-    }    
-    else if (language_code.startsWithIgnoreCase("zh-CN"))
-    {
-        return L"\u7b80\u4f53\u4e2d\u6587";
-    }
+	if (language_code.startsWithIgnoreCase("en"))
+	{
+		return "English";
+	}
+	else if (language_code.startsWithIgnoreCase("ko"))
+	{
+		return L"\ud55c\uad6d\uc5b4";
+	}
+	else if (language_code.startsWithIgnoreCase("vi"))
+	{
+		return L"Ti\u1ebfng Vi\u1ec7t";
+	}
+	else if (language_code.startsWithIgnoreCase("id"))
+	{
+		return L"bahasa Indonesia";
+	}
+	else if (language_code.startsWithIgnoreCase("pt-br"))
+	{
+		return L"portugu\u00eas brasileiro";
+	}
+	else if (language_code.startsWithIgnoreCase("pt"))
+	{
+		return L"Portugu\u00eas";
+	}
+	else if (language_code.startsWithIgnoreCase("es"))
+	{
+		return L"Espa\u00f1ol";
+	}
+	else if (language_code.startsWithIgnoreCase("zh-CN"))
+	{
+		return L"\u7b80\u4f53\u4e2d\u6587";
+	}
 	else if (language_code.startsWithIgnoreCase("zh-TW"))
 	{
 		return L"\u7e41\u9ad4\u4e2d\u6587";
 	}
-    else if (language_code.startsWithIgnoreCase("sv"))
-    {
-        return L"svenska";
-    } 
-    else if (language_code.startsWithIgnoreCase("fr"))
-    {
-        return L"fran\u00e7ais";
-    }
-    else if (language_code.startsWithIgnoreCase("it"))
-    {
-        return L"Italiano";
-    }
-    else if (language_code.startsWithIgnoreCase("ru"))
-    {
-        return L"\u0440\u0443\u0441\u0441\u043a\u0438\u0439";
-    }
-    else if (language_code.startsWithIgnoreCase("ro"))
-    {
-        return L"Rom\u00e2n\u0103";
-    }
-    else if (language_code.startsWithIgnoreCase("tr"))    {
-        return L"T\u00fcrk";
-    }
-    else if (language_code.startsWithIgnoreCase("pl"))
-    {
-        return L"Polski";
-    }
-    else if (language_code.startsWithIgnoreCase("de"))
-    {
-        return L"Deutsch";
-    }
+	else if (language_code.startsWithIgnoreCase("sv"))
+	{
+		return L"svenska";
+	}
+	else if (language_code.startsWithIgnoreCase("fr"))
+	{
+		return L"fran\u00e7ais";
+	}
+	else if (language_code.startsWithIgnoreCase("it"))
+	{
+		return L"Italiano";
+	}
+	else if (language_code.startsWithIgnoreCase("ru"))
+	{
+		return L"\u0440\u0443\u0441\u0441\u043a\u0438\u0439";
+	}
+	else if (language_code.startsWithIgnoreCase("ro"))
+	{
+		return L"Rom\u00e2n\u0103";
+	}
+	else if (language_code.startsWithIgnoreCase("tr")) {
+		return L"T\u00fcrk";
+	}
+	else if (language_code.startsWithIgnoreCase("pl"))
+	{
+		return L"Polski";
+	}
+	else if (language_code.startsWithIgnoreCase("de"))
+	{
+		return L"Deutsch";
+	}
 	else if (language_code.startsWithIgnoreCase("hu"))
 	{
 		return L"Magyar";
@@ -1731,6 +1734,10 @@ String FxController::getLanguageName(String language_code) const
 	else if (language_code.startsWithIgnoreCase("ba"))
 	{
 		return L"bosanski";
+	}
+	else if (language_code.startsWithIgnoreCase("fa"))
+	{
+		return L"\u0641\u0627\u0631\u0633\u06cc";
 	}
 
     return "English";

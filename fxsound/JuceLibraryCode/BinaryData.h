@@ -108,79 +108,82 @@ namespace BinaryData
     const int            Slider_Thumb_bw_svgSize = 4109;
 
     extern const char*   FxSound_ar_txt;
-    const int            FxSound_ar_txtSize = 13206;
+    const int            FxSound_ar_txtSize = 13293;
 
     extern const char*   FxSound_ba_txt;
-    const int            FxSound_ba_txtSize = 10187;
+    const int            FxSound_ba_txtSize = 10254;
 
     extern const char*   FxSound_de_txt;
-    const int            FxSound_de_txtSize = 11310;
+    const int            FxSound_de_txtSize = 11377;
 
     extern const char*   FxSound_es_txt;
-    const int            FxSound_es_txtSize = 10880;
+    const int            FxSound_es_txtSize = 10945;
 
     extern const char*   FxSound_fr_txt;
-    const int            FxSound_fr_txtSize = 11141;
+    const int            FxSound_fr_txtSize = 11218;
 
     extern const char*   FxSound_hr_txt;
-    const int            FxSound_hr_txtSize = 10049;
+    const int            FxSound_hr_txtSize = 10116;
 
     extern const char*   fxsound_hu_txt;
-    const int            fxsound_hu_txtSize = 11479;
+    const int            fxsound_hu_txtSize = 11558;
 
     extern const char*   FxSound_id_txt;
-    const int            FxSound_id_txtSize = 10402;
+    const int            FxSound_id_txtSize = 10587;
+
+    extern const char*   FxSound_ir_txt;
+    const int            FxSound_ir_txtSize = 13082;
 
     extern const char*   FxSound_it_txt;
-    const int            FxSound_it_txtSize = 10732;
+    const int            FxSound_it_txtSize = 10805;
 
     extern const char*   FxSound_ja_txt;
-    const int            FxSound_ja_txtSize = 12062;
+    const int            FxSound_ja_txtSize = 12142;
 
     extern const char*   FxSound_ko_txt;
-    const int            FxSound_ko_txtSize = 11146;
+    const int            FxSound_ko_txtSize = 11212;
 
     extern const char*   FxSound_nl_txt;
-    const int            FxSound_nl_txtSize = 10474;
+    const int            FxSound_nl_txtSize = 10543;
 
     extern const char*   FxSound_pl_txt;
-    const int            FxSound_pl_txtSize = 11129;
+    const int            FxSound_pl_txtSize = 11203;
 
     extern const char*   FxSound_ptbr_txt;
-    const int            FxSound_ptbr_txtSize = 10865;
+    const int            FxSound_ptbr_txtSize = 10939;
 
     extern const char*   FxSound_pt_txt;
-    const int            FxSound_pt_txtSize = 10769;
+    const int            FxSound_pt_txtSize = 10849;
 
     extern const char*   FxSound_ro_txt;
-    const int            FxSound_ro_txtSize = 10912;
+    const int            FxSound_ro_txtSize = 10987;
 
     extern const char*   FxSound_ru_txt;
-    const int            FxSound_ru_txtSize = 14544;
+    const int            FxSound_ru_txtSize = 14657;
 
     extern const char*   FxSound_sv_txt;
-    const int            FxSound_sv_txtSize = 10581;
+    const int            FxSound_sv_txtSize = 10643;
 
     extern const char*   FxSound_th_txt;
-    const int            FxSound_th_txtSize = 17439;
+    const int            FxSound_th_txtSize = 17565;
 
     extern const char*   FxSound_tr_txt;
-    const int            FxSound_tr_txtSize = 10691;
+    const int            FxSound_tr_txtSize = 10757;
 
     extern const char*   FxSound_txt;
-    const int            FxSound_txtSize = 9890;
+    const int            FxSound_txtSize = 9955;
 
     extern const char*   FxSound_vi_txt;
-    const int            FxSound_vi_txtSize = 11704;
+    const int            FxSound_vi_txtSize = 11791;
 
     extern const char*   FxSound_zhCN_txt;
-    const int            FxSound_zhCN_txtSize = 9323;
+    const int            FxSound_zhCN_txtSize = 9383;
 
     extern const char*   FxSound_zhTW_txt;
-    const int            FxSound_zhTW_txtSize = 9324;
+    const int            FxSound_zhTW_txtSize = 9537;
 
     // Number of elements in the namedResourceList and originalFileNames arrays.
-    const int namedResourceListSize = 57;
+    const int namedResourceListSize = 58;
 
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];

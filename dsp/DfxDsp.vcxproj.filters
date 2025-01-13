@@ -264,9 +264,6 @@
     <ClInclude Include="u_DfxDsp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\fxsound-support-library-dfx-dsp-dist\include\DfxDsp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ptutil\include\pt_defs.h">
       <Filter>Header Files\ptutil</Filter>
     </ClInclude>
@@ -281,6 +278,9 @@
     </ClInclude>
     <ClInclude Include="ptutil\include\slout.h">
       <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DfxDsp.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
