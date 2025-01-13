@@ -354,6 +354,12 @@ void FxTheme::loadFont(String language)
 		font_600_ = loadTypeface("IBMPlexSansArabic-Medium.ttf");
 		font_700_ = loadTypeface("IBMPlexSansArabic-Bold.ttf");
 	}
+	else if (language.startsWithIgnoreCase("fa"))
+	{
+		font_400_ = loadTypeface("IBMPlexSansArabic-Regular.ttf");
+		font_600_ = loadTypeface("IBMPlexSansArabic-Medium.ttf");
+		font_700_ = loadTypeface("IBMPlexSansArabic-Bold.ttf");
+	}
     else
     {
         font_400_ = Typeface::createSystemTypefaceFor(BinaryData::GilroyRegular_ttf, BinaryData::GilroyRegular_ttfSize);

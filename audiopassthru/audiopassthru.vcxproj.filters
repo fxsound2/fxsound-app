@@ -224,14 +224,14 @@
     <ClInclude Include="include\u_AudioPassthru.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\fxsound-support-library-audiopassthru-dist\include\AudioPassthru.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\codedefs.h">
       <Filter>Header Files\ptutil</Filter>
     </ClInclude>
     <ClInclude Include="include\pt_defs.h">
       <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AudioPassthru.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

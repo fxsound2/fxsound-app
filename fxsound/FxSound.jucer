@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.1.27.0"
+<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.1.28.0"
               displaySplashScreen="1" jucerFormatVersion="1" companyName="FxSound LLC"
               companyWebsite="https://www.fxsound.com" companyCopyright="2024 FxSound&#8482;"
-              defines="UNICODE" postExportShellCommandWin="type %%1%%\Project\status_icons.rc &gt;&gt; %%1%%\Project\resources.rc">
+              defines="UNICODE" postExportShellCommandWin="type %%1%%\Project\status_icons.rc &gt;&gt; %%1%%\Project\resources.rc"
+              cppLanguageStandard="17">
   <MAINGROUP id="fy4sG5" name="FxSound">
     <GROUP id="{9737D476-EEC4-7E5E-0B04-48E2783CC448}" name="Fonts">
       <FILE id="Z6Zv1m" name="Gilroy-Bold.ttf" compile="0" resource="1" file="Fonts/Gilroy-Bold.ttf"/>
@@ -158,6 +159,7 @@
       <FILE id="JQxWxW" name="FxSound.hr.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.hr.txt"/>
       <FILE id="P6YSQX" name="fxsound.hu.txt" compile="0" resource="1" file="../Strings/Strings/fxsound.hu.txt"/>
       <FILE id="sGe1HR" name="FxSound.id.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.id.txt"/>
+      <FILE id="UQKqdD" name="FxSound.ir.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.ir.txt"/>
       <FILE id="SCrfsv" name="FxSound.it.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.it.txt"/>
       <FILE id="HJHpXk" name="FxSound.ja.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.ja.txt"/>
       <FILE id="tKFayZ" name="FxSound.ko.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.ko.txt"/>
@@ -187,7 +189,8 @@
         <CONFIGURATION isDebug="1" name="Debug" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
                        useRuntimeLibDLL="0"/>
         <CONFIGURATION isDebug="0" name="Release" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
-                       useRuntimeLibDLL="0" alwaysGenerateDebugSymbols="1" postbuildCommand="copy $(TargetPath) ..\..\bin\$(PlatformTarget)\ /y&#10;copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y"/>
+                       useRuntimeLibDLL="0" alwaysGenerateDebugSymbols="1" postbuildCommand="copy $(TargetPath) ..\..\bin\$(PlatformTarget)\ /y&#10;copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y"
+                       optimisation="1"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="C:\JUCE\modules"/>

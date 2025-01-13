@@ -409,7 +409,7 @@ void FxSettingsDialog::GeneralSettingsPane::updateEndpointList()
 		}
 		i++;
 	}
-	preferred_endpoint_.addItem(TRANS("Newly connected device"), i);
+	preferred_endpoint_.addItem(TRANS("Newly connected output device"), i);
 	auto auto_index = i++;
 	preferred_endpoint_.addItem(TRANS("None"), i);
 	auto none_index = i;
