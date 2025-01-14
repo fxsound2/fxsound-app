@@ -639,11 +639,8 @@ void FxController::setOutput(int output, bool notify)
     {
         if (FxModel::getModel().getPowerState())
         {
-			if (!dfx_dsp_.isPowerOn())
-			{
-				dfx_dsp_.powerOn(true);
-				audio_passthru_->mute(false);
-			}
+			dfx_dsp_.powerOn(true);
+			audio_passthru_->mute(false);
         }
     }
 
