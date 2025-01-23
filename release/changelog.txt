@@ -1,3 +1,10 @@
+version 1.1.28.0
+----------------
+1. Feature added to connect to newly connected output device
+2. Debug logs are captured in log file
+3. Chinese (Traditional) and Korean translations updated
+4. Farsi/Persian language support added
+
 version 1.1.27.0
 ----------------
 1. Fixed the export presets bug which exported the current preset instead of the presets selected in the dialog
