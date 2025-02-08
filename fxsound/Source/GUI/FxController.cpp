@@ -208,7 +208,7 @@ void FxController::config(const String& commandline)
     
     if (preset.isNotEmpty())
     {
-        settings_.setString("preset", preset, true);
+        settings_.setString("preset", preset);
     }
 
     if (view.isNotEmpty())
