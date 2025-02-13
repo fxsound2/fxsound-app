@@ -54,7 +54,7 @@ private:
 	void showContextMenu();
 	void showNotification();	
 
-	bool custom_notification_;
+	bool system_notifications_available_;
 	FxNotification notification_;
 	WNDPROC componentWndProc_;
 

@@ -32,11 +32,11 @@ FxSystemTrayView::FxSystemTrayView()
         os == SystemStats::OperatingSystemType::Windows8_0 ||
         os == SystemStats::OperatingSystemType::Windows8_1)
     {
-        custom_notification_ = true;
+        system_notifications_available_ = false;
     }
     else
     {
-        custom_notification_ = false;
+        system_notifications_available_ = true;
     }
 
     addToDesktop(0);
@@ -259,7 +259,12 @@ void FxSystemTrayView::showNotification()
 
     if (message.isNotEmpty())
     {
-        if (custom_notification_ || link.first.isNotEmpty())
+        bool use_custom_notification =
+            !system_notifications_available_
+            || link.first.isNotEmpty()
+            || FxController::getInstance().isCustomNotificationsPreferred();
+
+        if (use_custom_notification)
         {
             NOTIFYICONIDENTIFIER icon_id = {};
             RECT rect;

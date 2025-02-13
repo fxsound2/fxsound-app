@@ -176,6 +176,7 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
     SettingsPane("General Preferences"),
     launch_toggle_(TRANS("Launch on system startup")),
     hide_help_tips_toggle_(TRANS("Hide help tips for audio controls")),
+    prefer_custom_notifications_toggle_(TRANS("Prefer FxSound custom notifications")),
 	hotkeys_toggle_(TRANS("Disable keyboard shortcuts")),
 	reset_presets_button_(TRANS("Reset presets to factory defaults"))
 {
@@ -222,6 +223,10 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
     hide_help_tips_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
     hide_help_tips_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	hide_help_tips_toggle_.setWantsKeyboardFocus(true);
+    prefer_custom_notifications_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
+    prefer_custom_notifications_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+    prefer_custom_notifications_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+    prefer_custom_notifications_toggle_.setWantsKeyboardFocus(true);
 	hotkeys_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
 	hotkeys_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	hotkeys_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
@@ -259,7 +264,10 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 
     hide_help_tips_toggle_.setToggleState(FxController::getInstance().isHelpTooltipsHidden(), NotificationType::dontSendNotification);
     hide_help_tips_toggle_.onClick = [this]() { FxController::getInstance().setHelpTooltipsHidden(hide_help_tips_toggle_.getToggleState()); };
-	
+
+    prefer_custom_notifications_toggle_.setToggleState(FxController::getInstance().isCustomNotificationsPreferred(), NotificationType::dontSendNotification);
+    prefer_custom_notifications_toggle_.onClick = [this]() { FxController::getInstance().setCustomNotificationsPreferred(prefer_custom_notifications_toggle_.getToggleState()); };
+
 	reset_presets_button_.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
 	reset_presets_button_.setEnabled(FxModel::getModel().getUserPresetCount() > 0);
     reset_presets_button_.setMouseCursor(MouseCursor::PointingHandCursor);
@@ -277,6 +285,7 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	addAndMakeVisible(&endpoint_title_);
 	addAndMakeVisible(&preferred_endpoint_);
 	addAndMakeVisible(&hide_help_tips_toggle_);
+    addAndMakeVisible(&prefer_custom_notifications_toggle_);
 	addAndMakeVisible(&hotkeys_toggle_);
 	addAndMakeVisible(&reset_presets_button_);
 	addAndMakeVisible(&language_switch_);
@@ -312,7 +321,10 @@ void FxSettingsDialog::GeneralSettingsPane::resized()
 	y = preferred_endpoint_.getBottom() + 20;
     hide_help_tips_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 
-    y = hide_help_tips_toggle_.getBottom() + 10;
+	y = hide_help_tips_toggle_.getBottom() + 10;
+    prefer_custom_notifications_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
+
+    y = prefer_custom_notifications_toggle_.getBottom() + 10;
 	hotkeys_toggle_.setBounds(X_MARGIN, y, getWidth()-X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 
 	y = hotkeys_toggle_.getBottom() + 5;
@@ -341,6 +353,7 @@ void FxSettingsDialog::GeneralSettingsPane::setText()
     int height = FxSettingsDialog::SettingsComponent::HEIGHT;
     launch_toggle_.setButtonText(TRANS("Launch on system startup"));
     hide_help_tips_toggle_.setButtonText(TRANS("Hide help tips for audio controls"));
+    prefer_custom_notifications_toggle_.setButtonText(TRANS("Prefer FxSound custom notifications"));
     hotkeys_toggle_.setButtonText(TRANS("Disable keyboard shortcuts"));
     reset_presets_button_.setButtonText(TRANS("Reset presets to factory defaults"));
 	endpoint_title_.setText(TRANS("Preferred output:"), NotificationType::dontSendNotification);
