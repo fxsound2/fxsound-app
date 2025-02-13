@@ -643,6 +643,12 @@ void FxController::setOutput(int output, bool notify)
 			dfx_dsp_.powerOn(true);
 			audio_passthru_->mute(false);
         }
+
+        FxModel::getModel().pushMessage(TRANS("Output: ") + output_device_name_);
+        if (mono_device)
+        {
+            FxModel::getModel().pushMessage(TRANS("FxSound does not support mono devices, so FxSound processing had been disabled for this device."));
+        }
     }
 
 	FxModel::getModel().setSelectedOutput(output, selected_sound_device, notify);
