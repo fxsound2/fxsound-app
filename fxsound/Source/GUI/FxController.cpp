@@ -1722,7 +1722,7 @@ String FxController::getLanguageName(String language_code) const
 	}
 	else if (language_code.startsWithIgnoreCase("ar"))
 	{
-		return L"\u0639\u0631\u0628\u064a";
+		return L"\u0627\u0644\u0639\u0631\u0628\u064a\u0629";
 	}
 	else if (language_code.startsWithIgnoreCase("hr"))
 	{
