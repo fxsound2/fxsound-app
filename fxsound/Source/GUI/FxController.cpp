@@ -442,13 +442,8 @@ void FxController::showMainWindow()
 {
 	if (main_window_ != nullptr)
 	{
-		if (!main_window_->isVisible())
-		{
-			main_window_->setVisible(true);
-            settings_.setBool("run_minimized", false);
-		}
-		main_window_->addToDesktop(ComponentPeer::windowAppearsOnTaskbar);
-		main_window_->toFront(true);
+		settings_.setBool("run_minimized", false);
+		main_window_->show();
 
         if (survey_tip_)
         {

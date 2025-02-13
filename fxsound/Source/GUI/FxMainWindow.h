@@ -35,6 +35,7 @@ public:
     FxMainWindow();
     ~FxMainWindow();
 
+    void show();
     void showLiteView();
     void showProView();
     void updateView();
