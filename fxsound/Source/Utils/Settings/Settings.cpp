@@ -23,6 +23,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 FxSound::Settings::Settings()
 {
 	PropertiesFile::Options options;
+	const String properties_xml = R"(
+		<PROPERTIES>
+			<VALUE name="power" val="1"/>
+			<VALUE name="hotkeys" val="1"/>
+			<VALUE name="preset" val="General"/>
+			<VALUE name="cmd_on_off" val="393297"/>
+			<VALUE name="cmd_open_close" val="393285"/>
+			<VALUE name="cmd_next_preset" val="393281"/>
+			<VALUE name="cmd_previous_preset" val="393306"/>
+			<VALUE name="cmd_change_output" val="393303"/>
+		</PROPERTIES>
+    )";
 
 	options.applicationName = FxSound::APPLICATION_NAME;
 	options.folderName = FxSound::SETTINGS_FOLDER;
@@ -38,18 +50,16 @@ FxSound::Settings::Settings()
 	options.doNotSave = true;	
 	app_default_properties_.setStorageParameters(options);
 	auto common_settings = app_default_properties_.getCommonSettings(false);
-	if (common_settings != nullptr)
+	if (common_settings == nullptr || common_settings->getAllProperties().size() == 0)
 	{
-		if (!common_settings->getFile().exists())
-		{
-			throw std::runtime_error(TRANS("Settings file not found!").toRawUTF8());
-		}
-		default_settings_ = *common_settings;
+		std::unique_ptr<XmlElement> default_properties = XmlDocument::parse(properties_xml);
+		default_settings_.restoreFromXml(*default_properties);
 		user_settings_->setFallbackPropertySet(&default_settings_);
 	}
 	else
 	{
-		throw std::runtime_error(TRANS("Settings file not found!").toRawUTF8());
+		default_settings_ = *common_settings;
+		user_settings_->setFallbackPropertySet(&default_settings_);
 	}
 }
 

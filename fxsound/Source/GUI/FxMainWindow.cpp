@@ -279,6 +279,29 @@ FxMainWindow::~FxMainWindow()
 {
 }
 
+void FxMainWindow::show()
+{
+	if (!isVisible())
+	{
+		setVisible(true);
+	}
+
+	addToDesktop(ComponentPeer::windowAppearsOnTaskbar);
+	toFront(true);
+
+	// Bring window to the top
+	auto* peer = getPeer();
+	if (peer)
+	{
+		HWND hwnd = (HWND)peer->getNativeHandle();
+		if (IsIconic(hwnd)) // If minimized, restore first
+			ShowWindow(hwnd, SW_RESTORE);
+
+		SetForegroundWindow(hwnd); // Bring to front
+		SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+	}
+}
+
 void FxMainWindow::showLiteView()
 {
 	setContent(&lite_view_);
