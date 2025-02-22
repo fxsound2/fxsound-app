@@ -4577,7 +4577,7 @@ static const unsigned char temp_binary_data_33[] =
 216,170,216,177,32,216,167,217,132,216,165,216,174,216,177,216,167,216,172,32,216,167,217,132,217,133,217,129,216,182,217,132,34,13,10,34,80,114,101,102,101,114,114,101,100,32,111,117,116,112,117,116,58,34,32,61,32,34,216,167,217,132,216,165,216,174,
 216,177,216,167,216,172,32,216,167,217,132,217,133,217,129,216,182,217,132,58,34,13,10,34,78,111,110,101,34,32,61,32,34,217,132,216,167,32,216,180,217,138,216,161,34,13,10,34,78,101,119,108,121,32,99,111,110,110,101,99,116,101,100,32,111,117,116,112,
 117,116,32,100,101,118,105,99,101,34,32,61,32,34,216,172,217,135,216,167,216,178,32,216,167,217,132,216,165,216,174,216,177,216,167,216,172,32,216,167,217,132,217,133,216,170,216,181,217,132,32,216,173,216,175,217,138,216,171,217,139,216,167,34,13,10,
-0,0 };
+34,72,105,100,101,32,110,111,116,105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,216,165,216,174,217,129,216,167,216,161,32,216,167,217,132,216,165,216,180,216,185,216,167,216,177,216,167,216,170,34,13,10,0,0 };
 
 const char* FxSound_ar_txt = (const char*) temp_binary_data_33;
 
@@ -4709,7 +4709,8 @@ static const unsigned char temp_binary_data_34[] =
 "\"Select preferred output\" = \"Odaberi \xc5\xbe""eljeni izlaz\"\r\n"
 "\"Preferred output:\" = \"\xc5\xbd""eljeni izlaz:\"\r\n"
 "\"None\" = \"nijedno\"\r\n"
-"\"Newly connected output device\" = \"Novo povezani izlazni ure\xc4\x91""aj\"\r\n";
+"\"Newly connected output device\" = \"Novo povezani izlazni ure\xc4\x91""aj\"\r\n"
+"\"Hide notifications\" = \"Sakrij obavje\xc5\xa1tenja\"";
 
 const char* FxSound_ba_txt = (const char*) temp_binary_data_34;
 
@@ -4845,7 +4846,8 @@ static const unsigned char temp_binary_data_35[] =
 "\"Select preferred output\" = \"Bevorzugte Ausgabe ausw\xc3\xa4hlen\"\r\n"
 "\"Preferred output:\" = \"Bevorzugte Ausgabe:\"\r\n"
 "\"None\" = \"Keine\"\r\n"
-"\"Newly connected output device\" = \"Neu verbundenes Ausgabeger\xc3\xa4t\"";
+"\"Newly connected output device\" = \"Neu verbundenes Ausgabeger\xc3\xa4t\"\r\n"
+"\"Hide notifications\" = \"Benachrichtigungen ausblenden\"";
 
 const char* FxSound_de_txt = (const char*) temp_binary_data_35;
 
@@ -4977,7 +4979,8 @@ static const unsigned char temp_binary_data_36[] =
 "\"Select preferred output\" = \"Seleccionar salida preferida\"\r\n"
 "\"Preferred output:\" = \"Salida preferida:\"\r\n"
 "\"None\" = \"Ninguno\"\r\n"
-"\"Newly connected output device\" = \"Dispositivo de salida reci\xc3\xa9n conectado\"\r\n";
+"\"Newly connected output device\" = \"Dispositivo de salida reci\xc3\xa9n conectado\"\r\n"
+"\"Hide notifications\" = \"Ocultar notificaciones\"\r\n";
 
 const char* FxSound_es_txt = (const char*) temp_binary_data_36;
 
@@ -5114,7 +5117,8 @@ static const unsigned char temp_binary_data_37[] =
 "\"Select preferred output\" = \"S\xc3\xa9lectionner la sortie pr\xc3\xa9""f\xc3\xa9r\xc3\xa9""e\"\r\n"
 "\"Preferred output:\" = \"Sortie pr\xc3\xa9""f\xc3\xa9r\xc3\xa9""e :\"\r\n"
 "\"None\" = \"Aucun\"\r\n"
-"\"Newly connected output device\" = \"Appareil de sortie r\xc3\xa9""cemment connect\xc3\xa9\"";
+"\"Newly connected output device\" = \"Appareil de sortie r\xc3\xa9""cemment connect\xc3\xa9\"\r\n"
+"\"Hide notifications\" = \"Masquer les notifications\"";
 
 const char* FxSound_fr_txt = (const char*) temp_binary_data_37;
 
@@ -5245,7 +5249,8 @@ static const unsigned char temp_binary_data_38[] =
 "\"Select preferred output\" = \"Odaberite preferirani izlaz\"\r\n"
 "\"Preferred output:\" = \"Preferirani izlaz:\"\r\n"
 "\"None\" = \"Nijedan\"\r\n"
-"\"Newly connected output device\" = \"Novo povezani izlazni ure\xc4\x91""aj\"";
+"\"Newly connected output device\" = \"Novo povezani izlazni ure\xc4\x91""aj\"\r\n"
+"\"Hide notifications\" = \"Sakrij obavijesti\"";
 
 const char* FxSound_hr_txt = (const char*) temp_binary_data_38;
 
@@ -5386,7 +5391,8 @@ static const unsigned char temp_binary_data_39[] =
 "\"Select preferred output\" = \"V\xc3\xa1lassza ki a k\xc3\xadv\xc3\xa1nt kimenetet\"\r\n"
 "\"Preferred output:\" = \"Prefer\xc3\xa1lt kimenet:\"\r\n"
 "\"None\" = \"Egyik sem\"\r\n"
-"\"Newly connected output device\" = \"\xc3\x9ajonnan csatlakoztatott kimeneti eszk\xc3\xb6z\"\r\n";
+"\"Newly connected output device\" = \"\xc3\x9ajonnan csatlakoztatott kimeneti eszk\xc3\xb6z\"\r\n"
+"\"Hide notifications\" = \"\xc3\x89rtes\xc3\xadt\xc3\xa9sek elrejt\xc3\xa9se\"\r\n";
 
 const char* fxsound_hu_txt = (const char*) temp_binary_data_39;
 
@@ -5517,7 +5523,8 @@ static const unsigned char temp_binary_data_40[] =
 "\"Select preferred output\" = \"Pilih perangkat keluaran yang diinginkan\"\r\n"
 "\"Preferred output:\" = \"Perangkat keluaran pilihan:\"\r\n"
 "\"None\" = \"Tidak ada\"\r\n"
-"\"Newly connected output device\" = \"Perangkat keluaran yang baru terhubung\"\r\n";
+"\"Newly connected output device\" = \"Perangkat keluaran yang baru terhubung\"\r\n"
+"\"Hide notifications\" = \"Sembunyikan notifikasi\"\r\n";
 
 const char* FxSound_id_txt = (const char*) temp_binary_data_40;
 
@@ -5718,7 +5725,8 @@ static const unsigned char temp_binary_data_41[] =
 174,216,177,217,136,216,172,219,140,34,13,10,34,83,101,108,101,99,116,32,112,114,101,102,101,114,114,101,100,32,111,117,116,112,117,116,34,32,61,32,34,216,167,217,134,216,170,216,174,216,167,216,168,32,216,174,216,177,217,136,216,172,219,140,32,217,133,
 217,136,216,177,216,175,32,217,134,216,184,216,177,34,13,10,34,80,114,101,102,101,114,114,101,100,32,111,117,116,112,117,116,58,34,32,61,32,34,216,174,216,177,217,136,216,172,219,140,32,217,133,217,136,216,177,216,175,32,217,134,216,184,216,177,58,34,
 13,10,34,78,111,110,101,34,32,61,32,34,217,135,219,140,218,134,34,13,10,34,78,101,119,108,121,32,99,111,110,110,101,99,116,101,100,32,111,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,216,175,216,179,216,170,218,175,216,167,217,135,32,
-216,174,216,177,217,136,216,172,219,140,32,217,133,216,170,216,181,217,132,32,216,180,216,175,217,135,32,216,172,216,175,219,140,216,175,34,13,10,0,0 };
+216,174,216,177,217,136,216,172,219,140,32,217,133,216,170,216,181,217,132,32,216,180,216,175,217,135,32,216,172,216,175,219,140,216,175,34,13,10,34,72,105,100,101,32,110,111,116,105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,217,133,216,174,217,
+129,219,140,32,218,169,216,177,216,175,217,134,32,216,167,216,185,217,132,216,167,217,134,226,128,140,217,135,216,167,34,13,10,13,10,0,0 };
 
 const char* FxSound_ir_txt = (const char*) temp_binary_data_41;
 
@@ -5852,7 +5860,8 @@ static const unsigned char temp_binary_data_42[] =
 "\"Select preferred output\" = \"Seleziona uscita preferita\"\r\n"
 "\"Preferred output:\" = \"Uscita preferita:\"\r\n"
 "\"None\" = \"Nessuno\"\r\n"
-"\"Newly connected output device\" = \"Dispositivo di uscita appena connesso\"\r\n";
+"\"Newly connected output device\" = \"Dispositivo di uscita appena connesso\"\r\n"
+"\"Hide notifications\" = \"Nascondi notifiche\"\r\n";
 
 const char* FxSound_it_txt = (const char*) temp_binary_data_42;
 
@@ -6041,7 +6050,8 @@ static const unsigned char temp_binary_data_43[] =
 79,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,229,135,186,229,138,155,227,131,135,227,131,144,227,130,164,227,130,185,34,13,10,34,83,101,108,101,99,116,32,112,114,101,102,101,114,114,101,100,32,111,117,116,112,117,116,34,32,34,229,132,
 170,229,133,136,229,135,186,229,138,155,227,130,146,233,129,184,230,138,158,34,13,10,34,80,114,101,102,101,114,114,101,100,32,111,117,116,112,117,116,58,34,32,61,32,34,229,132,170,229,133,136,229,135,186,229,138,155,58,34,13,10,34,78,111,110,101,34,32,
 61,32,34,227,129,170,227,129,151,34,13,10,34,78,101,119,108,121,32,99,111,110,110,101,99,116,101,100,32,111,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,230,150,176,227,129,151,227,129,143,230,142,165,231,182,154,227,129,149,227,130,140,
-227,129,159,229,135,186,229,138,155,227,131,135,227,131,144,227,130,164,227,130,185,34,0,0 };
+227,129,159,229,135,186,229,138,155,227,131,135,227,131,144,227,130,164,227,130,185,34,13,10,34,72,105,100,101,32,110,111,116,105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,32,233,128,154,231,159,165,227,130,146,233,157,158,232,161,168,231,164,
+186,227,129,171,227,129,153,227,130,139,34,0,0 };
 
 const char* FxSound_ja_txt = (const char*) temp_binary_data_43;
 
@@ -6213,7 +6223,7 @@ static const unsigned char temp_binary_data_44[] =
 100,101,118,105,99,101,34,32,61,32,34,236,182,156,235,160,165,32,236,158,165,236,185,152,34,13,10,34,83,101,108,101,99,116,32,112,114,101,102,101,114,114,101,100,32,111,117,116,112,117,116,34,32,61,32,34,236,155,144,237,149,152,235,138,148,32,236,182,
 156,235,160,165,236,157,132,32,236,132,160,237,131,157,237,149,152,236,132,184,236,154,148,34,13,10,34,80,114,101,102,101,114,114,101,100,32,111,117,116,112,117,116,58,34,32,61,32,34,236,132,160,237,152,184,235,144,152,235,138,148,32,236,182,156,235,
 160,165,58,34,13,10,34,78,111,110,101,34,32,61,32,34,236,151,134,236,157,140,34,13,10,34,78,101,119,108,121,32,99,111,110,110,101,99,116,101,100,32,111,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,236,131,136,235,161,156,32,236,151,176,
-234,178,176,235,144,156,32,236,182,156,235,160,165,32,236,158,165,236,185,152,34,0,0 };
+234,178,176,235,144,156,32,236,182,156,235,160,165,32,236,158,165,236,185,152,34,13,10,34,72,105,100,101,32,110,111,116,105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,236,149,140,235,166,188,32,236,136,168,234,184,176,234,184,176,34,0,0 };
 
 const char* FxSound_ko_txt = (const char*) temp_binary_data_44;
 
@@ -6345,7 +6355,8 @@ static const unsigned char temp_binary_data_45[] =
 "\"Select preferred output\" = \"Selecteer gewenste uitvoer\"\r\n"
 "\"Preferred output:\" = \"Gewenste uitvoer:\"\r\n"
 "\"None\" = \"Geen\"\r\n"
-"\"Newly connected output device\" = \"Nieuw aangesloten uitvoerapparaat\"";
+"\"Newly connected output device\" = \"Nieuw aangesloten uitvoerapparaat\"\r\n"
+"\"Hide notifications\" = \"Meldingen verbergen\"";
 
 const char* FxSound_nl_txt = (const char*) temp_binary_data_45;
 
@@ -6486,7 +6497,8 @@ static const unsigned char temp_binary_data_46[] =
 "\"Select preferred output\" = \"Wybierz preferowane wyj\xc5\x9b""cie\"\r\n"
 "\"Preferred output:\" = \"Preferowane wyj\xc5\x9b""cie:\"\r\n"
 "\"None\" = \"Brak\"\r\n"
-"\"Newly connected output device\" = \"Nowo pod\xc5\x82\xc4\x85""czone urz\xc4\x85""dzenie wyj\xc5\x9b""ciowe\"";
+"\"Newly connected output device\" = \"Nowo pod\xc5\x82\xc4\x85""czone urz\xc4\x85""dzenie wyj\xc5\x9b""ciowe\"\r\n"
+"\"Hide notifications\" = \"Ukryj powiadomienia\"";
 
 const char* FxSound_pl_txt = (const char*) temp_binary_data_46;
 
@@ -6619,7 +6631,8 @@ static const unsigned char temp_binary_data_47[] =
 "\"Select preferred output\" = \"Selecionar sa\xc3\xad""da preferida\"\r\n"
 "\"Preferred output:\" = \"Sa\xc3\xad""da preferida:\"\r\n"
 "\"None\" = \"Nenhum\"\r\n"
-"\"Newly connected output device\" = \"Dispositivo de sa\xc3\xad""da rec\xc3\xa9m-conectado\"";
+"\"Newly connected output device\" = \"Dispositivo de sa\xc3\xad""da rec\xc3\xa9m-conectado\"\r\n"
+"\"Hide notifications\" = \"Ocultar notifica\xc3\xa7\xc3\xb5""es\"";
 
 const char* FxSound_ptbr_txt = (const char*) temp_binary_data_47;
 
@@ -6651,8 +6664,8 @@ static const unsigned char temp_binary_data_48[] =
 "\"Presets are restored to factory defaults\" = \"As predefini\xc3\xa7\xc3\xb5""es s\xc3\xa3o restauradas aos padr\xc3\xb5""es de f\xc3\xa1""brica\"\r\n"
 "\"Preset file %s already exists in the export path, do you want to overwrite the preset file?\" = \"O arquivo predefinido %s j\xc3\xa1 existe no caminho de exporta\xc3\xa7\xc3\xa3o, deseja substituir o arquivo predefinido?\"\r\n"
 "\"FxSound is %s.\" = \"FxSound \xc3\xa9 %s.\"\r\n"
-"\"on\" = \"sobre\"\r\n"
-"\"off\" = \"fora\"\r\n"
+"\"on\" = \"ligado\"\r\n"
+"\"off\" = \"desligado\"\r\n"
 "\"Preset: \" = \"Predefini\xc3\xa7\xc3\xa3o: \"\r\n"
 "\"Clarity\" = \"Clareza\"\r\n"
 "\"Ambience\" = \"Ambiente\"\r\n"
@@ -6752,7 +6765,8 @@ static const unsigned char temp_binary_data_48[] =
 "\"Select preferred output\" = \"Selecionar sa\xc3\xad""da preferida\"\r\n"
 "\"Preferred output:\" = \"Sa\xc3\xad""da preferida:\"\r\n"
 "\"None\" = \"Nenhum\"\r\n"
-"\"Newly connected output device\" = \"Dispositivo de sa\xc3\xad""da recentemente conectado\"\r\n";
+"\"Newly connected output device\" = \"Dispositivo de sa\xc3\xad""da recentemente conectado\"\r\n"
+"\"Hide notifications\" = \"Ocultar notifica\xc3\xa7\xc3\xb5""es\"\r\n";
 
 const char* FxSound_pt_txt = (const char*) temp_binary_data_48;
 
@@ -6889,7 +6903,8 @@ static const unsigned char temp_binary_data_49[] =
 "\"Select preferred output\" = \"Selecteaz\xc4\x83 ie\xc8\x99irea preferat\xc4\x83\"\r\n"
 "\"Preferred output:\" = \"Ie\xc8\x99irea preferat\xc4\x83:\"\r\n"
 "\"None\" = \"Niciuna\"\r\n"
-"\"Newly connected output device\" = \"Dispozitiv de ie\xc8\x99ire conectat recent\"\r\n";
+"\"Newly connected output device\" = \"Dispozitiv de ie\xc8\x99ire conectat recent\"\r\n"
+"\"Hide notifications\" = \"Ascunde notific\xc4\x83rile\"\r\n";
 
 const char* FxSound_ro_txt = (const char*) temp_binary_data_49;
 
@@ -7112,10 +7127,11 @@ static const unsigned char temp_binary_data_50[] =
 187,209,143,32,209,141,209,130,208,190,208,179,208,190,32,209,131,209,129,209,130,209,128,208,190,208,185,209,129,209,130,208,178,208,176,32,208,190,209,130,208,186,208,187,209,142,209,135,208,181,208,189,208,176,46,34,13,10,34,77,105,110,105,109,105,
 122,101,32,66,117,116,116,111,110,34,32,61,32,34,208,154,208,189,208,190,208,191,208,186,208,176,32,209,129,208,178,208,181,209,128,208,189,209,131,209,130,209,140,34,13,10,34,79,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,208,163,209,
 129,209,130,209,128,208,190,208,185,209,129,209,130,208,178,208,190,32,208,178,209,139,208,178,208,190,208,180,208,176,34,13,10,34,83,101,108,101,99,116,32,112,114,101,102,101,114,114,101,100,32,111,117,116,112,117,116,34,32,61,32,34,208,146,209,139,
-208,177,208,181,209,128,208,184,209,130,208,181,32,208,191,209,128,208,181,208,180,208,191,208,190,209,135,209,130,208,184,209,130,208,181,208,187,209,140,208,189,209,139,208,185,32,208,178,209,139,208,178,208,190,208,180,34,13,10,34,80,114,101,102,101,
-114,114,101,100,32,111,117,116,112,117,116,58,34,32,61,32,34,208,163,209,129,209,130,209,128,208,190,208,185,209,129,209,130,208,178,208,190,32,208,178,209,139,208,178,208,190,208,180,208,176,58,34,13,10,34,78,111,110,101,34,32,61,32,34,208,157,208,184,
-209,135,208,181,208,179,208,190,34,13,10,34,78,101,119,108,121,32,99,111,110,110,101,99,116,101,100,32,111,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,208,157,208,181,208,180,208,176,208,178,208,189,208,190,32,208,191,208,190,208,180,
-208,186,208,187,209,142,209,135,209,145,208,189,208,189,208,190,208,181,32,208,178,209,139,209,133,208,190,208,180,208,189,208,190,208,181,32,209,131,209,129,209,130,209,128,208,190,208,185,209,129,209,130,208,178,208,190,34,0,0 };
+208,177,208,181,209,128,208,184,209,130,208,181,32,209,131,209,129,209,130,209,128,208,190,208,185,209,129,209,130,208,178,208,190,32,208,178,209,139,208,178,208,190,208,180,208,176,34,13,10,34,80,114,101,102,101,114,114,101,100,32,111,117,116,112,117,
+116,58,34,32,61,32,34,208,163,209,129,209,130,209,128,208,190,208,185,209,129,209,130,208,178,208,190,32,208,178,209,139,208,178,208,190,208,180,208,176,58,34,13,10,34,78,111,110,101,34,32,61,32,34,208,157,208,184,209,135,208,181,208,179,208,190,34,13,
+10,34,78,101,119,108,121,32,99,111,110,110,101,99,116,101,100,32,111,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,208,157,208,181,208,180,208,176,208,178,208,189,208,190,32,208,191,208,190,208,180,208,186,208,187,209,142,209,135,209,145,
+208,189,208,189,208,190,208,181,32,209,131,209,129,209,130,209,128,208,190,208,185,209,129,209,130,208,178,208,190,32,208,178,209,139,208,178,208,190,208,180,208,176,32,208,183,208,178,209,131,208,186,208,176,34,13,10,34,72,105,100,101,32,110,111,116,
+105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,208,161,208,186,209,128,209,139,209,130,209,140,32,209,131,208,178,208,181,208,180,208,190,208,188,208,187,208,181,208,189,208,184,209,143,34,13,10,0,0 };
 
 const char* FxSound_ru_txt = (const char*) temp_binary_data_50;
 
@@ -7249,7 +7265,8 @@ static const unsigned char temp_binary_data_51[] =
 "\"Select preferred output\" = \"V\xc3\xa4lj \xc3\xb6nskad utg\xc3\xa5ng\"\r\n"
 "\"Preferred output:\" = \"\xc3\x96nskad utdata:\"\r\n"
 "\"None\" = \"Ingen\"\r\n"
-"\"Newly connected output device\" = \"Nyanslutet utmatningsenhet\"";
+"\"Newly connected output device\" = \"Nyanslutet utmatningsenhet\"\r\n"
+"\"Hide notifications\" = \"D\xc3\xb6lj aviseringar\"";
 
 const char* FxSound_sv_txt = (const char*) temp_binary_data_51;
 
@@ -7524,7 +7541,8 @@ static const unsigned char temp_binary_data_52[] =
 184,165,224,184,177,224,184,158,224,184,152,224,185,140,224,184,151,224,184,181,224,185,136,224,184,149,224,185,137,224,184,173,224,184,135,224,184,129,224,184,178,224,184,163,58,34,13,10,34,78,111,110,101,34,32,61,32,34,224,185,132,224,184,161,224,185,
 136,224,184,161,224,184,181,34,13,10,34,78,101,119,108,121,32,99,111,110,110,101,99,116,101,100,32,111,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,224,184,173,224,184,184,224,184,155,224,184,129,224,184,163,224,184,147,224,185,140,224,
 184,170,224,185,136,224,184,135,224,184,173,224,184,173,224,184,129,224,184,151,224,184,181,224,185,136,224,185,128,224,184,158,224,184,180,224,185,136,224,184,135,224,185,128,224,184,138,224,184,183,224,185,136,224,184,173,224,184,161,224,184,149,224,
-185,136,224,184,173,34,0,0 };
+185,136,224,184,173,34,13,10,34,72,105,100,101,32,110,111,116,105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,224,184,139,224,185,136,224,184,173,224,184,153,224,184,129,224,184,178,224,184,163,224,185,129,224,184,136,224,185,137,224,184,135,224,
+185,128,224,184,149,224,184,183,224,184,173,224,184,153,34,0,0 };
 
 const char* FxSound_th_txt = (const char*) temp_binary_data_52;
 
@@ -7663,7 +7681,8 @@ static const unsigned char temp_binary_data_53[] =
 "\"Select preferred output\" = \"Tercih edilen \xc3\xa7\xc4\xb1k\xc4\xb1\xc5\x9f\xc4\xb1 se\xc3\xa7in\"\r\n"
 "\"Preferred output:\" = \"Tercih edilen \xc3\xa7\xc4\xb1k\xc4\xb1\xc5\x9f:\"\r\n"
 "\"None\" = \"Hi\xc3\xa7""biri\"\r\n"
-"\"Newly connected output device\" = \"Yeni ba\xc4\x9flanan \xc3\xa7\xc4\xb1k\xc4\xb1\xc5\x9f cihaz\xc4\xb1\"";
+"\"Newly connected output device\" = \"Yeni ba\xc4\x9flanan \xc3\xa7\xc4\xb1k\xc4\xb1\xc5\x9f cihaz\xc4\xb1\"\r\n"
+"\"Hide notifications\" = \"Bildirimleri gizle\"";
 
 const char* FxSound_tr_txt = (const char*) temp_binary_data_53;
 
@@ -7793,7 +7812,8 @@ static const unsigned char temp_binary_data_54[] =
 "\"Select preferred output\" = \"Select preferred output\"\r\n"
 "\"Preferred output:\" = \"Preferred output:\"\r\n"
 "\"None\" = \"None\"\r\n"
-"\"Newly connected output device\" = \"Newly connected output device\"";
+"\"Newly connected output device\" = \"Newly connected output device\"\r\n"
+"\"Hide notifications\" = \"Hide notifications\"";
 
 const char* FxSound_txt = (const char*) temp_binary_data_54;
 
@@ -7948,7 +7968,8 @@ static const unsigned char temp_binary_data_55[] =
 "\"Select preferred output\" = \"Ch\xe1\xbb\x8dn \xc4\x91\xe1\xba\xa7u ra \xc6\xb0""a th\xc3\xad""ch\"\r\n"
 "\"Preferred output:\" = \"\xc4\x90\xe1\xba\xa7u ra \xc6\xb0""a th\xc3\xad""ch:\"\r\n"
 "\"None\" = \"Kh\xc3\xb4ng c\xc3\xb3\"\r\n"
-"\"Newly connected output device\" = \"Thi\xe1\xba\xbft b\xe1\xbb\x8b \xc4\x91\xe1\xba\xa7u ra v\xe1\xbb\xab""a \xc4\x91\xc6\xb0\xe1\xbb\xa3""c k\xe1\xba\xbft n\xe1\xbb\x91i\"\r\n";
+"\"Newly connected output device\" = \"Thi\xe1\xba\xbft b\xe1\xbb\x8b \xc4\x91\xe1\xba\xa7u ra v\xe1\xbb\xab""a \xc4\x91\xc6\xb0\xe1\xbb\xa3""c k\xe1\xba\xbft n\xe1\xbb\x91i\"\r\n"
+"\"Hide notifications\" = \"\xe1\xba\xa8n th\xc3\xb4ng b\xc3\xa1o\"";
 
 const char* FxSound_vi_txt = (const char*) temp_binary_data_55;
 
@@ -8093,7 +8114,7 @@ static const unsigned char temp_binary_data_56[] =
 110,34,32,61,32,34,230,156,128,229,176,143,229,140,150,230,140,137,233,146,174,34,13,10,34,79,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,232,190,147,229,135,186,232,174,190,229,164,135,34,13,10,34,83,101,108,101,99,116,32,112,114,101,
 102,101,114,114,101,100,32,111,117,116,112,117,116,34,32,61,32,34,233,128,137,230,139,169,233,166,150,233,128,137,232,190,147,229,135,186,34,13,10,34,80,114,101,102,101,114,114,101,100,32,111,117,116,112,117,116,58,34,32,61,32,34,233,166,150,233,128,
 137,232,190,147,229,135,186,239,188,154,34,13,10,34,78,111,110,101,34,32,61,32,34,230,151,160,34,13,10,34,78,101,119,108,121,32,99,111,110,110,101,99,116,101,100,32,111,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,230,150,176,232,191,
-158,230,142,165,231,154,132,232,190,147,229,135,186,232,174,190,229,164,135,34,0,0 };
+158,230,142,165,231,154,132,232,190,147,229,135,186,232,174,190,229,164,135,34,13,10,34,72,105,100,101,32,110,111,116,105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,233,154,144,232,151,143,233,128,154,231,159,165,34,0,0 };
 
 const char* FxSound_zhCN_txt = (const char*) temp_binary_data_56;
 
@@ -8240,7 +8261,8 @@ static const unsigned char temp_binary_data_57[] =
 231,144,134,229,183,178,229,129,156,231,148,168,227,128,130,34,13,10,34,77,105,110,105,109,105,122,101,32,66,117,116,116,111,110,34,32,61,32,34,230,156,128,229,176,143,229,140,150,230,140,137,233,136,149,34,13,10,34,79,117,116,112,117,116,32,100,101,
 118,105,99,101,34,32,61,32,34,232,188,184,229,135,186,232,163,157,231,189,174,34,13,10,34,83,101,108,101,99,116,32,112,114,101,102,101,114,114,101,100,32,111,117,116,112,117,116,34,32,61,32,34,233,129,184,230,147,135,229,129,143,229,165,189,231,154,132,
 232,188,184,229,135,186,34,13,10,34,80,114,101,102,101,114,114,101,100,32,111,117,116,112,117,116,58,34,32,61,32,34,229,132,170,229,133,136,232,188,184,229,135,186,239,188,154,34,13,10,34,78,111,110,101,34,32,61,32,34,231,132,161,34,13,10,34,78,101,119,
-108,121,32,99,111,110,110,101,99,116,101,100,32,111,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,230,150,176,233,128,163,230,142,165,231,154,132,232,188,184,229,135,186,232,163,157,231,189,174,34,0,0 };
+108,121,32,99,111,110,110,101,99,116,101,100,32,111,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,230,150,176,233,128,163,230,142,165,231,154,132,232,188,184,229,135,186,232,163,157,231,189,174,34,13,10,34,72,105,100,101,32,110,111,116,
+105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,233,154,177,232,151,143,233,128,154,231,159,165,34,0,0 };
 
 const char* FxSound_zhTW_txt = (const char*) temp_binary_data_57;
 
@@ -8289,31 +8311,31 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
         case 0x1fdee048:  numBytes = 1396; return settings_svg;
         case 0x9eeab69d:  numBytes = 4894; return Slider_Thumb_svg;
         case 0x36e2b8a1:  numBytes = 4109; return Slider_Thumb_bw_svg;
-        case 0xda29b4a4:  numBytes = 13293; return FxSound_ar_txt;
-        case 0xdaeefdb2:  numBytes = 10254; return FxSound_ba_txt;
-        case 0xde910cf4:  numBytes = 11377; return FxSound_de_txt;
-        case 0xe10b2ea1:  numBytes = 10945; return FxSound_es_txt;
-        case 0xe2b1efbf:  numBytes = 11218; return FxSound_fr_txt;
-        case 0xe61ba0fd:  numBytes = 10116; return FxSound_hr_txt;
-        case 0x1833c740:  numBytes = 11558; return fxsound_hu_txt;
-        case 0xe70b308e:  numBytes = 10587; return FxSound_id_txt;
-        case 0xe7d0799c:  numBytes = 13082; return FxSound_ir_txt;
-        case 0xe7eca89e:  numBytes = 10805; return FxSound_it_txt;
-        case 0xe895c2aa:  numBytes = 12142; return FxSound_ja_txt;
-        case 0xeb0fe457:  numBytes = 11212; return FxSound_ko_txt;
-        case 0xf00427b1:  numBytes = 10543; return FxSound_nl_txt;
-        case 0xf36dd8ef:  numBytes = 11203; return FxSound_pl_txt;
-        case 0x7b843fc7:  numBytes = 10939; return FxSound_ptbr_txt;
-        case 0xf3de94f7:  numBytes = 10849; return FxSound_pt_txt;
-        case 0xf701d0b0:  numBytes = 10987; return FxSound_ro_txt;
-        case 0xf7565db6:  numBytes = 14657; return FxSound_ru_txt;
-        case 0xf9194dd6:  numBytes = 10643; return FxSound_sv_txt;
-        case 0xfa08dd67:  numBytes = 17565; return FxSound_th_txt;
-        case 0xfa95c871:  numBytes = 10757; return FxSound_tr_txt;
-        case 0x4464a26e:  numBytes = 9955; return FxSound_txt;
-        case 0xfd80a626:  numBytes = 11791; return FxSound_vi_txt;
-        case 0xd8a3b00c:  numBytes = 9383; return FxSound_zhCN_txt;
-        case 0xf624e624:  numBytes = 9537; return FxSound_zhTW_txt;
+        case 0xda29b4a4:  numBytes = 13349; return FxSound_ar_txt;
+        case 0xdaeefdb2:  numBytes = 10299; return FxSound_ba_txt;
+        case 0xde910cf4:  numBytes = 11433; return FxSound_de_txt;
+        case 0xe10b2ea1:  numBytes = 10994; return FxSound_es_txt;
+        case 0xe2b1efbf:  numBytes = 11270; return FxSound_fr_txt;
+        case 0xe61ba0fd:  numBytes = 10160; return FxSound_hr_txt;
+        case 0x1833c740:  numBytes = 11610; return fxsound_hu_txt;
+        case 0xe70b308e:  numBytes = 10636; return FxSound_id_txt;
+        case 0xe7d0799c:  numBytes = 13146; return FxSound_ir_txt;
+        case 0xe7eca89e:  numBytes = 10850; return FxSound_it_txt;
+        case 0xe895c2aa:  numBytes = 12197; return FxSound_ja_txt;
+        case 0xeb0fe457:  numBytes = 11255; return FxSound_ko_txt;
+        case 0xf00427b1:  numBytes = 10589; return FxSound_nl_txt;
+        case 0xf36dd8ef:  numBytes = 11249; return FxSound_pl_txt;
+        case 0x7b843fc7:  numBytes = 10988; return FxSound_ptbr_txt;
+        case 0xf3de94f7:  numBytes = 10904; return FxSound_pt_txt;
+        case 0xf701d0b0:  numBytes = 11035; return FxSound_ro_txt;
+        case 0xf7565db6:  numBytes = 14718; return FxSound_ru_txt;
+        case 0xf9194dd6:  numBytes = 10687; return FxSound_sv_txt;
+        case 0xfa08dd67:  numBytes = 17640; return FxSound_th_txt;
+        case 0xfa95c871:  numBytes = 10802; return FxSound_tr_txt;
+        case 0x4464a26e:  numBytes = 10000; return FxSound_txt;
+        case 0xfd80a626:  numBytes = 11832; return FxSound_vi_txt;
+        case 0xd8a3b00c:  numBytes = 9422; return FxSound_zhCN_txt;
+        case 0xf624e624:  numBytes = 9576; return FxSound_zhTW_txt;
         default: break;
     }
 
