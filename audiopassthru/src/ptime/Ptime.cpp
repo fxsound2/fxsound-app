@@ -403,7 +403,7 @@ int PT_DECLSPEC ptimeUnixTimeToFileTime(time_t t, LPFILETIME pft)
      // Note that LONGLONG is a 64-bit value
      LONGLONG ll;
 
-     ll = Int32x32To64(t, 10000000) + 116444736000000000;
+     ll = (t * 10000000LL) + 116444736000000000LL;
      pft->dwLowDateTime = (DWORD)ll;
      pft->dwHighDateTime = (DWORD)(ll >> 32);
 
