@@ -49,8 +49,10 @@ private:
 		{
 			auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
 
-			error_message_.setText(TRANS("Oops! There's an issue with your playback device settings.\r\nBefore we can get started, please go through the "), NotificationType::dontSendNotification);
 			error_message_.setFont(theme.getNormalFont());
+			contact_message_.setFont(theme.getNormalFont());
+
+			error_message_.setText(TRANS("Oops! There's an issue with your playback device settings.\r\nBefore we can get started, please go through the "), NotificationType::dontSendNotification);
 			error_message_.setJustificationType(Justification::topLeft);
 			addAndMakeVisible(error_message_);
 
@@ -60,7 +62,6 @@ private:
 			addAndMakeVisible(error_link_);
 
 			contact_message_.setText(TRANS(" if you're still having problems."), NotificationType::dontSendNotification);
-			contact_message_.setFont(theme.getNormalFont());
 			contact_message_.setJustificationType(Justification::topLeft);
 			addAndMakeVisible(contact_message_);
 
@@ -168,6 +169,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 
     free_plan_ = settings_.getBool("free_plan");
     hide_help_tooltips_ = settings_.getBool("hide_help_tooltips");
+	hide_notifications_ = settings_.getBool("hide_notifications");
     output_device_id_ = settings_.getString("output_device_id");
     output_device_name_ = settings_.getString("output_device_name");
 	max_user_presets_ = settings_.getInt("max_user_presets");
@@ -1513,6 +1515,17 @@ void FxController::setHelpTooltipsHidden(bool status)
     main_window_->repaint();
 }
 
+bool FxController::isNotificationsHidden()
+{
+	return hide_notifications_;
+}
+
+void FxController::setNotificationsHidden(bool status)
+{
+	hide_notifications_ = status;
+	settings_.setBool("hide_notifications", true);
+}
+
 String FxController::getLanguage() const
 {
     return language_;
@@ -1520,6 +1533,11 @@ String FxController::getLanguage() const
 
 void FxController::setLanguage(String language_code)
 {
+	if (language_code.isEmpty())
+	{
+		language_code = "en";
+	}
+
     language_ = language_code;
     settings_.setString("language", language_);
 
@@ -1621,13 +1639,17 @@ void FxController::setLanguage(String language_code)
 	{
 		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ir_txt, BinaryData::FxSound_ir_txtSize), false));
 	}
-    auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
-    theme.loadFont(language_);
+  
+	auto* theme = dynamic_cast<FxTheme*>(&LookAndFeel::getDefaultLookAndFeel());
+	if (theme != nullptr)
+	{
+		theme->loadFont(language_);
+	}
 
-    if (main_window_ != nullptr)
-    {
-        main_window_->sendLookAndFeelChange();
-    }
+  if (main_window_ != nullptr)
+  {
+      main_window_->sendLookAndFeelChange();
+  }
 }
 
 String FxController::getLanguageName(String language_code) const

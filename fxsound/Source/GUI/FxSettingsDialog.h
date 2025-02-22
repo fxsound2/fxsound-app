@@ -114,6 +114,7 @@ private:
 
         ToggleButton launch_toggle_;
         ToggleButton hide_help_tips_toggle_;
+		ToggleButton hide_notifications_toggle_;
 		ToggleButton hotkeys_toggle_;
 		TextButton reset_presets_button_;
 		OwnedArray<FxHotkeyLabel> hotkey_labels_;

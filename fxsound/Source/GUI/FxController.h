@@ -108,6 +108,9 @@ public:
     bool isHelpTooltipsHidden();
     void setHelpTooltipsHidden(bool status);
 
+	bool isNotificationsHidden();
+	void setNotificationsHidden(bool status);
+
     String getLanguage() const;
     void setLanguage(String language_code);
     String getLanguageName(String language_code) const;
@@ -204,6 +207,7 @@ private:
     StringArray output_ids_;
 	std::vector<SoundDevice> output_devices_;
     bool hide_help_tooltips_;
+	bool hide_notifications_;
     
 	unsigned long audio_process_time_;
 	int audio_process_on_counter_;
