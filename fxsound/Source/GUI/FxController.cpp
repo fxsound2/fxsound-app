@@ -1639,18 +1639,17 @@ void FxController::setLanguage(String language_code)
 	{
 		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ir_txt, BinaryData::FxSound_ir_txtSize), false));
 	}
-
+  
 	auto* theme = dynamic_cast<FxTheme*>(&LookAndFeel::getDefaultLookAndFeel());
 	if (theme != nullptr)
 	{
 		theme->loadFont(language_);
 	}
 
-
-    if (main_window_ != nullptr)
-    {
-        main_window_->sendLookAndFeelChange();
-    }
+  if (main_window_ != nullptr)
+  {
+      main_window_->sendLookAndFeelChange();
+  }
 }
 
 String FxController::getLanguageName(String language_code) const
