@@ -169,6 +169,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 
     free_plan_ = settings_.getBool("free_plan");
     hide_help_tooltips_ = settings_.getBool("hide_help_tooltips");
+	hide_notifications_ = settings_.getBool("hide_notifications");
     output_device_id_ = settings_.getString("output_device_id");
     output_device_name_ = settings_.getString("output_device_name");
 	max_user_presets_ = settings_.getInt("max_user_presets");
@@ -1512,6 +1513,17 @@ void FxController::setHelpTooltipsHidden(bool status)
     hide_help_tooltips_ = status;
     settings_.setBool("hide_help_tooltips", status);
     main_window_->repaint();
+}
+
+bool FxController::isNotificationsHidden()
+{
+	return hide_notifications_;
+}
+
+void FxController::setNotificationsHidden(bool status)
+{
+	hide_notifications_ = status;
+	settings_.setBool("hide_notifications", true);
 }
 
 String FxController::getLanguage() const
