@@ -53,9 +53,9 @@ public:
                     RPC_C_IMP_LEVEL_IMPERSONATE, NULL, EOAC_NONE, NULL);
             }
             
-            setWorkingDirectory();
-
             LookAndFeel::setDefaultLookAndFeel(&theme_);
+
+            setWorkingDirectory();
 
             FxController::getInstance().config(commandline);
 

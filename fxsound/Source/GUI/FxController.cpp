@@ -49,8 +49,10 @@ private:
 		{
 			auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
 
-			error_message_.setText(TRANS("Oops! There's an issue with your playback device settings.\r\nBefore we can get started, please go through the "), NotificationType::dontSendNotification);
 			error_message_.setFont(theme.getNormalFont());
+			contact_message_.setFont(theme.getNormalFont());
+
+			error_message_.setText(TRANS("Oops! There's an issue with your playback device settings.\r\nBefore we can get started, please go through the "), NotificationType::dontSendNotification);
 			error_message_.setJustificationType(Justification::topLeft);
 			addAndMakeVisible(error_message_);
 
@@ -60,7 +62,6 @@ private:
 			addAndMakeVisible(error_link_);
 
 			contact_message_.setText(TRANS(" if you're still having problems."), NotificationType::dontSendNotification);
-			contact_message_.setFont(theme.getNormalFont());
 			contact_message_.setJustificationType(Justification::topLeft);
 			addAndMakeVisible(contact_message_);
 
@@ -1520,6 +1521,11 @@ String FxController::getLanguage() const
 
 void FxController::setLanguage(String language_code)
 {
+	if (language_code.isEmpty())
+	{
+		language_code = "en";
+	}
+
     language_ = language_code;
     settings_.setString("language", language_);
 
@@ -1621,8 +1627,13 @@ void FxController::setLanguage(String language_code)
 	{
 		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ir_txt, BinaryData::FxSound_ir_txtSize), false));
 	}
-    auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
-    theme.loadFont(language_);
+
+	auto* theme = dynamic_cast<FxTheme*>(&LookAndFeel::getDefaultLookAndFeel());
+	if (theme != nullptr)
+	{
+		theme->loadFont(language_);
+	}
+
 
     if (main_window_ != nullptr)
     {

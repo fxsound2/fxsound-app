@@ -43,6 +43,10 @@ FxTheme::FxTheme() : LookAndFeel_V4(getFxColourScheme())
     setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colour(0xe33250).withAlpha(0.2f));
     setColour(Slider::ColourIds::rotarySliderFillColourId, Colour(0xe33250).withAlpha(1.0f));
 
+	font_400_ = Typeface::createSystemTypefaceFor(BinaryData::GilroyRegular_ttf, BinaryData::GilroyRegular_ttfSize);
+	font_600_ = Typeface::createSystemTypefaceFor(BinaryData::GilroySemibold_ttf, BinaryData::GilroySemibold_ttfSize);
+	font_700_ = Typeface::createSystemTypefaceFor(BinaryData::GilroyBold_ttf, BinaryData::GilroyBold_ttfSize);
+
 	drop_down_arrow_ = Drawable::createFromImageData(BinaryData::dropdown_arrow_hover_svg, BinaryData::dropdown_arrow_hover_svgSize);
 	slider_thumb_ = Drawable::createFromImageData(BinaryData::Slider_Thumb_svg, BinaryData::Slider_Thumb_svgSize);
     drop_down_arrow_grey_ = Drawable::createFromImageData(BinaryData::dropdown_arrow_bw_svg, BinaryData::dropdown_arrow_bw_svgSize);
