@@ -447,6 +447,9 @@ void FxController::showMainWindow()
 		settings_.setBool("run_minimized", false);
 		main_window_->show();
 
+		auto power = FxModel::getModel().getPowerState();
+		main_window_->setIcon(power, audio_process_on_);
+
         if (survey_tip_)
         {
             uint32_t survey_timer = settings_.getInt("survey_timer");
