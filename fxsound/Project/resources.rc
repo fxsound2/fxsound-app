@@ -9,7 +9,7 @@
 #include <windows.h>
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION  1,1,29,0
+FILEVERSION  1,1,30,0
 BEGIN
   BLOCK "StringFileInfo"
   BEGIN
@@ -18,9 +18,9 @@ BEGIN
       VALUE "CompanyName",  "FxSound LLC\0"
       VALUE "LegalCopyright",  "2024 FxSound™\0"
       VALUE "FileDescription",  "FxSound\0"
-      VALUE "FileVersion",  "1.1.29.0\0"
+      VALUE "FileVersion",  "1.1.30.0\0"
       VALUE "ProductName",  "FxSound\0"
-      VALUE "ProductVersion",  "1.1.29.0\0"
+      VALUE "ProductVersion",  "1.1.30.0\0"
     END
   END
 
