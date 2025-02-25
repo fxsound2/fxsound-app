@@ -1,3 +1,8 @@
+version 1.1.30.0
+----------------
+1. Fixed the issue of taskbar icon color not changing after application window restore
+2. Fixed a potential crash in changing volume/mute
+
 version 1.1.29.0
 ----------------
 1. Build optimizations done to improve performance and reduce CPU utilization
