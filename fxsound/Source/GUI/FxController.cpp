@@ -170,6 +170,30 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
     free_plan_ = settings_.getBool("free_plan");
     hide_help_tooltips_ = settings_.getBool("hide_help_tooltips");
 	hide_notifications_ = settings_.getBool("hide_notifications");
+
+	device_specific_preset_ = settings_.getBool("device_specific_preset");
+
+	DynamicObject* obj = new DynamicObject();
+	obj->setProperty("foo", "bar");
+	obj->setProperty("num", 123);
+
+	DynamicObject* nestedObj = new DynamicObject();
+	nestedObj->setProperty("inner", "value");
+	obj->setProperty("nested", nestedObj);
+
+	var json(obj); // store the outer object in a var [we could have done this earlier]
+	String s = JSON::toString(json);
+
+	String loaded_settings_string = settings_.getString("device_preset_map_");
+
+	auto parsed_device_preset_map = JSON::parse(loaded_settings_string);
+	String ad = JSON::toString(parsed_device_preset_map);
+
+	device_preset_map_ = parsed_device_preset_map.getDynamicObject()
+		? DynamicObject(*parsed_device_preset_map.getDynamicObject()->clone().get())
+		: DynamicObject();
+
+
     output_device_id_ = settings_.getString("output_device_id");
     output_device_name_ = settings_.getString("output_device_name");
 	max_user_presets_ = settings_.getInt("max_user_presets");
@@ -319,6 +343,24 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		initPresets();
 		
 		auto preset_name = settings_.getString("preset");
+
+		bool device_specific_preset = settings_.getBool("device_specific_preset");
+		if (device_specific_preset)
+		{
+			String loaded_settings_string = settings_.getString("device_preset_map_");
+
+			auto parsed_device_preset_map = JSON::fromString(settings_.getString("device_preset_map_"));
+
+			device_preset_map_ = parsed_device_preset_map.getDynamicObject() != nullptr
+				? DynamicObject(*parsed_device_preset_map.getDynamicObject()->clone().get())
+				: DynamicObject();
+
+			if (device_preset_map_.hasProperty(output_device_id_))
+			{
+				preset_name = device_preset_map_.getProperty(output_device_id_);
+			}
+		}
+
         if (!authenticated_)
         {
             preset_name = "General";
@@ -538,6 +580,8 @@ bool FxController::setPreset(int selected_preset)
 
     auto preset = model.getPreset(selected_preset);
 
+	setDevicePreset(selected_device_id_, preset.name);
+
 	if (model.isPresetModified() && selected_preset != model.getSelectedPreset())
 	{
 		if (authenticated_ && !FxConfirmationMessage::showMessage(TRANS("Changes to your preset are not saved.\r\nDo you want to ignore the changes?")))
@@ -643,6 +687,9 @@ void FxController::setOutput(int output, bool notify)
 			audio_passthru_->mute(false);
         }
     }
+
+	selected_device_id_ = selected_sound_device.pwszID.c_str();
+	loadDevicePreset(selected_sound_device.pwszID.c_str());
 
 	FxModel::getModel().setSelectedOutput(output, selected_sound_device, notify);
 }
@@ -1113,6 +1160,29 @@ void FxController::setSelectedOutput(String id, String name)
 	}
 }
 
+
+void FxController::loadDevicePreset(String device_id)
+{
+	if (!isDeviceSpecificPreset())
+		return;
+
+	String saved_preset = getDevicePreset(device_id);
+
+	Array<FxModel::Preset> presets = FxModel::getModel().getPresets();
+
+	int saved_preset_index = -1;
+	for (auto i = 0; i < presets.size(); i++)
+	{
+		if (saved_preset.equalsIgnoreCase(presets[i].name))
+		{
+			saved_preset_index = i;
+		}
+	}
+
+	if (saved_preset_index >= 0)
+		setPreset(saved_preset_index);
+}
+
 float FxController::getEffectValue(FxEffects::EffectType effect)
 {
 	return dfx_dsp_.getEffectValue(static_cast<DfxDsp::Effect>(effect));
@@ -1527,6 +1597,35 @@ void FxController::setNotificationsHidden(bool status)
 {
 	hide_notifications_ = status;
 	settings_.setBool("hide_notifications", true);
+}
+bool FxController::isDeviceSpecificPreset()
+{
+	return device_specific_preset_;
+}
+
+void FxController::setDeviceSpecificPreset(bool status)
+{
+	device_specific_preset_ = status;
+	settings_.setBool("device_specific_preset", true);
+}
+
+String FxController::getDevicePreset(const String& device_id)
+{
+	return device_preset_map_.getProperty(device_id);
+}
+
+void FxController::setDevicePreset(const String& device_id, const String& preset_id)
+{
+	if (device_id == "")
+		return;
+	device_preset_map_.setProperty(device_id, preset_id);
+	settings_.setString("device_preset_map", JSON::toString(device_preset_map_.clone().get()));
+}
+
+void FxController::removeDevicePreset(const String& device_id)
+{
+	device_preset_map_.removeProperty(device_id);
+	settings_.setString("device_preset_map", JSON::toString(device_preset_map_.clone().get()));
 }
 
 String FxController::getLanguage() const

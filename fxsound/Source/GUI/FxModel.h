@@ -77,6 +77,7 @@ public:
 	int getPresetCount() const;
 	int getUserPresetCount() const;
 	Preset getPreset(int preset) const;
+	Array<Preset> getPresets() const;
 	bool isPresetModified() const;
 	void setPresetModified(bool preset_modified);
     bool isPresetNameValid(const String& preset_name);
