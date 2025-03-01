@@ -173,17 +173,6 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 
 	device_specific_preset_ = settings_.getBool("device_specific_preset");
 
-	DynamicObject* obj = new DynamicObject();
-	obj->setProperty("foo", "bar");
-	obj->setProperty("num", 123);
-
-	DynamicObject* nestedObj = new DynamicObject();
-	nestedObj->setProperty("inner", "value");
-	obj->setProperty("nested", nestedObj);
-
-	var json(obj); // store the outer object in a var [we could have done this earlier]
-	String s = JSON::toString(json);
-
 	String loaded_settings_string = settings_.getString("device_preset_map_");
 
 	auto parsed_device_preset_map = JSON::parse(loaded_settings_string);
