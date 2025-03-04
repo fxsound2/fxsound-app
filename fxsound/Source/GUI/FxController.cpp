@@ -571,6 +571,8 @@ bool FxController::setPreset(int selected_preset)
         }
 	}
 
+	model.pushMessage(TRANS("Preset: ") + model.getPreset(selected_preset).name);
+
 	return true;
 }
 
@@ -642,6 +644,8 @@ void FxController::setOutput(int output, bool notify)
 			dfx_dsp_.powerOn(true);
 			audio_passthru_->mute(false);
         }
+
+		FxModel::getModel().pushMessage(TRANS("Output: ") + output_device_name_);
     }
 
 	FxModel::getModel().setSelectedOutput(output, selected_sound_device, notify);
@@ -1214,10 +1218,8 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 					{
 						preset_index = 0;
 					}
-					if (controller->setPreset(preset_index))
-					{
-						FxModel::getModel().pushMessage(TRANS("Preset: ") + FxModel::getModel().getPreset(preset_index).name);
-					}
+
+					controller->setPreset(preset_index);
 				}
 			}
 			if (w_param == CMD_PREVIOUS_PRESET && FxModel::getModel().getPowerState())
@@ -1234,10 +1236,8 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 					{
 						preset_index = preset_count - 1;
 					}
-					if (controller->setPreset(preset_index))
-					{
-						FxModel::getModel().pushMessage(TRANS("Preset: ") + FxModel::getModel().getPreset(preset_index).name);
-					}
+
+					controller->setPreset(preset_index);
 				}
 			}
 			if (w_param == CMD_NEXT_OUTPUT)
