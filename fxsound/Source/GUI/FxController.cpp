@@ -330,6 +330,8 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		auto prev_version = settings_.getString("version");
         if (prev_version != app_version)
         {
+			RegDeleteTree(HKEY_CURRENT_USER, L"Software\\DFX");
+
             FxModel::getModel().pushMessage(" ", { TRANS("Click here to see what's new on this version!"), "https://www.fxsound.com/changelog" });			
             settings_.setString("version", app_version);
 			if (!prev_version.startsWith("1.1.2") && app_version.startsWith("1.1.2"))

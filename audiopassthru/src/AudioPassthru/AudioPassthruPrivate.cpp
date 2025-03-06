@@ -144,8 +144,7 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices()
 	sound_devices_.clear();
 
 	// Get the guid of the currently selected real playback device
-	if (sndDevicesGetID(hp_sndDevices_, SND_DEVICES_USER_SELECTED_PLAYBACK_DEVICE, wcp_user_seleted_playback_device_guid, &i_resultFlag) != OKAY ||
-		sndDevicesGetID(hp_sndDevices_, SND_DEVICES_TARGETED_REAL_PLAYBACK, wcp_targeted_real_playback_device_guid, &i_resultFlag) != OKAY ||
+	if (sndDevicesGetID(hp_sndDevices_, SND_DEVICES_TARGETED_REAL_PLAYBACK, wcp_targeted_real_playback_device_guid, &i_resultFlag) != OKAY ||
 		sndDevicesGetID(hp_sndDevices_, SND_DEVICES_CAPTURE, wcp_capture_device_guid, &i_resultFlag) != OKAY ||
 		sndDevicesGetID(hp_sndDevices_, SND_DEVICES_VIRTUAL_PLAYBACK_DFX, wcp_dfx_device_guid, &i_resultFlag) != OKAY ||
 		sndDevicesGetID(hp_sndDevices_, SND_DEVICES_DEFAULT, wcp_default_device_guid, &i_resultFlag) != OKAY)
