@@ -155,10 +155,15 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices()
 
 	for (int index = 0; index < cast_handle->totalNumDevices; index++) 
 	{
+		if (cast_handle->pwszID[index] == NULL || cast_handle->deviceFriendlyName[index] == NULL)
+		{
+			continue;
+		}
+
 		SoundDevice sound_device;
 		sound_device.pwszID = std::wstring(cast_handle->pwszID[index]);
 		sound_device.deviceFriendlyName = std::wstring(cast_handle->deviceFriendlyName[index]);
-		sound_device.deviceDescription = std::wstring(cast_handle->deviceDescription[index]);
+		sound_device.deviceDescription = std::wstring(cast_handle->deviceDescription[index] != NULL ? cast_handle->deviceDescription[index] : L"");
 		sound_device.deviceNumChannel = cast_handle->deviceNumChannel[index];
 
 		// Skip mono devices if SND_DEVICES_MONO_BUG_SKIP_MONO_DEVICES is IS_TRUE

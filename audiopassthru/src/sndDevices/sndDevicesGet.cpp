@@ -301,7 +301,7 @@ int PT_DECLSPEC sndDevicesGetFriendlyNameFromID(PT_HANDLE *hp_sndDevices, wchar_
 	for(i=0; i<cast_handle->totalNumDevices; i++)
 	{
 		// Check ID strings to see if they match
-		if( wcscmp(cast_handle->pwszID[i], wcp_ID) == 0 )
+		if( cast_handle->pwszID[i] != NULL && wcscmp(cast_handle->pwszID[i], wcp_ID) == 0 )
 		{
 			wcscpy(wcp_Name, cast_handle->deviceFriendlyName[i] );
 			*ip_resultFlag = SND_DEVICES_DEVICE_OPERATION_COMPLETED;
@@ -332,7 +332,7 @@ int PT_DECLSPEC sndDevicesGetDeviceNameFromID(PT_HANDLE *hp_sndDevices, wchar_t 
 	for(i=0; i<cast_handle->totalNumDevices; i++)
 	{
 		// Check ID strings to see if they match
-		if( wcscmp(cast_handle->pwszID[i], wcp_ID) == 0 )
+		if( cast_handle->pwszID[i] != NULL && wcscmp(cast_handle->pwszID[i], wcp_ID) == 0 )
 		{
 			wcscpy(wcp_Description, cast_handle->deviceDescription[i] );
 			*ip_resultFlag = SND_DEVICES_DEVICE_OPERATION_COMPLETED;
@@ -361,7 +361,7 @@ int PT_DECLSPEC sndDevicesGetNumberOfChannelsFromID(PT_HANDLE *hp_sndDevices, wc
 	for (auto index = 0; index < cast_handle->totalNumDevices; index++)
 	{
 		// Check ID strings to see if they match
-		if (wcscmp(cast_handle->pwszID[index], wcp_ID) == 0)
+		if (cast_handle->pwszID[index] != NULL && wcscmp(cast_handle->pwszID[index], wcp_ID) == 0)
 		{
 			*ip_numChannels = cast_handle->deviceNumChannel[index];
 			*ip_resultFlag = SND_DEVICES_DEVICE_OPERATION_COMPLETED;
@@ -420,7 +420,7 @@ int PT_DECLSPEC sndDevicesGetFormatFromID(PT_HANDLE *hp_sndDevices, wchar_t *wcp
 	for(i=0; i<cast_handle->totalNumDevices; i++)
 	{
 		// Check ID string to see if this is the requested device,
-		if( wcscmp(cast_handle->pwszID[i], wcp_ID) == 0 )
+		if( cast_handle->pwszID[i] != NULL && wcscmp(cast_handle->pwszID[i], wcp_ID) == 0 )
 		{
 			// Activate capture device for audio so we can get its format
 			hr = cast_handle->pAllDevices[i]->Activate(cast_handle->IID_IAudioClient, CLSCTX_ALL, NULL, (void**)&pAudioClient);
