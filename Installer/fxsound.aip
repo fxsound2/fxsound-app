@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<DOCUMENT Type="Advanced Installer" CreateVersion="17.2" version="21.9" Modules="professional" RootPath="." Language="en" Id="{9FE1878D-CAA1-41D8-A7C2-0BF5E9B1955B}">
+<DOCUMENT Type="Advanced Installer" CreateVersion="17.2" version="22.5" Modules="professional" RootPath="." Language="en" Id="{9FE1878D-CAA1-41D8-A7C2-0BF5E9B1955B}">
   <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
     <ROW Property="AI_APP_FILE" Value="[#FxSound.exe]"/>
     <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0"/>
     <ROW Property="AI_FINDEXE_TITLE" Value="Select the installation package for [|ProductName]" ValueLocId="AI.Property.FindExeTitle"/>
+    <ROW Property="AI_IA_APPLICATION_ID" Value="67cc48034512a1c62dc00254"/>
     <ROW Property="AI_REQUIRED_WINDOWS_INSTALLER_DISPLAY" MultiBuildValue="DefaultBuild:2.0" ValueLocId="-"/>
     <ROW Property="AI_REQUIRED_WINDOWS_INSTALLER_VERSION" MultiBuildValue="DefaultBuild:2.0" ValueLocId="-"/>
     <ROW Property="ALLUSERS" Value="1"/>
@@ -24,11 +25,11 @@
     <ROW Property="MSIFASTINSTALL" MultiBuildValue="DefaultBuild:2"/>
     <ROW Property="Manufacturer" Value="FxSound LLC"/>
     <ROW Property="MsiLogging" MultiBuildValue="DefaultBuild:vp"/>
-    <ROW Property="ProductCode" Value="1033:{ABCDA086-3923-4EA1-8D69-6B173FD11EF2} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{686221C2-D1C8-4EED-A285-5006FEFCAFF4} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="FxSound"/>
     <ROW Property="ProductName_32" Value="[|ProductName]"/>
-    <ROW Property="ProductVersion" Value="1.1.30.0" Options="20"/>
+    <ROW Property="ProductVersion" Value="1.1.31.0" Options="20"/>
     <ROW Property="REBOOT" MultiBuildValue="DefaultBuild:Suppress"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
