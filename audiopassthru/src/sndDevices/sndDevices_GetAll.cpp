@@ -138,11 +138,11 @@ int PT_DECLSPEC sndDevices_GetAll( PT_HANDLE *hp_sndDevices, int *ip_num_devices
 
 		// Get the devices's friendly-name property. This key doesn't include the "Speakers" prefix.
 		hr = pProps->GetValue(PKEY_Device_FriendlyName, &FriendlyName);
-		if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_INSTANCE_CREATE_FAILED);
+		if (FAILED(hr)) continue;
 
 		// Get the devices's descriptive name property, ie "Speakers".
 		hr = pProps->GetValue(PKEY_Device_DeviceDesc, &DeviceDesc);
-		if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_INSTANCE_CREATE_FAILED);
+		if (FAILED(hr)) continue;
 
 		// Copy friendly name and description
         if (FriendlyName.pwszVal != NULL && DeviceDesc.pwszVal != NULL) 
