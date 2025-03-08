@@ -7265,7 +7265,7 @@ static const unsigned char temp_binary_data_51[] =
 "\"Select preferred output\" = \"V\xc3\xa4lj \xc3\xb6nskad utg\xc3\xa5ng\"\r\n"
 "\"Preferred output:\" = \"\xc3\x96nskad utdata:\"\r\n"
 "\"None\" = \"Ingen\"\r\n"
-"\"Newly connected output device\" = \"Nyanslutet utmatningsenhet\"\r\n"
+"\"Newly connected output device\" = \"Nyansluten utg\xc3\xa5ngsenhet\"\r\n"
 "\"Hide notifications\" = \"D\xc3\xb6lj aviseringar\"";
 
 const char* FxSound_sv_txt = (const char*) temp_binary_data_51;
@@ -8329,7 +8329,7 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
         case 0xf3de94f7:  numBytes = 10904; return FxSound_pt_txt;
         case 0xf701d0b0:  numBytes = 11035; return FxSound_ro_txt;
         case 0xf7565db6:  numBytes = 14718; return FxSound_ru_txt;
-        case 0xf9194dd6:  numBytes = 10687; return FxSound_sv_txt;
+        case 0xf9194dd6:  numBytes = 10685; return FxSound_sv_txt;
         case 0xfa08dd67:  numBytes = 17640; return FxSound_th_txt;
         case 0xfa95c871:  numBytes = 10802; return FxSound_tr_txt;
         case 0x4464a26e:  numBytes = 10000; return FxSound_txt;
