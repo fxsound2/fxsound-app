@@ -120,7 +120,7 @@ HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDefaultDeviceChange
 	  SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDefaultDeviceChanged() setting processing thread kill flag");
 
 	  // Don't think we need to kill process thread if DFX itself is selected as default from within our code
-	  if (wcscmp(pwstrDeviceId, cast_handle->pwszID[cast_handle->dfxDeviceNum]) == 0)
+	  if ( cast_handle->pwszID[cast_handle->dfxDeviceNum] != NULL && wcscmp(pwstrDeviceId, cast_handle->pwszID[cast_handle->dfxDeviceNum]) == 0)
 		  return(S_OK);
 
 	  //std::wstring temp_string(pwstrDeviceId);

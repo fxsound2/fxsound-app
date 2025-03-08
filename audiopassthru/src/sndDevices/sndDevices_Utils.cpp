@@ -116,7 +116,7 @@ int PT_DECLSPEC sndDevices_UtilsGetIndexFromID(PT_HANDLE *hp_sndDevices, wchar_t
 	if (cast_handle == NULL)
 		return(NOT_OKAY);
 
-	if (wcp_ID == NULL)
+	if (wcp_ID == NULL || wcslen(wcp_ID) == 0)
 	{
 		return(OKAY);
 	}
@@ -127,7 +127,7 @@ int PT_DECLSPEC sndDevices_UtilsGetIndexFromID(PT_HANDLE *hp_sndDevices, wchar_t
 	for(i=0; i<cast_handle->totalNumDevices; i++)
 	{
 		// Check ID strings to see if they match
-		if( wcscmp(cast_handle->pwszID[i], wcp_ID) == 0 )
+		if( cast_handle->pwszID[i] != NULL && wcscmp(cast_handle->pwszID[i], wcp_ID) == 0 )
 		{
 			*ip_index = i;
 			break;
