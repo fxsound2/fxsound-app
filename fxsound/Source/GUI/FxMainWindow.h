@@ -46,6 +46,7 @@ public:
     void setIcon(bool power, bool processing);
 
     bool keyPressed(const KeyPress& key) override;
+    void visibilityChanged() override;
 
 private:
     static constexpr int BUTTON_WIDTH = 24;
