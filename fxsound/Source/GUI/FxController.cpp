@@ -148,7 +148,22 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 	file_logger_.reset(FileLogger::createDefaultAppLogger(L"FxSound", L"fxsound.log", L"FxSound logs"));
     logMessage("v" + JUCEApplication::getInstance()->getApplicationVersion());
 	logMessage(SystemStats::getOperatingSystemName());
-	logMessage(SystemStats::isOperatingSystem64Bit() ? String("x64") : String("x86"));
+	if (SystemStats::isOperatingSystem64Bit())
+	{
+		if (IsProcessorFeaturePresent(PF_ARM_V8_INSTRUCTIONS_AVAILABLE))
+		{
+			logMessage(String("ARM64"));
+		}
+		else
+		{
+			logMessage(String("x64"));
+		}
+	}
+	else
+	{
+		logMessage(String("x86"));
+	}
+	
 
 	auto view = settings_.getInt("view");
 	if (view <= 0 || view > 2)
