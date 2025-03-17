@@ -168,14 +168,18 @@ DfxInstall::DfxInstall(const wchar_t* working_dir, const wchar_t* version)
     SYSTEM_INFO sys_info;
     GetNativeSystemInfo(&sys_info);
 
-    cpu_arch_ = 0;
+    cpu_arch_ = CpuArch::Unknown;
     if (sys_info.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL)
     {
-        cpu_arch_ = 32;
+        cpu_arch_ = CpuArch::x86;
     }
     else if (sys_info.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64)
     {
-        cpu_arch_ = 64;
+        cpu_arch_ = CpuArch::x64;
+    }
+    else if (sys_info.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_ARM64)
+    {
+        cpu_arch_ = CpuArch::ARM64;
     }
 }
 
@@ -186,174 +190,24 @@ DfxInstall::~DfxInstall()
 
 bool DfxInstall::InstallDFXDriver(std::string& log)
 {
-    if (cpu_arch_ == 0)
-    {
-        return false;
-    }
-    if (working_dir_.empty())
+    if (cpu_arch_ == CpuArch::Unknown)
     {
         return false;
     }
 
-    if (working_dir_[working_dir_.length() - 1] != L'\\')
+    if (cpu_arch_ == CpuArch::ARM64)
     {
-        working_dir_ += L"\\";
-    }
-
-    std::wstring dfxsetup;
-    std::wstring apps_path = working_dir_ + APPS_FOLDER;
-    std::wstring fxdevcon;
-    std::wstring driver_path; 
-    std::wstring inf_path;
-    dfxsetup = apps_path + L"DfxSetupDrv.exe";
-
-    if (cpu_arch_ == 32)
-    {
-        if (IsWindows10())
-        {
-            driver_path = working_dir_ + DRIVERS_FOLDER + L"win10\\x86\\";
-        }
-        else
-        {
-            driver_path = working_dir_ + DRIVERS_FOLDER + L"win7\\x86\\";
-        }
-
-        fxdevcon = driver_path + L"fxdevcon32.exe";
+        return InstallARMDriver(log);
     }
     else
     {
-        if (IsWindows10())
-        {
-            driver_path = working_dir_ + DRIVERS_FOLDER + L"win10\\x64\\";
-        }
-        else
-        {
-            driver_path = working_dir_ + DRIVERS_FOLDER + L"win7\\x64\\";
-        }
-
-        fxdevcon = driver_path + L"fxdevcon64.exe";        
+        return InstallIntelDriver(log);
     }
-
-    inf_path = driver_path + L"fxvad.inf";
-
-    std::wstring cmd = dfxsetup + L" check";
-    std::string output;
-    if (CmdExec(cmd, apps_path, output))
-    {
-        log = "DfxSetup check " + output + "\r\n";
-        if (output.find("DFX Audio Enhancer", 0) == 0)
-        {
-            cmd = fxdevcon + L" remove *DFX12";
-            if (CmdExec(cmd, driver_path, output))
-            {
-                log = log + "fxdevcon remove DFX " + output + "\r\n";
-                if (output.find("Success", 0) != std::string::npos)
-                {
-                    Sleep(1000);
-                }                			
-            }
-        }
-    }
-
-    cmd = fxdevcon + L" install \"" + inf_path + L"\"";
-    if (CmdExec(cmd, driver_path, output))
-    {
-        log = log + "fxdevcon install " + output + "\r\n";
-        if (output.find("Success", 0) == std::string::npos)
-        {
-            return false;
-        }
-
-        Sleep(1000);
-    }
-
-    if (!EnableDFXDriver())
-    {
-        log = log + "FxSound driver is not enabled\r\n";
-        return false;
-    }
-
-    std::string reg_path = std::string("Software\\DFX\\") + VENDOR_CODE + std::string("\\devices");
-
-    cmd = dfxsetup + L" getguid";
-    if (CmdExec(cmd, apps_path, output))
-    {
-        log = log + "DfxSetup getguid " + output + "\r\n";
-        if (output.length() > 0 && output[0] == '{' && output[output.length() - 1] == '}')
-        {			
-            HKEY h_key;
-            REGSAM access_mask = KEY_ALL_ACCESS;
-            if (cpu_arch_ == 64)
-            {
-                access_mask |= KEY_WOW64_64KEY;
-            }
-            if (RegCreateKeyExA(HKEY_LOCAL_MACHINE, reg_path.c_str(), 0, NULL, 0, access_mask, NULL, &h_key, NULL) == ERROR_SUCCESS)
-            {
-                RegSetKeyValueA(h_key, NULL, "dfx_guid", REG_SZ, (LPCVOID)output.c_str(), output.length());
-                RegCloseKey(h_key);
-            }
-        }
-        else
-        {
-            return false;
-        }
-    }
-    else
-    {
-        return false;
-    }
-
-    cmd = dfxsetup + L" setname";
-    if (CmdExec(cmd, apps_path, output))
-    {
-        log = log + "DfxSetup setname " + output + "\r\n";
-        if (output.find("Success", 0) == std::string::npos)
-        {
-            return false;
-        }
-    }
-
-    /*cmd = dfxsetup + L" seticon";
-    if (CmdExec(cmd, apps_path, output))
-    {
-        log = log + "DfxSetup seticon " + output + "\r\n";
-        if (output.find("Success", 0) == std::string::npos)
-        {
-            return false;
-        }
-    }*/
-
-    cmd = dfxsetup + L" defaultbuffersize";
-    if (CmdExec(cmd, apps_path, output))
-    {
-        log = log + "DfxSetup defaultbuffersize " + output + "\r\n";
-        if (output.find("Failed", 0) != std::string::npos)
-        {
-            return false;
-        }
-
-        HKEY h_key;
-        REGSAM access_mask = KEY_ALL_ACCESS;
-        if (cpu_arch_ == 64)
-        {
-            access_mask |= KEY_WOW64_64KEY;
-        }
-        if (RegCreateKeyExA(HKEY_LOCAL_MACHINE, reg_path.c_str(), 0, NULL, 0, access_mask, NULL, &h_key, NULL) == ERROR_SUCCESS)
-        {
-            RegSetKeyValueA(h_key, NULL, "default_buffer_size", REG_SZ, (LPCVOID)output.c_str(), output.length());
-            RegCloseKey(h_key);
-        }		
-    }
-
-    cmd = L"powercfg -REQUESTSOVERRIDE DRIVER \"FxSound Audio Enhancer\" SYSTEM";
-    CmdExec(cmd, apps_path, output);
-
-    return true;
 }
 
 bool DfxInstall::UninstallDFXDriver(std::string& log)
 {
-    if (cpu_arch_ == 0)
+    if (cpu_arch_ == CpuArch::Unknown)
     {
         return false;
     }
@@ -371,7 +225,7 @@ bool DfxInstall::UninstallDFXDriver(std::string& log)
     std::wstring driver_path;
     std::wstring inf_path;
 
-    if (cpu_arch_ == 32)
+    if (cpu_arch_ == CpuArch::x86)
     {
         if (IsWindows10())
         {
@@ -420,68 +274,18 @@ bool DfxInstall::UninstallDFXDriver(std::string& log)
 
 bool DfxInstall::UninstallFxSoundDriver(std::string& log)
 {
-    if (cpu_arch_ == 0)
-    {
-        return false;
-    }
-    if (working_dir_.empty())
+    if (cpu_arch_ == CpuArch::Unknown)
     {
         return false;
     }
 
-    if (working_dir_[working_dir_.length() - 1] != L'\\')
+    if (cpu_arch_ == CpuArch::ARM64)
     {
-        working_dir_ += L"\\";
-    }
-
-    std::wstring fxdevcon;
-    std::wstring driver_path;
-    std::wstring inf_path;
-
-    if (cpu_arch_ == 32)
-    {
-        if (IsWindows10())
-        {
-            driver_path = working_dir_ + DRIVERS_FOLDER + L"win10\\x86\\";
-        }
-        else
-        {
-            driver_path = working_dir_ + DRIVERS_FOLDER + L"win7\\x86\\";
-        }
-
-        fxdevcon = driver_path + L"fxdevcon32.exe";
+        return UninstallARMDriver(log);
     }
     else
     {
-        if (IsWindows10())
-        {
-            driver_path = working_dir_ + DRIVERS_FOLDER + L"win10\\x64\\";
-        }
-        else
-        {
-            driver_path = working_dir_ + DRIVERS_FOLDER + L"win7\\x64\\";
-        }
-
-        fxdevcon = driver_path + L"fxdevcon64.exe";
-    }
-
-    std::string output;
-    std::wstring cmd = fxdevcon + L" remove";
-    if (CmdExec(cmd, driver_path, output))
-    {
-        log = log + "fxdevcon remove " + output + "\r\n";
-        if (output.find("Success", 0) == std::string::npos)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-    else
-    {
-        return false;
+        return UninstallIntelDriver(log);
     }
 }
 
@@ -530,6 +334,370 @@ bool DfxInstall::DeleteUpdateTask(std::string& log)
     return true;
 }
 
+bool DfxInstall::InstallIntelDriver(std::string& log)
+{
+    if (cpu_arch_ == CpuArch::Unknown)
+    {
+        return false;
+    }
+    if (working_dir_.empty())
+    {
+        return false;
+    }
+
+    if (working_dir_[working_dir_.length() - 1] != L'\\')
+    {
+        working_dir_ += L"\\";
+    }
+
+    std::wstring dfxsetup;
+    std::wstring apps_path = working_dir_ + APPS_FOLDER;
+    std::wstring fxdevcon;
+    std::wstring driver_path;
+    std::wstring inf_path;
+    std::string os;
+    dfxsetup = apps_path + L"DfxSetupDrv.exe";
+
+    if (cpu_arch_ == CpuArch::x86)
+    {
+        if (IsWindows10())
+        {
+            driver_path = working_dir_ + DRIVERS_FOLDER + L"win10\\x86\\";
+            os = "win10 x86";
+        }
+        else
+        {
+            driver_path = working_dir_ + DRIVERS_FOLDER + L"win7\\x86\\";
+            os = "win7 x86";
+        }
+
+        fxdevcon = driver_path + L"fxdevcon32.exe";
+    }
+    else
+    {
+        if (IsWindows10())
+        {
+            driver_path = working_dir_ + DRIVERS_FOLDER + L"win10\\x64\\";
+            os = "win10 x64";
+        }
+        else
+        {
+            driver_path = working_dir_ + DRIVERS_FOLDER + L"win7\\x64\\";
+            os = "win7 x64";
+        }
+
+        fxdevcon = driver_path + L"fxdevcon64.exe";
+    }
+
+    inf_path = driver_path + L"fxvad.inf";
+
+    std::wstring cmd = dfxsetup + L" check";
+    std::string output;
+    if (CmdExec(cmd, apps_path, output))
+    {
+        log = "DfxSetup check " + output + "\r\n";
+        if (output.find("DFX Audio Enhancer", 0) == 0)
+        {
+            cmd = fxdevcon + L" remove *DFX12";
+            if (CmdExec(cmd, driver_path, output))
+            {
+                log = log + "fxdevcon remove DFX " + output + "\r\n";
+                if (output.find("Success", 0) != std::string::npos)
+                {
+                    Sleep(1000);
+                }
+            }
+        }
+    }
+
+    cmd = fxdevcon + L" install \"" + inf_path + L"\"";
+    if (CmdExec(cmd, driver_path, output))
+    {
+        log = log + "fxdevcon install " + os + output + "\r\n";
+        if (output.find("Success", 0) == std::string::npos)
+        {
+            return false;
+        }
+
+        Sleep(1000);
+    }
+
+    if (!EnableDFXDriver())
+    {
+        log = log + "FxSound driver is not enabled\r\n";
+        return false;
+    }
+
+    std::string reg_path = std::string("Software\\DFX\\") + VENDOR_CODE + std::string("\\devices");
+
+    cmd = dfxsetup + L" getguid";
+    if (CmdExec(cmd, apps_path, output))
+    {
+        log = log + "DfxSetup getguid " + output + "\r\n";
+        if (output.length() > 0 && output[0] == '{' && output[output.length() - 1] == '}')
+        {
+            HKEY h_key;
+            REGSAM access_mask = KEY_ALL_ACCESS;
+            if (cpu_arch_ == CpuArch::x64)
+            {
+                access_mask |= KEY_WOW64_64KEY;
+            }
+            if (RegCreateKeyExA(HKEY_LOCAL_MACHINE, reg_path.c_str(), 0, NULL, 0, access_mask, NULL, &h_key, NULL) == ERROR_SUCCESS)
+            {
+                RegSetKeyValueA(h_key, NULL, "dfx_guid", REG_SZ, (LPCVOID)output.c_str(), (DWORD) output.length());
+                RegCloseKey(h_key);
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+
+    cmd = dfxsetup + L" setname";
+    if (CmdExec(cmd, apps_path, output))
+    {
+        log = log + "DfxSetup setname " + output + "\r\n";
+        if (output.find("Success", 0) == std::string::npos)
+        {
+            return false;
+        }
+    }
+
+    /*cmd = dfxsetup + L" seticon";
+    if (CmdExec(cmd, apps_path, output))
+    {
+        log = log + "DfxSetup seticon " + output + "\r\n";
+        if (output.find("Success", 0) == std::string::npos)
+        {
+            return false;
+        }
+    }*/
+
+    cmd = dfxsetup + L" defaultbuffersize";
+    if (CmdExec(cmd, apps_path, output))
+    {
+        log = log + "DfxSetup defaultbuffersize " + output + "\r\n";
+        if (output.find("Failed", 0) != std::string::npos)
+        {
+            return false;
+        }
+
+        HKEY h_key;
+        REGSAM access_mask = KEY_ALL_ACCESS;
+        if (cpu_arch_ == CpuArch::x64)
+        {
+            access_mask |= KEY_WOW64_64KEY;
+        }
+        if (RegCreateKeyExA(HKEY_LOCAL_MACHINE, reg_path.c_str(), 0, NULL, 0, access_mask, NULL, &h_key, NULL) == ERROR_SUCCESS)
+        {
+            RegSetKeyValueA(h_key, NULL, "default_buffer_size", REG_SZ, (LPCVOID)output.c_str(), (DWORD) output.length());
+            RegCloseKey(h_key);
+        }
+    }
+
+    cmd = L"powercfg -REQUESTSOVERRIDE DRIVER \"FxSound Audio Enhancer\" SYSTEM";
+    CmdExec(cmd, apps_path, output);
+
+    return true;
+}
+
+bool DfxInstall::InstallARMDriver(std::string& log)
+{
+    std::vector<AudioDevice> audio_devices;
+
+    if (EnumAudioOutputs(audio_devices))
+    {
+        for (auto audio_device : audio_devices)
+        {
+            if (audio_device.device_name.find(L"FxSound Audio Enhancer", 0) == 0)
+            {
+                log = log + "FxSound Audio Enhancer already installed\r\n";
+                return true;
+            }
+        }
+    }
+
+    if (working_dir_[working_dir_.length() - 1] != L'\\')
+    {
+        working_dir_ += L"\\";
+    }
+
+    std::wstring fxdevcon;
+    std::wstring driver_path;
+    std::wstring inf_path;
+
+    driver_path = working_dir_ + DRIVERS_FOLDER + L"win10\\arm64\\";
+    fxdevcon = driver_path + L"fxdevcon64.exe";
+    inf_path = driver_path + L"fxvad.inf";
+
+    std::wstring cmd = fxdevcon + L" install \"" + inf_path + L"\"" + L" root\\fxvad";
+    std::string output;
+
+    if (CmdExec(cmd, driver_path, output))
+    {
+        log = log + "fxdevcon install ARM64 " + output + "\r\n";
+        if (output.find("Success", 0) == std::string::npos)
+        {
+            return false;
+        }
+
+        Sleep(1000);
+    }
+
+    if (!EnableDFXDriver())
+    {
+        log = log + "FxSound driver is not enabled\r\n";
+        return false;
+    }
+
+    std::wstring reg_path = std::wstring(L"Software\\DFX\\") + WVENDOR_CODE + std::wstring(L"\\devices");
+
+    audio_devices.clear();
+    std::wstring device_id;
+    if (EnumAudioOutputs(audio_devices))
+    {
+        for (auto audio_device : audio_devices)
+        {
+            if (audio_device.device_name.find(L"FxSound Audio Enhancer", 0) == 0)
+            {
+                device_id = audio_device.device_guid;
+                break;
+            }
+        }
+    }
+
+    if (device_id.length() > 0 && device_id[0] == L'{' && device_id[device_id.length() - 1] == L'}')
+    {
+        HKEY h_key;
+        REGSAM access_mask = KEY_ALL_ACCESS;
+        if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, reg_path.c_str(), 0, NULL, 0, access_mask, NULL, &h_key, NULL) == ERROR_SUCCESS)
+        {
+            RegSetKeyValue(h_key, NULL, L"dfx_guid", REG_SZ, (LPCVOID)device_id.c_str(), (DWORD) device_id.length()*sizeof(wchar_t));
+            RegCloseKey(h_key);
+        }
+    }
+
+    HKEY h_key;
+    REGSAM access_mask = KEY_ALL_ACCESS;
+    wchar_t buffer_size[] = L"40";
+    if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, reg_path.c_str(), 0, NULL, 0, access_mask, NULL, &h_key, NULL) == ERROR_SUCCESS)
+    {
+        RegSetKeyValue(h_key, NULL, L"default_buffer_size", REG_SZ, (LPCVOID)buffer_size, (DWORD) wcslen(buffer_size)*sizeof(wchar_t));
+        RegCloseKey(h_key);
+    }
+
+    cmd = L"powercfg -REQUESTSOVERRIDE DRIVER \"FxSound Audio Enhancer\" SYSTEM";
+    CmdExec(cmd, driver_path, output);
+
+    return true;
+}
+
+bool DfxInstall::UninstallIntelDriver(std::string& log)
+{
+    if (cpu_arch_ == CpuArch::Unknown)
+    {
+        return false;
+    }
+    if (working_dir_.empty())
+    {
+        return false;
+    }
+
+    if (working_dir_[working_dir_.length() - 1] != L'\\')
+    {
+        working_dir_ += L"\\";
+    }
+
+    std::wstring fxdevcon;
+    std::wstring driver_path;
+    std::wstring inf_path;
+
+    if (cpu_arch_ == CpuArch::x86)
+    {
+        if (IsWindows10())
+        {
+            driver_path = working_dir_ + DRIVERS_FOLDER + L"win10\\x86\\";
+        }
+        else
+        {
+            driver_path = working_dir_ + DRIVERS_FOLDER + L"win7\\x86\\";
+        }
+
+        fxdevcon = driver_path + L"fxdevcon32.exe";
+    }
+    else
+    {
+        if (IsWindows10())
+        {
+            driver_path = working_dir_ + DRIVERS_FOLDER + L"win10\\x64\\";
+        }
+        else
+        {
+            driver_path = working_dir_ + DRIVERS_FOLDER + L"win7\\x64\\";
+        }
+
+        fxdevcon = driver_path + L"fxdevcon64.exe";
+    }
+
+    std::string output;
+    std::wstring cmd = fxdevcon + L" remove";
+    if (CmdExec(cmd, driver_path, output))
+    {
+        log = log + "fxdevcon remove " + output + "\r\n";
+        if (output.find("Success", 0) == std::string::npos)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool DfxInstall::UninstallARMDriver(std::string& log)
+{
+    if (working_dir_[working_dir_.length() - 1] != L'\\')
+    {
+        working_dir_ += L"\\";
+    }
+
+    std::wstring fxdevcon;
+    std::wstring driver_path;
+    std::wstring inf_path;
+
+    driver_path = working_dir_ + DRIVERS_FOLDER + L"win10\\arm64\\";
+    fxdevcon = driver_path + L"fxdevcon64.exe";
+
+    std::string output;
+    std::wstring cmd = fxdevcon + L" remove root\\fxvad";
+    if (CmdExec(cmd, driver_path, output))
+    {
+        log = log + "fxdevcon remove " + output + "\r\n";
+        if (output.find("Success", 0) == std::string::npos)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
 bool DfxInstall::CmdExec(const std::wstring& cmd_str, const std::wstring& working_dir, std::string& output)
 {
     SECURITY_ATTRIBUTES security_attr;
@@ -566,7 +734,7 @@ bool DfxInstall::CmdExec(const std::wstring& cmd_str, const std::wstring& workin
     PROCESS_INFORMATION process_info = {};
 
     wchar_t* cmd = new wchar_t[cmd_str.length() + 1];
-    lstrcpynW(cmd, cmd_str.c_str(), cmd_str.length() + 1);
+    lstrcpynW(cmd, cmd_str.c_str(), (int)(cmd_str.length() + 1));
 
     startup_info.cb = sizeof(STARTUPINFO);
     startup_info.hStdOutput = stdout_write;
@@ -796,7 +964,7 @@ bool DfxInstall::EnableDFXDriver()
 
                 std::wstring reg_path = REG_PATH_DEVICES + audio_device.device_guid;
                 REGSAM access_mask = KEY_ALL_ACCESS;
-                if (cpu_arch_ == 64)
+                if (cpu_arch_ == CpuArch::x64)
                 {
                     access_mask |= KEY_WOW64_64KEY;
                 }
@@ -910,7 +1078,7 @@ std::wstring DfxInstall::GetAudioOutputName(IMMDevice* p_device)
     return device_name;
 }
 
-int cmdInstall(_In_ LPCTSTR BaseName, _In_opt_ LPCTSTR Machine, _In_ DWORD Flags, _In_  LPCTSTR inf, _In_  LPCTSTR hwid)
+int cmdInstall(_In_opt_ LPCTSTR BaseName, _In_opt_ LPCTSTR Machine, _In_ DWORD Flags, _In_  LPCTSTR inf, _In_  LPCTSTR hwid)
 /*++
 
 Routine Description:
@@ -1044,7 +1212,7 @@ Return Value:
     return failcode;
 }
 
-int cmdUpdate(_In_ LPCTSTR BaseName, _In_opt_ LPCTSTR Machine, _In_ DWORD Flags, _In_  LPCTSTR inf, _In_  LPCTSTR hwid)
+int cmdUpdate(_In_opt_ LPCTSTR BaseName, _In_opt_ LPCTSTR Machine, _In_ DWORD Flags, _In_  LPCTSTR inf, _In_  LPCTSTR hwid)
 /*++
 
 Routine Description:
@@ -1139,7 +1307,7 @@ Return Value:
     return failcode;
 }
 
-int cmdRemove(_In_ LPCTSTR BaseName, _In_opt_ LPCTSTR Machine, _In_ LPCTSTR hwid)
+int cmdRemove(_In_opt_ LPCTSTR BaseName, _In_opt_ LPCTSTR Machine, _In_ LPCTSTR hwid)
 /*++
 
 Routine Description:

@@ -65,9 +65,9 @@ typedef BOOL(WINAPI *SetupVerifyInfFileProto)(_In_ LPCTSTR InfName,
 #define SETUPSETNONINTERACTIVEMODE "SetupSetNonInteractiveMode"
 #define SETUPVERIFYINFFILE "SetupVerifyInfFile"
 
-int cmdInstall(_In_ LPCTSTR BaseName, _In_opt_ LPCTSTR Machine, _In_ DWORD Flags, _In_  LPCTSTR inf, _In_  LPCTSTR hwid);
-int cmdUpdate(_In_ LPCTSTR BaseName, _In_opt_ LPCTSTR Machine, _In_ DWORD Flags, _In_  LPCTSTR inf, _In_  LPCTSTR hwid);
-int cmdRemove(_In_ LPCTSTR BaseName, _In_opt_ LPCTSTR Machine, _In_ LPCTSTR hwid);
+int cmdInstall(_In_opt_ LPCTSTR BaseName, _In_opt_ LPCTSTR Machine, _In_ DWORD Flags, _In_  LPCTSTR inf, _In_  LPCTSTR hwid);
+int cmdUpdate(_In_opt_ LPCTSTR BaseName, _In_opt_ LPCTSTR Machine, _In_ DWORD Flags, _In_  LPCTSTR inf, _In_  LPCTSTR hwid);
+int cmdRemove(_In_opt_ LPCTSTR BaseName, _In_opt_ LPCTSTR Machine, _In_ LPCTSTR hwid);
 
 class DfxInstall final
 {
@@ -75,8 +75,10 @@ public:
 	struct AudioDevice {
 		std::wstring device_name;
 		std::wstring device_guid;
-		DWORD state;
+		DWORD state = 0;
 	};
+
+	enum class CpuArch {Unknown=0, x86, x64, ARM64};
 
 	DfxInstall(const wchar_t* working_dir, const wchar_t* version);
 	~DfxInstall();
@@ -92,10 +94,16 @@ private:
 	static constexpr wchar_t BOOTSTRAP_FOLDER[] = L"Drivers\\bootstrap\\";
 	static constexpr wchar_t APPS_FOLDER[] = L"Apps\\";
 	static constexpr char VENDOR_CODE[] = "23";
+	static constexpr wchar_t WVENDOR_CODE[] = L"23";
 
 	static constexpr DWORD ENABLE_DEVICE = 0x1;
 	static constexpr DWORD DISABLE_DEVICE = 0x10000001;
 	static constexpr wchar_t REG_PATH_DEVICES[] = LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\MMDevices\Audio\Render\)";
+
+	bool InstallIntelDriver(std::string& log);
+	bool UninstallIntelDriver(std::string& log);
+	bool InstallARMDriver(std::string& log);
+	bool UninstallARMDriver(std::string& log);
 
 	bool CmdExec(const std::wstring& cmd_str, const std::wstring& working_dir, std::string& output);
 	bool FindDFXDriver(const std::wstring& version);
@@ -108,6 +116,6 @@ private:
 	std::wstring working_dir_;
 	std::wstring version_;
 
-	uint16_t cpu_arch_;
+	CpuArch cpu_arch_;
 };
 
