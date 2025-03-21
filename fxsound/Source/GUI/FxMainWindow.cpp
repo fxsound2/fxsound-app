@@ -395,6 +395,20 @@ bool FxMainWindow::keyPressed(const KeyPress& key)
 	return Component::keyPressed(key);
 }
 
+void FxMainWindow::visibilityChanged()
+{
+	auto* peer = getPeer();
+	if (peer)
+	{
+		HWND hwnd = (HWND)peer->getNativeHandle();
+		LONG style = GetWindowLong(hwnd, GWL_STYLE);
+		if ((style & WS_MINIMIZEBOX) == 0)
+		{
+			SetWindowLong(hwnd, GWL_STYLE, style | WS_MINIMIZEBOX);
+		}
+	}
+}
+
 void FxMainWindow::showMenu()
 {
 	auto settingsClicked = [this]() {

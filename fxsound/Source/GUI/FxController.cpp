@@ -361,6 +361,8 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		auto prev_version = settings_.getString("version");
         if (prev_version != app_version)
         {
+			RegDeleteTree(HKEY_CURRENT_USER, L"Software\\DFX");
+
             FxModel::getModel().pushMessage(" ", { TRANS("Click here to see what's new on this version!"), "https://www.fxsound.com/changelog" });			
             settings_.setString("version", app_version);
 			if (!prev_version.startsWith("1.1.2") && app_version.startsWith("1.1.2"))
@@ -604,6 +606,8 @@ bool FxController::setPreset(int selected_preset)
         }
 	}
 
+	model.pushMessage(TRANS("Preset: ") + model.getPreset(selected_preset).name);
+
 	return true;
 }
 
@@ -675,6 +679,8 @@ void FxController::setOutput(int output, bool notify)
 			dfx_dsp_.powerOn(true);
 			audio_passthru_->mute(false);
         }
+
+		FxModel::getModel().pushMessage(TRANS("Output: ") + output_device_name_);
     }
 
 	selected_device_id_ = selected_sound_device.pwszID.c_str();
@@ -1273,10 +1279,8 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 					{
 						preset_index = 0;
 					}
-					if (controller->setPreset(preset_index))
-					{
-						FxModel::getModel().pushMessage(TRANS("Preset: ") + FxModel::getModel().getPreset(preset_index).name);
-					}
+
+					controller->setPreset(preset_index);
 				}
 			}
 			if (w_param == CMD_PREVIOUS_PRESET && FxModel::getModel().getPowerState())
@@ -1293,10 +1297,8 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 					{
 						preset_index = preset_count - 1;
 					}
-					if (controller->setPreset(preset_index))
-					{
-						FxModel::getModel().pushMessage(TRANS("Preset: ") + FxModel::getModel().getPreset(preset_index).name);
-					}
+
+					controller->setPreset(preset_index);
 				}
 			}
 			if (w_param == CMD_NEXT_OUTPUT)

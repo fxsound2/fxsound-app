@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<DOCUMENT Type="Advanced Installer" CreateVersion="17.2" version="21.9" Modules="update" RootPath="." Language="en" Id="{A7497CF1-F571-42FA-BEBC-816695037016}">
+<DOCUMENT Type="Advanced Installer" CreateVersion="17.2" version="22.5" Modules="update" RootPath="." Language="en" Id="{A7497CF1-F571-42FA-BEBC-816695037016}">
   <COMPONENT cid="caphyon.advinst.msicomp.DictionaryComponent">
     <ROW Path="&lt;AI_DICTS&gt;aiu-ue.ail"/>
     <ROW Path="&lt;AI_DICTS&gt;aiu-ue_en.ail"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.UpdaterEditorComponent">
     <ROW Section="Update" Key="Name" Value="FxSound"/>
-    <ROW Section="Update" Key="ProductVersion" Value="1.1.30.0" ValueLocId="-"/>
+    <ROW Section="Update" Key="ProductVersion" Value="1.1.31.0" ValueLocId="-"/>
     <ROW Section="Update" Key="URL" Value="https://github.com/fxsound2/fxsound-app/raw/latest/release/fxsound_setup.exe" ValueLocId="-"/>
     <ROW Section="Update" Key="URL1" Value="https://download.fxsound.com/fxsoundlatest" ValueLocId="-"/>
     <ROW Section="Update" Key="Size" Value="Output\fxsound_setup.exe" ValueLocId="-"/>
@@ -15,7 +15,7 @@
     <ROW Section="Update" Key="ServerFileName" Value="fxsound_setup.exe" ValueLocId="-"/>
     <ROW Section="Update" Key="Flags" Value="SilentInstall|Sys64" ValueLocId="-"/>
     <ROW Section="Update" Key="RegistryKey" Value="HKUD\Software\FxSound LLC\FxSound\Version" ValueLocId="-"/>
-    <ROW Section="Update" Key="Version" Value="1.1.30.0" ValueLocId="-"/>
+    <ROW Section="Update" Key="Version" Value="1.1.31.0" ValueLocId="-"/>
     <ROW Section="Update" Key="AutoCloseApplication" Value="[APPDIR]FxSound.exe" ValueLocId="-"/>
     <ATTRIBUTE name="OutputFileName" value="updates.txt"/>
     <ATTRIBUTE name="OutputFolder" value="Output"/>

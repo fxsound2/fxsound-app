@@ -144,8 +144,7 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices()
 	sound_devices_.clear();
 
 	// Get the guid of the currently selected real playback device
-	if (sndDevicesGetID(hp_sndDevices_, SND_DEVICES_USER_SELECTED_PLAYBACK_DEVICE, wcp_user_seleted_playback_device_guid, &i_resultFlag) != OKAY ||
-		sndDevicesGetID(hp_sndDevices_, SND_DEVICES_TARGETED_REAL_PLAYBACK, wcp_targeted_real_playback_device_guid, &i_resultFlag) != OKAY ||
+	if (sndDevicesGetID(hp_sndDevices_, SND_DEVICES_TARGETED_REAL_PLAYBACK, wcp_targeted_real_playback_device_guid, &i_resultFlag) != OKAY ||
 		sndDevicesGetID(hp_sndDevices_, SND_DEVICES_CAPTURE, wcp_capture_device_guid, &i_resultFlag) != OKAY ||
 		sndDevicesGetID(hp_sndDevices_, SND_DEVICES_VIRTUAL_PLAYBACK_DFX, wcp_dfx_device_guid, &i_resultFlag) != OKAY ||
 		sndDevicesGetID(hp_sndDevices_, SND_DEVICES_DEFAULT, wcp_default_device_guid, &i_resultFlag) != OKAY)
@@ -155,10 +154,15 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices()
 
 	for (int index = 0; index < cast_handle->totalNumDevices; index++) 
 	{
+		if (cast_handle->pwszID[index] == NULL || cast_handle->deviceFriendlyName[index] == NULL)
+		{
+			continue;
+		}
+
 		SoundDevice sound_device;
 		sound_device.pwszID = std::wstring(cast_handle->pwszID[index]);
 		sound_device.deviceFriendlyName = std::wstring(cast_handle->deviceFriendlyName[index]);
-		sound_device.deviceDescription = std::wstring(cast_handle->deviceDescription[index]);
+		sound_device.deviceDescription = std::wstring(cast_handle->deviceDescription[index] != NULL ? cast_handle->deviceDescription[index] : L"");
 		sound_device.deviceNumChannel = cast_handle->deviceNumChannel[index];
 
 		// Skip mono devices if SND_DEVICES_MONO_BUG_SKIP_MONO_DEVICES is IS_TRUE
