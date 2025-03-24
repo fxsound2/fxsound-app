@@ -11,7 +11,7 @@
 //==============================================================================
 MainComponent::MainComponent(const String& name) : Component(name)
 {
-	colour_scheme_ = 0;
+	colour_scheme_ = ColorScheme::Dark;
 	fx_view_ = MinView;
 	resize_view_ = true;
 
@@ -41,7 +41,7 @@ MainComponent::MainComponent(const String& name) : Component(name)
 
 MainComponent::~MainComponent()
 {
-	setLookAndFeel(nullptr);
+	// unique_ptr will automatically handle cleanup of look_and_feel_
 }
 
 //==============================================================================
@@ -100,29 +100,25 @@ void MainComponent::mouseDrag(const MouseEvent& e)
 
 void MainComponent::mouseDoubleClick(const MouseEvent& e)
 {
-	if (++colour_scheme_ > 3)
-		colour_scheme_ = 0;
-	switch (colour_scheme_)
-	{
-	case 0:
-		look_and_feel_->setColourScheme(LookAndFeel_V4::getDarkColourScheme());
-		repaint();
-		break;
-
-	case 1:
-		look_and_feel_->setColourScheme(LookAndFeel_V4::getMidnightColourScheme());
-		repaint();
-		break;
-
-	case 2:
-		look_and_feel_->setColourScheme(LookAndFeel_V4::getGreyColourScheme());
-		repaint();
-		break;
-
-	case 3:
-		look_and_feel_->setColourScheme(LookAndFeel_V4::getLightColourScheme());
-		repaint();
+	switch (colour_scheme_) {
+		case ColorScheme::Dark:
+			colour_scheme_ = ColorScheme::Midnight;
+			look_and_feel_->setColourScheme(LookAndFeel_V4::getMidnightColourScheme());
+			break;
+		case ColorScheme::Midnight:
+			colour_scheme_ = ColorScheme::Grey;
+			look_and_feel_->setColourScheme(LookAndFeel_V4::getGreyColourScheme());
+			break;
+		case ColorScheme::Grey:
+			colour_scheme_ = ColorScheme::Light;
+			look_and_feel_->setColourScheme(LookAndFeel_V4::getLightColourScheme());
+			break;
+		case ColorScheme::Light:
+			colour_scheme_ = ColorScheme::Dark;
+			look_and_feel_->setColourScheme(LookAndFeel_V4::getDarkColourScheme());
+			break;
 	}
+	repaint();
 }
 
 bool MainComponent::hitTest(int x, int y)
@@ -145,6 +141,7 @@ void MainComponent::userTriedToCloseWindow()
 void MainComponent::resizeView()
 {
 	int x, y, width, height;
+	const int SCREEN_MARGIN = 20;  // Configurable margin from screen edges
 
 	x = getX();
 	y = getY();
@@ -171,19 +168,19 @@ void MainComponent::resizeView()
 		height = min_view_->getHeight();
 
 		x = x + (expanded_view_->getWidth() - width) / 2;
-
 		y = y + (expanded_view_->getHeight() - height) / 2;
 
 		fx_view_ = MinView;
 	}
 
-	if (x + width + 20 > desktop_area.getWidth())
+	// Ensure window stays within screen bounds
+	if (x + width + SCREEN_MARGIN > desktop_area.getWidth())
 	{
-		x = desktop_area.getWidth() - (width + 20);
+		x = desktop_area.getWidth() - (width + SCREEN_MARGIN);
 	}
-	if (y + height + 0 > desktop_area.getHeight())
+	if (y + height + SCREEN_MARGIN > desktop_area.getHeight())
 	{
-		y = desktop_area.getHeight() - (height + 20);
+		y = desktop_area.getHeight() - (height + SCREEN_MARGIN);
 	}
 
 	Rectangle<int> final_bounds(x, y, width, height);
@@ -193,27 +190,35 @@ void MainComponent::resizeView()
 
 void MainComponent::showAnnouncement()
 {
-	WebInputStream stream(URL(CHECK_ANNOUNCEMENT_URL), false);
-	var attribs = JSON::parse(stream);
-	String url = attribs[ATTRIB_URL];
-	int width = attribs[ATTRIB_WIDTH];
-	int height = attribs[ATTRIB_HEIGHT];
+	try {
+		WebInputStream stream(URL(CHECK_ANNOUNCEMENT_URL), false);
+		if (!stream.isExhausted()) {
+			var attribs = JSON::parse(stream);
+			if (attribs.isObject()) {
+				String url = attribs[ATTRIB_URL];
+				int width = attribs[ATTRIB_WIDTH];
+				int height = attribs[ATTRIB_HEIGHT];
 
-	if (url.isNotEmpty())
-	{
-		settings_.setString("URL", url);
-		settings_.setInt("width", width);
-		settings_.setInt("height", height);
+				if (url.isNotEmpty() && width > 0 && height > 0) {
+					settings_.setString("URL", url);
+					settings_.setInt("width", width);
+					settings_.setInt("height", height);
 
-		juce::Rectangle<int> area(0, 0, width, height);
-		RectanglePlacement placement(RectanglePlacement::xRight
-			| RectanglePlacement::yBottom
-			| RectanglePlacement::doNotResize);
-		auto bounds = placement.appliedTo(area, Desktop::getInstance().getDisplays().getMainDisplay().userArea);
+					juce::Rectangle<int> area(0, 0, width, height);
+					RectanglePlacement placement(RectanglePlacement::xRight
+						| RectanglePlacement::yBottom
+						| RectanglePlacement::doNotResize);
+					auto bounds = placement.appliedTo(area, Desktop::getInstance().getDisplays().getMainDisplay().userArea);
 
-		announcement_->addToDesktop(ComponentPeer::windowIsTemporary);
-		announcement_->setVisible(true);
-		announcement_->setBounds(bounds);
-		announcement_->goToURL(url);
+					announcement_->addToDesktop(ComponentPeer::windowIsTemporary);
+					announcement_->setVisible(true);
+					announcement_->setBounds(bounds);
+					announcement_->goToURL(url);
+				}
+			}
+		}
+	} catch (const std::exception& e) {
+		// Log error but don't show to user as this is not critical
+		Logger::writeToLog("Failed to show announcement: " + String(e.what()));
 	}
 }
