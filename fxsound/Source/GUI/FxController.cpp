@@ -826,7 +826,7 @@ void FxController::resetPresets()
 	FxModel::getModel().pushMessage(TRANS("Presets are restored to factory defaults"));
 }
 
-bool FxController::exportPresets(const Array< FxModel::Preset>& presets)
+bool FxController::exportPresets(const StringArray& preset_names)
 {
     auto path_name = File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory).getFullPathName()) + L"FxSound\\Presets\\Export\\";
 
@@ -838,14 +838,14 @@ bool FxController::exportPresets(const Array< FxModel::Preset>& presets)
 
     bool exported = false;
 
-    for (auto preset : presets)
+    for (String preset_name : preset_names)
     {
         bool skip = false;
 
-        auto preset_file = File(path_name + preset.name + ".fac");
+        auto preset_file = File(path_name + preset_name + ".fac");
         if (preset_file.exists())
         {
-            if (!FxConfirmationMessage::showMessage(String::formatted(TRANS("Preset file %s already exists in the export path, do you want to overwrite the preset file?"), preset.name.toWideCharPointer())))
+            if (!FxConfirmationMessage::showMessage(String::formatted(TRANS("Preset file %s already exists in the export path, do you want to overwrite the preset file?"), preset_name)))
             {
                 skip = true;
             }
@@ -853,7 +853,7 @@ bool FxController::exportPresets(const Array< FxModel::Preset>& presets)
 
         if (!skip)
         {
-            dfx_dsp_.exportPreset(preset.path.toWideCharPointer(), preset.name.toWideCharPointer(), path.getFullPathName().toWideCharPointer());
+            dfx_dsp_.savePreset(preset_name.toWideCharPointer(), path.getFullPathName().toWideCharPointer());
             exported = true;
         }
     }

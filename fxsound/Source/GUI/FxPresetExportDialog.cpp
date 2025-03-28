@@ -179,14 +179,14 @@ void FxPresetExportDialog::PresetExportComponent::buttonClicked(Button* button)
             preset_export_progress_.setVisible(true);
             Component::getParentComponent()->toFront(true);
 
-            Array<FxModel::Preset> presets;
+            StringArray preset_names;
 
             for (auto i=0; i<selected_presets.size(); i++)
             {
-                presets.add(FxModel::getModel().getPreset(selected_presets[i]));
+                preset_names.add(FxModel::getModel().getPreset(selected_presets[i]).name);
             }
 
-            show_explorer = FxController::getInstance().exportPresets(presets);
+            show_explorer = FxController::getInstance().exportPresets(preset_names);
         }
         
         if (show_explorer)

@@ -42,7 +42,6 @@ public:
 	int processAudio(short int *si_input_samples, short int *si_output_samples, int i_num_sample_sets, int i_check_for_duplicate_buffers);
 	int loadPreset(std::wstring preset_file_full_path);
 	int savePreset(std::wstring preset_name, std::wstring preset_file_full_path);
-	int exportPreset(std::wstring preset_source_file_full_path, std::wstring preset_name, std::wstring preset_export_path);
 	void eqOn(bool on);
 	int getNumEqBands();
     float getEqBandFrequency(int band_num);
