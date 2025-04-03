@@ -35,7 +35,7 @@ Due to the some limitations with Projucer, after exporting the Visual Studio sol
 2. From FxSound_App project, add reference to audiopassthru and DfxDsp.
 3. By default, only the x64 platform configuration is created in the exported FxSound_App project. To build 32 bit, add a 32 bit Win32 configuration from the Visual Studio Configuration Manager as a new platform, then choose x64 in the "Copy settings from:" option.
 4. If you run FxSound from Visual Studio, to let the application to use the presets, set the Working Directory to ```$(SolutionDir)..\..\bin\$(PlatformTarget)``` in FxSound_App Project->Properties->Debugging setting.
-
+ 
 ## How to contribute
 We welcome anyone who wants to contribute to this project. For more details on how to contribute, follow [this contributing guideline](./CONTRIBUTING.md).
 
