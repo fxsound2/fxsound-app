@@ -548,3 +548,8 @@ void DfxDspPrivate::getSpectrumBandValues(float* rp_band_values, int i_array_siz
 {
     dfxpSpectrumGetBandValues(dfxp_handle_, rp_band_values, i_array_size);
 }
+
+void DfxDspPrivate::setVolumeNormalization(float target_rms)
+{
+	dfxpEqSetVolumeNormalization(dfxp_handle_, target_rms);
+}

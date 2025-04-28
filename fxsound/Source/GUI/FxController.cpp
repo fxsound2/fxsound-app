@@ -178,6 +178,10 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 		settings_.setInt("max_user_presets", 20);
 		max_user_presets_ = 20;		
 	}
+
+	volume_normalization_enabled_ = settings_.getBool("volume_normalization_enabled");
+	volume_normalization_rms_ = checkRMSValue((float)settings_.getDouble("volume_normalization_rms"));
+	
 	SetWindowLongPtr(message_window_.getHandle(), GWLP_USERDATA, (LONG_PTR)this);
 
 	session_id_ = 0;
@@ -285,7 +289,11 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 
 		FxModel::getModel().setPowerState(dfx_enabled_ && settings_.getBool("power"));
 		dfx_dsp_.powerOn(FxModel::getModel().getPowerState() && !FxModel::getModel().isMonoOutputSelected());
-
+		if (volume_normalization_enabled_)
+		{
+			dfx_dsp_.setVolumeNormalization(volume_normalization_rms_);
+		}
+		
 		FxModel::getModel().setEmail(settings_.getSecure("email").toLowerCase());
 
         try 
@@ -1134,6 +1142,55 @@ void FxController::setEffectValue(FxEffects::EffectType effect, float value)
 	}
 }
 
+bool FxController::isVolumeNormalizationEnbabled() const
+{
+	return volume_normalization_enabled_;
+}
+
+void FxController::setVolumeNormalizationEnabled(bool enabled)
+{
+	volume_normalization_enabled_ = enabled;
+	settings_.setBool("volume_normalization_enabled", enabled);
+
+	if (volume_normalization_enabled_)
+	{
+		dfx_dsp_.setVolumeNormalization(volume_normalization_rms_);
+	}
+	else
+	{
+		dfx_dsp_.setVolumeNormalization(0.0f);
+	}
+}
+
+float FxController::getVolumeNormalization() const
+{
+	return volume_normalization_rms_;
+}
+
+void FxController::setVolumeNormalization(float target_rms)
+{
+	volume_normalization_rms_ = checkRMSValue(target_rms);
+	settings_.setDouble("volume_normalization_rms", target_rms);
+	if (volume_normalization_enabled_)
+	{
+		dfx_dsp_.setVolumeNormalization(target_rms);
+	}
+}
+
+float FxController::checkRMSValue(float target_rms)
+{
+	if (target_rms < 0.125f)
+	{
+		return 0.125f;
+	}
+	else if (target_rms > 0.5f)
+	{
+		return 0.5f;
+	}
+
+	return target_rms;
+}
+
 bool FxController::isAudioProcessing()
 {
     return audio_process_on_;
@@ -1528,7 +1585,7 @@ bool FxController::isNotificationsHidden()
 void FxController::setNotificationsHidden(bool status)
 {
 	hide_notifications_ = status;
-	settings_.setBool("hide_notifications", true);
+	settings_.setBool("hide_notifications", status);
 }
 
 String FxController::getLanguage() const

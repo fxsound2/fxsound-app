@@ -47,6 +47,7 @@ int PT_DECLSPEC GraphicEqReCalcAllBandCoeffs(PT_HANDLE *hp_GraphicEq);
 int PT_DECLSPEC GraphicEqReSetAllBandFreqs(PT_HANDLE *hp_GraphicEq, realtype r_min_band_freq, realtype r_max_band_freq);
 int PT_DECLSPEC GraphicEqSetBandFreq(PT_HANDLE *hp_GraphicEq, int i_band_num, realtype r_band_freq);
 int PT_DECLSPEC GraphicEqSetAppHasHyperBassMode(PT_HANDLE *, bool);
+int PT_DECLSPEC GraphicEqSetVolumeNormalization(PT_HANDLE*, realtype);
 
 /* GraphicEqGet.cpp */
 int PT_DECLSPEC GraphicEqGetNumBands(PT_HANDLE *hp_GraphicEq, int *ip_num_bands);

@@ -3190,6 +3190,9 @@
     <None Include="..\Fonts\Gilroy-Semibold.ttf">
       <Filter>FxSound\Fonts</Filter>
     </None>
+    <None Include="..\Images\speaker.svg">
+      <Filter>FxSound\Images</Filter>
+    </None>
     <None Include="..\Images\min_window.svg">
       <Filter>FxSound\Images</Filter>
     </None>
