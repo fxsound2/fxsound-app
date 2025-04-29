@@ -122,7 +122,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	#ifdef UNICODE
 		static int ptReleaseNotOkay(wchar_t *wcp_file, wchar_t *wcp_line)
 		{
-			MessageBoxW(NULL, wcp_file, wcp_line, MB_OK);
+			if (wcp_file != nullptr)
+			{
+				const wchar_t* filename = wcsrchr(wcp_file, L'\\');
+				MessageBoxW(NULL, filename ? (filename+1) : wcp_file, wcp_line, MB_OK);
+			}
 			return(NOT_OKAY_NO_BREAK);
 		}
 		#define NOT_OKAY ptReleaseNotOkay(PT_WFILE, PT_LINE_STRING)

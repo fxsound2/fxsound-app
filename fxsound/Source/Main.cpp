@@ -67,7 +67,20 @@ public:
         }
         catch (const std::exception& e)
         {
-            juce::NativeMessageBox::showMessageBox(juce::AlertWindow::AlertIconType::WarningIcon, getApplicationName(), e.what());
+            auto& controller = FxController::getInstance();
+            controller.logMessage(String::formatted("std::exception: %s\n", e.what()));
+
+            CaptureAndLogCallStack();
+
+            quit();
+        }
+        catch (...)
+        {
+            auto& controller = FxController::getInstance();
+            controller.logMessage("Unknown exception\n");
+
+            CaptureAndLogCallStack();
+
             quit();
         }
     }
@@ -120,53 +133,132 @@ private:
 
     static LONG WINAPI unhandledExceptionFilter(EXCEPTION_POINTERS* exception_info)
     {
-        String message = String::formatted("Unhandled exception\nException code: 0x%X\nException flags: 0x%X\nException address: 0x%p\n",
+        auto& controller = FxController::getInstance();
+
+        String message = String::formatted(
+            "Unhandled exception\nException code: 0x%X\nException flags: 0x%X\nException address: 0x%p\n",
             exception_info->ExceptionRecord->ExceptionCode,
             exception_info->ExceptionRecord->ExceptionFlags,
-            exception_info->ExceptionRecord->ExceptionAddress);
+            exception_info->ExceptionRecord->ExceptionAddress
+        );
 
+        controller.logMessage("\n" + message);
+
+        // Capture stack based on crash context
+        CaptureAndLogCallStack(exception_info->ContextRecord);
+
+        return EXCEPTION_EXECUTE_HANDLER;
+    }
+
+    static void CaptureAndLogCallStack(CONTEXT* context = nullptr)
+    {
         auto& controller = FxController::getInstance();
-        controller.logMessage("\n"+message);
-
-        void* stack[MAX_FRAMES];
-        HANDLE process = GetCurrentProcess();
         String stacktrace_info;
 
-        WORD frames = CaptureStackBackTrace(0, MAX_FRAMES, stack, nullptr);
+        HANDLE process = GetCurrentProcess();
+        HANDLE thread = GetCurrentThread();
 
-        SymInitialize(process, nullptr, TRUE);
+        SymSetOptions(SYMOPT_LOAD_LINES | SYMOPT_UNDNAME);
+        SymInitialize(process, NULL, TRUE);
 
-        for (WORD i = 0; i < frames; i++)
+        if (context == nullptr)
         {
-            DWORD64 address = (DWORD64)(stack[i]);
+            // No crash context — capture live callstack
+            void* frames[MAX_FRAMES];
+            USHORT capturedFrames = CaptureStackBackTrace(0, MAX_FRAMES, frames, NULL);
 
-            char symbol_buffer[sizeof(SYMBOL_INFO) + 256] = { 0 };
-            SYMBOL_INFO* symbol = (SYMBOL_INFO*)symbol_buffer;
+            char buffer[sizeof(SYMBOL_INFO) + 256] = { 0 };
+            SYMBOL_INFO* symbol = (SYMBOL_INFO*)buffer;
             symbol->MaxNameLen = 255;
             symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
 
-            if (SymFromAddr(process, address, nullptr, symbol))
+            for (USHORT i = 0; i < capturedFrames; i++)
             {
-                DWORD lineDisplacement;
-                IMAGEHLP_LINE64 lineInfo = { 0 };
-                lineInfo.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
-
-                stacktrace_info += String::formatted("%S at 0x%llX\n", symbol->Name, symbol->Address);
-
-                if (SymGetLineFromAddr64(process, address, &lineDisplacement, &lineInfo))
+                if (SymFromAddr(process, (DWORD64)frames[i], 0, symbol))
                 {
-                    char* path = std::strrchr(lineInfo.FileName, '\\');
-                    char* file_name;
-                    if (path != nullptr)
-                    {
-                        file_name = path + 1;
-                    }
-                    else
-                    {
-                        file_name = lineInfo.FileName;
-                    }
+                    stacktrace_info += String::formatted("%S at 0x%llX\n", symbol->Name, symbol->Address);
 
-                    stacktrace_info += String::formatted("    File: %S, Line: %d\n", file_name, lineInfo.LineNumber);
+                    DWORD displacement;
+                    IMAGEHLP_LINE64 line = { sizeof(IMAGEHLP_LINE64) };
+                    if (SymGetLineFromAddr64(process, (DWORD64)frames[i], &displacement, &line))
+                    {
+                        char* file_name = std::strrchr(line.FileName, '\\');
+                        file_name = file_name ? (file_name + 1) : line.FileName;
+                        stacktrace_info += String::formatted("    File: %S, Line: %d\n", file_name, line.LineNumber);
+                    }
+                }
+                else
+                {
+                    stacktrace_info += String::formatted("Unknown function at 0x%p\n", frames[i]);
+                }
+            }
+        }
+        else
+        {
+            // Crash context — walk using StackWalk64
+            STACKFRAME64 stackFrame = { 0 };
+#if defined(_M_IX86)
+            DWORD machineType = IMAGE_FILE_MACHINE_I386;
+            stackFrame.AddrPC.Offset = context->Eip;
+            stackFrame.AddrPC.Mode = AddrModeFlat;
+            stackFrame.AddrFrame.Offset = context->Ebp;
+            stackFrame.AddrFrame.Mode = AddrModeFlat;
+            stackFrame.AddrStack.Offset = context->Esp;
+            stackFrame.AddrStack.Mode = AddrModeFlat;
+#elif defined(_M_X64)
+            DWORD machineType = IMAGE_FILE_MACHINE_AMD64;
+            stackFrame.AddrPC.Offset = context->Rip;
+            stackFrame.AddrPC.Mode = AddrModeFlat;
+            stackFrame.AddrFrame.Offset = context->Rsp;
+            stackFrame.AddrFrame.Mode = AddrModeFlat;
+            stackFrame.AddrStack.Offset = context->Rsp;
+            stackFrame.AddrStack.Mode = AddrModeFlat;
+#elif defined(_M_ARM64)
+            DWORD machineType = IMAGE_FILE_MACHINE_ARM64;
+            stackFrame.AddrPC.Offset = context->Pc;
+            stackFrame.AddrPC.Mode = AddrModeFlat;
+            stackFrame.AddrFrame.Offset = context->Fp;
+            stackFrame.AddrFrame.Mode = AddrModeFlat;
+            stackFrame.AddrStack.Offset = context->Sp;
+            stackFrame.AddrStack.Mode = AddrModeFlat;
+#else
+#error Unsupported platform
+#endif
+
+            char buffer[sizeof(SYMBOL_INFO) + 256] = { 0 };
+            SYMBOL_INFO* symbol = (SYMBOL_INFO*)buffer;
+            symbol->MaxNameLen = 255;
+            symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+
+            for (int frame = 0; frame < MAX_FRAMES; ++frame)
+            {
+                if (!StackWalk64(machineType, process, thread, &stackFrame, context, NULL,
+                    SymFunctionTableAccess64, SymGetModuleBase64, NULL))
+                {
+                    break;
+                }
+
+                if (stackFrame.AddrPC.Offset == 0)
+                    break;
+
+                DWORD64 address = stackFrame.AddrPC.Offset;
+
+                if (SymFromAddr(process, address, 0, symbol))
+                {
+                    stacktrace_info += String::formatted("%S at 0x%llX\n", symbol->Name, symbol->Address);
+
+                    DWORD displacement;
+                    IMAGEHLP_LINE64 line = { sizeof(IMAGEHLP_LINE64) };
+                    if (SymGetLineFromAddr64(process, address, &displacement, &line))
+                    {
+                        char* file_name = std::strrchr(line.FileName, '\\');
+                        file_name = file_name ? (file_name + 1) : line.FileName;
+                        stacktrace_info += String::formatted("    File: %S, Line: %d\n", file_name, line.LineNumber);
+                    }
+                }
+                else
+                {
+                    stacktrace_info += String::formatted("Unknown function at 0x%llX\n", address);
                 }
             }
         }
@@ -174,10 +266,6 @@ private:
         SymCleanup(process);
 
         controller.logMessage(stacktrace_info);
-
-        MessageBox(NULL, message.toWideCharPointer(), L"FxSound", MB_ICONERROR | MB_OK);
-
-        return EXCEPTION_EXECUTE_HANDLER;
     }
 
     void setWorkingDirectory()
