@@ -32,28 +32,15 @@ FxSystemTrayView::FxSystemTrayView()
 
     addToDesktop(0);
 
-    NOTIFYICONDATA nid = { sizeof(nid) };
-
-    HINSTANCE hInst = GetModuleHandle(NULL);
     HWND hWnd = (HWND)getWindowHandle();
 
     SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
     componentWndProc_ = (WNDPROC)GetWindowLongPtr(hWnd, GWLP_WNDPROC);
     SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)wndProc);
 
-    nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE | NIF_SHOWTIP | NIF_GUID;
-    nid.guidItem = trayIconGuid_;
-    nid.uCallbackMessage = WMAPP_FXTRAYICON;
-    nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_WHITE");    
-    nid.hWnd = hWnd;
-    lstrcpy(nid.szTip, L"FxSound");
-    Shell_NotifyIcon(NIM_ADD, &nid);
+    taskbar_created_message_ = RegisterWindowMessage(TEXT("TaskbarCreated"));
 
-    // NOTIFYICON_VERSION_4 is prefered
-    nid.uVersion = NOTIFYICON_VERSION_4;
-    Shell_NotifyIcon(NIM_SETVERSION, &nid);
-
-    setVisible(true);
+    addIcon();
 }
 
 FxSystemTrayView::~FxSystemTrayView()
@@ -116,6 +103,43 @@ void FxSystemTrayView::setStatus(bool power, bool processing)
     lstrcpy(nid.szTip, tool_tip);
 
     Shell_NotifyIcon(NIM_MODIFY, &nid);
+}
+
+void FxSystemTrayView::addIcon()
+{
+    NOTIFYICONDATA nid = { sizeof(nid) };
+
+    HINSTANCE hInst = GetModuleHandle(NULL);
+    HWND hWnd = (HWND)getWindowHandle();
+
+    if (FxModel::getModel().getPowerState())
+    {
+        if (FxController::getInstance().isAudioProcessing())
+        {
+            nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_RED");
+        }
+        else
+        {
+            nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_WHITE");
+        }
+    }
+    else
+    {
+        nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_GRAY");
+    }
+
+    nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE | NIF_SHOWTIP | NIF_GUID;
+    nid.guidItem = trayIconGuid_;
+    nid.uCallbackMessage = WMAPP_FXTRAYICON;
+    nid.hWnd = hWnd;
+    lstrcpy(nid.szTip, L"FxSound");
+    Shell_NotifyIcon(NIM_ADD, &nid);
+
+    // NOTIFYICON_VERSION_4 is prefered
+    nid.uVersion = NOTIFYICON_VERSION_4;
+    Shell_NotifyIcon(NIM_SETVERSION, &nid);
+
+    setVisible(true);
 }
 
 void FxSystemTrayView::showContextMenu()
@@ -318,7 +342,11 @@ LRESULT CALLBACK FxSystemTrayView::wndProc(HWND hwnd, UINT message, WPARAM wPara
 {
     auto tray_view = reinterpret_cast<FxSystemTrayView*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
-    if (message == WMAPP_FXTRAYICON)
+    if (message == tray_view->taskbar_created_message_)
+    {
+        tray_view->addIcon();
+    }
+    else if (message == WMAPP_FXTRAYICON)
     {
         switch (LOWORD(lParam))
         {
