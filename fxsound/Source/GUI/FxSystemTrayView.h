@@ -53,6 +53,7 @@ private:
 
 	void addIcon();
 	void showContextMenu();
+	void addOutputDeviceMenu(PopupMenu* context_menu);
 	void showNotification();	
 
 	bool custom_notification_;

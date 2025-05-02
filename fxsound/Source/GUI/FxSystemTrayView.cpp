@@ -180,34 +180,6 @@ void FxSystemTrayView::showContextMenu()
         id++;
     }
 
-    PopupMenu output_menu;
-
-    StringArray output_names = FxModel::getModel().getOutputNames();
-
-    id = OUTPUT_MENU_ID_START;
-    for (auto name : output_names)
-    {
-        PopupMenu::Item menu_item(name);
-        menu_item.setID(id);
-        if (name.endsWith("[Mono]"))
-        {
-            menu_item.setEnabled(false);
-        }
-
-        if (id - OUTPUT_MENU_ID_START == FxModel::getModel().getSelectedOutput())
-        {
-            menu_item.setTicked(true);
-        }
-
-        auto handler = [output = id]() {
-            FxController::getInstance().setOutput(output - OUTPUT_MENU_ID_START);
-        };
-        menu_item.setAction(handler);
-
-        output_menu.addItem(menu_item);
-        id++;
-    }
-
     auto openClicked = []() {
         FxController::getInstance().showMainWindow();
     };
@@ -251,7 +223,7 @@ void FxSystemTrayView::showContextMenu()
     context_menu.addItem(open);
     context_menu.addItem(power);
     context_menu.addSubMenu(TRANS("Preset Select"), preset_menu, FxModel::getModel().getPowerState());
-    context_menu.addSubMenu(TRANS("Playback Device Select"), output_menu);
+    addOutputDeviceMenu(&context_menu);
     context_menu.addItem(settings);
     context_menu.addItem(donate);
     context_menu.addItem(exit);
@@ -262,6 +234,58 @@ void FxSystemTrayView::showContextMenu()
     SetForegroundWindow(hWnd);
 
     context_menu.show();
+}
+
+void FxSystemTrayView::addOutputDeviceMenu(PopupMenu* context_menu)
+{
+    PopupMenu output_menu;
+    PopupMenu* menu;
+
+    StringArray output_names = FxModel::getModel().getOutputNames();
+    int num_outputs = output_names.size();
+    if (num_outputs > 5)
+    {
+        menu = &output_menu;
+    }
+    else
+    {
+        menu = context_menu;
+        menu->addSeparator();
+        menu->addSectionHeader(TRANS("Playback Device Select"));
+    }
+
+    auto id = OUTPUT_MENU_ID_START;
+    for (auto name : output_names)
+    {
+        PopupMenu::Item menu_item(name);
+        menu_item.setID(id);
+        if (name.endsWith("[Mono]"))
+        {
+            menu_item.setEnabled(false);
+        }
+
+        if (id - OUTPUT_MENU_ID_START == FxModel::getModel().getSelectedOutput())
+        {
+            menu_item.setTicked(true);
+        }
+
+        auto handler = [output = id]() {
+            FxController::getInstance().setOutput(output - OUTPUT_MENU_ID_START);
+            };
+        menu_item.setAction(handler);
+
+        menu->addItem(menu_item);
+        id++;
+    }
+
+    if (num_outputs > 5)
+    {
+        context_menu->addSubMenu(TRANS("Playback Device Select"), output_menu);
+    }
+    else
+    {
+        menu->addSeparator();
+    }
 }
 
 void FxSystemTrayView::showNotification()
