@@ -507,6 +507,11 @@ FxWindow* FxController::getMainWindow()
 	return main_window_;
 }
 
+Point<int> FxController::getSystemTrayWindowPosition(int width, int height)
+{
+	return system_tray_view_->getSystemTrayWindowPosition(width, height);
+}
+
 bool FxController::exit()
 {
 	if (FxModel::getModel().isPresetModified())

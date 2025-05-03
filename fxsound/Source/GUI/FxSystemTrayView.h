@@ -37,6 +37,7 @@ public:
 
 	void modelChanged(FxModel::Event model_event) override;
 	void setStatus(bool power, bool processing);
+	Point<int> getSystemTrayWindowPosition(int width, int height);
 
 private:
 	static constexpr int MENU_ID_OPEN = 1;

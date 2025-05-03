@@ -105,6 +105,55 @@ void FxSystemTrayView::setStatus(bool power, bool processing)
     Shell_NotifyIcon(NIM_MODIFY, &nid);
 }
 
+Point<int> FxSystemTrayView::getSystemTrayWindowPosition(int width, int height)
+{
+    Point<int> pos = { 0, 0 };
+
+    NOTIFYICONIDENTIFIER icon_id = {};
+    RECT rect;
+
+    HWND hWnd = (HWND)getWindowHandle();
+
+    icon_id.cbSize = sizeof(NOTIFYICONIDENTIFIER);
+    icon_id.hWnd = hWnd;
+    icon_id.guidItem = trayIconGuid_;
+
+    if (FAILED(Shell_NotifyIconGetRect(&icon_id, &rect)))
+    {
+        return pos;
+    }
+
+    auto display = Desktop::getInstance().getDisplays().getPrimaryDisplay();
+    if (display != nullptr)
+    {
+        juce::Rectangle<int> prect{ rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top };
+        auto lrect = Desktop::getInstance().getDisplays().physicalToLogical(prect);
+
+        auto area = display->userArea;
+
+        if (lrect.getX() < area.getCentreX())
+        {
+            pos.x = area.getX() + 10;
+        }
+        else
+        {
+            pos.x = area.getRight() - width - 10;
+        }
+
+
+        if (lrect.getY() < area.getCentreY())
+        {
+            pos.y = area.getY() + 10;
+        }
+        else
+        {
+            pos.y = area.getBottom() - height - 10;
+        }
+    }
+
+    return pos;
+}
+
 void FxSystemTrayView::addIcon()
 {
     NOTIFYICONDATA nid = { sizeof(nid) };
@@ -294,24 +343,10 @@ void FxSystemTrayView::showNotification()
     std::pair<String, String> link;
     FxModel::getModel().popMessage(message, link);
 
-    HWND hWnd = (HWND)getWindowHandle();
-
     if (message.isNotEmpty())
     {
         if (custom_notification_ || link.first.isNotEmpty())
         {
-            NOTIFYICONIDENTIFIER icon_id = {};
-            RECT rect;
-
-            icon_id.cbSize = sizeof(NOTIFYICONIDENTIFIER);
-            icon_id.hWnd = hWnd;
-            icon_id.guidItem = trayIconGuid_;
-
-            if (FAILED(Shell_NotifyIconGetRect(&icon_id, &rect)))
-            {
-                return;
-            }
-
             QUERY_USER_NOTIFICATION_STATE quns;
             if (FAILED(SHQueryUserNotificationState(&quns)) || quns != QUNS_ACCEPTS_NOTIFICATIONS)
             {
@@ -319,31 +354,9 @@ void FxSystemTrayView::showNotification()
             }
 
             notification_.setMessage(message, link);
-
-            auto display = Desktop::getInstance().getDisplays().getPrimaryDisplay();
-            if (display != nullptr)
-            {
-                auto area = display->userArea;
-                Point<int> pos = {};
-                if (rect.left < area.getCentreX())
-                {
-                    pos.x = area.getX() + 20;
-                }
-                else
-                {
-                    pos.x = area.getRight() - notification_.getWidth() - 20;
-                }
-                if (rect.top < area.getCentreY())
-                {
-                    pos.y = area.getY() + 20;
-                }
-                else
-                {
-                    pos.y = area.getBottom() - notification_.getHeight() - 20;
-                }
-                notification_.setBounds(pos.x, pos.y, notification_.getWidth(), notification_.getHeight());
-                notification_.showMessage();
-            }
+            Point<int> pos = getSystemTrayWindowPosition(notification_.getWidth(), notification_.getHeight());
+            notification_.setBounds(pos.x, pos.y, notification_.getWidth(), notification_.getHeight());
+            notification_.showMessage();
         }
         else
         {

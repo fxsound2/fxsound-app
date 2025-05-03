@@ -306,6 +306,12 @@ void FxMainWindow::showLiteView()
 {
 	setContent(&lite_view_);
     setResizeImage();
+	setAlwaysOnTop(true);
+
+	auto bounds = getBounds();
+	auto pos = FxController::getInstance().getSystemTrayWindowPosition(bounds.getWidth(), bounds.getHeight());
+	bounds.setPosition(pos);
+	setBounds(bounds);
 }
 
 void FxMainWindow::showProView()
@@ -313,6 +319,32 @@ void FxMainWindow::showProView()
     pro_view_.update();
 	setContent(&pro_view_);
     setResizeImage();
+	setAlwaysOnTop(false);
+
+	auto display = Desktop::getInstance().getDisplays().getPrimaryDisplay();
+	if (display != nullptr)
+	{
+		auto bounds = getBounds();
+		if (display->userArea.getX() > bounds.getX())
+		{
+			bounds.setX(display->userArea.getX() + 10);
+		}
+		else if (display->userArea.getRight() < bounds.getRight())
+		{
+			bounds.setX(display->userArea.getRight() - bounds.getWidth() - 10);
+		}
+
+		if (display->userArea.getY() > bounds.getY())
+		{
+			bounds.setY(display->userArea.getY() + 10);
+		}
+		else if (display->userArea.getBottom() < bounds.getBottom())
+		{
+			bounds.setY(display->userArea.getBottom() - bounds.getHeight() - 10);
+		}
+
+		setBounds(bounds);
+	}
 }
 
 void FxMainWindow::updateView()

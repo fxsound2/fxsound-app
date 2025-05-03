@@ -64,6 +64,7 @@ public:
     bool isMainWindowVisible();
 	void setMenuClicked(bool clicked);
 	FxWindow* getMainWindow();
+	Point<int> getSystemTrayWindowPosition(int width, int height);
 	bool exit();
 
 	void setPowerState(bool power_state);
