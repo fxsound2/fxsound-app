@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 FxLanguage::FxLanguage() : next_button_("next", DrawableButton::ButtonStyle::ImageFitted), prev_button_("prev", DrawableButton::ButtonStyle::ImageFitted)
 {
-    languages_ = { "en", "ar", "ba", "hr", "de", "es", "fr", "hu", "id", "it", "ja", "ko", "nl", "fa", "pl", "pt", "pt-br", "ro", "ru", "sv", "th", "tr", "vi", "zh-CN", "zh-TW"};
+    languages_ = { "en", "ar", "ba", "hr", "de", "es", "fr", "hu", "id", "it", "ja", "ko", "nl", "fa", "pl", "pt", "pt-br", "ro", "ru", "sv", "th", "tr", "ua", "vi", "zh-CN", "zh-TW"};
 
     language_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
     language_.setJustificationType(Justification::centred);

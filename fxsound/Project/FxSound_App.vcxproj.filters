@@ -3349,6 +3349,9 @@
     <None Include="..\..\Strings\Strings\FxSound.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
+    <None Include="..\..\Strings\Strings\FxSound.ua.txt">
+      <Filter>FxSound\Strings</Filter>
+    </None>
     <None Include="..\..\Strings\Strings\FxSound.vi.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
