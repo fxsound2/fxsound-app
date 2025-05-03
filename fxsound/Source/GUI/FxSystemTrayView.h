@@ -37,6 +37,7 @@ public:
 
 	void modelChanged(FxModel::Event model_event) override;
 	void setStatus(bool power, bool processing);
+	Point<int> getSystemTrayWindowPosition(int width, int height);
 
 private:
 	static constexpr int MENU_ID_OPEN = 1;
@@ -51,12 +52,15 @@ private:
 
 	static LRESULT CALLBACK wndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
+	void addIcon();
 	void showContextMenu();
+	void addOutputDeviceMenu(PopupMenu* context_menu);
 	void showNotification();	
 
 	bool custom_notification_;
 	FxNotification notification_;
 	WNDPROC componentWndProc_;
+	UINT taskbar_created_message_;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxSystemTrayView)
 };

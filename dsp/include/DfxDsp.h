@@ -58,6 +58,7 @@ public:
 	unsigned long getTotalAudioProcessedTime();
 	void resetTotalAudioProcessedTime();
     void getSpectrumBandValues(float* rp_band_values, int i_array_size);
+	void setVolumeNormalization(float target_rms);
 
 private:
 	DfxDspPrivate *data_;

@@ -30,6 +30,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 /*
 */
+
+class FxVolumeSlider : public Slider
+{
+public:
+	FxVolumeSlider();
+	~FxVolumeSlider() = default;
+
+	void setVolumeValue(float value);
+	void showValue(bool show);
+
+private:
+	static constexpr int LABEL_HEIGHT = 12;
+
+	void resized() override;
+	void valueChanged() override;
+	void enablementChanged() override;
+	bool keyPressed(const KeyPress& key) override;
+
+	Label value_label_;
+};
+
 class FxSettingsDialog : public FxWindow
 {
 public:
@@ -84,7 +105,37 @@ private:
 		String name_;
 	};
 
-	class GeneralSettingsPane : public SettingsPane, public FxModel::Listener
+	class AudioSettingsPane : public SettingsPane, public FxModel::Listener
+	{
+	public:
+		AudioSettingsPane();
+		~AudioSettingsPane();
+
+		void resized() override;
+		void paint(Graphics& g) override;
+
+	private:
+		static constexpr int ENDPOINT_Y = 50;
+		static constexpr int TOGGLE_BUTTON_HEIGHT = 30;
+		static constexpr int ENDPOINT_LABEL_WIDTH = 120;
+		static constexpr int ENDPOINT_LIST_HEIGHT = 30;
+		static constexpr int SLIDER_WIDTH = 200;
+		static constexpr int SLIDER_HEIGHT = 18;
+
+		void setText();
+		void modelChanged(FxModel::Event model_event);
+		void updateEndpointList();
+
+		void mouseEnter(const MouseEvent& mouse_event) override;
+		void mouseExit(const MouseEvent& mouse_event) override;
+
+		ComboBox preferred_endpoint_;
+		Label endpoint_title_;
+		ToggleButton volume_normalizer_toggle_;
+		FxVolumeSlider volume_;
+	};
+
+	class GeneralSettingsPane : public SettingsPane
 	{
 	public:
 		GeneralSettingsPane();
@@ -101,16 +152,12 @@ private:
 		static constexpr int LANGUAGE_LABEL_HEIGHT = 24;
 		static constexpr int LANGUAGE_LIST_WIDTH = 120;
 		static constexpr int LANGUAGE_LIST_HEIGHT = 30;
-		static constexpr int ENDPOINT_LABEL_WIDTH = 120;
-		static constexpr int ENDPOINT_LIST_HEIGHT = 30;
 		static constexpr int BUTTON_WIDTH = 220;
 		static constexpr int BUTTON_HEIGHT = 24;
 		static constexpr int MAX_BUTTON_WIDTH = 315;
 
         void setText();
 		void resizeResetButton(int x, int y);
-		void modelChanged(FxModel::Event model_event);
-		void updateEndpointList();
 
         ToggleButton launch_toggle_;
         ToggleButton hide_help_tips_toggle_;
@@ -119,8 +166,6 @@ private:
 		TextButton reset_presets_button_;
 		OwnedArray<FxHotkeyLabel> hotkey_labels_;
 		FxLanguage language_switch_;
-		ComboBox preferred_endpoint_;
-		Label endpoint_title_;
 	};
 
 	class HelpSettingsPane : public SettingsPane, public ToggleButton::Listener
@@ -181,10 +226,12 @@ private:
         static constexpr int DONATE_BUTTON_HEIGHT = 30;
 		static constexpr int SEPARATOR_X = 152;
 
+		std::unique_ptr<SettingsButton> audio_button_;
 		std::unique_ptr<SettingsButton> general_button_;
 		std::unique_ptr<SettingsButton> help_button_;
         TextButton donate_button_;
 
+		AudioSettingsPane audio_settings_pane_;
 		GeneralSettingsPane general_settings_pane_;
 		HelpSettingsPane help_settings_pane_; 
 	};

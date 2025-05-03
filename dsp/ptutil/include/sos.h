@@ -46,6 +46,7 @@ int PT_DECLSPEC sosSetSectionResponseFlag(PT_HANDLE *, int, int);
 int PT_DECLSPEC sosZeroStateAllSections(PT_HANDLE *);
 int PT_DECLSPEC sosSetAppHasHyperBassMode(PT_HANDLE *, bool);
 int PT_DECLSPEC sosSetDisableBand1Flag(PT_HANDLE *, bool);
+int PT_DECLSPEC sosSetVolumeNormalization(PT_HANDLE*, realtype);
 
 /* sosGet.cpp */
 int PT_DECLSPEC sosGetMasterGain(PT_HANDLE *hp_sos, realtype *);

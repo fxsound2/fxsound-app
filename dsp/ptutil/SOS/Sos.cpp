@@ -54,9 +54,11 @@ int PT_DECLSPEC sosNew(PT_HANDLE **hpp_sos, CSlout *hp_slout, int i_num_sections
     
     /* Initialize master gain */
     cast_handle->master_gain = (realtype)1.0;
+	cast_handle->normalization_gain = (realtype)1.0;
+	cast_handle->target_rms = 0.0f;
 
-	 cast_handle->disable_band_1 = false;
-    
+	cast_handle->disable_band_1 = false;
+
     /* Allocate the sections */
     cast_handle->sections =
 	   (struct sosSectionType *)calloc(i_num_sections, sizeof(struct sosSectionType));   

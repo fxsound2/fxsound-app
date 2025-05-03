@@ -1,0 +1,10 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g id="24 / basic / speaker">
+    <!-- Speaker body with rounded corners -->
+    <path d="M6.5 9.25V14.75C6.5 15.1642 6.83579 15.5 7.25 15.5H9.05C9.21091 15.5 9.36571 15.561 9.48388 15.6704L13.6 19.5265C13.9386 19.8431 14.5 19.604 14.5 19.1397V4.86029C14.5 4.396 13.9386 4.15689 13.6 4.47351L9.48388 8.32956C9.36571 8.43899 9.21091 8.5 9.05 8.5H7.25C6.83579 8.5 6.5 8.83579 6.5 9.25Z" fill="#7E7E7E"/>
+
+    <!-- Spaced-out sound waves -->
+    <path d="M17 8C17.933 8.933 18.5 10.377 18.5 12C18.5 13.623 17.933 15.067 17 16" stroke="#7E7E7E" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    <path d="M19 6C20.645 7.645 21.5 9.697 21.5 12C21.5 14.303 20.645 16.355 19 18" stroke="#7E7E7E" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+  </g>
+</svg>
