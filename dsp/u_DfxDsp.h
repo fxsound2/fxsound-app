@@ -98,6 +98,7 @@ public:
 	unsigned long getTotalAudioProcessedTime();
 	void resetTotalAudioProcessedTime();
     void getSpectrumBandValues(float* rp_band_values, int i_array_size);
+	void setVolumeNormalization(float target_rms);
 
 	bool being_destroyed_ = false;
 private:

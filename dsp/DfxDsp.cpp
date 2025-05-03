@@ -141,3 +141,8 @@ void DfxDsp::getSpectrumBandValues(float* rp_band_values, int i_array_size)
 {
     data_->getSpectrumBandValues(rp_band_values, i_array_size);
 }
+
+void DfxDsp::setVolumeNormalization(float target_rms)
+{
+	data_->setVolumeNormalization(target_rms);
+}

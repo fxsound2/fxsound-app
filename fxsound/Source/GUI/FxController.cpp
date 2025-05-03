@@ -192,6 +192,10 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 		settings_.setInt("max_user_presets", 20);
 		max_user_presets_ = 20;		
 	}
+
+	volume_normalization_enabled_ = settings_.getBool("volume_normalization_enabled");
+	volume_normalization_rms_ = checkRMSValue((float)settings_.getDouble("volume_normalization_rms"));
+	
 	SetWindowLongPtr(message_window_.getHandle(), GWLP_USERDATA, (LONG_PTR)this);
 
 	session_id_ = 0;
@@ -299,7 +303,11 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 
 		FxModel::getModel().setPowerState(dfx_enabled_ && settings_.getBool("power"));
 		dfx_dsp_.powerOn(FxModel::getModel().getPowerState() && !FxModel::getModel().isMonoOutputSelected());
-
+		if (volume_normalization_enabled_)
+		{
+			dfx_dsp_.setVolumeNormalization(volume_normalization_rms_);
+		}
+		
 		FxModel::getModel().setEmail(settings_.getSecure("email").toLowerCase());
 
         try 
@@ -511,6 +519,11 @@ void FxController::setMenuClicked(bool clicked)
 FxWindow* FxController::getMainWindow()
 {
 	return main_window_;
+}
+
+Point<int> FxController::getSystemTrayWindowPosition(int width, int height)
+{
+	return system_tray_view_->getSystemTrayWindowPosition(width, height);
 }
 
 bool FxController::exit()
@@ -1148,6 +1161,55 @@ void FxController::setEffectValue(FxEffects::EffectType effect, float value)
 	}
 }
 
+bool FxController::isVolumeNormalizationEnbabled() const
+{
+	return volume_normalization_enabled_;
+}
+
+void FxController::setVolumeNormalizationEnabled(bool enabled)
+{
+	volume_normalization_enabled_ = enabled;
+	settings_.setBool("volume_normalization_enabled", enabled);
+
+	if (volume_normalization_enabled_)
+	{
+		dfx_dsp_.setVolumeNormalization(volume_normalization_rms_);
+	}
+	else
+	{
+		dfx_dsp_.setVolumeNormalization(0.0f);
+	}
+}
+
+float FxController::getVolumeNormalization() const
+{
+	return volume_normalization_rms_;
+}
+
+void FxController::setVolumeNormalization(float target_rms)
+{
+	volume_normalization_rms_ = checkRMSValue(target_rms);
+	settings_.setDouble("volume_normalization_rms", target_rms);
+	if (volume_normalization_enabled_)
+	{
+		dfx_dsp_.setVolumeNormalization(target_rms);
+	}
+}
+
+float FxController::checkRMSValue(float target_rms)
+{
+	if (target_rms < 0.125f)
+	{
+		return 0.125f;
+	}
+	else if (target_rms > 0.5f)
+	{
+		return 0.5f;
+	}
+
+	return target_rms;
+}
+
 bool FxController::isAudioProcessing()
 {
     return audio_process_on_;
@@ -1542,7 +1604,7 @@ bool FxController::isNotificationsHidden()
 void FxController::setNotificationsHidden(bool status)
 {
 	hide_notifications_ = status;
-	settings_.setBool("hide_notifications", true);
+	settings_.setBool("hide_notifications", status);
 }
 
 String FxController::getLanguage() const
@@ -1658,6 +1720,10 @@ void FxController::setLanguage(String language_code)
 	{
 		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ir_txt, BinaryData::FxSound_ir_txtSize), false));
 	}
+	else if (language_.startsWithIgnoreCase("ua"))
+	{
+		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ua_txt, BinaryData::FxSound_ua_txtSize), false));
+	}
   
 	auto* theme = dynamic_cast<FxTheme*>(&LookAndFeel::getDefaultLookAndFeel());
 	if (theme != nullptr)
@@ -1771,6 +1837,10 @@ String FxController::getLanguageName(String language_code) const
 	else if (language_code.startsWithIgnoreCase("fa"))
 	{
 		return L"\u0641\u0627\u0631\u0633\u06cc";
+	}
+	else if (language_code.startsWithIgnoreCase("ua"))
+	{
+		return L"\u0443\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430";
 	}
 
     return "English";

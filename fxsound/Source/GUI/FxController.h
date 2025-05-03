@@ -64,6 +64,7 @@ public:
     bool isMainWindowVisible();
 	void setMenuClicked(bool clicked);
 	FxWindow* getMainWindow();
+	Point<int> getSystemTrayWindowPosition(int width, int height);
 	bool exit();
 
 	void setPowerState(bool power_state);
@@ -82,7 +83,11 @@ public:
 
 	float getEffectValue(FxEffects::EffectType effect);
 	void setEffectValue(FxEffects::EffectType effect, float value);
-
+	bool isVolumeNormalizationEnbabled() const;
+	void setVolumeNormalizationEnabled(bool enabled);
+	float getVolumeNormalization() const;
+	void setVolumeNormalization(float target_rms);
+	float checkRMSValue(float target_rms);
     bool isAudioProcessing();
 	int getNumEqBands();
 	float getEqBandFrequency(int band_num);
@@ -208,7 +213,9 @@ private:
 	std::vector<SoundDevice> output_devices_;
     bool hide_help_tooltips_;
 	bool hide_notifications_;
-    
+	bool volume_normalization_enabled_;
+	float volume_normalization_rms_;
+
 	unsigned long audio_process_time_;
 	int audio_process_on_counter_;
 	int audio_process_off_counter_;

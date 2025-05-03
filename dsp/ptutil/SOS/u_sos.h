@@ -59,6 +59,8 @@ struct sosHdlType {
    int sos_type[SOS_MAX_NUM_SOS_SECTIONS]; /* SOS_PARA for parametric, SOS_SHELF for shelf type */
    struct sosSectionType *sections; 
    int section_on_flag[SOS_MAX_NUM_SOS_SECTIONS]; /* If IS_TRUE, then displayed gain is not 0 */
+   realtype target_rms;
+   realtype normalization_gain;
 
 	realtype in1_old, in2_old, outDC1_old, outDC2_old;	// Added for DC blocking filter.
 	realtype in1_oldSS[8];

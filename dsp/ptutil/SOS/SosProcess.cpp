@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <cmath>
 
 #include "codedefs.h"
 #include "slout.h"
@@ -45,7 +46,7 @@ int PT_DECLSPEC sosProcessBuffer(PT_HANDLE *hp_sos, realtype *rp_in_buf, realtyp
 
 	struct sosSectionType *s;
 	int i, j, k;
-    
+	realtype sum_squares = 0.0f;
 	cast_handle = (struct sosHdlType *)(hp_sos);  
 	
 	if (cast_handle == NULL)
@@ -145,11 +146,44 @@ int PT_DECLSPEC sosProcessBuffer(PT_HANDLE *hp_sos, realtype *rp_in_buf, realtyp
 			}
 			rp_out_buf[k] = out1 * cast_handle->master_gain;
 			rp_out_buf[k+1] = out2 * cast_handle->master_gain;
+
+			if (cast_handle->target_rms != 0.0f)
+			{
+				sum_squares += (rp_out_buf[k] * rp_out_buf[k]) + (rp_out_buf[k + 1] * rp_out_buf[k + 1]);
+			}
 		}
 
 		k += i_num_channels;
 	}
-	
+
+	if (cast_handle->target_rms != 0.0f && i_num_channels == 2)
+	{		
+		realtype current_rms = sqrtf(sum_squares / (i_num_sample_sets * 2));
+		realtype rms_gain = std::fmin(cast_handle->target_rms / current_rms, 1.0f);
+		if (rms_gain > 0.0f)
+		{
+			if (cast_handle->normalization_gain == 1.0f)
+			{
+				cast_handle->normalization_gain = rms_gain;
+			}
+			else
+			{
+				if (fabs(cast_handle->normalization_gain - rms_gain) <= 0.01f)
+				{
+					cast_handle->normalization_gain = rms_gain;
+				}
+			}
+		}
+
+		k = 0;
+		for (j = 0; j < i_num_sample_sets; j++)
+		{
+			rp_out_buf[k] *= cast_handle->normalization_gain;
+			rp_out_buf[k + 1] *= cast_handle->normalization_gain;
+			k += i_num_channels;
+		}
+	}
+
 	return(OKAY);
 }
 
@@ -256,7 +290,7 @@ int PT_DECLSPEC sosProcessBufferNoBias(PT_HANDLE *hp_sos, realtype *rp_in_buf, r
 
 		k += i_num_channels;
 	}
-	
+
 	return(OKAY);
 }
 

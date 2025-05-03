@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.1.32.0"
+              displaySplashScreen="1" jucerFormatVersion="1" companyName="FxSound LLC"
+              companyWebsite="https://www.fxsound.com" companyCopyright="2024 FxSound&#8482;"
+              defines="UNICODE" postExportShellCommandWin="type %%1%%\Project\status_icons.rc &gt;&gt; %%1%%\Project\resources.rc"
+              cppLanguageStandard="17">
+  <MAINGROUP id="fy4sG5" name="FxSound">
+    <GROUP id="{9737D476-EEC4-7E5E-0B04-48E2783CC448}" name="Fonts">
+      <FILE id="Z6Zv1m" name="Gilroy-Bold.ttf" compile="0" resource="1" file="Fonts/Gilroy-Bold.ttf"/>
+      <FILE id="pxR00h" name="Gilroy-Regular.ttf" compile="0" resource="1"
+            file="Fonts/Gilroy-Regular.ttf"/>
+      <FILE id="AX57ui" name="Gilroy-Semibold.ttf" compile="0" resource="1"
+            file="Fonts/Gilroy-Semibold.ttf"/>
+    </GROUP>
+    <GROUP id="{1003D6EA-45C1-E8E4-DFD9-451D205D2F09}" name="Images">
+      <FILE id="WpX8ql" name="min_window.svg" compile="0" resource="1" file="Images/min_window.svg"/>
+      <FILE id="jcmz9o" name="min_window_hover.svg" compile="0" resource="1"
+            file="Images/min_window_hover.svg"/>
+      <FILE id="jKom9G" name="arrow_next_bw.svg" compile="0" resource="1"
+            file="Images/arrow_next_bw.svg"/>
+      <FILE id="JzXfVb" name="arrow_prev.svg" compile="0" resource="1" file="Images/arrow_prev.svg"/>
+      <FILE id="KniXTC" name="arrow_next.svg" compile="0" resource="1" file="Images/arrow_next.svg"/>
+      <FILE id="tuJiX7" name="arrow_prev_bw.svg" compile="0" resource="1"
+            file="Images/arrow_prev_bw.svg"/>
+      <FILE id="njSlcA" name="Button_OFF.svg" compile="0" resource="1" file="Images/Button_OFF.svg"/>
+      <FILE id="Rw7cG4" name="Button_ON.svg" compile="0" resource="1" file="Images/Button_ON.svg"/>
+      <FILE id="nM5WiO" name="dropdown_arrow_bw.svg" compile="0" resource="1"
+            file="Images/dropdown_arrow_bw.svg"/>
+      <FILE id="iIvSNh" name="dropdown_arrow_hover.svg" compile="0" resource="1"
+            file="Images/dropdown_arrow_hover.svg"/>
+      <FILE id="usPkJw" name="FxSound Logo White.png" compile="0" resource="1"
+            file="Images/FxSound Logo White.png"/>
+      <FILE id="U9DNmz" name="FxSound Logo.svg" compile="0" resource="1"
+            file="Images/FxSound Logo.svg"/>
+      <FILE id="KPjArf" name="FxSound White Bars.png" compile="0" resource="1"
+            file="Images/FxSound White Bars.png"/>
+      <FILE id="KEHCfx" name="FxSound White Bars.svg" compile="0" resource="1"
+            file="Images/FxSound White Bars.svg"/>
+      <FILE id="KpuESS" name="fxsound.png" compile="0" resource="1" file="Images/fxsound.png"/>
+      <FILE id="EFMcqw" name="fxsound_large.png" compile="0" resource="1"
+            file="Images/fxsound_large.png"/>
+      <FILE id="rh0i9g" name="logo-red.png" compile="0" resource="1" file="Images/logo-red.png"/>
+      <FILE id="RvANme" name="logo-white.png" compile="0" resource="1" file="Images/logo-white.png"/>
+      <FILE id="ZgOLJX" name="maximize.svg" compile="0" resource="1" file="Images/maximize.svg"/>
+      <FILE id="O5DD0s" name="maximize_hover.svg" compile="0" resource="1"
+            file="Images/maximize_hover.svg"/>
+      <FILE id="qABIK3" name="menu.svg" compile="0" resource="1" file="Images/menu.svg"/>
+      <FILE id="KkDGmO" name="menu_hover.svg" compile="0" resource="1" file="Images/menu_hover.svg"/>
+      <FILE id="Cukyd0" name="minimize.svg" compile="0" resource="1" file="Images/minimize.svg"/>
+      <FILE id="Juc5J3" name="minimize_hover.svg" compile="0" resource="1"
+            file="Images/minimize_hover.svg"/>
+      <FILE id="XHXCI7" name="power_off.svg" compile="0" resource="1" file="Images/power_off.svg"/>
+      <FILE id="cOSNtH" name="power_on.svg" compile="0" resource="1" file="Images/power_on.svg"/>
+      <FILE id="v6YSgI" name="question.svg" compile="0" resource="1" file="Images/question.svg"/>
+      <FILE id="KOKcdP" name="settings.svg" compile="0" resource="1" file="Images/settings.svg"/>
+      <FILE id="RVTNkc" name="Slider_Thumb.svg" compile="0" resource="1"
+            file="Images/Slider_Thumb.svg"/>
+      <FILE id="kCcjcE" name="Slider_Thumb_bw.svg" compile="0" resource="1"
+            file="Images/Slider_Thumb_bw.svg"/>
+    </GROUP>
+    <GROUP id="{D719274A-0BE1-FA67-529B-B012A702512B}" name="Source">
+      <GROUP id="{7D838BF2-5642-7BE7-DF78-745226F70630}" name="GUI">
+        <GROUP id="{59F271E4-F186-3EBD-DA7B-97C454130F71}" name="Components">
+          <FILE id="s2OsmF" name="FxHotkeyLabel.cpp" compile="1" resource="0"
+                file="Source/GUI/FxHotkeyLabel.cpp"/>
+          <FILE id="hu90ED" name="FxHotkeyLabel.h" compile="0" resource="0" file="Source/GUI/FxHotkeyLabel.h"/>
+          <FILE id="Tdb1eI" name="FxLanguage.cpp" compile="1" resource="0" file="Source/GUI/FxLanguage.cpp"/>
+          <FILE id="YH14mJ" name="FxLanguage.h" compile="0" resource="0" file="Source/GUI/FxLanguage.h"/>
+          <FILE id="Qbcp2S" name="FxVisualizer.cpp" compile="1" resource="0"
+                file="Source/GUI/FxVisualizer.cpp"/>
+          <FILE id="ZTvcaq" name="FxVisualizer.h" compile="0" resource="0" file="Source/GUI/FxVisualizer.h"/>
+          <FILE id="PFkZyE" name="FxEqualizer.cpp" compile="1" resource="0" file="Source/GUI/FxEqualizer.cpp"/>
+          <FILE id="QkOMsp" name="FxEffects.cpp" compile="1" resource="0" file="Source/GUI/FxEffects.cpp"/>
+          <FILE id="LhvIcK" name="FxEffects.h" compile="0" resource="0" file="Source/GUI/FxEffects.h"/>
+          <FILE id="tp9RTX" name="FxEqualizer.h" compile="0" resource="0" file="Source/GUI/FxEqualizer.h"/>
+          <FILE id="WojPjZ" name="FxNotification.cpp" compile="1" resource="0"
+                file="Source/GUI/FxNotification.cpp"/>
+          <FILE id="MLmEyk" name="FxNotification.h" compile="0" resource="0"
+                file="Source/GUI/FxNotification.h"/>
+          <FILE id="bEG4VO" name="FxHyperlink.cpp" compile="1" resource="0" file="Source/GUI/FxHyperlink.cpp"/>
+          <FILE id="b7rUVk" name="FxHyperlink.h" compile="0" resource="0" file="Source/GUI/FxHyperlink.h"/>
+          <FILE id="DkAjMK" name="FxComboBox.cpp" compile="1" resource="0" file="Source/GUI/FxComboBox.cpp"
+                xcodeResource="1"/>
+          <FILE id="WuT1Cs" name="FxComboBox.h" compile="0" resource="0" file="Source/GUI/FxComboBox.h"/>
+          <FILE id="pY8N2i" name="FxPowerButton.cpp" compile="1" resource="0"
+                file="Source/GUI/FxPowerButton.cpp"/>
+          <FILE id="VTb6MM" name="FxPowerButton.h" compile="0" resource="0" file="Source/GUI/FxPowerButton.h"/>
+        </GROUP>
+        <GROUP id="{F847142A-EC2B-3BDE-DD50-1DA2CB4E9C78}" name="Views">
+          <FILE id="heuftZ" name="FxSystemTrayView.cpp" compile="1" resource="0"
+                file="Source/GUI/FxSystemTrayView.cpp"/>
+          <FILE id="gZOMvw" name="FxSystemTrayView.h" compile="0" resource="0"
+                file="Source/GUI/FxSystemTrayView.h"/>
+          <FILE id="uC1bA1" name="FxView.cpp" compile="1" resource="0" file="Source/GUI/FxView.cpp"/>
+          <FILE id="e0V6RH" name="FxLiteView.cpp" compile="1" resource="0" file="Source/GUI/FxLiteView.cpp"/>
+          <FILE id="gNJQUb" name="FxLiteView.h" compile="0" resource="0" file="Source/GUI/FxLiteView.h"/>
+          <FILE id="mGa2kJ" name="FxProView.cpp" compile="1" resource="0" file="Source/GUI/FxProView.cpp"/>
+          <FILE id="IElYx2" name="FxProView.h" compile="0" resource="0" file="Source/GUI/FxProView.h"/>
+          <FILE id="zOgvhq" name="FxView.h" compile="0" resource="0" file="Source/GUI/FxView.h"/>
+        </GROUP>
+        <GROUP id="{1A4CB6D4-AC3C-F275-3031-1CBADB1439D6}" name="Dialogs">
+          <FILE id="GLoltX" name="FxPresetImportDialog.cpp" compile="1" resource="0"
+                file="Source/GUI/FxPresetImportDialog.cpp"/>
+          <FILE id="gZpHY4" name="FxPresetImportDialog.h" compile="0" resource="0"
+                file="Source/GUI/FxPresetImportDialog.h"/>
+          <FILE id="tRv7tW" name="FxPresetExportDialog.cpp" compile="1" resource="0"
+                file="Source/GUI/FxPresetExportDialog.cpp"/>
+          <FILE id="CNLuUQ" name="FxPresetExportDialog.h" compile="0" resource="0"
+                file="Source/GUI/FxPresetExportDialog.h"/>
+          <FILE id="ThbgoU" name="FxSettingsDialog.cpp" compile="1" resource="0"
+                file="Source/GUI/FxSettingsDialog.cpp"/>
+          <FILE id="vERb0s" name="FxSettingsDialog.h" compile="0" resource="0"
+                file="Source/GUI/FxSettingsDialog.h"/>
+        </GROUP>
+        <GROUP id="{16207F4A-0AB0-2942-D69D-4F03B1DF7E0E}" name="Theme">
+          <FILE id="aHBzEn" name="FxTheme.cpp" compile="1" resource="0" file="Source/GUI/FxTheme.cpp"/>
+          <FILE id="infVRZ" name="FxTheme.h" compile="0" resource="0" file="Source/GUI/FxTheme.h"/>
+        </GROUP>
+        <GROUP id="{6176A208-68CA-125B-0CAB-EC7A954CEDD0}" name="Windows">
+          <FILE id="vTeFCF" name="FxMessage.cpp" compile="1" resource="0" file="Source/GUI/FxMessage.cpp"/>
+          <FILE id="wEEYkv" name="FxMessage.h" compile="0" resource="0" file="Source/GUI/FxMessage.h"
+                xcodeResource="0"/>
+          <FILE id="v1pKfo" name="FxMainWindow.cpp" compile="1" resource="0"
+                file="Source/GUI/FxMainWindow.cpp"/>
+          <FILE id="GvUaRT" name="FxMainWindow.h" compile="0" resource="0" file="Source/GUI/FxMainWindow.h"/>
+          <FILE id="ogc2Zl" name="FxWindow.cpp" compile="1" resource="0" file="Source/GUI/FxWindow.cpp"
+                xcodeResource="1"/>
+          <FILE id="GBwoGe" name="FxWindow.h" compile="0" resource="0" file="Source/GUI/FxWindow.h"/>
+        </GROUP>
+        <GROUP id="{FBD61171-43D0-1152-4B75-F146482E62D3}" name="Controller">
+          <FILE id="GhxcDp" name="FxController.cpp" compile="1" resource="0"
+                file="Source/GUI/FxController.cpp"/>
+          <FILE id="DY0Igh" name="FxController.h" compile="0" resource="0" file="Source/GUI/FxController.h"/>
+        </GROUP>
+        <GROUP id="{145D6EE7-51A3-672A-B9B3-8D8F8412EC51}" name="Model">
+          <FILE id="aS1K8b" name="FxModel.cpp" compile="1" resource="0" file="Source/GUI/FxModel.cpp"/>
+          <FILE id="lyDydn" name="FxModel.h" compile="0" resource="0" file="Source/GUI/FxModel.h"/>
+        </GROUP>
+      </GROUP>
+      <GROUP id="{615B55CB-A753-F6FD-0F8B-7C616B5635F1}" name="Utils">
+        <GROUP id="{8EA48EC8-4BE2-4FD4-7D9B-DCAF21ABB54A}" name="SysInfo">
+          <FILE id="Odu3b6" name="SysInfo.cpp" compile="1" resource="0" file="Source/Utils/SysInfo/SysInfo.cpp"/>
+          <FILE id="mmvC93" name="SysInfo.h" compile="0" resource="0" file="Source/Utils/SysInfo/SysInfo.h"/>
+        </GROUP>
+        <GROUP id="{4B583B65-EB6A-26FA-E8D9-48551CBAB902}" name="Settings">
+          <FILE id="Wqw8lj" name="Settings.cpp" compile="1" resource="0" file="Source/Utils/Settings/Settings.cpp"/>
+          <FILE id="je5afJ" name="Settings.h" compile="0" resource="0" file="Source/Utils/Settings/Settings.h"/>
+        </GROUP>
+      </GROUP>
+      <FILE id="giU5B1" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+    </GROUP>
+    <GROUP id="{AAFAFD7C-41A7-0774-9216-95AEBD0117C0}" name="Strings">
+      <FILE id="C8J1b9" name="FxSound.ar.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.ar.txt"/>
+      <FILE id="KrQ5Ag" name="FxSound.ba.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.ba.txt"/>
+      <FILE id="hty94N" name="FxSound.de.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.de.txt"/>
+      <FILE id="h8UpMu" name="FxSound.es.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.es.txt"/>
+      <FILE id="uY5651" name="FxSound.fr.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.fr.txt"/>
+      <FILE id="JQxWxW" name="FxSound.hr.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.hr.txt"/>
+      <FILE id="P6YSQX" name="fxsound.hu.txt" compile="0" resource="1" file="../Strings/Strings/fxsound.hu.txt"/>
+      <FILE id="sGe1HR" name="FxSound.id.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.id.txt"/>
+      <FILE id="UQKqdD" name="FxSound.ir.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.ir.txt"/>
+      <FILE id="SCrfsv" name="FxSound.it.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.it.txt"/>
+      <FILE id="HJHpXk" name="FxSound.ja.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.ja.txt"/>
+      <FILE id="tKFayZ" name="FxSound.ko.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.ko.txt"/>
+      <FILE id="nrWheT" name="FxSound.nl.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.nl.txt"/>
+      <FILE id="FwTgf9" name="FxSound.pl.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.pl.txt"/>
+      <FILE id="t6cFrz" name="FxSound.pt-br.txt" compile="0" resource="1"
+            file="../Strings/Strings/FxSound.pt-br.txt"/>
+      <FILE id="UGYRkS" name="FxSound.pt.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.pt.txt"/>
+      <FILE id="rmIUGl" name="FxSound.ro.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.ro.txt"/>
+      <FILE id="plMqGL" name="FxSound.ru.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.ru.txt"/>
+      <FILE id="X1ygki" name="FxSound.sv.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.sv.txt"/>
+      <FILE id="KIMS9o" name="FxSound.th.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.th.txt"/>
+      <FILE id="awKQ98" name="FxSound.tr.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.tr.txt"/>
+      <FILE id="xrziha" name="FxSound.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.txt"/>
+      <FILE id="mIhelm" name="FxSound.vi.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.vi.txt"/>
+      <FILE id="PIqwHI" name="FxSound.zh-CN.txt" compile="0" resource="1"
+            file="../Strings/Strings/FxSound.zh-CN.txt"/>
+      <FILE id="gqOoeq" name="FxSound.zh-TW.txt" compile="0" resource="1"
+            file="../Strings/Strings/FxSound.zh-TW.txt"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <VS2022 targetFolder="Project" extraDefs="JUCE_MODAL_LOOPS_PERMITTED"
+            extraCompilerFlags="/bigobj /Qpar" externalLibraries="crypt32.lib;Wtsapi32.lib"
+            bigIcon="EFMcqw" windowsTargetPlatformVersion="Latest">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
+                       useRuntimeLibDLL="0" winArchitecture="ARM64,Win32,x64"/>
+        <CONFIGURATION isDebug="0" name="Release" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
+                       useRuntimeLibDLL="0" alwaysGenerateDebugSymbols="1" postbuildCommand="copy $(TargetPath) ..\..\bin\$(PlatformTarget)\ /y&#10;copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y"
+                       optimisation="4" debugInformationFormat="ProgramDatabase" winArchitecture="ARM64,Win32,x64"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="C:\JUCE\modules"/>
+        <MODULEPATH id="juce_cryptography" path="C:\JUCE\modules"/>
+        <MODULEPATH id="juce_data_structures" path="C:\JUCE\modules"/>
+        <MODULEPATH id="juce_events" path="C:\JUCE\modules"/>
+        <MODULEPATH id="juce_graphics" path="C:\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_basics" path="C:\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_extra" path="C:\JUCE\modules"/>
+        <MODULEPATH id="juce_opengl" path="C:\JUCE\modules"/>
+      </MODULEPATHS>
+    </VS2022>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <LIVE_SETTINGS>
+    <WINDOWS/>
+  </LIVE_SETTINGS>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+</JUCERPROJECT>

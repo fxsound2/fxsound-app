@@ -296,3 +296,18 @@ int PT_DECLSPEC GraphicEqSetAppHasHyperBassMode(PT_HANDLE *hp_GraphicEq, bool b_
 
 	return(OKAY);
 }
+
+int PT_DECLSPEC GraphicEqSetVolumeNormalization(PT_HANDLE *hp_GraphicEq, realtype r_target_rms)
+{
+	struct GraphicEqHdlType* cast_handle;
+
+	cast_handle = (struct GraphicEqHdlType*)(hp_GraphicEq);
+
+	if (cast_handle == NULL)
+		return(NOT_OKAY);
+
+	if (sosSetVolumeNormalization((PT_HANDLE*)(cast_handle->sos_hdl), r_target_rms) != OKAY)
+		return(NOT_OKAY);
+
+	return(OKAY);
+}

@@ -266,3 +266,17 @@ int PT_DECLSPEC sosSetDisableBand1Flag(PT_HANDLE *hp_sos, bool b_disable_band_1)
 	return(OKAY);
 }
 
+int PT_DECLSPEC sosSetVolumeNormalization(PT_HANDLE *hp_sos, realtype r_target_rms)
+{
+	struct sosHdlType* cast_handle;
+
+	cast_handle = (struct sosHdlType*)(hp_sos);
+
+	if (cast_handle == NULL)
+		return(NOT_OKAY);
+
+	cast_handle->target_rms = r_target_rms;
+	cast_handle->normalization_gain = 1.0f;
+
+	return(OKAY);
+}
