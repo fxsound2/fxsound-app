@@ -1,3 +1,4 @@
 [submodule "Strings"]
 	path = Strings
 	url = https://github.com/fxsound2/Strings
+        branch = main

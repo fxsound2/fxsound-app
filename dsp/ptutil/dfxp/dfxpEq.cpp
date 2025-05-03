@@ -194,6 +194,21 @@ int dfxpEqInitBand1SpecialCase(PT_HANDLE *hp_dfxp)
 	return(OKAY);
 }
 
+int dfxpEqSetVolumeNormalization(PT_HANDLE* hp_dfxp, realtype r_target_rms)
+{
+	struct dfxpHdlType* cast_handle;
+
+	cast_handle = (struct dfxpHdlType*)(hp_dfxp);
+
+	if (cast_handle == NULL)
+		return(OKAY);
+
+	if (GraphicEqSetVolumeNormalization(cast_handle->eq.graphicEq_hdl, r_target_rms) != OKAY)
+		return(NOT_OKAY);
+
+	return(OKAY);
+}
+
 /*
  * FUNCTION: dfxpEqGetProcessingOn() 
  * DESCRIPTION:

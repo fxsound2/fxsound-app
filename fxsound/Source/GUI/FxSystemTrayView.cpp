@@ -32,28 +32,15 @@ FxSystemTrayView::FxSystemTrayView()
 
     addToDesktop(0);
 
-    NOTIFYICONDATA nid = { sizeof(nid) };
-
-    HINSTANCE hInst = GetModuleHandle(NULL);
     HWND hWnd = (HWND)getWindowHandle();
 
     SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
     componentWndProc_ = (WNDPROC)GetWindowLongPtr(hWnd, GWLP_WNDPROC);
     SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)wndProc);
 
-    nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE | NIF_SHOWTIP | NIF_GUID;
-    nid.guidItem = trayIconGuid_;
-    nid.uCallbackMessage = WMAPP_FXTRAYICON;
-    nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_WHITE");    
-    nid.hWnd = hWnd;
-    lstrcpy(nid.szTip, L"FxSound");
-    Shell_NotifyIcon(NIM_ADD, &nid);
+    taskbar_created_message_ = RegisterWindowMessage(TEXT("TaskbarCreated"));
 
-    // NOTIFYICON_VERSION_4 is prefered
-    nid.uVersion = NOTIFYICON_VERSION_4;
-    Shell_NotifyIcon(NIM_SETVERSION, &nid);
-
-    setVisible(true);
+    addIcon();
 }
 
 FxSystemTrayView::~FxSystemTrayView()
@@ -118,6 +105,92 @@ void FxSystemTrayView::setStatus(bool power, bool processing)
     Shell_NotifyIcon(NIM_MODIFY, &nid);
 }
 
+Point<int> FxSystemTrayView::getSystemTrayWindowPosition(int width, int height)
+{
+    Point<int> pos = { 0, 0 };
+
+    NOTIFYICONIDENTIFIER icon_id = {};
+    RECT rect;
+
+    HWND hWnd = (HWND)getWindowHandle();
+
+    icon_id.cbSize = sizeof(NOTIFYICONIDENTIFIER);
+    icon_id.hWnd = hWnd;
+    icon_id.guidItem = trayIconGuid_;
+
+    if (FAILED(Shell_NotifyIconGetRect(&icon_id, &rect)))
+    {
+        return pos;
+    }
+
+    auto display = Desktop::getInstance().getDisplays().getPrimaryDisplay();
+    if (display != nullptr)
+    {
+        juce::Rectangle<int> prect{ rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top };
+        auto lrect = Desktop::getInstance().getDisplays().physicalToLogical(prect);
+
+        auto area = display->userArea;
+
+        if (lrect.getX() < area.getCentreX())
+        {
+            pos.x = area.getX() + 10;
+        }
+        else
+        {
+            pos.x = area.getRight() - width - 10;
+        }
+
+
+        if (lrect.getY() < area.getCentreY())
+        {
+            pos.y = area.getY() + 10;
+        }
+        else
+        {
+            pos.y = area.getBottom() - height - 10;
+        }
+    }
+
+    return pos;
+}
+
+void FxSystemTrayView::addIcon()
+{
+    NOTIFYICONDATA nid = { sizeof(nid) };
+
+    HINSTANCE hInst = GetModuleHandle(NULL);
+    HWND hWnd = (HWND)getWindowHandle();
+
+    if (FxModel::getModel().getPowerState())
+    {
+        if (FxController::getInstance().isAudioProcessing())
+        {
+            nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_RED");
+        }
+        else
+        {
+            nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_WHITE");
+        }
+    }
+    else
+    {
+        nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_GRAY");
+    }
+
+    nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE | NIF_SHOWTIP | NIF_GUID;
+    nid.guidItem = trayIconGuid_;
+    nid.uCallbackMessage = WMAPP_FXTRAYICON;
+    nid.hWnd = hWnd;
+    lstrcpy(nid.szTip, L"FxSound");
+    Shell_NotifyIcon(NIM_ADD, &nid);
+
+    // NOTIFYICON_VERSION_4 is prefered
+    nid.uVersion = NOTIFYICON_VERSION_4;
+    Shell_NotifyIcon(NIM_SETVERSION, &nid);
+
+    setVisible(true);
+}
+
 void FxSystemTrayView::showContextMenu()
 {    
     PopupMenu context_menu;
@@ -153,34 +226,6 @@ void FxSystemTrayView::showContextMenu()
         menu_item.setAction(handler);
 
         preset_menu.addItem(menu_item);
-        id++;
-    }
-
-    PopupMenu output_menu;
-
-    StringArray output_names = FxModel::getModel().getOutputNames();
-
-    id = OUTPUT_MENU_ID_START;
-    for (auto name : output_names)
-    {
-        PopupMenu::Item menu_item(name);
-        menu_item.setID(id);
-        if (name.endsWith("[Mono]"))
-        {
-            menu_item.setEnabled(false);
-        }
-
-        if (id - OUTPUT_MENU_ID_START == FxModel::getModel().getSelectedOutput())
-        {
-            menu_item.setTicked(true);
-        }
-
-        auto handler = [output = id]() {
-            FxController::getInstance().setOutput(output - OUTPUT_MENU_ID_START);
-        };
-        menu_item.setAction(handler);
-
-        output_menu.addItem(menu_item);
         id++;
     }
 
@@ -227,7 +272,7 @@ void FxSystemTrayView::showContextMenu()
     context_menu.addItem(open);
     context_menu.addItem(power);
     context_menu.addSubMenu(TRANS("Preset Select"), preset_menu, FxModel::getModel().getPowerState());
-    context_menu.addSubMenu(TRANS("Playback Device Select"), output_menu);
+    addOutputDeviceMenu(&context_menu);
     context_menu.addItem(settings);
     context_menu.addItem(donate);
     context_menu.addItem(exit);
@@ -240,30 +285,68 @@ void FxSystemTrayView::showContextMenu()
     context_menu.show();
 }
 
+void FxSystemTrayView::addOutputDeviceMenu(PopupMenu* context_menu)
+{
+    PopupMenu output_menu;
+    PopupMenu* menu;
+
+    StringArray output_names = FxModel::getModel().getOutputNames();
+    int num_outputs = output_names.size();
+    if (num_outputs > 5)
+    {
+        menu = &output_menu;
+    }
+    else
+    {
+        menu = context_menu;
+        menu->addSeparator();
+        menu->addSectionHeader(TRANS("Playback Device Select"));
+    }
+
+    auto id = OUTPUT_MENU_ID_START;
+    for (auto name : output_names)
+    {
+        PopupMenu::Item menu_item(name);
+        menu_item.setID(id);
+        if (name.endsWith("[Mono]"))
+        {
+            menu_item.setEnabled(false);
+        }
+
+        if (id - OUTPUT_MENU_ID_START == FxModel::getModel().getSelectedOutput())
+        {
+            menu_item.setTicked(true);
+        }
+
+        auto handler = [output = id]() {
+            FxController::getInstance().setOutput(output - OUTPUT_MENU_ID_START);
+            };
+        menu_item.setAction(handler);
+
+        menu->addItem(menu_item);
+        id++;
+    }
+
+    if (num_outputs > 5)
+    {
+        context_menu->addSubMenu(TRANS("Playback Device Select"), output_menu);
+    }
+    else
+    {
+        menu->addSeparator();
+    }
+}
+
 void FxSystemTrayView::showNotification()
 {
     String message;
     std::pair<String, String> link;
     FxModel::getModel().popMessage(message, link);
 
-    HWND hWnd = (HWND)getWindowHandle();
-
     if (message.isNotEmpty())
     {
         if (custom_notification_ || link.first.isNotEmpty())
         {
-            NOTIFYICONIDENTIFIER icon_id = {};
-            RECT rect;
-
-            icon_id.cbSize = sizeof(NOTIFYICONIDENTIFIER);
-            icon_id.hWnd = hWnd;
-            icon_id.guidItem = trayIconGuid_;
-
-            if (FAILED(Shell_NotifyIconGetRect(&icon_id, &rect)))
-            {
-                return;
-            }
-
             QUERY_USER_NOTIFICATION_STATE quns;
             if (FAILED(SHQueryUserNotificationState(&quns)) || quns != QUNS_ACCEPTS_NOTIFICATIONS)
             {
@@ -271,31 +354,9 @@ void FxSystemTrayView::showNotification()
             }
 
             notification_.setMessage(message, link);
-
-            auto display = Desktop::getInstance().getDisplays().getPrimaryDisplay();
-            if (display != nullptr)
-            {
-                auto area = display->userArea;
-                Point<int> pos = {};
-                if (rect.left < area.getCentreX())
-                {
-                    pos.x = area.getX() + 20;
-                }
-                else
-                {
-                    pos.x = area.getRight() - notification_.getWidth() - 20;
-                }
-                if (rect.top < area.getCentreY())
-                {
-                    pos.y = area.getY() + 20;
-                }
-                else
-                {
-                    pos.y = area.getBottom() - notification_.getHeight() - 20;
-                }
-                notification_.setBounds(pos.x, pos.y, notification_.getWidth(), notification_.getHeight());
-                notification_.showMessage();
-            }
+            Point<int> pos = getSystemTrayWindowPosition(notification_.getWidth(), notification_.getHeight());
+            notification_.setBounds(pos.x, pos.y, notification_.getWidth(), notification_.getHeight());
+            notification_.showMessage();
         }
         else
         {
@@ -318,7 +379,11 @@ LRESULT CALLBACK FxSystemTrayView::wndProc(HWND hwnd, UINT message, WPARAM wPara
 {
     auto tray_view = reinterpret_cast<FxSystemTrayView*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
-    if (message == WMAPP_FXTRAYICON)
+    if (message == tray_view->taskbar_created_message_)
+    {
+        tray_view->addIcon();
+    }
+    else if (message == WMAPP_FXTRAYICON)
     {
         switch (LOWORD(lParam))
         {

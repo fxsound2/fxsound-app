@@ -35,6 +35,7 @@ int dfxpEqGetBandBoostCut_FromProcessing(PT_HANDLE *, int, realtype *, wchar_t *
 int dfxpEqGetBandBoostCut_FromRegistry(PT_HANDLE *, int, realtype *, wchar_t *);
 int dfxpEqGetGraphicEqHdl(PT_HANDLE *, PT_HANDLE **);
 int dfxpEqInitBand1SpecialCase(PT_HANDLE *);
+int dfxpEqSetVolumeNormalization(PT_HANDLE *, realtype);
 
 /* dfxpGet */
 int dfxpGetKnobValue(PT_HANDLE *, int, float *);
