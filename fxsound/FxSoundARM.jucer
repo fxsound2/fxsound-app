@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.1.32.0"
+<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.1.33.0"
               displaySplashScreen="1" jucerFormatVersion="1" companyName="FxSound LLC"
               companyWebsite="https://www.fxsound.com" companyCopyright="2024 FxSound&#8482;"
-              defines="UNICODE" postExportShellCommandWin="type %%1%%\Project\status_icons.rc &gt;&gt; %%1%%\Project\resources.rc"
+              defines="UNICODE" postExportShellCommandWin="type %%1%%\ProjectARM\status_icons.rc &gt;&gt; %%1%%\ProjectARM\resources.rc"
               cppLanguageStandard="17">
   <MAINGROUP id="fy4sG5" name="FxSound">
     <GROUP id="{9737D476-EEC4-7E5E-0B04-48E2783CC448}" name="Fonts">
@@ -14,6 +14,7 @@
             file="Fonts/Gilroy-Semibold.ttf"/>
     </GROUP>
     <GROUP id="{1003D6EA-45C1-E8E4-DFD9-451D205D2F09}" name="Images">
+      <FILE id="s6wjfm" name="speaker.svg" compile="0" resource="1" file="Images/speaker.svg"/>
       <FILE id="WpX8ql" name="min_window.svg" compile="0" resource="1" file="Images/min_window.svg"/>
       <FILE id="jcmz9o" name="min_window_hover.svg" compile="0" resource="1"
             file="Images/min_window_hover.svg"/>
@@ -174,6 +175,7 @@
       <FILE id="KIMS9o" name="FxSound.th.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.th.txt"/>
       <FILE id="awKQ98" name="FxSound.tr.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.tr.txt"/>
       <FILE id="xrziha" name="FxSound.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.txt"/>
+      <FILE id="IVDIaE" name="FxSound.ua.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.ua.txt"/>
       <FILE id="mIhelm" name="FxSound.vi.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.vi.txt"/>
       <FILE id="PIqwHI" name="FxSound.zh-CN.txt" compile="0" resource="1"
             file="../Strings/Strings/FxSound.zh-CN.txt"/>
@@ -182,15 +184,16 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2022 targetFolder="Project" extraDefs="JUCE_MODAL_LOOPS_PERMITTED"
+    <VS2022 targetFolder="ProjectARM" extraDefs="JUCE_MODAL_LOOPS_PERMITTED"
             extraCompilerFlags="/bigobj /Qpar" externalLibraries="crypt32.lib;Wtsapi32.lib"
             bigIcon="EFMcqw" windowsTargetPlatformVersion="Latest">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
-                       useRuntimeLibDLL="0" winArchitecture="ARM64,Win32,x64"/>
+                       useRuntimeLibDLL="0" winArchitecture="ARM64" targetName="FxSound"/>
         <CONFIGURATION isDebug="0" name="Release" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
                        useRuntimeLibDLL="0" alwaysGenerateDebugSymbols="1" postbuildCommand="copy $(TargetPath) ..\..\bin\$(PlatformTarget)\ /y&#10;copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y"
-                       optimisation="4" debugInformationFormat="ProgramDatabase" winArchitecture="ARM64,Win32,x64"/>
+                       optimisation="4" debugInformationFormat="ProgramDatabase" winArchitecture="ARM64"
+                       targetName="FxSound"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="C:\JUCE\modules"/>
