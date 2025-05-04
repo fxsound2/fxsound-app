@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="FxSoundARM\Fonts">
-      <UniqueIdentifier>{7E29017F-6A8A-0A5E-872A-A62C3B86803B}</UniqueIdentifier>
+    <Filter Include="FxSound\Fonts">
+      <UniqueIdentifier>{A22AD0DC-9A25-7088-0C7B-4A4A8DBAA375}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FxSoundARM\Images">
-      <UniqueIdentifier>{F5DF6634-723D-E525-C65E-97080AD81D86}</UniqueIdentifier>
+    <Filter Include="FxSound\Images">
+      <UniqueIdentifier>{DF052E34-7667-1B5E-4F8F-DECE694D51DF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FxSoundARM\Source\GUI\Components">
-      <UniqueIdentifier>{963E8E63-5480-7C9E-ADE8-D67DD9905F45}</UniqueIdentifier>
+    <Filter Include="FxSound\Source\GUI\Components">
+      <UniqueIdentifier>{612083D8-EE33-F256-F220-3DB8A3062D3E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FxSoundARM\Source\GUI\Views">
-      <UniqueIdentifier>{E141CDAE-86AC-9FAC-9483-3CE1548011EC}</UniqueIdentifier>
+    <Filter Include="FxSound\Source\GUI\Views">
+      <UniqueIdentifier>{2CA49673-642A-7A32-2A87-E7A237382BFD}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FxSoundARM\Source\GUI\Dialogs">
-      <UniqueIdentifier>{6FF8BE3F-EE1C-C7B2-E621-2B9B3169F87E}</UniqueIdentifier>
+    <Filter Include="FxSound\Source\GUI\Dialogs">
+      <UniqueIdentifier>{CB187103-7B50-2332-17C1-235BAEE748F4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FxSoundARM\Source\GUI\Theme">
-      <UniqueIdentifier>{9108421E-8309-C8E3-6B35-0710413D07A7}</UniqueIdentifier>
+    <Filter Include="FxSound\Source\GUI\Theme">
+      <UniqueIdentifier>{8448284D-028E-1A49-CB97-F4933A9CC975}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FxSoundARM\Source\GUI\Windows">
-      <UniqueIdentifier>{79FFD5FA-8341-2BDE-0F6F-9AA62A088F5A}</UniqueIdentifier>
+    <Filter Include="FxSound\Source\GUI\Windows">
+      <UniqueIdentifier>{729DF3C8-D270-1ABD-9769-325F2787EB30}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FxSoundARM\Source\GUI\Controller">
-      <UniqueIdentifier>{1DCC23E6-08AC-CCE1-DCE1-1F2D61EC0D6D}</UniqueIdentifier>
+    <Filter Include="FxSound\Source\GUI\Controller">
+      <UniqueIdentifier>{25A8D870-9456-9B4D-78DB-33C75DC0420B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FxSoundARM\Source\GUI\Model">
-      <UniqueIdentifier>{DBFF2DA7-7200-509B-8C51-92BD6174CD3B}</UniqueIdentifier>
+    <Filter Include="FxSound\Source\GUI\Model">
+      <UniqueIdentifier>{9D6A5EC6-6451-6971-5BD8-E20E14A4D856}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FxSoundARM\Source\GUI">
-      <UniqueIdentifier>{341D8442-2C08-E778-54F2-7F75157054AB}</UniqueIdentifier>
+    <Filter Include="FxSound\Source\GUI">
+      <UniqueIdentifier>{28CF679A-F623-527C-8C25-337423301BCE}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FxSoundARM\Source\Utils\SysInfo">
-      <UniqueIdentifier>{91BE1850-625C-A4EB-4885-B82654A018A9}</UniqueIdentifier>
+    <Filter Include="FxSound\Source\Utils\SysInfo">
+      <UniqueIdentifier>{4FE9CC77-EE20-E59B-B10D-830F29F5CB2D}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FxSoundARM\Source\Utils\Settings">
-      <UniqueIdentifier>{5B482132-4262-0F47-8C76-680604B35F7B}</UniqueIdentifier>
+    <Filter Include="FxSound\Source\Utils\Settings">
+      <UniqueIdentifier>{BBD5B48D-2E08-A49D-207B-7F0A35D6AE24}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FxSoundARM\Source\Utils">
-      <UniqueIdentifier>{BC0B2E8B-C205-717D-3673-08D00687CCB5}</UniqueIdentifier>
+    <Filter Include="FxSound\Source\Utils">
+      <UniqueIdentifier>{6107775E-F3E1-44C8-5D1A-8BB47B5D48A0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FxSoundARM\Source">
-      <UniqueIdentifier>{C1352502-1587-9A90-234E-B3E5CB319A8B}</UniqueIdentifier>
+    <Filter Include="FxSound\Source">
+      <UniqueIdentifier>{3DA471D1-9321-1B29-38B8-6B717ED7FD78}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FxSoundARM\Strings">
-      <UniqueIdentifier>{9F0380F8-B058-5054-5EEE-37CDAAE74B62}</UniqueIdentifier>
+    <Filter Include="FxSound\Strings">
+      <UniqueIdentifier>{3F2D1B5C-6A9D-7E6B-1239-0457EE33BE28}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FxSoundARM">
-      <UniqueIdentifier>{2E6F46E6-A126-2616-390C-B7319947B86A}</UniqueIdentifier>
+    <Filter Include="FxSound">
+      <UniqueIdentifier>{5D10E973-06BC-A78E-574F-4BC2F7AD3CB8}</UniqueIdentifier>
     </Filter>
     <Filter Include="JUCE Modules\juce_core\containers">
       <UniqueIdentifier>{42F7BE9D-3C8A-AE26-289B-8F355C068036}</UniqueIdentifier>
@@ -373,79 +373,79 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\GUI\FxHotkeyLabel.cpp">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxLanguage.cpp">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxVisualizer.cpp">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxEqualizer.cpp">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxEffects.cpp">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxNotification.cpp">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxHyperlink.cpp">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxComboBox.cpp">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxPowerButton.cpp">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxSystemTrayView.cpp">
-      <Filter>FxSoundARM\Source\GUI\Views</Filter>
+      <Filter>FxSound\Source\GUI\Views</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxView.cpp">
-      <Filter>FxSoundARM\Source\GUI\Views</Filter>
+      <Filter>FxSound\Source\GUI\Views</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxLiteView.cpp">
-      <Filter>FxSoundARM\Source\GUI\Views</Filter>
+      <Filter>FxSound\Source\GUI\Views</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxProView.cpp">
-      <Filter>FxSoundARM\Source\GUI\Views</Filter>
+      <Filter>FxSound\Source\GUI\Views</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxPresetImportDialog.cpp">
-      <Filter>FxSoundARM\Source\GUI\Dialogs</Filter>
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxPresetExportDialog.cpp">
-      <Filter>FxSoundARM\Source\GUI\Dialogs</Filter>
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxSettingsDialog.cpp">
-      <Filter>FxSoundARM\Source\GUI\Dialogs</Filter>
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxTheme.cpp">
-      <Filter>FxSoundARM\Source\GUI\Theme</Filter>
+      <Filter>FxSound\Source\GUI\Theme</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxMessage.cpp">
-      <Filter>FxSoundARM\Source\GUI\Windows</Filter>
+      <Filter>FxSound\Source\GUI\Windows</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxMainWindow.cpp">
-      <Filter>FxSoundARM\Source\GUI\Windows</Filter>
+      <Filter>FxSound\Source\GUI\Windows</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxWindow.cpp">
-      <Filter>FxSoundARM\Source\GUI\Windows</Filter>
+      <Filter>FxSound\Source\GUI\Windows</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxController.cpp">
-      <Filter>FxSoundARM\Source\GUI\Controller</Filter>
+      <Filter>FxSound\Source\GUI\Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxModel.cpp">
-      <Filter>FxSoundARM\Source\GUI\Model</Filter>
+      <Filter>FxSound\Source\GUI\Model</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Utils\SysInfo\SysInfo.cpp">
-      <Filter>FxSoundARM\Source\Utils\SysInfo</Filter>
+      <Filter>FxSound\Source\Utils\SysInfo</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Utils\Settings\Settings.cpp">
-      <Filter>FxSoundARM\Source\Utils\Settings</Filter>
+      <Filter>FxSound\Source\Utils\Settings</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Main.cpp">
-      <Filter>FxSoundARM\Source</Filter>
+      <Filter>FxSound\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\containers\juce_AbstractFifo.cpp">
       <Filter>JUCE Modules\juce_core\containers</Filter>
@@ -2223,76 +2223,76 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\GUI\FxHotkeyLabel.h">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxLanguage.h">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxVisualizer.h">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxEffects.h">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxEqualizer.h">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxNotification.h">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxHyperlink.h">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxComboBox.h">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxPowerButton.h">
-      <Filter>FxSoundARM\Source\GUI\Components</Filter>
+      <Filter>FxSound\Source\GUI\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxSystemTrayView.h">
-      <Filter>FxSoundARM\Source\GUI\Views</Filter>
+      <Filter>FxSound\Source\GUI\Views</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxLiteView.h">
-      <Filter>FxSoundARM\Source\GUI\Views</Filter>
+      <Filter>FxSound\Source\GUI\Views</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxProView.h">
-      <Filter>FxSoundARM\Source\GUI\Views</Filter>
+      <Filter>FxSound\Source\GUI\Views</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxView.h">
-      <Filter>FxSoundARM\Source\GUI\Views</Filter>
+      <Filter>FxSound\Source\GUI\Views</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxPresetImportDialog.h">
-      <Filter>FxSoundARM\Source\GUI\Dialogs</Filter>
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxPresetExportDialog.h">
-      <Filter>FxSoundARM\Source\GUI\Dialogs</Filter>
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxSettingsDialog.h">
-      <Filter>FxSoundARM\Source\GUI\Dialogs</Filter>
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxTheme.h">
-      <Filter>FxSoundARM\Source\GUI\Theme</Filter>
+      <Filter>FxSound\Source\GUI\Theme</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxMessage.h">
-      <Filter>FxSoundARM\Source\GUI\Windows</Filter>
+      <Filter>FxSound\Source\GUI\Windows</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxMainWindow.h">
-      <Filter>FxSoundARM\Source\GUI\Windows</Filter>
+      <Filter>FxSound\Source\GUI\Windows</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxWindow.h">
-      <Filter>FxSoundARM\Source\GUI\Windows</Filter>
+      <Filter>FxSound\Source\GUI\Windows</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxController.h">
-      <Filter>FxSoundARM\Source\GUI\Controller</Filter>
+      <Filter>FxSound\Source\GUI\Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxModel.h">
-      <Filter>FxSoundARM\Source\GUI\Model</Filter>
+      <Filter>FxSound\Source\GUI\Model</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Utils\SysInfo\SysInfo.h">
-      <Filter>FxSoundARM\Source\Utils\SysInfo</Filter>
+      <Filter>FxSound\Source\Utils\SysInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Utils\Settings\Settings.h">
-      <Filter>FxSoundARM\Source\Utils\Settings</Filter>
+      <Filter>FxSound\Source\Utils\Settings</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\containers\juce_AbstractFifo.h">
       <Filter>JUCE Modules\juce_core\containers</Filter>
@@ -4874,184 +4874,184 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Fonts\Gilroy-Bold.ttf">
-      <Filter>FxSoundARM\Fonts</Filter>
+      <Filter>FxSound\Fonts</Filter>
     </None>
     <None Include="..\Fonts\Gilroy-Regular.ttf">
-      <Filter>FxSoundARM\Fonts</Filter>
+      <Filter>FxSound\Fonts</Filter>
     </None>
     <None Include="..\Fonts\Gilroy-Semibold.ttf">
-      <Filter>FxSoundARM\Fonts</Filter>
+      <Filter>FxSound\Fonts</Filter>
     </None>
     <None Include="..\Images\speaker.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\min_window.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\min_window_hover.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\arrow_next_bw.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\arrow_prev.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\arrow_next.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\arrow_prev_bw.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\Button_OFF.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\Button_ON.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\dropdown_arrow_bw.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\dropdown_arrow_hover.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\FxSound Logo White.png">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\FxSound Logo.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\FxSound White Bars.png">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\FxSound White Bars.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\fxsound.png">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\fxsound_large.png">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\logo-red.png">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\logo-white.png">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\maximize.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\maximize_hover.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\menu.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\menu_hover.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\minimize.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\minimize_hover.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\power_off.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\power_on.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\question.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\settings.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\Slider_Thumb.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\Slider_Thumb_bw.svg">
-      <Filter>FxSoundARM\Images</Filter>
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.ar.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.ba.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.de.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.es.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.fr.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.hr.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\fxsound.hu.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.id.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.ir.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.it.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.ja.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.ko.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.nl.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.pl.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.pt-br.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.pt.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.ro.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.ru.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.sv.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.th.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.tr.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.ua.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.vi.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.zh-CN.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Strings\Strings\FxSound.zh-TW.txt">
-      <Filter>FxSoundARM\Strings</Filter>
+      <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\native\java\README.txt">
       <Filter>JUCE Modules\juce_core\native\java</Filter>
