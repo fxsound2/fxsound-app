@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DOCUMENT Type="Advanced Installer" CreateVersion="17.2" version="22.5" Modules="professional" RootPath="." Language="en" Id="{9FE1878D-CAA1-41D8-A7C2-0BF5E9B1955B}">
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
+    <ROW Property="AI_APP_FILE" Value="[#FxSound.exe]"/>
+    <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0"/>
+    <ROW Property="AI_FINDEXE_TITLE" Value="Select the installation package for [|ProductName]" ValueLocId="AI.Property.FindExeTitle"/>
+    <ROW Property="AI_IA_APPLICATION_ID" Value="67cc48034512a1c62dc00254"/>
+    <ROW Property="AI_REQUIRED_WINDOWS_INSTALLER_DISPLAY" MultiBuildValue="DefaultBuild:2.0" ValueLocId="-"/>
+    <ROW Property="AI_REQUIRED_WINDOWS_INSTALLER_VERSION" MultiBuildValue="DefaultBuild:2.0" ValueLocId="-"/>
+    <ROW Property="ALLUSERS" Value="1"/>
+    <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
+    <ROW Property="ARPHELPLINK" Value="https://www.fxsound.com/learning-center"/>
+    <ROW Property="ARPNOMODIFY" Value="1"/>
+    <ROW Property="ARPNOREPAIR" MultiBuildValue="DefaultBuild:1"/>
+    <ROW Property="ARPPRODUCTICON" Value="fxsound.exe" Type="8"/>
+    <ROW Property="ARPURLINFOABOUT" Value="https://forum.fxsound.com"/>
+    <ROW Property="ARPURLUPDATEINFO" Value="https://www.fxsound.com/changelog"/>
+    <ROW Property="AiFeatIcoMainFeature" Value="fxsound.exe" Type="8"/>
+    <ROW Property="AiSkipExitDlg" Value="1"/>
+    <ROW Property="CTRLS" Value="2"/>
+    <ROW Property="DFX_VERSION" Value="12.0.0.0"/>
+    <ROW Property="FXSOUND_CONFIG" Value="@"/>
+    <ROW Property="FXSOUND_FREE_LINK" Value="IDNO"/>
+    <ROW Property="LIMITUI" Value="1"/>
+    <ROW Property="MSIFASTINSTALL" MultiBuildValue="DefaultBuild:2"/>
+    <ROW Property="Manufacturer" Value="FxSound LLC"/>
+    <ROW Property="MsiLogging" MultiBuildValue="DefaultBuild:vp"/>
+    <ROW Property="ProductCode" Value="1033:{F0CAA1DA-E7A1-49E3-A838-EF92AA16B2D0} " Type="16"/>
+    <ROW Property="ProductLanguage" Value="1033"/>
+    <ROW Property="ProductName" Value="FxSound"/>
+    <ROW Property="ProductName_32" Value="[|ProductName]"/>
+    <ROW Property="ProductVersion" Value="1.1.33.0" Options="20"/>
+    <ROW Property="REBOOT" MultiBuildValue="DefaultBuild:Suppress"/>
+    <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
+    <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
+    <ROW Property="UpgradeCode" Value="{1CA2081B-0D5A-41DF-86E8-2788204CE340}"/>
+    <ROW Property="WindowsType9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
+    <ROW Property="WindowsType9XDisplay" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT" MultiBuildValue="DefaultBuild:Windows 9x/ME/NT/2000/XP/Vista/Windows 7/Windows 8 x86/Windows 8.1 x86/Windows 10 x86" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT40" MultiBuildValue="DefaultBuild:Windows NT 4.0" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT40Display" MultiBuildValue="DefaultBuild:Windows NT 4.0" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT50" MultiBuildValue="DefaultBuild:Windows 2000" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT50Display" MultiBuildValue="DefaultBuild:Windows 2000" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT5X" MultiBuildValue="DefaultBuild:Windows XP/2003" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT5XDisplay" MultiBuildValue="DefaultBuild:Windows XP/2003" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT60" MultiBuildValue="DefaultBuild:Windows Vista/Server 2008" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT60Display" MultiBuildValue="DefaultBuild:Windows Vista/Server 2008" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT64" MultiBuildValue="DefaultBuild:Windows 7 x64, Windows Server 2008 R2 x64, Windows 8 x64, Windows Server 2012 x64, Windows 8.1 x64, Windows Server 2012 R2 x64, Windows Server x64" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT64Display" MultiBuildValue="DefaultBuild:Windows 7 x64, Windows Server 2008 R2 x64, Windows 8 x64, Windows Server 2012 x64, Windows 8.1 x64, Windows Server 2012 R2 x64, Windows Server x64" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNTDisplay" MultiBuildValue="DefaultBuild:32-bit Windows versions" ValueLocId="-"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiDirsComponent">
+    <ROW Directory="APPDIR" Directory_Parent="TARGETDIR" DefaultDir="APPDIR:." IsPseudoRoot="1"/>
+    <ROW Directory="Apps_Dir" Directory_Parent="APPDIR" DefaultDir="Apps"/>
+    <ROW Directory="CommonAppDataFolder" Directory_Parent="TARGETDIR" DefaultDir="COMMON~1|CommonAppDataFolder" IsPseudoRoot="1"/>
+    <ROW Directory="DesktopFolder" Directory_Parent="TARGETDIR" DefaultDir="DESKTO~1|DesktopFolder" IsPseudoRoot="1"/>
+    <ROW Directory="Drivers_Dir" Directory_Parent="APPDIR" DefaultDir="Drivers"/>
+    <ROW Directory="Factsoft_Dir" Directory_Parent="APPDIR" DefaultDir="Factsoft" DirectoryOptions="3"/>
+    <ROW Directory="FxSound_Dir" Directory_Parent="CommonAppDataFolder" DefaultDir="FxSound" DirectoryOptions="3"/>
+    <ROW Directory="SHORTCUTDIR" Directory_Parent="TARGETDIR" DefaultDir="SHORTC~1|SHORTCUTDIR" IsPseudoRoot="1"/>
+    <ROW Directory="StartupFolder" Directory_Parent="TARGETDIR" DefaultDir="STARTU~1|StartupFolder" IsPseudoRoot="1"/>
+    <ROW Directory="SystemFolder" Directory_Parent="TARGETDIR" DefaultDir="SYSTEM~1|SystemFolder" IsPseudoRoot="1"/>
+    <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
+    <ROW Directory="arm64_Dir" Directory_Parent="win10_Dir" DefaultDir="arm64"/>
+    <ROW Directory="win10_Dir" Directory_Parent="Drivers_Dir" DefaultDir="win10"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
+    <ROW Component="AI_ExePath" ComponentId="{C639AA54-D819-495F-9D9E-A8C805681C50}" Directory_="APPDIR" Attributes="260" KeyPath="AI_ExePath"/>
+    <ROW Component="AI_IA_ENABLE" ComponentId="{1CEA49F7-1A1D-4D8A-BCB3-56E39FF231B0}" Directory_="APPDIR" Attributes="260" KeyPath="AI_IA_ENABLE" Options="1"/>
+    <ROW Component="APPDIR" ComponentId="{215927B7-6543-4106-B941-F33B96B65E3B}" Directory_="APPDIR" Attributes="0"/>
+    <ROW Component="Default.fac" ComponentId="{F5A2B0DB-CB99-4992-B717-1F1AE09C0996}" Directory_="Factsoft_Dir" Attributes="0" KeyPath="Default.fac" Type="0"/>
+    <ROW Component="DfxInstall.dll" ComponentId="{4B4A298D-1A3A-448C-AF9A-692D7EAFC327}" Directory_="Apps_Dir" Attributes="0" KeyPath="DfxInstall.dll"/>
+    <ROW Component="Fonts" ComponentId="{A2EF6825-EECB-4179-8F5E-78090FB01E63}" Directory_="APPDIR" Attributes="0" Type="0"/>
+    <ROW Component="FxSound.exe" ComponentId="{82E872A6-8D59-4785-92C3-8BBFF79EB0E4}" Directory_="APPDIR" Attributes="256" Condition="VersionNT64" KeyPath="FxSound.exe"/>
+    <ROW Component="FxSound.settings" ComponentId="{F8459A73-F385-4ED6-809A-50204A74B04F}" Directory_="FxSound_Dir" Attributes="0" KeyPath="FxSound.settings" Type="0"/>
+    <ROW Component="Path" ComponentId="{19CFBC28-C762-407F-9344-86A957870300}" Directory_="APPDIR" Attributes="260" Condition="VersionNT64" KeyPath="Path"/>
+    <ROW Component="ProductInformation" ComponentId="{8CD532CB-F65E-4D43-B32A-4D0DA210189B}" Directory_="APPDIR" Attributes="260" Condition="VersionNT64" KeyPath="Version"/>
+    <ROW Component="SHORTCUTDIR" ComponentId="{D56B8D69-2366-40AF-BA27-0E50E5434C55}" Directory_="SHORTCUTDIR" Attributes="0"/>
+    <ROW Component="dfx.ico" ComponentId="{1306547E-0F0C-4677-BC13-5F8301BDAA15}" Directory_="SystemFolder" Attributes="0" KeyPath="dfx.ico" Type="0"/>
+    <ROW Component="fac" ComponentId="{1403F2A1-B025-4820-94F2-A2784FDCB770}" Directory_="Factsoft_Dir" Attributes="0" KeyPath="fac"/>
+    <ROW Component="fxdevcon64.exe" ComponentId="{4A7D834C-E6C4-47F2-B7F6-78F6DE97B420}" Directory_="arm64_Dir" Attributes="256" KeyPath="fxdevcon64.exe_1"/>
+    <ROW Component="fxdiag.exe" ComponentId="{30863080-57FA-4839-B0D6-6C013A08C1ED}" Directory_="APPDIR" Attributes="256" KeyPath="fxdiag.exe"/>
+    <ROW Component="fxsound.ico" ComponentId="{4D26BB00-46E1-4EC4-B72D-161C0D79D2AB}" Directory_="SystemFolder" Attributes="0" KeyPath="fxsound.ico"/>
+    <ROW Component="fxvad" ComponentId="{3A882A11-8997-49D6-B2B3-3D2B30E6CBEF}" Directory_="arm64_Dir" Attributes="0" KeyPath="fxvad.inf_1"/>
+    <ROW Component="updater.exe" ComponentId="{9F3A0D44-4797-4E80-B597-9E707F111CB4}" Directory_="APPDIR" Attributes="0" KeyPath="updater.exe"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
+    <ROW Feature="AI64BitFiles" Title="64-bit" Description="64-bit Executables and Libraries" Display="7" Level="1" Directory_="APPDIR" Attributes="0"/>
+    <ROW Feature="AIOtherFiles" Title="Common" Description="Shared Resource and Regular Files" Display="11" Level="1" Directory_="APPDIR" Attributes="0"/>
+    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0"/>
+    <ATTRIBUTE name="CurrentFeature" value="AI64BitFiles"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
+    <ROW File="FxSound.exe" Component_="FxSound.exe" FileName="FxSound.exe" Attributes="0" SourcePath="..\bin\arm64\FxSound.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="FxSound.settings" Component_="FxSound.settings" FileName="FXSOUN~1.SET|FxSound.settings" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\FxSound.settings" SelfReg="false"/>
+    <ROW File="dfx.ico" Component_="dfx.ico" FileName="dfx11.ico" Attributes="0" SourcePath="Resources\dfx.ico" SelfReg="false"/>
+    <ROW File="updater.exe" Component_="updater.exe" FileName="updater.exe" Version="65535.65535.65535.65535" Attributes="0" SourcePath="&lt;AI_STUBS&gt;updater.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="DfxInstall.dll" Component_="DfxInstall.dll" FileName="DFXINS~1.DLL|DfxInstall.dll" Attributes="0" SourcePath="Apps\arm64\DfxInstall.dll" SelfReg="false" DigSign="true"/>
+    <ROW File="fxsound.ico" Component_="fxsound.ico" FileName="fxsound.ico" Attributes="0" SourcePath="Resources\fxsound.ico" SelfReg="false"/>
+    <ROW File="fac" Component_="fac" FileName="1.fac" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\Factsoft\1.fac" SelfReg="false"/>
+    <ROW File="fac_1" Component_="fac" FileName="10.fac" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\Factsoft\10.fac" SelfReg="false"/>
+    <ROW File="fac_2" Component_="fac" FileName="11.fac" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\Factsoft\11.fac" SelfReg="false"/>
+    <ROW File="fac_3" Component_="fac" FileName="12.fac" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\Factsoft\12.fac" SelfReg="false"/>
+    <ROW File="fac_4" Component_="fac" FileName="2.fac" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\Factsoft\2.fac" SelfReg="false"/>
+    <ROW File="fac_5" Component_="fac" FileName="3.fac" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\Factsoft\3.fac" SelfReg="false"/>
+    <ROW File="fac_6" Component_="fac" FileName="4.fac" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\Factsoft\4.fac" SelfReg="false"/>
+    <ROW File="fac_7" Component_="fac" FileName="5.fac" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\Factsoft\5.fac" SelfReg="false"/>
+    <ROW File="fac_8" Component_="fac" FileName="6.fac" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\Factsoft\6.fac" SelfReg="false"/>
+    <ROW File="fac_9" Component_="fac" FileName="7.fac" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\Factsoft\7.fac" SelfReg="false"/>
+    <ROW File="fac_10" Component_="fac" FileName="8.fac" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\Factsoft\8.fac" SelfReg="false"/>
+    <ROW File="fac_11" Component_="fac" FileName="9.fac" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\Factsoft\9.fac" SelfReg="false"/>
+    <ROW File="MontserratAlternatesBold.ttf" Component_="Fonts" FileName="MONTSE~1.TTF|MontserratAlternates-Bold.ttf" Attributes="0" SourcePath="Resources\Fonts\MontserratAlternates-Bold.ttf" SelfReg="false"/>
+    <ROW File="MontserratAlternatesMedium.ttf" Component_="Fonts" FileName="MONTSE~2.TTF|MontserratAlternates-Medium.ttf" Attributes="0" SourcePath="Resources\Fonts\MontserratAlternates-Medium.ttf" SelfReg="false"/>
+    <ROW File="MontserratAlternatesRegular.ttf" Component_="Fonts" FileName="MONTSE~3.TTF|MontserratAlternates-Regular.ttf" Attributes="0" SourcePath="Resources\Fonts\MontserratAlternates-Regular.ttf" SelfReg="false"/>
+    <ROW File="NotoSansKRBold.otf" Component_="Fonts" FileName="NOTOSA~1.OTF|NotoSansKR-Bold.otf" Attributes="0" SourcePath="Resources\Fonts\NotoSansKR-Bold.otf" SelfReg="false"/>
+    <ROW File="NotoSansKRMedium.otf" Component_="Fonts" FileName="NOTOSA~2.OTF|NotoSansKR-Medium.otf" Attributes="0" SourcePath="Resources\Fonts\NotoSansKR-Medium.otf" SelfReg="false"/>
+    <ROW File="NotoSansKRRegular.otf" Component_="Fonts" FileName="NOTOSA~3.OTF|NotoSansKR-Regular.otf" Attributes="0" SourcePath="Resources\Fonts\NotoSansKR-Regular.otf" SelfReg="false"/>
+    <ROW File="NotoSansSCBold.otf" Component_="Fonts" FileName="NOTOSA~4.OTF|NotoSansSC-Bold.otf" Attributes="0" SourcePath="Resources\Fonts\NotoSansSC-Bold.otf" SelfReg="false"/>
+    <ROW File="NotoSansSCMedium.otf" Component_="Fonts" FileName="NOTOSA~5.OTF|NotoSansSC-Medium.otf" Attributes="0" SourcePath="Resources\Fonts\NotoSansSC-Medium.otf" SelfReg="false"/>
+    <ROW File="NotoSansSCRegular.otf" Component_="Fonts" FileName="NOTOSA~6.OTF|NotoSansSC-Regular.otf" Attributes="0" SourcePath="Resources\Fonts\NotoSansSC-Regular.otf" SelfReg="false"/>
+    <ROW File="NotoSansThaiMedium.ttf" Component_="Fonts" FileName="NOTOSA~1.TTF|NotoSansThai-Medium.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansThai-Medium.ttf" SelfReg="false"/>
+    <ROW File="NotoSansThaiRegular.ttf" Component_="Fonts" FileName="NOTOSA~2.TTF|NotoSansThai-Regular.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansThai-Regular.ttf" SelfReg="false"/>
+    <ROW File="Default.fac" Component_="Default.fac" FileName="Default.fac" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\Factsoft\Default.fac" SelfReg="false"/>
+    <ROW File="NotoSansJPBold.ttf" Component_="Fonts" FileName="NOTOSA~6.TTF|NotoSansJP-Bold.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansJP-Bold.ttf" SelfReg="false"/>
+    <ROW File="NotoSansJPMedium.ttf" Component_="Fonts" FileName="NOTOSA~7.TTF|NotoSansJP-Medium.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansJP-Medium.ttf" SelfReg="false"/>
+    <ROW File="NotoSansJPRegular.ttf" Component_="Fonts" FileName="NOTOSA~8.TTF|NotoSansJP-Regular.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansJP-Regular.ttf" SelfReg="false"/>
+    <ROW File="IBMPlexSansArabicBold.ttf" Component_="Fonts" FileName="IBMPLE~1.TTF|IBMPlexSansArabic-Bold.ttf" Attributes="0" SourcePath="Resources\Fonts\IBMPlexSansArabic-Bold.ttf" SelfReg="false"/>
+    <ROW File="IBMPlexSansArabicMedium.ttf" Component_="Fonts" FileName="IBMPLE~2.TTF|IBMPlexSansArabic-Medium.ttf" Attributes="0" SourcePath="Resources\Fonts\IBMPlexSansArabic-Medium.ttf" SelfReg="false"/>
+    <ROW File="IBMPlexSansArabicRegular.ttf" Component_="Fonts" FileName="IBMPLE~3.TTF|IBMPlexSansArabic-Regular.ttf" Attributes="0" SourcePath="Resources\Fonts\IBMPlexSansArabic-Regular.ttf" SelfReg="false"/>
+    <ROW File="NotoSansTCBold.ttf" Component_="Fonts" FileName="NOTOSA~3.TTF|NotoSansTC-Bold.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansTC-Bold.ttf" SelfReg="false"/>
+    <ROW File="NotoSansTCMedium.ttf" Component_="Fonts" FileName="NOTOSA~4.TTF|NotoSansTC-Medium.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansTC-Medium.ttf" SelfReg="false"/>
+    <ROW File="NotoSansTCRegular.ttf" Component_="Fonts" FileName="NOTOSA~5.TTF|NotoSansTC-Regular.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansTC-Regular.ttf" SelfReg="false"/>
+    <ROW File="fxdevcon64.exe_1" Component_="fxdevcon64.exe" FileName="FXDEVC~1.EXE|fxdevcon64.exe" Attributes="0" SourcePath="Drivers\Version14\win10\arm64\fxdevcon64.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="fxvad.inf_1" Component_="fxvad" FileName="fxvad.inf" Attributes="0" SourcePath="Drivers\Version14\win10\arm64\fxvad.inf" SelfReg="false"/>
+    <ROW File="fxvad.sys_1" Component_="fxvad" FileName="fxvad.sys" Attributes="0" SourcePath="Drivers\Version14\win10\arm64\fxvad.sys" SelfReg="false"/>
+    <ROW File="fxvadntarm64.cat" Component_="fxvad" FileName="FXVADN~1.CAT|fxvadntarm64.cat" Attributes="0" SourcePath="Drivers\Version14\win10\arm64\fxvadntarm64.cat" SelfReg="false"/>
+    <ROW File="fxdiag.exe" Component_="fxdiag.exe" FileName="fxdiag.exe" Attributes="0" SourcePath="..\bin\arm64\fxdiag.exe" SelfReg="false" DigSign="true"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.BootstrOptComponent">
+    <ROW BootstrOptKey="GlobalOptions" GeneralOptions="b" DownloadFolder="[AppDataFolder][|Manufacturer]\[|ProductName]\prerequisites" Options="2"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.BootstrapperUISequenceComponent">
+    <ROW Action="AI_AppSearchEx" Condition="AI_BOOTSTRAPPER" Sequence="252"/>
+    <ROW Action="AI_BACKUP_AI_SETUPEXEPATH" Sequence="249"/>
+    <ROW Action="AI_RESTORE_AI_SETUPEXEPATH" Condition="AI_SETUPEXEPATH_ORIGINAL" Sequence="251"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
+    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="Output" Languages="en" InstallationType="4" CabsLocation="1" PackageType="1" FilesInsideExe="true" ExeIconPath="Resources\fxsound.ico" SummInfoMetadata="Page Count:500" CreateMd5="true" ExtractionFolder="[AppDataFolder][|Manufacturer]\[|ProductName] [|ProductVersion]\install" ExtUI="true" UseLargeSchema="true" ExeName="fxsound_setup.arm64" MsiPackageType="Arm64" UACExecutionLevel="2"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.DictionaryComponent">
+    <ROW Path="&lt;AI_DICTS&gt;ui.ail"/>
+    <ROW Path="&lt;AI_DICTS&gt;ui_en.ail"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.DigCertStoreComponent">
+    <ROW TimeStampUrl="http://timestamp.digicert.com" SignerDescription="[|ProductName]" SignOptions="7" SignTool="0" SignDelay="500" UseSha256="1" Subject="CN=&quot;FxSound, LLC&quot;, O=&quot;FxSound, LLC&quot;, L=Mill Valley, S=California, C=US, SERIALNUMBER=201721910237, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=California, OID.1.3.6.1.4.1.311.60.2.1.3=US" Store="User\MY"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.DynamicPropertyComponent">
+    <ROW Property="ProductVersion" Type="2" SourcePath="FxSound.exe"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.FragmentComponent">
+    <ROW Fragment="CommonUI.aip" Path="&lt;AI_FRAGS&gt;CommonUI.aip"/>
+    <ROW Fragment="FolderDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\FolderDlg.aip"/>
+    <ROW Fragment="MaintenanceTypeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\MaintenanceTypeDlg.aip"/>
+    <ROW Fragment="MaintenanceWelcomeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\MaintenanceWelcomeDlg.aip"/>
+    <ROW Fragment="SequenceDialogs.aip" Path="&lt;AI_THEMES&gt;classic\fragments\SequenceDialogs.aip"/>
+    <ROW Fragment="Sequences.aip" Path="&lt;AI_FRAGS&gt;Sequences.aip"/>
+    <ROW Fragment="StaticUIStrings.aip" Path="&lt;AI_FRAGS&gt;StaticUIStrings.aip"/>
+    <ROW Fragment="Themes.aip" Path="&lt;AI_FRAGS&gt;Themes.aip"/>
+    <ROW Fragment="UI.aip" Path="&lt;AI_THEMES&gt;classic\fragments\UI.aip"/>
+    <ROW Fragment="Validation.aip" Path="&lt;AI_FRAGS&gt;Validation.aip"/>
+    <ROW Fragment="VerifyRemoveDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\VerifyRemoveDlg.aip"/>
+    <ROW Fragment="VerifyRepairDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\VerifyRepairDlg.aip"/>
+    <ROW Fragment="WelcomeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\WelcomeDlg.aip"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiActionTextComponent">
+    <ROW Action="AI_DeleteLzma" Description="Deleting files extracted from archive" DescriptionLocId="ActionText.Description.AI_DeleteLzma" TemplateLocId="-"/>
+    <ROW Action="AI_DeleteRLzma" Description="Deleting files extracted from archive" DescriptionLocId="ActionText.Description.AI_DeleteLzma" TemplateLocId="-"/>
+    <ROW Action="AI_ExtractFiles" Description="Extracting files from archive" DescriptionLocId="ActionText.Description.AI_ExtractLzma" TemplateLocId="-"/>
+    <ROW Action="AI_ExtractLzma" Description="Extracting files from archive" DescriptionLocId="ActionText.Description.AI_ExtractLzma" TemplateLocId="-"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiAppSearchComponent">
+    <ROW Property="AI_SETUPEXEPATH" Signature_="AI_EXE_PATH_LM" Builds="DefaultBuild"/>
+    <ROW Property="AI_SETUPEXEPATH" Signature_="AI_EXE_PATH_CU" Builds="DefaultBuild"/>
+    <ROW Property="DFX" Signature_="FileSearchSign"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiBinaryComponent">
+    <ROW Name="Prereq.dll" SourcePath="&lt;AI_CUSTACTS&gt;Prereq.dll"/>
+    <ROW Name="aicustact.dll" SourcePath="&lt;AI_CUSTACTS&gt;aicustact.dll"/>
+    <ROW Name="lzmaextractor.dll" SourcePath="&lt;AI_CUSTACTS&gt;lzmaextractor.dll"/>
+    <ROW Name="viewer.exe" SourcePath="&lt;AI_CUSTACTS&gt;viewer.exe" DigSign="true"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiConditionComponent">
+    <ROW Feature_="AI64BitFiles" Level="0" Condition="NOT VersionNT64"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiControlEventComponent">
+    <ROW Dialog_="WelcomeDlg" Control_="Next" Event="NewDialog" Argument="FolderDlg" Condition="AI_INSTALL" Ordering="1"/>
+    <ROW Dialog_="FolderDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_INSTALL" Ordering="201"/>
+    <ROW Dialog_="FolderDlg" Control_="Back" Event="NewDialog" Argument="WelcomeDlg" Condition="AI_INSTALL" Ordering="1"/>
+    <ROW Dialog_="MaintenanceWelcomeDlg" Control_="Next" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT" Ordering="99"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_MAINT" Ordering="198"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="CustomizeDlg" Condition="AI_MAINT" Ordering="202"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_INSTALL" Ordering="197"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="FolderDlg" Condition="AI_INSTALL" Ordering="201"/>
+    <ROW Dialog_="CustomizeDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_MAINT" Ordering="101"/>
+    <ROW Dialog_="CustomizeDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="ChangeButton" Event="NewDialog" Argument="CustomizeDlg" Condition="AI_MAINT" Ordering="501"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceWelcomeDlg" Condition="AI_MAINT" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="RemoveButton" Event="NewDialog" Argument="VerifyRemoveDlg" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="601"/>
+    <ROW Dialog_="VerifyRemoveDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="RepairButton" Event="NewDialog" Argument="VerifyRepairDlg" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="601"/>
+    <ROW Dialog_="VerifyRepairDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="1"/>
+    <ROW Dialog_="VerifyRepairDlg" Control_="Repair" Event="EndDialog" Argument="Return" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="399" Options="1"/>
+    <ROW Dialog_="VerifyRemoveDlg" Control_="Remove" Event="EndDialog" Argument="Return" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="299" Options="1"/>
+    <ROW Dialog_="PatchWelcomeDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_PATCH" Ordering="201"/>
+    <ROW Dialog_="ResumeDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_RESUME" Ordering="299"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_PATCH" Ordering="199"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="PatchWelcomeDlg" Condition="AI_PATCH" Ordering="203"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiCreateFolderComponent">
+    <ROW Directory_="APPDIR" Component_="APPDIR" ManualDelete="true"/>
+    <ROW Directory_="SHORTCUTDIR" Component_="SHORTCUTDIR" ManualDelete="false"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiCustActComponent">
+    <ROW Action="AI_AppSearchEx" Type="1" Source="Prereq.dll" Target="DoAppSearchEx"/>
+    <ROW Action="AI_BACKUP_AI_SETUPEXEPATH" Type="51" Source="AI_SETUPEXEPATH_ORIGINAL" Target="[AI_SETUPEXEPATH]"/>
+    <ROW Action="AI_DATA_SETTER" Type="51" Source="CustomActionData" Target="[AI_SETUPEXEPATH]"/>
+    <ROW Action="AI_DATA_SETTER_1" Type="51" Source="CustomActionData" Target="[APPDIR];[DFX_VERSION]"/>
+    <ROW Action="AI_DATA_SETTER_3" Type="51" Source="CustomActionData" Target="FxSound.exe"/>
+    <ROW Action="AI_DATA_SETTER_6" Type="51" Source="CustomActionData" Target="[APPDIR]"/>
+    <ROW Action="AI_DOWNGRADE" Type="19" Target="4010"/>
+    <ROW Action="AI_DeleteCadLzma" Type="51" Source="AI_DeleteLzma" Target="[AI_SETUPEXEPATH]"/>
+    <ROW Action="AI_DeleteLzma" Type="1025" Source="lzmaextractor.dll" Target="DeleteLZMAFiles"/>
+    <ROW Action="AI_DeleteRCadLzma" Type="51" Source="AI_DeleteRLzma" Target="[AI_SETUPEXEPATH]"/>
+    <ROW Action="AI_DeleteRLzma" Type="1281" Source="lzmaextractor.dll" Target="DeleteLZMAFiles"/>
+    <ROW Action="AI_DpiContentScale" Type="1" Source="aicustact.dll" Target="DpiContentScale"/>
+    <ROW Action="AI_EnableDebugLog" Type="321" Source="aicustact.dll" Target="EnableDebugLog"/>
+    <ROW Action="AI_ExtractCadLzma" Type="51" Source="AI_ExtractLzma" Target="[AI_SETUPEXEPATH]"/>
+    <ROW Action="AI_ExtractFiles" Type="1" Source="Prereq.dll" Target="ExtractSourceFiles" AdditionalSeq="AI_DATA_SETTER"/>
+    <ROW Action="AI_ExtractLzma" Type="1025" Source="lzmaextractor.dll" Target="ExtractLZMAFiles"/>
+    <ROW Action="AI_FindExeLzma" Type="1" Source="lzmaextractor.dll" Target="FindEXE"/>
+    <ROW Action="AI_FinishActions" Type="1" Source="aicustact.dll" Target="RunAllExitActions"/>
+    <ROW Action="AI_InstallModeCheck" Type="1" Source="aicustact.dll" Target="UpdateInstallMode" WithoutSeq="true"/>
+    <ROW Action="AI_LaunchApp" Type="1" Source="aicustact.dll" Target="LaunchApp"/>
+    <ROW Action="AI_PREPARE_UPGRADE" Type="65" Source="aicustact.dll" Target="PrepareUpgrade"/>
+    <ROW Action="AI_PRESERVE_INSTALL_TYPE" Type="65" Source="aicustact.dll" Target="PreserveInstallType"/>
+    <ROW Action="AI_REDIRECT_32BIT_FOLDER" Type="51" Source="AI_Bin32_Dir" Target="[APPDIR]"/>
+    <ROW Action="AI_REDIRECT_32BIT_SH_FOLDER" Type="51" Source="AI_Sh32_Dir" Target="[SHORTCUTDIR]"/>
+    <ROW Action="AI_RESTORE_AI_SETUPEXEPATH" Type="51" Source="AI_SETUPEXEPATH" Target="[AI_SETUPEXEPATH_ORIGINAL]"/>
+    <ROW Action="AI_RESTORE_LOCATION" Type="65" Source="aicustact.dll" Target="RestoreLocation"/>
+    <ROW Action="AI_ResolveKnownFolders" Type="1" Source="aicustact.dll" Target="AI_ResolveKnownFolders"/>
+    <ROW Action="AI_SHOW_LOG" Type="65" Source="aicustact.dll" Target="LaunchLogFile" WithoutSeq="true"/>
+    <ROW Action="AI_STORE_LOCATION" Type="51" Source="ARPINSTALLLOCATION" Target="[APPDIR]"/>
+    <ROW Action="AI_UPDATER_UNINSTALL" Type="82" Source="updater.exe" Target="/clean silent"/>
+    <ROW Action="InstallFxSoundDriver" Type="81" Source="DfxInstall.dll" Target="InstallDFXDriver" AdditionalSeq="AI_DATA_SETTER_1"/>
+    <ROW Action="LaunchFxSound" Type="226" Source="APPDIR" Target="&quot;[APPDIR]\FxSound.exe&quot; [FXSOUND_CONFIG]"/>
+    <ROW Action="OpenUrl" Type="66" Source="viewer.exe" Target="https://www.fxsound.com/blog/fxsound-is-now-completely-free" Options="1"/>
+    <ROW Action="SET_APPDIR" Type="307" Source="APPDIR" Target="[ProgramFilesFolder][Manufacturer]\[ProductName]" MultiBuildTarget="DefaultBuild:[ProgramFiles64Folder][Manufacturer]\[ProductName]"/>
+    <ROW Action="SET_SHORTCUTDIR" Type="307" Source="SHORTCUTDIR" Target="[ProgramMenuFolder][ProductName]"/>
+    <ROW Action="SET_TARGETDIR_TO_APPDIR" Type="51" Source="TARGETDIR" Target="[APPDIR]"/>
+    <ROW Action="StopFxSound" Type="1" Source="aicustact.dll" Target="StopProcess" Options="1" AdditionalSeq="AI_DATA_SETTER_3"/>
+    <ROW Action="UninstallFxSoundDriver" Type="81" Source="DfxInstall.dll" Target="UninstallFxSoundDriver" AdditionalSeq="AI_DATA_SETTER_6"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiDrLocatorComponent">
+    <ROW Signature_="FileSearchSign" Path="[ProgramFilesFolder]DFX" Depth="1"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatCompsComponent">
+    <ROW Feature_="MainFeature" Component_="APPDIR"/>
+    <ROW Feature_="AI64BitFiles" Component_="FxSound.exe"/>
+    <ROW Feature_="AIOtherFiles" Component_="FxSound.settings"/>
+    <ROW Feature_="MainFeature" Component_="SHORTCUTDIR"/>
+    <ROW Feature_="MainFeature" Component_="AI_ExePath"/>
+    <ROW Feature_="MainFeature" Component_="dfx.ico"/>
+    <ROW Feature_="MainFeature" Component_="updater.exe"/>
+    <ROW Feature_="AI64BitFiles" Component_="Path"/>
+    <ROW Feature_="AI64BitFiles" Component_="ProductInformation"/>
+    <ROW Feature_="MainFeature" Component_="fxsound.ico"/>
+    <ROW Feature_="AIOtherFiles" Component_="DfxInstall.dll"/>
+    <ROW Feature_="AI64BitFiles" Component_="fxdevcon64.exe"/>
+    <ROW Feature_="AIOtherFiles" Component_="fac"/>
+    <ROW Feature_="AIOtherFiles" Component_="Fonts"/>
+    <ROW Feature_="AIOtherFiles" Component_="Default.fac"/>
+    <ROW Feature_="AI64BitFiles" Component_="fxvad"/>
+    <ROW Feature_="AI64BitFiles" Component_="AI_IA_ENABLE"/>
+    <ROW Feature_="AI64BitFiles" Component_="fxdiag.exe"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
+    <ROW Name="fxsound.exe" SourcePath="Resources\fxsound.ico" Index="0"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiIniFileComponent">
+    <ROW IniFile="AppDir" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="AppDir" Value="[APPDIR]" Action="0" Component_="updater.exe"/>
+    <ROW IniFile="ApplicationName" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="ApplicationName" Value="[ProductName]" Action="0" Component_="updater.exe"/>
+    <ROW IniFile="ApplicationVersion" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="ApplicationVersion" Value="[ProductVersion]" Action="0" Component_="updater.exe"/>
+    <ROW IniFile="CheckFrequency" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="CheckFrequency" Value="7" Action="0" Component_="updater.exe"/>
+    <ROW IniFile="CompanyName" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="CompanyName" Value="[Manufacturer]" Action="0" Component_="updater.exe"/>
+    <ROW IniFile="DefaultCommandLine" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="DefaultCommandLine" Value="/silent" Action="0" Component_="updater.exe"/>
+    <ROW IniFile="DownloadsFolder" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="DownloadsFolder" Value="[CommonAppDataFolder][Manufacturer]\[ProductName]\updates\" Action="0" Component_="updater.exe"/>
+    <ROW IniFile="Flags" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="Flags" Value="PerMachine|VerifyDigitalSignature|NoUpdaterInstallGUI" Action="0" Component_="updater.exe"/>
+    <ROW IniFile="ID" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="ID" Value="[UpgradeCode]" Action="0" Component_="updater.exe"/>
+    <ROW IniFile="URL" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="URL" Value="https://github.com/fxsound2/fxsound-app/raw/latest/release/arm64/updates.txt" Action="0" Component_="updater.exe"/>
+    <ROW IniFile="URL1" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="URL1" Value="https://download.fxsound.com/updates" Action="0" Component_="updater.exe"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
+    <ROW Action="AI_DOWNGRADE" Condition="AI_NEWERPRODUCTFOUND AND (UILevel &lt;&gt; 5)" Sequence="210"/>
+    <ROW Action="AI_RESTORE_LOCATION" Condition="APPDIR=&quot;&quot;" Sequence="745"/>
+    <ROW Action="AI_STORE_LOCATION" Condition="(Not Installed) OR REINSTALL" Sequence="1501"/>
+    <ROW Action="AI_PREPARE_UPGRADE" Condition="AI_UPGRADE=&quot;No&quot; AND (Not Installed)" Sequence="1397"/>
+    <ROW Action="AI_ResolveKnownFolders" Sequence="56"/>
+    <ROW Action="AI_EnableDebugLog" Sequence="54"/>
+    <ROW Action="AI_REDIRECT_32BIT_FOLDER" Condition="NOT VersionNT64 AND NOT AI_Disable32BitRedirection" Sequence="798"/>
+    <ROW Action="AI_REDIRECT_32BIT_SH_FOLDER" Condition="NOT VersionNT64 AND NOT AI_Disable32BitRedirection" Sequence="799"/>
+    <ROW Action="AI_AppSearchEx" Sequence="102"/>
+    <ROW Action="LaunchFxSound" Condition="( ( NOT Installed ) OR ( Installed AND REMOVE &lt;&gt; &quot;ALL&quot; AND AI_INSTALL_MODE &lt;&gt; &quot;Remove&quot; ) )" Sequence="6603"/>
+    <ROW Action="AI_UPDATER_UNINSTALL" Condition="($updater.exe = 2) AND (?updater.exe = 3) AND NOT (UPGRADINGPRODUCTCODE)" Sequence="1551"/>
+    <ROW Action="StopFxSound" Sequence="203"/>
+    <ROW Action="AI_DATA_SETTER_3" Sequence="202"/>
+    <ROW Action="InstallFxSoundDriver" Condition="( NOT Installed )" Sequence="6602"/>
+    <ROW Action="AI_DATA_SETTER_1" Condition="( NOT Installed )" Sequence="6601"/>
+    <ROW Action="AI_ExtractFiles" Sequence="1399" Builds="DefaultBuild"/>
+    <ROW Action="AI_DATA_SETTER" Sequence="1398"/>
+    <ROW Action="AI_DETECT_MODERNWIN" Condition="(VersionNT &gt;= 603)" Sequence="57" MsiKey="AI_DETECT_MODERNWIN"/>
+    <ROW Action="UninstallFxSoundDriver" Condition="( Installed AND ( REMOVE = &quot;ALL&quot; OR AI_INSTALL_MODE = &quot;Remove&quot; ) )" Sequence="1202"/>
+    <ROW Action="AI_DATA_SETTER_6" Condition="( Installed AND ( REMOVE = &quot;ALL&quot; OR AI_INSTALL_MODE = &quot;Remove&quot; ) )" Sequence="1201"/>
+    <ROW Action="OpenUrl" Condition="( NOT Installed ) AND ( FXSOUND_FREE_LINK = &quot;IDYES&quot; )" Sequence="201"/>
+    <ROW Action="AI_DETECT_WINTHEME" Condition="(VersionNT &gt;= 603)" Sequence="55" MsiKey="AI_DETECT_WINTHEME"/>
+    <ROW Action="AI_BACKUP_AI_SETUPEXEPATH" Sequence="99" Builds="DefaultBuild"/>
+    <ROW Action="AI_RESTORE_AI_SETUPEXEPATH" Condition="AI_SETUPEXEPATH_ORIGINAL" Sequence="101" Builds="DefaultBuild"/>
+    <ROW Action="AI_DeleteCadLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="199" Builds="DefaultBuild"/>
+    <ROW Action="AI_DeleteRCadLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="198" Builds="DefaultBuild"/>
+    <ROW Action="AI_ExtractCadLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="197" Builds="DefaultBuild"/>
+    <ROW Action="AI_FindExeLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="196" Builds="DefaultBuild"/>
+    <ROW Action="AI_ExtractLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="1549" Builds="DefaultBuild"/>
+    <ROW Action="AI_DeleteRLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="1548" Builds="DefaultBuild"/>
+    <ROW Action="AI_DeleteLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="6599" Builds="DefaultBuild"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiInstallUISequenceComponent">
+    <ROW Action="AI_RESTORE_LOCATION" Condition="APPDIR=&quot;&quot;" Sequence="745"/>
+    <ROW Action="AI_ResolveKnownFolders" Sequence="53"/>
+    <ROW Action="AI_DpiContentScale" Sequence="52"/>
+    <ROW Action="AI_EnableDebugLog" Sequence="51"/>
+    <ROW Action="AI_BACKUP_AI_SETUPEXEPATH" Sequence="98"/>
+    <ROW Action="AI_RESTORE_AI_SETUPEXEPATH" Condition="AI_SETUPEXEPATH_ORIGINAL" Sequence="102"/>
+    <ROW Action="AI_AppSearchEx" Sequence="101"/>
+    <ROW Action="AI_FinishActions" Condition="AI_INSTALL AND AiSkipExitDlg" Sequence="1301"/>
+    <ROW Action="AI_PRESERVE_INSTALL_TYPE" Sequence="199"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiLaunchConditionsComponent">
+    <ROW Condition="( Version9X OR ( NOT VersionNT64 ) OR ( VersionNT64 AND ((VersionNT64 &lt;&gt; 601) OR (MsiNTProductType &lt;&gt; 1)) AND ((VersionNT64 &lt;&gt; 601) OR (MsiNTProductType = 1)) AND ((VersionNT64 &lt;&gt; 602) OR (MsiNTProductType &lt;&gt; 1)) AND ((VersionNT64 &lt;&gt; 602) OR (MsiNTProductType = 1)) AND ((VersionNT64 &lt;&gt; 603) OR (MsiNTProductType &lt;&gt; 1)) AND ((VersionNT64 &lt;&gt; 603) OR (MsiNTProductType = 1)) AND ((VersionNT64 &lt;&gt; 1000 AND VersionNT64 &lt;&gt; 1100) OR (MsiNTProductType = 1)) ) )" Description="[ProductName] cannot be installed on the following Windows versions: [WindowsTypeNT64Display]." DescriptionLocId="AI.LaunchCondition.NoSpecificNT64" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="( Version9X OR VersionNT64 )" Description="[ProductName] cannot be installed on [WindowsTypeNTDisplay]." DescriptionLocId="AI.LaunchCondition.NoNT" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="((VersionNT &lt;&gt; 501) AND (VersionNT &lt;&gt; 502))" Description="[ProductName] cannot be installed on [WindowsTypeNT5XDisplay]." DescriptionLocId="AI.LaunchCondition.NoNT5X" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="(VersionNT &lt;&gt; 400)" Description="[ProductName] cannot be installed on [WindowsTypeNT40Display]." DescriptionLocId="AI.LaunchCondition.NoNT40" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="(VersionNT &lt;&gt; 500)" Description="[ProductName] cannot be installed on [WindowsTypeNT50Display]." DescriptionLocId="AI.LaunchCondition.NoNT50" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="(VersionNT &lt;&gt; 600)" Description="[ProductName] cannot be installed on [WindowsTypeNT60Display]." DescriptionLocId="AI.LaunchCondition.NoNT60" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="VersionMsi &gt;= AI_REQUIRED_WINDOWS_INSTALLER_VERSION" Description="[ProductName] cannot be installed on systems with Windows Installer version lower than [AI_REQUIRED_WINDOWS_INSTALLER_DISPLAY]." DescriptionLocId="AI.LaunchCondition.WI" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="VersionNT" Description="[ProductName] cannot be installed on [WindowsType9XDisplay]." DescriptionLocId="AI.LaunchCondition.No9X" IsPredefined="true" Builds="DefaultBuild"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiRegLocatorComponent">
+    <ROW Signature_="AI_EXE_PATH_CU" Root="1" Key="Software\Caphyon\Advanced Installer\LZMA\[ProductCode]\[ProductVersion]" Name="AI_ExePath" Type="2"/>
+    <ROW Signature_="AI_EXE_PATH_LM" Root="2" Key="Software\Caphyon\Advanced Installer\LZMA\[ProductCode]\[ProductVersion]" Name="AI_ExePath" Type="2"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiRegsComponent">
+    <ROW Registry="AI_ExePath" Root="-1" Key="Software\Caphyon\Advanced Installer\LZMA\[ProductCode]\[ProductVersion]" Name="AI_ExePath" Value="[AI_SETUPEXEPATH]" Component_="AI_ExePath"/>
+    <ROW Registry="AI_IA_ENABLE" Root="-1" Key="Software\[Manufacturer]\[ProductCode]" Name="AI_IA_ENABLE" Value="[AI_IA_ENABLE]" Component_="AI_IA_ENABLE"/>
+    <ROW Registry="AdvancedInstaller" Root="-1" Key="Software\Caphyon\Advanced Installer" Name="\"/>
+    <ROW Registry="Caphyon" Root="-1" Key="Software\Caphyon" Name="\"/>
+    <ROW Registry="LZMA" Root="-1" Key="Software\Caphyon\Advanced Installer\LZMA" Name="\"/>
+    <ROW Registry="Manufacturer" Root="-1" Key="Software\[Manufacturer]" Name="\"/>
+    <ROW Registry="Path" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Path" Value="[APPDIR]" Component_="Path"/>
+    <ROW Registry="ProductCode" Root="-1" Key="Software\Caphyon\Advanced Installer\LZMA\[ProductCode]" Name="\"/>
+    <ROW Registry="ProductCode_1" Root="-1" Key="Software\[Manufacturer]\[ProductCode]" Name="\"/>
+    <ROW Registry="ProductName" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="\"/>
+    <ROW Registry="ProductVersion" Root="-1" Key="Software\Caphyon\Advanced Installer\LZMA\[ProductCode]\[ProductVersion]" Name="\"/>
+    <ROW Registry="Software" Root="-1" Key="Software" Name="\"/>
+    <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
+    <ROW Shortcut="CheckforFxSound2updates" Directory_="SHORTCUTDIR" Name="CHECKF~2|Check for FxSound updates" Component_="updater.exe" Target="[#updater.exe]" Arguments="/checknow" Hotkey="0" Icon_="fxsound.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="FxSound" Directory_="StartupFolder" Name="FxSound" Component_="FxSound.exe" Target="[#FxSound.exe]" Hotkey="0" Icon_="fxsound.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="FxSound.exe_1" Directory_="SHORTCUTDIR" Name="FxSound" Component_="FxSound.exe" Target="[#FxSound.exe]" Hotkey="0" Icon_="fxsound.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="FxSound_1" Directory_="DesktopFolder" Name="FxSound" Component_="FxSound.exe" Target="[#FxSound.exe]" Hotkey="0" Icon_="fxsound.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiSignatureComponent">
+    <ROW Signature="FileSearchSign" FileName="dfx.exe"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
+    <ATTRIBUTE name="UsedTheme" value="classic"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiUpgradeComponent">
+    <ROW UpgradeCode="[|UpgradeCode]" VersionMin="0.0.1" VersionMax="[|ProductVersion]" Attributes="257" ActionProperty="OLDPRODUCTS"/>
+    <ROW UpgradeCode="[|UpgradeCode]" VersionMin="[|ProductVersion]" Attributes="2" ActionProperty="AI_NEWERPRODUCTFOUND"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.PreReqSearchComponent">
+    <ROW SearchKey="_" SearchType="2" SearchString="HKLM\Software\FxSound LLC\FxSound\Version" VerMin="1.1.13.0" Order="4" Property="FXSOUND_FREE"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.UpdaterComponent">
+    <ROW Updater="updater.exe" URL="URL" SearchFreq="CheckFrequency" DownloadsFolder="DownloadsFolder" ID="ID" TargetDir="AppDir" AppName="ApplicationName" AppVersion="ApplicationVersion" CompanyName="CompanyName" DefCommandLine="DefaultCommandLine" Flags="Flags" IconPath="Resources\fxsound.ico" IconIndex="0" UnistallCASeq="AI_UPDATER_UNINSTALL" Description="[|UpdaterName] [|ProductVersion]" URL1="URL1"/>
+  </COMPONENT>
+</DOCUMENT>
