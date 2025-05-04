@@ -111,7 +111,7 @@ namespace BinaryData
     const int            Slider_Thumb_bw_svgSize = 4109;
 
     extern const char*   FxSound_ar_txt;
-    const int            FxSound_ar_txtSize = 13607;
+    const int            FxSound_ar_txtSize = 13606;
 
     extern const char*   FxSound_ba_txt;
     const int            FxSound_ba_txtSize = 10368;
@@ -120,7 +120,7 @@ namespace BinaryData
     const int            FxSound_de_txtSize = 11502;
 
     extern const char*   FxSound_es_txt;
-    const int            FxSound_es_txtSize = 11039;
+    const int            FxSound_es_txtSize = 11037;
 
     extern const char*   FxSound_fr_txt;
     const int            FxSound_fr_txtSize = 11334;
@@ -141,7 +141,7 @@ namespace BinaryData
     const int            FxSound_it_txtSize = 10914;
 
     extern const char*   FxSound_ja_txt;
-    const int            FxSound_ja_txtSize = 12269;
+    const int            FxSound_ja_txtSize = 12270;
 
     extern const char*   FxSound_ko_txt;
     const int            FxSound_ko_txtSize = 11322;
@@ -177,7 +177,7 @@ namespace BinaryData
     const int            FxSound_txtSize = 10059;
 
     extern const char*   FxSound_ua_txt;
-    const int            FxSound_ua_txtSize = 14453;
+    const int            FxSound_ua_txtSize = 14456;
 
     extern const char*   FxSound_vi_txt;
     const int            FxSound_vi_txtSize = 11905;
