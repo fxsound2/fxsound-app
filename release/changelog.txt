@@ -5,7 +5,7 @@ version 1.1.33.0
 3. Context menu changes for playback device selection
 4. In mini mode, window will be always on top
 5. Ukrainian language support added
-6. Translation corrections in Arabic, Bosnian, Croatian, Dutch,  Hungarian, Portuguese and Spanish
+6. Translation corrections in Arabic, Bosnian, Croatian, Dutch,  Hungarian, Japanese, Portuguese and Spanish
 
 version 1.1.32.0
 ----------------
