@@ -25,7 +25,7 @@
     <ROW Property="MSIFASTINSTALL" MultiBuildValue="DefaultBuild:2"/>
     <ROW Property="Manufacturer" Value="FxSound LLC"/>
     <ROW Property="MsiLogging" MultiBuildValue="DefaultBuild:vp"/>
-    <ROW Property="ProductCode" Value="1033:{8448576D-FEF8-4247-B9B4-6F21C036BD97} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{F0CAA1DA-E7A1-49E3-A838-EF92AA16B2D0} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="FxSound"/>
     <ROW Property="ProductName_32" Value="[|ProductName]"/>
