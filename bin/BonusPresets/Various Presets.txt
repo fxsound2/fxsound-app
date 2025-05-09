@@ -1,4 +1,22 @@
-These are presets for the FxSound equalizer and they have a meaningful point, they are divided by the sound quality and the music preferences... Their point is to make people have fun or to set them free or enable them hard working with model for living - natural and meaningful cosmos combined...
+
+Various presets for the FxSound equalizer have a point to set people free or enable them hard working with a combination natural - cosmos models of living, but there you can find and those for fun... Just import presets into the equalizer and enjoy!
+
+Various presets include:
+* Alien (beings) presets
+	> we can find associations on their lives, different beings
+* American
+	> serious ones, as the ones that give association on American jokes, also about their superheroes
+* Meaningful presets
+	> about different life ideas, happiness, about leisure, life, learning, love, being saint, truth
+* Sound Quality Presets
+	> Bass, Blues, Music, other sound presets
+* Presets with life help as are underworld codes
+	> knowledge association
+* Work area
+	> divided work associations for different work motivations (work environments) - from almost leisure, to hardest ones; about work on holidays
+
+> Download link:
+https://github.com/Downness/FxSound-presets/archive/refs/tags/FxSound_presets.zip
 
 Various presets include:
 
@@ -15,7 +33,6 @@ Beings.fac
 Cosmos life of a beings.fac                                        
 Degernoth - Degernothya.fac                                        
 Different beings.fac                                               
-filenames.txt                                                      
 Free beings.fac                                                    
 Freedom knowledge.fac                                              
 Freeing the beings.fac                                             
@@ -30,8 +47,6 @@ Love for beings - assfedazzya.fac
 Smart - Great IQ.fac                                               
 Work for beings (Ranzellariya).fac                                 
 
-//////////////////////////////////////////////
-
 > American
 
 American jokes (work divided).fac                                  
@@ -41,15 +56,12 @@ American life 2.0.fac
 American life.fac                                                  
 American [flag] (with underworld codes).fac                        
 American.fac                                                       
-filenames.txt                                                      
 Jokes of American life.fac                                         
 Life of Americans.fac                                              
 Superheroes everywhere.fac                                         
 Superheroes of US.fac                                              
 Superman.fac                                                       
 US citizen.fac                                                     
-
-/////////////////////////////////////////////
 
 > Meaningful
 
@@ -62,7 +74,6 @@ Cosmos Life (Carbunallya).fac
 Cosmos life.fac                                                    
 Doing way (Dezorgeniya).fac                                        
 Everything (randoslariya, QLXZ).fac                                
-filenames.txt                                                      
 Freeing (azzymetrya).fac                                           
 Happiness (Active pyramid).fac                                     
 Happiness pyramid.fac                                              
@@ -125,8 +136,6 @@ Understanding way (Extrapoletia).fac
 Underworld Life (Quizal).fac                                       
 Yelle [US].fac                                                     
 
-//////////////////////////////////////////////
-
 > Sound
 
 Bass & beat (QLXZ).fac                                             
@@ -137,7 +146,6 @@ Bass boosted music.fac
 Bass boosted.fac                                                   
 Blues life.fac                                                     
 Blues.fac                                                          
-filenames.txt                                                      
 Loud sound (XRZ).fac                                               
 Music (enjoyable).fac                                              
 Music - everything about it.fac                                    
@@ -151,8 +159,6 @@ Sound RXZ.fac
 Sound YRXZ.fac                                                     
 Supreme life (YRXZ).fac                                            
 
-//////////////////////////////////////////////
-
 > Underworld codes
 
 Ban.fac                                                            
@@ -162,7 +168,6 @@ Closed system [US].fac
 Closed System.fac                                                  
 Complete ban.fac                                                   
 Explanations (Rescalleriya).fac                                    
-filenames.txt                                                      
 Life of Underworld.fac                                             
 Life with undewrold codes.fac                                      
 Model - Full (Dellaggroniya of life).fac                           
@@ -171,8 +176,6 @@ Underworld codes (Yanzzdragara).fac
 Underworld Life (Quizal).fac                                       
 Underworld name.fac                                                
 Underworld.fac                                                     
-
-//////////////////////////////////////////////
 
 > Work area
 
@@ -211,4 +214,4 @@ Working models (Onezdya).fac
 Working models (Orguliya).fac                                      
 Working saint (Yezemblerya).fac                                    
 Working through life (agustyyaryyanyya dy drosyya).fac             
-Working way (Ranzemariya).fac                                      
+Working way (Ranzemariya).fac
