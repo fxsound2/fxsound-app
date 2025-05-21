@@ -45,4 +45,4 @@ Our special thanks to Advanced Installer for supporting us with Advanced Install
 [![image](https://github.com/user-attachments/assets/c133fe06-619c-4c17-bce9-f1cf051c5265)](https://www.advancedinstaller.com)
 
 ## License
-[GPL v3.0](https://github.com/fxsound2/fxsound-app/blob/main/LICENSE)
+[AGPL v3.0](https://github.com/fxsound2/fxsound-app/blob/main/LICENSE)
