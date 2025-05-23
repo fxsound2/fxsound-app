@@ -88,19 +88,19 @@ void FxView::modelChanged(FxModel::Event model_event)
 {
 	if (model_event == FxModel::Event::OutputListUpdated)
 	{
-		StringArray output_names = FxModel::getModel().getOutputNames();
+		auto output_devices = FxModel::getModel().getOutputDevices();
 
 		endpoint_list_.clear(NotificationType::dontSendNotification);
 		int id = 1;
-		for (auto name : output_names)
+		for (auto device : output_devices)
 		{
-			endpoint_list_.addItem(name, id);
-			if (name.endsWith("[Mono]"))
+			endpoint_list_.addItem(device.deviceFriendlyName.c_str(), id);
+			if (device.deviceNumChannel < 2)
 			{
 				endpoint_list_.setItemEnabled(id, false);
 			}
 
-            id++;
+			id++;
 		}
 	}
 

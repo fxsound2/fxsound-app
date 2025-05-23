@@ -290,8 +290,8 @@ void FxSystemTrayView::addOutputDeviceMenu(PopupMenu* context_menu)
     PopupMenu output_menu;
     PopupMenu* menu;
 
-    StringArray output_names = FxModel::getModel().getOutputNames();
-    int num_outputs = output_names.size();
+    auto output_devices = FxModel::getModel().getOutputDevices();
+    int num_outputs = output_devices.size();
     if (num_outputs > 5)
     {
         menu = &output_menu;
@@ -304,11 +304,11 @@ void FxSystemTrayView::addOutputDeviceMenu(PopupMenu* context_menu)
     }
 
     auto id = OUTPUT_MENU_ID_START;
-    for (auto name : output_names)
+    for (auto device : output_devices)
     {
-        PopupMenu::Item menu_item(name);
+        PopupMenu::Item menu_item(device.deviceFriendlyName.c_str());
         menu_item.setID(id);
-        if (name.endsWith("[Mono]"))
+        if (device.deviceNumChannel < 2)
         {
             menu_item.setEnabled(false);
         }
