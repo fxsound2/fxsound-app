@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.1.32.0"
+<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.1.34.0"
               displaySplashScreen="1" jucerFormatVersion="1" companyName="FxSound LLC"
               companyWebsite="https://www.fxsound.com" companyCopyright="2024 FxSound&#8482;"
               defines="UNICODE" postExportShellCommandWin="type %%1%%\Project\status_icons.rc &gt;&gt; %%1%%\Project\resources.rc"
@@ -14,6 +14,7 @@
             file="Fonts/Gilroy-Semibold.ttf"/>
     </GROUP>
     <GROUP id="{1003D6EA-45C1-E8E4-DFD9-451D205D2F09}" name="Images">
+      <FILE id="fIP0kb" name="speaker.svg" compile="0" resource="1" file="Images/speaker.svg"/>
       <FILE id="WpX8ql" name="min_window.svg" compile="0" resource="1" file="Images/min_window.svg"/>
       <FILE id="jcmz9o" name="min_window_hover.svg" compile="0" resource="1"
             file="Images/min_window_hover.svg"/>
@@ -174,6 +175,7 @@
       <FILE id="KIMS9o" name="FxSound.th.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.th.txt"/>
       <FILE id="awKQ98" name="FxSound.tr.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.tr.txt"/>
       <FILE id="xrziha" name="FxSound.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.txt"/>
+      <FILE id="wtXWe6" name="FxSound.ua.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.ua.txt"/>
       <FILE id="mIhelm" name="FxSound.vi.txt" compile="0" resource="1" file="../Strings/Strings/FxSound.vi.txt"/>
       <FILE id="PIqwHI" name="FxSound.zh-CN.txt" compile="0" resource="1"
             file="../Strings/Strings/FxSound.zh-CN.txt"/>
