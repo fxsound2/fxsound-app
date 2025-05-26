@@ -1,0 +1,343 @@
+
+Various presets for the FxSound equalizer have a point to set people free or enable them hard working with a combination natural - cosmos models of living, but there you can find and those for fun... Just import presets into the equalizer and enjoy!
+
+
+Various presets include:
+
+* Alien mode
+	> we can find associations on lives of different beings
+
+* American
+	> serious ones, as the ones that give association on American jokes, also about their superheroes
+
+* Beings - Colorful
+	> giving the color for underworld beings that have knowledge about everything	
+
+* Chinese
+	> representing idea of a "life steps" - named "staza"
+
+* Life (Living)
+	> giving idea about life, also questioning them
+
+* Meaningful
+	> about different life ideas, happiness, about leisure, life, learning, love, being saint, truth
+
+* Sound Quality Presets
+	> Bass, Blues, Music, other sound presets
+
+* Presets with life help as are underworld codes
+	> knowledge association
+
+* Work area
+	> divided work associations for different work motivations (work environments) - from almost leisure, also about work on holidays, to the hardest ones
+
+
+
+Various presets include:
+
+> Alien mode:
+
+Being - development.fac                                            
+Being - primary.fac                                                
+Being - Regularity.fac                                             
+Being - underworld.fac                                             
+Being change (instantly).fac                                       
+Being change.fac                                                   
+Being Eshalencia.fac                                               
+Being protection.fac                                               
+Beings (Degernoth - Degernothya).fac                               
+Beings (different).fac                                             
+Beings - Aukreliyeno And Aukreliyena.fac                           
+Beings - different.fac                                             
+Beings - Flybberal world.fac                                       
+Beings - Flybberallya world.fac                                    
+Beings - strangest (Zembraliya).fac                                
+Beings - totally different.fac                                     
+Beings enjoyment (Agnodarryum).fac                                 
+Beings life (NFGT).fac                                             
+Beings protection.fac                                              
+Beings Yargollas - Yargollasia.fac                                 
+Cosmos life for beings.fac                                         
+Cosmos life.fac                                                    
+Free beings.fac                                                    
+Happiness (Fibrald life).fac                                       
+Happiness (Fibrald).fac                                            
+Life (Complete Oxagonenya).fac                                     
+Life (Denegrya being supported).fac                                
+Life (Denegrya couple beings supported).fac                        
+Life - Fixing (Degorgeniya) 2.0.fac                                
+Life - Fixing (Degorgeniya).fac                                    
+Life Denegrya being supported.fac                                  
+Life of a beings.fac                                               
+Living (beings).fac                                                
+Love for beings - assfedazzya.fac                                  
+Mirror for beings.fac                                              
+Smart - Great IQ.fac                                               
+Twirl life (smaller cosmos).fac                                    
+Work for beings (Ranzellariya).fac                                 
+
+> American
+
+American flag.fac                                                  
+American jokes (work divided).fac                                  
+American jokes.fac                                                 
+American life.fac                                                  
+American Love (all woofer sound).fac                               
+American Party.fac                                                 
+American.fac                                                       
+Superheroes everywhere.fac                                         
+Superheroes of US.fac                                              
+Superman.fac                                                       
+US citizen.fac                                                     
+
+> Beings - Colorful
+
+Beings - Egg laying with colors.fac                                
+Colors - Saint, Lord, Wise, Amazing.fac                            
+Colors of Beings (Ergullarya).fac                                  
+Colors of Beings of Life.fac                                       
+Colors of Frybbyennda Being.fac                                    
+Saint life protection (yaguarre dy kallybrya).fac                  
+Saint life [US].fac                                                
+
+> Chinese
+
+Staza - cosmos model (Chinese).fac                                 
+Staza - Life in China.fac                                          
+Staza - Life Plan.fac                                              
+Staza - Love Thing.fac                                             
+Staza - Shame of life.fac                                          
+Staza of China.fac                                                 
+Staza of life.fac                                                  
+Staza work (Chinese).fac                                           
+Staza.fac                                                          
+
+> Life (Living)
+
+Life (natural - cosmos).fac                                        
+Life (natural).fac                                                 
+Life (Quizal).fac                                                  
+Life (Supreme, Wanzzerry).fac                                      
+Life - about life (Randoslariya) (QLXZ sound).fac                  
+Life - Any age (Orrgonnya).fac                                     
+Life - Cosmos Life.fac                                             
+Life - everything about it.fac                                     
+Life - Extra Life (Panserotaliya).fac                              
+Life - Extra life (randoslariya).fac                               
+Life - how to live it (owiniya).fac                                
+Life - how to live it.fac                                          
+Life - ignorant.fac                                                
+Life - interesting life (RZX).fac                                  
+Life - lust (exargonya).fac                                        
+Life - Nice Life (regallmya).fac                                   
+Life - Not knowing to live.fac                                     
+Life - Questions about life.fac                                    
+Life - Questions of life.fac                                       
+Life - Respecting Life (Credenzzerya).fac                          
+Life - Self thoughts.fac                                           
+Life - Supreme Life.fac                                            
+Life feeling (Elagronya of life).fac                               
+Life Help (R3CT).fac                                               
+Life help - Exallgoniya.fac                                        
+Life ledders.fac                                                   
+Life Mirror.fac                                                    
+Life of a baby.fac                                                 
+Life of a beings.fac                                               
+Life of different beings.fac                                       
+Life of music (Kontrakurwaniya).fac                                
+Life path.fac                                                      
+Life Questions.fac                                                 
+Life rules (Prowarya).fac                                          
+Life support - retarded.fac                                        
+Life supportive (Octargeniya).fac                                  
+Life supportive (R3TCXZ).fac                                       
+Life teaching (Yanzzdragara).fac                                   
+Life through music (XRZ supported).fac                             
+Life through Quizal environment.fac                                
+Life with begging (Yroshmaliya).fac                                
+Life with Und codes (Qrywellstar work).fac                         
+Life without a danger.fac                                          
+Life.fac                                                           
+Livin' la vida loca.fac                                            
+Living - regular (Asfedaziya).fac                                  
+Living model (Exargonia).fac                                       
+Living Model (Exargonya, Musical).fac                              
+Living the way we know (Larisiya).fac                              
+Living way (Exorgoniyadaliya).fac                                  
+Living.fac                                                         
+Lonely life (eragoniyada).fac                                      
+
+> Meaningful
+
+Baby fun (Yandoslarya).fac                                         
+Baby's Life.fac                                                    
+Books.fac                                                          
+Closed system (Dezogeniya).fac                                     
+Closed system (not knowing).fac                                    
+Conotating life.fac                                                
+COP.fac                                                            
+Cosmos Behavior (Carbunaliya).fac                                  
+Cosmos Jokes.fac                                                   
+Doing way (Dezorgeniya).fac                                        
+Dope.fac                                                           
+Dreams of life.fac                                                 
+Everything About (Randoslariya).fac                                
+Everything about everything (Carbonarya).fac                       
+Explanations (Rescalleriya).fac                                    
+Freeing (azzymetrya).fac                                           
+Happiness pyramid.fac                                              
+Healty life.fac                                                    
+Highness (QLXZ).fac                                                
+Horror (DRTZ).fac                                                  
+Horror (Mordor music with begging).fac                             
+Horror life (Bloody Blue).fac                                      
+Learning (Bendwalleriya).fac                                       
+Learning (bendwallerya).fac                                        
+Learning - Most Extreme.fac                                        
+Learning for life (bendwallerya life).fac                          
+Learning to live (Exorgeniya).fac                                  
+Learning.fac                                                       
+Leisure (Yozengia).fac                                             
+Life ledders.fac                                                   
+Life through music (XRZ supported).fac                             
+Life with begging (Yroshmaliya).fac                                
+Love - everything about.fac                                        
+Love about (assfedazzya).fac                                       
+Love theme.fac                                                     
+Love thing.fac                                                     
+Lovers (Xorgonnya).fac                                             
+Lovin' something (Laviniyada).fac                                  
+Loving love.fac                                                    
+Model - Full (Dellaggroniya of life).fac                           
+Mordor (LOTR).fac                                                  
+Mordor music (LOTR).fac                                            
+Muical - How to be (Rembrato).fac                                  
+Musician (XRZ).fac                                                 
+Normality back (Redynscullator).fac                                
+Normality, truth (Ygguallarmantiya).fac                            
+Peace by saint life (regallme dy kallybryana).fac                  
+Pyramid.fac                                                        
+Quizal environment.fac                                             
+Regular living (asfedazyya).fac                                    
+Rocafella dreams.fac                                               
+Sex.fac                                                            
+Sound - all musical sounds.fac                                     
+Stories (Zycarnarya).fac                                           
+Super life.fac                                                     
+Talking (XRZ).fac                                                  
+Task managing for beings (Yestermantiya).fac                       
+Teach me (Ranzellariya).fac                                        
+Thinking - exponential.fac                                         
+Truth.fac                                                          
+Understanding way (Extrapoletia).fac                               
+Underworld codes (Crywallerya).fac                                 
+Underworld Life (Quizal).fac                                       
+Underworld name.fac                                                
+Vibe - Bad vibe (Exostallya).fac                                   
+Wishes (Yargollas Yargollasya).fac                                 
+Yelle.fac                                                          
+
+> Sound
+
+Bass & beat (QLXZ).fac                                             
+Bass (Quizal).fac                                                  
+Bass (XRZ).fac                                                     
+Bass - ambience (Quizal).fac                                       
+Bass boosted music.fac                                             
+Bass boosted.fac                                                   
+Blues life 2.fac                                                   
+Blues life.fac                                                     
+Blues.fac                                                          
+Drum Bass.fac                                                      
+House Music.fac                                                    
+Life support - retarded.fac                                        
+Loudness (QPRXT).fac                                               
+Music (enjoyable).fac                                              
+Music (Extra fun).fac                                              
+Music - everything about it.fac                                    
+Music - Riverstar (Rhytm, Bass, Blues).fac                         
+Musical (NFRT).fac                                                 
+Musical life.fac                                                   
+Piano life.fac                                                     
+Piano notes.fac                                                    
+Piano stories.fac                                                  
+Sound (Degermonya).fac                                             
+Sound (Drum, bass - QLXZ).fac                                      
+Sound (NFRT).fac                                                   
+Sound (XRZ).fac                                                    
+Sound - all musical sounds.fac                                     
+Sound - Big Woofer, Sub Woofer, Woofer.fac                         
+Sound - Big Woofer, Sub Woofer.fac                                 
+Sound - Big Woofer.fac                                             
+Sound - Woofers.fac                                                
+Sound Loud.fac                                                     
+Sound NFRT.fac                                                     
+Sound QLXZ.fac                                                     
+Sound RXZ.fac                                                      
+Techno - House.fac                                                 
+Techno.fac                                                         
+
+> Work area
+
+Leisure work (Yzongeriya).fac                                      
+Way of working (Ycarbonarya).fac                                   
+Work (Agrivious).fac                                               
+Work (Fywral).fac                                                  
+Work (Quanzzyllyumar).fac                                          
+Work (Quizal).fac                                                  
+Work (Reggless).fac                                                
+Work - Agruppullant.fac                                            
+Work - Agrywyous (underworld codes).fac                            
+Work - Everything about it.fac                                     
+Work - Fywral (Qrywellstar work).fac                               
+Work - hard.fac                                                    
+Work - hardest (Oscarnotalliyana).fac                              
+Work - Hardest work (Oscarnotallyyana).fac                         
+Work - Lazy work.fac                                               
+Work - reckless (Ranzemyrryya).fac                                 
+Work - relaxed while it is hard.fac                                
+Work - Relaxing (Frygullety dy espaccyno).fac                      
+Work - Task managing.fac                                           
+Work - Underworld work.fac                                         
+Work - Work for life (Qrywellstar).fac                             
+Work - Working agrivious.fac                                       
+Work during hollidays (Yxargonnya).fac                             
+Work enjoyment (Aggrupullant).fac                                  
+Work enjoyment (Ranzewalliya).fac                                  
+Work environment (Quizal).fac                                      
+Work environment (ramfilohiya).fac                                 
+Work environment (ranzewalliya).fac                                
+Work environments.fac                                              
+Work everything (Reggless).fac                                     
+Work feeling (Onezdya).fac                                         
+Work for beings (Ranzellariya).fac                                 
+Work for life (Qrywellstar work).fac                               
+Work for life protected (Qrywellstar work).fac                     
+Work for life with underworld codes (Qrywellstar).fac              
+Work intuition (Yanzzdragarra).fac                                 
+Work life.fac                                                      
+Work Motivation  (Yanzdragara).fac                                 
+Work one thing (Radollaxant).fac                                   
+Work type (Fywral).fac                                             
+Work types - Everything about them.fac                             
+Work types with underworld codes [US].fac                          
+Work types with underworld codes.fac                               
+Work types [US].fac                                                
+Work types.fac                                                     
+Work with underworld codes (Quizal).fac                            
+Work with underworld codes (Reggless).fac                          
+Work with undeworld codes (Fywral).fac                             
+Work [US].fac                                                      
+Worker (agrippullant).fac                                          
+Worker life (Aggrupullant).fac                                     
+Worker [US].fac                                                    
+Worker.fac                                                         
+Working - task managing (Yargonnya).fac                            
+Working - task managing (Yargonnya, Ycarbonarya).fac               
+Working asking questions (Zembralliya).fac                         
+Working everything (Ycarbonarya).fac                               
+Working hard (Yanguara).fac                                        
+Working life (Yznogarda dy flybe).fac                              
+Working saint (Yezemblerya).fac                                    
+Working through life (agustyyaryyanyya dy drosyya).fac             
+Working way (Ranzemariya).fac                                      
