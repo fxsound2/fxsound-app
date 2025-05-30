@@ -1,14 +1,14 @@
 CLASS1 : Effect Type
 9: Version
-Bass (Quizal)
+Baby fun (Yandoslarya)
 0: Double Params Flag
 1: Total number of elements
-13: Main 0
-13: Main 1
+64: Main 0
+25: Main 1
 0: Main 2
-13: Main 3
-0: Main 4
-127: Main 5
+0: Main 3
+25: Main 4
+25: Main 5
 0: Element Number
    0: Param 0
    0: Param 1
@@ -31,31 +31,31 @@ Bass (Quizal)
 1: On/Off Flag
 Band 1
    62.5: CF
-   10: Boost/Cut
+   1.9685: Boost/Cut
 Band 2
    157: CF
-   6: Boost/Cut
+   12: Boost/Cut
 Band 3
-   292: CF
-   -3: Boost/Cut
+   187.48: CF
+   0: Boost/Cut
 Band 4
    540: CF
-   6: Boost/Cut
+   12: Boost/Cut
 Band 5
-   1000: CF
-   -6: Boost/Cut
+   541: CF
+   -12: Boost/Cut
 Band 6
-   1010: CF
+   1725.7: CF
    0: Boost/Cut
 Band 7
-   1862: CF
+   3178.28: CF
    0: Boost/Cut
 Band 8
-   3439: CF
+   5942.46: CF
    0: Boost/Cut
 Band 9
-   6360: CF
+   10786.4: CF
    0: Boost/Cut
 Band 10
-   11768: CF
+   15280.6: CF
    0: Boost/Cut

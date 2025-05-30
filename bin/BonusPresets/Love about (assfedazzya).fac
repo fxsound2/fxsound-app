@@ -1,14 +1,14 @@
 CLASS1 : Effect Type
 9: Version
-Bass (Quizal)
+Love about (assfedazzya)
 0: Double Params Flag
 1: Total number of elements
-13: Main 0
-13: Main 1
+38: Main 0
+25: Main 1
 0: Main 2
-13: Main 3
-0: Main 4
-127: Main 5
+38: Main 3
+25: Main 4
+0: Main 5
 0: Element Number
    0: Param 0
    0: Param 1
@@ -31,31 +31,31 @@ Bass (Quizal)
 1: On/Off Flag
 Band 1
    62.5: CF
-   10: Boost/Cut
+   0: Boost/Cut
 Band 2
-   157: CF
-   6: Boost/Cut
+   142.09: CF
+   8: Boost/Cut
 Band 3
-   292: CF
-   -3: Boost/Cut
+   265.2: CF
+   7: Boost/Cut
 Band 4
-   540: CF
-   6: Boost/Cut
+   490.6: CF
+   5: Boost/Cut
 Band 5
-   1000: CF
-   -6: Boost/Cut
+   912.79: CF
+   6: Boost/Cut
 Band 6
-   1010: CF
-   0: Boost/Cut
+   1683.6: CF
+   -4: Boost/Cut
 Band 7
-   1862: CF
-   0: Boost/Cut
+   3115.6: CF
+   4: Boost/Cut
 Band 8
-   3439: CF
-   0: Boost/Cut
+   5826.02: CF
+   -10: Boost/Cut
 Band 9
-   6360: CF
-   0: Boost/Cut
+   10570.4: CF
+   -10: Boost/Cut
 Band 10
-   11768: CF
-   0: Boost/Cut
+   15111.3: CF
+   12: Boost/Cut

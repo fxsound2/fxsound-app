@@ -1,14 +1,14 @@
 CLASS1 : Effect Type
 9: Version
-Bass (Quizal)
+Horror life (Bloody Blue)
 0: Double Params Flag
 1: Total number of elements
-13: Main 0
-13: Main 1
+38: Main 0
+25: Main 1
 0: Main 2
-13: Main 3
-0: Main 4
-127: Main 5
+64: Main 3
+127: Main 4
+64: Main 5
 0: Element Number
    0: Param 0
    0: Param 1
@@ -22,7 +22,7 @@ Bass (Quizal)
 0: Number of Application Dependent Strings
 1: Integer[0]
 1: Integer[1]
-1: Integer[2]
+0: Integer[2]
 1: Integer[3]
 1: Integer[4]
 0: Integer[5]
@@ -31,31 +31,31 @@ Bass (Quizal)
 1: On/Off Flag
 Band 1
    62.5: CF
-   10: Boost/Cut
+   5.03937: Boost/Cut
 Band 2
    157: CF
    6: Boost/Cut
 Band 3
    292: CF
-   -3: Boost/Cut
+   3: Boost/Cut
 Band 4
    540: CF
    6: Boost/Cut
 Band 5
    1000: CF
-   -6: Boost/Cut
+   3: Boost/Cut
 Band 6
-   1010: CF
-   0: Boost/Cut
+   1852: CF
+   6: Boost/Cut
 Band 7
-   1862: CF
-   0: Boost/Cut
+   3429: CF
+   -6: Boost/Cut
 Band 8
-   3439: CF
-   0: Boost/Cut
+   6350: CF
+   -3: Boost/Cut
 Band 9
-   6360: CF
+   11758: CF
    0: Boost/Cut
 Band 10
-   11768: CF
-   0: Boost/Cut
+   16000: CF
+   6: Boost/Cut

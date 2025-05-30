@@ -1,14 +1,14 @@
 CLASS1 : Effect Type
 9: Version
-Bass (Quizal)
+Underworld Life (Quizal)
 0: Double Params Flag
 1: Total number of elements
-13: Main 0
-13: Main 1
+25: Main 0
+38: Main 1
 0: Main 2
-13: Main 3
-0: Main 4
-127: Main 5
+0: Main 3
+25: Main 4
+25: Main 5
 0: Element Number
    0: Param 0
    0: Param 1
@@ -31,7 +31,7 @@ Bass (Quizal)
 1: On/Off Flag
 Band 1
    62.5: CF
-   10: Boost/Cut
+   1.9685: Boost/Cut
 Band 2
    157: CF
    6: Boost/Cut
@@ -42,8 +42,8 @@ Band 4
    540: CF
    6: Boost/Cut
 Band 5
-   1000: CF
-   -6: Boost/Cut
+   541: CF
+   6: Boost/Cut
 Band 6
    1010: CF
    0: Boost/Cut
@@ -51,11 +51,11 @@ Band 7
    1862: CF
    0: Boost/Cut
 Band 8
-   3439: CF
-   0: Boost/Cut
+   4894.5: CF
+   6: Boost/Cut
 Band 9
-   6360: CF
-   0: Boost/Cut
+   8951.04: CF
+   6: Boost/Cut
 Band 10
    11768: CF
    0: Boost/Cut
