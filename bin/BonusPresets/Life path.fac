@@ -1,0 +1,61 @@
+CLASS1 : Effect Type
+9: Version
+Life path
+0: Double Params Flag
+1: Total number of elements
+13: Main 0
+0: Main 1
+0: Main 2
+64: Main 3
+127: Main 4
+64: Main 5
+0: Element Number
+   0: Param 0
+   0: Param 1
+   0: Param 2
+   0: Param 3
+   0: Param 4
+   0: Param 5
+   0: Param 6
+7: Number of Application Dependent Integers
+0: Number of Application Dependent Reals
+0: Number of Application Dependent Strings
+1: Integer[0]
+1: Integer[1]
+1: Integer[2]
+1: Integer[3]
+1: Integer[4]
+0: Integer[5]
+2: Integer[6]
+10: Number of EQ Bands
+1: On/Off Flag
+Band 1
+   62.5: CF
+   5.03937: Boost/Cut
+Band 2
+   142.8: CF
+   6: Boost/Cut
+Band 3
+   262.52: CF
+   8: Boost/Cut
+Band 4
+   473.31: CF
+   10: Boost/Cut
+Band 5
+   669.52: CF
+   -6: Boost/Cut
+Band 6
+   1397.32: CF
+   0: Boost/Cut
+Band 7
+   2238.08: CF
+   0: Boost/Cut
+Band 8
+   4021.2: CF
+   0: Boost/Cut
+Band 9
+   7385.62: CF
+   0: Boost/Cut
+Band 10
+   12614.4: CF
+   0: Boost/Cut
