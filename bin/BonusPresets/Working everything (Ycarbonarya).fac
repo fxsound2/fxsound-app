@@ -1,9 +1,9 @@
 CLASS1 : Effect Type
 9: Version
-Work for beings (Ranzellariya)
+Working everything (Ycarbonarya)
 0: Double Params Flag
 1: Total number of elements
-64: Main 0
+0: Main 0
 64: Main 1
 0: Main 2
 0: Main 3
@@ -34,13 +34,13 @@ Band 1
    5.03937: Boost/Cut
 Band 2
    157: CF
-   6: Boost/Cut
+   7: Boost/Cut
 Band 3
    292: CF
-   6: Boost/Cut
+   7: Boost/Cut
 Band 4
    540: CF
-   6: Boost/Cut
+   7: Boost/Cut
 Band 5
    1000: CF
    0: Boost/Cut
@@ -49,7 +49,7 @@ Band 6
    -9: Boost/Cut
 Band 7
    3429: CF
-   -9: Boost/Cut
+   3: Boost/Cut
 Band 8
    6350: CF
    -9: Boost/Cut
@@ -58,4 +58,4 @@ Band 9
    0: Boost/Cut
 Band 10
    16000: CF
-   6: Boost/Cut
+   10: Boost/Cut

@@ -1,13 +1,13 @@
 CLASS1 : Effect Type
 9: Version
-Work for beings (Ranzellariya)
+Work during hollidays (Yxargonnya)
 0: Double Params Flag
 1: Total number of elements
-64: Main 0
-64: Main 1
+0: Main 0
+0: Main 1
 0: Main 2
 0: Main 3
-64: Main 4
+127: Main 4
 64: Main 5
 0: Element Number
    0: Param 0
@@ -22,7 +22,7 @@ Work for beings (Ranzellariya)
 0: Number of Application Dependent Strings
 1: Integer[0]
 1: Integer[1]
-1: Integer[2]
+0: Integer[2]
 1: Integer[3]
 1: Integer[4]
 0: Integer[5]
@@ -33,29 +33,29 @@ Band 1
    62.5: CF
    5.03937: Boost/Cut
 Band 2
-   157: CF
+   100.2: CF
    6: Boost/Cut
 Band 3
-   292: CF
+   180.78: CF
    6: Boost/Cut
 Band 4
-   540: CF
+   409.09: CF
    6: Boost/Cut
 Band 5
-   1000: CF
-   0: Boost/Cut
+   637.39: CF
+   3: Boost/Cut
 Band 6
-   1852: CF
-   -9: Boost/Cut
+   1169.98: CF
+   -1: Boost/Cut
 Band 7
-   3429: CF
-   -9: Boost/Cut
+   2144.06: CF
+   0: Boost/Cut
 Band 8
-   6350: CF
+   4894.5: CF
    -9: Boost/Cut
 Band 9
-   11758: CF
-   0: Boost/Cut
+   9112.98: CF
+   3: Boost/Cut
 Band 10
    16000: CF
    6: Boost/Cut
