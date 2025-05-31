@@ -44,5 +44,7 @@ Our special thanks to Advanced Installer for supporting us with Advanced Install
 
 [![image](https://github.com/user-attachments/assets/c133fe06-619c-4c17-bce9-f1cf051c5265)](https://www.advancedinstaller.com)
 
+This project uses the [JUCE](https://juce.com) framework, which is licensed under [AGPL v3.0](https://github.com/juce-framework/JUCE/blob/master/LICENSE.md).
+
 ## License
 [AGPL v3.0](https://github.com/fxsound2/fxsound-app/blob/main/LICENSE)
