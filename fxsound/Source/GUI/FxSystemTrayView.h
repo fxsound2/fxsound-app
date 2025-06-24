@@ -55,7 +55,8 @@ private:
 	void addIcon();
 	void showContextMenu();
 	void addOutputDeviceMenu(PopupMenu* context_menu);
-	void showNotification();	
+	void showNotification();
+	String getTruncatedText(const String& text, int max_length);
 
 	bool custom_notification_;
 	FxNotification notification_;

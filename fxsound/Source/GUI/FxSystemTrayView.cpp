@@ -306,7 +306,7 @@ void FxSystemTrayView::addOutputDeviceMenu(PopupMenu* context_menu)
     auto id = OUTPUT_MENU_ID_START;
     for (auto device : output_devices)
     {
-        PopupMenu::Item menu_item(device.deviceFriendlyName.c_str());
+        PopupMenu::Item menu_item(getTruncatedText(device.deviceFriendlyName.c_str(), 30));
         menu_item.setID(id);
         if (device.deviceNumChannel < 2)
         {
@@ -372,6 +372,18 @@ void FxSystemTrayView::showNotification()
 
             Shell_NotifyIcon(NIM_MODIFY, &nid);
         }
+    }
+}
+
+String FxSystemTrayView::getTruncatedText(const String& text, int max_length)
+{
+    if (text.length() <= max_length)
+        return text;
+    else
+    {
+        const String ellipsis = "...";
+        int trunc_length = (text.length() - max_length) + ellipsis.length();
+        return text.dropLastCharacters(trunc_length) + ellipsis;
     }
 }
 
