@@ -428,6 +428,8 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
   <ItemGroup>
     <ClCompile Include="..\Source\GUI\FxHotkeyLabel.cpp" />
     <ClCompile Include="..\Source\GUI\FxLanguage.cpp" />
+    <ClCompile Include="..\Source\GUI\FxPresetNameEditor.cpp" />
+    <ClCompile Include="..\Source\GUI\FxPresetSaveDialog.cpp" />
     <ClCompile Include="..\Source\GUI\FxVisualizer.cpp" />
     <ClCompile Include="..\Source\GUI\FxEqualizer.cpp" />
     <ClCompile Include="..\Source\GUI\FxEffects.cpp" />
@@ -2210,6 +2212,8 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
   <ItemGroup>
     <ClInclude Include="..\Source\GUI\FxHotkeyLabel.h" />
     <ClInclude Include="..\Source\GUI\FxLanguage.h" />
+    <ClInclude Include="..\Source\GUI\FxPresetNameEditor.h" />
+    <ClInclude Include="..\Source\GUI\FxPresetSaveDialog.h" />
     <ClInclude Include="..\Source\GUI\FxVisualizer.h" />
     <ClInclude Include="..\Source\GUI\FxEffects.h" />
     <ClInclude Include="..\Source\GUI\FxEqualizer.h" />

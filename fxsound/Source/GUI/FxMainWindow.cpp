@@ -22,50 +22,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxSettingsDialog.h"
 #include "FxPresetExportDialog.h"
 #include "FxPresetImportDialog.h"
+#include "FxPresetNameEditor.h"
 
-class PresetNameInputFilter : public juce::TextEditor::InputFilter
-{
-public:
-	PresetNameInputFilter()
-	{
-		// Define a list of reserved characters
-		reservedChars.add('<');
-		reservedChars.add('>');
-		reservedChars.add(':');
-		reservedChars.add('"');
-		reservedChars.add('/');
-		reservedChars.add('\\');
-		reservedChars.add('|');
-		reservedChars.add('?');
-		reservedChars.add('*');
-	}
-
-	juce::String filterNewText(juce::TextEditor& textEditor, const juce::String& newText) override
-	{
-		// Iterate through the new text and remove any reserved characters
-		juce::String filteredText;
-		for (int i = 0; i < newText.length(); ++i)
-		{
-			juce_wchar character = newText[i];
-			if (!reservedChars.contains(character))
-			{
-				filteredText += character;
-			}
-		}
-		return filteredText;
-	}
-
-private:
-	juce::Array<juce::juce_wchar> reservedChars;
-};
-
-class FxPresetNameEditor : public PopupMenu::CustomComponent, private TextEditor::Listener
+class FxPresetMenuItem : public PopupMenu::CustomComponent, private TextEditor::Listener
 {
 public:
 	enum class Status { Empty = 0, Valid, Invalid };
 	enum class Action { Save = 1, Rename };
 
-	FxPresetNameEditor(Action action) : PopupMenu::CustomComponent(false)
+	FxPresetMenuItem(Action action) : PopupMenu::CustomComponent(false)
 	{
 		auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
 
@@ -116,7 +81,7 @@ public:
 			}
 		};
 	}
-	~FxPresetNameEditor() = default;
+	~FxPresetMenuItem() = default;
 
 	Status getStatus() { return preset_status_; }
 	String getPresetName() { return preset_name_; }
@@ -207,7 +172,7 @@ private:
 	Status preset_status_;
 	String preset_name_;
 
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxPresetNameEditor)
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxPresetMenuItem)
 };
 
 //==============================================================================
@@ -485,8 +450,8 @@ void FxMainWindow::showMenu()
 	PopupMenu save_menu;
 	PopupMenu rename_menu;
 
-	save_menu.addCustomItem(1, std::make_unique<FxPresetNameEditor>(FxPresetNameEditor::Action::Save), nullptr);
-	rename_menu.addCustomItem(2, std::make_unique<FxPresetNameEditor>(FxPresetNameEditor::Action::Rename), nullptr);
+	save_menu.addCustomItem(1, std::make_unique<FxPresetMenuItem>(FxPresetMenuItem::Action::Save), nullptr);
+	rename_menu.addCustomItem(2, std::make_unique<FxPresetMenuItem>(FxPresetMenuItem::Action::Rename), nullptr);
 
 	popup_menu.addItem(TRANS("Settings"), settingsClicked);
 	popup_menu.addSeparator();

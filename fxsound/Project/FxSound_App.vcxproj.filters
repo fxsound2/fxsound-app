@@ -2220,6 +2220,12 @@
     <ClCompile Include="..\JuceLibraryCode\include_juce_opengl.cpp">
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\GUI\FxPresetNameEditor.cpp">
+      <Filter>FxSound\Source\GUI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\GUI\FxPresetSaveDialog.cpp">
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\GUI\FxHotkeyLabel.h">
@@ -4870,6 +4876,12 @@
     </ClInclude>
     <ClInclude Include="..\JuceLibraryCode\JuceHeader.h">
       <Filter>JUCE Library Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\GUI\FxPresetNameEditor.h">
+      <Filter>FxSound\Source\GUI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\GUI\FxPresetSaveDialog.h">
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

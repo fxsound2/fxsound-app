@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxSystemTrayView.h"
 #include "FxMessage.h"
 #include "FxEffects.h"
+#include "FxPresetSaveDialog.h"
 #include "../Utils/SysInfo/SysInfo.h"
 
 class FxDeviceErrorMessage : public FxWindow
@@ -530,10 +531,8 @@ bool FxController::exit()
 {
 	if (FxModel::getModel().isPresetModified())
 	{
-		if (authenticated_ && !FxConfirmationMessage::showMessage(TRANS("Changes to your preset are not saved.\r\nDo you want to exit?")))
-		{
-			return false;
-		}
+		FxPresetSaveDialog preset_save_dialog;
+		preset_save_dialog.runModalLoop();
 	}
 
     audio_processed_per_day_ += dfx_dsp_.getTotalAudioProcessedTime() / 1000;
@@ -569,11 +568,8 @@ bool FxController::setPreset(int selected_preset)
 
 	if (model.isPresetModified() && selected_preset != model.getSelectedPreset())
 	{
-		if (authenticated_ && !FxConfirmationMessage::showMessage(TRANS("Changes to your preset are not saved.\r\nDo you want to ignore the changes?")))
-		{
-			model.selectPreset(model.getSelectedPreset(), true);
-			return false;
-		}
+		FxPresetSaveDialog preset_save_dialog;
+		preset_save_dialog.runModalLoop();
 
 		model.setPresetModified(false);
 	}
