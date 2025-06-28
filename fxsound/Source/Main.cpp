@@ -134,6 +134,32 @@ private:
     static LONG WINAPI unhandledExceptionFilter(EXCEPTION_POINTERS* exception_info)
     {
         auto& controller = FxController::getInstance();
+     
+        auto logPath = File::getSpecialLocation(File::userApplicationDataDirectory).getChildFile("FxSound");
+        if (!logPath.exists()) {
+            logPath.createDirectory();
+        }
+
+        juce::File dumpFile = logPath.getChildFile("fxsound.dmp");
+        HANDLE hFile = CreateFileW(dumpFile.getFullPathName().toWideCharPointer(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL, nullptr);
+
+        if (hFile != INVALID_HANDLE_VALUE)
+        {
+            MINIDUMP_EXCEPTION_INFORMATION dumpInfo;
+            dumpInfo.ThreadId = GetCurrentThreadId();
+            dumpInfo.ExceptionPointers = exception_info;
+            dumpInfo.ClientPointers = FALSE;
+
+            MiniDumpWriteDump(GetCurrentProcess(),
+                GetCurrentProcessId(),
+                hFile,
+                MiniDumpNormal,
+                &dumpInfo,
+                nullptr,
+                nullptr);
+
+            CloseHandle(hFile);
+        }
 
         String message = String::formatted(
             "Unhandled exception\nException code: 0x%X\nException flags: 0x%X\nException address: 0x%p\n",

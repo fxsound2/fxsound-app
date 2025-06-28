@@ -426,10 +426,9 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\GUI\FxPresetNameEditor.cpp" />
     <ClCompile Include="..\Source\GUI\FxHotkeyLabel.cpp" />
     <ClCompile Include="..\Source\GUI\FxLanguage.cpp" />
-    <ClCompile Include="..\Source\GUI\FxPresetNameEditor.cpp" />
-    <ClCompile Include="..\Source\GUI\FxPresetSaveDialog.cpp" />
     <ClCompile Include="..\Source\GUI\FxVisualizer.cpp" />
     <ClCompile Include="..\Source\GUI\FxEqualizer.cpp" />
     <ClCompile Include="..\Source\GUI\FxEffects.cpp" />
@@ -441,6 +440,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\Source\GUI\FxView.cpp" />
     <ClCompile Include="..\Source\GUI\FxLiteView.cpp" />
     <ClCompile Include="..\Source\GUI\FxProView.cpp" />
+    <ClCompile Include="..\Source\GUI\FxPresetSaveDialog.cpp" />
     <ClCompile Include="..\Source\GUI\FxPresetImportDialog.cpp" />
     <ClCompile Include="..\Source\GUI\FxPresetExportDialog.cpp" />
     <ClCompile Include="..\Source\GUI\FxSettingsDialog.cpp" />
@@ -2210,10 +2210,9 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\JuceLibraryCode\include_juce_opengl.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\GUI\FxPresetNameEditor.h" />
     <ClInclude Include="..\Source\GUI\FxHotkeyLabel.h" />
     <ClInclude Include="..\Source\GUI\FxLanguage.h" />
-    <ClInclude Include="..\Source\GUI\FxPresetNameEditor.h" />
-    <ClInclude Include="..\Source\GUI\FxPresetSaveDialog.h" />
     <ClInclude Include="..\Source\GUI\FxVisualizer.h" />
     <ClInclude Include="..\Source\GUI\FxEffects.h" />
     <ClInclude Include="..\Source\GUI\FxEqualizer.h" />
@@ -2225,6 +2224,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\Source\GUI\FxLiteView.h" />
     <ClInclude Include="..\Source\GUI\FxProView.h" />
     <ClInclude Include="..\Source\GUI\FxView.h" />
+    <ClInclude Include="..\Source\GUI\FxPresetSaveDialog.h" />
     <ClInclude Include="..\Source\GUI\FxPresetImportDialog.h" />
     <ClInclude Include="..\Source\GUI\FxPresetExportDialog.h" />
     <ClInclude Include="..\Source\GUI\FxSettingsDialog.h" />
@@ -3131,32 +3131,32 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <None Include="..\Images\settings.svg" />
     <None Include="..\Images\Slider_Thumb.svg" />
     <None Include="..\Images\Slider_Thumb_bw.svg" />
-    <None Include="..\..\Strings\Strings\FxSound.ar.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.ba.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.de.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.es.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.fr.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.hr.txt" />
-    <None Include="..\..\Strings\Strings\fxsound.hu.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.id.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.ir.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.it.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.ja.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.ko.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.nl.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.pl.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.pt-br.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.pt.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.ro.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.ru.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.sv.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.th.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.tr.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.ua.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.vi.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.zh-CN.txt" />
-    <None Include="..\..\Strings\Strings\FxSound.zh-TW.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.ar.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.ba.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.de.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.es.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.fr.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.hr.txt" />
+    <None Include="..\..\Resources\Strings\fxsound.hu.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.id.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.ir.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.it.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.ja.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.ko.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.nl.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.pl.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.pt-br.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.pt.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.ro.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.ru.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.sv.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.th.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.tr.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.ua.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.vi.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.zh-CN.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.zh-TW.txt" />
     <None Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\native\java\README.txt" />
     <None Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\zip\zlib\JUCE_CHANGES.txt" />
     <None Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\changes to libjpeg for JUCE.txt" />

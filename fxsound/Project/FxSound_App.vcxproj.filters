@@ -372,6 +372,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\GUI\FxPresetNameEditor.cpp">
+      <Filter>FxSound\Source\GUI\Components</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\GUI\FxHotkeyLabel.cpp">
       <Filter>FxSound\Source\GUI\Components</Filter>
     </ClCompile>
@@ -410,6 +413,9 @@
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxProView.cpp">
       <Filter>FxSound\Source\GUI\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\GUI\FxPresetSaveDialog.cpp">
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxPresetImportDialog.cpp">
       <Filter>FxSound\Source\GUI\Dialogs</Filter>
@@ -2220,14 +2226,11 @@
     <ClCompile Include="..\JuceLibraryCode\include_juce_opengl.cpp">
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\GUI\FxPresetNameEditor.cpp">
-      <Filter>FxSound\Source\GUI\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\GUI\FxPresetSaveDialog.cpp">
-      <Filter>FxSound\Source\GUI\Dialogs</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\GUI\FxPresetNameEditor.h">
+      <Filter>FxSound\Source\GUI\Components</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\GUI\FxHotkeyLabel.h">
       <Filter>FxSound\Source\GUI\Components</Filter>
     </ClInclude>
@@ -2266,6 +2269,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxView.h">
       <Filter>FxSound\Source\GUI\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\GUI\FxPresetSaveDialog.h">
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxPresetImportDialog.h">
       <Filter>FxSound\Source\GUI\Dialogs</Filter>
@@ -4877,12 +4883,6 @@
     <ClInclude Include="..\JuceLibraryCode\JuceHeader.h">
       <Filter>JUCE Library Code</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\GUI\FxPresetNameEditor.h">
-      <Filter>FxSound\Source\GUI\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\GUI\FxPresetSaveDialog.h">
-      <Filter>FxSound\Source\GUI\Dialogs</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Fonts\Gilroy-Bold.ttf">
@@ -4987,82 +4987,82 @@
     <None Include="..\Images\Slider_Thumb_bw.svg">
       <Filter>FxSound\Images</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.ar.txt">
+    <None Include="..\..\Resources\Strings\FxSound.ar.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.ba.txt">
+    <None Include="..\..\Resources\Strings\FxSound.ba.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.de.txt">
+    <None Include="..\..\Resources\Strings\FxSound.de.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.es.txt">
+    <None Include="..\..\Resources\Strings\FxSound.es.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.fr.txt">
+    <None Include="..\..\Resources\Strings\FxSound.fr.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.hr.txt">
+    <None Include="..\..\Resources\Strings\FxSound.hr.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\fxsound.hu.txt">
+    <None Include="..\..\Resources\Strings\fxsound.hu.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.id.txt">
+    <None Include="..\..\Resources\Strings\FxSound.id.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.ir.txt">
+    <None Include="..\..\Resources\Strings\FxSound.ir.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.it.txt">
+    <None Include="..\..\Resources\Strings\FxSound.it.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.ja.txt">
+    <None Include="..\..\Resources\Strings\FxSound.ja.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.ko.txt">
+    <None Include="..\..\Resources\Strings\FxSound.ko.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.nl.txt">
+    <None Include="..\..\Resources\Strings\FxSound.nl.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.pl.txt">
+    <None Include="..\..\Resources\Strings\FxSound.pl.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.pt-br.txt">
+    <None Include="..\..\Resources\Strings\FxSound.pt-br.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.pt.txt">
+    <None Include="..\..\Resources\Strings\FxSound.pt.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.ro.txt">
+    <None Include="..\..\Resources\Strings\FxSound.ro.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.ru.txt">
+    <None Include="..\..\Resources\Strings\FxSound.ru.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.sv.txt">
+    <None Include="..\..\Resources\Strings\FxSound.sv.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.th.txt">
+    <None Include="..\..\Resources\Strings\FxSound.th.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.tr.txt">
+    <None Include="..\..\Resources\Strings\FxSound.tr.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.txt">
+    <None Include="..\..\Resources\Strings\FxSound.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.ua.txt">
+    <None Include="..\..\Resources\Strings\FxSound.ua.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.vi.txt">
+    <None Include="..\..\Resources\Strings\FxSound.vi.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.zh-CN.txt">
+    <None Include="..\..\Resources\Strings\FxSound.zh-CN.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.zh-TW.txt">
+    <None Include="..\..\Resources\Strings\FxSound.zh-TW.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\native\java\README.txt">
