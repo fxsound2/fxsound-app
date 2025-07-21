@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -44,18 +47,12 @@ namespace FxSound
 		void setDouble(StringRef key, double value, bool default = false) noexcept;
 		void setBool(StringRef key, bool value, bool default = false) noexcept;
 
-		String getSecure(String key);
-		void   setSecure(String key, String value);
-
-		static bool isAdminUser();
-
 	private:
 		ApplicationProperties app_default_properties_;
 		ApplicationProperties app_user_properties_;
 		ApplicationProperties app_secure_properties_;
 		PropertySet default_settings_;
 		PropertiesFile* user_settings_;
-		PropertiesFile* secure_settings_;
 	};
 }
 

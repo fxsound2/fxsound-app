@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -41,7 +44,6 @@ FxSound::Settings::Settings()
 	options.filenameSuffix = FxSound::SECURE_EXTN;
 	options.doNotSave = false;
 	app_secure_properties_.setStorageParameters(options);
-	secure_settings_ = app_secure_properties_.getUserSettings();
 
 	options.filenameSuffix = FxSound::SETTINGS_EXTN;
 	app_user_properties_.setStorageParameters(options);
@@ -133,75 +135,4 @@ void FxSound::Settings::setBool(StringRef key, bool value, bool default) noexcep
     {
         user_settings_->setValue(key, value);
     }
-}
-
-String FxSound::Settings::getSecure(String key)
-{
-	DATA_BLOB data_in;
-	DATA_BLOB data_out;
-
-	MemoryOutputStream stream;
-	auto encoded_value = secure_settings_->getValue(key);
-	if (Base64::convertFromBase64(stream, encoded_value))
-	{
-		data_in.pbData = (BYTE*) stream.getData();
-		data_in.cbData = stream.getDataSize();
-		if (CryptUnprotectData(&data_in, NULL, NULL, NULL, NULL, 0, &data_out))
-		{
-			String value = (char*) data_out.pbData;
-			return value;
-		}
-	}
-	
-	return { "" };
-}
-
-void FxSound::Settings::setSecure(String key, String value)
-{
-	DATA_BLOB data_in;
-	DATA_BLOB data_out;
-	DWORD flags = 0;
-
-	data_in.pbData = (BYTE*) value.toRawUTF8();
-	data_in.cbData = value.length() + 1;
-
-	if (isAdminUser())
-	{
-		flags = CRYPTPROTECT_LOCAL_MACHINE;
-	}
-	if (CryptProtectData(&data_in, NULL, NULL, NULL, NULL, flags, &data_out))
-	{
-		auto encoded_value = Base64::toBase64(data_out.pbData, data_out.cbData);
-		secure_settings_->setValue(key, encoded_value);
-	}
-
-    if (secure_settings_->needsToBeSaved())
-    {
-        secure_settings_->save();
-    }
-}
-
-bool FxSound::Settings::isAdminUser()
-{
-	BOOL ret;
-	SID_IDENTIFIER_AUTHORITY NtAuthority = SECURITY_NT_AUTHORITY;
-	PSID AdministratorsGroup;
-	ret = AllocateAndInitializeSid(&NtAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &AdministratorsGroup);
-	if (ret)
-	{
-		if (!CheckTokenMembership(NULL, AdministratorsGroup, &ret))
-		{
-			ret = FALSE;
-		}
-		FreeSid(AdministratorsGroup);
-	}
-
-	if (ret)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
 }

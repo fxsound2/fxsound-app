@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -125,9 +128,6 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 	dfx_enabled_ = true;
 	authenticated_ = true;
 	minimize_tip_ = true;
-	processing_time_over_tip_ = true;
-	subscription_validity_tip_ = true;
-    subscription_unverified_tip_ = true;
 
 	hotkeys_registered_ = false;
 	output_changed_ = false;
@@ -140,8 +140,6 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 	audio_process_on_counter_ = 0;
 	audio_process_off_counter_ = 0;
 	audio_process_on_ = false;
-
-    audio_process_start_time_ = -1LL;
 
     main_window_ = nullptr;
     audio_passthru_ = nullptr;
@@ -182,7 +180,6 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 	}
 	FxModel::getModel().setMenuClicked(settings_.getBool("menu_clicked"));
 
-    free_plan_ = settings_.getBool("free_plan");
     hide_help_tooltips_ = settings_.getBool("hide_help_tooltips");
 	hide_notifications_ = settings_.getBool("hide_notifications");
     output_device_id_ = settings_.getString("output_device_id");
@@ -216,16 +213,10 @@ void FxController::config(const String& commandline)
 {
     auto arg_list = ArgumentList(File::getSpecialLocation(File::SpecialLocationType::invokedExecutableFile).getFileName(), commandline);
 
-    auto email = arg_list.getValueForOption("--email");
     auto preset = arg_list.getValueForOption("--preset");
     auto view = arg_list.getValueForOption("--view");
     auto output_device = arg_list.getValueForOption("--output").unquoted();
     auto language = arg_list.getValueForOption("--language");
-
-    if (email.isNotEmpty())
-    {
-        settings_.setSecure("email", email);
-    }
     
     if (preset.isNotEmpty())
     {
@@ -308,36 +299,6 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		{
 			dfx_dsp_.setVolumeNormalization(volume_normalization_rms_);
 		}
-		
-		FxModel::getModel().setEmail(settings_.getSecure("email").toLowerCase());
-
-        try 
-        {
-            auto audio_processed = settings_.getSecure("audio_processed_per_day");
-            auto audio_processed_start = settings_.getSecure("audio_process_start_time");
-            if (audio_processed.isEmpty())
-            {
-                audio_processed_per_day_ = 0;
-            }
-            else
-            {
-                audio_processed_per_day_ = std::stoul(audio_processed.toStdString());
-            }
-            if (audio_processed_start.isEmpty())
-            {
-                audio_process_start_time_ = std::time(nullptr);
-                String s;
-                s << audio_process_start_time_;
-                settings_.setSecure("audio_process_start_time", s);
-            }
-            else
-            {
-                audio_process_start_time_ = (std::time_t) std::stoll(audio_processed_start.toStdString());
-            }
-        }
-        catch (...)
-        {
-        }
 
 		initPresets();
 		
@@ -534,11 +495,6 @@ bool FxController::exit()
 		FxPresetSaveDialog preset_save_dialog;
 		preset_save_dialog.runModalLoop();
 	}
-
-    audio_processed_per_day_ += dfx_dsp_.getTotalAudioProcessedTime() / 1000;
-    String s;
-    s << audio_processed_per_day_;
-    settings_.setSecure("audio_processed_per_day", s);
 	
 	JUCEApplication::getInstance()->systemRequestedQuit();
 

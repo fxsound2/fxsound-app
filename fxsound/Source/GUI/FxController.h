@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -219,15 +222,10 @@ private:
 	unsigned long audio_process_time_;
 	int audio_process_on_counter_;
 	int audio_process_off_counter_;
-	bool audio_process_on_;
-    unsigned long audio_processed_per_day_;
-    std::time_t audio_process_start_time_;
+	bool audio_process_on_;	
 
 	bool minimize_tip_;
-	bool processing_time_over_tip_;
-	bool subscription_validity_tip_;
     bool survey_tip_;
-    bool subscription_unverified_tip_;
 	int max_user_presets_;
 
 	DWORD session_id_;
