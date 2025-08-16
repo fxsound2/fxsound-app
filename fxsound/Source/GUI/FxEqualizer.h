@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+    www.theremino.com (2025)
+	
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -26,8 +29,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class FxEqualizer : public Component, Slider::Listener, Timer
 {
 public:
+    static FxEqualizer& getInstance()
+    {
+        static FxEqualizer equalizer;
+        return equalizer;
+    }
+
 	FxEqualizer();
 	~FxEqualizer() = default;
+
+    void reinit(int num_bands);
 
     void sliderValueChanged(Slider*slider) override;
     void sliderDragStarted(Slider* slider) override;
@@ -56,9 +67,9 @@ private:
         void resized() override;
         void valueChanged() override;
         bool keyPressed(const KeyPress& key) override;
+        void mouseDown(const juce::MouseEvent& event) override;
 
         Label gain_label_;
-
         int band_;
     };
 
@@ -75,16 +86,18 @@ private:
     private:
         void valueChanged() override;
         bool keyPressed(const KeyPress& key) override;
+        void mouseDown(const juce::MouseEvent& event) override;
         
         Label& freq_label_;
 
         int band_;
     };
 
-	static constexpr int WIDTH = 696;
+	static constexpr int WIDTH = 776;
 	static constexpr int HEIGHT = 242;
 	static constexpr int SLIDER_HEIGHT = 170;
 	static constexpr int LABEL_HEIGHT = 12;
+	static constexpr int SMALL_FONT = 10;
     static constexpr int ROTARY_SLIDER_HEIGHT = 36;
 	static constexpr int X_MARGIN = 16;
 	static constexpr int Y_MARGIN = 8;

@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -131,18 +134,8 @@ int dfxp_SetKnobValue_MIDI(PT_HANDLE *hp_dfxp, int i_knob_type, int i_midi_value
 		 * NOTE: Make sure not to do this if this call came as a result of a change to EQ band1 trying to move the
 		 *       the HyperBass slider to match the EQ.  Otherwise, we will end up in an endless loop.
 		 */
-		if (!b_from_eq_change)
-		{
-			/* Convert the midi setting to a real value between 0.0 and 1.0 */
-			if (qntIToRCalc(cast_handle->midi_to_real_qnt_hdl, i_midi_value, &r_eq_setting_normalized) != OKAY)
-				return(NOT_OKAY);
 
-			/* Convert normalized value to dB (maxed out at 10) */
-			r_eq_setting_db = r_eq_setting_normalized * (realtype)10.0;
 
-			if (dfxpEqSetBandBoostCut(hp_dfxp, DFXP_STORAGE_TYPE_ALL, 1, r_eq_setting_db) != OKAY)
-				return(NOT_OKAY);
-		}
 	}
 	
 	return(OKAY);

@@ -26,30 +26,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxTheme.h"
 #include "FxHotkeyLabel.h"
 #include "FxLanguage.h"
+#include "FxAudioSlider.h"
+#include "FxBalanceSlider.h"
 
 //==============================================================================
 /*
 */
-
-class FxVolumeSlider : public Slider
-{
-public:
-	FxVolumeSlider();
-	~FxVolumeSlider() = default;
-
-	void setVolumeValue(float value);
-	void showValue(bool show);
-
-private:
-	static constexpr int LABEL_HEIGHT = 12;
-
-	void resized() override;
-	void valueChanged() override;
-	void enablementChanged() override;
-	bool keyPressed(const KeyPress& key) override;
-
-	Label value_label_;
-};
 
 class FxSettingsDialog : public FxWindow
 {
@@ -117,23 +99,38 @@ private:
 	private:
 		static constexpr int ENDPOINT_Y = 50;
 		static constexpr int TOGGLE_BUTTON_HEIGHT = 30;
-		static constexpr int ENDPOINT_LABEL_WIDTH = 120;
-		static constexpr int ENDPOINT_LIST_HEIGHT = 30;
-		static constexpr int SLIDER_WIDTH = 200;
+		static constexpr int LABEL_WIDTH = 120;
+		static constexpr int COMBOBOX_HEIGHT = 30;
 		static constexpr int SLIDER_HEIGHT = 18;
+		static constexpr int LABEL_HEIGHT = 14;
+
+		std::vector<int> equalizer_bands_ = { 5, 10, 15, 20, 31 };
 
 		void setText();
 		void modelChanged(FxModel::Event model_event);
 		void updateEndpointList();
 		void updateEndpointText();
+		void selectEqualizerBands();
 
 		void mouseEnter(const MouseEvent& mouse_event) override;
 		void mouseExit(const MouseEvent& mouse_event) override;
 
+		Label endpoint_title_;		
+		Label equalizer_title_;
+		Label master_gain_title_;
+		Label normalizer_title_;
+		Label filter_q_title_;
+		Label balance_title_;
+		Label left_label_;
+		Label right_label_;
+
 		ComboBox preferred_endpoint_;
-		Label endpoint_title_;
-		ToggleButton volume_normalizer_toggle_;
-		FxVolumeSlider volume_;
+		ComboBox equalizer_;
+		
+		FxAudioSlider master_gain_slider_;
+		FxAudioSlider normalizer_slider_;
+		FxAudioSlider filter_q_slider_;
+		FxBalanceSlider balance_slider_;
 	};
 
 	class GeneralSettingsPane : public SettingsPane

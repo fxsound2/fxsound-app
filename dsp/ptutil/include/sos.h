@@ -1,7 +1,9 @@
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
-
+Contributors:
+	www.theremino.com (2025)
+	
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -41,12 +43,11 @@ int PT_DECLSPEC sosSetSection(PT_HANDLE *hp_sos, int i_section_num, int i_set_fr
 int PT_DECLSPEC sosSetSectionUnityGain(PT_HANDLE *, int, int);
 int PT_DECLSPEC sosSetAllSectionsUnityGain(PT_HANDLE *, int);
 int PT_DECLSPEC sosSetNumActiveSections(PT_HANDLE *, int);
+int PT_DECLSPEC sosSetBalance(PT_HANDLE*, realtype, realtype);
+int PT_DECLSPEC sosSetNormalization(PT_HANDLE*, realtype);
 int PT_DECLSPEC sosSetMasterGain(PT_HANDLE *, realtype);
 int PT_DECLSPEC sosSetSectionResponseFlag(PT_HANDLE *, int, int);
 int PT_DECLSPEC sosZeroStateAllSections(PT_HANDLE *);
-int PT_DECLSPEC sosSetAppHasHyperBassMode(PT_HANDLE *, bool);
-int PT_DECLSPEC sosSetDisableBand1Flag(PT_HANDLE *, bool);
-int PT_DECLSPEC sosSetVolumeNormalization(PT_HANDLE*, realtype);
 
 /* sosGet.cpp */
 int PT_DECLSPEC sosGetMasterGain(PT_HANDLE *hp_sos, realtype *);
@@ -62,8 +63,8 @@ int PT_DECLSPEC sosGetCenterFreqArray(PT_HANDLE *, realtype **);
 int PT_DECLSPEC sosGetCenterFreqIndexArray(PT_HANDLE *, int **);
 
 /* sosProcessBuffer.cpp */
+int PT_DECLSPEC sosProcessBuffer_MasterGainOnly(PT_HANDLE* hp_sos, realtype* rp_in_buf, realtype* rp_out_buf, int i_num_sample_sets, int i_num_channels);
 int PT_DECLSPEC sosProcessBuffer(PT_HANDLE *hp_sos, realtype *rp_in_buf, realtype *rp_out_buf, int i_num_sample_sets, int i_num_channels);
-int PT_DECLSPEC sosProcessBufferNoBias(PT_HANDLE *hp_sos, realtype *rp_in_buf, realtype *rp_out_buf, int i_num_sample_sets, int i_num_channels);
 int PT_DECLSPEC sosProcessSurroundBuffer(PT_HANDLE *hp_sos, realtype *rp_in_buf, realtype *rp_out_buf, int i_num_sample_sets, int i_num_channels);
 
 #endif //_SOS_H

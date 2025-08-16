@@ -1,7 +1,9 @@
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
-
+Contributors:
+	www.theremino.com (2025)
+	
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -118,48 +120,67 @@ int PT_DECLSPEC GraphicEqGetBandFrequencyRange(PT_HANDLE *hp_GraphicEq, int i_ba
     if (sosGetCenterFreqArray((PT_HANDLE *)(cast_handle->sos_hdl), &rp_freq_array) != OKAY)
         return(NOT_OKAY);
 
-    if (cast_handle->num_bands == 1)
-    {
-        cast_handle->Q = (realtype)1.0;
+    // ---------------------------------------------------- Compute fp_min_freq fp_max_freq
 
-        *fp_min_freq = rp_freq_array[i_band_num - 1];
-        *fp_max_freq = rp_freq_array[i_band_num - 1];
-    }
-    else
-    {
-        d_ratio = (double)cast_handle->max_band_freq / (double)cast_handle->min_band_freq;
+    *fp_min_freq = rp_freq_array[i_band_num - 1] * 0.7;
+    *fp_max_freq = rp_freq_array[i_band_num - 1] * 1.3;
+    
+    return(OKAY);
+}
 
-        if (i_band_num == 1)
-        {
-            *fp_min_freq = rp_freq_array[i_band_num - 1];
-        }
-        else
-        {
-            d_power = (double)((i_band_num-1)*2 - 1) / (double)(cast_handle->num_bands*2 - 2);
+int PT_DECLSPEC GraphicEqGetMasterGain(PT_HANDLE* hp_GraphicEq, float* gain_db)
+{
+	struct GraphicEqHdlType* cast_handle;
 
-            d_factor = pow(d_ratio, d_power);
+	cast_handle = (struct GraphicEqHdlType*)(hp_GraphicEq);
 
-            *fp_min_freq = round((realtype)(cast_handle->min_band_freq * d_factor));
-            if (*fp_min_freq < 1000)
-                (*fp_min_freq)++;
-            else
-                (*fp_min_freq)+=10;
-        }
-        
+	if (cast_handle == NULL)
+		return(NOT_OKAY);
 
-        if (i_band_num == cast_handle->num_bands)
-        {
-            *fp_max_freq = rp_freq_array[i_band_num - 1];
-        }
-        else
-        {
-            d_power = (double)(i_band_num*2 - 1) / (double)(cast_handle->num_bands*2 - 2);
+	*gain_db = cast_handle->master_gain;
 
-            d_factor = pow(d_ratio, d_power);
+	return(OKAY);
+}
 
-            *fp_max_freq = round((realtype)(cast_handle->min_band_freq * d_factor));
-        }
-        
-        
-    }	return(OKAY);
+int PT_DECLSPEC GraphicEqGetNormalization(PT_HANDLE* hp_GraphicEq, float* gain_db)
+{
+	struct GraphicEqHdlType* cast_handle;
+
+	cast_handle = (struct GraphicEqHdlType*)(hp_GraphicEq);
+
+	if (cast_handle == NULL)
+		return(NOT_OKAY);
+
+	*gain_db = cast_handle->normalization_gain;
+
+	return(OKAY);
+}
+
+
+int PT_DECLSPEC GraphicEqGetFilterQ(PT_HANDLE* hp_GraphicEq, float* q_multiplier)
+{
+	struct GraphicEqHdlType* cast_handle;
+
+	cast_handle = (struct GraphicEqHdlType*)(hp_GraphicEq);
+
+	if (cast_handle == NULL)
+		return(NOT_OKAY);
+
+	*q_multiplier = cast_handle->Q_multiplier;
+
+	return(OKAY);
+}
+
+int PT_DECLSPEC GraphicEqGetBalance(PT_HANDLE* hp_GraphicEq, float* balance_db)
+{
+	struct GraphicEqHdlType* cast_handle;
+
+	cast_handle = (struct GraphicEqHdlType*)(hp_GraphicEq);
+
+	if (cast_handle == NULL)
+		return(NOT_OKAY);
+
+	*balance_db = cast_handle->balance;
+
+	return(OKAY);
 }

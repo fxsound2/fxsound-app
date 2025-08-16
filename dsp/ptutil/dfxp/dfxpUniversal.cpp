@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+	
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -33,48 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "DfxSdk.h"
 #include "pstr.h"
 #include "dfxSharedUtil.h"
-
-/*
- * FUNCTION: dfxp_UniversalInitPaths()
- * DESCRIPTION:
- *
- *   Initialize the top folders and other paths
- *
- */
-int dfxp_UniversalInitPaths(PT_HANDLE *hp_dfxp)
-{	
-	struct dfxpHdlType *cast_handle;
-
-	cast_handle = (struct dfxpHdlType *)(hp_dfxp);
-
-	if (cast_handle == NULL)
-		return(OKAY);
-
-	wchar_t wcp_top_vendor_specific_folder_path[PT_MAX_PATH_STRLEN];
-	wchar_t wcp_parent_exe_path[PT_MAX_PATH_STRLEN];
-	int i_length;
-
-	/* Get the top vendor specific folder (ex. C:\\Program Files\\DFX\\Universal) */
-	if (dfxp_RegistryGetTopVendorSpecificFolderPath(hp_dfxp, wcp_top_vendor_specific_folder_path) != OKAY)
-		return(NOT_OKAY);
-
-	/* Get the path to the dfx ui exe */
-	if (dfxp_RegistryGetDfxUniversalUiFullpath(hp_dfxp, cast_handle->universal.wcp_dfx_ui_path) != OKAY)
-		return(NOT_OKAY);
-
-	/* Get the path to the parent exe (ex. C:\Program Files\Winamp\winamp.exe) */
-	i_length = GetModuleFileName(0, wcp_parent_exe_path, PT_MAX_PATH_STRLEN);
-	if (i_length > 0)
-	{
-		/* Create an uppercase version of the path so we can do a case insenstive search */
-		if (pstrToUpper_Wide(wcp_parent_exe_path,  cast_handle->universal.wcp_parent_exe_path_uppercase) != OKAY)
-			return(NOT_OKAY);
-	}
-	else
-		wsprintf(cast_handle->universal.wcp_parent_exe_path_uppercase, L"");
-
-	return(OKAY);
-}
 
 /*
  * FUNCTION: dfxpUniversalSetSignalFormat()
@@ -543,40 +504,6 @@ int dfxpUniversalCheckParentCompatibility(PT_HANDLE *hp_dfxp, int i_processing_m
 			*ip_allow_processing = IS_FALSE;
 	}
 
-	/* Also make sure the website is not Netflix */
-/*
-	int i_incompatable_website;
-	int i_no_need_to_check_for_incompatible_website;
-
-	if (i_processing_module_type == DFX_UNIVERSAL_PROCESSING_TYPE_DSOUND_DLL)
-	{
-		i_no_need_to_check_for_incompatible_website = IS_FALSE;
-
-		if (pstrCalcLocationOfStrInStr_Wide(cast_handle->universal.wcp_parent_exe_path_uppercase, L"ITUNES", 0, &i_location, &i_found) != OKAY)
-			return(NOT_OKAY);
-		if (i_found)
-			i_no_need_to_check_for_incompatible_website = IS_TRUE;
-
-		if (pstrCalcLocationOfStrInStr_Wide(cast_handle->universal.wcp_parent_exe_path_uppercase, L"SPOTIFY", 0, &i_location, &i_found) != OKAY)
-			return(NOT_OKAY);
-		if (i_found)
-			i_no_need_to_check_for_incompatible_website = IS_TRUE;
-
-		if (pstrCalcLocationOfStrInStr_Wide(cast_handle->universal.wcp_parent_exe_path_uppercase, L"VLC.EXE", 0, &i_location, &i_found) != OKAY)
-			return(NOT_OKAY);
-		if (i_found)
-			i_no_need_to_check_for_incompatible_website = IS_TRUE;
-
-		if (!i_no_need_to_check_for_incompatible_website)
-		{
-			if (dfxp_UniversalCheckIfIncompatableWebsiteForProcessing(hp_dfxp, &i_incompatable_website) != OKAY)
-				return(NOT_OKAY);
-			if (i_incompatable_website)
-				*ip_allow_processing = IS_FALSE;
-		}
-	}
-*/
-
 	if (cast_handle->trace.mode)
 	{
 		swprintf(cast_handle->wcp_msg1, L"dfxpUniversalCheckParentCompatibility: allow_processing = %d", *ip_allow_processing);
@@ -585,94 +512,3 @@ int dfxpUniversalCheckParentCompatibility(PT_HANDLE *hp_dfxp, int i_processing_m
 
 	return(OKAY);
 }
-
-/*
- * FUNCTION: dfxp_UniversalCheckIfIncompatableWebsiteForProcessing()
- * DESCRIPTION:
- *
- *   Some websites like Netflix which use Silverlight are incompatable with processing by DFX.
- *  
- */
-int dfxp_UniversalCheckIfIncompatableWebsiteForProcessing(PT_HANDLE *hp_dfxp, int *ip_incompatable_website)
-{	
-	struct dfxpHdlType *cast_handle;
-
-	cast_handle = (struct dfxpHdlType *)(hp_dfxp);
-
-	if (cast_handle == NULL)
-		return(OKAY);
-
-	*ip_incompatable_website = IS_FALSE;
-
-	cast_handle->universal.i_found_incompatable_website_for_processing = IS_FALSE;
-
-   EnumWindows((WNDENUMPROC)&dfxp_UniversalEnumWindowsProc, (LPARAM)hp_dfxp);
-
-	if (cast_handle->universal.i_found_incompatable_website_for_processing)
-		*ip_incompatable_website = IS_TRUE;
-
-	return(OKAY);
-}
-
-/*
- * FUNCTION: dfxp_UniversalEnumWindowsProc()
- * DESCRIPTION:
- *  
- * This is the callback function for enumerating all the top level windows.  It is called from
- * the function dfxp_UniversalCheckIfIncompatableWebsiteForProcessing().
- *
- * If such a window is found, it sets the global flag stating that such a window has been found.
- *
- * NOTE: THIS IS A CALLBACK FUNCTION WHICH MUST RETURN "TRUE".
- *
- */
-BOOL CALLBACK dfxp_UniversalEnumWindowsProc(HWND hwnd, LPARAM lParam)
-{
-	struct dfxpHdlType *cast_handle;
-
-	cast_handle = (struct dfxpHdlType *)(lParam);
-
-	if (cast_handle == NULL)
-		return(OKAY);
-
-	wchar_t wcp_window_title[PT_MAX_GENERIC_STRLEN];
-	wchar_t wcp_window_title_uppercase[PT_MAX_GENERIC_STRLEN];
-	int i_location;
-	int i_found;
-
-	/* Note: We do not check for matching process ids because the parent exe is not the browser (it can be plugin-container.exe) */
-//	int dw_current_process_id;
-//	int dw_window_process_id;
-
-	/* Get the current process id */
-//	dw_current_process_id = GetCurrentProcessId();
-
-	/* Get the process id of the top level window being enumerated */
-//	dw_window_process_id = GetWindowThreadProcessId(hwnd, NULL);
-
-	/* If the window is not from the same process as the current process, then ignore */
-//	if (dw_current_process_id != dw_window_process_id)
-//		return(TRUE);
-
-	/* Get the title of the window */
-	GetWindowText(hwnd, wcp_window_title, PT_MAX_GENERIC_STRLEN);
-
-	if (wcslen(wcp_window_title) <= 0)
-		return(TRUE);
-
-	/* Create an uppercase version of the title so we can do a case insenstive search */
-	if (pstrToUpper_Wide(wcp_window_title, wcp_window_title_uppercase) != OKAY)
-		return(TRUE);
-
-	/* Search for "Netflix" */
-	if (pstrCalcLocationOfStrInStr_Wide(wcp_window_title_uppercase, L"NETFLIX", 0, &i_location, &i_found) != OKAY)
-		return(TRUE);
-	if (i_found)
-		cast_handle->universal.i_found_incompatable_website_for_processing = IS_TRUE;
-
-	return(TRUE);
-}
-
-
-
-

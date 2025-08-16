@@ -1,7 +1,9 @@
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
-
+Contributors:
+	www.theremino.com (2025)
+	
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -204,69 +206,11 @@ int PT_DECLSPEC sosSetNumActiveSections(PT_HANDLE *hp_sos, int i_num_active_sect
 }    
     
 /*
- * FUNCTION: sosSetMasterGain()
+ * FUNCTION: sosSetBalance()
  * DESCRIPTION:
- *  Sets an external master gain for the combined filter structure.
+ *  Sets the Left-Right balance for the combined filter structure.
  */
-int PT_DECLSPEC sosSetMasterGain(PT_HANDLE *hp_sos, realtype r_master_gain)
-{
-	struct sosHdlType *cast_handle;
-    
-	cast_handle = (struct sosHdlType *)(hp_sos);  
-	
-	if (cast_handle == NULL)
-       return(NOT_OKAY);
-       
- 	cast_handle->master_gain = r_master_gain;
- 	
- 	return(OKAY);   
-}
-
-/*
- * FUNCTION: sosSetSectionResponseFlag()
- * DESCRIPTION:
- *   Sets the value of the flag that says if the response for this section is valid.
- */
-int PT_DECLSPEC sosSetSectionResponseFlag(PT_HANDLE *hp_sos, int i_section_num, int i_valid_flag)
-{
-	struct sosHdlType *cast_handle;
-    
-	cast_handle = (struct sosHdlType *)(hp_sos);  
-	
-    if (cast_handle == NULL)
-       return(NOT_OKAY);
-
-	/* Make sure parameters are legal */
-	if (i_section_num >= cast_handle->num_allocated_sections)
-	   return(NOT_OKAY);
-	   
-	/* Set the return value */
- 	(cast_handle->sos_response_valid)[i_section_num] = i_valid_flag; 
- 	
-	return(OKAY);
-}
-
-/*
- * FUNCTION: sosSetDisableBand1Flag()
- * DESCRIPTION:
- *  Used to disable band1 in cases such has syncing of DFX Hyperbass and Band1 control.
- *
- */
-int PT_DECLSPEC sosSetDisableBand1Flag(PT_HANDLE *hp_sos, bool b_disable_band_1)
-{
-	struct sosHdlType *cast_handle;
-
-	cast_handle = (struct sosHdlType *)(hp_sos);
- 
-	if (cast_handle == NULL)
-		return(NOT_OKAY);
-
-	cast_handle->disable_band_1 = b_disable_band_1;
-
-	return(OKAY);
-}
-
-int PT_DECLSPEC sosSetVolumeNormalization(PT_HANDLE *hp_sos, realtype r_target_rms)
+int PT_DECLSPEC sosSetBalance(PT_HANDLE* hp_sos, realtype r_balance_left, realtype r_balance_right)
 {
 	struct sosHdlType* cast_handle;
 
@@ -275,8 +219,69 @@ int PT_DECLSPEC sosSetVolumeNormalization(PT_HANDLE *hp_sos, realtype r_target_r
 	if (cast_handle == NULL)
 		return(NOT_OKAY);
 
-	cast_handle->target_rms = r_target_rms;
-	cast_handle->normalization_gain = 1.0f;
+	cast_handle->balance_left = r_balance_left;
+	cast_handle->balance_right = r_balance_right;
+
+	return(OKAY);
+}
+/*
+ * FUNCTION: sosSetNormalization()
+ * DESCRIPTION:
+ *  Sets the Normalization for the combined filter structure.
+ */
+int PT_DECLSPEC sosSetNormalization(PT_HANDLE* hp_sos, realtype r_normalization)
+{
+	struct sosHdlType* cast_handle;
+
+	cast_handle = (struct sosHdlType*)(hp_sos);
+
+	if (cast_handle == NULL)
+		return(NOT_OKAY);
+
+	cast_handle->target_rms = r_normalization;
+
+	return(OKAY);
+}
+
+/*
+ * FUNCTION: sosSetMasterGain()
+ * DESCRIPTION:
+ *  Sets an external master gain for the combined filter structure.
+ */
+int PT_DECLSPEC sosSetMasterGain(PT_HANDLE* hp_sos, realtype r_master_gain)
+{
+	struct sosHdlType* cast_handle;
+
+	cast_handle = (struct sosHdlType*)(hp_sos);
+
+	if (cast_handle == NULL)
+		return(NOT_OKAY);
+
+	cast_handle->master_gain = r_master_gain;
+
+	return(OKAY);
+}
+
+/*
+ * FUNCTION: sosSetSectionResponseFlag()
+ * DESCRIPTION:
+ *   Sets the value of the flag that says if the response for this section is valid.
+ */
+int PT_DECLSPEC sosSetSectionResponseFlag(PT_HANDLE* hp_sos, int i_section_num, int i_valid_flag)
+{
+	struct sosHdlType* cast_handle;
+
+	cast_handle = (struct sosHdlType*)(hp_sos);
+
+	if (cast_handle == NULL)
+		return(NOT_OKAY);
+
+	/* Make sure parameters are legal */
+	if (i_section_num >= cast_handle->num_allocated_sections)
+		return(NOT_OKAY);
+
+	/* Set the return value */
+	(cast_handle->sos_response_valid)[i_section_num] = i_valid_flag;
 
 	return(OKAY);
 }

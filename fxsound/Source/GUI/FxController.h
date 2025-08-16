@@ -86,13 +86,19 @@ public:
 
 	float getEffectValue(FxEffects::EffectType effect);
 	void setEffectValue(FxEffects::EffectType effect, float value);
-	bool isVolumeNormalizationEnbabled() const;
-	void setVolumeNormalizationEnabled(bool enabled);
-	float getVolumeNormalization() const;
-	void setVolumeNormalization(float target_rms);
-	float checkRMSValue(float target_rms);
-    bool isAudioProcessing();
+
 	int getNumEqBands();
+	void setNumEqBands(int num_bands);
+	float getNormalization();
+	void setNormalization(float gain_db);	
+	void setBalance(float gain_db);
+	float getBalance();
+	void setMasterGain(float gain_db);
+	float getMasterGain();
+	void setFilterQ(float q_multiplier);
+	float getFilterQ();
+
+    bool isAudioProcessing();
 	float getEqBandFrequency(int band_num);
     void setEqBandFrequency(int band_num, float freq);
     void getEqBandFrequencyRange(int band_num, float* min_freq, float* max_freq);
@@ -128,6 +134,22 @@ public:
 	{
 		file_logger_->logMessage(message);
 	}
+	String getNumBands_FromSettings();
+	void setNumBands_ToSettings(String num_bands);
+
+	String getMasterGain_FromSettings();
+	void   setMasterGain_ToSettings(String master_gain);
+
+	String getFilterQ_FromSettings();
+	void setFilterQ_ToSettings(String filter_q);
+
+	String getBalance_FromSettings();
+	void setBalance_ToSettings(String balance);
+
+	String getNormalization_FromSettings();
+	void setNormalization_ToSettings(String normalization);
+
+	FxSound::Settings& getSettings() { return settings_; }
 
 private:
 	class MessageWindow
@@ -207,7 +229,6 @@ private:
     String language_;
 	bool dfx_enabled_;
 	bool authenticated_;
-    bool free_plan_;
 	bool output_changed_;
     bool playback_device_available_;
 	String output_device_id_;
@@ -216,16 +237,15 @@ private:
 	std::vector<SoundDevice> output_devices_;
     bool hide_help_tooltips_;
 	bool hide_notifications_;
-	bool volume_normalization_enabled_;
-	float volume_normalization_rms_;
 
 	unsigned long audio_process_time_;
 	int audio_process_on_counter_;
 	int audio_process_off_counter_;
 	bool audio_process_on_;	
+	std::time_t audio_process_start_time_;
 
 	bool minimize_tip_;
-    bool survey_tip_;
+	bool survey_tip_;
 	int max_user_presets_;
 
 	DWORD session_id_;

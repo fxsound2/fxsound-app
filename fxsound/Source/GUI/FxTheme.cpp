@@ -272,7 +272,7 @@ Slider::SliderLayout FxTheme::getSliderLayout(Slider& slider)
 	}
 	else if (style == Slider::LinearHorizontal)
 	{
-		auto width = layout.sliderBounds.getWidth() - (SLIDER_THUMB_RADIUS*3);
+		auto width = layout.sliderBounds.getWidth() - (SLIDER_THUMB_RADIUS*4);
 		layout.sliderBounds.setWidth(width);
 	}
 

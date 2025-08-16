@@ -1,6 +1,8 @@
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
+Contributors:
+	www.theremino.com (2025)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -64,6 +66,40 @@ int PT_DECLSPEC GraphicEqProcess(PT_HANDLE *hp_GraphicEq,
 	}
 	else
 		return(NOT_OKAY);
+
+	return(OKAY);
+}
+/*
+ * FUNCTION: GraphicEqProcess_MasterGainOnly()
+ * DESCRIPTION:
+ *  Process the passed input signal with MASTER_GAIN only, and set the output signal to have the processed data.
+ */
+int PT_DECLSPEC GraphicEqProcess_MasterGainOnly(PT_HANDLE* hp_GraphicEq,
+												realtype* rp_signal_in,	 /* Input signal, points interleaved */
+												realtype* rp_signal_out, /* Array to store the processed signal */
+												int i_num_sample_sets,   /* Number of mono sample points or stereo sample pairs */
+												int i_num_channels,      /* 1 for mono, 2 for stereo, 6 or 8 for surround */
+												realtype r_samp_freq     /* Sampling frequency in hz. */
+											   )
+{
+	struct GraphicEqHdlType* cast_handle;
+
+	cast_handle = (struct GraphicEqHdlType*)(hp_GraphicEq);
+
+	if (cast_handle == NULL)
+		return(NOT_OKAY);
+
+	/* If the sampling frequency has changed recalc all filter coeffs */
+	if (r_samp_freq != cast_handle->sampling_freq)
+	{
+		cast_handle->sampling_freq = r_samp_freq;
+		if (GraphicEqReCalcAllBandCoeffs(hp_GraphicEq) != OKAY)
+			return(NOT_OKAY);
+	}
+
+	/* Call processing function */
+	if (sosProcessBuffer_MasterGainOnly((PT_HANDLE*)(cast_handle->sos_hdl), rp_signal_in, rp_signal_out, i_num_sample_sets, i_num_channels) != OKAY)
+		return(NOT_OKAY);   // SosProcess ERROR
 
 	return(OKAY);
 }

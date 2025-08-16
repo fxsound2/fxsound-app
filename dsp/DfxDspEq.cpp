@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+	
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -25,6 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "reg.h"
 #include "mth.h"
 #include "ptutil/dfxp/u_dfxp.h"
+
+int DFXP_GRAPHIC_EQ_NUM_BANDS = 31;
+
 /*
 * FUNCTION: eqUpdateFromRegistry()
 * DESCRIPTION:
@@ -70,18 +76,9 @@ int DfxDspPrivate::eqUpdateFromRegistry(int *ip_eq_changed)
 			if (dfxpSetButtonValue(dfxp_handle_, DFX_UI_BUTTON_BASS_BOOST, IS_FALSE) != OKAY)
 				return(NOT_OKAY);
 		}
-		else /* If eq has been turned on, then force Hyperbass on and move Hyperbass to match band 1*/
-		{
-			/* Get the band1 eq setting */
-			if (dfxpEqGetBandBoostCut_FromProcessing(dfxp_handle_, 1, &r_boost_cut_from_processing, wcp_boost_cut_from_processing) != OKAY)
-				return(NOT_OKAY);
-
-			if (eqMakeHyperBassMatchBand1(r_boost_cut_from_processing) != OKAY)
-				return(NOT_OKAY);
-		}
 	}
 
-	for (i_band_num = 2; i_band_num <= DFXP_GRAPHIC_EQ_NUM_BANDS; i_band_num++)
+	for (i_band_num = 1; i_band_num <= DFXP_GRAPHIC_EQ_NUM_BANDS; i_band_num++)
 	{
 		/* Get the currently utilized eq setting */
 		if (dfxpEqGetBandBoostCut_FromProcessing(dfxp_handle_, i_band_num, &r_boost_cut_from_processing, wcp_boost_cut_from_processing) != OKAY)
@@ -103,12 +100,6 @@ int DfxDspPrivate::eqUpdateFromRegistry(int *ip_eq_changed)
 			if (dfxpEqSetBandBoostCut(dfxp_handle_, DFXP_STORAGE_TYPE_MEMORY, i_band_num, r_boost_cut_from_registry) != OKAY)
 				return(NOT_OKAY);
 
-			/* If it is band 1 that is being changed (the lowest band) then we need move the Hyperbass to match the EQ */
-			if (i_band_num == 1)
-			{
-				if (eqMakeHyperBassMatchBand1(r_boost_cut_from_registry) != OKAY)
-					return(NOT_OKAY);
-			}
 		}
 	}
 
@@ -119,7 +110,7 @@ int DfxDspPrivate::resetEQ()
 {
 	int i_band_num;
 
-	for (i_band_num = 2; i_band_num <= DFXP_GRAPHIC_EQ_NUM_BANDS; i_band_num++)
+	for (i_band_num = 1; i_band_num <= DFXP_GRAPHIC_EQ_NUM_BANDS; i_band_num++)
 	{
 		if (dfxpEqSetBandBoostCut(dfxp_handle_, DFXP_STORAGE_TYPE_ALL, i_band_num, (realtype)0.0) != OKAY)
 			return(NOT_OKAY);
@@ -140,12 +131,13 @@ int DfxDspPrivate::getGraphicEqInfoFromVals(PT_HANDLE *hp_vals)
 	int i_eq_on;
 	float f_bass_boost_value;
 
+	int graphic_eq_num_bands = DFXP_GRAPHIC_EQ_NUM_BANDS;
+
 	if (valsGetGraphicEq(hp_vals, &hp_graphicEq, &i_eq_on) != OKAY)
 		return(NOT_OKAY);
 
 	/*
-	* If it is an old preset which does not have any eq data eq to be on but then set all the bands to be flat except band 1 which
-	* should match the Hyperbass setting.
+	* If it is an old preset which does not have any eq data eq to be on but then set all the bands to be flat 
 	*/
 	if (hp_graphicEq == NULL)
 	{
@@ -154,18 +146,9 @@ int DfxDspPrivate::getGraphicEqInfoFromVals(PT_HANDLE *hp_vals)
 		if (dfxpEqSetProcessingOn(dfxp_handle_, DFXP_STORAGE_TYPE_REGISTRY, i_eq_on) != OKAY)
 			return(NOT_OKAY);
 
-		for (i_band_num = 2; i_band_num <= DFXP_GRAPHIC_EQ_NUM_BANDS; i_band_num++)
+		for (i_band_num = 1; i_band_num <= graphic_eq_num_bands; i_band_num++)
 		{
-			if (i_band_num == 1)
-			{
-				/* Get the Hyperbass setting */
-				if (dfxpGetKnobValue(dfxp_handle_, DFX_UI_KNOB_BASS_BOOST, &f_bass_boost_value) != OKAY)
-					return(NOT_OKAY);
-
-				r_boost_cut = (realtype)f_bass_boost_value * (realtype)10.0;
-			}
-			else
-				r_boost_cut = (realtype)0.0;
+			r_boost_cut = (realtype)0.0;
 
 			if (dfxpEqSetBandBoostCut(dfxp_handle_, DFXP_STORAGE_TYPE_ALL, i_band_num, r_boost_cut) != OKAY)
 				return(NOT_OKAY);
@@ -179,88 +162,98 @@ int DfxDspPrivate::getGraphicEqInfoFromVals(PT_HANDLE *hp_vals)
         PT_HANDLE* graphic_eq_handle;
 
         dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
-
-		for (i_band_num = 2; i_band_num <= DFXP_GRAPHIC_EQ_NUM_BANDS; i_band_num++)
+		
+		
+		// ====================================================================================
+		//  CORRECTION for variable number of bands (Since version Theremino 2.0)
+		//  - Eliminated errors produced by incorrect band number
+		//  - Interpolation and extrapolation if nBands not equal to graphic_eq_num_bands
+		// ====================================================================================
+		int nBands;
+		GraphicEqGetNumBands(hp_graphicEq, &nBands);
+		// ---------------------------------------------------------- Dimension arrays more than max bands number (31)
+		realtype r_boost_cut_original[35];
+		realtype r_freq_original[35];
+		realtype r_boost_cut_interpolated[35];
+		realtype r_freq_interpolated[35];
+		// ---------------------------------------------------------- Read values into the original arrays
+		for (int i_band_num = 1; i_band_num <= nBands; i_band_num++)
 		{
-			r_boost_cut = (realtype)0.0;
-
-			if (GraphicEqGetBandBoostCut(hp_graphicEq, i_band_num, &r_boost_cut) != OKAY)
+			if (GraphicEqGetBandBoostCut(hp_graphicEq, i_band_num, &r_boost_cut_original[i_band_num]) != OKAY)
 				return(NOT_OKAY);
 
-			if (dfxpEqSetBandBoostCut(dfxp_handle_, DFXP_STORAGE_TYPE_ALL, i_band_num, r_boost_cut) != OKAY)
+			if (GraphicEqGetBandCenterFrequency(hp_graphicEq, i_band_num, &r_freq_original[i_band_num]) != OKAY)
 				return(NOT_OKAY);
+		}
 
-            if (GraphicEqGetBandCenterFrequency(hp_graphicEq, i_band_num, &r_freq) != OKAY)
-                return(NOT_OKAY);
-
-            if (GraphicEqSetBandFreq(graphic_eq_handle, i_band_num, r_freq) != OKAY)
-                return(NOT_OKAY);
-
-			/* If it is band 1 that is being changed (the lowest band) then we need move the Hyperbass to match the EQ */
-			if (i_band_num == 1)
+		// ---------------------------------------------------------- Interpolate values if the number of bands is different
+		if (nBands != graphic_eq_num_bands)
+		{
+			if (nBands < graphic_eq_num_bands)
 			{
-				if (eqMakeHyperBassMatchBand1(r_boost_cut) != OKAY)
+				// -------------------------------------------------- Increase number of bands (linear interpolation)
+				for (int i = 1; i <= graphic_eq_num_bands; i++)
+				{
+					realtype source_index = 1.0 + (realtype)(i - 1) * (nBands - 1.0) / (graphic_eq_num_bands - 1.0);
+					int lower_index = (int)source_index;
+					int upper_index = lower_index + 1;
+					realtype fraction = source_index - lower_index;
+
+					if (lower_index >= 1 && upper_index <= nBands)
+					{
+						r_boost_cut_interpolated[i] = r_boost_cut_original[lower_index] + (r_boost_cut_original[upper_index] - r_boost_cut_original[lower_index]) * fraction;
+						r_freq_interpolated[i] = r_freq_original[lower_index] + (r_freq_original[upper_index] - r_freq_original[lower_index]) * fraction;
+					}
+					else if (lower_index == nBands)
+					{
+						r_boost_cut_interpolated[i] = r_boost_cut_original[lower_index];
+						r_freq_interpolated[i] = r_freq_original[lower_index];
+					}
+				}
+			}
+			else
+			{
+				// -------------------------------------------------- Decrease number of bands (equidistant selection)
+				for (int i = 1; i <= graphic_eq_num_bands; i++)
+				{
+					int source_index = 1 + (int)((i - 1.0) * (nBands - 1.0) / (graphic_eq_num_bands - 1.0) + 0.5);
+					r_boost_cut_interpolated[i] = r_boost_cut_original[source_index];
+					r_freq_interpolated[i] = r_freq_original[source_index];
+				}
+			}
+
+			// ------------------------------------------------------ Use interpolated values
+			for (int i_band_num = 1; i_band_num <= graphic_eq_num_bands; i_band_num++)
+			{
+				if (dfxpEqSetBandBoostCut(dfxp_handle_, DFXP_STORAGE_TYPE_ALL, i_band_num, r_boost_cut_interpolated[i_band_num]) != OKAY)
 					return(NOT_OKAY);
+
+				if (graphic_eq_num_bands < 15)
+				{
+					if (GraphicEqSetBandFreq(graphic_eq_handle, i_band_num, r_freq_interpolated[i_band_num]) != OKAY)
+						return(NOT_OKAY);
+				}
+			}
+		}
+		else
+		{
+			// ------------------------------------------------------ Use original values if the number of bands is the same
+			for (int i_band_num = 1; i_band_num <= graphic_eq_num_bands; i_band_num++)
+			{
+				if (dfxpEqSetBandBoostCut(dfxp_handle_, DFXP_STORAGE_TYPE_ALL, i_band_num, r_boost_cut_original[i_band_num]) != OKAY)
+					return(NOT_OKAY);
+
+				if (graphic_eq_num_bands < 15)
+				{
+					if (GraphicEqSetBandFreq(graphic_eq_handle, i_band_num, r_freq_original[i_band_num]) != OKAY)
+						return(NOT_OKAY);
+				}
 			}
 		}
 	}
-
+	
 	return(OKAY);
-}
 
-/*
- * Modeled after dfxg_EqMakeHyperBassMatchBand1() in dfxgEQ.cpp.
- */
-int DfxDspPrivate::eqMakeHyperBassMatchBand1(realtype r_boost_cut_band1)
-{
-	realtype r_new_hyperbass_val;
-	realtype r_normalized_hyperbass_val;
-	int i_eq_on;
-	int i_hyperbass_on;
-	bool b_do_toggle;
-
-	/*
-	* Make the Hyperbass on/off match the EQ on/off
-	*/
-	if (dfxpEqGetProcessingOn(dfxp_handle_, DFXP_STORAGE_TYPE_MEMORY, &i_eq_on) != OKAY)
-		return(NOT_OKAY);
-	if (dfxpGetButtonValue(dfxp_handle_, DFX_UI_BUTTON_BASS_BOOST, &i_hyperbass_on) != OKAY)
-		return(NOT_OKAY);
-
-	if (i_eq_on != i_hyperbass_on)
-	{
-		/* Don't turn Hyperbass on if it is off and eq has been moved to 0 because that is what happens when Hyperbass is turned off */
-		b_do_toggle = true;
-		if ((r_boost_cut_band1 == (realtype)0.0) && (!i_hyperbass_on))
-			b_do_toggle = false;
-
-		if (b_do_toggle)
-		{
-			if (dfxpSetButtonValue(dfxp_handle_, DFX_UI_BUTTON_BASS_BOOST, i_eq_on) != OKAY)
-				return(NOT_OKAY);
-		}
-	}
-
-	/* If band1 is positive, more hyperbass to match (up to 10) */
-	if (r_boost_cut_band1 >= (realtype)0.0)
-	{
-		if (r_boost_cut_band1 > (realtype)10.0)
-			r_new_hyperbass_val = (realtype)10.0;
-		else
-			r_new_hyperbass_val = r_boost_cut_band1;
-	}
-	else /* If band1 is negative, move hyperbass to 0 */
-	{
-		r_new_hyperbass_val = (realtype)0.0;
-	}
-
-	/* Set the new Hyperbass value.  We need to use a normalized value between 0.0 and 1.0 for this call */
-	r_normalized_hyperbass_val = r_new_hyperbass_val / (realtype)10.0;
-
-	if (dfxpSetKnobValue(dfxp_handle_, DFX_UI_KNOB_BASS_BOOST, (float)r_normalized_hyperbass_val, true) != OKAY)
-		return(NOT_OKAY);
-
-	return(OKAY);
 }
 
 /*
@@ -373,6 +366,83 @@ int DfxDspPrivate::getNumEqBands()
 	return num_bands;
 }
 
+float DfxDspPrivate::getBalance()
+{
+	float balance_db;
+
+	PT_HANDLE* graphic_eq_handle;
+	dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
+	GraphicEqGetBalance(graphic_eq_handle, &balance_db);
+
+	return balance_db;
+}
+
+void DfxDspPrivate::setBalance(float gain_db)
+{
+	PT_HANDLE* graphic_eq_handle;
+	dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
+	GraphicEqSetBalance(graphic_eq_handle, gain_db);
+}
+
+float DfxDspPrivate::getNormalization()
+{
+	float gain_db;
+
+	PT_HANDLE* graphic_eq_handle;
+	dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
+	GraphicEqGetNormalization(graphic_eq_handle, &gain_db);
+
+	return gain_db;
+}
+
+void DfxDspPrivate::setNormalization(float gain_db)
+{
+	PT_HANDLE* graphic_eq_handle;
+	dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
+	GraphicEqSetNormalization(graphic_eq_handle, gain_db);
+}
+
+float DfxDspPrivate::getMasterGain()
+{
+	float gain_db;
+
+	PT_HANDLE* graphic_eq_handle;
+	dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
+	GraphicEqGetMasterGain(graphic_eq_handle, &gain_db);
+
+	return gain_db;
+}
+
+void DfxDspPrivate::setMasterGain(float gain_db)
+{
+	PT_HANDLE* graphic_eq_handle;
+	dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
+	GraphicEqSetMasterGain(graphic_eq_handle, gain_db);
+}
+
+float DfxDspPrivate::getFilterQ()
+{
+	float q_multiplier;
+
+	PT_HANDLE* graphic_eq_handle;
+	dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
+	GraphicEqGetFilterQ(graphic_eq_handle, &q_multiplier);
+
+	return q_multiplier;
+}
+
+void DfxDspPrivate::setFilterQ(float q_multiplier)
+{
+	PT_HANDLE* graphic_eq_handle;
+	dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
+	GraphicEqSetFilterQ(graphic_eq_handle, q_multiplier);
+}
+void DfxDspPrivate::setNumBands(int num_bands)
+{
+	PT_HANDLE* graphic_eq_handle;
+	dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
+	GraphicEqSetNumBands(graphic_eq_handle, num_bands);
+}
 float DfxDspPrivate::getEqBandFrequency(int band_num)
 {
 	float band_freq = 0.0;

@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+	
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -24,7 +27,5 @@ int PT_DECLSPEC dfxSharedUtilSetSpectrumValues(PT_HANDLE *, realtype *, int);
 int PT_DECLSPEC dfxSharedUtilGetSpectrumValues(PT_HANDLE *, realtype *, int);
 int PT_DECLSPEC dfxSharedUtilSetTotalProcessedTime(PT_HANDLE *, unsigned long);
 int PT_DECLSPEC dfxSharedUtilGetTotalProcessedTime(PT_HANDLE *, unsigned long *);
-int PT_DECLSPEC dfxSharedUtilSetFlag(PT_HANDLE *, int, int);
-int PT_DECLSPEC dfxSharedUtilGetFlag(PT_HANDLE *, int, int *);
 
 #endif // _DFX_SHARED_UTIL_H_

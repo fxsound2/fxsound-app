@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -28,63 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define DEF_GLOBAL
 #include "u_reg.h"
-
-/*
- * FUNCTION: regReadTopDir_Wide()
- * DESCRIPTION:
- *
- *  Read the top level directory of DFX or DSPFX from the registry
- *  and pass it back.  Stuffs it in the passed buffer.
- */
-int PT_DECLSPEC regReadTopDir_Wide(wchar_t *wcp_top_dir, 
-											  int i_length, int i_product_type,
-											  int i_demo_version, CSlout *hp_slout)
-{
-   HKEY hKeyDspfx;
-   DWORD dwBufferSize;
-
-	if (!i_demo_version)
-	{
-      if (i_product_type == PT_PRODUCT_DFX)
-		{
-         if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, 
-								  DFX_RETAIL_REGISTRY_TOP_WIDE,
-		                    0, KEY_READ, &hKeyDspfx) != ERROR_SUCCESS)
-            return(NOT_OKAY);
-		}
-	   else
-		{
-         if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, DSPFX_RETAIL_REGISTRY_TOP_WIDE,
-		                    0, KEY_READ, &hKeyDspfx) != ERROR_SUCCESS)
-            return(NOT_OKAY);
-		}
-	}
-   else /* Demo version */
-	{
-		if (i_product_type == PT_PRODUCT_DFX)
-		{
-         if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, DFX_DEMO_REGISTRY_TOP_WIDE,
-		                    0, KEY_READ, &hKeyDspfx) != ERROR_SUCCESS)
-            return(NOT_OKAY);
-		}
-	   else
-		{
-         if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, DSPFX_DEMO_REGISTRY_TOP_WIDE,
-		                    0, KEY_READ, &hKeyDspfx) != ERROR_SUCCESS)
-            return(NOT_OKAY);
-		}
-	}
-
-   dwBufferSize = i_length;
-
-   if (RegQueryValueExW(hKeyDspfx, L"TOP_DIR",
-	      NULL, NULL,  (LPBYTE)wcp_top_dir, &dwBufferSize) != ERROR_SUCCESS)
-      return(NOT_OKAY);
-
-   RegCloseKey(hKeyDspfx);
-
-   return(OKAY);
-}
 
 /*
  * FUNCTION: regReadRegisteredOwner()

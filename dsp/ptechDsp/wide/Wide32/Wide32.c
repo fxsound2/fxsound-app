@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -153,22 +156,23 @@ DSP_FUNC_DEF int DSPS_WIDE_INIT(float *fp_params, float *fp_memory, long l_memsi
 }
 #endif /* DSPSOFT_32_BIT */
 
+// =========================================================================================
+//   Theremino V2.0.3 - SURROUND SIMPLIFIED AND IMPROVED  
+// -----------------------------------------------------------------------------------------
+//  All the initializations are done here and the precedent initializations are unused.
+// =========================================================================================
+
 #ifdef DSPSOFT_TARGET
-DSP_FUNC_DEF void DSPS_WIDE_PROCESS(long *lp_data, int l_length,
-								   float *fp_params, float *fp_memory, float *fp_state,
-								   struct hardwareMeterValType *sp_meters, int DSP_data_type)
+DSP_FUNC_DEF void DSPS_WIDE_PROCESS(long* lp_data, int l_length,
+	float* fp_params, float* fp_memory, float* fp_state,
+	struct hardwareMeterValType* sp_meters, int DSP_data_type)
 {
-	float *COMM_MEM_OFFSET = fp_params;
-	float *MEMBANK0_START = fp_memory;
+	float* COMM_MEM_OFFSET = fp_params;
+	float* MEMBANK0_START = fp_memory;
 
 	/* Variables below must be restored from the state array and
 	 * stored back at end of buffer processing
 	 */
-	/*
-	float **fpp = (float **)&(fp_state[0]);
-	long *lpp  =  (long *)&(fp_state[0]);
-	float *ptr0 = fpp[0];
-	*/
 
 	long transfer_state = 0; /* For sending out meter values */
 	long status = 0;         /* For sending run time status to PC */
@@ -185,106 +189,61 @@ DSP_FUNC_DEF void DSPS_WIDE_PROCESS(long *lp_data, int l_length,
 	/* All the vars below are from DMA_GLOBAL_DECLARATIONS.
 	 * They are declared there as statics, but don't need to be
 	 */
-	long *read_in_buf;
-	long *read_out_buf;
-
-	int i;
+	long* read_in_buf;
+	long* read_out_buf;
 
 	/* Run one buffer full of data. Zero index and averaged meter vals.
 	 * Note- making local version of s->ptr, s->MasterStart, s->MasterEnd and s->MasterLen
 	 * didn't improve performance any.
 	 */
-
 	read_in_buf = lp_data;
 	read_out_buf = lp_data;
 
-	for(i=0; i<l_length; i++)
+	float out1, out2;
+	float in1, in2;
+	float mono_signal, l_minus_mono, r_minus_mono, side_signal;
+	float gainFactorSide, gainFactorCompensation;
+
+	load_parameter(); /* If its been sent, loads a parameter into memory */
+
+	struct dspWideStructType* s = (struct dspWideStructType*)(COMM_MEM_OFFSET);
+
+	// =======================================================================
+	//  SURROUND CONTROL PARAMETERS
+	// =======================================================================
+	gainFactorSide = 1 + 3.0 * s->intensity;  // (3 to 5) This is the surround intensity
+	gainFactorCompensation = 1 - 0.3 * s->intensity;  // (0.3)    This decreases also the mono signal so live it to 0.3
+
+	for (int i = 0; i < l_length; i++)
 	{
-		float out1, out2;
-		float in1, in2;
-		volatile long in_count = 0;
-		volatile long out_count = 0;
-		float dly_l_out, dly_r_out, dly_mono;
+		dutilGetInputsAndMeter(in1, in2, status);
 
-		struct dspWideStructType *s = (struct dspWideStructType *)(COMM_MEM_OFFSET);
-		float filtH1, filtH2;
-		float mono_sig, l_minus_mono, r_minus_mono;
-		
-	  	load_parameter(); /* If its been sent, loads a parameter into memory */
+		// =======================================================================
+		// SURROUND SIMPLIFIED AND IMPROVED 
+		// -----------------------------------------------------------------------
+		//  - Works more smoothly
+		//  - No delay artifacts
+		//  - Wide stereo enlarging
+		//  - Overall volume unchanged
+		//  - Faster execution (less CPU charge)
+		// =======================================================================	
+		mono_signal = (in1 + in2) * 0.5f;
+		l_minus_mono = in1 - mono_signal;
+		r_minus_mono = in2 - mono_signal;
 
-		/* Next line includes kerdmaru.h run loop macro (no args) */
-		#include "kerdmaru.h"
+		mono_signal *= gainFactorCompensation;
+		out1 = mono_signal + gainFactorSide * l_minus_mono;
+		out2 = mono_signal + gainFactorSide * r_minus_mono;
 
-	  	out1 = out2 = (realtype)0.0;
-		 
-		dutilGetInputsAndMeter( in1, in2, status);
-
-		mono_sig = (in1 + in2) * (realtype)0.5;
-		l_minus_mono = in1 - mono_sig;
-		r_minus_mono = in2 - mono_sig;
-
-		/* Implement Highpass linear transformed 2nd order Butterworth filter */
-		/* Note using Nil's method for allowing optimizer to work well, all
-		 * parameters and internal states are in a structure that is accessed
-		 * via a pointer.
-		 */
-		{
-			filtH1 = s->out1_minus1 * s->a1 + s->out1_minus2 * s->a0;
-			s->out1_minus2 = s->out1_minus1;
-			/* Add bias to avoid zero input cpu load increases */
-			filtH1 += (l_minus_mono + (realtype)1.0e-30 - (realtype)2.0 * s->in1_minus1 + s->in1_minus2) * s->gain;
-			s->out1_minus1 = filtH1;
-			s->in1_minus2 = s->in1_minus1;
-			s->in1_minus1 = l_minus_mono;
-
-			filtH2 = s->out2_minus1 * s->a1 + s->out2_minus2 * s->a0;
-			s->out2_minus2 = s->out2_minus1;
-			/* Add bias to avoid zero input cpu load increases */
-			filtH2 += (r_minus_mono  + (realtype)1.0e-30 - (realtype)2.0 * s->in2_minus1 + s->in2_minus2) * s->gain;
-			s->out2_minus1 = filtH2;
-			s->in2_minus2 = s->in2_minus1;
-			s->in2_minus1 = r_minus_mono;
-		}
-
-		dly_l_out = *(s->ptr_l);
-		*(s->ptr_l) = filtH1;
-		(s->ptr_l)++;
-		if( s->ptr_l >= (s->dly_start_l + s->dispersion_l) )
-			s->ptr_l = s->dly_start_l;
-
-		dly_r_out = *(s->ptr_r);
-		*(s->ptr_r) = filtH2;
-		(s->ptr_r)++;
-		if( s->ptr_r >= (s->dly_start_r + s->dispersion_r) )
-			s->ptr_r = s->dly_start_r;
-
-		/* Skip this section if there is no delay to the mono signal */
-		if( s->center_depth > 1 )
-		{
-			dly_mono = *(s->ptr_mono);
-			*(s->ptr_mono) = mono_sig;
-			(s->ptr_mono)++;
-			if( s->ptr_mono >= (s->dly_start_mono + s->center_depth) )
-				s->ptr_mono = s->dly_start_mono;
-		}
-		else
-			dly_mono = mono_sig;
-
-		dly_mono *= s->center_gain;
-
-		out1 = l_minus_mono + dly_mono - (realtype)5.0 * s->intensity * (s->width * dly_r_out + s->reverse_width * dly_l_out);
-		out1 *= s->master_gain;
-		out2 = r_minus_mono + dly_mono - (realtype)5.0 * s->intensity * (s->width * dly_l_out + s->reverse_width * dly_r_out);
-		out2 *= s->master_gain;
-
-		if( !(s->stereo_in_flag) )
+		// ---------------------------------------------------------------------------------
+		if (!(s->stereo_in_flag))
 		{
 			in2 = (realtype)0.0;
 			out1 *= (realtype)0.5;
 			out2 *= (realtype)0.5;
 		}
 
-		if( s->bypass_flag )
+		if (s->bypass_flag)
 		{
 			out1 = in1;
 			out2 = in2;
@@ -301,21 +260,6 @@ DSP_FUNC_DEF void DSPS_WIDE_PROCESS(long *lp_data, int l_length,
 	 * Will be converted to long and factored in calling function.
 	 */
 	write_meter_average();
+}
 
-	/*
-	{
-		sp_meters->aux_vals[0] = (realtype)WIDE_PLOT_PT_UNDETECTABLE;
-		sp_meters->aux_vals[1] = (realtype)WIDE_PLOT_PT_UNDETECTABLE;
-	}
-	*/
-
-	/* Place variables into state array */
-	{
-		/*
-		float **fpp = (float **)&(fp_state[0]);
-		long *lpp  =  (long *)&(fp_state[0]);
-		fpp[0] = ptr0;
-		*/
-	}
-} 
 #endif

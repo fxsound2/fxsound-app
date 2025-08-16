@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+    www.theremino.com (2025)
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -98,58 +101,18 @@ void FxVisualizer::paint(Graphics& g)
     }
     g.setGradientFill(gradient);
 
-    float x = 55;
-    for (auto i = 0; i < FxController::NUM_SPECTRUM_BANDS*NUM_BARS; i++)
+    // ------------------------------------------------------ SPECTRUM AREA - LEFT AND SIZE 
+    float x = 27;
+    float dx = 9.1;
+
+    for (auto i = 0; i < FxController::NUM_SPECTRUM_BANDS * NUM_BARS; i++)
     {
         float band_value = band_graph_[i];
         float height = band_value * 100.0f;
 
-        juce::Rectangle<float> rect{ x, bounds.getHeight() / 2 - height / 2, 4, height };        
+        juce::Rectangle<float> rect{ x, bounds.getHeight() / 2 - height / 2, 4, height };
         g.fillRect(rect);
 
-        x += 7;
+        x += dx;
     }
 }
-
-#if 0
-void FxVisualizer::paint(Graphics& g)
-{
-    auto bounds = getLocalBounds();
-    g.setFillType(FillType(Colour(0x0).withAlpha(0.2f)));
-    g.fillRoundedRectangle(bounds.toFloat(), 8);
-
-    g.setFillType(FillType(Colour(0xe33250).withAlpha(1.0f)));
-
-    float x = 80;
-    for (auto index = 0; index < FxController::NUM_SPECTRUM_BANDS; index++)
-    {
-        float band_value = band_values_[index];
-        float height = 0;
-
-        x += 4;
-
-        if (band_value > 0 || band_value <= 1)
-        {
-            for (auto i = 1; i <= 5; i++)
-            {
-                height = std::sin((band_value / 5 * i) * (3.14159265 / 2)) * 100;
-                juce::Rectangle<float> rect{ x, bounds.getHeight() / 2 - height / 2, 4, height };
-                g.fillRect(rect);
-                x += 8;
-            }
-
-            for (auto i = 4; i >= 1; i--)
-            {
-                height = std::sin((band_value / 5 * i) * (3.14159265 / 2)) * 100;
-                juce::Rectangle<float> rect{ x, bounds.getHeight() / 2 - height / 2, 4, height };
-                g.fillRect(rect);
-                x += 8;
-            }
-        }
-        else
-        {
-            x += 8 * 9;
-        }
-    }
-}
-#endif

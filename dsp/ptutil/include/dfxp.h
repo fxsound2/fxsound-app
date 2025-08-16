@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+	
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -34,8 +37,6 @@ int dfxpEqSetBandBoostCut(PT_HANDLE *, int, int, realtype);
 int dfxpEqGetBandBoostCut_FromProcessing(PT_HANDLE *, int, realtype *, wchar_t *);
 int dfxpEqGetBandBoostCut_FromRegistry(PT_HANDLE *, int, realtype *, wchar_t *);
 int dfxpEqGetGraphicEqHdl(PT_HANDLE *, PT_HANDLE **);
-int dfxpEqInitBand1SpecialCase(PT_HANDLE *);
-int dfxpEqSetVolumeNormalization(PT_HANDLE *, realtype);
 
 /* dfxpGet */
 int dfxpGetKnobValue(PT_HANDLE *, int, float *);

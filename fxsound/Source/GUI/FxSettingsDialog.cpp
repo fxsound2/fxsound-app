@@ -21,87 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Utils/SysInfo/SysInfo.h"
 
 //==============================================================================
-FxVolumeSlider::FxVolumeSlider()
-{
-	setMouseCursor(MouseCursor::PointingHandCursor);
-
-	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
-
-	value_label_.setFont(theme.getNormalFont().withHeight(12.0f));
-	value_label_.setJustificationType(Justification::centredLeft);
-	addChildComponent(value_label_);
-
-	setWantsKeyboardFocus(true);
-}
-
-void FxVolumeSlider::setVolumeValue(float value)
-{
-	int display_value = int(value / 0.125f);
-	auto text = String::formatted("%d", display_value);
-	value_label_.setText(text, NotificationType::dontSendNotification);
-
-	auto pos = getPositionOfValue(value);
-	auto x = pos + FxTheme::SLIDER_THUMB_RADIUS + 1;
-	value_label_.setBounds(value_label_.getBounds().withX(x));
-}
-
-void FxVolumeSlider::showValue(bool show)
-{
-	value_label_.setVisible(show && isEnabled());
-}
-
-void FxVolumeSlider::resized()
-{
-	Slider::resized();
-
-	value_label_.setBounds(value_label_.getX(), (getHeight() - LABEL_HEIGHT) / 2, FxTheme::SLIDER_THUMB_RADIUS * 3, LABEL_HEIGHT);
-}
-
-void FxVolumeSlider::valueChanged()
-{
-	auto value = getValue();
-
-	auto& controller = FxController::getInstance();
-
-	if (value != controller.getVolumeNormalization())
-	{
-		setVolumeValue(value);
-
-		controller.setVolumeNormalization((float)value);
-	}
-}
-
-void FxVolumeSlider::enablementChanged()
-{
-	if (isEnabled())
-	{
-		setMouseCursor(MouseCursor::PointingHandCursor);
-	}
-	else
-	{
-		setMouseCursor(MouseCursor::NormalCursor);
-	}
-}
-
-bool FxVolumeSlider::keyPressed(const KeyPress& key)
-{
-	if (isEnabled())
-	{
-		if (key.isKeyCode(KeyPress::upKey))
-		{
-			setValue(getValue() + getInterval());
-			return true;
-		}
-		else if (key.isKeyCode(KeyPress::downKey))
-		{
-			setValue(getValue() - getInterval());
-			return true;
-		}
-	}
-
-	return false;
-}
-
 FxSettingsDialog::FxSettingsDialog() : FxWindow("Settings"), tooltip_window_(this)
 {
 	setContent(&settings_content_);
@@ -279,8 +198,7 @@ void FxSettingsDialog::SettingsPane::paint(Graphics&)
 }
 
 FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
-	SettingsPane("Audio"),
-	volume_normalizer_toggle_(TRANS("Normalize Volume"))
+	SettingsPane("Audio"), master_gain_slider_("%0.0f dB", 0.0f), normalizer_slider_("%0.0f dB", 0.0f), filter_q_slider_("%.1fx", 1.0f), balance_slider_(0.0f)
 {
 	FxModel::getModel().addListener(this);
 
@@ -288,6 +206,24 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 
 	endpoint_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	endpoint_title_.setJustificationType(Justification::centredLeft);
+
+	equalizer_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	equalizer_title_.setJustificationType(Justification::centredLeft);
+
+	master_gain_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	master_gain_title_.setJustificationType(Justification::centredLeft);
+
+	normalizer_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	normalizer_title_.setJustificationType(Justification::centredLeft);
+
+	filter_q_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	filter_q_title_.setJustificationType(Justification::centredLeft);
+
+	balance_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	balance_title_.setJustificationType(Justification::centredLeft);
+
+	left_label_.setJustificationType(Justification::centredLeft);
+	right_label_.setJustificationType(Justification::centredRight);
 
 	preferred_endpoint_.setMouseCursor(MouseCursor::PointingHandCursor);
 	preferred_endpoint_.setWantsKeyboardFocus(true);
@@ -315,47 +251,97 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 			}
 		};
 
-	volume_normalizer_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
-	volume_normalizer_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-	volume_normalizer_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-	volume_normalizer_toggle_.setWantsKeyboardFocus(true);
-
 	auto& controller = FxController::getInstance();
-	
-	bool enabled = controller.isVolumeNormalizationEnbabled();
-	volume_normalizer_toggle_.setToggleState(enabled, NotificationType::dontSendNotification);
-	volume_normalizer_toggle_.onClick = [this]() {
-		if (volume_normalizer_toggle_.getToggleState()) {
-			FxController::getInstance().setVolumeNormalizationEnabled(true);
-			volume_.setEnabled(true);
+
+	equalizer_.setMouseCursor(MouseCursor::PointingHandCursor);
+	equalizer_.setWantsKeyboardFocus(true);
+	equalizer_.setEnabled(true);
+	equalizer_.onChange = [this]() {
+		auto id = equalizer_.getSelectedId();
+		
+		auto num_eq_bands = 10;		
+		for (auto bands : equalizer_bands_)
+		{
+			if (bands == id)
+			{
+				num_eq_bands = bands;
+				break;
+			}
 		}
-		else {
-			FxController::getInstance().setVolumeNormalizationEnabled(false);
-			volume_.setEnabled(false);
-		}
+
+		FxController::getInstance().setNumEqBands(num_eq_bands);
 	};
 
-	auto volume_normalization_rms = controller.getVolumeNormalization();
-	volume_.setSliderStyle(Slider::LinearHorizontal);
-	volume_.setRange(0.125, 0.5, 0.125);
-	volume_.setValue(volume_normalization_rms);
-	volume_.setVolumeValue(volume_normalization_rms);
-	volume_.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
-	volume_.setEnabled(enabled);
-	addAndMakeVisible(&volume_);
+	setText();
+	updateEndpointList();
+
+	equalizer_.clear(NotificationType::dontSendNotification);
+	for (auto bands : equalizer_bands_)
+	{
+		equalizer_.addItem(String::formatted("%d Bands", bands), bands);
+	}
+	selectEqualizerBands();
+
+	master_gain_slider_.setSliderStyle(Slider::LinearHorizontal);
+	master_gain_slider_.setRange(-20, 20, 2);
+	master_gain_slider_.setValue(controller.getMasterGain());
+	master_gain_slider_.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	master_gain_slider_.onValueChange= [this]() {
+		auto value = master_gain_slider_.getValue();
+		auto& controller = FxController::getInstance();
+
+		if (controller.getMasterGain() != value)
+			controller.setMasterGain((float)value);
+
+		};
+
+	normalizer_slider_.setSliderStyle(Slider::LinearHorizontal);
+	normalizer_slider_.setRange(-20, 0, 2);
+	normalizer_slider_.setValue(controller.getNormalization());
+	normalizer_slider_.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	normalizer_slider_.onValueChange = [this]() {
+		auto value = normalizer_slider_.getValue();
+		auto& controller = FxController::getInstance();
+
+		if (controller.getNormalization() != value)
+			controller.setNormalization((float)value);
+		};
 	
+	filter_q_slider_.setSliderStyle(Slider::LinearHorizontal);
+	filter_q_slider_.setRange(1, 3, 0.5);
+	filter_q_slider_.setValue(controller.getFilterQ());
+	filter_q_slider_.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	filter_q_slider_.onValueChange = [this]() {
+		auto value = filter_q_slider_.getValue();
+		auto& controller = FxController::getInstance();
+
+		if (controller.getFilterQ() != value)
+			controller.setFilterQ((float)value);
+		};
+
 	addAndMakeVisible(&endpoint_title_);
 	addAndMakeVisible(&preferred_endpoint_);
-	addAndMakeVisible(&volume_normalizer_toggle_);
-
-	setText();
-
-	updateEndpointList();
+	addAndMakeVisible(&equalizer_title_);
+	addAndMakeVisible(&equalizer_);
+	addAndMakeVisible(&master_gain_title_);
+	addAndMakeVisible(&master_gain_slider_);
+	addAndMakeVisible(&normalizer_title_);
+	addAndMakeVisible(&normalizer_slider_);
+	addAndMakeVisible(&filter_q_title_);
+	addAndMakeVisible(&filter_q_slider_);
+	addAndMakeVisible(&balance_title_);
+	addAndMakeVisible(&balance_slider_);
+	addAndMakeVisible(&left_label_);
+	addAndMakeVisible(&right_label_);
 }
 
 FxSettingsDialog::AudioSettingsPane::~AudioSettingsPane()
 {
 	preferred_endpoint_.onChange = nullptr;
+	equalizer_.onChange = nullptr;
+	master_gain_slider_.onValueChange = nullptr;
+	normalizer_slider_.onValueChange = nullptr;
+	filter_q_slider_.onValueChange = nullptr;
 
 	FxModel::getModel().removeListener(this);
 }
@@ -365,16 +351,39 @@ void FxSettingsDialog::AudioSettingsPane::resized()
 	auto bounds = getLocalBounds().withLeft(X_MARGIN).withTop(Y_MARGIN).withHeight(TITLE_HEIGHT);
 	title_.setBounds(bounds);
 
-	endpoint_title_.setBounds(X_MARGIN, ENDPOINT_Y, ENDPOINT_LABEL_WIDTH, ENDPOINT_LIST_HEIGHT);
-	auto width = getWidth() - ((X_MARGIN + 5) * 2) - ENDPOINT_LABEL_WIDTH;
-	preferred_endpoint_.setBounds(ENDPOINT_LABEL_WIDTH + X_MARGIN + 15, ENDPOINT_Y, width, ENDPOINT_LIST_HEIGHT);
+	endpoint_title_.setBounds(X_MARGIN, ENDPOINT_Y, LABEL_WIDTH, COMBOBOX_HEIGHT);
+	auto width = getWidth() - ((X_MARGIN + 5) * 2) - LABEL_WIDTH;
+	preferred_endpoint_.setBounds(LABEL_WIDTH + X_MARGIN + 15, ENDPOINT_Y, width, COMBOBOX_HEIGHT);
 
 	int y = preferred_endpoint_.getBottom() + 20;
 
-	volume_normalizer_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
-	y = volume_normalizer_toggle_.getBottom() + 10;
+	equalizer_title_.setBounds(X_MARGIN, y, LABEL_WIDTH, COMBOBOX_HEIGHT);
+	equalizer_.setBounds(LABEL_WIDTH + X_MARGIN + 15, y, width, COMBOBOX_HEIGHT);
 
-	volume_.setBounds(X_MARGIN, y, SLIDER_WIDTH, SLIDER_HEIGHT);
+	y = equalizer_.getBottom() + 20;
+
+	master_gain_title_.setBounds(X_MARGIN, y, LABEL_WIDTH, SLIDER_HEIGHT);
+	master_gain_slider_.setBounds(LABEL_WIDTH + X_MARGIN + 15, y, width, SLIDER_HEIGHT);
+
+	y = master_gain_slider_.getBottom() + 20;
+
+	normalizer_title_.setBounds(X_MARGIN, y, LABEL_WIDTH, SLIDER_HEIGHT);
+	normalizer_slider_.setBounds(LABEL_WIDTH + X_MARGIN + 15, y, width, SLIDER_HEIGHT);
+
+	y = normalizer_slider_.getBottom() + 20;
+
+	filter_q_title_.setBounds(X_MARGIN, y, LABEL_WIDTH, SLIDER_HEIGHT);
+	filter_q_slider_.setBounds(LABEL_WIDTH + X_MARGIN + 15, y, width, SLIDER_HEIGHT);
+
+	y = filter_q_slider_.getBottom() + 20;
+
+	balance_title_.setBounds(X_MARGIN, y, LABEL_WIDTH, SLIDER_HEIGHT);
+	balance_slider_.setBounds(LABEL_WIDTH + X_MARGIN + 15, y, width, SLIDER_HEIGHT);
+
+	y = balance_slider_.getBottom();
+
+	left_label_.setBounds(LABEL_WIDTH + X_MARGIN + 15, y, width/2 - 10, LABEL_HEIGHT);
+	right_label_.setBounds(left_label_.getRight() + 10, y, width/2 - (FxTheme::SLIDER_THUMB_RADIUS * 4), LABEL_HEIGHT);
 }
 
 void FxSettingsDialog::AudioSettingsPane::paint(Graphics& g)
@@ -392,11 +401,47 @@ void FxSettingsDialog::AudioSettingsPane::setText()
 {
 	auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
 
-	endpoint_title_.setText(TRANS("Preferred output:"), NotificationType::dontSendNotification);
 	endpoint_title_.setFont(theme.getNormalFont());
+	endpoint_title_.setText(TRANS("Preferred output:"), NotificationType::dontSendNotification);	
 	preferred_endpoint_.setTextWhenNothingSelected(TRANS("Select preferred output"));
 
-	volume_normalizer_toggle_.setButtonText(TRANS("Normalize Volume"));
+	equalizer_title_.setFont(theme.getNormalFont());
+	equalizer_title_.setText(TRANS("Equalizer:"), NotificationType::dontSendNotification);
+
+	master_gain_title_.setFont(theme.getNormalFont());
+	master_gain_title_.setText(TRANS("Master Gain:"), NotificationType::dontSendNotification);
+	normalizer_title_.setFont(theme.getNormalFont());
+	normalizer_title_.setText(TRANS("Normalizer:"), NotificationType::dontSendNotification);
+	filter_q_title_.setFont(theme.getNormalFont());
+	filter_q_title_.setText(TRANS("Filter Q:"), NotificationType::dontSendNotification);	
+	balance_title_.setFont(theme.getNormalFont());
+	balance_title_.setText(TRANS("Balance:"), NotificationType::dontSendNotification);
+
+	left_label_.setFont(theme.getNormalFont().withHeight(12.0f));
+	left_label_.setText(TRANS("Left"), NotificationType::dontSendNotification);
+
+	right_label_.setFont(theme.getNormalFont().withHeight(12.0f));
+	right_label_.setText(TRANS("Right"), NotificationType::dontSendNotification);
+}
+
+void FxSettingsDialog::AudioSettingsPane::selectEqualizerBands()
+{
+	auto& controller = FxController::getInstance();
+	auto num_eq_bands = controller.getNumEqBands();
+
+	switch (num_eq_bands)
+	{
+	case 5:
+	case 10:
+	case 15:
+	case 20:
+	case 31:
+		equalizer_.setSelectedId(num_eq_bands, NotificationType::dontSendNotification);
+		break;
+
+	default:
+		equalizer_.setSelectedId(10, NotificationType::dontSendNotification);
+	}
 }
 
 void FxSettingsDialog::AudioSettingsPane::modelChanged(FxModel::Event model_event)
@@ -460,15 +505,11 @@ void FxSettingsDialog::AudioSettingsPane::updateEndpointText()
 void FxSettingsDialog::AudioSettingsPane::mouseEnter(const MouseEvent& mouse_event)
 {
 	Component::mouseEnter(mouse_event);
-
-	volume_.showValue(volume_.isMouseOver(false));
 }
 
 void FxSettingsDialog::AudioSettingsPane::mouseExit(const MouseEvent& mouse_event)
 {
 	Component::mouseEnter(mouse_event);
-
-	volume_.showValue(volume_.isMouseOver(false));
 }
 
 FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :

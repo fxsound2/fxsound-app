@@ -1,6 +1,8 @@
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
+Contributors:
+	www.theremino.com (2025)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -45,6 +47,15 @@ public:
 	int exportPreset(std::wstring preset_source_file_full_path, std::wstring preset_name, std::wstring preset_export_path);
 	void eqOn(bool on);
 	int getNumEqBands();
+	float getBalance();
+	void setBalance(float gain_db);
+	float getNormalization();
+	void setNormalization(float gain_db);
+	float getMasterGain();
+	void setMasterGain(float gain_db);
+	float getFilterQ();
+	void setFilterQ(float q_multiplier);
+	void setNumBands(int num_bands);
     float getEqBandFrequency(int band_num);
     void setEqBandFrequency(int band_num, float freq);
     void getEqBandFrequencyRange(int band_num, float* min_freq, float* max_freq);
@@ -58,7 +69,6 @@ public:
 	unsigned long getTotalAudioProcessedTime();
 	void resetTotalAudioProcessedTime();
     void getSpectrumBandValues(float* rp_band_values, int i_array_size);
-	void setVolumeNormalization(float target_rms);
 
 private:
 	DfxDspPrivate *data_;

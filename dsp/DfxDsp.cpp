@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+	
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -112,6 +115,51 @@ int DfxDsp::processAudio(short int *si_input_samples, short int *si_output_sampl
 	}
 }
 
+float DfxDsp::getBalance()
+{
+	return data_->getBalance();
+}
+
+void DfxDsp::setBalance(float gain_db)
+{
+	data_->setBalance(gain_db);
+}
+
+float DfxDsp::getNormalization()
+{
+	return data_->getNormalization();
+}
+
+void DfxDsp::setNormalization(float gain_db)
+{
+	data_->setNormalization(gain_db);
+}
+
+float DfxDsp::getMasterGain()
+{
+	return data_->getMasterGain();
+}
+
+void DfxDsp::setMasterGain(float gain_db)
+{
+	data_->setMasterGain(gain_db);
+}
+
+float DfxDsp::getFilterQ()
+{
+	return data_->getFilterQ();
+}
+
+void DfxDsp::setFilterQ(float q_multiplier)
+{
+	data_->setFilterQ(q_multiplier);
+}
+
+void DfxDsp::setNumBands(int num_bands)
+{
+	data_->setNumBands(num_bands);
+}
+
 float DfxDsp::getEqBandFrequency(int band_num)
 {
 	return data_->getEqBandFrequency(band_num);
@@ -142,7 +190,3 @@ void DfxDsp::getSpectrumBandValues(float* rp_band_values, int i_array_size)
     data_->getSpectrumBandValues(rp_band_values, i_array_size);
 }
 
-void DfxDsp::setVolumeNormalization(float target_rms)
-{
-	data_->setVolumeNormalization(target_rms);
-}

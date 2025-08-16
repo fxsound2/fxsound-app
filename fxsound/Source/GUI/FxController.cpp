@@ -141,6 +141,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 	audio_process_off_counter_ = 0;
 	audio_process_on_ = false;
 
+	audio_process_start_time_ = -1LL;
     main_window_ = nullptr;
     audio_passthru_ = nullptr;
 
@@ -185,14 +186,11 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
     output_device_id_ = settings_.getString("output_device_id");
     output_device_name_ = settings_.getString("output_device_name");
 	max_user_presets_ = settings_.getInt("max_user_presets");
-	if (max_user_presets_ < 10 || max_user_presets_ > 100)
+	if (max_user_presets_ < 10 || max_user_presets_ > 120)
 	{
-		settings_.setInt("max_user_presets", 20);
-		max_user_presets_ = 20;		
+		settings_.setInt("max_user_presets", 120);
+		max_user_presets_ = 120;		
 	}
-
-	volume_normalization_enabled_ = settings_.getBool("volume_normalization_enabled");
-	volume_normalization_rms_ = checkRMSValue((float)settings_.getDouble("volume_normalization_rms"));
 	
 	SetWindowLongPtr(message_window_.getHandle(), GWLP_USERDATA, (LONG_PTR)this);
 
@@ -217,6 +215,11 @@ void FxController::config(const String& commandline)
     auto view = arg_list.getValueForOption("--view");
     auto output_device = arg_list.getValueForOption("--output").unquoted();
     auto language = arg_list.getValueForOption("--language");
+	auto numbands = arg_list.getValueForOption("--num_bands");
+	auto balance = arg_list.getValueForOption("--balance");
+	auto filterq = arg_list.getValueForOption("--filter_q");
+	auto mastergain = arg_list.getValueForOption("--master_gain");
+	auto normalization = arg_list.getValueForOption("--normalization");
     
     if (preset.isNotEmpty())
     {
@@ -248,6 +251,69 @@ void FxController::config(const String& commandline)
     }
 
     setLanguage(language);
+
+	// ------------------------------------------------------------------------------------------
+	//  NumBands / Balance / FilterQ / MasterGain / Normalization - SET ON START
+	// ------------------------------------------------------------------------------------------
+	int nb = 10;
+	if (numbands == "")
+	{
+		nb = settings_.getInt("num_bands");
+	}		
+	else
+	{
+		nb = numbands.getIntValue();
+	}	
+	if (nb < 5 || nb > 31) nb = 10;
+	setNumEqBands(nb);
+
+	float nm = 0;
+	if (normalization == "")
+	{
+		nm = settings_.getDouble("normalization");
+	}
+	else
+	{
+		nm = normalization.getFloatValue();
+	}
+	if (nm < -20 || nm > 0) nm = 0;
+	setNormalization(nm);
+
+	float bl = 0;
+	if (balance == "")
+	{
+		bl = settings_.getDouble("balance");
+	}
+	else
+	{
+		bl = balance.getFloatValue();
+	}
+	if (bl < -20 || bl > +20) bl = 0;
+	setBalance(bl);	
+
+	float fq = 0;
+	if (filterq == "")
+	{
+		fq = settings_.getDouble("filter_q");
+	}
+	else
+	{
+		fq = filterq.getFloatValue();
+	}
+	if (fq < 1 || fq > 3) fq = 1;
+	setFilterQ(fq);
+
+	float mg = 0;
+	if (mastergain == "")
+	{
+		mg = settings_.getDouble("master_gain");
+	}
+	else
+	{
+		mg = mastergain.getFloatValue();
+	}		
+	if (mg < -20 || mg > +20) mg = 0;
+	setMasterGain(mg);
 }
 
 void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray_view, AudioPassthru* audio_passthru)
@@ -295,10 +361,6 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 
 		FxModel::getModel().setPowerState(dfx_enabled_ && settings_.getBool("power"));
 		dfx_dsp_.powerOn(FxModel::getModel().getPowerState() && !FxModel::getModel().isMonoOutputSelected());
-		if (volume_normalization_enabled_)
-		{
-			dfx_dsp_.setVolumeNormalization(volume_normalization_rms_);
-		}
 
 		initPresets();
 		
@@ -710,6 +772,7 @@ void FxController::renamePreset(const String& new_name)
 	auto preset_index = model.getSelectedPreset();
 	auto preset = model.getPreset(preset_index);
 
+	if (preset.name == new_name) return;
 	if (preset.type == FxModel::PresetType::UserPreset)
 	{
 		auto path = File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userApplicationDataDirectory).getFullPathName()) + L"FxSound\\Presets";
@@ -1113,63 +1176,64 @@ void FxController::setEffectValue(FxEffects::EffectType effect, float value)
 	}
 }
 
-bool FxController::isVolumeNormalizationEnbabled() const
+int FxController::getNumEqBands()
 {
-	return volume_normalization_enabled_;
+	return dfx_dsp_.getNumEqBands();
 }
 
-void FxController::setVolumeNormalizationEnabled(bool enabled)
+void FxController::setNumEqBands(int num_bands)
 {
-	volume_normalization_enabled_ = enabled;
-	settings_.setBool("volume_normalization_enabled", enabled);
-
-	if (volume_normalization_enabled_)
-	{
-		dfx_dsp_.setVolumeNormalization(volume_normalization_rms_);
-	}
-	else
-	{
-		dfx_dsp_.setVolumeNormalization(0.0f);
-	}
+	dfx_dsp_.setNumBands(num_bands);
+	settings_.setInt("num_bands", num_bands);
 }
 
-float FxController::getVolumeNormalization() const
+float FxController::getNormalization()
 {
-	return volume_normalization_rms_;
+	return dfx_dsp_.getNormalization();
 }
 
-void FxController::setVolumeNormalization(float target_rms)
+void FxController::setNormalization(float normalization_db)
 {
-	volume_normalization_rms_ = checkRMSValue(target_rms);
-	settings_.setDouble("volume_normalization_rms", target_rms);
-	if (volume_normalization_enabled_)
-	{
-		dfx_dsp_.setVolumeNormalization(target_rms);
-	}
+	dfx_dsp_.setNormalization(normalization_db);
+	settings_.setDouble("normalization", normalization_db);
 }
 
-float FxController::checkRMSValue(float target_rms)
+float FxController::getBalance()
 {
-	if (target_rms < 0.125f)
-	{
-		return 0.125f;
-	}
-	else if (target_rms > 0.5f)
-	{
-		return 0.5f;
-	}
+	return dfx_dsp_.getBalance();
+}
 
-	return target_rms;
+void FxController::setBalance(float balance_db)
+{
+	dfx_dsp_.setBalance(balance_db);
+	settings_.setDouble("balance", balance_db);
+}
+
+float FxController::getMasterGain()
+{
+	return dfx_dsp_.getMasterGain();
+}
+
+void FxController::setMasterGain(float gain_db)
+{
+	dfx_dsp_.setMasterGain(gain_db);
+	settings_.setDouble("master_gain", gain_db);
+}
+
+float FxController::getFilterQ()
+{
+	return dfx_dsp_.getFilterQ();
+}
+
+void FxController::setFilterQ(float q_multiplier)
+{
+	dfx_dsp_.setFilterQ(q_multiplier);
+	settings_.setDouble("filter_q", q_multiplier);
 }
 
 bool FxController::isAudioProcessing()
 {
     return audio_process_on_;
-}
-
-int FxController::getNumEqBands()
-{
-	return dfx_dsp_.getNumEqBands();
 }
 
 float FxController::getEqBandFrequency(int band_num)
@@ -1956,4 +2020,34 @@ String FxController::FormatString(const String& format, const String& arg)
     swprintf_s(buffer, format.toWideCharPointer(), arg.toWideCharPointer());
 
     return String(buffer);
+}
+
+String FxController::getMasterGain_FromSettings()
+{
+	return settings_.getString("master_gain");
+}
+
+void FxController::setMasterGain_ToSettings(String master_gain)
+{
+	settings_.setString("master_gain", master_gain);
+}
+
+String FxController::getFilterQ_FromSettings()
+{
+	return settings_.getString("filter_q");
+}
+
+void FxController::setFilterQ_ToSettings(String filter_q)
+{
+	settings_.setString("filter_q", filter_q);
+}
+
+String FxController::getBalance_FromSettings()
+{
+	return settings_.getString("balance");
+}
+
+void FxController::setBalance_ToSettings(String balance)
+{
+	settings_.setString("balance", balance);
 }

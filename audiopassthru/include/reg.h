@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -35,7 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define REG_REGISTERED_OWNER_DEFAULT_VALUE_WIDE  L"default"
 
 /* regWithoutKeyname.cpp */
-int PT_DECLSPEC regReadTopDir_Wide(wchar_t *, int, int, int, CSlout *);
 int PT_DECLSPEC regReadRegisteredOwner(char *, int);
 int PT_DECLSPEC regReadRegisteredOwner_Wide(wchar_t *, int);
 int PT_DECLSPEC regRemoveKey(int, char *);

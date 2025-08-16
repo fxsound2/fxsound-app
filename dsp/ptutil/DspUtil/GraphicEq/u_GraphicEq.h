@@ -1,8 +1,23 @@
-/* (C) COPYRIGHT 1994-2002 Power Technology. All Rights Reserved.
- * This document and file contain highly confidential information
- * which is not to be disclosed or in any other way retransmitted
- * without the express written consent of Power Technology.
- */
+/*
+FxSound
+Copyright (C) 2025  FxSound LLC
+
+Contributors:
+	www.theremino.com (2025)
+	
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 /*
  * FILE: u_GraphicEq.h
  * DATE: 12/19/2002
@@ -35,6 +50,11 @@ struct GraphicEqHdlType
 
 	/* Filter Q setting */
 	realtype Q;
+	realtype Q_multiplier;
+
+	realtype master_gain;
+	realtype normalization_gain;	
+	realtype balance;
 
 	/* Current sampling frequency */
 	realtype sampling_freq;
@@ -42,8 +62,6 @@ struct GraphicEqHdlType
 	/* SOS sections and parameters for each band */
 	PT_HANDLE *sos_hdl;
 
-	/* Flag to set mode where application has synching and warping of DFX Hyperbass and EQ Band1 controls. */
-	bool app_has_hyperbass;
 };
 
 /* Local Functions */

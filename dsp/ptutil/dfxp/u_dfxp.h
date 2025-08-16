@@ -1,7 +1,9 @@
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
-
+Contributors:
+	www.theremino.com (2025)
+	
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -383,10 +385,7 @@ int dfxp_SpectrumStoreCurrentValuesInSharedMemory(PT_HANDLE *, int);
 
 
 /* dfxpUniversal.cpp */
-int dfxp_UniversalInitPaths(PT_HANDLE *);
 int dfxp_UniversalCalcBufferHash(PT_HANDLE *, BYTE *, DWORD, int *);
-int dfxp_UniversalCheckIfIncompatableWebsiteForProcessing(PT_HANDLE *, int *);
-BOOL CALLBACK dfxp_UniversalEnumWindowsProc(HWND, LPARAM);
 int dfxp_UniversalUpdateTotalTimeProcessed(PT_HANDLE *, int);
 int dfxp_UniversalIsBufferAllSilence(PT_HANDLE *, short int *, int, int, int, int *);
 

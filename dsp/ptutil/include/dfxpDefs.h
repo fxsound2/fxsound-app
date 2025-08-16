@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+	
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -147,9 +150,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /****************************
  * SPECTRUM SETTINGS        *
  ****************************/
-#define DFXP_SPECTRUM_NUM_BANDS_PRE_VERSION9		5
 #define DFXP_SPECTRUM_NUM_BANDS						10
-#define DFXP_SPECTRUM_NUM_VALUES						40
+
 
 /* Number of samples per each save of the spectrum to the registry */
 /* Note - up to DFX release 9.204, this was set at 512 */
@@ -258,10 +260,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /*******************************************
  * EQ Defines                              *
  *******************************************/
-#define DFXP_GRAPHIC_EQ_NUM_BANDS				10
+extern int DFXP_GRAPHIC_EQ_NUM_BANDS;
 #define DFXP_GRAPHIC_EQ_MIN_BOOST_OR_CUT_DB	-12.0 
 #define DFXP_GRAPHIC_EQ_MAX_BOOST_OR_CUT_DB	12.0 
-#define DFXP_GRAPHIC_EQ_PANEL_NUM_BANDS				9
 
 /*******************************************
  * Storage Types                           *

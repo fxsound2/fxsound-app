@@ -1,7 +1,9 @@
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
-
+Contributors:
+	www.theremino.com (2025)
+	
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -44,6 +46,12 @@ int PT_DECLSPEC GraphicEqNew( PT_HANDLE **hpp_GraphicEq, int i_num_bands, int i_
 	cast_handle->slout_hdl = hp_slout;
 	cast_handle->i_trace_mode = i_trace_mode;
 
+	cast_handle->Q_multiplier = 1;
+
+	cast_handle->master_gain = 0.0f;
+	cast_handle->normalization_gain = 0.0f;
+	cast_handle->balance = 0.0f;
+
 	if (i_trace_mode)
 	{
 		swprintf(cast_handle->wcp_msg1, L"GraphicEqNew(): Entered, i_num_bands = %d", i_num_bands);
@@ -54,7 +62,6 @@ int PT_DECLSPEC GraphicEqNew( PT_HANDLE **hpp_GraphicEq, int i_num_bands, int i_
 		return(NOT_OKAY);
 
 	cast_handle->num_bands = i_num_bands;
-	cast_handle->app_has_hyperbass = false;
 
 	if ( sosNew( (PT_HANDLE **)&(cast_handle->sos_hdl), NULL, i_num_bands) != OKAY )
 		return(NOT_OKAY);

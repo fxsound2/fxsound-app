@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+	
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -71,10 +74,10 @@ class FxConfirmationMessage : public FxWindow
 public:
     enum Style { YesNo = 1, OK };
 
-    FxConfirmationMessage(String message, Style style = Style::YesNo) : FxWindow(), message_content_(message, style)
+    FxConfirmationMessage(String message, Style style, int x, int y) : FxWindow(), message_content_(message, style)
     {
         setContent(&message_content_);
-        centreWithSize(getWidth(), getHeight());
+        setTopLeftPosition(x, y); // Set the desired position
         addToDesktop(0);
         setAlwaysOnTop(true);
        
@@ -90,9 +93,19 @@ public:
         removeFromDesktop();
     }
 
-    static bool showMessage(String message, Style style = Style::YesNo)
+    // SINGLE, COMPLETE VERSION OF showMessage
+    // All parameters after 'message' have default values.
+    // This eliminates ambiguity because there's only one way to call it with fewer arguments.
+    static bool showMessage(String message, Style style = Style::YesNo, int x = -1, int y = -1)
     {
-        FxConfirmationMessage confirmation_message(message, style);
+        // Construct the FxConfirmationMessage object with the provided values.
+        FxConfirmationMessage confirmation_message(message, style, x, y);
+
+        // If x and y values are -1 (default), then center the window.
+        if (x == -1 || y == -1) {
+            confirmation_message.centreWithSize(confirmation_message.getWidth(), confirmation_message.getHeight());
+        }
+
         confirmation_message.runModalLoop();
         if (confirmation_message.style_ == Style::YesNo)
         {
@@ -100,10 +113,9 @@ public:
             {
                 return true;
             }
-
             return false;
         }
-        else
+        else // Style::OK
         {
             return true;
         }

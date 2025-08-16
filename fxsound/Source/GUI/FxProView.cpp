@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -61,6 +64,9 @@ void FxProView::update()
 
 	visualizer_.setVisible(true);
 	setSize(WIDTH, HEIGHT + 20);
+	// -------------------------- Values always visible since version 2.0 (otherwise they do not appear on touch screens)
+	equalizer_.showValues(true);
+	effects_.showValues(true);
 }
 
 void FxProView::resized()
@@ -98,7 +104,7 @@ void FxProView::paint(Graphics& g)
 	g.fillAll();
 
 	g.setFillType(FillType(Colour(0x0).withAlpha(0.2f)));
-	g.fillRoundedRectangle(20, 16, 920, 330+visualizer_offset, 8);
+	g.fillRoundedRectangle(20, 16, 1000, 330+visualizer_offset, 8);
 
     auto enable_controls = FxModel::getModel().getPowerState() && !FxModel::getModel().isMonoOutputSelected();
 
@@ -126,15 +132,9 @@ void FxProView::modelChanged(FxModel::Event model_event)
 void FxProView::mouseEnter(const MouseEvent& mouse_event)
 {
 	FxView::mouseEnter(mouse_event);
-
-	equalizer_.showValues(equalizer_.isMouseOver(true));
-	effects_.showValues(effects_.isMouseOver(true));
 }
 
 void FxProView::mouseExit(const MouseEvent& mouse_event)
 {
 	FxView::mouseEnter(mouse_event);
-
-	equalizer_.showValues(equalizer_.isMouseOver(true));
-	effects_.showValues(effects_.isMouseOver(true));
 }

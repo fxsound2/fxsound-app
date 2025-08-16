@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -28,18 +31,7 @@ public:
 	enum Event { Notification=1, Subscription, PresetSelected, PresetListUpdated, PresetModified, OutputSelected, OutputListUpdated, OutputError, Other };
 	enum PresetType { AppPreset=1, UserPreset=2 };
 
-	struct AccountInfo final
-	{
-		String email;
-		String subscription;
-		bool trial;
-	};
 
-	struct AccountLog final
-	{
-		int64_t next_limited_playback_time;
-		uint32_t playback_duration;
-	};
 
 	struct Preset final
 	{
@@ -127,36 +119,10 @@ public:
         notifyListeners(Event::OutputError);
     }
 
-	AccountInfo getAccountInfo() const
-	{
-		return account_info_;
-	}
 
-	void setEmail(String email)
-	{
-		account_info_.email = email;
-	}
 
-	void setSubscription(String subscription)
-	{
-		account_info_.subscription = subscription;
-		notifyListeners(Event::Subscription);
-	}
 
-	AccountLog getAccountLog() const
-	{
-		return account_log_;
-	}
 
-	void setAccountLog(const AccountLog& account_log)
-	{
-		account_log_ = account_log;
-	}
-
-	void setTrial(bool trial)
-	{
-		account_info_.trial = trial;
-	}
 
 	bool getHotkeySupport()
 	{
@@ -227,8 +193,7 @@ private:
 	int selected_preset_;
 	int selected_output_;
     bool output_disconnected_;
-	AccountInfo account_info_;
-	AccountLog account_log_;
+
 	bool hotkey_support_;
 	bool menu_clicked_;
 	int language_;

@@ -2,9 +2,6 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
-Contributors:
-    www.theremino.com (2025)
-
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -26,24 +23,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 /*
 */
-class FxVisualizer : public AnimatedAppComponent
+
+class FxAudioSlider : public Slider
 {
 public:
-    FxVisualizer();
-
-    void start();
-    void pause();
-
-    void reset();
-
-    void update() override;
-    void paint(Graphics& g) override;
+	FxAudioSlider(String label_format, float default_value);
+	~FxAudioSlider() = default;
 
 private:
-    static constexpr int WIDTH = 960;
-    static constexpr int HEIGHT = 120;
-    static constexpr int NUM_BARS = 10;
+	static constexpr int LABEL_HEIGHT = 14;
+	static constexpr int LABEL_WIDTH = 40;
 
-    Array<float> band_values_;
-    Array<float> band_graph_;
+	void resized() override;
+	void valueChanged() override;
+	bool keyPressed(const KeyPress& key) override;
+	void mouseDown(const MouseEvent& event) override;
+
+	void updateLabel();
+
+	Label value_label_;
+	String label_format_;
+	const float default_value_;
 };

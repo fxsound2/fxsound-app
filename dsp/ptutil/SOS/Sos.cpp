@@ -1,7 +1,9 @@
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
-
+Contributors:
+	www.theremino.com (2025)
+	
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -54,10 +56,15 @@ int PT_DECLSPEC sosNew(PT_HANDLE **hpp_sos, CSlout *hp_slout, int i_num_sections
     
     /* Initialize master gain */
     cast_handle->master_gain = (realtype)1.0;
-	cast_handle->normalization_gain = (realtype)1.0;
-	cast_handle->target_rms = 0.0f;
 
-	cast_handle->disable_band_1 = false;
+	/* Initialize balance */
+	cast_handle->balance_left = (realtype)1.0;
+	cast_handle->balance_right = (realtype)1.0;
+
+	/* Initialize normalization */
+	cast_handle->target_rms = (realtype)1.0;
+	cast_handle->normalization_gain = (realtype)1.0;
+    
 
     /* Allocate the sections */
     cast_handle->sections =

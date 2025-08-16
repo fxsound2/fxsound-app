@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+	
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -52,9 +55,6 @@ int dfxp_EqInit(PT_HANDLE *hp_dfxp)
 	if (dfxpEqGetProcessingOn(hp_dfxp, DFXP_STORAGE_TYPE_REGISTRY, &(cast_handle->eq.i_processing_on)) != OKAY)
 		return(NOT_OKAY);
 
-	/* Initialize band1 since it is a special case.  If a value does not exist in the registry for it, use Hyperbass value */
-	if (dfxpEqInitBand1SpecialCase(hp_dfxp) != OKAY)
-		return(NOT_OKAY);
 
 	return(OKAY);
 }
@@ -81,9 +81,7 @@ int dfxpEqSetEqType(PT_HANDLE *hp_dfxp, int i_eq_type)
 
 	/* Create the Graphic EQ handle */
 	if (GraphicEqNew(&(cast_handle->eq.graphicEq_hdl), i_eq_type, cast_handle->trace.mode, cast_handle->slout1) != OKAY)
-		return(NOT_OKAY);
 
-	if (GraphicEqSetAppHasHyperBassMode(cast_handle->eq.graphicEq_hdl, true) != OKAY)
 		return(NOT_OKAY);
 
 	return(OKAY);
@@ -139,75 +137,6 @@ int dfxpEqSetProcessingOn(PT_HANDLE *hp_dfxp, int i_storage_type, int i_on)
 	return(OKAY);
 }
 
-/*
- * FUNCTION: dfxpEqInitBand1SpecialCase() 
- * DESCRIPTION:
- *
- * Initialize band1 since it is a special case.  If a value does not exist in the registry for it, use Hyperbass value.
- *
- */
-int dfxpEqInitBand1SpecialCase(PT_HANDLE *hp_dfxp)
-{
-	wchar_t wcp_keyname[PT_MAX_GENERIC_STRLEN];
-	wchar_t wcp_key_value[DFXP_REGISTRY_BUFFER_LENGTH];
-	wchar_t wcp_full_key_path[PT_MAX_PATH_STRLEN];
-	int key_exists;
-	float f_bass_boost_value; 
-	realtype r_band1_value;
-
-	struct dfxpHdlType *cast_handle;
-
-	cast_handle = (struct dfxpHdlType *)(hp_dfxp);
-
-	if (cast_handle == NULL)
-		return(OKAY);
-
-	/* Check if band1 has a value in the registry */
-	swprintf(wcp_keyname, L"%s%d", DFXP_REGISTRY_EQ_BAND_NAME_WIDE, 1);
-
-	swprintf(wcp_full_key_path, L"%s\\%s\\%d\\%d\\%s\\%s\\%s", 
-									DFXP_REGISTRY_TOP_WIDE, 
-									cast_handle->wcp_product_name, 
-									cast_handle->major_version,
-		                     cast_handle->vendor_code, 
-									DFXP_REGISTRY_LASTUSED_WIDE, 
-									DFXP_REGISTRY_EQ_FOLDER_NAME_WIDE,
-									wcp_keyname);
-
-	if (regReadKey_Wide(REG_CURRENT_USER, wcp_full_key_path, &key_exists, wcp_key_value,
-				(unsigned long)DFXP_REGISTRY_BUFFER_LENGTH) != OKAY)
-	         return(NOT_OKAY);
-
-	/* If the key exists, there is nothing to do */
-	if (key_exists == IS_TRUE)
-		return(OKAY);
-
-	/* Since band1 setting does not exist, we need to use Hyperbass setting to initialize it */
-	if (dfxpGetKnobValue(hp_dfxp, DFX_UI_KNOB_BASS_BOOST, &f_bass_boost_value) != OKAY)
-		return(NOT_OKAY);
-
-	r_band1_value = (realtype)f_bass_boost_value * (realtype)10.0;
-
-	if (dfxpEqSetBandBoostCut(hp_dfxp, DFXP_STORAGE_TYPE_ALL, 1, r_band1_value) != OKAY)
-		return(NOT_OKAY);
-
-	return(OKAY);
-}
-
-int dfxpEqSetVolumeNormalization(PT_HANDLE* hp_dfxp, realtype r_target_rms)
-{
-	struct dfxpHdlType* cast_handle;
-
-	cast_handle = (struct dfxpHdlType*)(hp_dfxp);
-
-	if (cast_handle == NULL)
-		return(OKAY);
-
-	if (GraphicEqSetVolumeNormalization(cast_handle->eq.graphicEq_hdl, r_target_rms) != OKAY)
-		return(NOT_OKAY);
-
-	return(OKAY);
-}
 
 /*
  * FUNCTION: dfxpEqGetProcessingOn() 

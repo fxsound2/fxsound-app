@@ -2,9 +2,6 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
-Contributors:
-    www.theremino.com (2025)
-
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -26,24 +23,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 /*
 */
-class FxVisualizer : public AnimatedAppComponent
+
+class FxBalanceSlider : public Slider
 {
 public:
-    FxVisualizer();
-
-    void start();
-    void pause();
-
-    void reset();
-
-    void update() override;
-    void paint(Graphics& g) override;
+	FxBalanceSlider(float default_value);
+	~FxBalanceSlider() = default;
 
 private:
-    static constexpr int WIDTH = 960;
-    static constexpr int HEIGHT = 120;
-    static constexpr int NUM_BARS = 10;
+	static constexpr int X_MARGIN = 15;
+	static constexpr int LABEL_HEIGHT = 14;
+	static constexpr int LABEL_WIDTH = 40;
 
-    Array<float> band_values_;
-    Array<float> band_graph_;
+	void valueChanged() override;
+	void resized() override;
+	void paint(Graphics& g) override;
+	bool keyPressed(const KeyPress& key) override;
+	void mouseDown(const MouseEvent& event) override;
+
+	void updateValueLabel();
+
+	Label value_label_;
+	std::unique_ptr<Drawable> slider_thumb_;
+	std::unique_ptr<Drawable> slider_thumb_grey_;
+	const float default_value_;
 };
+
+

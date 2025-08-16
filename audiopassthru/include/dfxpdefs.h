@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2023  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -231,14 +234,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DFX_UNIVERSAL_PROCESSING_TYPE_UNDEFINED	 0
 #define DFX_UNIVERSAL_PROCESSING_TYPE_DSOUND_DLL 1
 #define DFX_UNIVERSAL_PROCESSING_TYPE_WINMM_DLL	 2
-
-/*******************************************
- * EQ Defines                              *
- *******************************************/
-#define DFXP_GRAPHIC_EQ_NUM_BANDS				10
-#define DFXP_GRAPHIC_EQ_MIN_BOOST_OR_CUT_DB	-12.0 
-#define DFXP_GRAPHIC_EQ_MAX_BOOST_OR_CUT_DB	12.0 
-#define DFXP_GRAPHIC_EQ_PANEL_NUM_BANDS				9
 
 /*******************************************
  * Storage Types                           *

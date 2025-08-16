@@ -1,7 +1,9 @@
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
-
+Contributors:
+	www.theremino.com (2025)
+	
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -149,6 +151,19 @@ int dfxpModifyRealtypeSamples(PT_HANDLE *hp_dfxp, realtype *rp_samples, int i_nu
 										 rp_samples, rp_samples, i_num_sample_sets, cast_handle->num_channels_out,
 										cast_handle->sampling_freq) != OKAY)
 				return(NOT_OKAY);
+		}
+	}
+	else
+	{
+		if (dfxpEqGetProcessingOn(hp_dfxp, DFXP_STORAGE_TYPE_MEMORY, &i_eq_on) != OKAY)
+			return(NOT_OKAY);
+		if ((i_eq_on) &&
+			(cast_handle->num_channels_out <= 2) || (cast_handle->num_channels_out == 6) || (cast_handle->num_channels_out == 8)) // SosProcess ERROR
+		{
+			if (GraphicEqProcess_MasterGainOnly(cast_handle->eq.graphicEq_hdl,
+												rp_samples, rp_samples, i_num_sample_sets, cast_handle->num_channels_out,
+												cast_handle->sampling_freq) != OKAY)
+												return(NOT_OKAY);
 		}
 	}
 

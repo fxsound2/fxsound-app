@@ -1,8 +1,24 @@
-/* (C) COPYRIGHT 1994-1997 Power Technology. All Rights Reserved.
- * This document and file contain highly confidential information
- * which is not to be disclosed or in any other way retransmitted
- * without the express written consent of Power Technology.
- */
+/*
+FxSound
+Copyright (C) 2025  FxSound LLC
+
+Contributors:
+	www.theremino.com (2025)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 /*
  * FILE: u_sos.h
  * DATE: 7/2/96
@@ -55,12 +71,14 @@ struct sosHdlType {
    realtype sos_center_freq[SOS_MAX_NUM_SOS_SECTIONS];/* Contains current center freq of section */
    int sos_center_freq_indexes[SOS_MAX_NUM_SOS_SECTIONS];/* Contains pixel index corresponding to center freq of section */
    realtype sos_center_freq_response[SOS_MAX_NUM_SOS_SECTIONS];/* Contains power response at center freq */
+   realtype balance_left;       /* Externally applied balance for the combined sections */
+   realtype balance_right;      /* Externally applied balance for the combined sections */
+   realtype target_rms;         /* Externally applied normalization rms  for the combined sections */
+   realtype normalization_gain; /* normalization gain */
    realtype master_gain; /* Externally applied master gain for the combined sections */
    int sos_type[SOS_MAX_NUM_SOS_SECTIONS]; /* SOS_PARA for parametric, SOS_SHELF for shelf type */
    struct sosSectionType *sections; 
    int section_on_flag[SOS_MAX_NUM_SOS_SECTIONS]; /* If IS_TRUE, then displayed gain is not 0 */
-   realtype target_rms;
-   realtype normalization_gain;
 
 	realtype in1_old, in2_old, outDC1_old, outDC2_old;	// Added for DC blocking filter.
 	realtype in1_oldSS[8];
@@ -68,8 +86,6 @@ struct sosHdlType {
 	realtype outDC1_oldSS[8];
 	realtype outDC2_oldSS[8];
 
-	/* Flag used to disable band1 in cases such as synching and warping of DFX Hyperbass and EQ Band1 controls. */
-	bool disable_band_1;
 };
 
 #endif //_U_SOS_H_

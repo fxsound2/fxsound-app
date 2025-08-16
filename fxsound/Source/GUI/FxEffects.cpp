@@ -2,6 +2,9 @@
 FxSound
 Copyright (C) 2025  FxSound LLC
 
+Contributors:
+	www.theremino.com (2025)
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -124,6 +127,7 @@ FxEffects::FxEffectSlider::FxEffectSlider(EffectType effect)
 
 	value_label_.setFont(theme.getNormalFont().withHeight(12.0f));
 	value_label_.setJustificationType(Justification::centredLeft);
+	value_label_.setInterceptsMouseClicks(false, false);
 	addChildComponent(value_label_);
 
 	setWantsKeyboardFocus(true);
