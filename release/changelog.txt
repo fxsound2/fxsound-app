@@ -1,3 +1,14 @@
+version 1.2.0.0
+----------------
+1. Integrated audio features implemented by theremino
+- Equalizer band frequencies compliant with the ISO standard
+- Adjustable number of bands from 5 to 31
+- Adjustment of master gain
+- Adjustment of filter bandwidth (Filter Q)
+- Balance adjustment
+- Normalization adjustment
+2. Output device selected is displayed on system tray icon hover
+
 version 1.1.34.0
 ----------------
 1. System tray context menu width is fixed and device names are adjusted to width
