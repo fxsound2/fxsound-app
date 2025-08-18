@@ -63,6 +63,13 @@
     <GROUP id="{D719274A-0BE1-FA67-529B-B012A702512B}" name="Source">
       <GROUP id="{7D838BF2-5642-7BE7-DF78-745226F70630}" name="GUI">
         <GROUP id="{59F271E4-F186-3EBD-DA7B-97C454130F71}" name="Components">
+          <FILE id="m61HtG" name="FxAudioSlider.cpp" compile="1" resource="0"
+                file="Source/GUI/FxAudioSlider.cpp"/>
+          <FILE id="QluxCZ" name="FxAudioSlider.h" compile="0" resource="0" file="Source/GUI/FxAudioSlider.h"/>
+          <FILE id="DJqpJR" name="FxBalanceSlider.cpp" compile="1" resource="0"
+                file="Source/GUI/FxBalanceSlider.cpp"/>
+          <FILE id="GM1Bld" name="FxBalanceSlider.h" compile="0" resource="0"
+                file="Source/GUI/FxBalanceSlider.h"/>
           <FILE id="qb7R1e" name="FxPresetNameEditor.cpp" compile="1" resource="0"
                 file="Source/GUI/FxPresetNameEditor.cpp"/>
           <FILE id="kYhKSD" name="FxPresetNameEditor.h" compile="0" resource="0"

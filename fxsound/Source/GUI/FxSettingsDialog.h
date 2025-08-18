@@ -110,6 +110,7 @@ private:
 		void modelChanged(FxModel::Event model_event);
 		void updateEndpointList();
 		void updateEndpointText();
+		void updateEqualizerBandsText();
 		void selectEqualizerBands();
 
 		void mouseEnter(const MouseEvent& mouse_event) override;

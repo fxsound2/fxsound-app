@@ -2021,33 +2021,3 @@ String FxController::FormatString(const String& format, const String& arg)
 
     return String(buffer);
 }
-
-String FxController::getMasterGain_FromSettings()
-{
-	return settings_.getString("master_gain");
-}
-
-void FxController::setMasterGain_ToSettings(String master_gain)
-{
-	settings_.setString("master_gain", master_gain);
-}
-
-String FxController::getFilterQ_FromSettings()
-{
-	return settings_.getString("filter_q");
-}
-
-void FxController::setFilterQ_ToSettings(String filter_q)
-{
-	settings_.setString("filter_q", filter_q);
-}
-
-String FxController::getBalance_FromSettings()
-{
-	return settings_.getString("balance");
-}
-
-void FxController::setBalance_ToSettings(String balance)
-{
-	settings_.setString("balance", balance);
-}

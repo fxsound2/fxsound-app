@@ -278,7 +278,7 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 	equalizer_.clear(NotificationType::dontSendNotification);
 	for (auto bands : equalizer_bands_)
 	{
-		equalizer_.addItem(String::formatted(TRANS("%d Bands"), bands), bands);
+		equalizer_.addItem(String(bands) + TRANS(" Bands"), bands);
 	}
 	selectEqualizerBands();
 
@@ -394,6 +394,8 @@ void FxSettingsDialog::AudioSettingsPane::paint(Graphics& g)
 
 	updateEndpointText();
 
+	updateEqualizerBandsText();
+
 	SettingsPane::paint(g);
 }
 
@@ -491,15 +493,37 @@ void FxSettingsDialog::AudioSettingsPane::updateEndpointList()
 }
 
 void FxSettingsDialog::AudioSettingsPane::updateEndpointText()
-{
+{	
 	auto endpoints = FxModel::getModel().getOutputDevices();
+
+	auto id = preferred_endpoint_.getSelectedId();
 
 	auto count = preferred_endpoint_.getNumItems();
 	if (count == endpoints.size() + 2)
 	{
 		preferred_endpoint_.changeItemText(count-1, TRANS("Newly connected output device"));
 		preferred_endpoint_.changeItemText(count, TRANS("None"));
-	}	
+	}
+
+	if (preferred_endpoint_.getSelectedId() == 0 && id != 0)
+	{
+		preferred_endpoint_.setSelectedId(id, juce::dontSendNotification);
+	}
+}
+
+void FxSettingsDialog::AudioSettingsPane::updateEqualizerBandsText()
+{
+	auto id = equalizer_.getSelectedId();
+
+	for (auto bands : equalizer_bands_)
+	{
+		equalizer_.changeItemText(bands, String(bands) + TRANS(" Bands"));
+	}
+
+	if (equalizer_.getSelectedId() == 0 && id != 0)
+	{
+		equalizer_.setSelectedId(id, juce::dontSendNotification);
+	}
 }
 
 void FxSettingsDialog::AudioSettingsPane::mouseEnter(const MouseEvent& mouse_event)

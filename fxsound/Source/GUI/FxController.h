@@ -134,20 +134,6 @@ public:
 	{
 		file_logger_->logMessage(message);
 	}
-	String getNumBands_FromSettings();
-	void setNumBands_ToSettings(String num_bands);
-
-	String getMasterGain_FromSettings();
-	void   setMasterGain_ToSettings(String master_gain);
-
-	String getFilterQ_FromSettings();
-	void setFilterQ_ToSettings(String filter_q);
-
-	String getBalance_FromSettings();
-	void setBalance_ToSettings(String balance);
-
-	String getNormalization_FromSettings();
-	void setNormalization_ToSettings(String normalization);
 
 	FxSound::Settings& getSettings() { return settings_; }
 

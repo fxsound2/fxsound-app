@@ -1214,6 +1214,9 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_GlyphArrangement.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_GlyphArrangementOptions.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_TextLayout.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -1451,10 +1454,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_Direct2DGraphicsContext_windows.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_Direct2DHelpers_windows.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_Direct2DHwndContext_windows.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_Direct2DGraphicsContextImpl_windows.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_Direct2DImage_windows.cpp">
@@ -1466,10 +1466,10 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_Direct2DMetrics_windows.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_Direct2DResources_windows.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_DirectWriteTypeface_windows.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_DirectWriteTypeface_windows.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_DirectX_windows.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_Fonts_android.cpp">
@@ -1871,6 +1871,9 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\native\juce_ContentSharer_ios.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\native\juce_Direct2DHwndContext_windows.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\native\juce_DragAndDrop_linux.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -2263,6 +2266,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_core\containers\juce_SparseSet.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_core\containers\juce_Variant.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_core\detail\juce_CallbackListenerList.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_core\detail\juce_LruCache.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_core\detail\juce_NativeFileHandle.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_core\files\juce_AndroidDocument.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_core\files\juce_common_MimeTypes.h" />
@@ -2746,7 +2750,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_FontOptions.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_FunctionPointerDestructor.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_GlyphArrangement.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_LruCache.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_GlyphArrangementOptions.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_TextLayout.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_Typeface.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_TypefaceFileCache.h" />
@@ -2784,11 +2788,12 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\images\juce_ImageCache.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\images\juce_ImageConvolutionKernel.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\images\juce_ImageFileFormat.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\images\juce_ImagePixelDataNativeExtensions.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\images\juce_ScaledImage.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_CoreGraphicsContext_mac.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_CoreGraphicsHelpers_mac.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_Direct2DGraphicsContext_windows.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_Direct2DHwndContext_windows.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_Direct2DGraphicsContextImpl_windows.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_Direct2DImage_windows.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_Direct2DImageContext_windows.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_Direct2DMetrics_windows.h" />
@@ -2986,6 +2991,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\native\accessibility\juce_UIAWindowProvider_windows.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\native\accessibility\juce_WindowsUIAWrapper_windows.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\native\juce_CGMetalLayerRenderer_mac.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\native\juce_Direct2DHwndContext_windows.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\native\juce_MultiTouchMapper.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\native\juce_NativeModalWrapperComponent_ios.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\native\juce_PerScreenDisplayLinks_mac.h" />
