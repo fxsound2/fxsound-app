@@ -74,6 +74,11 @@ void FxSystemTrayView::setStatus(bool power, bool processing)
 
     wchar_t tool_tip[1024];
     swprintf_s(tool_tip, String(TRANS("FxSound is %s.")).toWideCharPointer(), param.toWideCharPointer());
+	wcscat_s(tool_tip, 1024, L"\n\n");
+    wcscat_s(tool_tip, 1024, String(TRANS("Output: ")).toWideCharPointer());
+    auto& model = FxModel::getModel();
+	String output_device_name = model.getOutputNames()[model.getSelectedOutput()];
+	wcscat_s(tool_tip, 1024, output_device_name.toWideCharPointer());
 
     NOTIFYICONDATA nid = { sizeof(nid) };
 
