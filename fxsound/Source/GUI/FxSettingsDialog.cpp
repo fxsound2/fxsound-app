@@ -97,7 +97,7 @@ FxSettingsDialog::SettingsComponent::SettingsComponent()
 	audio_button_->addListener(this);
 
 	general_button_ = std::make_unique<SettingsButton>("General");
-	general_button_->setToggleState(true, NotificationType::dontSendNotification);
+	general_button_->setToggleState(false, NotificationType::dontSendNotification);
 	general_button_->setImage(Drawable::createFromImageData(BinaryData::settings_svg, BinaryData::settings_svgSize).get());
 	general_button_->addListener(this);
 	
@@ -278,7 +278,7 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 	equalizer_.clear(NotificationType::dontSendNotification);
 	for (auto bands : equalizer_bands_)
 	{
-		equalizer_.addItem(String::formatted("%d Bands", bands), bands);
+		equalizer_.addItem(String::formatted(TRANS("%d Bands"), bands), bands);
 	}
 	selectEqualizerBands();
 
@@ -411,7 +411,7 @@ void FxSettingsDialog::AudioSettingsPane::setText()
 	master_gain_title_.setFont(theme.getNormalFont());
 	master_gain_title_.setText(TRANS("Master Gain:"), NotificationType::dontSendNotification);
 	normalizer_title_.setFont(theme.getNormalFont());
-	normalizer_title_.setText(TRANS("Normalizer:"), NotificationType::dontSendNotification);
+	normalizer_title_.setText(TRANS("Normalization:"), NotificationType::dontSendNotification);
 	filter_q_title_.setFont(theme.getNormalFont());
 	filter_q_title_.setText(TRANS("Filter Q:"), NotificationType::dontSendNotification);	
 	balance_title_.setFont(theme.getNormalFont());
