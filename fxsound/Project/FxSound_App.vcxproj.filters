@@ -372,6 +372,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\GUI\FxPresetNameEditor.cpp">
+      <Filter>FxSound\Source\GUI\Components</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\GUI\FxHotkeyLabel.cpp">
       <Filter>FxSound\Source\GUI\Components</Filter>
     </ClCompile>
@@ -410,6 +413,9 @@
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxProView.cpp">
       <Filter>FxSound\Source\GUI\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\GUI\FxPresetSaveDialog.cpp">
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxPresetImportDialog.cpp">
       <Filter>FxSound\Source\GUI\Dialogs</Filter>
@@ -942,7 +948,16 @@
     <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\contexts\juce_LowLevelGraphicsSoftwareRenderer.cpp">
       <Filter>JUCE Modules\juce_graphics\contexts</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\detail\juce_JustifiedText.cpp">
+      <Filter>JUCE Modules\juce_graphics\detail</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\detail\juce_Ranges.cpp">
+      <Filter>JUCE Modules\juce_graphics\detail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\detail\juce_ShapedText.cpp">
+      <Filter>JUCE Modules\juce_graphics\detail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\detail\juce_SimpleShapedText.cpp">
       <Filter>JUCE Modules\juce_graphics\detail</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\effects\juce_DropShadowEffect.cpp">
@@ -1195,15 +1210,6 @@
       <Filter>JUCE Modules\juce_graphics\fonts</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_GlyphArrangement.cpp">
-      <Filter>JUCE Modules\juce_graphics\fonts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_JustifiedText.cpp">
-      <Filter>JUCE Modules\juce_graphics\fonts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_ShapedText.cpp">
-      <Filter>JUCE Modules\juce_graphics\fonts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_SimpleShapedText.cpp">
       <Filter>JUCE Modules\juce_graphics\fonts</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_TextLayout.cpp">
@@ -1644,6 +1650,9 @@
     <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\detail\juce_AccessibilityHelpers.cpp">
       <Filter>JUCE Modules\juce_gui_basics\detail</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\detail\juce_ComponentPeerHelpers.cpp">
+      <Filter>JUCE Modules\juce_gui_basics\detail</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\drawables\juce_Drawable.cpp">
       <Filter>JUCE Modules\juce_gui_basics\drawables</Filter>
     </ClCompile>
@@ -1989,6 +1998,9 @@
     <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\widgets\juce_TextEditor.cpp">
       <Filter>JUCE Modules\juce_gui_basics\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\widgets\juce_TextEditorModel.cpp">
+      <Filter>JUCE Modules\juce_gui_basics\widgets</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\widgets\juce_Toolbar.cpp">
       <Filter>JUCE Modules\juce_gui_basics\widgets</Filter>
     </ClCompile>
@@ -2216,6 +2228,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\GUI\FxPresetNameEditor.h">
+      <Filter>FxSound\Source\GUI\Components</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\GUI\FxHotkeyLabel.h">
       <Filter>FxSound\Source\GUI\Components</Filter>
     </ClInclude>
@@ -2254,6 +2269,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxView.h">
       <Filter>FxSound\Source\GUI\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\GUI\FxPresetSaveDialog.h">
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxPresetImportDialog.h">
       <Filter>FxSound\Source\GUI\Dialogs</Filter>
@@ -2355,6 +2373,9 @@
       <Filter>JUCE Modules\juce_core\containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\detail\juce_CallbackListenerList.h">
+      <Filter>JUCE Modules\juce_core\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\detail\juce_NativeFileHandle.h">
       <Filter>JUCE Modules\juce_core\detail</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\files\juce_AndroidDocument.h">
@@ -2726,6 +2747,9 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\zip\zlib\deflate.h">
       <Filter>JUCE Modules\juce_core\zip\zlib</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\zip\zlib\gzguts.h">
+      <Filter>JUCE Modules\juce_core\zip\zlib</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\zip\zlib\inffast.h">
       <Filter>JUCE Modules\juce_core\zip\zlib</Filter>
     </ClInclude>
@@ -2744,9 +2768,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\zip\zlib\zconf.h">
       <Filter>JUCE Modules\juce_core\zip\zlib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\zip\zlib\zconf.in.h">
-      <Filter>JUCE Modules\juce_core\zip\zlib</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\zip\zlib\zlib.h">
       <Filter>JUCE Modules\juce_core\zip\zlib</Filter>
     </ClInclude>
@@ -2760,6 +2781,9 @@
       <Filter>JUCE Modules\juce_core\zip</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\zip\juce_ZipFile.h">
+      <Filter>JUCE Modules\juce_core\zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\zip\juce_zlib.h">
       <Filter>JUCE Modules\juce_core\zip</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\juce_core.h">
@@ -2933,7 +2957,19 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\contexts\juce_LowLevelGraphicsSoftwareRenderer.h">
       <Filter>JUCE Modules\juce_graphics\contexts</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\detail\juce_JustifiedText.h">
+      <Filter>JUCE Modules\juce_graphics\detail</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\detail\juce_Ranges.h">
+      <Filter>JUCE Modules\juce_graphics\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\detail\juce_ShapedText.h">
+      <Filter>JUCE Modules\juce_graphics\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\detail\juce_SimpleShapedText.h">
+      <Filter>JUCE Modules\juce_graphics\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\detail\juce_Unicode.h">
       <Filter>JUCE Modules\juce_graphics\detail</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\effects\juce_DropShadowEffect.h">
@@ -3926,6 +3962,9 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_Direct2DMetrics_windows.h">
       <Filter>JUCE Modules\juce_graphics\native</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_Direct2DPixelDataPage_windows.h">
+      <Filter>JUCE Modules\juce_graphics\native</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\native\juce_DirectX_windows.h">
       <Filter>JUCE Modules\juce_graphics\native</Filter>
     </ClInclude>
@@ -4161,6 +4200,9 @@
       <Filter>JUCE Modules\juce_gui_basics\detail</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\detail\juce_ComponentHelpers.h">
+      <Filter>JUCE Modules\juce_gui_basics\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\detail\juce_ComponentPeerHelpers.h">
       <Filter>JUCE Modules\juce_gui_basics\detail</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_gui_basics\detail\juce_CustomMouseCursorInfo.h">
@@ -4852,6 +4894,9 @@
     <None Include="..\Fonts\Gilroy-Semibold.ttf">
       <Filter>FxSound\Fonts</Filter>
     </None>
+    <None Include="..\Images\speaker.svg">
+      <Filter>FxSound\Images</Filter>
+    </None>
     <None Include="..\Images\min_window.svg">
       <Filter>FxSound\Images</Filter>
     </None>
@@ -4942,83 +4987,89 @@
     <None Include="..\Images\Slider_Thumb_bw.svg">
       <Filter>FxSound\Images</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.ar.txt">
+    <None Include="..\..\Resources\Strings\FxSound.ar.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.ba.txt">
+    <None Include="..\..\Resources\Strings\FxSound.ba.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.de.txt">
+    <None Include="..\..\Resources\Strings\FxSound.de.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.es.txt">
+    <None Include="..\..\Resources\Strings\FxSound.es.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.fr.txt">
+    <None Include="..\..\Resources\Strings\FxSound.fr.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.hr.txt">
+    <None Include="..\..\Resources\Strings\FxSound.hr.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\fxsound.hu.txt">
+    <None Include="..\..\Resources\Strings\fxsound.hu.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.id.txt">
+    <None Include="..\..\Resources\Strings\FxSound.id.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.ir.txt">
+    <None Include="..\..\Resources\Strings\FxSound.ir.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.it.txt">
+    <None Include="..\..\Resources\Strings\FxSound.it.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.ja.txt">
+    <None Include="..\..\Resources\Strings\FxSound.ja.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.ko.txt">
+    <None Include="..\..\Resources\Strings\FxSound.ko.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.nl.txt">
+    <None Include="..\..\Resources\Strings\FxSound.nl.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.pl.txt">
+    <None Include="..\..\Resources\Strings\FxSound.pl.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.pt-br.txt">
+    <None Include="..\..\Resources\Strings\FxSound.pt-br.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.pt.txt">
+    <None Include="..\..\Resources\Strings\FxSound.pt.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.ro.txt">
+    <None Include="..\..\Resources\Strings\FxSound.ro.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.ru.txt">
+    <None Include="..\..\Resources\Strings\FxSound.ru.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.sv.txt">
+    <None Include="..\..\Resources\Strings\FxSound.sv.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.th.txt">
+    <None Include="..\..\Resources\Strings\FxSound.th.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.tr.txt">
+    <None Include="..\..\Resources\Strings\FxSound.tr.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.txt">
+    <None Include="..\..\Resources\Strings\FxSound.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.vi.txt">
+    <None Include="..\..\Resources\Strings\FxSound.ua.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.zh-CN.txt">
+    <None Include="..\..\Resources\Strings\FxSound.vi.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
-    <None Include="..\..\Strings\Strings\FxSound.zh-TW.txt">
+    <None Include="..\..\Resources\Strings\FxSound.zh-CN.txt">
+      <Filter>FxSound\Strings</Filter>
+    </None>
+    <None Include="..\..\Resources\Strings\FxSound.zh-TW.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\native\java\README.txt">
       <Filter>JUCE Modules\juce_core\native\java</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_core\zip\zlib\JUCE_CHANGES.txt">
+      <Filter>JUCE Modules\juce_core\zip\zlib</Filter>
     </None>
     <None Include="..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\changes to libjpeg for JUCE.txt">
       <Filter>JUCE Modules\juce_graphics\image_formats\jpglib</Filter>

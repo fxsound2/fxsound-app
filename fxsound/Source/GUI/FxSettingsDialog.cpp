@@ -108,6 +108,7 @@ FxSettingsDialog::FxSettingsDialog() : FxWindow("Settings"), tooltip_window_(thi
 	centreWithSize(getWidth(), getHeight());
 	addToDesktop(0);
 	toFront(true);
+	setAlwaysOnTop(true);
 }
 
 void FxSettingsDialog::closeButtonPressed()
@@ -348,6 +349,8 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 	addAndMakeVisible(&volume_normalizer_toggle_);
 
 	setText();
+
+	updateEndpointList();
 }
 
 FxSettingsDialog::AudioSettingsPane::~AudioSettingsPane()
@@ -380,6 +383,8 @@ void FxSettingsDialog::AudioSettingsPane::paint(Graphics& g)
 
 	setText();
 
+	updateEndpointText();
+
 	SettingsPane::paint(g);
 }
 
@@ -391,7 +396,7 @@ void FxSettingsDialog::AudioSettingsPane::setText()
 	endpoint_title_.setFont(theme.getNormalFont());
 	preferred_endpoint_.setTextWhenNothingSelected(TRANS("Select preferred output"));
 
-	updateEndpointList();
+	volume_normalizer_toggle_.setButtonText(TRANS("Normalize Volume"));
 }
 
 void FxSettingsDialog::AudioSettingsPane::modelChanged(FxModel::Event model_event)
@@ -438,6 +443,18 @@ void FxSettingsDialog::AudioSettingsPane::updateEndpointList()
 	}
 
 	preferred_endpoint_.setSelectedId(pref_device_index, NotificationType::dontSendNotification);
+}
+
+void FxSettingsDialog::AudioSettingsPane::updateEndpointText()
+{
+	auto endpoints = FxModel::getModel().getOutputDevices();
+
+	auto count = preferred_endpoint_.getNumItems();
+	if (count == endpoints.size() + 2)
+	{
+		preferred_endpoint_.changeItemText(count-1, TRANS("Newly connected output device"));
+		preferred_endpoint_.changeItemText(count, TRANS("None"));
+	}	
 }
 
 void FxSettingsDialog::AudioSettingsPane::mouseEnter(const MouseEvent& mouse_event)

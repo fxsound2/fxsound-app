@@ -125,6 +125,7 @@ private:
 		void setText();
 		void modelChanged(FxModel::Event model_event);
 		void updateEndpointList();
+		void updateEndpointText();
 
 		void mouseEnter(const MouseEvent& mouse_event) override;
 		void mouseExit(const MouseEvent& mouse_event) override;

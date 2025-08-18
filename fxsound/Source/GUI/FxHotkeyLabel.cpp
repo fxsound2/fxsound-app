@@ -182,7 +182,7 @@ void FxHotkeyEditor::paint(juce::Graphics& g)
 	}
 	else
 	{
-		borderThickness = 0.75;
+		borderThickness = 1;
 	}
 
 	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
@@ -190,7 +190,7 @@ void FxHotkeyEditor::paint(juce::Graphics& g)
 	{
 		if (FxController::getInstance().isValidHotkey(mod_, vk_))
 		{
-			setColour(Label::textColourId, theme.findColour(TextButton::buttonColourId));
+			setColour(Label::textColourId, theme.findColour(TextEditor::highlightedTextColourId));
 		}
 		else
 		{
@@ -199,7 +199,7 @@ void FxHotkeyEditor::paint(juce::Graphics& g)
 	}
 	else
 	{
-		borderThickness = 0.75;
+		borderThickness = 1;
 		setColour(Label::textColourId, theme.findColour(TextEditor::textColourId));
 	}
 

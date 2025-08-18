@@ -4599,7 +4599,12 @@ static const unsigned char temp_binary_data_34[] =
 217,129,216,182,217,132,58,34,13,10,34,78,111,110,101,34,32,61,32,34,217,132,216,167,32,216,180,217,138,216,161,34,13,10,34,78,101,119,108,121,32,99,111,110,110,101,99,116,101,100,32,111,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,216,
 167,217,132,216,163,216,172,217,135,216,178,216,169,32,216,167,217,132,217,133,216,170,216,181,217,132,32,216,173,216,175,217,138,216,171,217,139,216,167,34,13,10,34,72,105,100,101,32,110,111,116,105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,216,
 165,216,174,217,129,216,167,216,161,32,216,167,217,132,216,165,216,180,216,185,216,167,216,177,216,167,216,170,34,13,10,34,65,117,100,105,111,34,32,61,32,34,216,167,217,132,216,181,217,136,216,170,34,13,10,34,78,111,114,109,97,108,105,122,101,32,86,111,
-108,117,109,101,34,32,61,32,34,216,170,216,179,217,136,217,138,216,169,32,217,133,216,179,216,170,217,136,217,137,32,216,167,217,132,216,181,217,136,216,170,34,13,10,0,0 };
+108,117,109,101,34,32,61,32,34,216,170,216,179,217,136,217,138,216,169,32,217,133,216,179,216,170,217,136,217,137,32,216,167,217,132,216,181,217,136,216,170,34,13,10,34,67,104,97,110,103,101,115,32,116,111,32,121,111,117,114,32,112,114,101,115,101,116,
+32,97,114,101,32,110,111,116,32,115,97,118,101,100,46,92,114,92,110,68,111,32,121,111,117,32,119,97,110,116,32,116,111,32,115,97,118,101,63,34,32,61,32,34,216,170,217,134,217,136,217,138,217,135,58,32,217,138,216,177,216,172,217,137,32,216,167,217,132,
+216,185,217,132,217,133,32,216,168,216,163,217,134,217,135,32,217,132,217,133,32,217,138,216,170,217,133,32,216,173,217,129,216,184,32,216,167,217,132,216,170,216,186,217,138,217,138,216,177,216,167,216,170,32,216,167,217,132,216,170,217,138,32,216,163,
+216,172,216,177,217,138,216,170,217,135,216,167,32,46,92,114,92,110,217,135,217,132,32,216,170,216,177,217,138,216,175,32,216,173,217,129,216,184,217,135,216,167,216,159,34,13,10,34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,216,173,217,129,
+216,184,32,216,167,217,132,216,165,216,185,216,175,216,167,216,175,32,216,167,217,132,217,133,216,179,216,168,217,130,34,13,10,34,83,97,118,101,34,32,61,32,34,216,173,217,129,216,184,34,13,10,34,67,97,110,99,101,108,34,32,61,32,34,216,165,217,132,216,
+186,216,167,216,161,34,0,0 };
 
 const char* FxSound_ar_txt = (const char*) temp_binary_data_34;
 
@@ -4734,7 +4739,11 @@ static const unsigned char temp_binary_data_35[] =
 "\"Newly connected output device\" = \"Novo povezani izlazni ure\xc4\x91""aj\"\r\n"
 "\"Hide notifications\" = \"Sakrij obavje\xc5\xa1tenja\"\r\n"
 "\"Audio\" = \"Audio\"\r\n"
-"\"Normalize Volume\" = \"Normalizuj ja\xc4\x8dinu zvuka\"";
+"\"Normalize Volume\" = \"Normalizuj ja\xc4\x8dinu zvuka\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"Promjene u profilu nisu sa\xc4\x8duvane.\\r\\n\xc5\xbd""elite li ih sa\xc4\x8duvati?\"\r\n"
+"\"Save Preset\" = \"Sa\xc4\x8duvaj profil\"\r\n"
+"\"Save\" = \"Sa\xc4\x8duvaj\"\r\n"
+"\"Cancel\" = \"Otka\xc5\xbei\"";
 
 const char* FxSound_ba_txt = (const char*) temp_binary_data_35;
 
@@ -4751,34 +4760,34 @@ static const unsigned char temp_binary_data_36[] =
 "\"Error in system audio configuration. Unable to run FxSound\" = \"Fehler in der System-Audio-Konfiguration. FxSound kann nicht ausgef\xc3\xbchrt werden\"\r\n"
 "\"OK\" = \"OK\"\r\n"
 "\"Click here to see what\\'s new on this version!\" = \"Klicken Sie hier, um zu sehen, was in dieser Version neu ist!\"\r\n"
-"\"FxSound in system tray\\r\\nClick FxSound icon to reopen\" = \"FxSound in der Systemleiste\\r\\nKlicken Sie auf das FxSound-Symbol, um es wieder zu \xc3\xb6""ffnen\"\r\n"
+"\"FxSound in system tray\\r\\nClick FxSound icon to reopen\" = \"FxSound ist in der Systemleiste\\r\\nKlicken Sie auf das FxSound-Symbol, um es wieder zu \xc3\xb6""ffnen\"\r\n"
 "\"Thanks for using FxSound! Would you be\\r\\ninterested in helping us by taking a quick 4 minute\\r\\nsurvey so we can make FxSound better?\" = \"Vielen Dank f\xc3\xbcr die Verwendung von FxSound!\\r\\nW\xc3\xa4ren Sie daran interessiert, uns mit ei"
 "ner kurzen 4-Minuten-Umfrage\\r\\nzu helfen, damit wir FxSound noch besser machen k\xc3\xb6nnen?\"\r\n"
 "\"Take the survey.\" = \"Nehmen Sie an der Umfrage teil.\"\r\n"
-"\"Changes to your preset are not saved.\\r\\nDo you want to exit?\" = \"Die \xc3\x84nderungen an Ihrer Voreinstellung werden nicht gespeichert.\\r\\nM\xc3\xb6""chten Sie das Programm verlassen?\"\r\n"
-"\"Changes to your preset are not saved.\\r\\nDo you want to ignore the changes?\" = \"Die \xc3\x84nderungen an Ihrer Voreinstellung werden nicht gespeichert.\\r\\nM\xc3\xb6""chten Sie die \xc3\x84nderungen ignorieren?\"\r\n"
-"\"Output Disconnected\" = \"Ausgang getrennt\"\r\n"
-"\"Output: \" = \"Ausgang:\"\r\n"
-"\"Changes to preset %s are saved.\" = \"\xc3\x84nderungen am Preset %s werden gespeichert.\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to exit?\" = \"Die \xc3\x84nderungen an der Voreinstellung werden nicht gespeichert.\\r\\nM\xc3\xb6""chten Sie das Programm verlassen?\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to ignore the changes?\" = \"Die \xc3\x84nderungen an der Voreinstellung werden nicht gespeichert.\\r\\nM\xc3\xb6""chten Sie die \xc3\x84nderungen verwerfen?\"\r\n"
+"\"Output Disconnected\" = \"Ausgabeger\xc3\xa4t getrennt\"\r\n"
+"\"Output: \" = \"Ausgabe:\"\r\n"
+"\"Changes to preset %s are saved.\" = \"\xc3\x84nderungen an Voreinstellung %s werden gespeichert.\"\r\n"
 "\"New preset %s is saved.\" = \"Neue Voreinstellung %s wird gespeichert.\"\r\n"
-"\"Reached the limit on new presets.\" = \"Das Limit f\xc3\xbcr neue Presets wurde erreicht.\"\r\n"
+"\"Reached the limit on new presets.\" = \"Die maximale Anzahl an Voreinstellungen wurde erreicht.\"\r\n"
 "\"Preset %s is deleted.\" = \"Voreinstellung %s wird gel\xc3\xb6scht.\"\r\n"
-"\"Presets are restored to factory defaults\" = \"Presets werden auf Werkseinstellungen zur\xc3\xbc""ckgesetzt\"\r\n"
-"\"Preset file %s already exists in the export path, do you want to overwrite the preset file?\" = \"Presetdatei %s existiert bereits im Exportpfad, soll die Presetdatei \xc3\xbc""berschrieben werden?\"\r\n"
+"\"Presets are restored to factory defaults\" = \"Auf Werkseinstellungen zur\xc3\xbc""ckgesetzt\"\r\n"
+"\"Preset file %s already exists in the export path, do you want to overwrite the preset file?\" = \"Die Voreinstellungs-Datei %s existiert bereits im Exportpfad, soll die Datei \xc3\xbc""berschrieben werden?\"\r\n"
 "\"FxSound is %s.\" = \"FxSound ist %s.\"\r\n"
 "\"on\" = \"an\"\r\n"
 "\"off\" = \"aus\"\r\n"
 "\"Preset: \" = \"Voreinstellung:\"\r\n"
 "\"Clarity\" = \"Klarheit\"\r\n"
-"\"Ambience\" = \"Ambiente\"\r\n"
-"\"Surround Sound\" = \"Surround-Klang\"\r\n"
-"\"Dynamic Boost\" = \"Dynamikverst\xc3\xa4rkung\"\r\n"
+"\"Ambience\" = \"Atmosph\xc3\xa4re\"\r\n"
+"\"Surround Sound\" = \"Raumklang\"\r\n"
+"\"Dynamic Boost\" = \"Dynamik-Verbesserung\"\r\n"
 "\"Bass Boost\" = \"Bass-Verbesserung\"\r\n"
-"\"Enhances and elevates high end\\r\\nfidelity and presence\" = \"Verbessert und hebt den Hochtonbereich\\r\\nWiedergabetreue und Pr\xc3\xa4senz\"\r\n"
-"\"Thickens and smooths audio\\r\\nwith controlled reverberation\" = \"Verdichtet und gl\xc3\xa4ttet Audio\\r\\nmit kontrolliertem Nachhall\"\r\n"
+"\"Enhances and elevates high end\\r\\nfidelity and presence\" = \"Verbessert und hebt die Hochtonbereich-\\r\\nWiedergabetreue und -Pr\xc3\xa4senz\"\r\n"
+"\"Thickens and smooths audio\\r\\nwith controlled reverberation\" = \"Verdichtet und gl\xc3\xa4ttet die T\xc3\xb6ne\\r\\nmit kontrolliertem Nachhall\"\r\n"
 "\"Widens the left-right balance\\r\\nfor expansive, wide sound\" = \"Verbessert die Links-Rechts-Balance\\r\\nf\xc3\xbcr einen weitl\xc3\xa4ufigen, breiten Klang\"\r\n"
 "\"Increases overall volume and balance\\r\\nwith responsive processing\" = \"Erh\xc3\xb6ht die Gesamtlautst\xc3\xa4rke und -balance\\r\\nmit reaktionsschneller Verarbeitung\"\r\n"
-"\"Boosts low end for full,\\r\\nimpactful response\" = \"Verst\xc3\xa4rkt das tiefe Ende f\xc3\xbcr eine volle,\\r\\ndruckvolle Ansprache\"\r\n"
+"\"Boosts low end for full,\\r\\nimpactful response\" = \"Verst\xc3\xa4rkt das tiefe Ende f\xc3\xbcr einen vollen,\\r\\ndruckvollen Klang\"\r\n"
 "\"Super-low Bass. Increase this for more rumble and \\\"thump\\\", decrease if there\\'s too much boominess.\" = \"Super-Tiefbass. Erh\xc3\xb6hen Sie diesen Wert f\xc3\xbcr mehr Rumpeln und \xe2\x80\x9c""Dr\xc3\xb6hnen\xe2\x80\x9d, verringern Sie ihn"
 ", wenn es zu sehr dr\xc3\xb6hnt.\"\r\n"
 "\"Center of your Bass sound. Increase this for a fuller low end, decrease if the bass sounds overwhelming.\" = \"Mitte des Bass-Sounds. Erh\xc3\xb6hen Sie diesen Wert f\xc3\xbcr ein volleres tiefes Ende, verringern Sie ihn, wenn der Bass \xc3\xbc""be"
@@ -4792,16 +4801,16 @@ static const unsigned char temp_binary_data_36[] =
 "\"The high-mid-range. Increase this to get more instrumental harmonics, reduce it to improve drums that have too much \\\"clickiness\\\" or orchestral instruments that are piercing.\" = \"Der hohe Mittenbereich. Erh\xc3\xb6hen Sie diesen Wert, um meh"
 "r instrumentale Obert\xc3\xb6ne zu erhalten, verringern Sie ihn, um Schlagzeuginstrumente, die zu sehr \xe2\x80\x9cklickern\xe2\x80\x9d, oder Orchesterinstrumente, die schrill sind, zu verbessern.\"\r\n"
 "\"The lower end of the high-end range. Increase this for more vocal clarity and articulation, reduce it and move the frequency wheel up and down to find and cut out overly loud \\\"S\\\" and \\\"T\\\" sounds.\" = \"Das untere Ende des High-End-Bereic"
-"hs. Erh\xc3\xb6hen Sie diesen Wert f\xc3\xbcr mehr Klarheit und Artikulation bei Stimmen, verringern Sie ihn und bewegen Sie das Frequenzrad nach oben und unten, um \xc3\xbc""berm\xc3\xa4\xc3\x9fig laute \xe2\x80\x9cS\xe2\x80\x9d- und \xe2\x80\x9cT\xe2"
-"\x80\x9d-Sounds zu finden und herauszuschneiden.\"\r\n"
+"hs. Erh\xc3\xb6hen Sie diesen Wert f\xc3\xbcr mehr Klarheit und Artikulation bei Stimmen, verringern Sie ihn und bewegen Sie das Frequenzregler nach oben und unten, um \xc3\xbc""berm\xc3\xa4\xc3\x9fig laute \xe2\x80\x9cS\xe2\x80\x9d- und \xe2\x80\x9c"
+"T\xe2\x80\x9d-Sounds zu finden und herauszuschneiden.\"\r\n"
 "\"The core high-end range. Increase this to make your audio sound more like it\\'s in an airy, large space, reduce it to help with room noises and unwanted echoing.\" = \"Der Kern-High-End-Bereich. Erh\xc3\xb6hen Sie diesen Wert, um den Eindruck zu e"
-"rwecken, dass Ihr Audiomaterial in einem gro\xc3\x9f""en, luftigen Raum stattfindet, und verringern Sie ihn, um Raumger\xc3\xa4usche und unerw\xc3\xbcnschtes Echo zu vermeiden.\"\r\n"
+"rwecken, dass Ihr Audio-Material in einem gro\xc3\x9f""en, luftigen Raum aufgenommen wurde, und verringern Sie ihn, um Raumger\xc3\xa4usche und unerw\xc3\xbcnschtes Echo zu vermeiden.\"\r\n"
 "\"The highest range of average human hearing. Increase this to give your sound more of a crisp tone, with lots of overtones. Reduce it to remove hiss or painfully high sounds.\" = \"Der h\xc3\xb6""chste Bereich des durchschnittlichen menschlichen Geh"
 "\xc3\xb6rs. Erh\xc3\xb6hen Sie diesen Wert, um Ihrem Sound einen knackigeren Klang mit vielen Obert\xc3\xb6nen zu verleihen. Verringern Sie den Wert, um Rauschen oder schmerzhaft hohe T\xc3\xb6ne zu entfernen.\"\r\n"
 "\"This wheel allows you to adjust which frequencies this EQ band is affecting\\r\\nup or down to target different frequencies/pitches. The EQ slider above\\r\\ncontrols the volume of this EQ band. Increase or decrease to boost or cut\\r\\na portion o"
-"f your audio\\'s frequencies, without modifying the rest of your sound.\" = \"Mit diesem Rad k\xc3\xb6nnen Sie einstellen, auf welche Frequenzen sich dieses EQ-Band auswirkt\\r\\nnach oben oder unten, um verschiedene Frequenzen/Tonh\xc3\xb6hen zu err"
-"eichen. Der EQ-Schieberegler dar\xc3\xbc""ber\\r\\nsteuert die Lautst\xc3\xa4rke dieses EQ-Bands. Erh\xc3\xb6hen oder verringern Sie die Lautst\xc3\xa4rke, um\\r\\neinen Teil der Frequenzen Ihres Audios zu verst\xc3\xa4rken oder abzusenken, ohne den "
-"Rest Ihres Sounds zu ver\xc3\xa4ndern.\"\r\n"
+"f your audio\\'s frequencies, without modifying the rest of your sound.\" = \"Mit diesem Regler k\xc3\xb6nnen Sie einstellen, auf welche Frequenzen sich dieses EQ-Band auswirkt\\r\\nnach oben oder unten, um verschiedene Frequenzen/Tonh\xc3\xb6hen zu "
+"erreichen. Der EQ-Schieberegler dar\xc3\xbc""ber\\r\\nsteuert die Lautst\xc3\xa4rke dieses EQ-Bands. Erh\xc3\xb6hen oder verringern Sie die Lautst\xc3\xa4rke, um\\r\\neinen Teil der Frequenzen Ihres Audios zu verst\xc3\xa4rken oder abzusenken, ohne d"
+"en Rest Ihres Sounds zu ver\xc3\xa4ndern.\"\r\n"
 "\"SUBSCRIBE NOW\" = \"JETZT ABONNIEREN\"\r\n"
 "\"Yes\" = \"Ja\"\r\n"
 "\"No\" = \"Nein\"\r\n"
@@ -4815,17 +4824,17 @@ static const unsigned char temp_binary_data_36[] =
 "\"Import\" = \"Importieren\"\r\n"
 "\"Select the folder which contains the presets...\" = \"W\xc3\xa4hlen Sie den Ordner aus, der die Voreinstellungen enth\xc3\xa4lt\xe2\x80\xa6\"\r\n"
 "\"Folder:\" = \"Ordner:\"\r\n"
-"\"Preset files not found in the selected folder.\" = \"Voreinstellungsdateien nicht im gew\xc3\xa4hlten Ordner gefunden.\"\r\n"
-"\"Settings\" = \"Einstellungen:\"\r\n"
+"\"Preset files not found in the selected folder.\" = \"Es wurden keine Voreinstellungs-Dateien im gew\xc3\xa4hlten Ordner gefunden.\"\r\n"
+"\"Settings\" = \"Einstellungen\"\r\n"
 "\"Donate\" = \"Spenden\"\r\n"
 "\"General\" = \"Allgemein\"\r\n"
 "\"Help\" = \"Hilfe\"\r\n"
-"\"General Preferences\" = \"Allgemeine Pr\xc3\xa4""ferenzen\"\r\n"
-"\"Launch on system startup\" = \"Beim Systemstart starten\"\r\n"
+"\"General Preferences\" = \"Allgemeine Einstellungen\"\r\n"
+"\"Launch on system startup\" = \"Beim Systemstart ausf\xc3\xbchren\"\r\n"
 "\"Automatically switch to newly connected output device\" = \"Automatisch zum neu angeschlossenen\\r\\nAusgabeger\xc3\xa4t wechseln\"\r\n"
-"\"Hide help tips for audio controls\" = \"Hilfetipps f\xc3\xbcr Audiosteuerungen ausblenden\"\r\n"
+"\"Hide help tips for audio controls\" = \"Hilfe zu Kontrollelementen ausblenden\"\r\n"
 "\"Disable keyboard shortcuts\" = \"Tastaturk\xc3\xbcrzel deaktivieren\"\r\n"
-"\"Reset presets to factory defaults\" = \"Voreinstellungen auf\\r\\nWerksvorgaben zur\xc3\xbc""cksetzen\"\r\n"
+"\"Reset presets to factory defaults\" = \"Auf Werkseinstellungen zur\xc3\xbc""cksetzen\"\r\n"
 "\"Turn FxSound On/Off\" = \"FxSound ein/ausschalten\"\r\n"
 "\"Open/Close FxSound\" = \"FxSound \xc3\xb6""ffnen/schlie\xc3\x9f""en\"\r\n"
 "\"Use Next Preset\" = \"N\xc3\xa4""chste Voreinstellung verwenden\"\r\n"
@@ -4847,15 +4856,15 @@ static const unsigned char temp_binary_data_36[] =
 "\"Turn Off\" = \"Ausschalten\"\r\n"
 "\"Turn On\" = \"Einschalten\"\r\n"
 "\"Preset Select\" = \"Voreinstellung w\xc3\xa4hlen\"\r\n"
-"\"Playback Device Select\" = \"Playback Device Select\"\r\n"
-"\"Enter your preset name\" = \"Eingabe des Voreinstellungsnamens\"\r\n"
-"\"Enter new preset name\" = \"Eingabe eines neuen Voreinstellungsnamens\"\r\n"
-"\"Overwrite Existing Preset\" = \"Vorhandene Voreinstellung \xc3\xbc""berschreiben\"\r\n"
+"\"Playback Device Select\" = \"Ausgabeger\xc3\xa4t w\xc3\xa4hlen\"\r\n"
+"\"Enter your preset name\" = \"Name der Voreinstellung\"\r\n"
+"\"Enter new preset name\" = \"Neuer Name der Voreinstellung\"\r\n"
+"\"Overwrite Existing Preset\" = \"Voreinstellung \xc3\xbc""berschreiben\"\r\n"
 "\"Save New Preset\" = \"Neue Voreinstellung speichern\"\r\n"
-"\"Undo Preset Changes\" = \"Preset-\xc3\x84nderungen r\xc3\xbc""ckg\xc3\xa4ngig machen\"\r\n"
-"\"Rename Preset\" = \"Preset umbenennen\"\r\n"
-"\"Delete Preset\" = \"Preset l\xc3\xb6schen\"\r\n"
-"\"Download Bonus Presets\" = \"Bonusvoreinstellungen herunterladen\"\r\n"
+"\"Undo Preset Changes\" = \"Voreinstellungs-\xc3\x84nderung verwerfen\"\r\n"
+"\"Rename Preset\" = \"Voreinstellung umbenennen\"\r\n"
+"\"Delete Preset\" = \"Voreinstellung l\xc3\xb6schen\"\r\n"
+"\"Download Bonus Presets\" = \"Bonus-Voreinstellungen herunterladen\"\r\n"
 "\"FxSound is unable to play processed audio through the selected output device.\\r\\nAnother application could be using it in exclusive mode or the device could be\\r\\ndisconnected. To disable exclusive mode follow these \" = \"FxSound ist nicht in "
 "der Lage, verarbeitete Audiodaten \xc3\xbc""ber das ausgew\xc3\xa4hlte Ausgabeger\xc3\xa4t abzuspielen.\\r\\nEine andere Anwendung k\xc3\xb6nnte es im exklusiven Modus verwenden oder das Ger\xc3\xa4t k\xc3\xb6nnte\\r\\nnicht angeschlossen sein. Um de"
 "n Exklusivmodus zu deaktivieren, gehen Sie folgenderma\xc3\x9f""en vor\"\r\n"
@@ -4873,7 +4882,11 @@ static const unsigned char temp_binary_data_36[] =
 "\"Newly connected output device\" = \"Neu verbundenes Ausgabeger\xc3\xa4t\"\r\n"
 "\"Hide notifications\" = \"Benachrichtigungen ausblenden\"\r\n"
 "\"Audio\" = \"Audio\"\r\n"
-"\"Normalize Volume\" = \"Lautst\xc3\xa4rke normalisieren\"";
+"\"Normalize Volume\" = \"Lautst\xc3\xa4rke normalisieren\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"Die \xc3\x84nderungen an Ihrer Voreinstellung wurden nicht gespeichert.\\r\\nM\xc3\xb6""chten Sie sie speichern?\"\r\n"
+"\"Save Preset\" = \"Voreinstellung speichern\"\r\n"
+"\"Save\" = \"Speichern\"\r\n"
+"\"Cancel\" = \"Abbrechen\"";
 
 const char* FxSound_de_txt = (const char*) temp_binary_data_36;
 
@@ -5008,7 +5021,11 @@ static const unsigned char temp_binary_data_37[] =
 "\"Newly connected output device\" = \"Dispositivo de salida reci\xc3\xa9n conectado\"\r\n"
 "\"Hide notifications\" = \"Ocultar notificaciones\"\r\n"
 "\"Audio\" = \"Audio\"\r\n"
-"\"Normalize Volume\" = \"Normalizar volumen\"\r\n";
+"\"Normalize Volume\" = \"Normalizar volumen\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"No se han guardado los cambios en su preajuste.\\r\\n\xc2\xbf""Desea guardarlos?\"\r\n"
+"\"Save Preset\" = \"Guardar preajuste\"\r\n"
+"\"Save\" = \"Guardar\"\r\n"
+"\"Cancel\" = \"Cancelar\"";
 
 const char* FxSound_es_txt = (const char*) temp_binary_data_37;
 
@@ -5148,7 +5165,11 @@ static const unsigned char temp_binary_data_38[] =
 "\"Newly connected output device\" = \"Appareil de sortie r\xc3\xa9""cemment connect\xc3\xa9\"\r\n"
 "\"Hide notifications\" = \"Masquer les notifications\"\r\n"
 "\"Audio\" = \"Audio\"\r\n"
-"\"Normalize Volume\" = \"Normaliser le volume\"";
+"\"Normalize Volume\" = \"Normaliser le volume\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"Les changements apport\xc3\xa9s \xc3\xa0 votre pr\xc3\xa9r\xc3\xa9glage ne sont pas enregistr\xc3\xa9s.\\r\\nVoulez-vous les enregistrer ?\"\r\n"
+"\"Save Preset\" = \"Enregistrer le pr\xc3\xa9r\xc3\xa9glage\"\r\n"
+"\"Save\" = \"Enregistrer\"\r\n"
+"\"Cancel\" = \"Annuler\"";
 
 const char* FxSound_fr_txt = (const char*) temp_binary_data_38;
 
@@ -5282,7 +5303,11 @@ static const unsigned char temp_binary_data_39[] =
 "\"Newly connected output device\" = \"Novo povezani izlazni ure\xc4\x91""aj\"\r\n"
 "\"Hide notifications\" = \"Sakrij obavijesti\"\r\n"
 "\"Audio\" = \"Hang\"\r\n"
-"\"Normalize Volume\" = \"Hanger\xc5\x91 normaliz\xc3\xa1l\xc3\xa1sa\"";
+"\"Normalize Volume\" = \"Hanger\xc5\x91 normaliz\xc3\xa1l\xc3\xa1sa\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"Promjene za va\xc5\xa1 preset nisu sa\xc4\x8duvane.\\r\\n\xc5\xbd""elite li ih spremiti?\"\r\n"
+"\"Save Preset\" = \"Spremi postavku\"\r\n"
+"\"Save\" = \"Spremi\"\r\n"
+"\"Cancel\" = \"Odustani\"";
 
 const char* FxSound_hr_txt = (const char*) temp_binary_data_39;
 
@@ -5426,7 +5451,11 @@ static const unsigned char temp_binary_data_40[] =
 "\"Newly connected output device\" = \"\xc3\x9ajonnan csatlakoztatott kimeneti eszk\xc3\xb6z\"\r\n"
 "\"Hide notifications\" = \"\xc3\x89rtes\xc3\xadt\xc3\xa9sek elrejt\xc3\xa9se\"\r\n"
 "\"Audio\" = \"Hang\"\r\n"
-"\"Normalize Volume\" = \"Hanger\xc5\x91 normaliz\xc3\xa1l\xc3\xa1sa\"\r\n";
+"\"Normalize Volume\" = \"Hanger\xc5\x91 normaliz\xc3\xa1l\xc3\xa1sa\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"Az el\xc5\x91""be\xc3\xa1ll\xc3\xadt\xc3\xa1s m\xc3\xb3""dos\xc3\xadt\xc3\xa1sai nem ker\xc3\xbcltek ment\xc3\xa9sre.\\r\\nSzeretn\xc3\xa9 menteni \xc5\x91ket?\"\r\n"
+"\"Save Preset\" = \"El\xc5\x91""be\xc3\xa1ll\xc3\xadt\xc3\xa1s ment\xc3\xa9se\"\r\n"
+"\"Save\" = \"Ment\xc3\xa9s\"\r\n"
+"\"Cancel\" = \"M\xc3\xa9gse\"";
 
 const char* fxsound_hu_txt = (const char*) temp_binary_data_40;
 
@@ -5560,7 +5589,11 @@ static const unsigned char temp_binary_data_41[] =
 "\"Newly connected output device\" = \"Perangkat keluaran yang baru terhubung\"\r\n"
 "\"Hide notifications\" = \"Sembunyikan notifikasi\"\r\n"
 "\"Audio\" = \"Audio\"\r\n"
-"\"Normalize Volume\" = \"Menormalkan volume suara\"";
+"\"Normalize Volume\" = \"Menormalkan volume suara\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"Perubahan pada preset Anda belum disimpan.\\r\\nApakah Anda ingin menyimpannya?\"\r\n"
+"\"Save Preset\" = \"Simpan Preset\"\r\n"
+"\"Save\" = \"Simpan\"\r\n"
+"\"Cancel\" = \"Batal\"";
 
 const char* FxSound_id_txt = (const char*) temp_binary_data_41;
 
@@ -5763,7 +5796,12 @@ static const unsigned char temp_binary_data_42[] =
 13,10,34,78,111,110,101,34,32,61,32,34,217,135,219,140,218,134,34,13,10,34,78,101,119,108,121,32,99,111,110,110,101,99,116,101,100,32,111,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,216,175,216,179,216,170,218,175,216,167,217,135,32,
 216,174,216,177,217,136,216,172,219,140,32,217,133,216,170,216,181,217,132,32,216,180,216,175,217,135,32,216,172,216,175,219,140,216,175,34,13,10,34,72,105,100,101,32,110,111,116,105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,217,133,216,174,217,
 129,219,140,32,218,169,216,177,216,175,217,134,32,216,167,216,185,217,132,216,167,217,134,226,128,140,217,135,216,167,34,13,10,34,65,117,100,105,111,34,32,61,32,34,216,181,216,175,216,167,34,13,10,34,78,111,114,109,97,108,105,122,101,32,86,111,108,117,
-109,101,34,32,61,32,34,217,134,216,177,217,133,216,167,217,132,226,128,140,216,179,216,167,216,178,219,140,32,216,173,216,172,217,133,32,216,181,216,175,216,167,34,0,0 };
+109,101,34,32,61,32,34,217,134,216,177,217,133,216,167,217,132,226,128,140,216,179,216,167,216,178,219,140,32,216,173,216,172,217,133,32,216,181,216,175,216,167,34,13,10,34,67,104,97,110,103,101,115,32,116,111,32,121,111,117,114,32,112,114,101,115,101,
+116,32,97,114,101,32,110,111,116,32,115,97,118,101,100,46,92,114,92,110,68,111,32,121,111,117,32,119,97,110,116,32,116,111,32,115,97,118,101,63,34,32,61,32,34,216,170,216,186,219,140,219,140,216,177,216,167,216,170,32,216,170,217,134,216,184,219,140,
+217,133,216,167,216,170,32,216,180,217,133,216,167,32,216,176,216,174,219,140,216,177,217,135,32,217,134,216,180,216,175,217,135,226,128,140,216,167,217,134,216,175,46,92,114,92,110,216,162,219,140,216,167,32,217,133,219,140,226,128,140,216,174,217,136,
+216,167,217,135,219,140,216,175,32,216,162,217,134,226,128,140,217,135,216,167,32,216,177,216,167,32,216,176,216,174,219,140,216,177,217,135,32,218,169,217,134,219,140,216,175,216,159,34,13,10,34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,
+216,176,216,174,219,140,216,177,217,135,32,216,170,217,134,216,184,219,140,217,133,216,167,216,170,34,13,10,34,83,97,118,101,34,32,61,32,34,216,176,216,174,219,140,216,177,217,135,34,13,10,34,67,97,110,99,101,108,34,32,61,32,34,217,132,216,186,217,136,
+34,0,0 };
 
 const char* FxSound_ir_txt = (const char*) temp_binary_data_42;
 
@@ -5900,7 +5938,11 @@ static const unsigned char temp_binary_data_43[] =
 "\"Newly connected output device\" = \"Dispositivo di uscita appena connesso\"\r\n"
 "\"Hide notifications\" = \"Nascondi notifiche\"\r\n"
 "\"Audio\" = \"Audio\"\r\n"
-"\"Normalize Volume\" = \"Normalizza il volume\"\r\n";
+"\"Normalize Volume\" = \"Normalizza il volume\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"Le modifiche alla preimpostazione non sono state salvate.\\r\\nVuoi salvarle?\"\r\n"
+"\"Save Preset\" = \"Salva preimpostazione\"\r\n"
+"\"Save\" = \"Salva\"\r\n"
+"\"Cancel\" = \"Annulla\"";
 
 const char* FxSound_it_txt = (const char*) temp_binary_data_43;
 
@@ -6091,7 +6133,10 @@ static const unsigned char temp_binary_data_44[] =
 101,34,32,61,32,34,227,129,170,227,129,151,34,13,10,34,78,101,119,108,121,32,99,111,110,110,101,99,116,101,100,32,111,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,230,150,176,227,129,151,227,129,143,230,142,165,231,182,154,227,129,149,
 227,130,140,227,129,159,229,135,186,229,138,155,227,131,135,227,131,144,227,130,164,227,130,185,34,13,10,34,72,105,100,101,32,110,111,116,105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,233,128,154,231,159,165,227,130,146,233,157,158,232,161,168,
 231,164,186,227,129,171,227,129,153,227,130,139,34,13,10,34,65,117,100,105,111,34,32,61,32,34,227,130,170,227,131,188,227,131,135,227,130,163,227,130,170,34,13,10,34,78,111,114,109,97,108,105,122,101,32,86,111,108,117,109,101,34,32,61,32,34,233,159,179,
-233,135,143,227,130,146,230,173,163,232,166,143,229,140,150,34,0,0 };
+233,135,143,227,130,146,230,173,163,232,166,143,229,140,150,34,13,10,34,67,104,97,110,103,101,115,32,116,111,32,121,111,117,114,32,112,114,101,115,101,116,32,97,114,101,32,110,111,116,32,115,97,118,101,100,46,92,114,92,110,68,111,32,121,111,117,32,119,
+97,110,116,32,116,111,32,115,97,118,101,63,34,32,61,32,34,227,131,151,227,131,170,227,130,187,227,131,131,227,131,136,227,129,184,227,129,174,229,164,137,230,155,180,227,129,175,228,191,157,229,173,152,227,129,149,227,130,140,227,129,166,227,129,132,
+227,129,190,227,129,155,227,130,147,227,128,130,92,114,92,110,228,191,157,229,173,152,227,129,151,227,129,190,227,129,153,227,129,139,239,188,159,34,13,10,34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,227,131,151,227,131,170,227,130,187,227,
+131,131,227,131,136,227,130,146,228,191,157,229,173,152,34,13,10,34,83,97,118,101,34,32,61,32,34,228,191,157,229,173,152,34,13,10,34,67,97,110,99,101,108,34,32,61,32,34,227,130,173,227,131,163,227,131,179,227,130,187,227,131,171,34,0,0 };
 
 const char* FxSound_ja_txt = (const char*) temp_binary_data_44;
 
@@ -6264,7 +6309,11 @@ static const unsigned char temp_binary_data_45[] =
 156,235,160,165,236,157,132,32,236,132,160,237,131,157,237,149,152,236,132,184,236,154,148,34,13,10,34,80,114,101,102,101,114,114,101,100,32,111,117,116,112,117,116,58,34,32,61,32,34,236,132,160,237,152,184,235,144,152,235,138,148,32,236,182,156,235,
 160,165,58,34,13,10,34,78,111,110,101,34,32,61,32,34,236,151,134,236,157,140,34,13,10,34,78,101,119,108,121,32,99,111,110,110,101,99,116,101,100,32,111,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,236,131,136,235,161,156,32,236,151,176,
 234,178,176,235,144,156,32,236,182,156,235,160,165,32,236,158,165,236,185,152,34,13,10,34,72,105,100,101,32,110,111,116,105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,236,149,140,235,166,188,32,236,136,168,234,184,176,234,184,176,34,13,10,34,65,
-117,100,105,111,34,32,61,32,34,236,152,164,235,148,148,236,152,164,34,13,10,34,78,111,114,109,97,108,105,122,101,32,86,111,108,117,109,101,34,32,61,32,34,235,179,188,235,165,168,236,157,132,32,236,160,149,234,183,156,237,153,148,34,0,0 };
+117,100,105,111,34,32,61,32,34,236,152,164,235,148,148,236,152,164,34,13,10,34,78,111,114,109,97,108,105,122,101,32,86,111,108,117,109,101,34,32,61,32,34,235,179,188,235,165,168,236,157,132,32,236,160,149,234,183,156,237,153,148,34,13,10,34,67,104,97,
+110,103,101,115,32,116,111,32,121,111,117,114,32,112,114,101,115,101,116,32,97,114,101,32,110,111,116,32,115,97,118,101,100,46,92,114,92,110,68,111,32,121,111,117,32,119,97,110,116,32,116,111,32,115,97,118,101,63,34,32,61,32,34,235,179,128,234,178,189,
+235,144,156,32,237,148,132,235,166,172,236,133,139,236,157,180,32,236,160,128,236,158,165,235,144,152,236,167,128,32,236,149,138,236,149,152,236,138,181,235,139,136,235,139,164,46,92,114,92,110,236,160,128,236,158,165,237,149,152,236,139,156,234,178,
+160,236,138,181,235,139,136,234,185,140,63,34,13,10,34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,237,148,132,235,166,172,236,133,139,32,236,160,128,236,158,165,34,13,10,34,83,97,118,101,34,32,61,32,34,236,160,128,236,158,165,34,13,10,34,
+67,97,110,99,101,108,34,32,61,32,34,236,183,168,236,134,140,34,0,0 };
 
 const char* FxSound_ko_txt = (const char*) temp_binary_data_45;
 
@@ -6398,7 +6447,11 @@ static const unsigned char temp_binary_data_46[] =
 "\"Newly connected output device\" = \"Nieuw aangesloten uitvoerapparaat\"\r\n"
 "\"Hide notifications\" = \"Meldingen verbergen\"\r\n"
 "\"Audio\" = \"Audio\"\r\n"
-"\"Normalize Volume\" = \"Volume normaliseren\"";
+"\"Normalize Volume\" = \"Volume normaliseren\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"Wijzigingen in uw preset zijn niet opgeslagen.\\r\\nWilt u deze opslaan?\"\r\n"
+"\"Save Preset\" = \"Preset opslaan\"\r\n"
+"\"Save\" = \"Opslaan\"\r\n"
+"\"Cancel\" = \"Annuleren\"";
 
 const char* FxSound_nl_txt = (const char*) temp_binary_data_46;
 
@@ -6542,7 +6595,11 @@ static const unsigned char temp_binary_data_47[] =
 "\"Newly connected output device\" = \"Nowo pod\xc5\x82\xc4\x85""czone urz\xc4\x85""dzenie wyj\xc5\x9b""ciowe\"\r\n"
 "\"Hide notifications\" = \"Ukryj powiadomienia\"\r\n"
 "\"Audio\" = \"D\xc5\xbawi\xc4\x99k\"\r\n"
-"\"Normalize Volume\" = \"Normalizuj g\xc5\x82o\xc5\x9bno\xc5\x9b\xc4\x87\"";
+"\"Normalize Volume\" = \"Normalizuj g\xc5\x82o\xc5\x9bno\xc5\x9b\xc4\x87\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"Zmiany w ustawieniach wst\xc4\x99pnych nie zosta\xc5\x82y zapisane.\\r\\nCzy chcesz je zapisa\xc4\x87?\"\r\n"
+"\"Save Preset\" = \"Zapisz ustawienia\"\r\n"
+"\"Save\" = \"Zapisz\"\r\n"
+"\"Cancel\" = \"Anuluj\"";
 
 const char* FxSound_pl_txt = (const char*) temp_binary_data_47;
 
@@ -6678,7 +6735,11 @@ static const unsigned char temp_binary_data_48[] =
 "\"Newly connected output device\" = \"Dispositivo de sa\xc3\xad""da rec\xc3\xa9m-conectado\"\r\n"
 "\"Hide notifications\" = \"Ocultar notifica\xc3\xa7\xc3\xb5""es\"\r\n"
 "\"Audio\" = \"\xc3\x81udio\"\r\n"
-"\"Normalize Volume\" = \"Normalizar o volume\"";
+"\"Normalize Volume\" = \"Normalizar o volume\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"As altera\xc3\xa7\xc3\xb5""es na sua predefini\xc3\xa7\xc3\xa3o n\xc3\xa3o foram salvas.\\r\\nDeseja salv\xc3\xa1-las?\"\r\n"
+"\"Save Preset\" = \"Salvar predefini\xc3\xa7\xc3\xa3o\"\r\n"
+"\"Save\" = \"Salvar\"\r\n"
+"\"Cancel\" = \"Cancelar\"";
 
 const char* FxSound_ptbr_txt = (const char*) temp_binary_data_48;
 
@@ -6813,7 +6874,11 @@ static const unsigned char temp_binary_data_49[] =
 "\"Newly connected output device\" = \"Dispositivo de sa\xc3\xad""da recentemente conectado\"\r\n"
 "\"Hide notifications\" = \"Ocultar notifica\xc3\xa7\xc3\xb5""es\"\r\n"
 "\"Audio\" = \"\xc3\x81udio\"\r\n"
-"\"Normalize Volume\" = \"Normalizar o volume\"\r\n";
+"\"Normalize Volume\" = \"Normalizar o volume\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"As altera\xc3\xa7\xc3\xb5""es na sua predefini\xc3\xa7\xc3\xa3o n\xc3\xa3o est\xc3\xa3o guardadas.\\r\\nDeseja guard\xc3\xa1-las?\"\r\n"
+"\"Save Preset\" = \"Guardar predefini\xc3\xa7\xc3\xa3o\"\r\n"
+"\"Save\" = \"Guardar\"\r\n"
+"\"Cancel\" = \"Cancelar\"";
 
 const char* FxSound_pt_txt = (const char*) temp_binary_data_49;
 
@@ -6953,7 +7018,11 @@ static const unsigned char temp_binary_data_50[] =
 "\"Newly connected output device\" = \"Dispozitiv de ie\xc8\x99ire conectat recent\"\r\n"
 "\"Hide notifications\" = \"Ascunde notific\xc4\x83rile\"\r\n"
 "\"Audio\" = \"Audio\"\r\n"
-"\"Normalize Volume\" = \"Normalizeaz\xc4\x83 volumul\"\r\n";
+"\"Normalize Volume\" = \"Normalizeaz\xc4\x83 volumul\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"Modific\xc4\x83rile aduse preset\xc4\x83rii nu sunt salvate.\\r\\nDori\xc8\x9bi s\xc4\x83 le salva\xc8\x9bi?\"\r\n"
+"\"Save Preset\" = \"Salveaz\xc4\x83 presetarea\"\r\n"
+"\"Save\" = \"Salveaz\xc4\x83\"\r\n"
+"\"Cancel\" = \"Anuleaz\xc4\x83\"";
 
 const char* FxSound_ro_txt = (const char*) temp_binary_data_50;
 
@@ -7182,7 +7251,11 @@ static const unsigned char temp_binary_data_51[] =
 208,189,208,189,208,190,208,181,32,209,131,209,129,209,130,209,128,208,190,208,185,209,129,209,130,208,178,208,190,32,208,178,209,139,208,178,208,190,208,180,208,176,32,208,183,208,178,209,131,208,186,208,176,34,13,10,34,72,105,100,101,32,110,111,116,
 105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,208,161,208,186,209,128,209,139,209,130,209,140,32,209,131,208,178,208,181,208,180,208,190,208,188,208,187,208,181,208,189,208,184,209,143,34,13,10,34,65,117,100,105,111,34,32,61,32,34,208,144,209,
 131,208,180,208,184,208,190,34,13,10,34,78,111,114,109,97,108,105,122,101,32,86,111,108,117,109,101,34,32,61,32,34,208,157,208,190,209,128,208,188,208,176,208,187,208,184,208,183,208,190,208,178,208,176,209,130,209,140,32,208,179,209,128,208,190,208,
-188,208,186,208,190,209,129,209,130,209,140,34,13,10,0,0 };
+188,208,186,208,190,209,129,209,130,209,140,34,13,10,34,67,104,97,110,103,101,115,32,116,111,32,121,111,117,114,32,112,114,101,115,101,116,32,97,114,101,32,110,111,116,32,115,97,118,101,100,46,92,114,92,110,68,111,32,121,111,117,32,119,97,110,116,32,
+116,111,32,115,97,118,101,63,34,32,61,32,34,208,152,208,183,208,188,208,181,208,189,208,181,208,189,208,184,209,143,32,208,178,32,209,141,209,130,208,190,208,188,32,209,136,208,176,208,177,208,187,208,190,208,189,208,181,32,208,189,208,181,32,208,177,
+209,139,208,187,208,184,32,209,129,208,190,209,133,209,128,208,176,208,189,208,181,208,189,209,139,46,92,114,92,110,208,165,208,190,209,130,208,184,209,130,208,181,32,208,184,209,133,32,209,129,208,190,209,133,209,128,208,176,208,189,208,184,209,130,
+209,140,63,34,13,10,34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,208,161,208,190,209,133,209,128,208,176,208,189,208,184,209,130,209,140,32,209,136,208,176,208,177,208,187,208,190,208,189,34,13,10,34,83,97,118,101,34,32,61,32,34,208,161,
+208,190,209,133,209,128,208,176,208,189,208,184,209,130,209,140,34,13,10,34,67,97,110,99,101,108,34,32,61,32,34,208,158,209,130,208,188,208,181,208,189,208,176,34,0,0 };
 
 const char* FxSound_ru_txt = (const char*) temp_binary_data_51;
 
@@ -7319,7 +7392,11 @@ static const unsigned char temp_binary_data_52[] =
 "\"Newly connected output device\" = \"Nyansluten utg\xc3\xa5ngsenhet\"\r\n"
 "\"Hide notifications\" = \"D\xc3\xb6lj aviseringar\"\r\n"
 "\"Audio\" = \"Ljud\"\r\n"
-"\"Normalize Volume\" = \"Normalisera volymen\"";
+"\"Normalize Volume\" = \"Normalisera volymen\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"\xc3\x84ndringarna p\xc3\xa5 din f\xc3\xb6rinst\xc3\xa4llning \xc3\xa4r inte sparade.\\r\\nVill du spara dem?\"\r\n"
+"\"Save Preset\" = \"Spara f\xc3\xb6rinst\xc3\xa4llning\"\r\n"
+"\"Save\" = \"Spara\"\r\n"
+"\"Cancel\" = \"Avbryt\"";
 
 const char* FxSound_sv_txt = (const char*) temp_binary_data_52;
 
@@ -7597,7 +7674,13 @@ static const unsigned char temp_binary_data_53[] =
 185,136,224,184,173,34,13,10,34,72,105,100,101,32,110,111,116,105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,224,184,139,224,185,136,224,184,173,224,184,153,224,184,129,224,184,178,224,184,163,224,185,129,224,184,136,224,185,137,224,184,135,224,
 185,128,224,184,149,224,184,183,224,184,173,224,184,153,34,13,10,34,65,117,100,105,111,34,32,61,32,34,224,185,128,224,184,170,224,184,181,224,184,162,224,184,135,34,13,10,34,78,111,114,109,97,108,105,122,101,32,86,111,108,117,109,101,34,32,61,32,34,224,
 184,155,224,184,163,224,184,177,224,184,154,224,184,163,224,184,176,224,184,148,224,184,177,224,184,154,224,185,128,224,184,170,224,184,181,224,184,162,224,184,135,224,185,131,224,184,171,224,185,137,224,185,128,224,184,151,224,185,136,224,184,178,224,
-184,129,224,184,177,224,184,153,34,0,0 };
+184,129,224,184,177,224,184,153,34,13,10,34,67,104,97,110,103,101,115,32,116,111,32,121,111,117,114,32,112,114,101,115,101,116,32,97,114,101,32,110,111,116,32,115,97,118,101,100,46,92,114,92,110,68,111,32,121,111,117,32,119,97,110,116,32,116,111,32,115,
+97,118,101,63,34,32,61,32,34,224,184,129,224,184,178,224,184,163,224,185,128,224,184,155,224,184,165,224,184,181,224,185,136,224,184,162,224,184,153,224,185,129,224,184,155,224,184,165,224,184,135,224,184,158,224,184,163,224,184,181,224,185,128,224,184,
+139,224,184,149,224,184,130,224,184,173,224,184,135,224,184,132,224,184,184,224,184,147,224,184,162,224,184,177,224,184,135,224,185,132,224,184,161,224,185,136,224,185,132,224,184,148,224,185,137,224,184,163,224,184,177,224,184,154,224,184,129,224,184,
+178,224,184,163,224,184,154,224,184,177,224,184,153,224,184,151,224,184,182,224,184,129,92,114,92,110,224,184,132,224,184,184,224,184,147,224,184,149,224,185,137,224,184,173,224,184,135,224,184,129,224,184,178,224,184,163,224,184,154,224,184,177,224,
+184,153,224,184,151,224,184,182,224,184,129,224,184,171,224,184,163,224,184,183,224,184,173,224,185,132,224,184,161,224,185,136,63,34,13,10,34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,224,184,154,224,184,177,224,184,153,224,184,151,224,
+184,182,224,184,129,224,184,158,224,184,163,224,184,181,224,185,128,224,184,139,224,184,149,34,13,10,34,83,97,118,101,34,32,61,32,34,224,184,154,224,184,177,224,184,153,224,184,151,224,184,182,224,184,129,34,13,10,34,67,97,110,99,101,108,34,32,61,32,
+34,224,184,162,224,184,129,224,185,128,224,184,165,224,184,180,224,184,129,34,0,0 };
 
 const char* FxSound_th_txt = (const char*) temp_binary_data_53;
 
@@ -7739,7 +7822,11 @@ static const unsigned char temp_binary_data_54[] =
 "\"Newly connected output device\" = \"Yeni ba\xc4\x9flanan \xc3\xa7\xc4\xb1k\xc4\xb1\xc5\x9f cihaz\xc4\xb1\"\r\n"
 "\"Hide notifications\" = \"Bildirimleri gizle\"\r\n"
 "\"Audio\" = \"Ses\"\r\n"
-"\"Normalize Volume\" = \"Ses d\xc3\xbczeyini e\xc5\x9fitle\"";
+"\"Normalize Volume\" = \"Ses d\xc3\xbczeyini e\xc5\x9fitle\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"\xc3\x96n ayar\xc4\xb1n\xc4\xb1zdaki de\xc4\x9fi\xc5\x9fiklikler kaydedilmedi.\\r\\nKaydetmek ister misiniz?\"\r\n"
+"\"Save Preset\" = \"\xc3\x96n ayar\xc4\xb1 kaydet\"\r\n"
+"\"Save\" = \"Kaydet\"\r\n"
+"\"Cancel\" = \"\xc4\xb0ptal\"";
 
 const char* FxSound_tr_txt = (const char*) temp_binary_data_54;
 
@@ -7872,7 +7959,11 @@ static const unsigned char temp_binary_data_55[] =
 "\"Newly connected output device\" = \"Newly connected output device\"\r\n"
 "\"Hide notifications\" = \"Hide notifications\"\r\n"
 "\"Audio\" = \"Audio\"\r\n"
-"\"Normalize Volume\" = \"Normalize Volume\"";
+"\"Normalize Volume\" = \"Normalize Volume\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"Changes to your preset are not saved.\\r\\nDo you want to save?\"\r\n"
+"\"Save Preset\" = \"Save Preset\"\r\n"
+"\"Save\" = \"Save\"\r\n"
+"\"Cancel\" = \"Cancel\"";
 
 const char* FxSound_txt = (const char*) temp_binary_data_55;
 
@@ -8095,7 +8186,11 @@ static const unsigned char temp_binary_data_56[] =
 176,208,178,208,189,208,190,32,208,191,209,150,208,180,208,186,208,187,209,142,209,135,208,181,208,189,208,184,208,185,32,208,191,209,128,208,184,209,129,209,130,209,128,209,150,208,185,32,208,178,208,184,208,178,208,181,208,180,208,181,208,189,208,189,
 209,143,32,208,183,208,178,209,131,208,186,209,131,34,13,10,34,72,105,100,101,32,110,111,116,105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,208,159,209,128,208,184,209,133,208,190,208,178,208,176,209,130,208,184,32,209,129,208,191,208,190,208,178,
 209,150,209,137,208,181,208,189,208,189,209,143,34,13,10,34,65,117,100,105,111,34,32,61,32,34,208,144,209,131,208,180,209,150,208,190,34,13,10,34,78,111,114,109,97,108,105,122,101,32,86,111,108,117,109,101,34,32,61,32,34,208,157,208,190,209,128,208,188,
-208,176,208,187,209,150,208,183,209,131,208,178,208,176,209,130,208,184,32,208,179,209,131,209,135,208,189,209,150,209,129,209,130,209,140,34,13,10,0,0 };
+208,176,208,187,209,150,208,183,209,131,208,178,208,176,209,130,208,184,32,208,179,209,131,209,135,208,189,209,150,209,129,209,130,209,140,34,13,10,34,67,104,97,110,103,101,115,32,116,111,32,121,111,117,114,32,112,114,101,115,101,116,32,97,114,101,32,
+110,111,116,32,115,97,118,101,100,46,92,114,92,110,68,111,32,121,111,117,32,119,97,110,116,32,116,111,32,115,97,118,101,63,34,32,61,32,34,208,151,208,188,209,150,208,189,208,184,32,208,178,32,209,134,209,140,208,190,208,188,209,131,32,209,136,208,176,
+208,177,208,187,208,190,208,189,209,150,32,208,189,208,181,32,208,183,208,177,208,181,209,128,208,181,208,182,208,181,208,189,208,190,46,92,114,92,110,208,145,208,176,208,182,208,176,209,148,209,130,208,181,32,208,183,208,177,208,181,209,128,208,181,
+208,179,209,130,208,184,32,209,151,209,133,63,34,13,10,34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,208,151,208,177,208,181,209,128,208,181,208,179,209,130,208,184,32,209,136,208,176,208,177,208,187,208,190,208,189,34,13,10,34,83,97,118,
+101,34,32,61,32,34,208,151,208,177,208,181,209,128,208,181,208,179,209,130,208,184,34,13,10,34,67,97,110,99,101,108,34,32,61,32,34,208,161,208,186,208,176,209,129,209,131,208,178,208,176,209,130,208,184,34,0,0 };
 
 const char* FxSound_ua_txt = (const char*) temp_binary_data_56;
 
@@ -8253,7 +8348,12 @@ static const unsigned char temp_binary_data_57[] =
 "\"Newly connected output device\" = \"Thi\xe1\xba\xbft b\xe1\xbb\x8b \xc4\x91\xe1\xba\xa7u ra v\xe1\xbb\xab""a \xc4\x91\xc6\xb0\xe1\xbb\xa3""c k\xe1\xba\xbft n\xe1\xbb\x91i\"\r\n"
 "\"Hide notifications\" = \"\xe1\xba\xa8n th\xc3\xb4ng b\xc3\xa1o\"\r\n"
 "\"Audio\" = \"\xc3\x82m thanh\"\r\n"
-"\"Normalize Volume\" = \"Chu\xe1\xba\xa9n h\xc3\xb3""a \xc3\xa2m l\xc6\xb0\xe1\xbb\xa3ng\"";
+"\"Normalize Volume\" = \"Chu\xe1\xba\xa9n h\xc3\xb3""a \xc3\xa2m l\xc6\xb0\xe1\xbb\xa3ng\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"C\xc3\xa1""c thay \xc4\x91\xe1\xbb\x95i \xc4\x91\xe1\xbb\x91i v\xe1\xbb\x9bi c\xc3\xa0i \xc4\x91\xe1\xba\xb7t hi\xe1\xbb\x87n t\xe1\xba\xa1i c\xe1\xbb\xa7""a b\xe1\xba\xa1n v\xe1"
+"\xba\xabn ch\xc6\xb0""a \xc4\x91\xc6\xb0\xe1\xbb\xa3""c l\xc6\xb0u.\\r\\nB\xe1\xba\xa1n c\xc3\xb3 mu\xe1\xbb\x91n l\xc6\xb0u kh\xc3\xb4ng?\"\r\n"
+"\"Save Preset\" = \"L\xc6\xb0u c\xc3\xa0i \xc4\x91\xe1\xba\xb7t\"\r\n"
+"\"Save\" = \"L\xc6\xb0u\"\r\n"
+"\"Cancel\" = \"H\xe1\xbb\xa7y\"";
 
 const char* FxSound_vi_txt = (const char*) temp_binary_data_57;
 
@@ -8399,7 +8499,10 @@ static const unsigned char temp_binary_data_58[] =
 102,101,114,114,101,100,32,111,117,116,112,117,116,34,32,61,32,34,233,128,137,230,139,169,233,166,150,233,128,137,232,190,147,229,135,186,34,13,10,34,80,114,101,102,101,114,114,101,100,32,111,117,116,112,117,116,58,34,32,61,32,34,233,166,150,233,128,
 137,232,190,147,229,135,186,239,188,154,34,13,10,34,78,111,110,101,34,32,61,32,34,230,151,160,34,13,10,34,78,101,119,108,121,32,99,111,110,110,101,99,116,101,100,32,111,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,230,150,176,232,191,
 158,230,142,165,231,154,132,232,190,147,229,135,186,232,174,190,229,164,135,34,13,10,34,72,105,100,101,32,110,111,116,105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,233,154,144,232,151,143,233,128,154,231,159,165,34,13,10,34,65,117,100,105,111,
-34,32,61,32,34,233,159,179,233,162,145,34,13,10,34,78,111,114,109,97,108,105,122,101,32,86,111,108,117,109,101,34,32,61,32,34,233,159,179,233,135,143,230,160,135,229,135,134,229,140,150,34,0,0 };
+34,32,61,32,34,233,159,179,233,162,145,34,13,10,34,78,111,114,109,97,108,105,122,101,32,86,111,108,117,109,101,34,32,61,32,34,233,159,179,233,135,143,230,160,135,229,135,134,229,140,150,34,13,10,34,67,104,97,110,103,101,115,32,116,111,32,121,111,117,
+114,32,112,114,101,115,101,116,32,97,114,101,32,110,111,116,32,115,97,118,101,100,46,92,114,92,110,68,111,32,121,111,117,32,119,97,110,116,32,116,111,32,115,97,118,101,63,34,32,61,32,34,229,175,185,233,162,132,232,174,190,231,154,132,230,155,180,230,
+148,185,229,176,154,230,156,170,228,191,157,229,173,152,227,128,130,92,114,92,110,228,189,160,230,131,179,228,191,157,229,173,152,229,144,151,239,188,159,34,13,10,34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,228,191,157,229,173,152,233,162,
+132,232,174,190,34,13,10,34,83,97,118,101,34,32,61,32,34,228,191,157,229,173,152,34,13,10,34,67,97,110,99,101,108,34,32,61,32,34,229,143,150,230,182,136,34,0,0 };
 
 const char* FxSound_zhCN_txt = (const char*) temp_binary_data_58;
 
@@ -8548,7 +8651,10 @@ static const unsigned char temp_binary_data_59[] =
 232,188,184,229,135,186,34,13,10,34,80,114,101,102,101,114,114,101,100,32,111,117,116,112,117,116,58,34,32,61,32,34,229,132,170,229,133,136,232,188,184,229,135,186,239,188,154,34,13,10,34,78,111,110,101,34,32,61,32,34,231,132,161,34,13,10,34,78,101,119,
 108,121,32,99,111,110,110,101,99,116,101,100,32,111,117,116,112,117,116,32,100,101,118,105,99,101,34,32,61,32,34,230,150,176,233,128,163,230,142,165,231,154,132,232,188,184,229,135,186,232,163,157,231,189,174,34,13,10,34,72,105,100,101,32,110,111,116,
 105,102,105,99,97,116,105,111,110,115,34,32,61,32,34,233,154,177,232,151,143,233,128,154,231,159,165,34,13,10,34,65,117,100,105,111,34,32,61,32,34,233,159,179,232,168,138,34,13,10,34,78,111,114,109,97,108,105,122,101,32,86,111,108,117,109,101,34,32,61,
-32,34,233,159,179,233,135,143,230,168,153,230,186,150,229,140,150,34,0,0 };
+32,34,233,159,179,233,135,143,230,168,153,230,186,150,229,140,150,34,13,10,34,67,104,97,110,103,101,115,32,116,111,32,121,111,117,114,32,112,114,101,115,101,116,32,97,114,101,32,110,111,116,32,115,97,118,101,100,46,92,114,92,110,68,111,32,121,111,117,
+32,119,97,110,116,32,116,111,32,115,97,118,101,63,34,32,61,32,34,229,176,141,233,160,144,232,168,173,231,154,132,232,174,138,230,155,180,229,176,154,230,156,170,229,132,178,229,173,152,227,128,130,92,114,92,110,230,130,168,230,152,175,229,144,166,232,
+166,129,229,132,178,229,173,152,239,188,159,34,13,10,34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,229,132,178,229,173,152,233,160,144,232,168,173,34,13,10,34,83,97,118,101,34,32,61,32,34,229,132,178,229,173,152,34,13,10,34,67,97,110,99,101,
+108,34,32,61,32,34,229,143,150,230,182,136,34,0,0 };
 
 const char* FxSound_zhTW_txt = (const char*) temp_binary_data_59;
 
@@ -8598,32 +8704,32 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
         case 0x1fdee048:  numBytes = 1396; return settings_svg;
         case 0x9eeab69d:  numBytes = 4894; return Slider_Thumb_svg;
         case 0x36e2b8a1:  numBytes = 4109; return Slider_Thumb_bw_svg;
-        case 0xda29b4a4:  numBytes = 13606; return FxSound_ar_txt;
-        case 0xdaeefdb2:  numBytes = 10368; return FxSound_ba_txt;
-        case 0xde910cf4:  numBytes = 11502; return FxSound_de_txt;
-        case 0xe10b2ea1:  numBytes = 11037; return FxSound_es_txt;
-        case 0xe2b1efbf:  numBytes = 11334; return FxSound_fr_txt;
-        case 0xe61ba0fd:  numBytes = 10220; return FxSound_hr_txt;
-        case 0x1833c740:  numBytes = 11688; return fxsound_hu_txt;
-        case 0xe70b308e:  numBytes = 10702; return FxSound_id_txt;
-        case 0xe7d0799c:  numBytes = 13222; return FxSound_ir_txt;
-        case 0xe7eca89e:  numBytes = 10914; return FxSound_it_txt;
-        case 0xe895c2aa:  numBytes = 12270; return FxSound_ja_txt;
-        case 0xeb0fe457:  numBytes = 11322; return FxSound_ko_txt;
-        case 0xf00427b1:  numBytes = 10638; return FxSound_nl_txt;
-        case 0xf36dd8ef:  numBytes = 11319; return FxSound_pl_txt;
-        case 0x7b843fc7:  numBytes = 11052; return FxSound_ptbr_txt;
-        case 0xf3de94f7:  numBytes = 10923; return FxSound_pt_txt;
-        case 0xf701d0b0:  numBytes = 11100; return FxSound_ro_txt;
-        case 0xf7565db6:  numBytes = 14812; return FxSound_ru_txt;
-        case 0xf9194dd6:  numBytes = 10747; return FxSound_sv_txt;
-        case 0xfa08dd67:  numBytes = 17766; return FxSound_th_txt;
-        case 0xfa95c871:  numBytes = 10865; return FxSound_tr_txt;
-        case 0x4464a26e:  numBytes = 10059; return FxSound_txt;
-        case 0xfb5b117f:  numBytes = 14456; return FxSound_ua_txt;
-        case 0xfd80a626:  numBytes = 11905; return FxSound_vi_txt;
-        case 0xd8a3b00c:  numBytes = 9482; return FxSound_zhCN_txt;
-        case 0xf624e624:  numBytes = 9636; return FxSound_zhTW_txt;
+        case 0xda29b4a4:  numBytes = 13906; return FxSound_ar_txt;
+        case 0xdaeefdb2:  numBytes = 10578; return FxSound_ba_txt;
+        case 0xde910cf4:  numBytes = 11766; return FxSound_de_txt;
+        case 0xe10b2ea1:  numBytes = 11255; return FxSound_es_txt;
+        case 0xe2b1efbf:  numBytes = 11603; return FxSound_fr_txt;
+        case 0xe61ba0fd:  numBytes = 10433; return FxSound_hr_txt;
+        case 0x1833c740:  numBytes = 11929; return fxsound_hu_txt;
+        case 0xe70b308e:  numBytes = 10921; return FxSound_id_txt;
+        case 0xe7d0799c:  numBytes = 13516; return FxSound_ir_txt;
+        case 0xe7eca89e:  numBytes = 11138; return FxSound_it_txt;
+        case 0xe895c2aa:  numBytes = 12518; return FxSound_ja_txt;
+        case 0xeb0fe457:  numBytes = 11549; return FxSound_ko_txt;
+        case 0xf00427b1:  numBytes = 10856; return FxSound_nl_txt;
+        case 0xf36dd8ef:  numBytes = 11548; return FxSound_pl_txt;
+        case 0x7b843fc7:  numBytes = 11283; return FxSound_ptbr_txt;
+        case 0xf3de94f7:  numBytes = 11159; return FxSound_pt_txt;
+        case 0xf701d0b0:  numBytes = 11330; return FxSound_ro_txt;
+        case 0xf7565db6:  numBytes = 15109; return FxSound_ru_txt;
+        case 0xf9194dd6:  numBytes = 10975; return FxSound_sv_txt;
+        case 0xfa08dd67:  numBytes = 18171; return FxSound_th_txt;
+        case 0xfa95c871:  numBytes = 11088; return FxSound_tr_txt;
+        case 0x4464a26e:  numBytes = 10259; return FxSound_txt;
+        case 0xfb5b117f:  numBytes = 14740; return FxSound_ua_txt;
+        case 0xfd80a626:  numBytes = 12174; return FxSound_vi_txt;
+        case 0xd8a3b00c:  numBytes = 9679; return FxSound_zhCN_txt;
+        case 0xf624e624:  numBytes = 9836; return FxSound_zhTW_txt;
         default: break;
     }
 

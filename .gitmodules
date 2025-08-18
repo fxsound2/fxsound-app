@@ -1,4 +1,3 @@
-[submodule "Strings"]
-	path = Strings
-	url = https://github.com/fxsound2/Strings
-        branch = main
+[submodule "Resources"]
+	path = Resources
+	url = https://github.com/fxsound2/Resources.git
