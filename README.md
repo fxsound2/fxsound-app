@@ -47,5 +47,7 @@ Our special thanks to Advanced Installer for supporting us with Advanced Install
 
 This project uses the [JUCE](https://juce.com) framework, which is licensed under [AGPL v3.0](https://github.com/juce-framework/JUCE/blob/master/LICENSE.md).
 
+Thanks to [Theremino](https://www.theremino.com) for the valuable contributions they do through major feature enhancements in FxSound.
+
 ## License
 [AGPL v3.0](https://github.com/fxsound2/fxsound-app/blob/main/LICENSE)
