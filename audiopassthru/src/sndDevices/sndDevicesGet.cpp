@@ -301,7 +301,7 @@ int PT_DECLSPEC sndDevicesGetFriendlyNameFromID(PT_HANDLE *hp_sndDevices, wchar_
 	for(i=0; i<cast_handle->totalNumDevices; i++)
 	{
 		// Check ID strings to see if they match
-		if( cast_handle->pwszID[i] != NULL && wcscmp(cast_handle->pwszID[i], wcp_ID) == 0 )
+		if(wcscmp(cast_handle->pwszID[i], wcp_ID) == 0)
 		{
 			wcscpy(wcp_Name, cast_handle->deviceFriendlyName[i] );
 			*ip_resultFlag = SND_DEVICES_DEVICE_OPERATION_COMPLETED;
@@ -332,9 +332,9 @@ int PT_DECLSPEC sndDevicesGetDeviceNameFromID(PT_HANDLE *hp_sndDevices, wchar_t 
 	for(i=0; i<cast_handle->totalNumDevices; i++)
 	{
 		// Check ID strings to see if they match
-		if( cast_handle->pwszID[i] != NULL && wcscmp(cast_handle->pwszID[i], wcp_ID) == 0 )
+		if(wcscmp(cast_handle->pwszID[i], wcp_ID) == 0)
 		{
-			wcscpy(wcp_Description, cast_handle->deviceDescription[i] );
+			wcscpy(wcp_Description, cast_handle->deviceDescription[i]);
 			*ip_resultFlag = SND_DEVICES_DEVICE_OPERATION_COMPLETED;
 			break;
 		}
@@ -357,11 +357,16 @@ int PT_DECLSPEC sndDevicesGetNumberOfChannelsFromID(PT_HANDLE *hp_sndDevices, wc
 		return(NOT_OKAY);
 
 	*ip_resultFlag = SND_DEVICES_DEVICE_NOT_PRESENT;
+	if (wcp_ID == NULL)
+	{
+		*ip_numChannels = 0;
+		return(NOT_OKAY);
+	}
 
 	for (auto index = 0; index < cast_handle->totalNumDevices; index++)
 	{
 		// Check ID strings to see if they match
-		if (cast_handle->pwszID[index] != NULL && wcscmp(cast_handle->pwszID[index], wcp_ID) == 0)
+		if (wcscmp(cast_handle->pwszID[index], wcp_ID) == 0)
 		{
 			*ip_numChannels = cast_handle->deviceNumChannel[index];
 			*ip_resultFlag = SND_DEVICES_DEVICE_OPERATION_COMPLETED;
@@ -379,7 +384,7 @@ int PT_DECLSPEC sndDevicesGetNumberOfChannelsFromID(PT_HANDLE *hp_sndDevices, wc
  *  Passes back an array of strings of all the guids of all the real devices.
  *
  */
-int PT_DECLSPEC sndDevicesGetAllRealDeviceIDs(PT_HANDLE *hp_sndDevices, wchar_t ***wcppp_IDs, int *ip_numDevices)
+int PT_DECLSPEC sndDevicesGetAllRealDeviceIDs(PT_HANDLE *hp_sndDevices, wchar_t ***wcppp_IDs, int* ip_numDevices)
 {
 	struct sndDevicesHdlType *cast_handle;
     
@@ -390,7 +395,7 @@ int PT_DECLSPEC sndDevicesGetAllRealDeviceIDs(PT_HANDLE *hp_sndDevices, wchar_t 
 
 	*ip_numDevices = cast_handle->numRealDevices;
 
-	*wcppp_IDs = (wchar_t **)cast_handle->pwszIDRealDevices;
+	*wcppp_IDs = (wchar_t**) cast_handle->pwszIDRealDevices;
 
 	return(OKAY);
 } 
@@ -420,7 +425,7 @@ int PT_DECLSPEC sndDevicesGetFormatFromID(PT_HANDLE *hp_sndDevices, wchar_t *wcp
 	for(i=0; i<cast_handle->totalNumDevices; i++)
 	{
 		// Check ID string to see if this is the requested device,
-		if( cast_handle->pwszID[i] != NULL && wcscmp(cast_handle->pwszID[i], wcp_ID) == 0 )
+		if( wcscmp(cast_handle->pwszID[i], wcp_ID) == 0 )
 		{
 			// Activate capture device for audio so we can get its format
 			hr = cast_handle->pAllDevices[i]->Activate(cast_handle->IID_IAudioClient, CLSCTX_ALL, NULL, (void**)&pAudioClient);
@@ -780,7 +785,7 @@ int PT_DECLSPEC sndDevicesGetNumMonoDevices(PT_HANDLE *hp_sndDevices, int *ip_nu
 
 	for (i_deviceIndex = 0; i_deviceIndex < cast_handle->numRealDevices; i_deviceIndex++)
 	{
-		if (wcslen(cast_handle->pwszIDRealDevices[i_deviceIndex]) > 0)
+		if (cast_handle->pwszIDRealDevices[i_deviceIndex] != NULL && wcslen(cast_handle->pwszIDRealDevices[i_deviceIndex]) > 0)
 		{
 			if (sndDevicesGetNumberOfChannelsFromID(hp_sndDevices, cast_handle->pwszIDRealDevices[i_deviceIndex], &i_numChannels, &i_resultFlag) != OKAY)
 				return(NOT_OKAY);

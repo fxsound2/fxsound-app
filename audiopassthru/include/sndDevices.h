@@ -45,7 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* Limit settings */
-#define SND_DEVICES_MAX_NUM_DEVICES 16
+#define SND_DEVICES_MAX_NUM_DEVICES 64
 
 /* Device "friendly name" string, used to identify DFX device. */
 #define SND_DEVICES_DFX_DEVICE_STRING L"FxSound Audio Enhancer"
@@ -340,7 +340,7 @@ struct sndDevicesHdlType {
 	IMMDevice *pCaptureDevice;
 	IMMDevice *pPlaybackDevice;
 
-	LPWSTR pwszID[SND_DEVICES_MAX_NUM_DEVICES]; // For the GUID ID strings for each device, all devices combined.
+	WCHAR pwszID[SND_DEVICES_MAX_NUM_DEVICES][PT_MAX_GENERIC_STRLEN]; // For the GUID ID strings for each device, all devices combined.
 	LPWSTR pwszIDRealDevices[SND_DEVICES_MAX_NUM_DEVICES]; // For the GUID ID strings for each real playback device.
 	WCHAR pwszIDPreviousRealDevices[SND_DEVICES_MAX_NUM_DEVICES][PT_MAX_GENERIC_STRLEN]; // To detect when a new devices is added.
 
