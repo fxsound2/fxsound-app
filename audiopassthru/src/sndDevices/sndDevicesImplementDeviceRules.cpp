@@ -204,7 +204,7 @@ int PT_DECLSPEC sndDevicesImplementDeviceRules(PT_HANDLE *hp_sndDevices, int *ip
 				if (sndDevicesGetNumberOfChannelsFromID(hp_sndDevices, cast_handle->pwszIDRealDevices[i], &i_numChannels, &i_resultFlag) != OKAY)
 					return(NOT_OKAY);
 
-				if (i_numChannels == 1)
+				if (i_numChannels < 2)
 				{
 					continue;
 				}
@@ -213,7 +213,7 @@ int PT_DECLSPEC sndDevicesImplementDeviceRules(PT_HANDLE *hp_sndDevices, int *ip
 			NoMatchFlag = 1;
 			for(j=0; j<cast_handle->numPreviousRealDevices; j++)
 			{
-				if( wcscmp(cast_handle->pwszIDRealDevices[i], cast_handle->pwszIDPreviousRealDevices[j]) == 0 )
+				if(cast_handle->pwszIDRealDevices[i] != NULL && wcscmp(cast_handle->pwszIDRealDevices[i], cast_handle->pwszIDPreviousRealDevices[j]) == 0 )
 					NoMatchFlag = 0;
 			}
 			if(NoMatchFlag)

@@ -72,9 +72,14 @@ int PT_DECLSPEC sndDevices_GetAll( PT_HANDLE *hp_sndDevices, int *ip_num_devices
 	// Copy current devices to previous devices to allow new device detection
 	if( (cast_handle->numRealDevices > 0) && (cast_handle->numRealDevices != cast_handle->numPreviousRealDevices) )
 	{
-		for(k=0; k< cast_handle->numRealDevices; k++)
-			wcscpy(cast_handle->pwszIDPreviousRealDevices[k], cast_handle->pwszIDRealDevices[k]);
-
+		for (k = 0; k < cast_handle->numRealDevices; k++)
+		{
+			if (cast_handle->pwszIDRealDevices[k] != NULL)
+			{
+				wcscpy(cast_handle->pwszIDPreviousRealDevices[k], cast_handle->pwszIDRealDevices[k]);
+			}
+		}
+			
 		cast_handle->numPreviousRealDevices = cast_handle->numRealDevices;
 	}
 	cast_handle->numRealDevices = 0;
@@ -99,10 +104,6 @@ int PT_DECLSPEC sndDevices_GetAll( PT_HANDLE *hp_sndDevices, int *ip_num_devices
 		cast_handle->numRealDevices = 0;
 		cast_handle->dfxDeviceNum = SND_DEVICES_DEVICE_NOT_PRESENT;
 		cast_handle->defaultDeviceNum = SND_DEVICES_DEVICE_NOT_PRESENT;
-		CoTaskMemFree(pwszIDdefault);
-		PropVariantClear(&FriendlyName);
-		PropVariantClear(&DeviceDesc);
-
 		return(OKAY);
 	}
 
@@ -122,28 +123,49 @@ int PT_DECLSPEC sndDevices_GetAll( PT_HANDLE *hp_sndDevices, int *ip_num_devices
 	{
 		// Get indexed device.
 		hr = pCollectionAllDevices->Item(i, &(cast_handle->pAllDevices[i]));
-		if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_GET_INDEXED_DEVICE_FAILED);
+		if (FAILED(hr))
+		{
+			CoTaskMemFree(pwszIDdefault);
+			SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_GET_INDEXED_DEVICE_FAILED);
+		}
+			
 
+		LPWSTR pID = NULL;
+		cast_handle->pwszID[i][0] = L'\0';
 		// Get and store the endpoint ID string for each device (this is the GUID ID for the device).
-		hr = cast_handle->pAllDevices[i]->GetId( &(cast_handle->pwszID[i]) );
+		hr = cast_handle->pAllDevices[i]->GetId(&pID);
 		if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_GETID_FAILED);
+		wcscpy_s(cast_handle->pwszID[i], PT_MAX_GENERIC_STRLEN, pID);
+		CoTaskMemFree(pID);
 
 		// Access the registry properties for this device.
 		hr = cast_handle->pAllDevices[i]->OpenPropertyStore(STGM_READ, &pProps);
-		if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_INSTANCE_CREATE_FAILED);
+		if (FAILED(hr))
+		{
+			CoTaskMemFree(pwszIDdefault);
+			SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_INSTANCE_CREATE_FAILED);
+		}
 
 		// Initialize containers for property values.
 		PropVariantInit(&FriendlyName);
-		PropVariantInit(&DeviceDesc);
-
 		// Get the devices's friendly-name property. This key doesn't include the "Speakers" prefix.
 		hr = pProps->GetValue(PKEY_Device_FriendlyName, &FriendlyName);
-		if (FAILED(hr)) continue;
-
+		if (FAILED(hr))
+		{
+			PropVariantClear(&FriendlyName);
+			continue;
+		}
+			
+		PropVariantInit(&DeviceDesc);
 		// Get the devices's descriptive name property, ie "Speakers".
 		hr = pProps->GetValue(PKEY_Device_DeviceDesc, &DeviceDesc);
-		if (FAILED(hr)) continue;
-
+		if (FAILED(hr))
+		{
+			PropVariantClear(&FriendlyName);
+			PropVariantClear(&DeviceDesc);
+			continue;
+		}
+			
 		// Copy friendly name and description
         if (FriendlyName.pwszVal != NULL && DeviceDesc.pwszVal != NULL) 
         {
@@ -151,12 +173,18 @@ int PT_DECLSPEC sndDevices_GetAll( PT_HANDLE *hp_sndDevices, int *ip_num_devices
             wcscpy(cast_handle->deviceDescription[i], DeviceDesc.pwszVal);
 
             // Get device number of channels
-            if (sndDevicesGetFormatFromID(hp_sndDevices, cast_handle->pwszID[i], &wfx, &resultFlag) != OKAY)
-                return(NOT_OKAY);
+			if (sndDevicesGetFormatFromID(hp_sndDevices, cast_handle->pwszID[i], &wfx, &resultFlag) != OKAY)
+			{
+				CoTaskMemFree(pwszIDdefault);
+				PropVariantClear(&FriendlyName);
+				PropVariantClear(&DeviceDesc);
+				return(NOT_OKAY);
+			}
+                
             cast_handle->deviceNumChannel[i] = wfx.nChannels;
 
             // Check ID strings to see if this is the default device
-            if (cast_handle->pwszID[i] != NULL && pwszIDdefault != NULL && wcscmp(cast_handle->pwszID[i], pwszIDdefault) == 0)
+            if (pwszIDdefault != NULL && wcscmp(cast_handle->pwszID[i], pwszIDdefault) == 0)
                 cast_handle->defaultDeviceNum = i;
 
             // Check friendly name to see if this is one of the DFX devices.
@@ -171,7 +199,13 @@ int PT_DECLSPEC sndDevices_GetAll( PT_HANDLE *hp_sndDevices, int *ip_num_devices
                 0, &i_found_start_location, &i_found_dfx_string) != OKAY)
             {
                 hr = S_FALSE;
-                if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_INSTANCE_CREATE_FAILED);
+				if (FAILED(hr))
+				{
+					CoTaskMemFree(pwszIDdefault);
+					PropVariantClear(&FriendlyName);
+					PropVariantClear(&DeviceDesc);
+					SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_INSTANCE_CREATE_FAILED);
+				}
             }
             if (i_found_dfx_string)
                 cast_handle->dfxDeviceNum = i;
@@ -192,7 +226,12 @@ int PT_DECLSPEC sndDevices_GetAll( PT_HANDLE *hp_sndDevices, int *ip_num_devices
 
             cast_handle->deviceNumChannel[i] = 1;
         }
+
+		PropVariantClear(&FriendlyName);
+		PropVariantClear(&DeviceDesc);
 	}
+
+	CoTaskMemFree(pwszIDdefault);
 
 	return(OKAY);
 }

@@ -154,7 +154,7 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices()
 
 	for (int index = 0; index < cast_handle->totalNumDevices; index++) 
 	{
-		if (cast_handle->pwszID[index] == NULL || cast_handle->deviceFriendlyName[index] == NULL)
+		if (cast_handle->pwszID[index][0] == L'\0' || cast_handle->deviceFriendlyName[index] == NULL)
 		{
 			continue;
 		}
