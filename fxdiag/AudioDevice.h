@@ -22,8 +22,9 @@ enum class DeviceState : BYTE { Active = 0, Unplugged, Disabled, NotPresent  };
 
 struct AudioDevice
 {
+	std::wstring id_;
 	std::wstring deviceName_;
-	std::wstring deviceType_;
+	std::wstring deviceType_;	
 	DeviceState deviceState_;
 	WORD channels_;
 	DWORD samplesPerSec_;

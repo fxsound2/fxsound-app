@@ -39,6 +39,9 @@ int wmain(int argc, wchar_t* argv[])
 
 	CoUninitialize();
 
+    wprintf(L"\nPress any key to exit...");
+    _getch();
+
 	return 0;
 }
 
