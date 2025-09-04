@@ -176,7 +176,7 @@ private:
 };
 
 //==============================================================================
-FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"menuButton", DrawableButton::ButtonStyle::ImageFitted), resize_button_(L"resizeButton", DrawableButton::ButtonStyle::ImageFitted), donate_button_(TRANS("Donate")), minimize_button_(L"minimizeButton", DrawableButton::ButtonStyle::ImageFitted)
+FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"menuButton", DrawableButton::ButtonStyle::ImageFitted), resize_button_(L"resizeButton", DrawableButton::ButtonStyle::ImageFitted), donate_button_(L"donateButton", DrawableButton::ButtonStyle::ImageFitted), minimize_button_(L"minimizeButton", DrawableButton::ButtonStyle::ImageFitted)
 {
 	setName("FxSound");
 	setOpaque(false);
@@ -211,9 +211,15 @@ FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"men
 	resize_button_.addListener(this);
 
 	auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
+
 	donate_button_.setMouseCursor(MouseCursor::PointingHandCursor);
-	donate_button_.setName(L"Donate");
-	donate_button_.setSize(DONATE_BUTTON_WIDTH, DONATE_BUTTON_HEIGHT);
+	donate_button_.setSize(BUTTON_WIDTH + 2, BUTTON_WIDTH + 6);
+	donate_button_.setHelpText(TRANS("Donate"));
+	donate_button_.setTooltip(TRANS("Donate"));
+	donate_image_ = Drawable::createFromImageData(BinaryData::donate_svg, BinaryData::donate_svgSize);
+	donate_hover_image_ = Drawable::createFromImageData(BinaryData::donate_hover_svg, BinaryData::donate_hover_svgSize);
+	donate_button_.setImages(donate_image_.get(), donate_hover_image_.get());
+	donate_button_.setWantsKeyboardFocus(true);
 	donate_button_.onClick = [this]() {
 		URL url("https://www.paypal.com/donate/?hosted_button_id=JVNQGYXCQ2GPG");
 		url.launchInDefaultBrowser();
