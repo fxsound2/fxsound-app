@@ -692,6 +692,8 @@ void FxController::setOutput(int output, bool notify)
     }
 
 	FxModel::getModel().setSelectedOutput(output, selected_sound_device, notify);
+
+	system_tray_view_->setStatus(FxModel::getModel().getPowerState(), isAudioProcessing());
 }
 
 void FxController::selectOutput()
