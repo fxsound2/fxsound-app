@@ -25,11 +25,11 @@
     <ROW Property="MSIFASTINSTALL" MultiBuildValue="DefaultBuild:2"/>
     <ROW Property="Manufacturer" Value="FxSound LLC"/>
     <ROW Property="MsiLogging" MultiBuildValue="DefaultBuild:vp"/>
-    <ROW Property="ProductCode" Value="1033:{4778F8A2-88F9-4B3A-BDAD-9FDFD6E32BB9} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{0167930C-CC26-4DDE-AAA6-934A73D8EC06} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="FxSound"/>
     <ROW Property="ProductName_32" Value="[|ProductName]"/>
-    <ROW Property="ProductVersion" Value="1.1.35.0" Options="20"/>
+    <ROW Property="ProductVersion" Value="1.1.36.0" Options="20"/>
     <ROW Property="REBOOT" MultiBuildValue="DefaultBuild:Suppress"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
@@ -342,8 +342,8 @@
     <ROW Feature_="AIOtherFiles" Component_="Fonts"/>
     <ROW Feature_="AIOtherFiles" Component_="Default.fac"/>
     <ROW Feature_="AI32BitFiles" Component_="x86"/>
-    <ROW Feature_="AI32BitFiles" Component_="fxdiag.exe"/>
     <ROW Feature_="AI32BitFiles" Component_="fxdiag.exe_2"/>
+    <ROW Feature_="AI64BitFiles" Component_="fxdiag.exe"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
     <ROW Name="fxsound.exe" SourcePath="Resources\fxsound.ico" Index="0"/>
