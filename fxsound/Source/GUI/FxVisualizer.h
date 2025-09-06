@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 /*
 */
-class FxVisualizer : public AnimatedAppComponent
+class FxVisualizer : public Component
 {
 public:
     FxVisualizer();
@@ -32,8 +32,8 @@ public:
     void pause();
 
     void reset();
+    void update();
 
-    void update() override;
     void paint(Graphics& g) override;
 
 private:
@@ -43,4 +43,6 @@ private:
 
     Array<float> band_values_;
     Array<float> band_graph_;
+
+    std::unique_ptr<juce::VBlankAttachment> vblank_attachment;
 };
