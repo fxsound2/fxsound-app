@@ -178,7 +178,7 @@ FxSettingsDialog::SettingsComponent::SettingsComponent()
 	audio_button_->addListener(this);
 
 	general_button_ = std::make_unique<SettingsButton>("General");
-	general_button_->setToggleState(true, NotificationType::dontSendNotification);
+	general_button_->setToggleState(false, NotificationType::dontSendNotification);
 	general_button_->setImage(Drawable::createFromImageData(BinaryData::settings_svg, BinaryData::settings_svgSize).get());
 	general_button_->addListener(this);
 	

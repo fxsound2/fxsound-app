@@ -24,9 +24,7 @@ FxVisualizer::FxVisualizer()
     band_values_.resize(FxController::NUM_SPECTRUM_BANDS);
     band_graph_.resize(FxController::NUM_SPECTRUM_BANDS * NUM_BARS);
 
-    reset();
-
-    setFramesPerSecond(30);
+    start();
 
     setOpaque(false);
     setSize(WIDTH, HEIGHT);
@@ -34,17 +32,51 @@ FxVisualizer::FxVisualizer()
 
 void FxVisualizer::start()
 {
-    setFramesPerSecond(30);
+    if (vblank_attachment == nullptr)
+    {
+        vblank_attachment = std::make_unique<juce::VBlankAttachment>(
+            this,
+            [this](double timestamp)
+            {
+                if (!isShowing())
+                    return;
+
+                static double last_frame_time = 0.0;
+                constexpr double fps_interval = 1.0 / 30.0;
+
+                if (timestamp - last_frame_time >= fps_interval)
+                {
+                    last_frame_time = timestamp;
+                    if (FxController::getInstance().isAudioProcessing())
+                    {
+                        update();
+                        repaint();
+                    }
+                    else
+                    {
+                        reset();
+                        repaint();
+                        vblank_attachment.reset();
+                    }
+                }
+            });
+    }
 }
 
 void FxVisualizer::pause()
 {
-    setFramesPerSecond(10);
+    reset();
+    repaint();
+
+    if (vblank_attachment != nullptr)
+    {
+        vblank_attachment.reset();
+    }
 }
 
 void FxVisualizer::reset()
 {
-    for (int i = 0; i < FxController::NUM_SPECTRUM_BANDS * 11; i++)
+    for (int i = 0; i < FxController::NUM_SPECTRUM_BANDS * NUM_BARS; i++)
     {
         band_graph_.set(i, 0);
     }
@@ -101,7 +133,7 @@ void FxVisualizer::paint(Graphics& g)
     float x = 55;
     for (auto i = 0; i < FxController::NUM_SPECTRUM_BANDS*NUM_BARS; i++)
     {
-        float band_value = band_graph_[i];
+        float band_value = band_graph_[i] == 0.0 ? 0.01 : band_graph_[i];
         float height = band_value * 100.0f;
 
         juce::Rectangle<float> rect{ x, bounds.getHeight() / 2 - height / 2, 4, height };        

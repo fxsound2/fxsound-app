@@ -99,7 +99,7 @@ int PT_DECLSPEC sndDevicesInit(PT_HANDLE *hp_sndDevices, CSlout *hp_slout, int i
 	cast_handle->pAudioClientCapture = NULL;
 	cast_handle->pAudioCaptureLoopback = NULL;
 	cast_handle->pAudioClientPlayback = NULL;
-   cast_handle->pAudioClientPlaybackRender = NULL;
+    cast_handle->pAudioClientPlaybackRender = NULL;
 	cast_handle->pEndptVolCapture = NULL;
 	cast_handle->pEndptVolPlayback  = NULL;
 
@@ -108,7 +108,7 @@ int PT_DECLSPEC sndDevicesInit(PT_HANDLE *hp_sndDevices, CSlout *hp_slout, int i
 		cast_handle->pAllDevices[i] = NULL;
 		wcscpy(cast_handle->deviceFriendlyName[i], L"");
 		wcscpy(cast_handle->deviceDescription[i], L"");
-		cast_handle->pwszID[i] = NULL;
+		wcscpy(cast_handle->pwszID[i], L"");
 		cast_handle->pwszIDRealDevices[i] = NULL;
 		cast_handle->deviceFriendlyNameRealDevices[i] = NULL;
 		cast_handle->deviceDescriptionRealDevices[i] = NULL;
