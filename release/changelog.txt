@@ -1,4 +1,9 @@
-version 1.1.34.0
+version 1.1.36.0
+----------------
+1. Fixed the GPU utilization by changing the visualizer rendering
+2. Changes to donate button in toolbar
+
+version 1.1.35.0
 ----------------
 1. Potential fix for application crash
 
