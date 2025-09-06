@@ -37,7 +37,7 @@ void FxHotkeyLabel::resized()
 	auto bounds = getLocalBounds();
 
 	label_.setBounds(bounds.getX(), bounds.getY(), HOTKEY_LABEL_WIDTH, editor_bounds.getHeight());
-	editor_bounds.setX(label_.getRight());
+	editor_bounds.setX(label_.getRight()+1);
 	editor_bounds.setY(label_.getY());
 	hotkey_editor_.setBounds(editor_bounds);
 }
@@ -204,7 +204,7 @@ void FxHotkeyEditor::paint(juce::Graphics& g)
 	}
 
 	g.setColour(getLookAndFeel().findColour(TextEditor::textColourId));
-	g.drawRoundedRectangle(bounds.toFloat(), 5.0f, borderThickness);
+	g.drawRoundedRectangle(bounds.reduced(borderThickness, borderThickness).toFloat(), 5.0f, borderThickness);
 }
 
 void FxHotkeyEditor::setKeyText()
