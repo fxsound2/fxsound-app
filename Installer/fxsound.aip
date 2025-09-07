@@ -25,11 +25,11 @@
     <ROW Property="MSIFASTINSTALL" MultiBuildValue="DefaultBuild:2"/>
     <ROW Property="Manufacturer" Value="FxSound LLC"/>
     <ROW Property="MsiLogging" MultiBuildValue="DefaultBuild:vp"/>
-    <ROW Property="ProductCode" Value="1033:{D6BFD3B0-0664-4852-AA2F-8057570576C0} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{D8ADC1D5-DFF0-41FA-9F6D-65D0A66D3D06} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="FxSound"/>
     <ROW Property="ProductName_32" Value="[|ProductName]"/>
-    <ROW Property="ProductVersion" Value="1.2.0.0" Options="20"/>
+    <ROW Property="ProductVersion" Value="1.2.1.0" Options="20"/>
     <ROW Property="REBOOT" MultiBuildValue="DefaultBuild:Suppress"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
@@ -90,6 +90,8 @@
     <ROW Component="fxdevcon32.exe_1" ComponentId="{51F3C1A2-8DFC-45BF-A716-C6822F69E101}" Directory_="x86_2_Dir" Attributes="0" KeyPath="fxdevcon32.exe_1"/>
     <ROW Component="fxdevcon64.exe" ComponentId="{EE40577E-9743-4782-B5E4-6B0D2283E802}" Directory_="x64_Dir" Attributes="256" KeyPath="fxdevcon64.exe"/>
     <ROW Component="fxdevcon64.exe_1" ComponentId="{16796633-5AD4-4582-8F6D-CF2A4A6503D7}" Directory_="x64_1_Dir" Attributes="256" KeyPath="fxdevcon64.exe_1"/>
+    <ROW Component="fxdiag.exe" ComponentId="{1D8165F8-A0B8-4EED-870E-D69E3EE6ED08}" Directory_="APPDIR" Attributes="256" KeyPath="fxdiag.exe"/>
+    <ROW Component="fxdiag.exe_1" ComponentId="{EB14A05C-9142-4133-BFCB-C0875CCE82CB}" Directory_="x86_Dir" Attributes="0" KeyPath="fxdiag.exe_1"/>
     <ROW Component="fxsound.ico" ComponentId="{4D26BB00-46E1-4EC4-B72D-161C0D79D2AB}" Directory_="SystemFolder" Attributes="0" KeyPath="fxsound.ico"/>
     <ROW Component="fxvad.inf" ComponentId="{399DBC9A-6FF8-4191-941D-35E748F1A956}" Directory_="x64_Dir" Attributes="0" KeyPath="fxvad.inf"/>
     <ROW Component="fxvad.inf_1" ComponentId="{6192E32F-D6A9-4DAF-A4FD-757BADE3BD1F}" Directory_="x86_1_Dir" Attributes="0" KeyPath="fxvad.inf_1"/>
@@ -167,6 +169,8 @@
     <ROW File="NotoSansTCBold.ttf" Component_="Fonts" FileName="NOTOSA~3.TTF|NotoSansTC-Bold.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansTC-Bold.ttf" SelfReg="false"/>
     <ROW File="NotoSansTCMedium.ttf" Component_="Fonts" FileName="NOTOSA~4.TTF|NotoSansTC-Medium.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansTC-Medium.ttf" SelfReg="false"/>
     <ROW File="NotoSansTCRegular.ttf" Component_="Fonts" FileName="NOTOSA~5.TTF|NotoSansTC-Regular.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansTC-Regular.ttf" SelfReg="false"/>
+    <ROW File="fxdiag.exe" Component_="fxdiag.exe" FileName="fxdiag.exe" Attributes="0" SourcePath="..\bin\x64\fxdiag.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="fxdiag.exe_1" Component_="fxdiag.exe_1" FileName="fxdiag.exe" Attributes="0" SourcePath="..\bin\x86\fxdiag.exe" SelfReg="false" DigSign="true"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BootstrOptComponent">
     <ROW BootstrOptKey="GlobalOptions" GeneralOptions="b" DownloadFolder="[AppDataFolder][|Manufacturer]\[|ProductName]\prerequisites" Options="2"/>
@@ -338,6 +342,8 @@
     <ROW Feature_="AIOtherFiles" Component_="Fonts"/>
     <ROW Feature_="AIOtherFiles" Component_="Default.fac"/>
     <ROW Feature_="AI32BitFiles" Component_="x86"/>
+    <ROW Feature_="AI32BitFiles" Component_="fxdiag.exe_1"/>
+    <ROW Feature_="AI64BitFiles" Component_="fxdiag.exe"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
     <ROW Name="fxsound.exe" SourcePath="Resources\fxsound.ico" Index="0"/>
