@@ -152,6 +152,11 @@ FxModel::Preset FxModel::getPreset(int preset) const
 	return {};
 }
 
+Array<FxModel::Preset> FxModel::getPresets() const
+{
+	return presets_;
+}
+
 bool FxModel::isPresetModified() const
 {
 	return preset_modified_;

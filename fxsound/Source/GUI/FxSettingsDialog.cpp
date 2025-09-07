@@ -541,6 +541,7 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	launch_toggle_(TRANS("Launch on system startup")),
 	hide_help_tips_toggle_(TRANS("Hide help tips for audio controls")),
 	hide_notifications_toggle_(TRANS("Hide notifications")),
+	device_specific_preset_toggle_(TRANS("Enable device specific preset")),
 	hotkeys_toggle_(TRANS("Disable keyboard shortcuts")),
 	reset_presets_button_(TRANS("Reset presets to factory defaults"))
 {
@@ -563,6 +564,10 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	hide_notifications_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	hide_notifications_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	hide_notifications_toggle_.setWantsKeyboardFocus(true);
+	device_specific_preset_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
+	device_specific_preset_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	device_specific_preset_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	device_specific_preset_toggle_.setWantsKeyboardFocus(true);
 	hotkeys_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
 	hotkeys_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	hotkeys_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
@@ -604,6 +609,9 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	hide_notifications_toggle_.setToggleState(FxController::getInstance().isNotificationsHidden(), NotificationType::dontSendNotification);
 	hide_notifications_toggle_.onClick = [this]() { FxController::getInstance().setNotificationsHidden(hide_notifications_toggle_.getToggleState()); };
 
+	device_specific_preset_toggle_.setToggleState(FxController::getInstance().isDeviceSpecificPreset(), NotificationType::dontSendNotification);
+	device_specific_preset_toggle_.onClick = [this]() { FxController::getInstance().setDeviceSpecificPreset(device_specific_preset_toggle_.getToggleState()); };
+
 	reset_presets_button_.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
 	reset_presets_button_.setEnabled(FxModel::getModel().getUserPresetCount() > 0);
     reset_presets_button_.setMouseCursor(MouseCursor::PointingHandCursor);
@@ -620,6 +628,7 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	
 	addAndMakeVisible(&hide_help_tips_toggle_);
 	addAndMakeVisible(&hide_notifications_toggle_);
+	addAndMakeVisible(&device_specific_preset_toggle_);
 	addAndMakeVisible(&hotkeys_toggle_);
 	addAndMakeVisible(&reset_presets_button_);
 	addAndMakeVisible(&language_switch_);
@@ -651,6 +660,9 @@ void FxSettingsDialog::GeneralSettingsPane::resized()
 	hide_notifications_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 
     y = hide_notifications_toggle_.getBottom() + 10;
+	device_specific_preset_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
+
+	y = device_specific_preset_toggle_.getBottom() + 10;
 	hotkeys_toggle_.setBounds(X_MARGIN, y, getWidth()-X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 
 	y = hotkeys_toggle_.getBottom() + 5;
@@ -680,6 +692,7 @@ void FxSettingsDialog::GeneralSettingsPane::setText()
     launch_toggle_.setButtonText(TRANS("Launch on system startup"));
     hide_help_tips_toggle_.setButtonText(TRANS("Hide help tips for audio controls"));
 	hide_notifications_toggle_.setButtonText(TRANS("Hide notifications"));
+	device_specific_preset_toggle_.setButtonText(TRANS("Enable device specific preset"));
 
     hotkeys_toggle_.setButtonText(TRANS("Disable keyboard shortcuts"));
     reset_presets_button_.setButtonText(TRANS("Reset presets to factory defaults"));

@@ -125,6 +125,13 @@ public:
 	bool isNotificationsHidden();
 	void setNotificationsHidden(bool status);
 
+	bool isDeviceSpecificPreset();
+	void setDeviceSpecificPreset(bool status);
+
+	String getDevicePreset(const String& device_id);
+	void setDevicePreset(const String& device_id, const String& preset_id);
+	void removeDevicePreset(const String& device_id);
+
     String getLanguage() const;
     void setLanguage(String language_code);
     String getLanguageName(String language_code) const;
@@ -195,6 +202,7 @@ private:
     void selectOutput();
 	void updateOutputs(std::vector<SoundDevice>& sound_devices);
 	void setSelectedOutput(String id, String name);
+	void loadDevicePreset(String device_id);
 
 	void registerHotkeys();
 	void unregisterHotkeys();
@@ -217,7 +225,10 @@ private:
 	bool authenticated_;
 	bool output_changed_;
     bool playback_device_available_;
+	bool device_specific_preset_;
+	DynamicObject device_preset_map_;
 	String output_device_id_;
+	String selected_device_id_; // represents fxview selection
     String output_device_name_;
     StringArray output_ids_;
 	std::vector<SoundDevice> output_devices_;
