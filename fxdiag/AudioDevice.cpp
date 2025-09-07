@@ -42,7 +42,7 @@ void AudioDevice::initProperties(IMMDevice* pDevice)
 	LPWSTR id = NULL;
 	if (SUCCEEDED(pDevice->GetId(&id)))
 	{
-		id_ = id;
+		deviceId_ = id;
 		CoTaskMemFree(id);
 	}
 
@@ -192,7 +192,7 @@ void ReportAudioDevices(const std::vector<AudioDevice>& audioDevices)
 	int i = 1;
 	for (auto audioDevice : audioDevices)
 	{
-		std::wcout << ColorFormat(audioDevice.deviceState_ == DeviceState::Active ?  51 : 245) << i << L". " << audioDevice.deviceName_ << L" [" << audioDevice.deviceType_ << "]" << L" " << audioDevice.id_ << std::endl;
+		std::wcout << ColorFormat(audioDevice.deviceState_ == DeviceState::Active ?  51 : 245) << i << L". " << audioDevice.deviceName_ << L" [" << audioDevice.deviceType_ << "]" << L" " << audioDevice.deviceId_ << std::endl;
 		switch (audioDevice.deviceState_)
 		{
 			case DeviceState::Active:

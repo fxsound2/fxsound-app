@@ -127,9 +127,9 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.0.0;JUCE_APP_VERSION_HEX=0x1020000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.1.0;JUCE_APP_VERSION_HEX=0x1020100;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -144,7 +144,7 @@
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.0.0;JUCE_APP_VERSION_HEX=0x1020000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.1.0;JUCE_APP_VERSION_HEX=0x1020100;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <OutputFile>$(OutDir)\FxSound.exe</OutputFile>
@@ -174,9 +174,9 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.0.0;JUCE_APP_VERSION_HEX=0x1020000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.1.0;JUCE_APP_VERSION_HEX=0x1020100;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -191,7 +191,7 @@
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.0.0;JUCE_APP_VERSION_HEX=0x1020000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.1.0;JUCE_APP_VERSION_HEX=0x1020100;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <OutputFile>$(OutDir)\FxSound.exe</OutputFile>
@@ -222,9 +222,9 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.0.0;JUCE_APP_VERSION_HEX=0x1020000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.1.0;JUCE_APP_VERSION_HEX=0x1020100;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -239,7 +239,7 @@
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.0.0;JUCE_APP_VERSION_HEX=0x1020000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.1.0;JUCE_APP_VERSION_HEX=0x1020100;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <OutputFile>$(OutDir)\FxSound.exe</OutputFile>
@@ -271,7 +271,7 @@
       <Optimization>MaxSpeed</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.0.0;JUCE_APP_VERSION_HEX=0x1020000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.1.0;JUCE_APP_VERSION_HEX=0x1020100;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -286,7 +286,7 @@
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.0.0;JUCE_APP_VERSION_HEX=0x1020000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.1.0;JUCE_APP_VERSION_HEX=0x1020100;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <OutputFile>$(OutDir)\FxSound.exe</OutputFile>
@@ -326,7 +326,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
       <Optimization>MaxSpeed</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.0.0;JUCE_APP_VERSION_HEX=0x1020000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.1.0;JUCE_APP_VERSION_HEX=0x1020100;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -341,7 +341,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.0.0;JUCE_APP_VERSION_HEX=0x1020000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.1.0;JUCE_APP_VERSION_HEX=0x1020100;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <OutputFile>$(OutDir)\FxSound.exe</OutputFile>
@@ -382,7 +382,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
       <Optimization>MaxSpeed</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.0.0;JUCE_APP_VERSION_HEX=0x1020000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.1.0;JUCE_APP_VERSION_HEX=0x1020100;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -397,7 +397,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.0.0;JUCE_APP_VERSION_HEX=0x1020000;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_50C8E2F9=1;JUCE_APP_VERSION=1.2.1.0;JUCE_APP_VERSION_HEX=0x1020100;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <OutputFile>$(OutDir)\FxSound.exe</OutputFile>
@@ -1208,6 +1208,9 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_Font.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_FontFeatures.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_FontOptions.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -1247,10 +1250,16 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\geometry\juce_Rectangle_test.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jaricom.c">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jcapimin.c">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jcapistd.c">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jcarith.c">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jccoefct.c">
@@ -1283,9 +1292,6 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jcparam.c">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jcphuff.c">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jcprepct.c">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -1299,6 +1305,12 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jdapistd.c">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jdarith.c">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jdatadst.c">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jdatasrc.c">
@@ -1331,9 +1343,6 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jdmerge.c">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jdphuff.c">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jdpostct.c">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -1364,9 +1373,6 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jidctint.c">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jidctred.c">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jmemmgr.c">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -1380,9 +1386,6 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jutils.c">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\transupp.c">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\pnglib\png.c">
@@ -2313,6 +2316,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_core\misc\juce_EnumHelpers.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_core\misc\juce_Functional.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_core\misc\juce_OptionsHelpers.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_core\misc\juce_OrderedContainerHelpers.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_core\misc\juce_Result.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_core\misc\juce_RuntimePermissions.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_core\misc\juce_ScopeGuard.h" />
@@ -2747,6 +2751,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\harfbuzz\hb.hh" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_AttributedString.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_Font.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_FontFeatures.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_FontOptions.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_FunctionPointerDestructor.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\fonts\juce_GlyphArrangement.h" />
@@ -2766,10 +2771,9 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\geometry\juce_Rectangle.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\geometry\juce_RectangleList.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\cderror.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jchuff.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\cdjpeg.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jconfig.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jdct.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jdhuff.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jerror.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jinclude.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jmemsys.h" />
@@ -2777,7 +2781,6 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jpegint.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jpeglib.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\jversion.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\jpglib\transupp.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\pnglib\png.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\pnglib\pngconf.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_graphics\image_formats\pnglib\pngdebug.h" />
@@ -3110,6 +3113,8 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <None Include="..\Fonts\Gilroy-Bold.ttf" />
     <None Include="..\Fonts\Gilroy-Regular.ttf" />
     <None Include="..\Fonts\Gilroy-Semibold.ttf" />
+    <None Include="..\Images\donate.svg" />
+    <None Include="..\Images\donate_hover.svg" />
     <None Include="..\Images\speaker.svg" />
     <None Include="..\Images\min_window.svg" />
     <None Include="..\Images\min_window_hover.svg" />
