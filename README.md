@@ -15,11 +15,9 @@ FxSound is a digital audio program built for Windows PC's. The background proces
 * Download and install the [latest version of FxSound](https://download.fxsound.com/fxsoundlatest)
 * Install [Visual Studio 2022](https://visualstudio.microsoft.com/vs)
 * Install [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk)
-* Install [JUCE framework version 6.1.6](https://github.com/juce-framework/JUCE/releases/tag/6.1.6)
+* Install [JUCE framework](https://api.juce.com/api/v1/download/juce/latest/windows)
 
 FxSound application requires FxSound Audio Enhancer virtual audio driver. So, to run FxSound application built from source, we need to install FxSound which installs the audio driver.
-To build x64/x86 and ARM64 from a common project, from FxSound version 1.1.34.0, the project is upgraded to JUCE 8.
-Note: While building with JUCE 7.x.x version we ran into an issue that the application CPU utilisation goes high when the display is off. So, we were building FxSound versions 1.1.31.0 or older with JUCE 6.1.6.
 
 ### Build FxSound from Visual Studio
 * Open [fxsound/Project/FxSound.sln](https://github.com/fxsound2/fxsound-app/blob/main/fxsound/Project/FxSound.sln) in Visual Studio
