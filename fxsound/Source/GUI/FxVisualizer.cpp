@@ -35,9 +35,9 @@ FxVisualizer::FxVisualizer()
 
 void FxVisualizer::start()
 {
-    if (vblank_handler_ == nullptr)
+    if (vblank_listener_ == nullptr)
     {
-        vblank_handler_ = std::make_unique<juce::VBlankAttachment>(
+        vblank_listener_ = std::make_unique<juce::VBlankAttachment>(
             this,
             [this](double timestamp)
             {
@@ -59,7 +59,7 @@ void FxVisualizer::start()
                     {
                         reset();
                         repaint();
-                        vblank_handler_.reset();
+                        vblank_listener_.reset();
                     }
                 }
             });
@@ -71,9 +71,9 @@ void FxVisualizer::pause()
     reset();
     repaint();
 
-    if (vblank_handler_ != nullptr)
+    if (vblank_listener_ != nullptr)
     {
-        vblank_handler_.reset();
+        vblank_listener_.reset();
     }
 }
 
