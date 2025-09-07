@@ -35,7 +35,7 @@ class FxSystemTrayView;
 
 enum ViewType { Lite = 1, Pro = 2 };
 
-class FxController : public Timer, private AudioPassthruCallback
+class FxController : public Timer, public DeletedAtShutdown, private AudioPassthruCallback
 {
 public:
     static constexpr int NUM_SPECTRUM_BANDS = 10;
@@ -47,8 +47,8 @@ public:
 	
 	static FxController& getInstance()
 	{
-		static FxController controller;
-		return controller;
+		static FxController* controller = new FxController();
+		return *controller;
 	}
 	~FxController();
 

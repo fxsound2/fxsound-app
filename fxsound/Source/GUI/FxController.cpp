@@ -201,9 +201,8 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 
 FxController::~FxController()
 {
-	stopTimer();
 	WTSUnRegisterSessionNotification(message_window_.getHandle());
-	unregisterHotkeys();	
+	unregisterHotkeys();
 }
 
 
