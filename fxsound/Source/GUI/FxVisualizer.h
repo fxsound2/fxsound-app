@@ -37,15 +37,19 @@ public:
     void reset();
     void update();
 
-    void paint(Graphics& g) override;
-
 private:
     static constexpr int WIDTH = 960;
     static constexpr int HEIGHT = 120;
     static constexpr int NUM_BARS = 10;
 
+    void paint(Graphics& g) override;
+    void enablementChanged() override;
+
+    void calcGradient();
+
     Array<float> band_values_;
     Array<float> band_graph_;
+    ColourGradient gradient_;
 
     std::unique_ptr<juce::VBlankAttachment> vblank_listener_;
 };

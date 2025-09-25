@@ -34,7 +34,9 @@ FxVisualizer::FxVisualizer()
 }
 
 void FxVisualizer::start()
-{
+{    
+    calcGradient();
+
     if (vblank_listener_ == nullptr)
     {
         vblank_listener_ = std::make_unique<juce::VBlankAttachment>(
@@ -68,6 +70,8 @@ void FxVisualizer::start()
 
 void FxVisualizer::pause()
 {
+    calcGradient();
+
     reset();
     repaint();
 
@@ -113,27 +117,11 @@ void FxVisualizer::paint(Graphics& g)
     g.setFillType(FillType(Colour(0x0f0f0f).withAlpha(1.0f)));
     g.fillRoundedRectangle(bounds.toFloat(), 8);
 
-    float alpha = 0.75;
-    if (FxController::getInstance().isAudioProcessing())
-    {
-        alpha = 1.0;
-    }
-    
-    ColourGradient gradient(isEnabled() ? Colour(0xd51535).withAlpha(alpha) : Colour(0xd51535).withSaturation(0.0f).withAlpha(alpha),
-                            2.0f, 0.0f, 
-                            isEnabled() ? Colour(0xd51535).withAlpha(alpha) : Colour(0xd51535).withSaturation(0.0f).withAlpha(alpha),
-                            2.0f, 100.0f, false);
-    if (isEnabled())
-    {
-        gradient.addColour(0.5f, Colour(0xfe566a).withAlpha(alpha));
-    }
-    else
-    {
-        gradient.addColour(0.5f, Colour(0xfe566a).withSaturation(0.0f).withAlpha(alpha));
-    }
-    g.setGradientFill(gradient);
+    g.setGradientFill(gradient_);
 
     // ------------------------------------------------------ SPECTRUM AREA - LEFT AND SIZE 
+    Path barsPath;
+
     float x = 27;
     float dx = 9.1;
 
@@ -142,9 +130,36 @@ void FxVisualizer::paint(Graphics& g)
         float band_value = band_graph_[i] == 0.0 ? 0.01 : band_graph_[i];
         float height = band_value * 100.0f;
 
-        juce::Rectangle<float> rect{ x, bounds.getHeight() / 2 - height / 2, 4, height };
-        g.fillRect(rect);
-
+        barsPath.addRectangle(x, bounds.getHeight() / 2.0f - height / 2.0f, 4.0f, height);
         x += dx;
+    }
+
+    g.fillPath(barsPath);
+}
+
+void FxVisualizer::enablementChanged()
+{
+    calcGradient();
+}
+
+void FxVisualizer::calcGradient()
+{
+    float alpha = 0.75;
+    if (FxController::getInstance().isAudioProcessing())
+    {
+        alpha = 1.0;
+    }
+
+    gradient_ = ColourGradient(isEnabled() ? Colour(0xd51535).withAlpha(alpha) : Colour(0xd51535).withSaturation(0.0f).withAlpha(alpha),
+        2.0f, 0.0f,
+        isEnabled() ? Colour(0xd51535).withAlpha(alpha) : Colour(0xd51535).withSaturation(0.0f).withAlpha(alpha),
+        2.0f, 100.0f, false);
+    if (isEnabled())
+    {
+        gradient_.addColour(0.5f, Colour(0xfe566a).withAlpha(alpha));
+    }
+    else
+    {
+        gradient_.addColour(0.5f, Colour(0xfe566a).withSaturation(0.0f).withAlpha(alpha));
     }
 }
