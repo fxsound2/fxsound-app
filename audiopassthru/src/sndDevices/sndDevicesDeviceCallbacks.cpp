@@ -95,11 +95,7 @@ HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::QueryInterface(
 HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDefaultDeviceChanged(
                           EDataFlow flow, ERole role,
                           LPCWSTR pwstrDeviceId)
-{
-  char  *pszFlow = "?????";
-  char  *pszRole = "?????";
-  int i_resultFlag;
-  
+{  
   struct sndDevicesHdlType *cast_handle;
     
   cast_handle = (struct sndDevicesHdlType *)g_sndDevicesCallbacks_hdl;
