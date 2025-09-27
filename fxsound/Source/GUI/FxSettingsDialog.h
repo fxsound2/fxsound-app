@@ -103,10 +103,14 @@ private:
 		static constexpr int COMBOBOX_HEIGHT = 30;
 		static constexpr int SLIDER_HEIGHT = 18;
 		static constexpr int LABEL_HEIGHT = 14;
+		static constexpr int BUTTON_WIDTH = 220;
+		static constexpr int BUTTON_HEIGHT = 24;
+		static constexpr int MAX_BUTTON_WIDTH = 315;
 
 		std::vector<int> equalizer_bands_ = { 5, 10, 15, 20, 31 };
 
 		void setText();
+		void resizeResetButton(int x, int y);
 		void modelChanged(FxModel::Event model_event);
 		void updateEndpointList();
 		void updateEndpointText();
@@ -132,6 +136,7 @@ private:
 		FxAudioSlider normalizer_slider_;
 		FxAudioSlider filter_q_slider_;
 		FxBalanceSlider balance_slider_;
+		TextButton reset_presets_button_;
 	};
 
 	class GeneralSettingsPane : public SettingsPane
@@ -151,18 +156,13 @@ private:
 		static constexpr int LANGUAGE_LABEL_HEIGHT = 24;
 		static constexpr int LANGUAGE_LIST_WIDTH = 120;
 		static constexpr int LANGUAGE_LIST_HEIGHT = 30;
-		static constexpr int BUTTON_WIDTH = 220;
-		static constexpr int BUTTON_HEIGHT = 24;
-		static constexpr int MAX_BUTTON_WIDTH = 315;
 
         void setText();
-		void resizeResetButton(int x, int y);
 
         ToggleButton launch_toggle_;
         ToggleButton hide_help_tips_toggle_;
 		ToggleButton hide_notifications_toggle_;
 		ToggleButton hotkeys_toggle_;
-		TextButton reset_presets_button_;
 		OwnedArray<FxHotkeyLabel> hotkey_labels_;
 		FxLanguage language_switch_;
 	};

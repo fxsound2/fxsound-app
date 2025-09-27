@@ -74,9 +74,9 @@ String FxSound::Settings::getString(StringRef key) noexcept
 	return user_settings_->getValue(key);
 }
 
-int FxSound::Settings::getInt(StringRef key) noexcept
+int FxSound::Settings::getInt(StringRef key, int default_value) noexcept
 {
-	return user_settings_->getIntValue(key);
+	return user_settings_->getIntValue(key, default_value);
 }
 
 double FxSound::Settings::getDouble(StringRef key) noexcept

@@ -57,6 +57,7 @@ private:
     void modelChanged(FxModel::Event model_event) override;
 	void userTriedToCloseWindow() override;
 	void closeButtonPressed() override;
+    void moved() override;
 
 	FxLiteView lite_view_;
 	FxProView  pro_view_;

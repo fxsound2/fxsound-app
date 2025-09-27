@@ -263,7 +263,7 @@ void FxController::config(const String& commandline)
 	{
 		nb = numbands.getIntValue();
 	}	
-	if (nb < 5 || nb > 31) nb = 10;
+	if (nb < 5 || nb > 31) nb = DEFAULT_NUM_EQ_BANDS;
 	setNumEqBands(nb);
 
 	float nm = 0;
@@ -275,7 +275,7 @@ void FxController::config(const String& commandline)
 	{
 		nm = normalization.getFloatValue();
 	}
-	if (nm < -20 || nm > 0) nm = 0;
+	if (nm < -20 || nm > 0) nm = DEFAULT_NORMALIZATION;
 	setNormalization(nm);
 
 	float bl = 0;
@@ -287,7 +287,7 @@ void FxController::config(const String& commandline)
 	{
 		bl = balance.getFloatValue();
 	}
-	if (bl < -20 || bl > +20) bl = 0;
+	if (bl < -20 || bl > +20) bl = DEFAULT_BALANCE;
 	setBalance(bl);	
 
 	float fq = 0;
@@ -299,7 +299,7 @@ void FxController::config(const String& commandline)
 	{
 		fq = filterq.getFloatValue();
 	}
-	if (fq < 1 || fq > 3) fq = 1;
+	if (fq < 1 || fq > 3) fq = DEFAULT_FILTER_Q;
 	setFilterQ(fq);
 
 	float mg = 0;
@@ -311,7 +311,7 @@ void FxController::config(const String& commandline)
 	{
 		mg = mastergain.getFloatValue();
 	}		
-	if (mg < -20 || mg > +20) mg = 0;
+	if (mg < -20 || mg > +20) mg = DEFAULT_MASTER_GAIN;
 	setMasterGain(mg);
 }
 
@@ -388,7 +388,6 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
         }
 
 		showView();
-		main_window_->centreWithSize(main_window_->getWidth(), main_window_->getHeight());
 
         survey_tip_ = !settings_.getBool("survey_displayed");
         
@@ -841,6 +840,12 @@ void FxController::undoPreset()
 void FxController::resetPresets()
 {
 	auto& model = FxModel::getModel();
+
+	setNumEqBands(DEFAULT_NUM_EQ_BANDS);
+	setNormalization(DEFAULT_NORMALIZATION);
+	setBalance(DEFAULT_BALANCE);
+	setFilterQ(DEFAULT_FILTER_Q);
+	setMasterGain(DEFAULT_MASTER_GAIN);
 
 	auto count = model.getPresetCount();
 	for (auto i=0; i<count; i++)
@@ -1866,6 +1871,18 @@ String FxController::getLanguageName(String language_code) const
 int FxController::getMaxUserPresets() const
 {
 	return max_user_presets_;
+}
+
+void FxController::saveWindowPosition(int x, int y)
+{
+	settings_.setInt("window_x", x);
+	settings_.setInt("window_y", y);
+}
+
+void FxController::getWindowPosition(int& x, int& y)
+{
+	x = settings_.getInt("window_x", 0);
+	y = settings_.getInt("window_y", 0);
 }
 
 std::tuple<String, String> FxController::getPreferredOutput()

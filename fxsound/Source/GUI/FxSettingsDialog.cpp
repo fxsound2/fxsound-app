@@ -198,7 +198,11 @@ void FxSettingsDialog::SettingsPane::paint(Graphics&)
 }
 
 FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
-	SettingsPane("Audio"), master_gain_slider_("%0.0f dB", 0.0f), normalizer_slider_("%0.0f dB", 0.0f), filter_q_slider_("%.1fx", 1.0f), balance_slider_(0.0f)
+	SettingsPane("Audio"), 
+	master_gain_slider_("%0.0f dB", 0.0f), 
+	normalizer_slider_("%0.0f dB", 0.0f), 
+	filter_q_slider_("%.1fx", 1.0f), balance_slider_(0.0f),
+	reset_presets_button_(TRANS("Reset presets to factory defaults"))
 {
 	FxModel::getModel().addListener(this);
 
@@ -319,6 +323,18 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 			controller.setFilterQ((float)value);
 		};
 
+	reset_presets_button_.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+	reset_presets_button_.setMouseCursor(MouseCursor::PointingHandCursor);
+	reset_presets_button_.onClick = [this]() {
+		auto& controller = FxController::getInstance();
+		controller.resetPresets();
+		equalizer_.setSelectedId(controller.getNumEqBands(), NotificationType::dontSendNotification);
+		master_gain_slider_.setValue(controller.getMasterGain());
+		normalizer_slider_.setValue(controller.getNormalization());
+		filter_q_slider_.setValue(controller.getFilterQ());
+		balance_slider_.setValue(controller.getBalance());
+		};
+
 	addAndMakeVisible(&endpoint_title_);
 	addAndMakeVisible(&preferred_endpoint_);
 	addAndMakeVisible(&equalizer_title_);
@@ -333,6 +349,7 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 	addAndMakeVisible(&balance_slider_);
 	addAndMakeVisible(&left_label_);
 	addAndMakeVisible(&right_label_);
+	addAndMakeVisible(&reset_presets_button_);
 }
 
 FxSettingsDialog::AudioSettingsPane::~AudioSettingsPane()
@@ -384,6 +401,10 @@ void FxSettingsDialog::AudioSettingsPane::resized()
 
 	left_label_.setBounds(LABEL_WIDTH + X_MARGIN + 15, y, width/2 - 10, LABEL_HEIGHT);
 	right_label_.setBounds(left_label_.getRight() + 10, y, width/2 - (FxTheme::SLIDER_THUMB_RADIUS * 4), LABEL_HEIGHT);
+
+	y = left_label_.getBottom();
+
+	resizeResetButton(X_MARGIN, y + 40);
 }
 
 void FxSettingsDialog::AudioSettingsPane::paint(Graphics& g)
@@ -424,6 +445,38 @@ void FxSettingsDialog::AudioSettingsPane::setText()
 
 	right_label_.setFont(theme.getNormalFont().withHeight(12.0f));
 	right_label_.setText(TRANS("Right"), NotificationType::dontSendNotification);
+
+	reset_presets_button_.setButtonText(TRANS("Reset presets to factory defaults"));
+
+	resizeResetButton(reset_presets_button_.getX(), reset_presets_button_.getY());
+}
+
+void FxSettingsDialog::AudioSettingsPane::resizeResetButton(int x, int y)
+{
+	String buttonText = reset_presets_button_.getButtonText();
+
+	int index = 0;
+	int lineCount = 1;
+	do {
+		index = buttonText.indexOfChar(index, L'\n');
+		if (index >= 0)
+		{
+			index++;
+			lineCount++;
+		}
+		else
+		{
+			break;
+		}
+	} while (lineCount <= 3); // Resize the button height for upto 3 lines of text
+
+	int buttonWidth = min(reset_presets_button_.getBestWidthForHeight(BUTTON_HEIGHT * lineCount), MAX_BUTTON_WIDTH);
+	if (buttonWidth < BUTTON_WIDTH)
+	{
+		buttonWidth = BUTTON_WIDTH;
+	}
+
+	reset_presets_button_.setBounds(x, y, buttonWidth, BUTTON_HEIGHT * lineCount);
 }
 
 void FxSettingsDialog::AudioSettingsPane::selectEqualizerBands()
@@ -442,7 +495,7 @@ void FxSettingsDialog::AudioSettingsPane::selectEqualizerBands()
 		break;
 
 	default:
-		equalizer_.setSelectedId(10, NotificationType::dontSendNotification);
+		equalizer_.setSelectedId(FxController::DEFAULT_NUM_EQ_BANDS, NotificationType::dontSendNotification);
 	}
 }
 
@@ -541,8 +594,7 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	launch_toggle_(TRANS("Launch on system startup")),
 	hide_help_tips_toggle_(TRANS("Hide help tips for audio controls")),
 	hide_notifications_toggle_(TRANS("Hide notifications")),
-	hotkeys_toggle_(TRANS("Disable keyboard shortcuts")),
-	reset_presets_button_(TRANS("Reset presets to factory defaults"))
+	hotkeys_toggle_(TRANS("Disable keyboard shortcuts"))
 {
 	StringArray hotKeySettingsKeys = { FxController::HK_CMD_ON_OFF, FxController::HK_CMD_OPEN_CLOSE, FxController::HK_CMD_NEXT_PRESET, FxController::HK_CMD_PREVIOUS_PRESET, FxController::HK_CMD_NEXT_OUTPUT };
 	StringArray hotkey_names = { "Turn FxSound On/Off", "Open/Close FxSound",
@@ -604,14 +656,6 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	hide_notifications_toggle_.setToggleState(FxController::getInstance().isNotificationsHidden(), NotificationType::dontSendNotification);
 	hide_notifications_toggle_.onClick = [this]() { FxController::getInstance().setNotificationsHidden(hide_notifications_toggle_.getToggleState()); };
 
-	reset_presets_button_.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-	reset_presets_button_.setEnabled(FxModel::getModel().getUserPresetCount() > 0);
-    reset_presets_button_.setMouseCursor(MouseCursor::PointingHandCursor);
-	reset_presets_button_.onClick = [this]() {
-		FxController::getInstance().resetPresets();
-		reset_presets_button_.setEnabled(false);
-	};
-
 	auto os = SystemStats::getOperatingSystemType();
 	if (os == SystemStats::OperatingSystemType::Windows7)
 	{
@@ -621,7 +665,6 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	addAndMakeVisible(&hide_help_tips_toggle_);
 	addAndMakeVisible(&hide_notifications_toggle_);
 	addAndMakeVisible(&hotkeys_toggle_);
-	addAndMakeVisible(&reset_presets_button_);
 	addAndMakeVisible(&language_switch_);
 
 	setText();
@@ -659,8 +702,6 @@ void FxSettingsDialog::GeneralSettingsPane::resized()
 		hotkey_label->setBounds(HOTKEY_LABEL_X, y, getWidth()-HOTKEY_LABEL_X, HOTKEY_LABEL_HEIGHT);
 		y += HOTKEY_LABEL_HEIGHT + 10;
 	}
-	
-	resizeResetButton(X_MARGIN, y + 10);
 }
 
 void FxSettingsDialog::GeneralSettingsPane::paint(Graphics& g)
@@ -682,37 +723,6 @@ void FxSettingsDialog::GeneralSettingsPane::setText()
 	hide_notifications_toggle_.setButtonText(TRANS("Hide notifications"));
 
     hotkeys_toggle_.setButtonText(TRANS("Disable keyboard shortcuts"));
-    reset_presets_button_.setButtonText(TRANS("Reset presets to factory defaults"));
-	
-	resizeResetButton(reset_presets_button_.getX(), reset_presets_button_.getY());
-}
-
-void FxSettingsDialog::GeneralSettingsPane::resizeResetButton(int x, int y)
-{
-	String buttonText = reset_presets_button_.getButtonText();
-	
-	int index = 0;
-	int lineCount = 1;
-	do {
-		index = buttonText.indexOfChar(index, L'\n');
-		if (index >= 0)
-		{
-			index++;
-			lineCount++;
-		}
-		else
-		{
-			break;
-		}
-	} while (lineCount <= 3); // Resize the button height for upto 3 lines of text
-
-	int buttonWidth = min(reset_presets_button_.getBestWidthForHeight(BUTTON_HEIGHT * lineCount), MAX_BUTTON_WIDTH);
-	if (buttonWidth < BUTTON_WIDTH)
-	{
-		buttonWidth = BUTTON_WIDTH;
-	}
-
-	reset_presets_button_.setBounds(x, y, buttonWidth, BUTTON_HEIGHT * lineCount);
 }
 
 FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), debug_log_toggle_(TRANS("Disable debug logging"))

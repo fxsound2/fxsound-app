@@ -39,6 +39,11 @@ class FxController : public Timer, public DeletedAtShutdown, private AudioPassth
 {
 public:
     static constexpr int NUM_SPECTRUM_BANDS = 10;
+	static constexpr int DEFAULT_NUM_EQ_BANDS = 10;
+	static constexpr float DEFAULT_NORMALIZATION = 0.0f;
+	static constexpr float DEFAULT_BALANCE = 0.0f;
+	static constexpr float DEFAULT_FILTER_Q = 1.0f;
+	static constexpr float DEFAULT_MASTER_GAIN = 0.0f;
 	static constexpr char HK_CMD_ON_OFF[] = "cmd_on_off";
 	static constexpr char HK_CMD_OPEN_CLOSE[] = "cmd_open_close";
 	static constexpr char HK_CMD_NEXT_PRESET[] = "cmd_next_preset";
@@ -129,6 +134,9 @@ public:
     void setLanguage(String language_code);
     String getLanguageName(String language_code) const;
 	int getMaxUserPresets() const;
+
+	void saveWindowPosition(int x, int y);
+	void getWindowPosition(int& x, int& y);
 
 	void logMessage(const String& message)
 	{

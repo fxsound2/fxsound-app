@@ -291,31 +291,30 @@ void FxMainWindow::showProView()
 	setContent(&pro_view_);
     setResizeImage();
 	setAlwaysOnTop(false);
+	
+	int x = 0;
+	int y = 0;
 
-	auto display = Desktop::getInstance().getDisplays().getPrimaryDisplay();
-	if (display != nullptr)
+	auto bounds = getBounds();
+	auto desktop_bounds = Desktop::getInstance().getDisplays().getTotalBounds(true);
+
+	FxController::getInstance().getWindowPosition(x, y);
+	if (x == 0 && y == 0)
 	{
-		auto bounds = getBounds();
-		if (display->userArea.getX() > bounds.getX())
-		{
-			bounds.setX(display->userArea.getX() + 10);
-		}
-		else if (display->userArea.getRight() < bounds.getRight())
-		{
-			bounds.setX(display->userArea.getRight() - bounds.getWidth() - 10);
-		}
-
-		if (display->userArea.getY() > bounds.getY())
-		{
-			bounds.setY(display->userArea.getY() + 10);
-		}
-		else if (display->userArea.getBottom() < bounds.getBottom())
-		{
-			bounds.setY(display->userArea.getBottom() - bounds.getHeight() - 10);
-		}
-
-		setBounds(bounds);
+		centreWithSize(getWidth(), getHeight());		
 	}
+	else 
+	{
+		bounds.setPosition(Point<int>(x, y));
+		if (desktop_bounds.contains(bounds))
+		{
+			setBounds(bounds);
+		}
+		else
+		{
+			centreWithSize(getWidth(), getHeight());
+		}
+	}	
 }
 
 void FxMainWindow::updateView()
@@ -553,4 +552,18 @@ void FxMainWindow::userTriedToCloseWindow()
 void FxMainWindow::closeButtonPressed()
 {
 	FxController::getInstance().hideMainWindow();
+}
+
+void FxMainWindow::moved()
+{
+	if (FxController::getInstance().getCurrentView() == ViewType::Pro)
+	{
+		auto bounds = getBounds();
+		auto desktop_bounds = Desktop::getInstance().getDisplays().getTotalBounds(true);
+		if (desktop_bounds.contains(bounds))
+		{
+			// Save window position only if the whole window is visible on the desktop
+			FxController::getInstance().saveWindowPosition(bounds.getX(), bounds.getY());
+		}		
+	}
 }

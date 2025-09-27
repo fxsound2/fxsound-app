@@ -38,7 +38,7 @@ namespace FxSound
 		~Settings();
 
 		String getString(StringRef key) noexcept;
-		int    getInt(StringRef key) noexcept;
+		int    getInt(StringRef key, int default_value=0) noexcept;
 		double getDouble(StringRef key) noexcept;
 		bool   getBool(StringRef key) noexcept;
 
