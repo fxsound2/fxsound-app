@@ -729,6 +729,11 @@ bool FxController::isPlaybackDeviceAvailable()
     return playback_device_available_;
 }
 
+void FxController::checkDeviceChanges()
+{
+	audio_passthru_->checkDeviceChanges();
+}
+
 void FxController::savePreset(const String& preset_name)
 {
 	auto& model = FxModel::getModel();

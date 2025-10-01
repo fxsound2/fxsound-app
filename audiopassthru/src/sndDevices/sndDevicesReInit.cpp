@@ -313,4 +313,77 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 	SLOUT_FIRST_LINE(L"sndDevicesReInit():: Returns OKAY");
 
 	return(OKAY);
-} 
+}
+
+int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE* hp_sndDevices)
+{
+	struct sndDevicesHdlType* cast_handle;
+	IMMDeviceEnumeratorPtr pEnumerator = NULL;
+	IMMDeviceCollectionPtr pCollectionAllDevices = NULL;
+	HRESULT hr;
+	UINT deviceCount = 0;
+	UINT i;
+	int j;
+	BOOL deviceFound;
+	LPWSTR pID = NULL;
+
+	cast_handle = (struct sndDevicesHdlType*)hp_sndDevices;
+	if (cast_handle == NULL)
+		return(NOT_OKAY);
+
+	hr = CoCreateInstance(cast_handle->CLSID_MMDeviceEnumerator, NULL, CLSCTX_ALL, cast_handle->IID_IMMDeviceEnumerator, (void**)&pEnumerator);
+	if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_INSTANCE_CREATE_FAILED)
+
+	// Enumerate all playback audio devices, "eRender" means look only for playback devices.
+	hr = pEnumerator->EnumAudioEndpoints(eRender, DEVICE_STATE_ACTIVE, &pCollectionAllDevices);
+	if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_ENUMERATE_FAILED)
+
+	// Now get total number of playback devices
+	hr = pCollectionAllDevices->GetCount(&deviceCount);
+	if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_GETCOUNT_FAILED)
+
+	// If count is different, trigger stop
+	if (deviceCount != (UINT)cast_handle->totalNumDevices)
+	{
+		cast_handle->stopAudioCaptureAndPlaybackLoop = 1;
+		return(OKAY);
+	}
+
+	// If count is same, compare device IDs
+	for (i = 0; i < deviceCount; i++)
+	{
+		IMMDevice* pDevice = NULL;
+		hr = pCollectionAllDevices->Item(i, &pDevice);
+		if (FAILED(hr) || pDevice == NULL)
+			continue;
+
+		pID = NULL;
+		hr = pDevice->GetId(&pID);
+		if (FAILED(hr) || pID == NULL)
+		{
+			if (pDevice) pDevice->Release();
+			continue;
+		}
+
+		deviceFound = FALSE;
+		for (j = 0; j < cast_handle->totalNumDevices; j++)
+		{
+			if (wcscmp(pID, cast_handle->pwszID[j]) == 0)
+			{
+				deviceFound = TRUE;
+				break;
+			}
+		}
+
+		CoTaskMemFree(pID);
+		pDevice->Release();
+
+		if (!deviceFound)
+		{
+			cast_handle->stopAudioCaptureAndPlaybackLoop = 1;
+			return OKAY;
+		}
+	}
+
+	return(OKAY);
+}

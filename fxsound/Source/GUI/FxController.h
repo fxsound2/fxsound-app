@@ -80,6 +80,7 @@ public:
 	void setOutput(int output, bool notify=true);
     
     bool isPlaybackDeviceAvailable();
+	void checkDeviceChanges();
 
 	void savePreset(const String& preset_name=L"");
 	void renamePreset(const String& new_name);

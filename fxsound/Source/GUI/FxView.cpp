@@ -43,6 +43,9 @@ FxView::FxView()
 	addAndMakeVisible(&endpoint_list_);
 	endpoint_list_.addListener(this);
 	endpoint_list_.addMouseListener(this, true);
+	endpoint_list_.onShowPopup = []() {
+		FxController::getInstance().checkDeviceChanges();
+		};
 
     addChildComponent(&error_notification_);
 }

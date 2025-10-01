@@ -29,12 +29,16 @@ public:
     FxComboBox();
     ~FxComboBox() = default;
 
+    std::function<void()> onShowPopup;
+
 	void highlightText(bool highlight);
     bool getError();
     void setError(bool enable);
 
 private:
     bool error_;
+
+    void showPopup() override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FxComboBox)
 };

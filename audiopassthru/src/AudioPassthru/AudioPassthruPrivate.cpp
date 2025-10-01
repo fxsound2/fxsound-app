@@ -549,6 +549,11 @@ bool AudioPassthruPrivate::isPlaybackDeviceAvailable()
         return false;
 }
 
+void AudioPassthruPrivate::checkDeviceChanges()
+{
+	sndCheckDeviceChanges(hp_sndDevices_);
+}
+
 int AudioPassthruPrivate::setTargetedRealPlaybackDevice(const std::wstring sound_device_guid)
 {
 	int i_resultFlag;

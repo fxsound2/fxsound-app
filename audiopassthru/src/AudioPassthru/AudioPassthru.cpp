@@ -102,3 +102,8 @@ bool AudioPassthru::isPlaybackDeviceAvailable()
 {
     return data_->isPlaybackDeviceAvailable();
 }
+
+void AudioPassthru::checkDeviceChanges()
+{
+    data_->checkDeviceChanges();
+}

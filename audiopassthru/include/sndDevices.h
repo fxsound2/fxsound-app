@@ -437,6 +437,7 @@ int PT_DECLSPEC sndDevicesFree(PT_HANDLE *);
 
 /* sndDevicesReInit.cpp */
 int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *, int, int *, int *, int *);
+int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE*);
 
 /* sndDevicesGet.cpp */
 int PT_DECLSPEC sndDevicesGetID(PT_HANDLE *, int, wchar_t *, int *);
