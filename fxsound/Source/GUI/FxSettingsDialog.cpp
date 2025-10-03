@@ -202,6 +202,7 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 	master_gain_slider_("%0.0f dB", 0.0f), 
 	normalizer_slider_("%0.0f dB", 0.0f), 
 	filter_q_slider_("%.1fx", 1.0f), balance_slider_(0.0f),
+	restore_defaults_button_(TRANS("Restore Defaults")),
 	reset_presets_button_(TRANS("Reset presets to factory defaults"))
 {
 	FxModel::getModel().addListener(this);
@@ -323,16 +324,20 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 			controller.setFilterQ((float)value);
 		};
 
-	reset_presets_button_.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+	restore_defaults_button_.setSize(RESTORE_DEFAULTS_BUTTON_WIDTH, BUTTON_HEIGHT);
+	restore_defaults_button_.setMouseCursor(MouseCursor::PointingHandCursor);
+	restore_defaults_button_.onClick = [this]() {		
+		restoreDefaults();		
+		};
+
+	reset_presets_button_.setSize(RESET_PRESETS_BUTTON_WIDTH, BUTTON_HEIGHT);
 	reset_presets_button_.setMouseCursor(MouseCursor::PointingHandCursor);
+	reset_presets_button_.setEnabled(FxModel::getModel().getUserPresetCount() > 0);
 	reset_presets_button_.onClick = [this]() {
 		auto& controller = FxController::getInstance();
+
 		controller.resetPresets();
-		equalizer_.setSelectedId(controller.getNumEqBands(), NotificationType::dontSendNotification);
-		master_gain_slider_.setValue(controller.getMasterGain());
-		normalizer_slider_.setValue(controller.getNormalization());
-		filter_q_slider_.setValue(controller.getFilterQ());
-		balance_slider_.setValue(controller.getBalance());
+		reset_presets_button_.setEnabled(false);
 		};
 
 	addAndMakeVisible(&endpoint_title_);
@@ -349,6 +354,7 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 	addAndMakeVisible(&balance_slider_);
 	addAndMakeVisible(&left_label_);
 	addAndMakeVisible(&right_label_);
+	addAndMakeVisible(&restore_defaults_button_);
 	addAndMakeVisible(&reset_presets_button_);
 }
 
@@ -370,27 +376,27 @@ void FxSettingsDialog::AudioSettingsPane::resized()
 
 	endpoint_title_.setBounds(X_MARGIN, ENDPOINT_Y, LABEL_WIDTH, COMBOBOX_HEIGHT);
 	auto width = getWidth() - ((X_MARGIN + 5) * 2) - LABEL_WIDTH;
-	preferred_endpoint_.setBounds(LABEL_WIDTH + X_MARGIN + 15, ENDPOINT_Y, width, COMBOBOX_HEIGHT);
+	preferred_endpoint_.setBounds(LABEL_WIDTH + X_MARGIN + 10, ENDPOINT_Y, width, COMBOBOX_HEIGHT);
 
-	int y = preferred_endpoint_.getBottom() + 20;
-
+	int y = preferred_endpoint_.getBottom() + 30;	
 	equalizer_title_.setBounds(X_MARGIN, y, LABEL_WIDTH, COMBOBOX_HEIGHT);
-	equalizer_.setBounds(LABEL_WIDTH + X_MARGIN + 15, y, width, COMBOBOX_HEIGHT);
+	width = getWidth() - ((X_MARGIN + 5) * 2) - LABEL_WIDTH - GROUP_MARGIN;
+	equalizer_.setBounds(LABEL_WIDTH + X_MARGIN + 10, y, width, COMBOBOX_HEIGHT);
 
 	y = equalizer_.getBottom() + 20;
 
 	master_gain_title_.setBounds(X_MARGIN, y, LABEL_WIDTH, SLIDER_HEIGHT);
-	master_gain_slider_.setBounds(LABEL_WIDTH + X_MARGIN + 15, y, width, SLIDER_HEIGHT);
+	master_gain_slider_.setBounds(LABEL_WIDTH + X_MARGIN + 10, y, width, SLIDER_HEIGHT);
 
 	y = master_gain_slider_.getBottom() + 20;
 
 	normalizer_title_.setBounds(X_MARGIN, y, LABEL_WIDTH, SLIDER_HEIGHT);
-	normalizer_slider_.setBounds(LABEL_WIDTH + X_MARGIN + 15, y, width, SLIDER_HEIGHT);
+	normalizer_slider_.setBounds(LABEL_WIDTH + X_MARGIN + 10, y, width, SLIDER_HEIGHT);
 
 	y = normalizer_slider_.getBottom() + 20;
 
 	filter_q_title_.setBounds(X_MARGIN, y, LABEL_WIDTH, SLIDER_HEIGHT);
-	filter_q_slider_.setBounds(LABEL_WIDTH + X_MARGIN + 15, y, width, SLIDER_HEIGHT);
+	filter_q_slider_.setBounds(LABEL_WIDTH + X_MARGIN + 10, y, width, SLIDER_HEIGHT);
 
 	y = filter_q_slider_.getBottom() + 20;
 
@@ -402,14 +408,25 @@ void FxSettingsDialog::AudioSettingsPane::resized()
 	left_label_.setBounds(LABEL_WIDTH + X_MARGIN + 15, y, width/2 - 10, LABEL_HEIGHT);
 	right_label_.setBounds(left_label_.getRight() + 10, y, width/2 - (FxTheme::SLIDER_THUMB_RADIUS * 4), LABEL_HEIGHT);
 
-	y = left_label_.getBottom();
+	y = left_label_.getBottom() + 20;
+	restore_defaults_button_.setBounds(X_MARGIN, y, RESTORE_DEFAULTS_BUTTON_WIDTH, BUTTON_HEIGHT);
 
-	resizeResetButton(X_MARGIN, y + 40);
+	auto group_x = equalizer_title_.getX() - GROUP_MARGIN;
+	auto group_y = equalizer_.getY() - GROUP_MARGIN;
+	auto group_width = equalizer_.getRight() - group_x + GROUP_MARGIN;
+	auto group_height = restore_defaults_button_.getBottom() - group_y + GROUP_MARGIN;
+	group_bounds_ = juce::Rectangle<float>(group_x, group_y, group_width, group_height);
+
+	y = restore_defaults_button_.getBottom();
+	resizeResetButton(X_MARGIN, y + 30);
 }
 
 void FxSettingsDialog::AudioSettingsPane::paint(Graphics& g)
 {
 	g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+
+	g.setFillType(FillType(Colour(0x0).withAlpha(0.2f)));
+	g.fillRoundedRectangle(group_bounds_, 8);
 
 	setText();
 
@@ -446,6 +463,7 @@ void FxSettingsDialog::AudioSettingsPane::setText()
 	right_label_.setFont(theme.getNormalFont().withHeight(12.0f));
 	right_label_.setText(TRANS("Right"), NotificationType::dontSendNotification);
 
+	restore_defaults_button_.setButtonText(TRANS("Restore Defaults"));
 	reset_presets_button_.setButtonText(TRANS("Reset presets to factory defaults"));
 
 	resizeResetButton(reset_presets_button_.getX(), reset_presets_button_.getY());
@@ -471,9 +489,9 @@ void FxSettingsDialog::AudioSettingsPane::resizeResetButton(int x, int y)
 	} while (lineCount <= 3); // Resize the button height for upto 3 lines of text
 
 	int buttonWidth = min(reset_presets_button_.getBestWidthForHeight(BUTTON_HEIGHT * lineCount), MAX_BUTTON_WIDTH);
-	if (buttonWidth < BUTTON_WIDTH)
+	if (buttonWidth < RESET_PRESETS_BUTTON_WIDTH)
 	{
-		buttonWidth = BUTTON_WIDTH;
+		buttonWidth = RESET_PRESETS_BUTTON_WIDTH;
 	}
 
 	reset_presets_button_.setBounds(x, y, buttonWidth, BUTTON_HEIGHT * lineCount);
@@ -497,6 +515,23 @@ void FxSettingsDialog::AudioSettingsPane::selectEqualizerBands()
 	default:
 		equalizer_.setSelectedId(FxController::DEFAULT_NUM_EQ_BANDS, NotificationType::dontSendNotification);
 	}
+}
+
+void FxSettingsDialog::AudioSettingsPane::restoreDefaults()
+{
+	auto& controller = FxController::getInstance();
+
+	controller.setNumEqBands(FxController::DEFAULT_NUM_EQ_BANDS);
+	controller.setNormalization(FxController::DEFAULT_NORMALIZATION);
+	controller.setBalance(FxController::DEFAULT_BALANCE);
+	controller.setFilterQ(FxController::DEFAULT_FILTER_Q);
+	controller.setMasterGain(FxController::DEFAULT_MASTER_GAIN);
+
+	equalizer_.setSelectedId(controller.getNumEqBands(), NotificationType::dontSendNotification);
+	master_gain_slider_.setValue(controller.getMasterGain());
+	normalizer_slider_.setValue(controller.getNormalization());
+	filter_q_slider_.setValue(controller.getFilterQ());
+	balance_slider_.setValue(controller.getBalance());
 }
 
 void FxSettingsDialog::AudioSettingsPane::modelChanged(FxModel::Event model_event)

@@ -97,15 +97,17 @@ private:
 		void paint(Graphics& g) override;
 
 	private:
+		static constexpr int GROUP_MARGIN = 15;
 		static constexpr int ENDPOINT_Y = 50;
 		static constexpr int TOGGLE_BUTTON_HEIGHT = 30;
 		static constexpr int LABEL_WIDTH = 120;
 		static constexpr int COMBOBOX_HEIGHT = 30;
 		static constexpr int SLIDER_HEIGHT = 18;
 		static constexpr int LABEL_HEIGHT = 14;
-		static constexpr int BUTTON_WIDTH = 220;
+		static constexpr int RESTORE_DEFAULTS_BUTTON_WIDTH = 110;
+		static constexpr int RESET_PRESETS_BUTTON_WIDTH = 220;
 		static constexpr int BUTTON_HEIGHT = 24;
-		static constexpr int MAX_BUTTON_WIDTH = 315;
+		static constexpr int MAX_BUTTON_WIDTH = 315;		
 
 		std::vector<int> equalizer_bands_ = { 5, 10, 15, 20, 31 };
 
@@ -116,6 +118,7 @@ private:
 		void updateEndpointText();
 		void updateEqualizerBandsText();
 		void selectEqualizerBands();
+		void restoreDefaults();
 
 		void mouseEnter(const MouseEvent& mouse_event) override;
 		void mouseExit(const MouseEvent& mouse_event) override;
@@ -136,7 +139,10 @@ private:
 		FxAudioSlider normalizer_slider_;
 		FxAudioSlider filter_q_slider_;
 		FxBalanceSlider balance_slider_;
+		TextButton restore_defaults_button_;
 		TextButton reset_presets_button_;
+
+		juce::Rectangle<float> group_bounds_;
 	};
 
 	class GeneralSettingsPane : public SettingsPane
