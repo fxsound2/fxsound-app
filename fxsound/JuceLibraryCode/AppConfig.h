@@ -20,7 +20,7 @@
 
 // [END_USER_CODE_SECTION]
 
-#define JUCE_PROJUCER_VERSION 0x80009
+#define JUCE_PROJUCER_VERSION 0x8000a
 
 //==============================================================================
 #define JUCE_MODULE_AVAILABLE_juce_core                 1

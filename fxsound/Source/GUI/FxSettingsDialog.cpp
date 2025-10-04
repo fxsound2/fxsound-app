@@ -852,6 +852,6 @@ void FxSettingsDialog::HelpSettingsPane::setText()
     submitlogs_link_.setButtonText(TRANS("Submit debug logs"));    
     helpcenter_link_.setButtonText(TRANS("Help center"));        
     feedback_link_.setButtonText(TRANS("Feedback"));
-	auto_updates_toggle_.setButtonText(TRANS("Auto updates"));
+	auto_updates_toggle_.setButtonText(TRANS("Automatic updates"));
     updates_button_.setButtonText(TRANS("Check for updates"));
 }
