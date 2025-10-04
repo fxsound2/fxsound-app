@@ -40,7 +40,7 @@ namespace FxSound
 		String getString(StringRef key) noexcept;
 		int    getInt(StringRef key, int default_value=0) noexcept;
 		double getDouble(StringRef key) noexcept;
-		bool   getBool(StringRef key) noexcept;
+		bool   getBool(StringRef key, bool default_value=false) noexcept;
 
 		void setString(StringRef key, String value, bool default=false) noexcept;
 		void setInt(StringRef key, int value, bool default = false) noexcept;

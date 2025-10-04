@@ -84,9 +84,9 @@ double FxSound::Settings::getDouble(StringRef key) noexcept
 	return user_settings_->getDoubleValue(key);
 }
 
-bool FxSound::Settings::getBool(StringRef key) noexcept
+bool FxSound::Settings::getBool(StringRef key, bool default_value) noexcept
 {
-	return user_settings_->getBoolValue(key);
+	return user_settings_->getBoolValue(key, default_value);
 }
 
 void FxSound::Settings::setString(StringRef key, String value, bool default) noexcept

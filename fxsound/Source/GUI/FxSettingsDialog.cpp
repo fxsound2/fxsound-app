@@ -760,7 +760,7 @@ void FxSettingsDialog::GeneralSettingsPane::setText()
     hotkeys_toggle_.setButtonText(TRANS("Disable keyboard shortcuts"));
 }
 
-FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), debug_log_toggle_(TRANS("Disable debug logging"))
+FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), auto_updates_toggle_(TRANS("Automatic updates"))
 {	
 	version_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	version_title_.setJustificationType(Justification::centredLeft);
@@ -779,10 +779,19 @@ FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), d
     feedback_link_.setURL(URL("https://james722808.typeform.com/to/QfEP5QrP"));
 	feedback_link_.setJustificationType(Justification::topLeft);
 
-	debug_log_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
-	debug_log_toggle_.setToggleState(!FxModel::getModel().getDebugLogging(), NotificationType::dontSendNotification);
-	debug_log_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-	debug_log_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	auto_updates_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
+	auto_updates_toggle_.setToggleState(FxController::getInstance().getAutoUpdates(), NotificationType::dontSendNotification);
+	auto_updates_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	auto_updates_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+
+	auto_updates_toggle_.onClick = [this]() {
+		FxController::getInstance().setAutoUpdates(auto_updates_toggle_.getToggleState());
+	};
+
+	updates_button_.onClick = [this]() {
+		ChildProcess child_process;
+		child_process.start("updater.exe /checknow");
+	};
 
     setText();
 
@@ -794,8 +803,8 @@ FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), d
 	addChildComponent(quicktour_link_);
 	addChildComponent(submitlogs_link_);
 	addAndMakeVisible(helpcenter_link_);
+	addAndMakeVisible(auto_updates_toggle_);
 	addAndMakeVisible(updates_button_);
-	addChildComponent(debug_log_toggle_);
 }
 
 void FxSettingsDialog::HelpSettingsPane::resized()
@@ -809,7 +818,8 @@ void FxSettingsDialog::HelpSettingsPane::resized()
 	support_title_.setBounds(X_MARGIN, changelog_link_.getBottom()+20, getWidth()-X_MARGIN, TITLE_HEIGHT);
 	helpcenter_link_.setBounds(X_MARGIN+5, support_title_.getBottom()+10, getWidth()-X_MARGIN, HYPERLINK_HEIGHT);
 	maintenance_title_.setBounds(X_MARGIN, helpcenter_link_.getBottom()+20, getWidth()-X_MARGIN, TITLE_HEIGHT);
-	updates_button_.setBounds(X_MARGIN+5, maintenance_title_.getBottom()+10, BUTTON_WIDTH, HYPERLINK_HEIGHT);
+	auto_updates_toggle_.setBounds(X_MARGIN + 5, maintenance_title_.getBottom() + 10, BUTTON_WIDTH, TOGGLE_BUTTON_HEIGHT);
+	updates_button_.setBounds(X_MARGIN+5, auto_updates_toggle_.getBottom()+10, BUTTON_WIDTH, HYPERLINK_HEIGHT);
 }
 
 void FxSettingsDialog::HelpSettingsPane::paint(Graphics& g)
@@ -841,19 +851,7 @@ void FxSettingsDialog::HelpSettingsPane::setText()
     quicktour_link_.setButtonText(TRANS("Quick tour"));    
     submitlogs_link_.setButtonText(TRANS("Submit debug logs"));    
     helpcenter_link_.setButtonText(TRANS("Help center"));        
-    feedback_link_.setButtonText(TRANS("Feedback"));    
+    feedback_link_.setButtonText(TRANS("Feedback"));
+	auto_updates_toggle_.setButtonText(TRANS("Auto updates"));
     updates_button_.setButtonText(TRANS("Check for updates"));
-
-	updates_button_.onClick = [this]() {
-		ChildProcess child_process;
-		child_process.start("updater.exe /checknow");
-	};
-}
-
-void FxSettingsDialog::HelpSettingsPane::buttonStateChanged(Button* button)
-{
-	if (button == &debug_log_toggle_)
-	{
-		FxModel::getModel().setDebugLogging(!debug_log_toggle_.getToggleState());
-	}
 }

@@ -183,6 +183,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 
     hide_help_tooltips_ = settings_.getBool("hide_help_tooltips");
 	hide_notifications_ = settings_.getBool("hide_notifications");
+	auto_updates_ = settings_.getBool("automatic_updates", true);
     output_device_id_ = settings_.getString("output_device_id");
     output_device_name_ = settings_.getString("output_device_name");
 	max_user_presets_ = settings_.getInt("max_user_presets");
@@ -219,6 +220,11 @@ void FxController::config(const String& commandline)
 	auto filterq = arg_list.getValueForOption("--filter_q");
 	auto mastergain = arg_list.getValueForOption("--master_gain");
 	auto normalization = arg_list.getValueForOption("--normalization");
+
+	if (auto_updates_)
+	{
+		checkUpdates();
+	}
     
     if (preset.isNotEmpty())
     {
@@ -1446,6 +1452,12 @@ void FxController::timerCallback()
 			main_window_->pauseVisualizer();
         }
 	}
+
+	auto current_time = Time::getCurrentTime();
+	if (auto_updates_ && current_time.getHours() == 10 && current_time.getMinutes() == 0 && current_time.getSeconds() == 0)
+	{
+		checkUpdates();
+	}
 }
 
 void FxController::onSoundDeviceChange(std::vector<SoundDevice> sound_devices)
@@ -1876,6 +1888,34 @@ String FxController::getLanguageName(String language_code) const
 int FxController::getMaxUserPresets() const
 {
 	return max_user_presets_;
+}
+
+bool FxController::getAutoUpdates()
+{
+	return auto_updates_;
+}
+
+void FxController::setAutoUpdates(bool enable)
+{
+	auto_updates_ = enable;
+	settings_.setBool("automatic_updates", enable);
+}
+
+void FxController::checkUpdates()
+{
+	if (!isAudioProcessing())
+	{
+		auto current_time = std::time(nullptr);
+		uint32_t last_update_time = settings_.getInt("last_update_time", 0);
+
+		if ((current_time - last_update_time) > (24 * 60 * 60))
+		{
+			settings_.setInt("last_update_time", static_cast<uint32_t>(current_time));
+
+			ChildProcess child_process;
+			child_process.start("updater.exe /checknow");
+		}
+	}
 }
 
 void FxController::saveWindowPosition(int x, int y)

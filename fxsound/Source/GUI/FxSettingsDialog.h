@@ -173,7 +173,7 @@ private:
 		FxLanguage language_switch_;
 	};
 
-	class HelpSettingsPane : public SettingsPane, public ToggleButton::Listener
+	class HelpSettingsPane : public SettingsPane
 	{
 	public:
 		HelpSettingsPane();
@@ -181,9 +181,6 @@ private:
 
 		void resized() override;
 		void paint(Graphics& g) override;
-
-		void buttonClicked(Button*) override {}
-		void buttonStateChanged(Button* button) override;
 
 	private:
 		static constexpr int TEXT_Y = 50;
@@ -204,6 +201,7 @@ private:
 		FxHyperlink submitlogs_link_;
 		FxHyperlink helpcenter_link_;
 		FxHyperlink feedback_link_;
+		ToggleButton auto_updates_toggle_;
 		TextButton updates_button_;
 		ToggleButton debug_log_toggle_;
 	};

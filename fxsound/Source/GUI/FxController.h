@@ -136,6 +136,10 @@ public:
     String getLanguageName(String language_code) const;
 	int getMaxUserPresets() const;
 
+	bool getAutoUpdates();
+	void setAutoUpdates(bool enable);
+	void checkUpdates();
+
 	void saveWindowPosition(int x, int y);
 	void getWindowPosition(int& x, int& y);
 
@@ -232,6 +236,7 @@ private:
 	std::vector<SoundDevice> output_devices_;
     bool hide_help_tooltips_;
 	bool hide_notifications_;
+	bool auto_updates_;
 
 	unsigned long audio_process_time_;
 	int audio_process_on_counter_;
