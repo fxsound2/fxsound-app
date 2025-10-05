@@ -25,11 +25,11 @@
     <ROW Property="MSIFASTINSTALL" MultiBuildValue="DefaultBuild:2"/>
     <ROW Property="Manufacturer" Value="FxSound LLC"/>
     <ROW Property="MsiLogging" MultiBuildValue="DefaultBuild:vp"/>
-    <ROW Property="ProductCode" Value="1033:{D8ADC1D5-DFF0-41FA-9F6D-65D0A66D3D06} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{1877F42E-4723-43FC-ACC7-564076AC1C29} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="FxSound"/>
     <ROW Property="ProductName_32" Value="[|ProductName]"/>
-    <ROW Property="ProductVersion" Value="1.2.1.0" Options="20"/>
+    <ROW Property="ProductVersion" Value="1.2.2.0" Options="20"/>
     <ROW Property="REBOOT" MultiBuildValue="DefaultBuild:Suppress"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
@@ -263,10 +263,8 @@
     <ROW Action="AI_BACKUP_AI_SETUPEXEPATH" Type="51" Source="AI_SETUPEXEPATH_ORIGINAL" Target="[AI_SETUPEXEPATH]"/>
     <ROW Action="AI_DATA_SETTER" Type="51" Source="CustomActionData" Target="[AI_SETUPEXEPATH]"/>
     <ROW Action="AI_DATA_SETTER_1" Type="51" Source="CustomActionData" Target="[APPDIR];[DFX_VERSION]"/>
-    <ROW Action="AI_DATA_SETTER_2" Type="51" Source="CustomActionData" Target="[APPDIR]"/>
     <ROW Action="AI_DATA_SETTER_3" Type="51" Source="CustomActionData" Target="FxSound.exe"/>
     <ROW Action="AI_DATA_SETTER_4" Type="51" Source="CustomActionData" Target="[APPDIR]"/>
-    <ROW Action="AI_DATA_SETTER_5" Type="51" Source="CustomActionData" Target="[APPDIR]"/>
     <ROW Action="AI_DATA_SETTER_6" Type="51" Source="CustomActionData" Target="[APPDIR]"/>
     <ROW Action="AI_DOWNGRADE" Type="19" Target="4010"/>
     <ROW Action="AI_DeleteCadLzma" Type="51" Source="AI_DeleteLzma" Target="[AI_SETUPEXEPATH]"/>
@@ -294,8 +292,6 @@
     <ROW Action="AI_SHOW_LOG" Type="65" Source="aicustact.dll" Target="LaunchLogFile" WithoutSeq="true"/>
     <ROW Action="AI_STORE_LOCATION" Type="51" Source="ARPINSTALLLOCATION" Target="[APPDIR]"/>
     <ROW Action="AI_UPDATER_UNINSTALL" Type="82" Source="updater.exe" Target="/clean silent"/>
-    <ROW Action="CreateUpdateTask" Type="81" Source="DfxInstall.dll" Target="_CreateUpdateTask@4" AdditionalSeq="AI_DATA_SETTER_2"/>
-    <ROW Action="DeleteUpdateTask" Type="81" Source="DfxInstall.dll" Target="_DeleteUpdateTask@4" AdditionalSeq="AI_DATA_SETTER_5"/>
     <ROW Action="InstallFxSoundDriver" Type="81" Source="DfxInstall.dll" Target="_InstallDFXDriver@4" AdditionalSeq="AI_DATA_SETTER_1"/>
     <ROW Action="LaunchFxSound" Type="226" Source="APPDIR" Target="&quot;[APPDIR]\FxSound.exe&quot; [FXSOUND_CONFIG]"/>
     <ROW Action="OpenUrl" Type="66" Source="viewer.exe" Target="https://www.fxsound.com/blog/fxsound-is-now-completely-free" Options="1"/>
@@ -356,7 +352,7 @@
     <ROW IniFile="CompanyName" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="CompanyName" Value="[Manufacturer]" Action="0" Component_="updater.exe"/>
     <ROW IniFile="DefaultCommandLine" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="DefaultCommandLine" Value="/silent" Action="0" Component_="updater.exe"/>
     <ROW IniFile="DownloadsFolder" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="DownloadsFolder" Value="[CommonAppDataFolder][Manufacturer]\[ProductName]\updates\" Action="0" Component_="updater.exe"/>
-    <ROW IniFile="Flags" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="Flags" Value="NoDisableAutoCheck|PerMachine|VerifyDigitalSignature|NoUpdaterInstallGUI" Action="0" Component_="updater.exe"/>
+    <ROW IniFile="Flags" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="Flags" Value="PerMachine|VerifyDigitalSignature|NoUpdaterInstallGUI" Action="0" Component_="updater.exe"/>
     <ROW IniFile="ID" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="ID" Value="[UpgradeCode]" Action="0" Component_="updater.exe"/>
     <ROW IniFile="URL" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="URL" Value="https://github.com/fxsound2/fxsound-app/raw/latest/release/updates.txt" Action="0" Component_="updater.exe"/>
     <ROW IniFile="URL1" FileName="updater.ini" DirProperty="APPDIR" Section="General" Key="URL1" Value="https://download.fxsound.com/updates" Action="0" Component_="updater.exe"/>
@@ -371,18 +367,14 @@
     <ROW Action="AI_REDIRECT_32BIT_FOLDER" Condition="NOT VersionNT64 AND NOT AI_Disable32BitRedirection" Sequence="798"/>
     <ROW Action="AI_REDIRECT_32BIT_SH_FOLDER" Condition="NOT VersionNT64 AND NOT AI_Disable32BitRedirection" Sequence="799"/>
     <ROW Action="AI_AppSearchEx" Sequence="102"/>
-    <ROW Action="LaunchFxSound" Condition="( ( NOT Installed ) OR ( Installed AND REMOVE &lt;&gt; &quot;ALL&quot; AND AI_INSTALL_MODE &lt;&gt; &quot;Remove&quot; ) )" Sequence="6607"/>
+    <ROW Action="LaunchFxSound" Condition="( ( NOT Installed ) OR ( Installed AND REMOVE &lt;&gt; &quot;ALL&quot; AND AI_INSTALL_MODE &lt;&gt; &quot;Remove&quot; ) )" Sequence="6605"/>
     <ROW Action="AI_SETPROGRAMFILES64" Condition="VersionNT64" Sequence="746"/>
     <ROW Action="AI_SETPROGRAMFILES" Condition="NOT VersionNT64" Sequence="747"/>
     <ROW Action="AI_UPDATER_UNINSTALL" Condition="($updater.exe = 2) AND (?updater.exe = 3) AND NOT (UPGRADINGPRODUCTCODE)" Sequence="1551"/>
     <ROW Action="StopFxSound" Sequence="205"/>
     <ROW Action="AI_DATA_SETTER_3" Sequence="204"/>
     <ROW Action="InstallFxSoundDriver" Condition="( NOT Installed )" Sequence="6604"/>
-    <ROW Action="CreateUpdateTask" Condition="( NOT Installed )" Sequence="6606"/>
-    <ROW Action="DeleteUpdateTask" Condition="( Installed AND ( REMOVE = &quot;ALL&quot; OR AI_INSTALL_MODE = &quot;Remove&quot; ) )" Sequence="1204"/>
     <ROW Action="AI_DATA_SETTER_1" Condition="( NOT Installed )" Sequence="6603"/>
-    <ROW Action="AI_DATA_SETTER_2" Condition="( NOT Installed )" Sequence="6605"/>
-    <ROW Action="AI_DATA_SETTER_5" Condition="( Installed AND ( REMOVE = &quot;ALL&quot; OR AI_INSTALL_MODE = &quot;Remove&quot; ) )" Sequence="1203"/>
     <ROW Action="SetDFXUninstall" Condition="( NOT Installed )" Sequence="202"/>
     <ROW Action="UninstallOldVersion" Condition="( NOT Installed ) AND ( DFX )" Sequence="203"/>
     <ROW Action="AI_ExtractFiles" Sequence="1399" Builds="DefaultBuild"/>

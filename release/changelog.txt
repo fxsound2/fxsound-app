@@ -1,3 +1,12 @@
+version 1.2.2.0
+----------------
+1. Application window position is saved and restored to fix the bug where the window was appearing in the wrong monitor in a multi display system
+2. To fix the bug where some devices were not automatically enumerated, devices are enumerated when the output devices dropdown list is opened
+3. Automatic updates can now be enabled/disabled from settings
+4. Reset presets button is moved to audio settings pane
+5. Restore Defaults button is added to restore audio controls in settings
+6. Visualizer algorithm optimizations
+
 version 1.2.1.0
 ----------------
 1. Fixed hotkey editor rendering
