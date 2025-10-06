@@ -275,10 +275,7 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 		}
 
 		FxController::getInstance().setNumEqBands(num_eq_bands);
-	};
-
-	setText();
-	updateEndpointList();
+	};	
 
 	equalizer_.clear(NotificationType::dontSendNotification);
 	for (auto bands : equalizer_bands_)
@@ -339,6 +336,9 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 		controller.resetPresets();
 		reset_presets_button_.setEnabled(false);
 		};
+
+	setText();
+	updateEndpointList();
 
 	addAndMakeVisible(&endpoint_title_);
 	addAndMakeVisible(&preferred_endpoint_);
@@ -464,8 +464,14 @@ void FxSettingsDialog::AudioSettingsPane::setText()
 	right_label_.setText(TRANS("Right"), NotificationType::dontSendNotification);
 
 	restore_defaults_button_.setButtonText(TRANS("Restore Defaults"));
-	reset_presets_button_.setButtonText(TRANS("Reset presets to factory defaults"));
+	int button_width = min(restore_defaults_button_.getBestWidthForHeight(BUTTON_HEIGHT), MAX_BUTTON_WIDTH);
+	if (button_width < RESET_PRESETS_BUTTON_WIDTH)
+	{
+		button_width = RESET_PRESETS_BUTTON_WIDTH;
+	}
+	restore_defaults_button_.setBounds(restore_defaults_button_.getX(), restore_defaults_button_.getY(), button_width, BUTTON_HEIGHT);
 
+	reset_presets_button_.setButtonText(TRANS("Reset presets to factory defaults"));
 	resizeResetButton(reset_presets_button_.getX(), reset_presets_button_.getY());
 }
 

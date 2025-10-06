@@ -104,7 +104,7 @@ private:
 		static constexpr int COMBOBOX_HEIGHT = 30;
 		static constexpr int SLIDER_HEIGHT = 18;
 		static constexpr int LABEL_HEIGHT = 14;
-		static constexpr int RESTORE_DEFAULTS_BUTTON_WIDTH = 110;
+		static constexpr int RESTORE_DEFAULTS_BUTTON_WIDTH = 220;
 		static constexpr int RESET_PRESETS_BUTTON_WIDTH = 220;
 		static constexpr int BUTTON_HEIGHT = 24;
 		static constexpr int MAX_BUTTON_WIDTH = 315;		

@@ -1,3 +1,9 @@
+version 1.2.3.0
+----------------
+1. Korean translation corrections
+2. Fixed the Russian translation issues in settings dialog
+3. Fixed the Restore Default button size for proper rendering in all languages
+
 version 1.2.2.0
 ----------------
 1. Application window position is saved and restored to fix the bug where the window was appearing in the wrong monitor in a multi display system

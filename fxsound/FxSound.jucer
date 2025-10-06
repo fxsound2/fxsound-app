@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.2.0"
+<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.3.0"
               displaySplashScreen="1" jucerFormatVersion="1" companyName="FxSound LLC"
               companyWebsite="https://www.fxsound.com" companyCopyright="2025 FxSound&#8482;"
               defines="UNICODE" postExportShellCommandWin="type %%1%%\Project\status_icons.rc &gt;&gt; %%1%%\Project\resources.rc"
@@ -170,34 +170,34 @@
       <FILE id="giU5B1" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
     </GROUP>
     <GROUP id="{AAFAFD7C-41A7-0774-9216-95AEBD0117C0}" name="Strings">
-      <FILE id="l0nl4P" name="FxSound.ar.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ar.txt"/>
-      <FILE id="oL8jv9" name="FxSound.ba.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ba.txt"/>
-      <FILE id="pAy4s5" name="FxSound.de.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.de.txt"/>
-      <FILE id="rV4xpC" name="FxSound.es.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.es.txt"/>
-      <FILE id="u9jOlg" name="FxSound.fr.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.fr.txt"/>
-      <FILE id="PCGG0A" name="FxSound.hr.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.hr.txt"/>
-      <FILE id="TMG8Yi" name="fxsound.hu.txt" compile="0" resource="1" file="../Resources/Strings/fxsound.hu.txt"/>
-      <FILE id="V0EF10" name="FxSound.id.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.id.txt"/>
-      <FILE id="vurx1r" name="FxSound.ir.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ir.txt"/>
-      <FILE id="duDpEu" name="FxSound.it.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.it.txt"/>
-      <FILE id="jdy1By" name="FxSound.ja.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ja.txt"/>
-      <FILE id="QoBXiY" name="FxSound.ko.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ko.txt"/>
-      <FILE id="rICuze" name="FxSound.nl.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.nl.txt"/>
-      <FILE id="PrCXcS" name="FxSound.pl.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.pl.txt"/>
-      <FILE id="OfWsqN" name="FxSound.pt-br.txt" compile="0" resource="1"
+      <FILE id="XbT61V" name="FxSound.ar.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ar.txt"/>
+      <FILE id="cAIn3x" name="FxSound.ba.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ba.txt"/>
+      <FILE id="gVyPZi" name="FxSound.de.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.de.txt"/>
+      <FILE id="CQH7Jy" name="FxSound.es.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.es.txt"/>
+      <FILE id="f64DAO" name="FxSound.fr.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.fr.txt"/>
+      <FILE id="f1D4BE" name="FxSound.hr.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.hr.txt"/>
+      <FILE id="Wj87Eh" name="fxsound.hu.txt" compile="0" resource="1" file="../Resources/Strings/fxsound.hu.txt"/>
+      <FILE id="KRZtVd" name="FxSound.id.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.id.txt"/>
+      <FILE id="OWtECq" name="FxSound.ir.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ir.txt"/>
+      <FILE id="zxfPfh" name="FxSound.it.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.it.txt"/>
+      <FILE id="JRQzN4" name="FxSound.ja.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ja.txt"/>
+      <FILE id="JZUDxv" name="FxSound.ko.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ko.txt"/>
+      <FILE id="Af5L3s" name="FxSound.nl.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.nl.txt"/>
+      <FILE id="X7Zl3x" name="FxSound.pl.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.pl.txt"/>
+      <FILE id="EvdnQc" name="FxSound.pt-br.txt" compile="0" resource="1"
             file="../Resources/Strings/FxSound.pt-br.txt"/>
-      <FILE id="WTTJwb" name="FxSound.pt.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.pt.txt"/>
-      <FILE id="DhEKAe" name="FxSound.ro.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ro.txt"/>
-      <FILE id="JmoI2q" name="FxSound.ru.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ru.txt"/>
-      <FILE id="Ad3btR" name="FxSound.sv.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.sv.txt"/>
-      <FILE id="X6k6J6" name="FxSound.th.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.th.txt"/>
-      <FILE id="yxZs0z" name="FxSound.tr.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.tr.txt"/>
-      <FILE id="wiCUFS" name="FxSound.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.txt"/>
-      <FILE id="uQeAit" name="FxSound.ua.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ua.txt"/>
-      <FILE id="RgqQl1" name="FxSound.vi.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.vi.txt"/>
-      <FILE id="Rxc9uZ" name="FxSound.zh-CN.txt" compile="0" resource="1"
+      <FILE id="mFwFGF" name="FxSound.pt.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.pt.txt"/>
+      <FILE id="DEcfBf" name="FxSound.ro.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ro.txt"/>
+      <FILE id="QhLN1z" name="FxSound.ru.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ru.txt"/>
+      <FILE id="yBNcjS" name="FxSound.sv.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.sv.txt"/>
+      <FILE id="trnXRh" name="FxSound.th.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.th.txt"/>
+      <FILE id="vwLV6S" name="FxSound.tr.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.tr.txt"/>
+      <FILE id="kUCjr0" name="FxSound.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.txt"/>
+      <FILE id="CLrdfy" name="FxSound.ua.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ua.txt"/>
+      <FILE id="SL6DV6" name="FxSound.vi.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.vi.txt"/>
+      <FILE id="iy9krx" name="FxSound.zh-CN.txt" compile="0" resource="1"
             file="../Resources/Strings/FxSound.zh-CN.txt"/>
-      <FILE id="oe7W0c" name="FxSound.zh-TW.txt" compile="0" resource="1"
+      <FILE id="RZlI7v" name="FxSound.zh-TW.txt" compile="0" resource="1"
             file="../Resources/Strings/FxSound.zh-TW.txt"/>
     </GROUP>
   </MAINGROUP>
