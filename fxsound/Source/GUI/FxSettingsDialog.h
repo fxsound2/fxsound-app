@@ -202,7 +202,6 @@ private:
 		FxHyperlink helpcenter_link_;
 		FxHyperlink feedback_link_;
 		ToggleButton auto_updates_toggle_;
-		TextButton updates_button_;
 		ToggleButton debug_log_toggle_;
 	};
 

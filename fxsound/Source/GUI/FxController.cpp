@@ -220,11 +220,6 @@ void FxController::config(const String& commandline)
 	auto filterq = arg_list.getValueForOption("--filter_q");
 	auto mastergain = arg_list.getValueForOption("--master_gain");
 	auto normalization = arg_list.getValueForOption("--normalization");
-
-	if (auto_updates_)
-	{
-		checkUpdates();
-	}
     
     if (preset.isNotEmpty())
     {
@@ -1913,7 +1908,7 @@ void FxController::checkUpdates()
 			settings_.setInt("last_update_time", static_cast<uint32_t>(current_time));
 
 			ChildProcess child_process;
-			child_process.start("updater.exe /checknow");
+			child_process.start("updater.exe /silent");
 		}
 	}
 }

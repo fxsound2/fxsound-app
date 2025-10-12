@@ -794,11 +794,6 @@ FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), a
 		FxController::getInstance().setAutoUpdates(auto_updates_toggle_.getToggleState());
 	};
 
-	updates_button_.onClick = [this]() {
-		ChildProcess child_process;
-		child_process.start("updater.exe /checknow");
-	};
-
     setText();
 
 	addAndMakeVisible(version_title_);
@@ -810,7 +805,6 @@ FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), a
 	addChildComponent(submitlogs_link_);
 	addAndMakeVisible(helpcenter_link_);
 	addAndMakeVisible(auto_updates_toggle_);
-	addAndMakeVisible(updates_button_);
 }
 
 void FxSettingsDialog::HelpSettingsPane::resized()
@@ -825,7 +819,6 @@ void FxSettingsDialog::HelpSettingsPane::resized()
 	helpcenter_link_.setBounds(X_MARGIN+5, support_title_.getBottom()+10, getWidth()-X_MARGIN, HYPERLINK_HEIGHT);
 	maintenance_title_.setBounds(X_MARGIN, helpcenter_link_.getBottom()+20, getWidth()-X_MARGIN, TITLE_HEIGHT);
 	auto_updates_toggle_.setBounds(X_MARGIN + 5, maintenance_title_.getBottom() + 10, BUTTON_WIDTH, TOGGLE_BUTTON_HEIGHT);
-	updates_button_.setBounds(X_MARGIN+5, auto_updates_toggle_.getBottom()+10, BUTTON_WIDTH, HYPERLINK_HEIGHT);
 }
 
 void FxSettingsDialog::HelpSettingsPane::paint(Graphics& g)
@@ -858,6 +851,5 @@ void FxSettingsDialog::HelpSettingsPane::setText()
     submitlogs_link_.setButtonText(TRANS("Submit debug logs"));    
     helpcenter_link_.setButtonText(TRANS("Help center"));        
     feedback_link_.setButtonText(TRANS("Feedback"));
-	auto_updates_toggle_.setButtonText(TRANS("Automatic updates"));
-    updates_button_.setButtonText(TRANS("Check for updates"));
+	auto_updates_toggle_.setButtonText(TRANS("Automatic updates"));;
 }

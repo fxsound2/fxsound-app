@@ -446,6 +446,11 @@ void FxMainWindow::showMenu()
 		url.launchInDefaultBrowser();
 	};
 
+	auto checkForUpdatesClicked = []() {
+		ChildProcess child_process;
+		child_process.start("updater.exe /checknow");
+	};
+
 	auto donateClicked = []() {
 		URL url("https://www.paypal.com/donate/?hosted_button_id=JVNQGYXCQ2GPG");
 		url.launchInDefaultBrowser();
@@ -486,6 +491,8 @@ void FxMainWindow::showMenu()
 	popup_menu.addItem(TRANS("Import Presets"), !model.isPresetModified() && power_state, false, importClicked);
 	popup_menu.addSeparator();
 	popup_menu.addItem(TRANS("Download Bonus Presets"), downloadClicked);
+	popup_menu.addSeparator();
+	popup_menu.addItem(TRANS("Check for updates"), checkForUpdatesClicked);
 	popup_menu.addSeparator();
 	popup_menu.addItem(TRANS("Donate"), donateClicked);
 
