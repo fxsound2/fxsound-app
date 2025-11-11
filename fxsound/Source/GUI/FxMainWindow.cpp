@@ -38,7 +38,7 @@ public:
 
 		hint_text_.setName(L"hintLabel");
 		hint_text_.setFont(theme.getNormalFont());
-		hint_text_.setColour(Label::ColourIds::textColourId, Colour(0x7F7F7F).withAlpha(1.0f));
+		hint_text_.setColour(Label::ColourIds::textColourId, Colour(FXCOLOR(HintText)).withAlpha(1.0f));
 		hint_text_.setJustificationType(Justification::centredLeft);
 		addAndMakeVisible(hint_text_);
 
@@ -54,7 +54,7 @@ public:
 		}
 		preset_editor_.setName(L"presetName");
 		preset_editor_.setFont(theme.getNormalFont());
-		preset_editor_.setColour(TextEditor::ColourIds::backgroundColourId, Colour(0x000000).withAlpha(0.0f));
+		preset_editor_.setColour(TextEditor::ColourIds::backgroundColourId, Colour(FXCOLOR(DefaultFill)).withAlpha(0.0f));
 		preset_editor_.setInputRestrictions(64);
 		preset_editor_.setInputFilter(&preset_name_input_filter_, false);
 		preset_editor_.addListener(this);
@@ -112,12 +112,12 @@ private:
 		switch (preset_status_)
 		{
 		case Status::Valid:
-			outline_colour = Colour(0xff009cdd);
+			outline_colour = Colour(FXCOLOR(ValidTextBorder)).withAlpha(1.0f);
 			break;
 
 		case Status::Empty:
 		case Status::Invalid:
-			outline_colour = Colour(0xffd51535);
+			outline_colour = Colour(FXCOLOR(InvalidTextBorder)).withAlpha(1.0f);
 		}
 
 		g.setColour(findColour(TextEditor::backgroundColourId));
@@ -198,8 +198,8 @@ FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"men
 	menu_button_.setMouseCursor(MouseCursor::PointingHandCursor);
 	menu_button_.setSize(BUTTON_WIDTH+2, BUTTON_WIDTH+6);
 	menu_button_.setHelpText(TRANS("Menu Button"));
-	menu_image_ = Drawable::createFromImageData(BinaryData::menu_svg, BinaryData::menu_svgSize);
-	menu_hover_image_ = Drawable::createFromImageData(BinaryData::menu_hover_svg, BinaryData::menu_hover_svgSize);
+	menu_image_ = Drawable::createFromImageData(FXIMAGE(MenuButton), FXIMAGESIZE(MenuButton));
+	menu_hover_image_ = Drawable::createFromImageData(FXIMAGE(MenuButtonHover), FXIMAGESIZE(MenuButtonHover));
 	menu_button_.setImages(menu_image_.get(), menu_hover_image_.get());
 	menu_button_.setWantsKeyboardFocus(true);
 	menu_button_.addListener(this);
@@ -216,8 +216,8 @@ FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"men
 	donate_button_.setSize(BUTTON_WIDTH + 2, BUTTON_WIDTH + 6);
 	donate_button_.setHelpText(TRANS("Donate"));
 	donate_button_.setTooltip(TRANS("Donate"));
-	donate_image_ = Drawable::createFromImageData(BinaryData::donate_svg, BinaryData::donate_svgSize);
-	donate_hover_image_ = Drawable::createFromImageData(BinaryData::donate_hover_svg, BinaryData::donate_hover_svgSize);
+	donate_image_ = Drawable::createFromImageData(FXIMAGE(DonateButton), FXIMAGESIZE(DonateButton));
+	donate_hover_image_ = Drawable::createFromImageData(FXIMAGE(DonateButtonHover), FXIMAGESIZE(DonateButtonHover));
 	donate_button_.setImages(donate_image_.get(), donate_hover_image_.get());
 	donate_button_.setWantsKeyboardFocus(true);
 	donate_button_.onClick = [this]() {
@@ -228,14 +228,14 @@ FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"men
 	minimize_button_.setMouseCursor(MouseCursor::PointingHandCursor);
 	minimize_button_.setSize(BUTTON_WIDTH + 2, BUTTON_WIDTH + 6);
 	minimize_button_.setHelpText(TRANS("Minimize Button"));
-	minimize_image_ = Drawable::createFromImageData(BinaryData::min_window_svg, BinaryData::min_window_svgSize);
-	minimize_hover_image_ = Drawable::createFromImageData(BinaryData::min_window_hover_svg, BinaryData::min_window_hover_svgSize);
+	minimize_image_ = Drawable::createFromImageData(FXIMAGE(MinimizeWindowButton), FXIMAGESIZE(MinimizeWindowButton));
+	minimize_hover_image_ = Drawable::createFromImageData(FXIMAGE(MinimizeWindowButtonHover), FXIMAGESIZE(MinimizeWindowButtonHover));
 	minimize_button_.setImages(minimize_image_.get(), minimize_hover_image_.get());
 	minimize_button_.setWantsKeyboardFocus(true);
 	minimize_button_.addListener(this);
 
 	help_bubble_.addToDesktop(0);
-	help_bubble_.setColour(BubbleComponent::ColourIds::backgroundColourId, Colour(0x0).withAlpha(1.0f));
+	help_bubble_.setColour(BubbleComponent::ColourIds::backgroundColourId, Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f));
 	help_bubble_.setColour(BubbleComponent::ColourIds::outlineColourId, theme.findColour(TextEditor::textColourId));
 	help_bubble_.setAlwaysOnTop(true);
 
@@ -336,14 +336,14 @@ void FxMainWindow::setResizeImage()
 {
 	if (FxController::getInstance().getCurrentView() == ViewType::Pro)
 	{
-		resize_image_ = Drawable::createFromImageData(BinaryData::minimize_svg, BinaryData::minimize_svgSize);
-		resize_hover_image_ = Drawable::createFromImageData(BinaryData::minimize_hover_svg, BinaryData::minimize_hover_svgSize);
+		resize_image_ = Drawable::createFromImageData(FXIMAGE(MinimizeButton), FXIMAGESIZE(MinimizeButton));
+		resize_hover_image_ = Drawable::createFromImageData(FXIMAGE(MinimizeButtonHover), FXIMAGESIZE(MinimizeButtonHover));
 		resize_button_.setSize(BUTTON_WIDTH+2, BUTTON_WIDTH+2);
 	}
 	else
 	{
-		resize_image_ = Drawable::createFromImageData(BinaryData::maximize_svg, BinaryData::maximize_svgSize);
-		resize_hover_image_ = Drawable::createFromImageData(BinaryData::maximize_hover_svg, BinaryData::maximize_hover_svgSize);
+		resize_image_ = Drawable::createFromImageData(FXIMAGE(MaximizeButton), FXIMAGESIZE(MaximizeButton));
+		resize_hover_image_ = Drawable::createFromImageData(FXIMAGE(MaximizeButtonHover), FXIMAGESIZE(MaximizeButtonHover));
 		resize_button_.setSize(BUTTON_WIDTH, BUTTON_WIDTH); 	
 	}
 

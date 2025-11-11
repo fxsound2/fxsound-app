@@ -27,13 +27,13 @@ FxLanguage::FxLanguage() : next_button_("next", DrawableButton::ButtonStyle::Ima
     language_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
     language_.setJustificationType(Justification::centred);
 
-    auto next_normal = Drawable::createFromImageData(BinaryData::arrow_next_svg, BinaryData::arrow_next_svgSize);
-    auto next_disabled = Drawable::createFromImageData(BinaryData::arrow_next_bw_svg, BinaryData::arrow_next_bw_svgSize);
+    auto next_normal = Drawable::createFromImageData(FXIMAGE(ArrowNext), FXIMAGESIZE(ArrowNext));
+    auto next_disabled = Drawable::createFromImageData(FXIMAGE(ArrowNextBW), FXIMAGESIZE(ArrowNextBW));
     next_button_.setImages(next_normal.get(), nullptr, next_disabled.get());
     next_button_.setMouseCursor(MouseCursor::PointingHandCursor);
 
-    auto prev_normal = Drawable::createFromImageData(BinaryData::arrow_prev_svg, BinaryData::arrow_prev_svgSize);
-    auto prev_disabled = Drawable::createFromImageData(BinaryData::arrow_prev_bw_svg, BinaryData::arrow_prev_bw_svgSize);
+    auto prev_normal = Drawable::createFromImageData(FXIMAGE(ArrowPrev), FXIMAGESIZE(ArrowPrev));
+    auto prev_disabled = Drawable::createFromImageData(FXIMAGE(ArrowPrevBW), FXIMAGESIZE(ArrowPrevBW));
     prev_button_.setImages(prev_normal.get(), nullptr, prev_disabled.get());
     prev_button_.setMouseCursor(MouseCursor::PointingHandCursor);
     
@@ -73,7 +73,7 @@ FxLanguage::FxLanguage() : next_button_("next", DrawableButton::ButtonStyle::Ima
 
 void FxLanguage::paint(Graphics& g)
 {
-    g.setFillType(FillType(Colour(0x0f0f0f).withAlpha(1.0f)));
+    g.setFillType(FillType(Colour(FXCOLOR(ControlBackground)).withAlpha(1.0f)));
     g.fillRoundedRectangle(getLocalBounds().toFloat(), 5.0f);
 }
 

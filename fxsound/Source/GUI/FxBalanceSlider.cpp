@@ -24,8 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 FxBalanceSlider::FxBalanceSlider(float default_value) : default_value_(default_value)
 {
-	slider_thumb_ = Drawable::createFromImageData(BinaryData::Slider_Thumb_svg, BinaryData::Slider_Thumb_svgSize);
-	slider_thumb_grey_ = Drawable::createFromImageData(BinaryData::Slider_Thumb_bw_svg, BinaryData::Slider_Thumb_bw_svgSize);
+	slider_thumb_ = Drawable::createFromImageData(FXIMAGE(SliderThumb), FXIMAGESIZE(SliderThumb));
+	slider_thumb_grey_ = Drawable::createFromImageData(FXIMAGE(SliderThumbBW), FXIMAGESIZE(SliderThumbBW));
 
 	setMouseCursor(MouseCursor::PointingHandCursor);
 
@@ -78,8 +78,8 @@ void FxBalanceSlider::paint(Graphics& g)
 	auto value = getValue();
 	float scaled_value = (value - (-20.0f)) / (20.0f - (-20.0f));
 
-	Colour left_colour = Colour(0xe33250).withAlpha(1.0f - scaled_value);
-	Colour right_colour = Colour(0xe33250).withAlpha(scaled_value);
+	Colour left_colour = Colour(FXCOLOR(SliderTrack)).withAlpha(1.0f - scaled_value);
+	Colour right_colour = Colour(FXCOLOR(SliderTrack)).withAlpha(scaled_value);
 	if (!isEnabled())
 	{
 		left_colour = left_colour.withSaturation(0.0);
@@ -98,7 +98,7 @@ void FxBalanceSlider::paint(Graphics& g)
 
 	if (hasKeyboardFocus(true))
 	{
-		Colour colour = Colour(0xf7546f).withAlpha(0.1f);
+		Colour colour = Colour(FXCOLOR(SliderHighlight)).withAlpha(0.1f);
 		g.setFillType(colour);
 		g.fillRoundedRectangle(juce::Rectangle<float>(x, y, width, height).expanded(FxTheme::SLIDER_THUMB_RADIUS / 2, FxTheme::SLIDER_THUMB_RADIUS / 2), height + FxTheme::SLIDER_THUMB_RADIUS);
 	}

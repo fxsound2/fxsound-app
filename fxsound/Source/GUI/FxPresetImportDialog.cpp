@@ -205,10 +205,10 @@ FxPresetImportDialog::PresetImportComponent::PresetImportComponent() :
     select_dir_label_.setFont(theme.getNormalFont());
     select_dir_label_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 
-    import_dir_select_.setColour(FileBrowserComponent::ColourIds::currentPathBoxBackgroundColourId, Colour(0x000000).withAlpha(1.0f));
-    import_dir_select_.setColour(FileBrowserComponent::ColourIds::currentPathBoxTextColourId, Colour(0xb1b1b1).withAlpha(1.0f));
-    import_dir_select_.setColour(FileBrowserComponent::ColourIds::filenameBoxBackgroundColourId, Colour(0x000000).withAlpha(1.0f));
-    import_dir_select_.setColour(FileBrowserComponent::ColourIds::filenameBoxTextColourId, Colour(0xb1b1b1).withAlpha(1.0f));
+    import_dir_select_.setColour(FileBrowserComponent::ColourIds::currentPathBoxBackgroundColourId, Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f));
+    import_dir_select_.setColour(FileBrowserComponent::ColourIds::currentPathBoxTextColourId, Colour(FXCOLOR(DefaultText)).withAlpha(1.0f));
+    import_dir_select_.setColour(FileBrowserComponent::ColourIds::filenameBoxBackgroundColourId, Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f));
+    import_dir_select_.setColour(FileBrowserComponent::ColourIds::filenameBoxTextColourId, Colour(FXCOLOR(DefaultText)).withAlpha(1.0f));
     import_dir_select_.setFilenameBoxLabel(TRANS("Folder:"));
 
     select_dir_label_.setJustificationType(Justification::centredLeft);

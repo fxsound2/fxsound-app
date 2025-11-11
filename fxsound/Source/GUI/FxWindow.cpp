@@ -138,7 +138,7 @@ void FxWindow::paint(Graphics& g)
         g.fillRoundedRectangle((float)shadow_width_, (float)shadow_width_, (float)getWidth() - shadow_width_ * 2, (float)getHeight() - shadow_width_ * 2, (float)FxTheme::WINDOW_CORNER_RADIUS);        
     }
 
-	g.setColour(Colour(0x2b2b2b).withAlpha(1.0f));
+	g.setColour(Colour(FXCOLOR(ControlBackground)).withAlpha(1.0f));
 	g.drawLine((float)shadow_width_, (float)title_bar_.getBottom(), (float)getWidth() - shadow_width_*2, (float)title_bar_.getBottom());
 }
 
@@ -164,7 +164,7 @@ void FxWindow::CloseButton::paintButton(Graphics& g, bool, bool)
 	shape.addLineSegment({ 0.0f, 0.0f, 1.0f, 1.0f }, 0.08f);
 	shape.addLineSegment({ 1.0f, 0.0f, 0.0f, 1.0f }, 0.08f);
 
-	g.setColour(Colour(0xffe63462));
+	g.setColour(Colour(FXCOLOR(ImageButton)).withAlpha(1.0f));
 	g.fillPath(shape, shape.getTransformToScaleToFit(rect, true));
 }
 
@@ -176,18 +176,18 @@ FxWindow::TitleBar::TitleBar(String name)
 	addChildComponent(title_);
 	if (name_.isEmpty())
 	{
-		icon_ = Drawable::createFromImageData(BinaryData::logowhite_png, BinaryData::logowhite_pngSize);
+		icon_ = Drawable::createFromImageData(FXIMAGE(DefaultLogo), FXIMAGESIZE(DefaultLogo));
 		icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT) / 2, (float)ICON_WIDTH, (float)ICON_HEIGHT),
 			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
 
-		animation_icon_ = Drawable::createFromImageData(BinaryData::logored_png, BinaryData::logored_pngSize);
+		animation_icon_ = Drawable::createFromImageData(FXIMAGE(HighlightedLogo), FXIMAGESIZE(HighlightedLogo));
 		animation_icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT) / 2, (float)ICON_WIDTH, (float)ICON_HEIGHT),
 			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
 		animation_icon_->setAlpha(0.0f);
 	}
 	else
 	{
-		icon_ = Drawable::createFromImageData(BinaryData::FxSound_White_Bars_svg, BinaryData::FxSound_White_Bars_svgSize);
+		icon_ = Drawable::createFromImageData(FXIMAGE(IconLogo), FXIMAGESIZE(IconLogo));
 		auto width = (ICON_HEIGHT - 1)*icon_->getWidth() / icon_->getHeight();
 		icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT - 1) / 2, (float)width, (float)ICON_HEIGHT - 1),
 			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });

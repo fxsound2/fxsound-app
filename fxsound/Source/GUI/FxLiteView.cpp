@@ -51,7 +51,7 @@ void FxLiteView::paint(Graphics& g)
 	g.setFillType(FillType(theme.getCurrentColourScheme().getUIColour(LookAndFeel_V4::ColourScheme::windowBackground)));
 	g.fillAll();
 
-	g.setFillType(FillType(Colour(0x0).withAlpha(0.2f)));
+	g.setFillType(FillType(Colour(FXCOLOR(DefaultFill)).withAlpha(0.2f)));
 	g.fillRoundedRectangle(20, 22, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, 10);
 
     auto power_state = FxModel::getModel().getPowerState();

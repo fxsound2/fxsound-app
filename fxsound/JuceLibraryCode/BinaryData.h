@@ -17,6 +17,63 @@ namespace BinaryData
     extern const char*   GilroySemibold_ttf;
     const int            GilroySemibold_ttfSize = 83948;
 
+    extern const char*   maximize_black_svg;
+    const int            maximize_black_svgSize = 826;
+
+    extern const char*   maximize_hover_blue_svg;
+    const int            maximize_hover_blue_svgSize = 838;
+
+    extern const char*   menu_black_svg;
+    const int            menu_black_svgSize = 552;
+
+    extern const char*   menu_hover_blue_svg;
+    const int            menu_hover_blue_svgSize = 669;
+
+    extern const char*   min_window_black_svg;
+    const int            min_window_black_svgSize = 542;
+
+    extern const char*   min_window_hover_blue_svg;
+    const int            min_window_hover_blue_svgSize = 599;
+
+    extern const char*   logoblue_svg;
+    const int            logoblue_svgSize = 7257;
+
+    extern const char*   donate_blue_svg;
+    const int            donate_blue_svgSize = 431;
+
+    extern const char*   donate_hover_blue_svg;
+    const int            donate_hover_blue_svgSize = 431;
+
+    extern const char*   dropdown_arrow_hover_blue_svg;
+    const int            dropdown_arrow_hover_blue_svgSize = 685;
+
+    extern const char*   arrow_next_blue_svg;
+    const int            arrow_next_blue_svgSize = 507;
+
+    extern const char*   arrow_prev_blue_svg;
+    const int            arrow_prev_blue_svgSize = 506;
+
+    extern const char*   FxSound_Black_Bars_svg;
+    const int            FxSound_Black_Bars_svgSize = 589;
+
+    extern const char*   minimize_black_svg;
+    const int            minimize_black_svgSize = 951;
+
+    extern const char*   minimize_hover_blue_svg;
+    const int            minimize_hover_blue_svgSize = 963;
+
+    extern const char*   power_off_black_svg;
+    const int            power_off_black_svgSize = 2218;
+
+    extern const char*   power_on_blue_svg;
+    const int            power_on_blue_svgSize = 2218;
+
+    extern const char*   Slider_Thumb_blue_svg;
+    const int            Slider_Thumb_blue_svgSize = 4894;
+
+    extern const char*   logoblack_svg;
+    const int            logoblack_svgSize = 7254;
+
     extern const char*   donate_svg;
     const int            donate_svgSize = 431;
 
@@ -195,7 +252,7 @@ namespace BinaryData
     const int            FxSound_zhTW_txtSize = 10124;
 
     // Number of elements in the namedResourceList and originalFileNames arrays.
-    const int namedResourceListSize = 62;
+    const int namedResourceListSize = 81;
 
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];

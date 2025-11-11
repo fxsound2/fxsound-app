@@ -63,7 +63,7 @@ void FxPresetExportDialog::PresetExportProgress::paint(Graphics& g)
         colour_gradient_start_ = 0.0;
     }
 
-    ColourGradient gradient = ColourGradient::horizontal(Colour(0xe63462).withAlpha(1.0f), colour_gradient_start_* (float)getWidth(), Colour(0xf3f3f3).withAlpha(1.0f), getWidth());
+    ColourGradient gradient = ColourGradient::horizontal(Colour(FXCOLOR(ImageButton)).withAlpha(1.0f), colour_gradient_start_* (float)getWidth(), Colour(FXCOLOR(VerticalSliderLow)).withAlpha(1.0f), getWidth());
 
     g.setFillType(FillType(gradient));
     auto area = juce::Rectangle<float>(0, 0, getWidth(), getHeight());
@@ -79,9 +79,9 @@ FxPresetExportDialog::PresetExportComponent::PresetExportComponent() : export_bu
     select_presets_label_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
     select_presets_label_.setJustificationType(Justification::centredLeft);
 
-    preset_list_.setColour(ListBox::ColourIds::backgroundColourId, Colour(0x000000).withAlpha(1.0f));
-    preset_list_.setColour(ListBox::ColourIds::outlineColourId, Colour(0x000000).withAlpha(1.0f));
-    preset_list_.setColour(ListBox::ColourIds::textColourId, Colour(0xb1b1b1).withAlpha(1.0f));
+    preset_list_.setColour(ListBox::ColourIds::backgroundColourId, Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f));
+    preset_list_.setColour(ListBox::ColourIds::outlineColourId, Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f));
+    preset_list_.setColour(ListBox::ColourIds::textColourId, Colour(FXCOLOR(DefaultText)).withAlpha(1.0f));
     preset_list_.setRowHeight(TEXT_HEIGHT + 6);
     preset_list_.setModel(this);
     preset_list_.setMultipleSelectionEnabled(true);
@@ -143,13 +143,13 @@ void FxPresetExportDialog::PresetExportComponent::paintListBoxItem(int rowNumber
 {
     if (rowIsSelected)
     {
-        g.fillAll(Colour(0xe63462).withAlpha(1.0f));
+        g.fillAll(Colour(FXCOLOR(ImageButton)).withAlpha(1.0f));
     }
 
     auto preset = FxModel::getModel().getPreset(rowNumber);
     auto area = juce::Rectangle<float>(0, 0, width, height);
     area.reduce(10, 0);
-    g.setColour(Colour(0xffffff).withAlpha(1.0f));
+    g.setColour(Colour(FXCOLOR(HighlightedText)).withAlpha(1.0f));
     g.setFont(font_);
     g.drawText(preset.name, area, Justification::centredLeft, true);
 }

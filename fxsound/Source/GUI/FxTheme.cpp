@@ -19,45 +19,84 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <JuceHeader.h>
 #include "FxTheme.h"
 
+const uint32 FxTheme::theme_colors_[FxThemeMode::NumModes][FxColor::NumColors] =
+{ { 0x181818, 0x181818, 0x383838, 0x2b2b2b, 0xb1b1b1, 0x000000, 0xffffff, 0x0c0c0c, 0xffffff,
+	0x000000, 0xd51535, 0xe63462, 0x7f7f7f, 0x009cdd, 0xd51535, 0x0f0f0f, 0xe33250, 0xf7546f,
+	0xd51535, 0xfe566a, 0xef4b65, 0x742834, 0xf3f3f3, 0x414141, 0x000000 },
+
+   {0xf5f5f5, 0xf5f5f5, 0xc7c7c7, 0xfafafa, 0x4e4e4e, 0xffffff, 0x000000, 0xf4f4f4, 0x000000,
+	0xd7d7d7, 0x1ac1ff, 0x23b6eb, 0x808080, 0x009cdd, 0xd51535, 0xe0e0e0, 0x0a4d66, 0x53ccff,
+	0x1ac1ff, 0x72d8ff, 0x33c8ff, 0x063244, 0x1c1c1c, 0xdadada, 0xc0c0c0} };
+
+const char* FxTheme::theme_images_[FxThemeMode::NumModes][FxImage::NumImages] =
+{ { BinaryData::logowhite_png, BinaryData::logored_png, BinaryData::FxSound_White_Bars_png,
+	BinaryData::power_on_svg, BinaryData::power_off_svg, BinaryData::donate_svg, BinaryData::donate_hover_svg, BinaryData::menu_svg, BinaryData::menu_hover_svg,
+	BinaryData::minimize_svg, BinaryData::minimize_hover_svg, BinaryData::maximize_svg, BinaryData::maximize_hover_svg, BinaryData::min_window_svg, BinaryData::min_window_hover_svg,
+	BinaryData::arrow_next_svg, BinaryData::arrow_next_bw_svg, BinaryData::arrow_prev_svg, BinaryData::arrow_prev_bw_svg, BinaryData::dropdown_arrow_bw_svg, BinaryData::dropdown_arrow_hover_svg,
+	BinaryData::Slider_Thumb_svg, BinaryData::Slider_Thumb_bw_svg },
+
+  { BinaryData::logoblack_svg, BinaryData::logoblue_svg, BinaryData::FxSound_Black_Bars_svg,
+	BinaryData::power_on_blue_svg, BinaryData::power_off_black_svg, BinaryData::donate_blue_svg, BinaryData::donate_hover_blue_svg, BinaryData::menu_black_svg, BinaryData::menu_hover_blue_svg,
+	BinaryData::minimize_black_svg, BinaryData::minimize_hover_blue_svg, BinaryData::maximize_black_svg, BinaryData::maximize_hover_blue_svg, BinaryData::min_window_black_svg, BinaryData::min_window_hover_blue_svg,
+	BinaryData::arrow_next_blue_svg, BinaryData::arrow_next_bw_svg, BinaryData::arrow_prev_blue_svg, BinaryData::arrow_prev_bw_svg, BinaryData::dropdown_arrow_bw_svg, BinaryData::dropdown_arrow_hover_blue_svg,
+	BinaryData::Slider_Thumb_blue_svg, BinaryData::Slider_Thumb_bw_svg } };
+
+const int FxTheme::theme_image_sizes_[FxThemeMode::NumModes][FxImage::NumImages] =
+{ {BinaryData::logowhite_pngSize, BinaryData::logored_pngSize, BinaryData::FxSound_White_Bars_pngSize,
+   BinaryData::power_on_svgSize, BinaryData::power_off_svgSize, BinaryData::donate_svgSize, BinaryData::donate_hover_svgSize, BinaryData::menu_svgSize, BinaryData::menu_hover_svgSize,
+   BinaryData::minimize_svgSize, BinaryData::minimize_hover_svgSize, BinaryData::maximize_svgSize, BinaryData::maximize_hover_svgSize, BinaryData::min_window_svgSize, BinaryData::min_window_hover_svgSize,
+   BinaryData::arrow_next_svgSize, BinaryData::arrow_next_bw_svgSize, BinaryData::arrow_prev_svgSize, BinaryData::arrow_prev_bw_svgSize, BinaryData::dropdown_arrow_bw_svgSize, BinaryData::dropdown_arrow_hover_svgSize,
+   BinaryData::Slider_Thumb_svgSize, BinaryData::Slider_Thumb_bw_svgSize},
+
+  { BinaryData::logoblack_svgSize, BinaryData::logoblue_svgSize, BinaryData::FxSound_Black_Bars_svgSize,
+	BinaryData::power_on_blue_svgSize, BinaryData::power_off_black_svgSize, BinaryData::donate_blue_svgSize, BinaryData::donate_hover_blue_svgSize, BinaryData::menu_black_svgSize, BinaryData::menu_hover_blue_svgSize,
+	BinaryData::minimize_black_svgSize, BinaryData::minimize_hover_blue_svgSize, BinaryData::maximize_black_svgSize, BinaryData::maximize_hover_blue_svgSize, BinaryData::min_window_black_svgSize, BinaryData::min_window_hover_blue_svgSize,
+	BinaryData::arrow_next_blue_svgSize, BinaryData::arrow_next_bw_svgSize, BinaryData::arrow_prev_blue_svgSize, BinaryData::arrow_prev_bw_svgSize, BinaryData::dropdown_arrow_bw_svgSize, BinaryData::dropdown_arrow_hover_blue_svgSize,
+	BinaryData::Slider_Thumb_blue_svgSize, BinaryData::Slider_Thumb_bw_svgSize } };
+
+FxThemeMode FxTheme::theme_mode_ = FxThemeMode::Light;
+
 //==============================================================================
-FxTheme::FxTheme() : LookAndFeel_V4(getFxColourScheme())
+FxTheme::FxTheme() : LookAndFeel_V4()
 {
-	setColour(ComboBox::ColourIds::arrowColourId, Colour(0xe63462).withAlpha(1.0f));
-	setColour(ComboBox::ColourIds::backgroundColourId, Colour(0x000000).withAlpha(1.0f));
-	setColour(ComboBox::ColourIds::outlineColourId, Colour(0x000000).withAlpha(1.0f));
-	setColour(ComboBox::ColourIds::focusedOutlineColourId, Colour(0x000000).withAlpha(1.0f));
-	setColour(ComboBox::ColourIds::textColourId, Colour(0xb1b1b1).withAlpha(1.0f));
-	setColour(TextEditor::ColourIds::backgroundColourId, Colour(0x000000).withAlpha(1.0f));
-	setColour(TextEditor::ColourIds::outlineColourId, Colour(0x000000).withAlpha(1.0f));
-	setColour(TextEditor::ColourIds::focusedOutlineColourId, Colour(0x000000).withAlpha(1.0f));
-	setColour(TextEditor::ColourIds::textColourId, Colour(0xb1b1b1).withAlpha(1.0f));
-	setColour(TextEditor::ColourIds::highlightedTextColourId, Colour(0xffffff).withAlpha(1.0f));
-	setColour(TextButton::ColourIds::buttonColourId, Colour(0xd51535).withAlpha(1.0f));
-	setColour(TextButton::ColourIds::buttonOnColourId, Colour(0xd51535).withAlpha(1.0f));
-	setColour(TextButton::ColourIds::textColourOffId, Colour(0xffffff).withAlpha(1.0f));
-	setColour(TextButton::ColourIds::textColourOnId, Colour(0xffffff).withAlpha(1.0f));
-	setColour(HyperlinkButton::ColourIds::textColourId, Colour(0xffffff).withAlpha(1.0f));
-	setColour(CaretComponent::ColourIds::caretColourId, Colour(0xb1b1b1).withAlpha(1.0f));
-	setColour(PopupMenu::ColourIds::backgroundColourId, Colour(0x000000).withAlpha(1.0f));
-	setColour(PopupMenu::ColourIds::highlightedBackgroundColourId, Colour(0xe63462).withAlpha(1.0f));
-    setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colour(0xe33250).withAlpha(0.2f));
-    setColour(Slider::ColourIds::rotarySliderFillColourId, Colour(0xe33250).withAlpha(1.0f));
+	setColourScheme(getFxColourScheme());
+
+	setColour(ComboBox::ColourIds::arrowColourId, Colour(FXCOLOR(ImageButton)).withAlpha(1.0f));
+	setColour(ComboBox::ColourIds::backgroundColourId, Colour(FXCOLOR(ComboBoxBackground)).withAlpha(1.0f));
+	setColour(ComboBox::ColourIds::outlineColourId, Colour(FXCOLOR(ComboBoxBackground)).withAlpha(1.0f));
+	setColour(ComboBox::ColourIds::focusedOutlineColourId, Colour(FXCOLOR(ComboBoxBackground)).withAlpha(1.0f));
+	setColour(ComboBox::ColourIds::textColourId, Colour(FXCOLOR(DefaultText)).withAlpha(1.0f));
+	setColour(TextEditor::ColourIds::backgroundColourId, Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f));
+	setColour(TextEditor::ColourIds::outlineColourId, Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f));
+	setColour(TextEditor::ColourIds::focusedOutlineColourId, Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f));
+	setColour(TextEditor::ColourIds::textColourId, Colour(FXCOLOR(DefaultText)).withAlpha(1.0f));
+	setColour(TextEditor::ColourIds::highlightedTextColourId, Colour(FXCOLOR(HighlightedText)).withAlpha(1.0f));
+	setColour(TextButton::ColourIds::buttonColourId, Colour(FXCOLOR(TextButtonBackground)).withAlpha(1.0f));
+	setColour(TextButton::ColourIds::buttonOnColourId, Colour(FXCOLOR(TextButtonBackground)).withAlpha(1.0f));
+	setColour(TextButton::ColourIds::textColourOffId, Colour(FXCOLOR(HighlightedText)).withAlpha(1.0f));
+	setColour(TextButton::ColourIds::textColourOnId, Colour(FXCOLOR(HighlightedText)).withAlpha(1.0f));
+	setColour(HyperlinkButton::ColourIds::textColourId, Colour(FXCOLOR(HighlightedText)).withAlpha(1.0f));
+	setColour(CaretComponent::ColourIds::caretColourId, Colour(FXCOLOR(DefaultText)).withAlpha(1.0f));
+	setColour(PopupMenu::ColourIds::backgroundColourId, Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f));
+	setColour(PopupMenu::ColourIds::highlightedBackgroundColourId, Colour(FXCOLOR(ImageButton)).withAlpha(1.0f));
+    setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colour(FXCOLOR(SliderTrack)).withAlpha(0.2f));
+    setColour(Slider::ColourIds::rotarySliderFillColourId, Colour(FXCOLOR(SliderTrack)).withAlpha(1.0f));
 
 	font_400_ = Typeface::createSystemTypefaceFor(BinaryData::GilroyRegular_ttf, BinaryData::GilroyRegular_ttfSize);
 	font_600_ = Typeface::createSystemTypefaceFor(BinaryData::GilroySemibold_ttf, BinaryData::GilroySemibold_ttfSize);
 	font_700_ = Typeface::createSystemTypefaceFor(BinaryData::GilroyBold_ttf, BinaryData::GilroyBold_ttfSize);
 
-	drop_down_arrow_ = Drawable::createFromImageData(BinaryData::dropdown_arrow_hover_svg, BinaryData::dropdown_arrow_hover_svgSize);
-	slider_thumb_ = Drawable::createFromImageData(BinaryData::Slider_Thumb_svg, BinaryData::Slider_Thumb_svgSize);
-    drop_down_arrow_grey_ = Drawable::createFromImageData(BinaryData::dropdown_arrow_bw_svg, BinaryData::dropdown_arrow_bw_svgSize);
-    slider_thumb_grey_ = Drawable::createFromImageData(BinaryData::Slider_Thumb_bw_svg, BinaryData::Slider_Thumb_bw_svgSize);
+	drop_down_arrow_ = Drawable::createFromImageData(FXIMAGE(DropDownArrowHover), FXIMAGESIZE(DropDownArrowHover));
+	slider_thumb_ = Drawable::createFromImageData(FXIMAGE(SliderThumb), FXIMAGESIZE(SliderThumb));
+    drop_down_arrow_grey_ = Drawable::createFromImageData(FXIMAGE(DropDownArrow), FXIMAGESIZE(DropDownArrow));
+    slider_thumb_grey_ = Drawable::createFromImageData(FXIMAGE(SliderThumbBW), FXIMAGESIZE(SliderThumbBW));
 }
 
 LookAndFeel_V4::ColourScheme FxTheme::getFxColourScheme()
 {
-	return { Colour(0x181818).withAlpha(1.0f), Colour(0x181818).withAlpha(1.0f), Colour(0x383838).withAlpha(1.0f),
-			 Colour(0x2B2B2B).withAlpha(1.0f), Colour(0xB1B1B1).withAlpha(1.0f), Colour(0x0).withAlpha(0.2f),
-			 0xffffffff, Colour(0x0c0c0c).withAlpha(1.0f), 0xffffffff };
+	return { Colour(FXCOLOR(WindowBackground)).withAlpha(1.0f), Colour(FXCOLOR(WidgetBackground)).withAlpha(1.0f), Colour(FXCOLOR(MenuBackground)).withAlpha(1.0f),
+			 Colour(FXCOLOR(Outline)).withAlpha(1.0f), Colour(FXCOLOR(DefaultText)).withAlpha(1.0f), Colour(FXCOLOR(DefaultFill)).withAlpha(0.2f),
+			 Colour(FXCOLOR(HighlightedText)).withAlpha(1.0f), Colour(FXCOLOR(HighlightedFill)).withAlpha(1.0f), Colour(FXCOLOR(MenuText)).withAlpha(1.0f) };
 }
 
 Label* FxTheme::createComboBoxTextBox(ComboBox& box)
@@ -90,7 +129,7 @@ void FxTheme::drawComboBox(Graphics& g, int width, int height, bool,
 
 	if (box.hasKeyboardFocus(true))
 	{
-		g.setColour(Colour(0xf7546f).withAlpha(0.2f));
+		g.setColour(Colour(FXCOLOR(SliderHighlight)).withAlpha(0.2f));
 		g.drawRoundedRectangle(boxBounds.toFloat().reduced(0.5f, 0.5f), cornerSize, 1.0f);
 	}
 	else
@@ -118,9 +157,9 @@ void FxTheme::drawLinearSlider(Graphics& g, int x, int y, int width, int height,
 		auto radius = getSliderThumbRadius(slider);
 
         Colour colour1;
-        colour1 = Colour(0xe33250).withAlpha(0.4f);
+        colour1 = Colour(FXCOLOR(SliderTrack)).withAlpha(0.4f);
         Colour colour2;
-        colour2 = Colour(0xf3f3f3).withAlpha(0.4f);
+        colour2 = Colour(FXCOLOR(VerticalSliderLow)).withAlpha(0.4f);
 
         if (!slider.isEnabled())
         {
@@ -138,7 +177,7 @@ void FxTheme::drawLinearSlider(Graphics& g, int x, int y, int width, int height,
 
         if (slider.getThumbBeingDragged() >= 0 || slider.hasKeyboardFocus(true))
         {
-            Colour colour = Colour(0xf7546f).withAlpha(0.1f);
+            Colour colour = Colour(FXCOLOR(SliderHighlight)).withAlpha(0.1f);
             g.setFillType(colour);
             g.fillRoundedRectangle(juce::Rectangle<float>(x + (width - SLIDER_THUMB_RADIUS*4) / 2, y, SLIDER_THUMB_RADIUS * 4, height).expanded(0, SLIDER_THUMB_RADIUS), 20);
         }
@@ -147,7 +186,7 @@ void FxTheme::drawLinearSlider(Graphics& g, int x, int y, int width, int height,
 	{
 		auto radius = getSliderThumbRadius(slider);
 
-        Colour colour = Colour(0xe33250).withAlpha(0.2f);
+        Colour colour = Colour(FXCOLOR(SliderTrack)).withAlpha(0.2f);
         if (!slider.isEnabled())
         {
             colour = colour.withSaturation(0.0);
@@ -156,7 +195,7 @@ void FxTheme::drawLinearSlider(Graphics& g, int x, int y, int width, int height,
 		g.setFillType(colour);
 		g.fillRoundedRectangle(x, y+(height-3)/2, width, 3, 5.6f);
 
-        colour = Colour(0xe33250).withAlpha(1.0f);
+        colour = Colour(FXCOLOR(SliderTrack)).withAlpha(1.0f);
         if (!slider.isEnabled())
         {
             colour = colour.withSaturation(0.0);
@@ -172,7 +211,7 @@ void FxTheme::drawLinearSlider(Graphics& g, int x, int y, int width, int height,
 	
 		if (slider.hasKeyboardFocus(true))
 		{
-			Colour colour = Colour(0xf7546f).withAlpha(0.1f);
+			Colour colour = Colour(FXCOLOR(SliderHighlight)).withAlpha(0.1f);
 			g.setFillType(colour);
 			g.fillRoundedRectangle(juce::Rectangle<float>(x, y, width, height).expanded(SLIDER_THUMB_RADIUS/2, SLIDER_THUMB_RADIUS/2), height+SLIDER_THUMB_RADIUS);
 		}
@@ -230,7 +269,7 @@ void FxTheme::drawRotarySlider(Graphics& g, int x, int y, int width, int height,
 	if (slider.hasKeyboardFocus(true))
 	{
 		DropShadow shadow;
-		shadow.colour = Colour(0xf7546f).withAlpha(0.1f);
+		shadow.colour = Colour(FXCOLOR(SliderHighlight)).withAlpha(0.1f);
 		shadow.drawForPath(g, backgroundArc);
 	}
 
@@ -412,6 +451,31 @@ Typeface::Ptr FxTheme::getDefaultTypeface()
     return font_400_;
 }
 
+FxThemeMode FxTheme::getThemeMode()
+{
+	return theme_mode_;
+}
+
+void FxTheme::setThemeMode(FxThemeMode theme_mode)
+{
+	theme_mode_ = theme_mode;
+}
+
+uint32 FxTheme::getColor(FxColor color)
+{
+	return theme_colors_[theme_mode_][color];
+}
+
+const char* FxTheme::getImage(FxImage image)
+{
+	return theme_images_[theme_mode_][image];
+}
+
+const int FxTheme::getImageSize(FxImage image)
+{
+	return theme_image_sizes_[theme_mode_][image];
+}
+
 Rectangle<int> FxTheme::getTooltipBounds(const String& tipText, Point<int> screenPos, Rectangle<int> parentArea)
 {
     const TextLayout tl(layoutTooltipText(tipText, Colours::black));
@@ -542,14 +606,14 @@ Button* FxTheme::createDocumentWindowButton(int buttonType)
 		shape.addLineSegment({ 0.0f, 0.0f, 1.0f, 1.0f }, crossThickness);
 		shape.addLineSegment({ 1.0f, 0.0f, 0.0f, 1.0f }, crossThickness);
 
-		return new FxTheme_DocumentWindowButton("close", Colour(0xffffffff), shape, shape);
+		return new FxTheme_DocumentWindowButton("close", Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f), shape, shape);
 	}
 
 	if (buttonType == DocumentWindow::minimiseButton)
 	{
 		shape.addLineSegment({ 0.0f, 0.5f, 1.0f, 0.5f }, crossThickness);
 
-		return new FxTheme_DocumentWindowButton("minimise", Colour(0xffffffff), shape, shape);
+		return new FxTheme_DocumentWindowButton("minimise", Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f), shape, shape);
 	}
 
 	if (buttonType == DocumentWindow::maximiseButton)
@@ -566,7 +630,7 @@ Button* FxTheme::createDocumentWindowButton(int buttonType)
 		fullscreenShape.addRectangle(45.0f, 45.0f, 100.0f, 100.0f);
 		PathStrokeType(30.0f).createStrokedPath(fullscreenShape, fullscreenShape);
 
-		return new FxTheme_DocumentWindowButton("maximise", Colour(0xffffffff), shape, fullscreenShape);
+		return new FxTheme_DocumentWindowButton("maximise", Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f), shape, fullscreenShape);
 	}
 
 	jassertfalse;

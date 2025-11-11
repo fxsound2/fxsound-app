@@ -40,7 +40,7 @@ FxPresetNameEditor::FxPresetNameEditor()
 
 	hint_text_.setName(L"hintLabel");
 	hint_text_.setFont(theme.getNormalFont());
-	hint_text_.setColour(Label::ColourIds::textColourId, Colour(0x7F7F7F).withAlpha(1.0f));
+	hint_text_.setColour(Label::ColourIds::textColourId, Colour(FXCOLOR(HintText)).withAlpha(1.0f));
 	hint_text_.setJustificationType(Justification::centredLeft);
 	addAndMakeVisible(hint_text_);
 
@@ -48,7 +48,7 @@ FxPresetNameEditor::FxPresetNameEditor()
 	preset_editor_.setDescription(TRANS("Enter your preset name"));
 	preset_editor_.setName(L"presetName");
 	preset_editor_.setFont(theme.getNormalFont());
-	preset_editor_.setColour(TextEditor::ColourIds::backgroundColourId, Colour(0x000000).withAlpha(0.0f));
+	preset_editor_.setColour(TextEditor::ColourIds::backgroundColourId, Colour(FXCOLOR(DefaultFill)).withAlpha(0.0f));
 	preset_editor_.setInputRestrictions(64);
 	preset_editor_.setInputFilter(&preset_name_input_filter_, false);
 	preset_editor_.addListener(this);
@@ -73,12 +73,12 @@ void FxPresetNameEditor::paint(Graphics& g)
 	switch (preset_status_)
 	{
 	case Status::Valid:
-		outline_colour = Colour(0xff009cdd);
+		outline_colour = Colour(FXCOLOR(ValidTextBorder)).withAlpha(1.0f);
 		break;
 
 	case Status::Empty:
 	case Status::Invalid:
-		outline_colour = Colour(0xffd51535);
+		outline_colour = Colour(FXCOLOR(InvalidTextBorder)).withAlpha(1.0f);
 	}
 
 	g.setColour(findColour(TextEditor::backgroundColourId));

@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <JuceHeader.h>
 #include "FxProView.h"
 #include "FxController.h"
+#include "FxTheme.h"
 
 //==============================================================================
 FxProView::FxProView() : tool_tip_(this)
@@ -103,7 +104,7 @@ void FxProView::paint(Graphics& g)
 	g.setFillType(FillType(theme.getCurrentColourScheme().getUIColour(LookAndFeel_V4::ColourScheme::windowBackground)));
 	g.fillAll();
 
-	g.setFillType(FillType(Colour(0x0).withAlpha(0.2f)));
+	g.setFillType(FillType(Colour(FXCOLOR(PanelBackground)).withAlpha(0.2f)));
 	g.fillRoundedRectangle(20, 16, 1000, 330+visualizer_offset, 8);
 
     auto enable_controls = FxModel::getModel().getPowerState() && !FxModel::getModel().isMonoOutputSelected();

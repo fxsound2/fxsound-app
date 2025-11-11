@@ -17,13 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "FxPowerButton.h"
+#include "FxTheme.h"
 
 FxPowerButton::FxPowerButton(const String &button_name) : DrawableButton(button_name, DrawableButton::ButtonStyle::ImageFitted)
 {
 	power_state_ = false;
 
-	power_on_image_ = Drawable::createFromImageData(BinaryData::power_on_svg, BinaryData::power_on_svgSize);
-	power_off_image_ = Drawable::createFromImageData(BinaryData::power_off_svg, BinaryData::power_off_svgSize);
+	power_on_image_ = Drawable::createFromImageData(FXIMAGE(PowerOnButton), FXIMAGESIZE(PowerOnButton));
+	power_off_image_ = Drawable::createFromImageData(FXIMAGE(PowerOffButton), FXIMAGESIZE(PowerOffButton));
 }
 
 void FxPowerButton::paint(Graphics& g)

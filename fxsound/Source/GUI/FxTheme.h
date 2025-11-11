@@ -24,6 +24,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 /*
 */
+
+enum FxThemeMode : int {Dark=0, Light, NumModes};
+enum FxColor : int { WindowBackground, WidgetBackground, MenuBackground, Outline, DefaultText, DefaultFill, HighlightedText, HighlightedFill, MenuText,
+					 ComboBoxBackground, TextButtonBackground, ImageButton, HintText, ValidTextBorder, InvalidTextBorder, ControlBackground, SliderTrack, SliderHighlight,
+					 GraphHigh, GraphLow, EqStart, EqEnd, VerticalSliderLow, MenuHighlightBackground, PanelBackground, NumColors};
+enum FxImage : int { DefaultLogo, HighlightedLogo, IconLogo,
+					 PowerOnButton, PowerOffButton, DonateButton, DonateButtonHover, MenuButton, MenuButtonHover,
+					 MinimizeButton, MinimizeButtonHover, MaximizeButton, MaximizeButtonHover, MinimizeWindowButton, MinimizeWindowButtonHover,
+				     ArrowNext, ArrowNextBW, ArrowPrev, ArrowPrevBW, DropDownArrow, DropDownArrowHover,
+	                 SliderThumb, SliderThumbBW, NumImages };
+
 class FxTheme : public LookAndFeel_V4
 {
 public:
@@ -73,6 +84,12 @@ public:
 	Font getTitleFont();
     Typeface::Ptr getDefaultTypeface();
 
+	static FxThemeMode getThemeMode();
+	static void setThemeMode(FxThemeMode theme_mode);
+	static uint32 getColor(FxColor color);
+	static const char* getImage(FxImage image);
+	static const int getImageSize(FxImage image);
+
 private:
     TextLayout layoutTooltipText(const String& text, Colour colour) noexcept;
     Typeface::Ptr loadTypeface(String fileName);
@@ -86,7 +103,16 @@ private:
 	Typeface::Ptr font_600_;
 	Typeface::Ptr font_700_;
 
+	static const uint32 theme_colors_[FxThemeMode::NumModes][FxColor::NumColors];
+	static const char* theme_images_[FxThemeMode::NumModes][FxImage::NumImages];
+	static const int theme_image_sizes_[FxThemeMode::NumModes][FxImage::NumImages];
+	static FxThemeMode theme_mode_;
+
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxTheme)
 };
+
+#define FXCOLOR(color) (FxTheme::getColor(FxColor::color))
+#define FXIMAGE(image) (FxTheme::getImage(FxImage::image))
+#define FXIMAGESIZE(image) (FxTheme::getImageSize(FxImage::image))
 
 #endif

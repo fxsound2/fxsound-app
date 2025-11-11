@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "FxVisualizer.h"
 #include "FxController.h"
+#include "FxTheme.h"
 
 FxVisualizer::FxVisualizer()
 {
@@ -114,7 +115,7 @@ void FxVisualizer::paint(Graphics& g)
 {
     auto bounds = getLocalBounds();
 
-    g.setFillType(FillType(Colour(0x0f0f0f).withAlpha(1.0f)));
+    g.setFillType(FillType(Colour(FXCOLOR(ControlBackground)).withAlpha(1.0f)));
     g.fillRoundedRectangle(bounds.toFloat(), 8);
 
     g.setGradientFill(gradient_);
@@ -150,16 +151,16 @@ void FxVisualizer::calcGradient()
         alpha = 1.0;
     }
 
-    gradient_ = ColourGradient(isEnabled() ? Colour(0xd51535).withAlpha(alpha) : Colour(0xd51535).withSaturation(0.0f).withAlpha(alpha),
+    gradient_ = ColourGradient(isEnabled() ? Colour(FXCOLOR(GraphHigh)).withAlpha(alpha) : Colour(FXCOLOR(GraphHigh)).withSaturation(0.0f).withAlpha(alpha),
         2.0f, 0.0f,
-        isEnabled() ? Colour(0xd51535).withAlpha(alpha) : Colour(0xd51535).withSaturation(0.0f).withAlpha(alpha),
+        isEnabled() ? Colour(FXCOLOR(GraphHigh)).withAlpha(alpha) : Colour(FXCOLOR(GraphHigh)).withSaturation(0.0f).withAlpha(alpha),
         2.0f, 100.0f, false);
     if (isEnabled())
     {
-        gradient_.addColour(0.5f, Colour(0xfe566a).withAlpha(alpha));
+        gradient_.addColour(0.5f, Colour(FXCOLOR(GraphLow)).withAlpha(alpha));
     }
     else
     {
-        gradient_.addColour(0.5f, Colour(0xfe566a).withSaturation(0.0f).withAlpha(alpha));
+        gradient_.addColour(0.5f, Colour(FXCOLOR(GraphLow)).withSaturation(0.0f).withAlpha(alpha));
     }
 }

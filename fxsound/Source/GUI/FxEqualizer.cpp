@@ -306,14 +306,14 @@ void FxEqualizer::paint(Graphics& g)
 		reinit(num_bands);
     }
 
-    g.setFillType(FillType(Colour(0x0f0f0f).withAlpha(1.0f)));
+    g.setFillType(FillType(Colour(FXCOLOR(ControlBackground)).withAlpha(1.0f)));
     g.fillRoundedRectangle(getLocalBounds().toFloat(), 8.0f);
 
     Path path;
 
-    Colour line_colour = Colour(0xffe33250);
-    Colour gradient_colour_1 = Colour(0xef4b65).withAlpha(0.34f);
-    Colour gradient_colour_2 = Colour(0x742834).withAlpha(0.0f);
+    Colour line_colour = Colour(FXCOLOR(SliderTrack)).withAlpha(1.0f);
+    Colour gradient_colour_1 = Colour(FXCOLOR(EqStart)).withAlpha(0.34f);
+    Colour gradient_colour_2 = Colour(FXCOLOR(EqEnd)).withAlpha(0.0f);
 
     if (!isEnabled())
     {

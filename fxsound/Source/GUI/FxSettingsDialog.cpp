@@ -40,7 +40,7 @@ void FxSettingsDialog::paint(Graphics& g)
 {
 	FxWindow::paint(g);
 
-	g.setColour(Colour(0x2b2b2b).withAlpha(1.0f));
+	g.setColour(Colour(FXCOLOR(Outline)).withAlpha(1.0f));
 	g.drawLine((float)SEPARATOR_X, (float)title_bar_.getBottom(), (float)SEPARATOR_X, (float)getLocalBounds().getBottom());
 }
 
@@ -50,11 +50,11 @@ void FxSettingsDialog::SettingsButton::paint(Graphics& g)
 
 	if (getToggleState())
 	{
-		g.setColour(Colour(0x414141).withAlpha(1.0f));
+		g.setColour(Colour(FXCOLOR(MenuHighlightBackground)).withAlpha(1.0f));
 	}
 	else
 	{
-		g.setColour(Colour(0x383838).withAlpha(1.0f));
+		g.setColour(Colour(FXCOLOR(MenuBackground)).withAlpha(1.0f));
 	}
 	auto rect = juce::Rectangle<float>(0, 0, (float)bounds.getHeight(), (float)bounds.getHeight());
 	g.fillRoundedRectangle(rect, (float)bounds.getHeight()/4);
@@ -63,11 +63,11 @@ void FxSettingsDialog::SettingsButton::paint(Graphics& g)
 
 	if (getToggleState())
 	{
-		g.setColour(Colour(0xffffffff));
+		g.setColour(Colour(FXCOLOR(HighlightedText)).withAlpha(1.0f));
 	}
 	else
 	{
-		g.setColour(Colour(0xB1B1B1).withAlpha(1.0f));
+		g.setColour(Colour(FXCOLOR(DefaultText)).withAlpha(1.0f));
 	}
 	auto w = bounds.getWidth() - bounds.getHeight() + 5;
 
@@ -425,7 +425,7 @@ void FxSettingsDialog::AudioSettingsPane::paint(Graphics& g)
 {
 	g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 
-	g.setFillType(FillType(Colour(0x0).withAlpha(0.2f)));
+	g.setFillType(FillType(Colour(FXCOLOR(DefaultFill)).withAlpha(0.2f)));
 	g.fillRoundedRectangle(group_bounds_, 8);
 
 	setText();

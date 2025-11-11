@@ -22,7 +22,7 @@ FxNotification::FxNotification()
 {
 	setLookAndFeel(&LookAndFeel::getDefaultLookAndFeel());
 
-	icon_ = Drawable::createFromImageData(BinaryData::logowhite_png, BinaryData::logowhite_pngSize);
+	icon_ = Drawable::createFromImageData(FXIMAGE(DefaultLogo), FXIMAGESIZE(DefaultLogo));
 	icon_->setTransformToFit(juce::Rectangle<float>(15.0f, 10.0f, (float)ICON_WIDTH, (float)ICON_HEIGHT),
 								{ RectanglePlacement::xMid | RectanglePlacement::yMid });
 	addAndMakeVisible(icon_.get());
@@ -203,15 +203,15 @@ void FxNotification::showMessage(bool autohide)
 
 void FxNotification::paint(Graphics& g)
 {
-    g.setFillType(FillType(Colour(0x0).withAlpha(1.0f)));
-        
-    g.fillRoundedRectangle(0, 0, (float)getWidth(), (float)getHeight(), 16);
+	DropShadow shadow;
+	Path path;
+	path.addRoundedRectangle(0, 0, (float)getWidth(), (float)getHeight(), 16);
+	shadow.radius = 5;
+	shadow.drawForPath(g, path);
 
-    DropShadow shadow;
-    Path path;
-    path.addRoundedRectangle(0, 0, (float)getWidth(), (float)getHeight(), 16);
-    shadow.radius = 5;
-    shadow.drawForPath(g, path);
+    g.setFillType(FillType(Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f)));
+        
+    g.fillRoundedRectangle(0, 0, (float)getWidth(), (float)getHeight(), 16);    
 }
 
 void FxNotification::timerCallback()
