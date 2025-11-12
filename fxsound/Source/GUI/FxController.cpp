@@ -181,6 +181,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 	}
 	FxModel::getModel().setMenuClicked(settings_.getBool("menu_clicked"));
 
+	always_on_top_ = settings_.getBool("always_on_top");
     hide_help_tooltips_ = settings_.getBool("hide_help_tooltips");
 	hide_notifications_ = settings_.getBool("hide_notifications");
 	auto_updates_ = settings_.getBool("automatic_updates", true);
@@ -1951,6 +1952,18 @@ void FxController::setPreferredOutput(String id, String name)
 	settings_.setString("preferred_device_name", name);
 
 	setSelectedOutput(id, name);
+}
+
+bool FxController::isAlwaysOnTop()
+{
+	return always_on_top_;
+}
+
+void FxController::setAlwaysOnTop(bool always_on_top)
+{
+	always_on_top_ = always_on_top;
+	settings_.setBool("always_on_top", always_on_top);
+	main_window_->setAlwaysOnTop(always_on_top);
 }
 
 bool FxController::isLaunchOnStartup()

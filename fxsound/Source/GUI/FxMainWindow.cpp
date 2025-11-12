@@ -277,7 +277,7 @@ void FxMainWindow::showLiteView()
 {
 	setContent(&lite_view_);
     setResizeImage();
-	setAlwaysOnTop(true);
+	setAlwaysOnTop(FxController::getInstance().isAlwaysOnTop());
 
 	auto bounds = getBounds();
 	auto pos = FxController::getInstance().getSystemTrayWindowPosition(bounds.getWidth(), bounds.getHeight());
@@ -290,7 +290,7 @@ void FxMainWindow::showProView()
     pro_view_.update();
 	setContent(&pro_view_);
     setResizeImage();
-	setAlwaysOnTop(false);
+	setAlwaysOnTop(FxController::getInstance().isAlwaysOnTop());
 	
 	int x = 0;
 	int y = 0;
@@ -493,6 +493,11 @@ void FxMainWindow::showMenu()
 	popup_menu.addItem(TRANS("Download Bonus Presets"), downloadClicked);
 	popup_menu.addSeparator();
 	popup_menu.addItem(TRANS("Check for updates"), checkForUpdatesClicked);
+	popup_menu.addSeparator();
+	popup_menu.addItem(TRANS("Always On Top"), true, isAlwaysOnTop(), [this]() {
+		auto& controller = FxController::getInstance();
+		controller.setAlwaysOnTop(!controller.isAlwaysOnTop());
+	});
 	popup_menu.addSeparator();
 	popup_menu.addItem(TRANS("Donate"), donateClicked);
 

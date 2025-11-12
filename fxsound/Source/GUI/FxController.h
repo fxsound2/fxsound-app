@@ -122,6 +122,9 @@ public:
 	String getPreferredOutputName();
 	void setPreferredOutput(String id, String name);
 
+	bool isAlwaysOnTop();
+	void setAlwaysOnTop(bool always_on_top);
+
 	bool isLaunchOnStartup();
 	void setLaunchOnStartup(bool launch_on_startup);
 
@@ -234,6 +237,7 @@ private:
     String output_device_name_;
     StringArray output_ids_;
 	std::vector<SoundDevice> output_devices_;
+	bool always_on_top_;
     bool hide_help_tooltips_;
 	bool hide_notifications_;
 	bool auto_updates_;

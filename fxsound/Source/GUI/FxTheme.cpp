@@ -54,7 +54,7 @@ const int FxTheme::theme_image_sizes_[FxThemeMode::NumModes][FxImage::NumImages]
 	BinaryData::arrow_next_blue_svgSize, BinaryData::arrow_next_bw_svgSize, BinaryData::arrow_prev_blue_svgSize, BinaryData::arrow_prev_bw_svgSize, BinaryData::dropdown_arrow_bw_svgSize, BinaryData::dropdown_arrow_hover_blue_svgSize,
 	BinaryData::Slider_Thumb_blue_svgSize, BinaryData::Slider_Thumb_bw_svgSize } };
 
-FxThemeMode FxTheme::theme_mode_ = FxThemeMode::Light;
+FxThemeMode FxTheme::theme_mode_ = FxThemeMode::Dark;
 
 //==============================================================================
 FxTheme::FxTheme() : LookAndFeel_V4()
@@ -322,7 +322,7 @@ void FxTheme::drawPopupMenuItem(Graphics& g, const juce::Rectangle<int>& area, b
 								bool is_highlighted, bool is_ticked, bool has_submenu, const String& text,
 								const String& shortcut_key_text, const Drawable* icon, const Colour* text_colour)
 {
-	LookAndFeel_V4::drawPopupMenuItem(g, area, is_separator, is_active, is_highlighted|is_ticked, false,
+	LookAndFeel_V4::drawPopupMenuItem(g, area, is_separator, is_active, is_highlighted||is_ticked, is_ticked,
 										has_submenu, text, shortcut_key_text, icon, text_colour);
 	
 	if (is_ticked)

@@ -247,6 +247,11 @@ void FxSystemTrayView::showContextMenu()
         settings_dialog.runModalLoop();
     };
 
+    auto alwaysOnTopClicked = []() {
+        auto& controller = FxController::getInstance();
+        controller.setAlwaysOnTop(!controller.isAlwaysOnTop());
+    };
+
     auto donateClicked = []() {
         URL url("https://www.paypal.com/donate/?hosted_button_id=JVNQGYXCQ2GPG");
         url.launchInDefaultBrowser();
@@ -279,6 +284,7 @@ void FxSystemTrayView::showContextMenu()
     context_menu.addSubMenu(TRANS("Preset Select"), preset_menu, FxModel::getModel().getPowerState());
     addOutputDeviceMenu(&context_menu);
     context_menu.addItem(settings);
+    context_menu.addItem(TRANS("Always On Top"), true, FxController::getInstance().getMainWindow()->isAlwaysOnTop(), alwaysOnTopClicked);
     context_menu.addItem(donate);
     context_menu.addItem(exit);
 
