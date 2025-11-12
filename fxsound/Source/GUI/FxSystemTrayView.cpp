@@ -202,6 +202,8 @@ void FxSystemTrayView::showContextMenu()
 
     PopupMenu preset_menu;
 
+    FxController::getInstance().checkDeviceChanges();
+
     auto id = PRESET_MENU_ID_START;
     auto count = FxModel::getModel().getPresetCount();
     auto preset_type = FxModel::PresetType::AppPreset;
