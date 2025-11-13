@@ -27,6 +27,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma comment(lib, "dbghelp.lib")
 
+// Do not use high-performance GPU on laptops with dual graphics adapters
+extern "C" {
+    __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000000;
+
+    __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 0;
+}
+
 //==============================================================================
 class FxSoundApplication : public JUCEApplication
 {
