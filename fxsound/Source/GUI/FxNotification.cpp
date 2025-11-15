@@ -20,26 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 FxNotification::FxNotification()
 {
-	setLookAndFeel(&LookAndFeel::getDefaultLookAndFeel());
-
-	icon_ = Drawable::createFromImageData(FXIMAGE(DefaultLogo), FXIMAGESIZE(DefaultLogo));
-	icon_->setTransformToFit(juce::Rectangle<float>(15.0f, 10.0f, (float)ICON_WIDTH, (float)ICON_HEIGHT),
-								{ RectanglePlacement::xMid | RectanglePlacement::yMid });
-	addAndMakeVisible(icon_.get());
-
-    auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
-	for (int i=0; i<3; i++)
-	{
-		message_lines_[i].setColour(Label::ColourIds::textColourId, theme.getCurrentColourScheme().getUIColour(LookAndFeel_V4::ColourScheme::defaultText));
-		message_lines_[i].setJustificationType(Justification::centred);
-		message_lines_[i].setBorderSize(BorderSize<int>(1, 0, 2, 0));
-		message_lines_[i].setMinimumHorizontalScale(1.0);
-		addChildComponent(message_lines_[i]);
-	}
-	
-	message_link_.setJustificationType(Justification::centredLeft);
-	addChildComponent(message_link_);
-
     setSize(WIDTH, HEIGHT);
 
 	setVisible(false);
@@ -61,7 +41,26 @@ FxNotification::~FxNotification()
 
 void FxNotification::setMessage(const String& message, const std::pair<String, String>& link, bool autohide)
 {
-    setLookAndFeel(&LookAndFeel::getDefaultLookAndFeel());
+	auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
+
+	setLookAndFeel(&LookAndFeel::getDefaultLookAndFeel());
+
+	icon_ = Drawable::createFromImageData(FXIMAGE(DefaultLogo), FXIMAGESIZE(DefaultLogo));
+	icon_->setTransformToFit(juce::Rectangle<float>(15.0f, 10.0f, (float)ICON_WIDTH, (float)ICON_HEIGHT),
+		{ RectanglePlacement::xMid | RectanglePlacement::yMid });
+	addAndMakeVisible(icon_.get());
+
+	for (int i = 0; i < 3; i++)
+	{
+		message_lines_[i].setColour(Label::ColourIds::textColourId, theme.getCurrentColourScheme().getUIColour(LookAndFeel_V4::ColourScheme::defaultText));
+		message_lines_[i].setJustificationType(Justification::centred);
+		message_lines_[i].setBorderSize(BorderSize<int>(1, 0, 2, 0));
+		message_lines_[i].setMinimumHorizontalScale(1.0);
+		addChildComponent(message_lines_[i]);
+	}
+
+	message_link_.setJustificationType(Justification::centredLeft);
+	addChildComponent(message_link_);
 
 	if (isTimerRunning())
 	{
@@ -78,7 +77,6 @@ void FxNotification::setMessage(const String& message, const std::pair<String, S
 	message_link_.setButtonText(link.first);
 	message_link_.setURL(URL(link.second));
 
-    auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
     auto font = theme.getSmallFont().withHeight(17.0f);
 
 	for (int i=0; i<3; i++)

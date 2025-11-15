@@ -91,6 +91,8 @@ public:
 	static const int getImageSize(FxImage image);
 
 private:
+	void init();
+
     TextLayout layoutTooltipText(const String& text, Colour colour) noexcept;
     Typeface::Ptr loadTypeface(String fileName);
 

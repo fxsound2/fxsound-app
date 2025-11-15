@@ -174,40 +174,8 @@ FxWindow::TitleBar::TitleBar(String name)
 	dragging_ = false;
 
 	addChildComponent(title_);
-	if (name_.isEmpty())
-	{
-		icon_ = Drawable::createFromImageData(FXIMAGE(DefaultLogo), FXIMAGESIZE(DefaultLogo));
-		icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT) / 2, (float)ICON_WIDTH, (float)ICON_HEIGHT),
-			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
 
-		animation_icon_ = Drawable::createFromImageData(FXIMAGE(HighlightedLogo), FXIMAGESIZE(HighlightedLogo));
-		animation_icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT) / 2, (float)ICON_WIDTH, (float)ICON_HEIGHT),
-			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
-		animation_icon_->setAlpha(0.0f);
-	}
-	else
-	{
-		icon_ = Drawable::createFromImageData(FXIMAGE(IconLogo), FXIMAGESIZE(IconLogo));
-		auto width = (ICON_HEIGHT - 1)*icon_->getWidth() / icon_->getHeight();
-		icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT - 1) / 2, (float)width, (float)ICON_HEIGHT - 1),
-			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
-
-		auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
-		auto font = theme.getNormalFont();
-
-		title_.setText(name_, NotificationType::dontSendNotification);
-		title_.setColour(Label::ColourIds::textColourId, theme.getCurrentColourScheme().getUIColour(LookAndFeel_V4::ColourScheme::highlightedText));
-		title_.setFont(font);
-		title_.setJustificationType(Justification::centredLeft);
-		title_.setSize(font.getStringWidth(name_) * 2, (int)font.getHeight());
-		title_.setVisible(true);
-	}
-
-	addAndMakeVisible(icon_.get());
-	if (animation_icon_.get() != nullptr)
-	{
-		addAndMakeVisible(animation_icon_.get());
-	}
+	updateLogo();	
 	
 	setFocusContainer(true);
 	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
@@ -320,6 +288,11 @@ void FxWindow::TitleBar::resized()
 	}
 }
 
+void FxWindow::TitleBar::lookAndFeelChanged()
+{
+	updateLogo();
+}
+
 void FxWindow::TitleBar::buttonClicked(Button* button)
 {
 	if (button == &close_button_)
@@ -348,4 +321,42 @@ void FxWindow::TitleBar::mouseDrag(const MouseEvent& e)
 void FxWindow::TitleBar::mouseUp(const MouseEvent&)
 {
 	dragging_ = false;
+}
+
+void FxWindow::TitleBar::updateLogo()
+{
+	if (name_.isEmpty())
+	{
+		icon_ = Drawable::createFromImageData(FXIMAGE(DefaultLogo), FXIMAGESIZE(DefaultLogo));
+		icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT) / 2, (float)ICON_WIDTH, (float)ICON_HEIGHT),
+			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
+
+		animation_icon_ = Drawable::createFromImageData(FXIMAGE(HighlightedLogo), FXIMAGESIZE(HighlightedLogo));
+		animation_icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT) / 2, (float)ICON_WIDTH, (float)ICON_HEIGHT),
+			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
+		animation_icon_->setAlpha(0.0f);
+	}
+	else
+	{
+		icon_ = Drawable::createFromImageData(FXIMAGE(IconLogo), FXIMAGESIZE(IconLogo));
+		auto width = (ICON_HEIGHT - 1) * icon_->getWidth() / icon_->getHeight();
+		icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT - 1) / 2, (float)width, (float)ICON_HEIGHT - 1),
+			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
+
+		auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
+		auto font = theme.getNormalFont();
+
+		title_.setText(name_, NotificationType::dontSendNotification);
+		title_.setColour(Label::ColourIds::textColourId, theme.getCurrentColourScheme().getUIColour(LookAndFeel_V4::ColourScheme::highlightedText));
+		title_.setFont(font);
+		title_.setJustificationType(Justification::centredLeft);
+		title_.setSize(font.getStringWidth(name_) * 2, (int)font.getHeight());
+		title_.setVisible(true);
+	}
+
+	addAndMakeVisible(icon_.get());
+	if (animation_icon_.get() != nullptr)
+	{
+		addAndMakeVisible(animation_icon_.get());
+	}
 }

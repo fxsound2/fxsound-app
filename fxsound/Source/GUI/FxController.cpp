@@ -388,8 +388,19 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
             view_ = ViewType::Pro;
             settings_.setBool("run_minimized", false);
         }
-
+		
 		showView();
+
+		auto theme_mode = settings_.getInt("theme_mode", 0);
+		if (theme_mode < 0 || theme_mode >= static_cast<int>(FxThemeMode::NumModes))
+		{
+			theme_mode = 0;
+		}
+		if (FxTheme::getThemeMode() != static_cast<FxThemeMode>(theme_mode))
+		{
+			FxTheme::setThemeMode(static_cast<FxThemeMode>(theme_mode));
+			main_window_->sendLookAndFeelChange();
+		}
 
         survey_tip_ = !settings_.getBool("survey_displayed");
         
@@ -1952,6 +1963,23 @@ void FxController::setPreferredOutput(String id, String name)
 	settings_.setString("preferred_device_name", name);
 
 	setSelectedOutput(id, name);
+}
+
+FxThemeMode FxController::getThemeMode()
+{
+	return FxTheme::getThemeMode();
+}
+
+void FxController::setThemeMode(FxThemeMode mode)
+{
+	if (mode == getThemeMode())
+	{
+		return;
+	}
+
+	FxTheme::setThemeMode(mode);
+	settings_.setInt("theme_mode", static_cast<int>(mode));
+	main_window_->sendLookAndFeelChange();
 }
 
 bool FxController::isAlwaysOnTop()

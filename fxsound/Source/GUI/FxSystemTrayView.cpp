@@ -201,6 +201,7 @@ void FxSystemTrayView::showContextMenu()
     PopupMenu context_menu;
 
     PopupMenu preset_menu;
+    PopupMenu theme_menu;
 
     FxController::getInstance().checkDeviceChanges();
 
@@ -235,7 +236,7 @@ void FxSystemTrayView::showContextMenu()
         preset_menu.addItem(menu_item);
         id++;
     }
-
+   
     auto openClicked = []() {
         FxController::getInstance().showMainWindow();
     };
@@ -248,6 +249,14 @@ void FxSystemTrayView::showContextMenu()
         FxSettingsDialog settings_dialog;
         settings_dialog.runModalLoop();
     };
+
+    auto darkModeClicked = [this]() {
+        FxController::getInstance().setThemeMode(FxThemeMode::Dark);
+        };
+
+    auto lightModeClicked = [this]() {
+        FxController::getInstance().setThemeMode(FxThemeMode::Light);
+        };
 
     auto alwaysOnTopClicked = []() {
         auto& controller = FxController::getInstance();
@@ -262,6 +271,9 @@ void FxSystemTrayView::showContextMenu()
     auto exitClicked = []() {
         FxController::getInstance().exit();
     };
+
+    theme_menu.addItem(TRANS("Dark"), true, FxTheme::getThemeMode() == FxThemeMode::Dark, darkModeClicked);
+    theme_menu.addItem(TRANS("Light"), true, FxTheme::getThemeMode() == FxThemeMode::Light, lightModeClicked);
 
     PopupMenu::Item open(TRANS("Open"));
     PopupMenu::Item power;
@@ -286,6 +298,7 @@ void FxSystemTrayView::showContextMenu()
     context_menu.addSubMenu(TRANS("Preset Select"), preset_menu, FxModel::getModel().getPowerState());
     addOutputDeviceMenu(&context_menu);
     context_menu.addItem(settings);
+    context_menu.addSubMenu(TRANS("Theme"), theme_menu);
     context_menu.addItem(TRANS("Always On Top"), true, FxController::getInstance().getMainWindow()->isAlwaysOnTop(), alwaysOnTopClicked);
     context_menu.addItem(donate);
     context_menu.addItem(exit);

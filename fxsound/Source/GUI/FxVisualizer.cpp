@@ -143,6 +143,12 @@ void FxVisualizer::enablementChanged()
     calcGradient();
 }
 
+void FxVisualizer::lookAndFeelChanged()
+{
+    calcGradient();
+	repaint();
+}
+
 void FxVisualizer::calcGradient()
 {
     float alpha = 0.75;

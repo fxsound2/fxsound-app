@@ -38,9 +38,6 @@ public:
 
 	void update();
 
-	void resized() override;
-	void paint(Graphics& g) override;
-
 private:
 	static constexpr int WIDTH = 1040;
 	static constexpr int HEIGHT = 474;
@@ -52,6 +49,8 @@ private:
 	static constexpr int LIST_WIDTH = 470;
 	static constexpr int LIST_HEIGHT = 40;
 
+	void resized() override;
+	void paint(Graphics& g) override;
 	void comboBoxChanged(ComboBox* combobox) override;
 	void modelChanged(FxModel::Event model_event) override;
 

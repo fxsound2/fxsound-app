@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <JuceHeader.h>
 #include "FxModel.h"
+#include "FxTheme.h"
 #include "FxEffects.h"
 #include "../Source/Utils/Settings/Settings.h"
 #include "AudioPassthru.h"
@@ -121,6 +122,9 @@ public:
 	String getPreferredOutputId();
 	String getPreferredOutputName();
 	void setPreferredOutput(String id, String name);
+
+	FxThemeMode getThemeMode();
+	void setThemeMode(FxThemeMode mode);
 
 	bool isAlwaysOnTop();
 	void setAlwaysOnTop(bool always_on_top);

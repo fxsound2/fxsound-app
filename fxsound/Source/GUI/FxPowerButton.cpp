@@ -58,6 +58,13 @@ bool FxPowerButton::keyPressed(const KeyPress& key)
 	return false;
 }
 
+void FxPowerButton::lookAndFeelChanged()
+{
+	power_on_image_ = Drawable::createFromImageData(FXIMAGE(PowerOnButton), FXIMAGESIZE(PowerOnButton));
+	power_off_image_ = Drawable::createFromImageData(FXIMAGE(PowerOffButton), FXIMAGESIZE(PowerOffButton));
+	repaint();
+}
+
 bool FxPowerButton::getPowerState()
 {
 	return power_state_;

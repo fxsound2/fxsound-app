@@ -38,10 +38,10 @@ public:
     void show();
     void showLiteView();
     void showProView();
-    void updateView();
     void startVisualizer();
     void pauseVisualizer();
 
+	void setLookAndFeel();
     void setResizeImage();
     void setIcon(bool power, bool processing);
 
@@ -58,6 +58,7 @@ private:
 	void userTriedToCloseWindow() override;
 	void closeButtonPressed() override;
     void moved() override;
+	void lookAndFeelChanged() override;
 
 	FxLiteView lite_view_;
 	FxProView  pro_view_;

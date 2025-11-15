@@ -37,6 +37,8 @@ public:
     void reset();
     void update();
 
+    void calcGradient();
+
 private:
     static constexpr int WIDTH = 960;
     static constexpr int HEIGHT = 120;
@@ -44,8 +46,7 @@ private:
 
     void paint(Graphics& g) override;
     void enablementChanged() override;
-
-    void calcGradient();
+	void lookAndFeelChanged() override;
 
     Array<float> band_values_;
     Array<float> band_graph_;

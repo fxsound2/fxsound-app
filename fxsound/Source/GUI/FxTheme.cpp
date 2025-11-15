@@ -59,6 +59,11 @@ FxThemeMode FxTheme::theme_mode_ = FxThemeMode::Dark;
 //==============================================================================
 FxTheme::FxTheme() : LookAndFeel_V4()
 {
+	init();
+}
+
+void FxTheme::init()
+{
 	setColourScheme(getFxColourScheme());
 
 	setColour(ComboBox::ColourIds::arrowColourId, Colour(FXCOLOR(ImageButton)).withAlpha(1.0f));
@@ -79,8 +84,8 @@ FxTheme::FxTheme() : LookAndFeel_V4()
 	setColour(CaretComponent::ColourIds::caretColourId, Colour(FXCOLOR(DefaultText)).withAlpha(1.0f));
 	setColour(PopupMenu::ColourIds::backgroundColourId, Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f));
 	setColour(PopupMenu::ColourIds::highlightedBackgroundColourId, Colour(FXCOLOR(ImageButton)).withAlpha(1.0f));
-    setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colour(FXCOLOR(SliderTrack)).withAlpha(0.2f));
-    setColour(Slider::ColourIds::rotarySliderFillColourId, Colour(FXCOLOR(SliderTrack)).withAlpha(1.0f));
+	setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colour(FXCOLOR(SliderTrack)).withAlpha(0.2f));
+	setColour(Slider::ColourIds::rotarySliderFillColourId, Colour(FXCOLOR(SliderTrack)).withAlpha(1.0f));
 
 	font_400_ = Typeface::createSystemTypefaceFor(BinaryData::GilroyRegular_ttf, BinaryData::GilroyRegular_ttfSize);
 	font_600_ = Typeface::createSystemTypefaceFor(BinaryData::GilroySemibold_ttf, BinaryData::GilroySemibold_ttfSize);
@@ -88,8 +93,8 @@ FxTheme::FxTheme() : LookAndFeel_V4()
 
 	drop_down_arrow_ = Drawable::createFromImageData(FXIMAGE(DropDownArrowHover), FXIMAGESIZE(DropDownArrowHover));
 	slider_thumb_ = Drawable::createFromImageData(FXIMAGE(SliderThumb), FXIMAGESIZE(SliderThumb));
-    drop_down_arrow_grey_ = Drawable::createFromImageData(FXIMAGE(DropDownArrow), FXIMAGESIZE(DropDownArrow));
-    slider_thumb_grey_ = Drawable::createFromImageData(FXIMAGE(SliderThumbBW), FXIMAGESIZE(SliderThumbBW));
+	drop_down_arrow_grey_ = Drawable::createFromImageData(FXIMAGE(DropDownArrow), FXIMAGESIZE(DropDownArrow));
+	slider_thumb_grey_ = Drawable::createFromImageData(FXIMAGE(SliderThumbBW), FXIMAGESIZE(SliderThumbBW));
 }
 
 LookAndFeel_V4::ColourScheme FxTheme::getFxColourScheme()
@@ -458,7 +463,11 @@ FxThemeMode FxTheme::getThemeMode()
 
 void FxTheme::setThemeMode(FxThemeMode theme_mode)
 {
+	auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
+
 	theme_mode_ = theme_mode;
+
+	theme.init();
 }
 
 uint32 FxTheme::getColor(FxColor color)

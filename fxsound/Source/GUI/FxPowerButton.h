@@ -38,6 +38,7 @@ public:
 private:
 	void paint(Graphics& g) override;
 	bool keyPressed(const KeyPress& key) override;
+	void lookAndFeelChanged() override;
 
 	std::unique_ptr<Drawable> power_on_image_;
 	std::unique_ptr<Drawable> power_off_image_;

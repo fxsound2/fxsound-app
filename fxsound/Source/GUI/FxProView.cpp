@@ -58,6 +58,8 @@ void FxProView::update()
 	effects_.update();
 	equalizer_.update();
 
+	visualizer_.calcGradient();
+
     if (FxController::getInstance().isAudioProcessing())
     {
         visualizer_.reset();
