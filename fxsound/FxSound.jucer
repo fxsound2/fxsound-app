@@ -14,6 +14,8 @@
             file="Fonts/Gilroy-Semibold.ttf"/>
     </GROUP>
     <GROUP id="{1003D6EA-45C1-E8E4-DFD9-451D205D2F09}" name="Images">
+      <FILE id="elWkZ9" name="logo-red.svg" compile="0" resource="1" file="Images/logo-red.svg"/>
+      <FILE id="tdpWdf" name="logo-white.svg" compile="0" resource="1" file="Images/logo-white.svg"/>
       <FILE id="OtMUHf" name="maximize_black.svg" compile="0" resource="1"
             file="Images/maximize_black.svg"/>
       <FILE id="aVxHzb" name="maximize_hover_blue.svg" compile="0" resource="1"

@@ -3113,6 +3113,8 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <None Include="..\Fonts\Gilroy-Bold.ttf" />
     <None Include="..\Fonts\Gilroy-Regular.ttf" />
     <None Include="..\Fonts\Gilroy-Semibold.ttf" />
+    <None Include="..\Images\logo-red.svg" />
+    <None Include="..\Images\logo-white.svg" />
     <None Include="..\Images\maximize_black.svg" />
     <None Include="..\Images\maximize_hover_blue.svg" />
     <None Include="..\Images\menu_black.svg" />

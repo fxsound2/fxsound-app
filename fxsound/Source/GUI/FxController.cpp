@@ -1980,6 +1980,10 @@ void FxController::setThemeMode(FxThemeMode mode)
 	FxTheme::setThemeMode(mode);
 	settings_.setInt("theme_mode", static_cast<int>(mode));
 	main_window_->sendLookAndFeelChange();
+
+	auto power = FxModel::getModel().getPowerState();
+	main_window_->setIcon(power, audio_process_on_);
+	system_tray_view_->setStatus(power, audio_process_on_);
 }
 
 bool FxController::isAlwaysOnTop()

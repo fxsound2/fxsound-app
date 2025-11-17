@@ -88,7 +88,14 @@ void FxSystemTrayView::setStatus(bool power, bool processing)
     {
         if (processing)
         {
-            nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_RED");
+            if (FxTheme::getThemeMode() == FxThemeMode::Dark)
+            {
+                nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_RED");
+            }
+            else
+            {
+                nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_BLUE");
+            }
         }
         else
         {
@@ -170,7 +177,14 @@ void FxSystemTrayView::addIcon()
     {
         if (FxController::getInstance().isAudioProcessing())
         {
-            nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_RED");
+            if (FxTheme::getThemeMode() == FxThemeMode::Dark)
+            {
+                nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_RED");
+            }
+            else
+            {
+                nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_BLUE");
+            }
         }
         else
         {

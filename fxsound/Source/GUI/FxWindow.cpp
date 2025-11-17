@@ -175,8 +175,12 @@ FxWindow::TitleBar::TitleBar(String name)
 
 	addChildComponent(title_);
 
-	updateLogo();	
-	
+	updateLogo();
+	if (animation_icon_.get() != nullptr)
+	{
+		animation_icon_->setAlpha(0.0f);
+	}
+
 	setFocusContainer(true);
 	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
 
@@ -291,6 +295,11 @@ void FxWindow::TitleBar::resized()
 void FxWindow::TitleBar::lookAndFeelChanged()
 {
 	updateLogo();
+
+	if (animation_icon_.get() != nullptr)
+	{
+		animation_icon_->setAlpha(animation_icon_->getAlpha());
+	}
 }
 
 void FxWindow::TitleBar::buttonClicked(Button* button)
@@ -334,7 +343,6 @@ void FxWindow::TitleBar::updateLogo()
 		animation_icon_ = Drawable::createFromImageData(FXIMAGE(HighlightedLogo), FXIMAGESIZE(HighlightedLogo));
 		animation_icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT) / 2, (float)ICON_WIDTH, (float)ICON_HEIGHT),
 			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
-		animation_icon_->setAlpha(0.0f);
 	}
 	else
 	{

@@ -29,7 +29,7 @@ const uint32 FxTheme::theme_colors_[FxThemeMode::NumModes][FxColor::NumColors] =
 	0x1ac1ff, 0x72d8ff, 0x33c8ff, 0x063244, 0x1c1c1c, 0xb9b9b9, 0xc0c0c0} };
 
 const char* FxTheme::theme_images_[FxThemeMode::NumModes][FxImage::NumImages] =
-{ { BinaryData::logowhite_png, BinaryData::logored_png, BinaryData::FxSound_White_Bars_png,
+{ { BinaryData::logowhite_svg, BinaryData::logored_svg, BinaryData::FxSound_White_Bars_svg,
 	BinaryData::power_on_svg, BinaryData::power_off_svg, BinaryData::donate_svg, BinaryData::donate_hover_svg, BinaryData::menu_svg, BinaryData::menu_hover_svg,
 	BinaryData::minimize_svg, BinaryData::minimize_hover_svg, BinaryData::maximize_svg, BinaryData::maximize_hover_svg, BinaryData::min_window_svg, BinaryData::min_window_hover_svg,
 	BinaryData::arrow_next_svg, BinaryData::arrow_next_bw_svg, BinaryData::arrow_prev_svg, BinaryData::arrow_prev_bw_svg, BinaryData::dropdown_arrow_bw_svg, BinaryData::dropdown_arrow_hover_svg,
@@ -42,7 +42,7 @@ const char* FxTheme::theme_images_[FxThemeMode::NumModes][FxImage::NumImages] =
 	BinaryData::Slider_Thumb_blue_svg, BinaryData::Slider_Thumb_bw_svg } };
 
 const int FxTheme::theme_image_sizes_[FxThemeMode::NumModes][FxImage::NumImages] =
-{ {BinaryData::logowhite_pngSize, BinaryData::logored_pngSize, BinaryData::FxSound_White_Bars_pngSize,
+{ {BinaryData::logowhite_svgSize, BinaryData::logored_svgSize, BinaryData::FxSound_White_Bars_svgSize,
    BinaryData::power_on_svgSize, BinaryData::power_off_svgSize, BinaryData::donate_svgSize, BinaryData::donate_hover_svgSize, BinaryData::menu_svgSize, BinaryData::menu_hover_svgSize,
    BinaryData::minimize_svgSize, BinaryData::minimize_hover_svgSize, BinaryData::maximize_svgSize, BinaryData::maximize_hover_svgSize, BinaryData::min_window_svgSize, BinaryData::min_window_hover_svgSize,
    BinaryData::arrow_next_svgSize, BinaryData::arrow_next_bw_svgSize, BinaryData::arrow_prev_svgSize, BinaryData::arrow_prev_bw_svgSize, BinaryData::dropdown_arrow_bw_svgSize, BinaryData::dropdown_arrow_hover_svgSize,

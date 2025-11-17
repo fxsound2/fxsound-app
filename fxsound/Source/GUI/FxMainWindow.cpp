@@ -367,7 +367,10 @@ void FxMainWindow::setIcon(bool power, bool processing)
 	{
 		if (processing)
 		{
-			icon = LoadIcon(hInst, L"IDI_LOGO_RED");
+			if (FxTheme::getThemeMode() == FxThemeMode::Dark)
+				icon = LoadIcon(hInst, L"IDI_LOGO_RED");
+			else
+				icon = LoadIcon(hInst, L"IDI_LOGO_BLUE");
 		}
 		else
 		{

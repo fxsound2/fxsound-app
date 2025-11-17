@@ -4921,6 +4921,12 @@
     <None Include="..\Fonts\Gilroy-Semibold.ttf">
       <Filter>FxSound\Fonts</Filter>
     </None>
+    <None Include="..\Images\logo-red.svg">
+      <Filter>FxSound\Images</Filter>
+    </None>
+    <None Include="..\Images\logo-white.svg">
+      <Filter>FxSound\Images</Filter>
+    </None>
     <None Include="..\Images\maximize_black.svg">
       <Filter>FxSound\Images</Filter>
     </None>
