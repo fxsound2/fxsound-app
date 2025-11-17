@@ -89,7 +89,6 @@ bool FxSettingsDialog::keyPressed(const KeyPress& key)
 }
 
 FxSettingsDialog::SettingsComponent::SettingsComponent()
-    : donate_button_("Donate")
 {
 	audio_button_ = std::make_unique<SettingsButton>("Audio");
 	audio_button_->setToggleState(true, NotificationType::dontSendNotification);
@@ -104,18 +103,11 @@ FxSettingsDialog::SettingsComponent::SettingsComponent()
 	help_button_ = std::make_unique<SettingsButton>("Help");
 	help_button_->setToggleState(false, NotificationType::dontSendNotification);
 	help_button_->setImage(Drawable::createFromImageData(BinaryData::question_svg, BinaryData::question_svgSize).get());
-	help_button_->addListener(this);
-
-    donate_button_.setMouseCursor(MouseCursor::PointingHandCursor);
-    donate_button_.onClick = [this]() {
-        URL url("https://www.paypal.com/donate/?hosted_button_id=JVNQGYXCQ2GPG");
-        url.launchInDefaultBrowser();
-    };
+	help_button_->addListener(this);    
 
 	addAndMakeVisible(audio_button_.get());
 	addAndMakeVisible(general_button_.get());
 	addAndMakeVisible(help_button_.get());
-    addAndMakeVisible(&donate_button_);
 
 	addAndMakeVisible(audio_settings_pane_);
 	addChildComponent(general_settings_pane_);
@@ -129,18 +121,12 @@ void FxSettingsDialog::SettingsComponent::resized()
 	audio_button_->setBounds(BUTTON_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
 	general_button_->setBounds(BUTTON_X, audio_button_->getBottom() + 20, BUTTON_WIDTH, BUTTON_HEIGHT);
 	help_button_->setBounds(BUTTON_X, general_button_->getBottom() + 20, BUTTON_WIDTH, BUTTON_HEIGHT);
-    donate_button_.setBounds(BUTTON_X, help_button_->getBottom() + 20, DONATE_BUTTON_WIDTH, DONATE_BUTTON_HEIGHT);
 
 	juce::Rectangle<int> pane_rect(SEPARATOR_X + 1, 1, getWidth() - SEPARATOR_X + 1, HEIGHT - 1);
 	
 	audio_settings_pane_.setBounds(pane_rect);
 	general_settings_pane_.setBounds(pane_rect);
 	help_settings_pane_.setBounds(pane_rect);
-}
-
-void  FxSettingsDialog::SettingsComponent::paint(Graphics&)
-{
-    donate_button_.setButtonText(TRANS("Donate"));
 }
 
 void  FxSettingsDialog::SettingsComponent::buttonClicked(Button* button)

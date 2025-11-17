@@ -215,7 +215,6 @@ private:
         ~SettingsComponent() = default;
 
 		void resized() override;
-        void paint(Graphics& g) override;
 
 		void buttonClicked(Button* button) override;
 
@@ -224,14 +223,11 @@ private:
 		static constexpr int BUTTON_Y = 50;
 		static constexpr int BUTTON_WIDTH = 150;
 		static constexpr int BUTTON_HEIGHT = 40;
-        static constexpr int DONATE_BUTTON_WIDTH = 100;
-        static constexpr int DONATE_BUTTON_HEIGHT = 30;
 		static constexpr int SEPARATOR_X = 152;
 
 		std::unique_ptr<SettingsButton> audio_button_;
 		std::unique_ptr<SettingsButton> general_button_;
 		std::unique_ptr<SettingsButton> help_button_;
-        TextButton donate_button_;
 
 		AudioSettingsPane audio_settings_pane_;
 		GeneralSettingsPane general_settings_pane_;
