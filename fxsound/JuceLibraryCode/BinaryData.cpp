@@ -5114,7 +5114,9 @@ static const unsigned char temp_binary_data_57[] =
 10,34,70,105,108,116,101,114,32,81,58,34,32,61,32,34,81,32,216,167,217,132,217,129,217,132,216,170,216,177,34,13,10,34,66,97,108,97,110,99,101,58,34,32,61,32,34,216,170,217,136,216,167,216,178,217,134,34,13,10,34,76,101,102,116,34,32,61,32,34,217,138,
 216,179,216,167,216,177,34,13,10,34,82,105,103,104,116,34,32,61,32,34,217,138,217,133,217,138,217,134,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,216,168,216,167,217,134,216,175,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,
 115,34,32,61,32,34,216,167,216,179,216,170,216,185,216,167,216,175,216,169,32,216,167,217,132,216,165,216,185,216,175,216,167,216,175,216,167,216,170,32,216,167,217,132,216,167,217,129,216,170,216,177,216,167,216,182,217,138,216,169,34,13,10,34,65,117,
-116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,216,167,217,132,216,170,216,173,216,175,217,138,216,171,216,167,216,170,32,216,167,217,132,216,170,217,132,217,130,216,167,216,166,217,138,216,169,34,13,10,13,10,0,0 };
+116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,216,167,217,132,216,170,216,173,216,175,217,138,216,171,216,167,216,170,32,216,167,217,132,216,170,217,132,217,130,216,167,216,166,217,138,216,169,34,13,10,34,65,108,119,97,121,115,
+32,79,110,32,84,111,112,34,32,61,32,34,216,175,216,167,216,166,217,133,216,167,217,139,32,217,129,217,138,32,216,167,217,132,216,163,216,185,217,132,217,137,34,13,10,34,84,104,101,109,101,34,32,61,32,34,216,167,217,132,216,179,217,133,216,169,34,13,10,
+34,68,97,114,107,34,32,61,32,34,216,175,216,167,217,131,217,134,34,13,10,34,76,105,103,104,116,34,32,61,32,34,217,129,216,167,216,170,216,173,34,13,10,0,0 };
 
 const char* FxSound_ar_txt = (const char*) temp_binary_data_57;
 
@@ -5263,7 +5265,11 @@ static const unsigned char temp_binary_data_58[] =
 "\"Right\" = \"Desno\"\r\n"
 "\" Bands\" = \" opsega\"\r\n"
 "\"Restore Defaults\" = \"Vrati zadane postavke\"\r\n"
-"\"Automatic updates\" = \"Automatska a\xc5\xbeuriranja\"";
+"\"Automatic updates\" = \"Automatska a\xc5\xbeuriranja\"\r\n"
+"\"Always On Top\" = \"Uvijek na vrhu\"\r\n"
+"\"Theme\" = \"Tema\"\r\n"
+"\"Dark\" = \"Tamna\"\r\n"
+"\"Light\" = \"Svijetla\"";
 
 const char* FxSound_ba_txt = (const char*) temp_binary_data_58;
 
@@ -5416,7 +5422,11 @@ static const unsigned char temp_binary_data_59[] =
 "\"Right\" = \"Rechts\"\r\n"
 "\" Bands\" = \" B\xc3\xa4nder\"\r\n"
 "\"Restore Defaults\" = \"Standardwerte wiederherstellen\"\r\n"
-"\"Automatic updates\" = \"Automatische Updates\"";
+"\"Automatic updates\" = \"Automatische Updates\"\r\n"
+"\"Always On Top\" = \"Immer im Vordergrund\"\r\n"
+"\"Theme\" = \"Design\"\r\n"
+"\"Dark\" = \"Dunkel\"\r\n"
+"\"Light\" = \"Hell\"";
 
 const char* FxSound_de_txt = (const char*) temp_binary_data_59;
 
@@ -5565,7 +5575,11 @@ static const unsigned char temp_binary_data_60[] =
 "\"Right\" = \"Derecha\"\r\n"
 "\" Bands\" = \" bandas\"\r\n"
 "\"Restore Defaults\" = \"Restaurar valores predeterminados\"\r\n"
-"\"Automatic updates\" = \"Actualizaciones autom\xc3\xa1ticas\"";
+"\"Automatic updates\" = \"Actualizaciones autom\xc3\xa1ticas\"\r\n"
+"\"Always On Top\" = \"Siempre arriba\"\r\n"
+"\"Theme\" = \"Tema\"\r\n"
+"\"Dark\" = \"Oscuro\"\r\n"
+"\"Light\" = \"Claro\"";
 
 const char* FxSound_es_txt = (const char*) temp_binary_data_60;
 
@@ -5719,7 +5733,11 @@ static const unsigned char temp_binary_data_61[] =
 "\"Right\" = \"Droite\"\r\n"
 "\" Bands\" = \" bandes\"\r\n"
 "\"Restore Defaults\" = \"Restaurer les param\xc3\xa8tres par d\xc3\xa9""faut\"\r\n"
-"\"Automatic updates\" = \"Mises \xc3\xa0 jour automatiques\"";
+"\"Automatic updates\" = \"Mises \xc3\xa0 jour automatiques\"\r\n"
+"\"Always On Top\" = \"Toujours au-dessus\"\r\n"
+"\"Theme\" = \"Th\xc3\xa8me\"\r\n"
+"\"Dark\" = \"Sombre\"\r\n"
+"\"Light\" = \"Clair\"";
 
 const char* FxSound_fr_txt = (const char*) temp_binary_data_61;
 
@@ -5867,7 +5885,11 @@ static const unsigned char temp_binary_data_62[] =
 "\"Right\" = \"Desno\"\r\n"
 "\" Bands\" = \" pojaseva\"\r\n"
 "\"Restore Defaults\" = \"Vrati zadane postavke\"\r\n"
-"\"Automatic updates\" = \"Automatska a\xc5\xbeuriranja\"";
+"\"Automatic updates\" = \"Automatska a\xc5\xbeuriranja\"\r\n"
+"\"Always On Top\" = \"Uvijek na vrhu\"\r\n"
+"\"Theme\" = \"Tema\"\r\n"
+"\"Dark\" = \"Tamna\"\r\n"
+"\"Light\" = \"Svijetla\"";
 
 const char* FxSound_hr_txt = (const char*) temp_binary_data_62;
 
@@ -6025,7 +6047,11 @@ static const unsigned char temp_binary_data_63[] =
 "\"Right\" = \"Jobb\"\r\n"
 "\" Bands\" = \" s\xc3\xa1v\"\r\n"
 "\"Restore Defaults\" = \"Alapbe\xc3\xa1ll\xc3\xadt\xc3\xa1sok vissza\xc3\xa1ll\xc3\xadt\xc3\xa1sa\"\r\n"
-"\"Automatic updates\" = \"Automatikus friss\xc3\xadt\xc3\xa9sek\"";
+"\"Automatic updates\" = \"Automatikus friss\xc3\xadt\xc3\xa9sek\"\r\n"
+"\"Always On Top\" = \"Mindig fel\xc3\xbcl\"\r\n"
+"\"Theme\" = \"T\xc3\xa9ma\"\r\n"
+"\"Dark\" = \"S\xc3\xb6t\xc3\xa9t\"\r\n"
+"\"Light\" = \"Vil\xc3\xa1gos\"";
 
 const char* fxsound_hu_txt = (const char*) temp_binary_data_63;
 
@@ -6173,7 +6199,11 @@ static const unsigned char temp_binary_data_64[] =
 "\"Right\" = \"Kanan\"\r\n"
 "\" Bands\" = \" pita\"\r\n"
 "\"Restore Defaults\" = \"Kembalikan ke setelan awal\"\r\n"
-"\"Automatic updates\" = \"Pembaruan otomatis\"";
+"\"Automatic updates\" = \"Pembaruan otomatis\"\r\n"
+"\"Always On Top\" = \"Selalu di atas\"\r\n"
+"\"Theme\" = \"Tema\"\r\n"
+"\"Dark\" = \"Gelap\"\r\n"
+"\"Light\" = \"Terang\"";
 
 const char* FxSound_id_txt = (const char*) temp_binary_data_64;
 
@@ -6386,7 +6416,8 @@ static const unsigned char temp_binary_data_65[] =
 140,217,132,216,170,216,177,34,13,10,34,66,97,108,97,110,99,101,58,34,32,61,32,34,216,170,216,185,216,167,216,175,217,132,34,13,10,34,76,101,102,116,34,32,61,32,34,218,134,217,190,34,13,10,34,82,105,103,104,116,34,32,61,32,34,216,177,216,167,216,179,
 216,170,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,216,168,216,167,217,134,216,175,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,216,168,216,167,216,178,218,175,216,177,216,175,216,167,217,134,216,175,
 217,134,32,216,170,217,134,216,184,219,140,217,133,216,167,216,170,32,217,190,219,140,216,180,226,128,140,217,129,216,177,216,182,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,216,168,217,135,226,128,140,216,
-177,217,136,216,178,216,177,216,179,216,167,217,134,219,140,32,216,174,217,136,216,175,218,169,216,167,216,177,34,0,0 };
+177,217,136,216,178,216,177,216,179,216,167,217,134,219,140,32,216,174,217,136,216,175,218,169,216,167,216,177,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,217,135,217,133,219,140,216,180,217,135,32,216,175,216,177,32,216,
+168,216,167,217,132,216,167,34,13,10,34,84,104,101,109,101,34,32,61,32,34,216,170,217,133,34,13,10,34,68,97,114,107,34,32,61,32,34,216,170,219,140,216,177,217,135,34,13,10,34,76,105,103,104,116,34,32,61,32,34,216,177,217,136,216,180,217,134,34,0,0 };
 
 const char* FxSound_ir_txt = (const char*) temp_binary_data_65;
 
@@ -6537,7 +6568,11 @@ static const unsigned char temp_binary_data_66[] =
 "\"Right\" = \"Destra\"\r\n"
 "\" Bands\" = \" bande\"\r\n"
 "\"Restore Defaults\" = \"Ripristina impostazioni predefinite\"\r\n"
-"\"Automatic updates\" = \"Aggiornamenti automatici\"";
+"\"Automatic updates\" = \"Aggiornamenti automatici\"\r\n"
+"\"Always On Top\" = \"Sempre in primo piano\"\r\n"
+"\"Theme\" = \"Tema\"\r\n"
+"\"Dark\" = \"Scuro\"\r\n"
+"\"Light\" = \"Chiaro\"";
 
 const char* FxSound_it_txt = (const char*) temp_binary_data_66;
 
@@ -6736,7 +6771,9 @@ static const unsigned char temp_binary_data_67[] =
 170,227,131,165,227,131,188,227,131,160,58,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,110,58,34,32,61,32,34,227,131,142,227,131,188,227,131,158,227,131,169,227,130,164,227,130,186,58,34,13,10,34,70,105,108,116,101,114,32,81,58,34,32,61,
 32,34,227,131,149,227,130,163,227,131,171,227,130,191,227,131,188,81,58,34,13,10,34,66,97,108,97,110,99,101,58,34,32,61,32,34,227,131,144,227,131,169,227,131,179,227,130,185,58,34,13,10,34,76,101,102,116,34,32,61,32,34,229,183,166,34,13,10,34,82,105,
 103,104,116,34,32,61,32,34,229,143,179,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,227,131,144,227,131,179,227,131,137,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,227,131,135,227,131,149,227,130,169,227,
-131,171,227,131,136,227,129,171,230,136,187,227,129,153,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,232,135,170,229,139,149,230,155,180,230,150,176,34,0,0 };
+131,171,227,131,136,227,129,171,230,136,187,227,129,153,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,232,135,170,229,139,149,230,155,180,230,150,176,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,
+34,32,61,32,34,229,184,184,227,129,171,230,156,128,229,137,141,233,157,162,227,129,171,232,161,168,231,164,186,34,13,10,34,84,104,101,109,101,34,32,61,32,34,227,131,134,227,131,188,227,131,158,34,13,10,34,68,97,114,107,34,32,61,32,34,227,131,128,227,
+131,188,227,130,175,34,13,10,34,76,105,103,104,116,34,32,61,32,34,227,131,169,227,130,164,227,131,136,34,0,0 };
 
 const char* FxSound_ja_txt = (const char*) temp_binary_data_67;
 
@@ -6917,7 +6954,8 @@ static const unsigned char temp_binary_data_68[] =
 109,97,108,105,122,97,116,105,111,110,58,34,32,61,32,34,236,160,149,234,183,156,237,153,148,58,34,13,10,34,70,105,108,116,101,114,32,81,58,34,32,61,32,34,237,149,132,237,132,176,32,81,58,34,13,10,34,66,97,108,97,110,99,101,58,34,32,61,32,34,236,157,140,
 234,183,160,237,152,149,58,34,13,10,34,76,101,102,116,34,32,61,32,34,236,153,188,236,170,189,34,13,10,34,82,105,103,104,116,34,32,61,32,34,236,152,164,235,165,184,236,170,189,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,235,176,180,235,147,156,
 34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,234,184,176,235,179,184,234,176,146,32,235,179,181,236,155,144,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,236,158,144,
-235,143,153,32,236,151,133,235,141,176,236,157,180,237,138,184,34,13,10,0,0 };
+235,143,153,32,236,151,133,235,141,176,236,157,180,237,138,184,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,237,149,173,236,131,129,32,236,156,132,236,151,144,32,235,145,144,234,184,176,34,13,10,34,84,104,101,109,101,34,32,
+61,32,34,237,133,140,235,167,136,34,13,10,34,68,97,114,107,34,32,61,32,34,235,139,164,237,129,172,34,13,10,34,76,105,103,104,116,34,32,61,32,34,235,157,188,236,157,180,237,138,184,34,13,10,0,0 };
 
 const char* FxSound_ko_txt = (const char*) temp_binary_data_68;
 
@@ -7065,7 +7103,11 @@ static const unsigned char temp_binary_data_69[] =
 "\"Right\" = \"Rechts\"\r\n"
 "\" Bands\" = \" banden\"\r\n"
 "\"Restore Defaults\" = \"Standaardinstellingen herstellen\"\r\n"
-"\"Automatic updates\" = \"Automatische updates\"";
+"\"Automatic updates\" = \"Automatische updates\"\r\n"
+"\"Always On Top\" = \"Altijd bovenaan\"\r\n"
+"\"Theme\" = \"Thema\"\r\n"
+"\"Dark\" = \"Donker\"\r\n"
+"\"Light\" = \"Licht\"";
 
 const char* FxSound_nl_txt = (const char*) temp_binary_data_69;
 
@@ -7082,9 +7124,9 @@ static const unsigned char temp_binary_data_70[] =
 "\"Error in system audio configuration. Unable to run FxSound\" = \"B\xc5\x82\xc4\x85""d w konfiguracji d\xc5\xbawi\xc4\x99ku systemu. Nie mo\xc5\xbcna uruchomi\xc4\x87 FxSound\"\r\n"
 "\"OK\" = \"OK\"\r\n"
 "\"Click here to see what\\'s new on this version!\" = \"Kliknij tutaj, aby zobaczy\xc4\x87, co nowego w tej wersji!\"\r\n"
-"\"FxSound in system tray\\r\\nClick FxSound icon to reopen\" = \"FxSound w zasobniku systemowym\\r\\nKliknij ikone FxSound do ponownego otwarcia\"\r\n"
-"\"Thanks for using FxSound! Would you be\\r\\ninterested in helping us by taking a quick 4 minute\\r\\nsurvey so we can make FxSound better?\" = \"Dzi\xc4\x99kujemy za korzystanie FxSound! Czy jeste\xc5\x9b zainteresowany/a by\\r\\nwzi\xc4\x85\xc4\x87"
-" udzia\xc5\x82 w naszej szybkiej i zwinnej\\r\\nankiecie, aby\xc5\x9bmy mogli ulepszy\xc4\x87 FxSound?\"\r\n"
+"\"FxSound in system tray\\r\\nClick FxSound icon to reopen\" = \"FxSound w zasobniku systemowym\\r\\nKliknij ikon\xc4\x99 FxSound, aby ponownie otworzy\xc4\x87\"\r\n"
+"\"Thanks for using FxSound! Would you be\\r\\ninterested in helping us by taking a quick 4 minute\\r\\nsurvey so we can make FxSound better?\" = \"Dzi\xc4\x99kujemy za korzystanie z FxSound! Czy jeste\xc5\x9b zainteresowany(a) udzia\xc5\x82""em w kr\xc3"
+"\xb3tkiej ankiecie, aby pom\xc3\xb3""c nam ulepszy\xc4\x87 FxSound?\"\r\n"
 "\"Take the survey.\" = \"We\xc5\xba udzia\xc5\x82 w ankiecie.\"\r\n"
 "\"Changes to your preset are not saved.\\r\\nDo you want to exit?\" = \"Zastosowane zmiany w ustawieniach wst\xc4\x99pnych nie s\xc4\x85 zapisane.\\r\\nCzy chcesz wyj\xc5\x9b\xc4\x87?\"\r\n"
 "\"Changes to your preset are not saved.\\r\\nDo you want to ignore the changes?\" = \"Zastosowane zmiany w ustawieniach wst\xc4\x99pnych nie s\xc4\x85 zapisane.\\r\\nCzy chcesz zignorowa\xc4\x87 zmiany?\"\r\n"
@@ -7106,7 +7148,7 @@ static const unsigned char temp_binary_data_70[] =
 "\"Surround Sound\" = \"Surround Sound\"\r\n"
 "\"Dynamic Boost\" = \"Dynamic Boost\"\r\n"
 "\"Bass Boost\" = \"Bass Boost\"\r\n"
-"\"Enhances and elevates high end\\r\\nfidelity and presence\" = \"Wzmacnia i podnosi jako\xc5\x9b\xc4\x87 high-end\\r\\nwierno\xc5\x9b\xc4\x87 i obecno\xc5\x9b\xc4\x87\"\r\n"
+"\"Enhances and elevates high end\\r\\nfidelity and presence\" = \"Wzmacnia i podnosi jako\xc5\x9b\xc4\x87 d\xc5\xbawi\xc4\x99ku wysokich ton\xc3\xb3w, poprawiaj\xc4\x85""c wierno\xc5\x9b\xc4\x87 i klarowno\xc5\x9b\xc4\x87\"\r\n"
 "\"Thickens and smooths audio\\r\\nwith controlled reverberation\" = \"Zag\xc4\x99szcza i wyg\xc5\x82""adza d\xc5\xbawi\xc4\x99k\\r\\nz kontrolowanym pog\xc5\x82osem\"\r\n"
 "\"Widens the left-right balance\\r\\nfor expansive, wide sound\" = \"Rozszerza r\xc3\xb3wnowag\xc4\x99 otoczenia lewo-prawo\\r\\ndla ekspansywnego, szerokiego d\xc5\xbawi\xc4\x99ku\"\r\n"
 "\"Increases overall volume and balance\\r\\nwith responsive processing\" = \"Zwi\xc4\x99ksza og\xc3\xb3ln\xc4\x85 g\xc5\x82o\xc5\x9bno\xc5\x9b\xc4\x87 i r\xc3\xb3wnowag\xc4\x99\\r\\nz responsywnym przetwarzaniem\"\r\n"
@@ -7127,11 +7169,10 @@ static const unsigned char temp_binary_data_70[] =
 "\"The lower end of the high-end range. Increase this for more vocal clarity and articulation, reduce it and move the frequency wheel up and down to find and cut out overly loud \\\"S\\\" and \\\"T\\\" sounds.\" = \"Dolny koniec zakresu high-end. Zwi\xc4"
 "\x99ksz to, aby uzyska\xc4\x87 wi\xc4\x99ksz\xc4\x85 klarowno\xc5\x9b\xc4\x87 g\xc5\x82osu i artykulacj\xc4\x99, zmniejsz j\xc4\x85 i przesu\xc5\x84 ko\xc5\x82o cz\xc4\x99stotliwo\xc5\x9b""ci w g\xc3\xb3r\xc4\x99 i w d\xc3\xb3\xc5\x82, aby znale\xc5\xba"
 "\xc4\x87 i wyci\xc4\x85\xc4\x87 zbyt g\xc5\x82o\xc5\x9bne d\xc5\xbawi\xc4\x99ki \xe2\x80\x9eS\xe2\x80\x9d i \xe2\x80\x9eT\xe2\x80\x9d.\"\r\n"
-"\"The core high-end range. Increase this to make your audio sound more like it\\'s in an airy, large space, reduce it to help with room noises and unwanted echoing.\" = \"Rze\xc5\x84 high-end\xe2\x80\x99u. Zwi\xc4\x99ksz to, aby d\xc5\xbawi\xc4\x99k "
-"brzmia\xc5\x82 bardziej przewiewnej, du\xc5\xbc""ej przestrzeni, zmniejsz go, aby pom\xc3\xb3""c w ha\xc5\x82""asie w pomieszczeniu i niechcianym echa.\"\r\n"
-"\"The highest range of average human hearing. Increase this to give your sound more of a crisp tone, with lots of overtones. Reduce it to remove hiss or painfully high sounds.\" = \"Najwy\xc5\xbcszy zakres przeci\xc4\x99tnego ludzkiego s\xc5\x82uchu."
-" Zwi\xc4\x99ksz t\xc4\x99 warto\xc5\x9b\xc4\x87, aby nada\xc4\x87 d\xc5\xbawi\xc4\x99kowi bardziej wyrazisty ton, z du\xc5\xbc\xc4\x85 ilo\xc5\x9b""ci\xc4\x85 alikwot\xc3\xb3w. Zmniejsz go, aby usun\xc4\x85\xc4\x87 syk lub bole\xc5\x9bnie wysokie d\xc5"
-"\xbawi\xc4\x99ki.\"\r\n"
+"\"The core high-end range. Increase this to make your audio sound more like it\\'s in an airy, large space, reduce it to help with room noises and unwanted echoing.\" = \"Rdze\xc5\x84 wysokiego pasma (high-end). Zwi\xc4\x99ksz go, aby d\xc5\xbawi\xc4"
+"\x99k brzmia\xc5\x82 bardziej jak w przestronnej, du\xc5\xbc""ej przestrzeni, zmniejsz go, aby zniwelowa\xc4\x87 ha\xc5\x82""as pomieszczenia i niepo\xc5\xbc\xc4\x85""dane pog\xc5\x82osy.\"\r\n"
+"\"The highest range of average human hearing. Increase this to give your sound more of a crisp tone, with lots of overtones. Reduce it to remove hiss or painfully high sounds.\" = \"Najwy\xc5\xbcszy zakres s\xc5\x82yszalny dla cz\xc5\x82owieka. Zwi\xc4"
+"\x99ksz go, aby d\xc5\xbawi\xc4\x99k sta\xc5\x82 si\xc4\x99 bardziej wyrazisty i klarowny, z bogatymi harmonicznymi. Zmniejsz, aby z\xc5\x82""agodzi\xc4\x87 szum lub nieprzyjemnie wysokie tony.\"\r\n"
 "\"This wheel allows you to adjust which frequencies this EQ band is affecting\\r\\nup or down to target different frequencies/pitches. The EQ slider above\\r\\ncontrols the volume of this EQ band. Increase or decrease to boost or cut\\r\\na portion o"
 "f your audio\\'s frequencies, without modifying the rest of your sound.\" = \"To pokr\xc4\x99t\xc5\x82o pozwala dostosowa\xc4\x87 cz\xc4\x99stotliwo\xc5\x9b""ci, na kt\xc3\xb3re wp\xc5\x82ywa to pasmo korektora\\r\\nw g\xc3\xb3r\xc4\x99 lub w d\xc3\xb3"
 "\xc5\x82, aby celowa\xc4\x87 w r\xc3\xb3\xc5\xbcne cz\xc4\x99stotliwo\xc5\x9b""ci/tony. Suwak EQ powy\xc5\xbc""ej\\r\\nkontroluje g\xc5\x82o\xc5\x9bno\xc5\x9b\xc4\x87 tego pasma korektora. Zwi\xc4\x99ksz lub zmniejsz, aby wzmocni\xc4\x87 lub uci\xc4\x85"
@@ -7149,7 +7190,7 @@ static const unsigned char temp_binary_data_70[] =
 "\"Import\" = \"Importuj\"\r\n"
 "\"Select the folder which contains the presets...\" = \"Wybierz folder zawieraj\xc4\x85""cy ustawienia wst\xc4\x99pne\xe2\x80\xa6\"\r\n"
 "\"Folder:\" = \"Folder:\"\r\n"
-"\"Preset files not found in the selected folder.\" = \"W wybranym folderze nie znaleziono wst\xc4\x99pnie ustawionych plik\xc3\xb3w.\"\r\n"
+"\"Preset files not found in the selected folder.\" = \"W wybranym folderze nie znaleziono plik\xc3\xb3w wst\xc4\x99pnych ustawie\xc5\x84.\"\r\n"
 "\"Settings\" = \"Ustawienia\"\r\n"
 "\"Donate\" = \"Donate\"\r\n"
 "\"General\" = \"Og\xc3\xb3lny\"\r\n"
@@ -7172,7 +7213,7 @@ static const unsigned char temp_binary_data_70[] =
 "\"Support\" = \"Wsparcie\"\r\n"
 "\"Maintenance\" = \"Konserwacja\"\r\n"
 "\"Changelog\" = \"Dziennik zmian\"\r\n"
-"\"Quick tour\" = \"Szybka wycieczka\"\r\n"
+"\"Quick tour\" = \"Szybki przewodnik\"\r\n"
 "\"Submit debug logs\" = \"Prze\xc5\x9blij dzienniki debugowania\"\r\n"
 "\"Help center\" = \"Centrum pomocy\"\r\n"
 "\"Feedback\" = \"Opinia\"\r\n"
@@ -7223,7 +7264,11 @@ static const unsigned char temp_binary_data_70[] =
 "\"Right\" = \"Prawo\"\r\n"
 "\" Bands\" = \" pasm\"\r\n"
 "\"Restore Defaults\" = \"Przywr\xc3\xb3\xc4\x87 ustawienia domy\xc5\x9blne\"\r\n"
-"\"Automatic updates\" = \"Automatyczne aktualizacje\"";
+"\"Automatic updates\" = \"Automatyczne aktualizacje\"\r\n"
+"\"Always On Top\" = \"Zawsze na wierzchu\"\r\n"
+"\"Theme\" = \"Motyw\"\r\n"
+"\"Dark\" = \"Ciemny\"\r\n"
+"\"Light\" = \"Jasny\"";
 
 const char* FxSound_pl_txt = (const char*) temp_binary_data_70;
 
@@ -7373,7 +7418,11 @@ static const unsigned char temp_binary_data_71[] =
 "\"Right\" = \"Direita\"\r\n"
 "\" Bands\" = \" bandas\"\r\n"
 "\"Restore Defaults\" = \"Restaurar padr\xc3\xb5""es\"\r\n"
-"\"Automatic updates\" = \"Atualiza\xc3\xa7\xc3\xb5""es autom\xc3\xa1ticas\"";
+"\"Automatic updates\" = \"Atualiza\xc3\xa7\xc3\xb5""es autom\xc3\xa1ticas\"\r\n"
+"\"Always On Top\" = \"Sempre no topo\"\r\n"
+"\"Theme\" = \"Tema\"\r\n"
+"\"Dark\" = \"Escuro\"\r\n"
+"\"Light\" = \"Claro\"";
 
 const char* FxSound_ptbr_txt = (const char*) temp_binary_data_71;
 
@@ -7522,7 +7571,11 @@ static const unsigned char temp_binary_data_72[] =
 "\"Right\" = \"Direita\"\r\n"
 "\" Bands\" = \" bandas\"\r\n"
 "\"Restore Defaults\" = \"Restaurar predefini\xc3\xa7\xc3\xb5""es\"\r\n"
-"\"Automatic updates\" = \"Atualiza\xc3\xa7\xc3\xb5""es autom\xc3\xa1ticas\"";
+"\"Automatic updates\" = \"Atualiza\xc3\xa7\xc3\xb5""es autom\xc3\xa1ticas\"\r\n"
+"\"Always On Top\" = \"Sempre no topo\"\r\n"
+"\"Theme\" = \"Tema\"\r\n"
+"\"Dark\" = \"Escuro\"\r\n"
+"\"Light\" = \"Claro\"";
 
 const char* FxSound_pt_txt = (const char*) temp_binary_data_72;
 
@@ -7676,7 +7729,11 @@ static const unsigned char temp_binary_data_73[] =
 "\"Right\" = \"Dreapta\"\r\n"
 "\" Bands\" = \" benzi\"\r\n"
 "\"Restore Defaults\" = \"Restabile\xc8\x99te valorile implicite\"\r\n"
-"\"Automatic updates\" = \"Actualiz\xc4\x83ri automate\"";
+"\"Automatic updates\" = \"Actualiz\xc4\x83ri automate\"\r\n"
+"\"Always On Top\" = \"\xc3\x8entotdeauna deasupra\"\r\n"
+"\"Theme\" = \"Tem\xc4\x83\"\r\n"
+"\"Dark\" = \"\xc3\x8entunecat\"\r\n"
+"\"Light\" = \"Luminos\"";
 
 const char* FxSound_ro_txt = (const char*) temp_binary_data_73;
 
@@ -7916,7 +7973,9 @@ static const unsigned char temp_binary_data_74[] =
 82,105,103,104,116,34,32,61,32,34,208,159,209,128,208,176,208,178,209,139,208,185,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,208,191,208,190,208,187,208,190,209,129,208,189,209,139,208,185,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,
 97,117,108,116,115,34,32,61,32,34,208,146,208,190,209,129,209,129,209,130,208,176,208,189,208,190,208,178,208,184,209,130,209,140,32,208,183,208,189,208,176,209,135,208,181,208,189,208,184,209,143,32,208,191,208,190,32,209,131,208,188,208,190,208,187,
 209,135,208,176,208,189,208,184,209,142,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,208,144,208,178,209,130,208,190,208,188,208,176,209,130,208,184,209,135,208,181,209,129,208,186,208,184,208,181,32,208,190,
-208,177,208,189,208,190,208,178,208,187,208,181,208,189,208,184,209,143,34,13,10,0,0 };
+208,177,208,189,208,190,208,178,208,187,208,181,208,189,208,184,209,143,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,208,146,209,129,208,181,208,179,208,180,208,176,32,209,129,208,178,208,181,209,128,209,133,209,131,34,13,
+10,34,84,104,101,109,101,34,32,61,32,34,208,162,208,181,208,188,208,176,34,13,10,34,68,97,114,107,34,32,61,32,34,208,162,209,145,208,188,208,189,208,176,209,143,34,13,10,34,76,105,103,104,116,34,32,61,32,34,208,161,208,178,208,181,209,130,208,187,208,
+176,209,143,34,13,10,0,0 };
 
 const char* FxSound_ru_txt = (const char*) temp_binary_data_74;
 
@@ -8067,7 +8126,11 @@ static const unsigned char temp_binary_data_75[] =
 "\"Right\" = \"H\xc3\xb6ger\"\r\n"
 "\" Bands\" = \" band\"\r\n"
 "\"Restore Defaults\" = \"\xc3\x85terst\xc3\xa4ll standardinst\xc3\xa4llningar\"\r\n"
-"\"Automatic updates\" = \"Automatiska uppdateringar\"";
+"\"Automatic updates\" = \"Automatiska uppdateringar\"\r\n"
+"\"Always On Top\" = \"Alltid \xc3\xb6verst\"\r\n"
+"\"Theme\" = \"Tema\"\r\n"
+"\"Dark\" = \"M\xc3\xb6rkt\"\r\n"
+"\"Light\" = \"Ljust\"";
 
 const char* FxSound_sv_txt = (const char*) temp_binary_data_75;
 
@@ -8359,7 +8422,9 @@ static const unsigned char temp_binary_data_76[] =
 34,32,61,32,34,224,184,139,224,185,137,224,184,178,224,184,162,34,13,10,34,82,105,103,104,116,34,32,61,32,34,224,184,130,224,184,167,224,184,178,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,224,185,129,224,184,150,224,184,154,34,13,10,34,82,101,
 115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,224,184,132,224,184,183,224,184,153,224,184,132,224,185,136,224,184,178,224,185,128,224,184,163,224,184,180,224,185,136,224,184,161,224,184,149,224,185,137,224,184,153,34,13,10,34,65,
 117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,224,184,173,224,184,177,224,184,155,224,185,128,224,184,148,224,184,149,224,184,173,224,184,177,224,184,149,224,185,130,224,184,153,224,184,161,224,184,177,224,184,149,224,184,
-180,34,0,0 };
+180,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,224,185,129,224,184,170,224,184,148,224,184,135,224,185,132,224,184,167,224,185,137,224,184,148,224,185,137,224,184,178,224,184,153,224,184,154,224,184,153,224,185,128,224,184,
+170,224,184,161,224,184,173,34,13,10,34,84,104,101,109,101,34,32,61,32,34,224,184,152,224,184,181,224,184,161,34,13,10,34,68,97,114,107,34,32,61,32,34,224,184,161,224,184,183,224,184,148,34,13,10,34,76,105,103,104,116,34,32,61,32,34,224,184,170,224,184,
+167,224,185,136,224,184,178,224,184,135,34,0,0 };
 
 const char* FxSound_th_txt = (const char*) temp_binary_data_76;
 
@@ -8515,7 +8580,11 @@ static const unsigned char temp_binary_data_77[] =
 "\"Right\" = \"Sa\xc4\x9f\"\r\n"
 "\" Bands\" = \" bant\"\r\n"
 "\"Restore Defaults\" = \"Varsay\xc4\xb1lanlar\xc4\xb1 geri y\xc3\xbckle\"\r\n"
-"\"Automatic updates\" = \"Otomatik g\xc3\xbcncellemeler\"";
+"\"Automatic updates\" = \"Otomatik g\xc3\xbcncellemeler\"\r\n"
+"\"Always On Top\" = \"Her zaman \xc3\xbcstte\"\r\n"
+"\"Theme\" = \"Tema\"\r\n"
+"\"Dark\" = \"Koyu\"\r\n"
+"\"Light\" = \"A\xc3\xa7\xc4\xb1k\"";
 
 const char* FxSound_tr_txt = (const char*) temp_binary_data_77;
 
@@ -8662,7 +8731,11 @@ static const unsigned char temp_binary_data_78[] =
 "\"Right\" = \"Right\"\r\n"
 "\" Bands\" = \" Bands\"\r\n"
 "\"Restore Defaults\" = \"Restore Defaults\"\r\n"
-"\"Automatic updates\" = \"Automatic updates\"\r\n";
+"\"Automatic updates\" = \"Automatic updates\"\r\n"
+"\"Always On Top\" = \"Always On Top\"\r\n"
+"\"Theme\" = \"Theme\"\r\n"
+"\"Dark\" = \"Dark\"\r\n"
+"\"Light\" = \"Light\"\r\n";
 
 const char* FxSound_txt = (const char*) temp_binary_data_78;
 
@@ -8896,7 +8969,8 @@ static const unsigned char temp_binary_data_79[] =
 150,208,178,208,190,34,13,10,34,82,105,103,104,116,34,32,61,32,34,208,159,209,128,208,176,208,178,208,190,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,209,129,208,188,209,131,208,179,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,
 116,115,34,32,61,32,34,208,146,209,150,208,180,208,189,208,190,208,178,208,184,209,130,208,184,32,209,130,208,184,208,191,208,190,208,178,209,150,32,208,189,208,176,208,187,208,176,209,136,209,130,209,131,208,178,208,176,208,189,208,189,209,143,34,13,
 10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,208,144,208,178,209,130,208,190,208,188,208,176,209,130,208,184,209,135,208,189,209,150,32,208,190,208,189,208,190,208,178,208,187,208,181,208,189,208,189,209,143,34,
-0,0 };
+13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,208,151,208,176,208,178,208,182,208,180,208,184,32,208,183,208,178,208,181,209,128,209,133,209,131,34,13,10,34,84,104,101,109,101,34,32,61,32,34,208,162,208,181,208,188,208,176,34,
+13,10,34,68,97,114,107,34,32,61,32,34,208,162,208,181,208,188,208,189,208,176,34,13,10,34,76,105,103,104,116,34,32,61,32,34,208,161,208,178,209,150,209,130,208,187,208,176,34,0,0 };
 
 const char* FxSound_ua_txt = (const char*) temp_binary_data_79;
 
@@ -9069,7 +9143,11 @@ static const unsigned char temp_binary_data_80[] =
 "\"Right\" = \"Ph\xe1\xba\xa3i\"\r\n"
 "\" Bands\" = \" d\xe1\xba\xa3i\"\r\n"
 "\"Restore Defaults\" = \"Kh\xc3\xb4i ph\xe1\xbb\xa5""c m\xe1\xba\xb7""c \xc4\x91\xe1\xbb\x8bnh\"\r\n"
-"\"Automatic updates\" = \"C\xe1\xba\xadp nh\xe1\xba\xadt t\xe1\xbb\xb1 \xc4\x91\xe1\xbb\x99ng\"";
+"\"Automatic updates\" = \"C\xe1\xba\xadp nh\xe1\xba\xadt t\xe1\xbb\xb1 \xc4\x91\xe1\xbb\x99ng\"\r\n"
+"\"Always On Top\" = \"Lu\xc3\xb4n \xe1\xbb\x9f tr\xc3\xaan c\xc3\xb9ng\"\r\n"
+"\"Theme\" = \"Giao di\xe1\xbb\x87n\"\r\n"
+"\"Dark\" = \"T\xe1\xbb\x91i\"\r\n"
+"\"Light\" = \"S\xc3\xa1ng\"";
 
 const char* FxSound_vi_txt = (const char*) temp_binary_data_80;
 
@@ -9222,7 +9300,8 @@ static const unsigned char temp_binary_data_81[] =
 58,34,13,10,34,77,97,115,116,101,114,32,71,97,105,110,58,34,32,61,32,34,228,184,187,233,159,179,233,135,143,58,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,110,58,34,32,61,32,34,230,160,135,229,135,134,229,140,150,58,34,13,10,34,70,105,108,
 116,101,114,32,81,58,34,32,61,32,34,230,187,164,230,179,162,229,153,168,81,58,34,13,10,34,66,97,108,97,110,99,101,58,34,32,61,32,34,229,163,176,233,129,147,229,185,179,232,161,161,58,34,13,10,34,76,101,102,116,34,32,61,32,34,229,183,166,34,13,10,34,82,
 105,103,104,116,34,32,61,32,34,229,143,179,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,230,179,162,230,174,181,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,230,129,162,229,164,141,233,187,152,232,174,164,
-232,174,190,231,189,174,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,232,135,170,229,138,168,230,155,180,230,150,176,34,0,0 };
+232,174,190,231,189,174,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,232,135,170,229,138,168,230,155,180,230,150,176,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,229,167,139,231,
+187,136,231,189,174,233,161,182,34,13,10,34,84,104,101,109,101,34,32,61,32,34,228,184,187,233,162,152,34,13,10,34,68,97,114,107,34,32,61,32,34,230,183,177,232,137,178,34,13,10,34,76,105,103,104,116,34,32,61,32,34,230,181,133,232,137,178,34,0,0 };
 
 const char* FxSound_zhCN_txt = (const char*) temp_binary_data_81;
 
@@ -9378,7 +9457,8 @@ static const unsigned char temp_binary_data_82[] =
 58,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,110,58,34,32,61,32,34,230,173,163,232,166,143,229,140,150,58,34,13,10,34,70,105,108,116,101,114,32,81,58,34,32,61,32,34,230,191,190,230,179,162,229,153,168,81,58,34,13,10,34,66,97,108,97,110,
 99,101,58,34,32,61,32,34,232,129,178,233,129,147,229,185,179,232,161,161,58,34,13,10,34,76,101,102,116,34,32,61,32,34,229,183,166,34,13,10,34,82,105,103,104,116,34,32,61,32,34,229,143,179,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,233,160,187,
 230,174,181,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,230,129,162,229,190,169,233,160,144,232,168,173,232,168,173,229,174,154,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,
-61,32,34,232,135,170,229,139,149,230,155,180,230,150,176,34,0,0 };
+61,32,34,232,135,170,229,139,149,230,155,180,230,150,176,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,230,176,184,233,129,160,231,189,174,233,160,130,34,13,10,34,84,104,101,109,101,34,32,61,32,34,228,184,187,233,161,140,34,
+13,10,34,68,97,114,107,34,32,61,32,34,230,183,177,232,137,178,34,13,10,34,76,105,103,104,116,34,32,61,32,34,230,183,186,232,137,178,34,0,0 };
 
 const char* FxSound_zhTW_txt = (const char*) temp_binary_data_82;
 
@@ -9451,32 +9531,32 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
         case 0x1fdee048:  numBytes = 1396; return settings_svg;
         case 0x9eeab69d:  numBytes = 4894; return Slider_Thumb_svg;
         case 0x36e2b8a1:  numBytes = 4109; return Slider_Thumb_bw_svg;
-        case 0xda29b4a4:  numBytes = 14308; return FxSound_ar_txt;
-        case 0xdaeefdb2:  numBytes = 10888; return FxSound_ba_txt;
-        case 0xde910cf4:  numBytes = 12087; return FxSound_de_txt;
-        case 0xe10b2ea1:  numBytes = 11594; return FxSound_es_txt;
-        case 0xe2b1efbf:  numBytes = 11951; return FxSound_fr_txt;
-        case 0xe61ba0fd:  numBytes = 10738; return FxSound_hr_txt;
-        case 0x1833c740:  numBytes = 12252; return fxsound_hu_txt;
-        case 0xe70b308e:  numBytes = 11227; return FxSound_id_txt;
-        case 0xe7d0799c:  numBytes = 13891; return FxSound_ir_txt;
-        case 0xe7eca89e:  numBytes = 11479; return FxSound_it_txt;
-        case 0xe895c2aa:  numBytes = 12857; return FxSound_ja_txt;
-        case 0xeb0fe457:  numBytes = 11825; return FxSound_ko_txt;
-        case 0xf00427b1:  numBytes = 11169; return FxSound_nl_txt;
-        case 0xf36dd8ef:  numBytes = 11870; return FxSound_pl_txt;
-        case 0x7b843fc7:  numBytes = 11603; return FxSound_ptbr_txt;
-        case 0xf3de94f7:  numBytes = 11492; return FxSound_pt_txt;
-        case 0xf701d0b0:  numBytes = 11649; return FxSound_ro_txt;
-        case 0xf7565db6:  numBytes = 15563; return FxSound_ru_txt;
-        case 0xf9194dd6:  numBytes = 11296; return FxSound_sv_txt;
-        case 0xfa08dd67:  numBytes = 18689; return FxSound_th_txt;
-        case 0xfa95c871:  numBytes = 11399; return FxSound_tr_txt;
-        case 0x4464a26e:  numBytes = 10552; return FxSound_txt;
-        case 0xfb5b117f:  numBytes = 15163; return FxSound_ua_txt;
-        case 0xfd80a626:  numBytes = 12507; return FxSound_vi_txt;
-        case 0xd8a3b00c:  numBytes = 9967; return FxSound_zhCN_txt;
-        case 0xf624e624:  numBytes = 10124; return FxSound_zhTW_txt;
+        case 0xda29b4a4:  numBytes = 14425; return FxSound_ar_txt;
+        case 0xdaeefdb2:  numBytes = 10982; return FxSound_ba_txt;
+        case 0xde910cf4:  numBytes = 12186; return FxSound_de_txt;
+        case 0xe10b2ea1:  numBytes = 11686; return FxSound_es_txt;
+        case 0xe2b1efbf:  numBytes = 12049; return FxSound_fr_txt;
+        case 0xe61ba0fd:  numBytes = 10832; return FxSound_hr_txt;
+        case 0x1833c740:  numBytes = 12348; return fxsound_hu_txt;
+        case 0xe70b308e:  numBytes = 11319; return FxSound_id_txt;
+        case 0xe7d0799c:  numBytes = 13998; return FxSound_ir_txt;
+        case 0xe7eca89e:  numBytes = 11578; return FxSound_it_txt;
+        case 0xe895c2aa:  numBytes = 12971; return FxSound_ja_txt;
+        case 0xeb0fe457:  numBytes = 11929; return FxSound_ko_txt;
+        case 0xf00427b1:  numBytes = 11263; return FxSound_nl_txt;
+        case 0xf36dd8ef:  numBytes = 11986; return FxSound_pl_txt;
+        case 0x7b843fc7:  numBytes = 11695; return FxSound_ptbr_txt;
+        case 0xf3de94f7:  numBytes = 11584; return FxSound_pt_txt;
+        case 0xf701d0b0:  numBytes = 11755; return FxSound_ro_txt;
+        case 0xf7565db6:  numBytes = 15685; return FxSound_ru_txt;
+        case 0xf9194dd6:  numBytes = 11388; return FxSound_sv_txt;
+        case 0xfa08dd67:  numBytes = 18836; return FxSound_th_txt;
+        case 0xfa95c871:  numBytes = 11492; return FxSound_tr_txt;
+        case 0x4464a26e:  numBytes = 10642; return FxSound_txt;
+        case 0xfb5b117f:  numBytes = 15281; return FxSound_ua_txt;
+        case 0xfd80a626:  numBytes = 12612; return FxSound_vi_txt;
+        case 0xd8a3b00c:  numBytes = 10060; return FxSound_zhCN_txt;
+        case 0xf624e624:  numBytes = 10217; return FxSound_zhTW_txt;
         default: break;
     }
 
