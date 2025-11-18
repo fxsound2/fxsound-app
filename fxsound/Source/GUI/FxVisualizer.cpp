@@ -28,7 +28,13 @@ FxVisualizer::FxVisualizer()
     band_values_.resize(FxController::NUM_SPECTRUM_BANDS);
     band_graph_.resize(FxController::NUM_SPECTRUM_BANDS * NUM_BARS);
 
+#if JUCE_MAJOR_VERSION >= 8
     start();
+#else
+    calcGradient();
+	reset();
+	setFramesPerSecond(10);
+#endif
 
     setOpaque(false);
     setSize(WIDTH, HEIGHT);
@@ -38,6 +44,7 @@ void FxVisualizer::start()
 {    
     calcGradient();
 
+#if JUCE_MAJOR_VERSION >= 8
     if (vblank_listener_ == nullptr)
     {
         vblank_listener_ = std::make_unique<juce::VBlankAttachment>(
@@ -67,12 +74,16 @@ void FxVisualizer::start()
                 }
             });
     }
+#else
+    setFramesPerSecond(30);
+#endif
 }
 
 void FxVisualizer::pause()
 {
     calcGradient();
 
+#if JUCE_MAJOR_VERSION >= 8
     reset();
     repaint();
 
@@ -80,6 +91,9 @@ void FxVisualizer::pause()
     {
         vblank_listener_.reset();
     }
+#else
+    setFramesPerSecond(10);
+#endif
 }
 
 void FxVisualizer::reset()

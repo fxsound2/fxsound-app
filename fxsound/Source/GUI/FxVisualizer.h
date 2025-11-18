@@ -26,7 +26,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 /*
 */
+#if JUCE_MAJOR_VERSION >=8
 class FxVisualizer : public Component
+#else
+class FxVisualizer : public AnimatedAppComponent
+#endif
 {
 public:
     FxVisualizer();
@@ -35,7 +39,11 @@ public:
     void pause();
 
     void reset();
+#if JUCE_MAJOR_VERSION >=8
     void update();
+#else
+	void update() override;
+#endif
 
     void calcGradient();
 
@@ -52,5 +60,7 @@ private:
     Array<float> band_graph_;
     ColourGradient gradient_;
 
+#if JUCE_MAJOR_VERSION >=8
     std::unique_ptr<juce::VBlankAttachment> vblank_listener_;
+#endif
 };
