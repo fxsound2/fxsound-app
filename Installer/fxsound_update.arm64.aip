@@ -6,7 +6,7 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.UpdaterEditorComponent">
     <ROW Section="Update" Key="Name" Value="FxSound"/>
-    <ROW Section="Update" Key="ProductVersion" Value="1.2.2.0" ValueLocId="-"/>
+    <ROW Section="Update" Key="ProductVersion" Value="1.2.4.0" ValueLocId="-"/>
     <ROW Section="Update" Key="URL" Value="https://github.com/fxsound2/fxsound-app/raw/latest/release/fxsound_setup.arm64.exe" ValueLocId="-"/>
     <ROW Section="Update" Key="URL1" Value="https://download.fxsound.com/fxsoundlatest" ValueLocId="-"/>
     <ROW Section="Update" Key="Size" Value="Output\fxsound_setup.arm64.exe" ValueLocId="-"/>
@@ -15,7 +15,7 @@
     <ROW Section="Update" Key="ServerFileName" Value="fxsound_setup.arm64.exe" ValueLocId="-"/>
     <ROW Section="Update" Key="Flags" Value="SilentInstall|Sys64|OsArm64" ValueLocId="-"/>
     <ROW Section="Update" Key="RegistryKey" Value="HKUD\Software\FxSound LLC\FxSound\Version" ValueLocId="-"/>
-    <ROW Section="Update" Key="Version" Value="1.2.2.0" ValueLocId="-"/>
+    <ROW Section="Update" Key="Version" Value="1.2.4.0" ValueLocId="-"/>
     <ROW Section="Update" Key="AutoCloseApplication" Value="[APPDIR]FxSound.exe" ValueLocId="-"/>
     <ATTRIBUTE name="OutputFileName" value="updates.txt"/>
     <ATTRIBUTE name="OutputFolder" value="Output"/>

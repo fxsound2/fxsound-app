@@ -2,14 +2,14 @@
 
 [Update]
 Name = FxSound
-ProductVersion = 1.2.3.0
+ProductVersion = 1.2.4.0
 URL = https://github.com/fxsound2/fxsound-app/raw/latest/release/fxsound_setup.exe
 URL1 = https://download.fxsound.com/fxsoundlatest
-Size = 73784488
-SHA256 = A3897FF7A9DAF49E7B3FE71160EF8FF28CE36FC65A0CF7C3EF1D881642BAD3C1
-MD5 = eaa4ae3ca37fdf39e8ea23ee4a727468
+Size = 74801688
+SHA256 = 03FFCB85A30B8885BCA9BF6E86BD4534EE38488026EC884AF9A87FF2924D67C9
+MD5 = f9a16f5e28ddeddc9ced5a1d9078c65a
 ServerFileName = fxsound_setup.exe
 Flags = SilentInstall|Sys64
 RegistryKey = HKUD\Software\FxSound LLC\FxSound\Version
-Version = 1.2.3.0
+Version = 1.2.4.0
 AutoCloseApplication = [APPDIR]FxSound.exe

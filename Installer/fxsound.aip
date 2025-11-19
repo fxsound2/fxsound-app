@@ -25,11 +25,11 @@
     <ROW Property="MSIFASTINSTALL" MultiBuildValue="DefaultBuild:2"/>
     <ROW Property="Manufacturer" Value="FxSound LLC"/>
     <ROW Property="MsiLogging" MultiBuildValue="DefaultBuild:vp"/>
-    <ROW Property="ProductCode" Value="1033:{1877F42E-4723-43FC-ACC7-564076AC1C29} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{BAE4852D-6FF4-4687-9146-FE8B460A010C} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="FxSound"/>
     <ROW Property="ProductName_32" Value="[|ProductName]"/>
-    <ROW Property="ProductVersion" Value="1.2.2.0" Options="20"/>
+    <ROW Property="ProductVersion" Value="1.2.4.0" Options="20"/>
     <ROW Property="REBOOT" MultiBuildValue="DefaultBuild:Suppress"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
@@ -57,6 +57,10 @@
     <ROW Directory="StartupFolder" Directory_Parent="TARGETDIR" DefaultDir="STARTU~1|StartupFolder" IsPseudoRoot="1"/>
     <ROW Directory="SystemFolder" Directory_Parent="TARGETDIR" DefaultDir="SYSTEM~1|SystemFolder" IsPseudoRoot="1"/>
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
+    <ROW Directory="Win7_Desktop_Dir" Directory_Parent="DesktopFolder" DefaultDir=".:Win7"/>
+    <ROW Directory="Win7_Dir" Directory_Parent="APPDIR" DefaultDir=".:Win7"/>
+    <ROW Directory="Win7_Shortcut_Dir" Directory_Parent="SHORTCUTDIR" DefaultDir=".:Win7"/>
+    <ROW Directory="Win7_Startup_Dir" Directory_Parent="StartupFolder" DefaultDir=".:Win7"/>
     <ROW Directory="win10_Dir" Directory_Parent="Drivers_Dir" DefaultDir="win10"/>
     <ROW Directory="win7_Dir" Directory_Parent="Drivers_Dir" DefaultDir="win7"/>
     <ROW Directory="x64_1_Dir" Directory_Parent="win7_Dir" DefaultDir="x64"/>
@@ -76,14 +80,16 @@
     <ROW Component="DfxInstall.dll" ComponentId="{4B4A298D-1A3A-448C-AF9A-692D7EAFC327}" Directory_="Apps_Dir" Attributes="0" KeyPath="DfxInstall.dll"/>
     <ROW Component="DfxSetupDrv.exe" ComponentId="{E6F40D13-6200-4931-A7A2-6142F7821778}" Directory_="Apps_Dir" Attributes="0" KeyPath="DfxSetupDrv.exe"/>
     <ROW Component="Fonts" ComponentId="{A2EF6825-EECB-4179-8F5E-78090FB01E63}" Directory_="APPDIR" Attributes="0" Type="0"/>
-    <ROW Component="FxSound.exe" ComponentId="{82E872A6-8D59-4785-92C3-8BBFF79EB0E4}" Directory_="APPDIR" Attributes="256" Condition="VersionNT64" KeyPath="FxSound.exe"/>
+    <ROW Component="FxSound.exe" ComponentId="{82E872A6-8D59-4785-92C3-8BBFF79EB0E4}" Directory_="APPDIR" Attributes="256" Condition="VersionNT64 &gt;= 1000" KeyPath="FxSound.exe"/>
     <ROW Component="FxSound.exe_2" ComponentId="{0ABA4B50-FBDF-43EE-9C5B-A5F296F063CB}" Directory_="x86_Dir" Attributes="0" Condition="NOT VersionNT64" KeyPath="FxSound.exe_2"/>
+    <ROW Component="FxSound.exe_Win7" ComponentId="{28B9A2D5-250C-41C7-917E-26FC97873E1D}" Directory_="Win7_Dir" Attributes="256" Condition="VersionNT64 &lt; 1000" KeyPath="FxSound.exe_1"/>
     <ROW Component="FxSound.settings" ComponentId="{F8459A73-F385-4ED6-809A-50204A74B04F}" Directory_="FxSound_Dir" Attributes="0" KeyPath="FxSound.settings" Type="0"/>
     <ROW Component="Path" ComponentId="{19CFBC28-C762-407F-9344-86A957870300}" Directory_="APPDIR" Attributes="260" Condition="VersionNT64" KeyPath="Path"/>
     <ROW Component="Path_32" ComponentId="{9BF41759-B09E-4CA3-B63B-7A8FAD49A847}" Directory_="APPDIR" Attributes="4" Condition="NOT VersionNT64" KeyPath="Path_1"/>
     <ROW Component="ProductInformation" ComponentId="{8CD532CB-F65E-4D43-B32A-4D0DA210189B}" Directory_="APPDIR" Attributes="260" Condition="VersionNT64" KeyPath="Version"/>
     <ROW Component="ProductInformation_32" ComponentId="{FA03A164-3F8F-402F-8293-01D897B93826}" Directory_="APPDIR" Attributes="4" Condition="NOT VersionNT64" KeyPath="Version_1"/>
     <ROW Component="SHORTCUTDIR" ComponentId="{D56B8D69-2366-40AF-BA27-0E50E5434C55}" Directory_="SHORTCUTDIR" Attributes="0"/>
+    <ROW Component="Win7" ComponentId="{23AABA76-FD6F-4BA1-9F34-7B3A12C1CDE0}" Directory_="Win7_Shortcut_Dir" Attributes="0"/>
     <ROW Component="dfx.ico" ComponentId="{1306547E-0F0C-4677-BC13-5F8301BDAA15}" Directory_="SystemFolder" Attributes="0" KeyPath="dfx.ico" Type="0"/>
     <ROW Component="fac" ComponentId="{1403F2A1-B025-4820-94F2-A2784FDCB770}" Directory_="Factsoft_Dir" Attributes="0" KeyPath="fac"/>
     <ROW Component="fxdevcon32.exe" ComponentId="{ABA76036-9C9F-457D-BDDB-FD8364D90471}" Directory_="x86_1_Dir" Attributes="0" KeyPath="fxdevcon32.exe"/>
@@ -112,7 +118,7 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
     <ROW File="FxSound.exe" Component_="FxSound.exe" FileName="FxSound.exe" Attributes="0" SourcePath="..\bin\x64\FxSound.exe" SelfReg="false" DigSign="true"/>
     <ROW File="FxSound.settings" Component_="FxSound.settings" FileName="FXSOUN~1.SET|FxSound.settings" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\FxSound.settings" SelfReg="false"/>
-    <ROW File="FxSound.exe_2" Component_="FxSound.exe_2" FileName="FxSound.exe" Attributes="0" SourcePath="..\bin\x86\FxSound.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="FxSound.exe_2" Component_="FxSound.exe_2" FileName="FxSound.exe" Attributes="0" SourcePath="..\bin\x86\Win7\FxSound.exe" SelfReg="false" DigSign="true"/>
     <ROW File="ptdevcon32.exe" Component_="ptdevcon32.exe" FileName="PTDEVC~1.EXE|ptdevcon32.exe" Attributes="0" SourcePath="Apps\Version13\ptdevcon32.exe" SelfReg="false"/>
     <ROW File="ptdevcon64.exe" Component_="ptdevcon64.exe" FileName="PTDEVC~2.EXE|ptdevcon64.exe" Attributes="0" SourcePath="Apps\Version13\ptdevcon64.exe" SelfReg="false"/>
     <ROW File="DfxSetupDrv.exe" Component_="DfxSetupDrv.exe" FileName="DFXSET~1.EXE|DfxSetupDrv.exe" Attributes="0" SourcePath="Apps\Version14\DfxSetupDrv.exe" SelfReg="false" DigSign="true"/>
@@ -171,6 +177,7 @@
     <ROW File="NotoSansTCRegular.ttf" Component_="Fonts" FileName="NOTOSA~5.TTF|NotoSansTC-Regular.ttf" Attributes="0" SourcePath="Resources\Fonts\NotoSansTC-Regular.ttf" SelfReg="false"/>
     <ROW File="fxdiag.exe" Component_="fxdiag.exe" FileName="fxdiag.exe" Attributes="0" SourcePath="..\bin\x64\fxdiag.exe" SelfReg="false" DigSign="true"/>
     <ROW File="fxdiag.exe_1" Component_="fxdiag.exe_1" FileName="fxdiag.exe" Attributes="0" SourcePath="..\bin\x86\fxdiag.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="FxSound.exe_1" Component_="FxSound.exe_Win7" FileName="FxSound.exe" Attributes="0" SourcePath="..\bin\x64\Win7\FxSound.exe" SelfReg="false" DigSign="true"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BootstrOptComponent">
     <ROW BootstrOptKey="GlobalOptions" GeneralOptions="b" DownloadFolder="[AppDataFolder][|Manufacturer]\[|ProductName]\prerequisites" Options="2"/>
@@ -257,6 +264,7 @@
     <ROW Directory_="APPDIR" Component_="APPDIR" ManualDelete="true"/>
     <ROW Directory_="SHORTCUTDIR" Component_="SHORTCUTDIR" ManualDelete="false"/>
     <ROW Directory_="x86_AppShortcut_Dir" Component_="x86" ManualDelete="false"/>
+    <ROW Directory_="Win7_Shortcut_Dir" Component_="Win7" ManualDelete="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCustActComponent">
     <ROW Action="AI_AppSearchEx" Type="1" Source="Prereq.dll" Target="DoAppSearchEx"/>
@@ -340,8 +348,11 @@
     <ROW Feature_="AI32BitFiles" Component_="x86"/>
     <ROW Feature_="AI32BitFiles" Component_="fxdiag.exe_1"/>
     <ROW Feature_="AI64BitFiles" Component_="fxdiag.exe"/>
+    <ROW Feature_="AI64BitFiles" Component_="FxSound.exe_Win7"/>
+    <ROW Feature_="AI64BitFiles" Component_="Win7"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
+    <ROW Name="FxSound.exe" SourcePath="..\bin\x64\Win7\FxSound.exe" Index="0"/>
     <ROW Name="fxsound.exe" SourcePath="Resources\fxsound.ico" Index="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIniFileComponent">
@@ -443,10 +454,13 @@
     <ROW Shortcut="CheckforFxSound2updates" Directory_="SHORTCUTDIR" Name="CHECKF~2|Check for FxSound updates" Component_="updater.exe" Target="[#updater.exe]" Arguments="/checknow" Hotkey="0" Icon_="fxsound.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
     <ROW Shortcut="FxSound" Directory_="StartupFolder" Name="FxSound" Component_="FxSound.exe" Target="[#FxSound.exe]" Hotkey="0" Icon_="fxsound.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
     <ROW Shortcut="FxSound.exe_1" Directory_="SHORTCUTDIR" Name="FxSound" Component_="FxSound.exe" Target="[#FxSound.exe]" Hotkey="0" Icon_="fxsound.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="FxSound2" Directory_="Win7_Shortcut_Dir" Name="FxSound" Component_="FxSound.exe_Win7" Target="[#FxSound.exe_1]" Hotkey="0" Icon_="FxSound.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
     <ROW Shortcut="FxSound_1" Directory_="DesktopFolder" Name="FxSound" Component_="FxSound.exe" Target="[#FxSound.exe]" Hotkey="0" Icon_="fxsound.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
     <ROW Shortcut="FxSound_2" Directory_="x86_AppShortcut_Dir" Name="FxSound" Component_="FxSound.exe_2" Target="[#FxSound.exe_2]" Hotkey="0" Icon_="fxsound.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
     <ROW Shortcut="FxSound_3" Directory_="x86_Startup_Dir" Name="FxSound" Component_="FxSound.exe_2" Target="[#FxSound.exe_2]" Hotkey="0" Icon_="fxsound.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
     <ROW Shortcut="FxSound_4" Directory_="x86_Desktop_Dir" Name="FxSound" Component_="FxSound.exe_2" Target="[#FxSound.exe_2]" Hotkey="0" Icon_="fxsound.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="FxSound_5" Directory_="Win7_Startup_Dir" Name="FxSound" Component_="FxSound.exe_Win7" Target="[#FxSound.exe_1]" Hotkey="0" Icon_="FxSound.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="FxSound_6" Directory_="Win7_Desktop_Dir" Name="FxSound" Component_="FxSound.exe_Win7" Target="[#FxSound.exe_1]" Hotkey="0" Icon_="FxSound.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiSignatureComponent">
     <ROW Signature="FileSearchSign" FileName="dfx.exe"/>

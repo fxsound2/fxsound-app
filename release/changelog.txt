@@ -1,3 +1,11 @@
+version 1.2.4.0
+----------------
+1. Light theme added and theme can be changed from menu option
+2. Added global variables which avoids using NVIDIA and AMD GPUs for rendering
+3. Fixed the issue of application not running on Windows 7
+4. Menu option added to switch always on top 
+5. Refresh device list when system tray icon context menu is opened
+
 version 1.2.3.0
 ----------------
 1. Korean translation corrections
