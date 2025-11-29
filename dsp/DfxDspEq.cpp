@@ -110,6 +110,8 @@ int DfxDspPrivate::resetEQ()
 {
 	int i_band_num;
 
+	update_from_registry_ = true;
+
 	for (i_band_num = 1; i_band_num <= DFXP_GRAPHIC_EQ_NUM_BANDS; i_band_num++)
 	{
 		if (dfxpEqSetBandBoostCut(dfxp_handle_, DFXP_STORAGE_TYPE_ALL, i_band_num, (realtype)0.0) != OKAY)
@@ -344,6 +346,8 @@ int DfxDspPrivate::eqGetProcessingOn(int i_storage_type, int *ip_on)
 
 void DfxDspPrivate::eqOn(bool on)
 {
+	update_from_registry_ = true;
+
 	if (on)
 	{
 		eqSetProcessingOn(DFXP_STORAGE_TYPE_ALL, IS_TRUE);
@@ -440,6 +444,9 @@ void DfxDspPrivate::setFilterQ(float q_multiplier)
 void DfxDspPrivate::setNumBands(int num_bands)
 {
 	PT_HANDLE* graphic_eq_handle;
+
+	update_from_registry_ = true;
+
 	dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
 	GraphicEqSetNumBands(graphic_eq_handle, num_bands);
 }
@@ -454,8 +461,9 @@ float DfxDspPrivate::getEqBandFrequency(int band_num)
 
 void DfxDspPrivate::setEqBandFrequency(int band_num, float freq)
 {
-
     PT_HANDLE* graphic_eq_handle;
+
+	update_from_registry_ = true;
 
     dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
 
@@ -489,5 +497,7 @@ float DfxDspPrivate::getEqBandBoostCut(int band_num)
 
 void DfxDspPrivate::setEqBandBoostCut(int band_num, float boost)
 {
+	update_from_registry_ = true;
+
 	dfxpEqSetBandBoostCut(dfxp_handle_, DFXP_STORAGE_TYPE_ALL, band_num + 1, boost);
 }

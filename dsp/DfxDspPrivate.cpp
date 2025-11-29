@@ -160,6 +160,7 @@ void DfxDspPrivate::processTimer()
 	if (update_from_registry_)
 	{
 		eqUpdateFromRegistry(&i_eq_changed);
+		update_from_registry_ = false;
 	}
 
 	if (i_eq_changed)
