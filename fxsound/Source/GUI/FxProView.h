@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 /*
 */
-class FxProView  : public FxView
+class FxProView  : public FxView, public Button::Listener
 {
 public:
     FxProView();
@@ -62,6 +62,7 @@ private:
 	FxEqualizer equalizer_;
     TooltipWindow tool_tip_;
     FxVisualizer visualizer_;
+    ImageButton refresh_button_;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FxProView)
 };

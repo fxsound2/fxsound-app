@@ -73,6 +73,8 @@ public:
     
     bool isPlaybackDeviceAvailable();
 
+	void refreshOutputs();
+
 	void savePreset(const String& preset_name=L"");
 	void renamePreset(const String& new_name);
 	void deletePreset();

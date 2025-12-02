@@ -26,9 +26,13 @@ FxProView::FxProView() : tool_tip_(this)
 	addAndMakeVisible(effects_);
 	addAndMakeVisible(equalizer_);
     addChildComponent(visualizer_);
+    addAndMakeVisible(refresh_button_);
 
 	equalizer_.addMouseListener(this, true);
 	effects_.addMouseListener(this, true);
+
+    refresh_button_.setButtonText(TRANS("↻"));
+    refresh_button_.addListener(this);
 
     auto& theme = dynamic_cast<LookAndFeel_V4&>(getLookAndFeel());
 
@@ -68,8 +72,10 @@ void FxProView::resized()
     auto component_bounds = juce::Rectangle<int>(PRESET_LIST_X, LIST_Y, LIST_WIDTH, LIST_HEIGHT);
     preset_list_.setBounds(component_bounds);
 
-    component_bounds = juce::Rectangle<int>(OUTPUT_LIST_X, LIST_Y, LIST_WIDTH, LIST_HEIGHT);
+    auto component_bounds = juce::Rectangle<int>(OUTPUT_LIST_X, LIST_Y, LIST_WIDTH, LIST_HEIGHT);
     endpoint_list_.setBounds(component_bounds);
+
+    refresh_button_.setBounds(component_bounds.getRight() + 10, LIST_Y, 40, LIST_HEIGHT);
 
     auto visualizer_offset = 0;
     if (visualizer_.isVisible())
@@ -137,4 +143,12 @@ void FxProView::mouseExit(const MouseEvent& mouse_event)
 
 	equalizer_.showValues(equalizer_.isMouseOver(true));
 	effects_.showValues(effects_.isMouseOver(true));
+}
+
+void FxProView::buttonClicked(Button* button)
+{
+    if (button == &refresh_button_)
+    {
+        FxController::getInstance().refreshOutputs();
+    }
 }
