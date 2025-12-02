@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 FxProView::FxProView() : tool_tip_(this)
 {
+	addAndMakeVisible(preset_list_);
+	addAndMakeVisible(endpoint_list_);
 	addAndMakeVisible(effects_);
 	addAndMakeVisible(equalizer_);
     addChildComponent(visualizer_);
@@ -31,8 +33,11 @@ FxProView::FxProView() : tool_tip_(this)
 	equalizer_.addMouseListener(this, true);
 	effects_.addMouseListener(this, true);
 
-    refresh_button_.setButtonText(TRANS("↻"));
+    refresh_button_.setButtonText(TRANS("Refresh"));
     refresh_button_.addListener(this);
+    refresh_button_.setTooltip(TRANS("Refresh audio devices"));
+    refresh_button_.setColour(TextButton::buttonColourId, Colour(0xe63462).withAlpha(1.0f));
+    refresh_button_.setColour(TextButton::textColourOffId, Colour(0xffffff).withAlpha(1.0f));
 
     auto& theme = dynamic_cast<LookAndFeel_V4&>(getLookAndFeel());
 
@@ -72,10 +77,10 @@ void FxProView::resized()
     auto component_bounds = juce::Rectangle<int>(PRESET_LIST_X, LIST_Y, LIST_WIDTH, LIST_HEIGHT);
     preset_list_.setBounds(component_bounds);
 
-    auto component_bounds = juce::Rectangle<int>(OUTPUT_LIST_X, LIST_Y, LIST_WIDTH, LIST_HEIGHT);
-    endpoint_list_.setBounds(component_bounds);
+    auto output_bounds = juce::Rectangle<int>(OUTPUT_LIST_X, LIST_Y, LIST_WIDTH, LIST_HEIGHT);
+    endpoint_list_.setBounds(output_bounds);
 
-    refresh_button_.setBounds(component_bounds.getRight() + 10, LIST_Y, 40, LIST_HEIGHT);
+    refresh_button_.setBounds(output_bounds.getRight() + 20, LIST_Y, 70, LIST_HEIGHT);
 
     auto visualizer_offset = 0;
     if (visualizer_.isVisible())
@@ -104,7 +109,7 @@ void FxProView::paint(Graphics& g)
 	g.fillAll();
 
 	g.setFillType(FillType(Colour(0x0).withAlpha(0.2f)));
-	g.fillRoundedRectangle(20, 16, 920, 330+visualizer_offset, 8);
+	g.fillRoundedRectangle(20, 16, WIDTH - 40, 330+visualizer_offset, 8);
 
     auto enable_controls = FxModel::getModel().getPowerState() && !FxModel::getModel().isMonoOutputSelected();
 
@@ -139,7 +144,7 @@ void FxProView::mouseEnter(const MouseEvent& mouse_event)
 
 void FxProView::mouseExit(const MouseEvent& mouse_event)
 {
-	FxView::mouseEnter(mouse_event);
+	FxView::mouseExit(mouse_event);
 
 	equalizer_.showValues(equalizer_.isMouseOver(true));
 	effects_.showValues(effects_.isMouseOver(true));
