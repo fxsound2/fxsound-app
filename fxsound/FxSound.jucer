@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.4.0"
+<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.5.0"
               displaySplashScreen="1" jucerFormatVersion="1" companyName="FxSound LLC"
               companyWebsite="https://www.fxsound.com" companyCopyright="2025 FxSound&#8482;"
               defines="UNICODE" postExportShellCommandWin="type %%1%%\Project\status_icons.rc &gt;&gt; %%1%%\Project\resources.rc"
@@ -69,19 +69,13 @@
             file="Images/dropdown_arrow_bw.svg"/>
       <FILE id="iIvSNh" name="dropdown_arrow_hover.svg" compile="0" resource="1"
             file="Images/dropdown_arrow_hover.svg"/>
-      <FILE id="usPkJw" name="FxSound Logo White.png" compile="0" resource="1"
-            file="Images/FxSound Logo White.png"/>
       <FILE id="U9DNmz" name="FxSound Logo.svg" compile="0" resource="1"
             file="Images/FxSound Logo.svg"/>
-      <FILE id="KPjArf" name="FxSound White Bars.png" compile="0" resource="1"
-            file="Images/FxSound White Bars.png"/>
       <FILE id="KEHCfx" name="FxSound White Bars.svg" compile="0" resource="1"
             file="Images/FxSound White Bars.svg"/>
       <FILE id="KpuESS" name="fxsound.png" compile="0" resource="1" file="Images/fxsound.png"/>
       <FILE id="EFMcqw" name="fxsound_large.png" compile="0" resource="1"
             file="Images/fxsound_large.png"/>
-      <FILE id="rh0i9g" name="logo-red.png" compile="0" resource="1" file="Images/logo-red.png"/>
-      <FILE id="RvANme" name="logo-white.png" compile="0" resource="1" file="Images/logo-white.png"/>
       <FILE id="ZgOLJX" name="maximize.svg" compile="0" resource="1" file="Images/maximize.svg"/>
       <FILE id="O5DD0s" name="maximize_hover.svg" compile="0" resource="1"
             file="Images/maximize_hover.svg"/>
@@ -219,6 +213,7 @@
       <FILE id="JRQzN4" name="FxSound.ja.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ja.txt"/>
       <FILE id="JZUDxv" name="FxSound.ko.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ko.txt"/>
       <FILE id="Af5L3s" name="FxSound.nl.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.nl.txt"/>
+      <FILE id="GfCJ7C" name="FxSound.no.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.no.txt"/>
       <FILE id="X7Zl3x" name="FxSound.pl.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.pl.txt"/>
       <FILE id="EvdnQc" name="FxSound.pt-br.txt" compile="0" resource="1"
             file="../Resources/Strings/FxSound.pt-br.txt"/>
@@ -243,10 +238,11 @@
             bigIcon="EFMcqw" windowsTargetPlatformVersion="Latest">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
-                       useRuntimeLibDLL="0" winArchitecture="ARM64,Win32,x64"/>
+                       useRuntimeLibDLL="0" winArchitecture="x64" targetName="FxSound"/>
         <CONFIGURATION isDebug="0" name="Release" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
                        useRuntimeLibDLL="0" alwaysGenerateDebugSymbols="1" postbuildCommand="copy $(TargetPath) ..\..\bin\$(PlatformTarget)\ /y&#10;copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y"
-                       optimisation="4" debugInformationFormat="ProgramDatabase" winArchitecture="ARM64,Win32,x64"/>
+                       optimisation="4" debugInformationFormat="ProgramDatabase" winArchitecture="x64"
+                       targetName="FxSound"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="C:\JUCE\modules"/>

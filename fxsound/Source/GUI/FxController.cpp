@@ -1461,7 +1461,7 @@ void FxController::timerCallback()
 	}
 
 	auto current_time = Time::getCurrentTime();
-	if (auto_updates_ && current_time.getHours() == 10 && current_time.getMinutes() == 0 && current_time.getSeconds() == 0)
+	if (auto_updates_ && current_time.getHours() == 10 && current_time.getMinutes() == 00 && current_time.getSeconds() == 0)
 	{
 		checkUpdates();
 	}
@@ -1770,7 +1770,11 @@ void FxController::setLanguage(String language_code)
 	{
 		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ua_txt, BinaryData::FxSound_ua_txtSize), false));
 	}
-  
+	else if (language_.startsWithIgnoreCase("no"))
+	{
+		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_no_txt, BinaryData::FxSound_no_txtSize), false));
+	}
+
 	auto* theme = dynamic_cast<FxTheme*>(&LookAndFeel::getDefaultLookAndFeel());
 	if (theme != nullptr)
 	{
@@ -1887,6 +1891,10 @@ String FxController::getLanguageName(String language_code) const
 	else if (language_code.startsWithIgnoreCase("ua"))
 	{
 		return L"\u0443\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430";
+	}
+	else if (language_code.startsWithIgnoreCase("no"))
+	{
+		return L"Norsk";
 	}
 
     return "English";
