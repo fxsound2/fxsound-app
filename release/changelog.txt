@@ -1,3 +1,9 @@
+version 1.2.5.0
+----------------
+1. x86 and x64 builds are done with JUCE 6.1.6 to avoid any GPU usage
+2. Constant registry read for EQ parameters fixed
+3. Norwegian language support added
+
 version 1.2.4.0
 ----------------
 1. Light theme added and theme can be changed from menu option
@@ -5,6 +11,7 @@ version 1.2.4.0
 3. Fixed the issue of application not running on Windows 7
 4. Menu option added to switch always on top 
 5. Refresh device list when system tray icon context menu is opened
+6. Check for updates done silently
 
 version 1.2.3.0
 ----------------
