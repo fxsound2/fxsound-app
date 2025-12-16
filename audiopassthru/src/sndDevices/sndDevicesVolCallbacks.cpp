@@ -130,13 +130,17 @@ HRESULT STDMETHODCALLTYPE CsndDevicesAudioEndpointVolumeCallbackCapture::OnNotif
 		hr = cast_handle->pEndptVolCapture->GetMute(&captureMute);
 
 		// Set mute on playback device to match capture device
-		hr = cast_handle->pEndptVolPlayback->SetMute(captureMute, &(cast_handle->guidThisApplication) );
-		if( (hr != S_OK) && (hr != S_FALSE) )	// Note, will return S_FALSE if the mute was already off, check for other errors.
+		if (cast_handle->pEndptVolPlayback != NULL)
 		{
-			cast_handle->function_status = SND_DEVICES_SET_MUTE_FAILED;
-			return(hr);
+			hr = cast_handle->pEndptVolPlayback->SetMute(captureMute, &(cast_handle->guidThisApplication));
+			if ((hr != S_OK) && (hr != S_FALSE))	// Note, will return S_FALSE if the mute was already off, check for other errors.
+			{
+				cast_handle->function_status = SND_DEVICES_SET_MUTE_FAILED;
+				return(hr);
+			}
 		}
 	}
+
 	return S_OK;
 }
 
