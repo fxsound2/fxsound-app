@@ -212,7 +212,7 @@ void FxController::config(const String& commandline)
 {
     auto arg_list = ArgumentList(File::getSpecialLocation(File::SpecialLocationType::invokedExecutableFile).getFileName(), commandline);
 
-    auto preset = arg_list.getValueForOption("--preset");
+    auto preset = arg_list.getValueForOption("--preset").unquoted();
     auto view = arg_list.getValueForOption("--view");
     auto output_device = arg_list.getValueForOption("--output").unquoted();
     auto language = arg_list.getValueForOption("--language");
