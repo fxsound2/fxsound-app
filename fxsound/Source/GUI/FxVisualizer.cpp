@@ -32,8 +32,8 @@ FxVisualizer::FxVisualizer()
     start();
 #else
     calcGradient();
-	reset();
-	setFramesPerSecond(10);
+    reset();
+    setFramesPerSecond(10);
 #endif
 
     setOpaque(false);
@@ -106,6 +106,9 @@ void FxVisualizer::reset()
 
 void FxVisualizer::update()
 {
+    if (!isEnabled())
+        return;
+
     FxController::getInstance().getSpectrumBandValues(band_values_);
 
     for (int i = 0; i < FxController::NUM_SPECTRUM_BANDS; i++)
@@ -154,13 +157,21 @@ void FxVisualizer::paint(Graphics& g)
 
 void FxVisualizer::enablementChanged()
 {
-    calcGradient();
+    if (isEnabled())
+    {
+        start();
+    }
+    else
+    {
+        pause();
+        reset();
+    }
 }
 
 void FxVisualizer::lookAndFeelChanged()
 {
     calcGradient();
-	repaint();
+    repaint();
 }
 
 void FxVisualizer::calcGradient()
