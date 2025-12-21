@@ -31,8 +31,6 @@ public:
 	enum Event { Notification=1, Subscription, PresetSelected, PresetListUpdated, PresetModified, OutputSelected, OutputListUpdated, OutputError, Other };
 	enum PresetType { AppPreset=1, UserPreset=2 };
 
-
-
 	struct Preset final
 	{
 		String name;

@@ -309,8 +309,11 @@ void FxSystemTrayView::showContextMenu()
 
     context_menu.addItem(open);
     context_menu.addItem(power);
-    context_menu.addSubMenu(TRANS("Preset Select"), preset_menu, FxModel::getModel().getPowerState());
-    addOutputDeviceMenu(&context_menu);
+    if (FxModel::getModel().getPowerState())
+    {
+        context_menu.addSubMenu(TRANS("Preset Select"), preset_menu);
+        addOutputDeviceMenu(&context_menu);
+    }
     context_menu.addItem(settings);
     context_menu.addSubMenu(TRANS("Theme"), theme_menu);
     context_menu.addItem(TRANS("Always On Top"), true, FxController::getInstance().getMainWindow()->isAlwaysOnTop(), alwaysOnTopClicked);

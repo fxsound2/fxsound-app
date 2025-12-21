@@ -51,6 +51,7 @@ public:
 	void registerCallback(AudioPassthruCallback *callback);
     bool isPlaybackDeviceAvailable();
 	void checkDeviceChanges();
+	void restoreDefaultPlaybackDevice();
 
 private:
 	int sndDeviceHandleToSoundDevices();

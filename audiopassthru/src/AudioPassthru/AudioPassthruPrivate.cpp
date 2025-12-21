@@ -71,10 +71,6 @@ AudioPassthruPrivate::~AudioPassthruPrivate()
 	return(NOT_OKAY);
 	*/
 
-	/* Change the default soundcard to not be the DFX virtual one but instead the proper real one */
-	if (sndDevicesRestoreDefaultDevice(hp_sndDevices_, &i_result_flag) != OKAY)
-		return;
-
 	/* Free the data allocated inside the sndDevices_hdl (NOTE: Does not free up structure) */
 	if (sndDevicesFree(hp_sndDevices_) != OKAY)
 		return;
@@ -552,6 +548,14 @@ bool AudioPassthruPrivate::isPlaybackDeviceAvailable()
 void AudioPassthruPrivate::checkDeviceChanges()
 {
 	sndCheckDeviceChanges(hp_sndDevices_);
+}
+
+void AudioPassthruPrivate::restoreDefaultPlaybackDevice()
+{
+	int i_resultFlag;
+	/* Change the default soundcard to not be the DFX virtual one but instead the proper real one */
+	if (sndDevicesRestoreDefaultDevice(hp_sndDevices_, &i_resultFlag) != OKAY)
+		return;
 }
 
 int AudioPassthruPrivate::setTargetedRealPlaybackDevice(const std::wstring sound_device_guid)

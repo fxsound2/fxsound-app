@@ -107,3 +107,8 @@ void AudioPassthru::checkDeviceChanges()
 {
     data_->checkDeviceChanges();
 }
+
+void AudioPassthru::restoreDefaultPlaybackDevice()
+{
+    data_->restoreDefaultPlaybackDevice();
+}

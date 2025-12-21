@@ -216,6 +216,8 @@ private:
 	void updateOutputs(std::vector<SoundDevice>& sound_devices);
 	void setSelectedOutput(String id, String name);
 
+	void powerOn(bool on);
+
 	void registerHotkeys();
 	void unregisterHotkeys();
 

@@ -72,6 +72,7 @@ public:
 	void registerCallback(AudioPassthruCallback *callback);
     bool isPlaybackDeviceAvailable();
 	void checkDeviceChanges();
+	void restoreDefaultPlaybackDevice();
 
 private:
 	AudioPassthruPrivate *data_;

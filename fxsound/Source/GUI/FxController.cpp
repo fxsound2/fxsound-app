@@ -339,11 +339,7 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 
 		audio_passthru_->setDspProcessingModule(&dfx_dsp_);
 		initOutputs(audio_passthru_->getSoundDevices());
-		if (dfx_enabled_)
-		{
-			startTimer(100);
-		}
-		else
+		if (!dfx_enabled_)
 		{
 			main_window_->removeFromDesktop();
 			FxDeviceErrorMessage error_message;
@@ -360,8 +356,7 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 			path.createDirectory();
 		}
 
-		FxModel::getModel().setPowerState(dfx_enabled_ && settings_.getBool("power"));
-		dfx_dsp_.powerOn(FxModel::getModel().getPowerState() && !FxModel::getModel().isMonoOutputSelected());
+		setPowerState(dfx_enabled_ && settings_.getBool("power"));
 
 		initPresets();
 		
@@ -563,6 +558,11 @@ Point<int> FxController::getSystemTrayWindowPosition(int width, int height)
 
 bool FxController::exit()
 {
+	if (FxModel::getModel().getPowerState())
+	{
+		audio_passthru_->restoreDefaultPlaybackDevice();
+	}
+
 	if (FxModel::getModel().isPresetModified())
 	{
 		FxPresetSaveDialog preset_save_dialog;
@@ -575,9 +575,10 @@ bool FxController::exit()
 }
 
 void FxController::setPowerState(bool power_state)
-{	
+{
 	FxModel::getModel().setPowerState(power_state);
-	dfx_dsp_.powerOn(power_state && !FxModel::getModel().isMonoOutputSelected());
+	powerOn(power_state && !FxModel::getModel().isMonoOutputSelected());
+	audio_passthru_->restoreDefaultPlaybackDevice();
 	settings_.setBool("power", power_state);
 
 	system_tray_view_->setStatus(power_state, audio_process_on_);
@@ -687,7 +688,7 @@ void FxController::setOutput(int output, bool notify)
     if (!output_found)
     {
         audio_passthru_->mute(true);
-        dfx_dsp_.powerOn(false);
+        powerOn(false);
 
         FxModel::getModel().pushMessage(TRANS("Output Disconnected"));
     }
@@ -695,7 +696,7 @@ void FxController::setOutput(int output, bool notify)
     {
         if (FxModel::getModel().getPowerState())
         {
-			dfx_dsp_.powerOn(true);
+			powerOn(true);
 			audio_passthru_->mute(false);
         }
 
@@ -1150,7 +1151,7 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 				{
 					// In the rare case that there is no output device available, turn off processing
 					audio_passthru_->mute(true);
-					dfx_dsp_.powerOn(false);
+					powerOn(false);
 
 					FxModel::getModel().pushMessage(TRANS("Output Disconnected"));
 				}
@@ -1164,7 +1165,7 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 
         FxModel::getModel().setSelectedOutput(index, output_devices_[index]);
 
-		setOutput(index);       
+		setOutput(index);
     }
 }
 
@@ -1182,6 +1183,28 @@ void FxController::setSelectedOutput(String id, String name)
 	{
 		settings_.setString("output_device_id", id);
 		settings_.setString("output_device_name", name);
+	}
+}
+
+void FxController::powerOn(bool on)
+{
+	if (on)
+	{
+		dfx_dsp_.powerOn(true);
+
+		if (!isTimerRunning())
+		{
+			startTimer(100);
+		}
+	}
+	else
+	{
+		dfx_dsp_.powerOn(false);
+
+		if (isTimerRunning())
+		{
+			stopTimer();
+		}
 	}
 }
 
@@ -1358,7 +1381,7 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 					controller->setPreset(preset_index);
 				}
 			}
-			if (w_param == CMD_NEXT_OUTPUT)
+			if (w_param == CMD_NEXT_OUTPUT && FxModel::getModel().getPowerState())
 			{
 				auto output_index = FxModel::getModel().getSelectedOutput();
 				int count = 0;
@@ -1391,18 +1414,10 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 				if ((DWORD)l_param == controller->session_id_)
 				{
 					controller->setPowerState(FxModel::getModel().getPowerState());
-					if (!controller->isTimerRunning())
-					{
-						controller->startTimer(100);
-					}
 				}
 				else
 				{
-					controller->dfx_dsp_.powerOn(false);
-					if (controller->isTimerRunning())
-					{
-						controller->stopTimer();
-					}
+					controller->powerOn(false);
 				}				
 			}
 		}
