@@ -1,3 +1,10 @@
+version 1.2.6.0
+----------------
+1. System audio output device can be changed when FxSound is off
+2. Moved menu button to the left on the toolbar
+3. Fixed the bug in setting preset through command line
+4. Added a check to avoid a crash
+
 version 1.2.5.0
 ----------------
 1. x86 and x64 builds are done with JUCE 6.1.6 to avoid any GPU usage
@@ -33,7 +40,7 @@ version 1.2.1.0
 1. Fixed hotkey editor rendering
 2. Translation corrections
 
-version 1.1.36.0
+version 1.1.36.0d
 ----------------
 1. Fixed the GPU utilization by changing the visualizer rendering
 2. Changes to donate button in toolbar

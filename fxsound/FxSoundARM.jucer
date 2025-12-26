@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.5.0"
+<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.6.0"
               displaySplashScreen="1" jucerFormatVersion="1" companyName="FxSound LLC"
               companyWebsite="https://www.fxsound.com" companyCopyright="2025 FxSound&#8482;"
               defines="UNICODE" postExportShellCommandWin="type %%1%%\Project\status_icons.rc &gt;&gt; %%1%%\Project\resources.rc"
@@ -239,15 +239,15 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2022 targetFolder="Project" extraDefs="JUCE_MODAL_LOOPS_PERMITTED"
+    <VS2022 targetFolder="ProjectARM" extraDefs="JUCE_MODAL_LOOPS_PERMITTED"
             extraCompilerFlags="/bigobj /Qpar" externalLibraries="crypt32.lib;Wtsapi32.lib"
             bigIcon="EFMcqw" windowsTargetPlatformVersion="Latest">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
-                       useRuntimeLibDLL="0" winArchitecture="ARM64,Win32,x64"/>
+                       useRuntimeLibDLL="0" winArchitecture="ARM64"/>
         <CONFIGURATION isDebug="0" name="Release" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
                        useRuntimeLibDLL="0" alwaysGenerateDebugSymbols="1" postbuildCommand="copy $(TargetPath) ..\..\bin\$(PlatformTarget)\ /y&#10;copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y"
-                       optimisation="4" debugInformationFormat="ProgramDatabase" winArchitecture="ARM64,Win32,x64"/>
+                       optimisation="4" debugInformationFormat="ProgramDatabase" winArchitecture="ARM64"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="C:\JUCE\modules"/>
