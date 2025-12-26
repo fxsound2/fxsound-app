@@ -196,7 +196,7 @@ FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"men
 	power_button_.addListener(this);
 
 	menu_button_.setMouseCursor(MouseCursor::PointingHandCursor);
-	menu_button_.setSize(BUTTON_WIDTH+2, BUTTON_WIDTH+6);
+	menu_button_.setSize(BUTTON_WIDTH, BUTTON_WIDTH);
 	menu_button_.setHelpText(TRANS("Menu Button"));;
 	menu_button_.setWantsKeyboardFocus(true);
 	menu_button_.addListener(this);
@@ -227,9 +227,9 @@ FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"men
 
 	setLookAndFeel();
 
+	addToolbarButton(&menu_button_, false);
 	addToolbarButton(&minimize_button_);
 	addToolbarButton(&resize_button_);
-	addToolbarButton(&menu_button_);
 	addToolbarButton(&power_button_);
 	addToolbarButton(&donate_button_);
 }

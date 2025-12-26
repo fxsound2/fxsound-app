@@ -35,7 +35,7 @@ public:
 
 	void startLogoAnimation();
 	void stopLogoAnimation();
-	void addToolbarButton(Button* toolbarButton);
+	void addToolbarButton(Button* toolbarButton, bool right_aligned = true);
 
     void enableShadow(bool enable);
     bool isShadowEnabled();
@@ -65,11 +65,11 @@ protected:
 
 		void startLogoAnimation();
 		void stopLogoAnimation();
-		void addToolbarButton(Button* toolbarButton);
+		void addToolbarButton(Button* toolbarButton, bool right_aligned=true);
 
 	private:
-		static constexpr int ICON_WIDTH = 86;
-		static constexpr int ICON_HEIGHT = 13;
+		static constexpr int ICON_WIDTH = 106;
+		static constexpr int ICON_HEIGHT = 15;
 
 		void paint(Graphics& g) override;
 		void resized() override;
@@ -87,7 +87,7 @@ protected:
 		std::unique_ptr<Drawable> icon_;
 		std::unique_ptr<Drawable> animation_icon_;
 		Label title_;
-		std::vector<Button*> toolbar_buttons_;
+		std::vector<std::pair<Button*, bool>> toolbar_buttons_;
 		CloseButton close_button_;
 		ComponentDragger dragger_;
 		bool dragging_;

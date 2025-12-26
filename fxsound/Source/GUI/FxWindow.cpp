@@ -92,9 +92,9 @@ void FxWindow::stopLogoAnimation()
 	title_bar_.stopLogoAnimation();
 }
 
-void FxWindow::addToolbarButton(Button* toolbarButton)
+void FxWindow::addToolbarButton(Button* toolbarButton, bool right_aligned)
 {
-	title_bar_.addToolbarButton(toolbarButton);
+	title_bar_.addToolbarButton(toolbarButton, right_aligned);
 }
 
 void FxWindow::enableShadow(bool enable)
@@ -207,7 +207,7 @@ void FxWindow::TitleBar::stopLogoAnimation()
 	}
 }
 
-void FxWindow::TitleBar::addToolbarButton(Button* toolbarButton)
+void FxWindow::TitleBar::addToolbarButton(Button* toolbarButton, bool right_aligned)
 {
 	if (toolbarButton != nullptr)
 	{
@@ -228,7 +228,7 @@ void FxWindow::TitleBar::addToolbarButton(Button* toolbarButton)
 			setWantsKeyboardFocus(true);
 		}
 
-		toolbar_buttons_.push_back(toolbarButton);
+		toolbar_buttons_.push_back({ toolbarButton, right_aligned });
 		addAndMakeVisible(toolbarButton);
 	}
 }
@@ -243,8 +243,10 @@ void FxWindow::TitleBar::paint(Graphics& g)
     title_.setFont(font);
     title_.setSize(font.getStringWidth(TRANS(name_)) * 2, (int)font.getHeight());
 
-	for (auto* button : toolbar_buttons_)
+	for (auto& item : toolbar_buttons_)
 	{
+		Button* button = item.first;
+
 		if (TextButton* text_button = dynamic_cast<TextButton*>(button))
 		{
 			auto& text = text_button->getName();
@@ -258,47 +260,70 @@ void FxWindow::TitleBar::paint(Graphics& g)
 
 void FxWindow::TitleBar::resized()
 {
-	RectanglePlacement placement = { RectanglePlacement::xRight | RectanglePlacement::yMid | RectanglePlacement::doNotResize };
-	close_button_.setBounds(placement.appliedTo(close_button_.getLocalBounds(), getLocalBounds()));
+	RectanglePlacement right_placement = { RectanglePlacement::xRight | RectanglePlacement::yMid | RectanglePlacement::doNotResize };
+	close_button_.setBounds(right_placement.appliedTo(close_button_.getLocalBounds(), getLocalBounds()));
+	RectanglePlacement left_placement = { RectanglePlacement::xLeft | RectanglePlacement::yMid | RectanglePlacement::doNotResize };
 	
 	if (!title_.isVisible())
 	{
-		auto bounds = juce::Rectangle<int>(0, close_button_.getY(), ICON_WIDTH, ICON_HEIGHT);
-		icon_->setBounds(bounds);
+		auto bounds = juce::Rectangle<int>(0, 0, ICON_WIDTH, ICON_HEIGHT);
+		RectanglePlacement icon_placement = { RectanglePlacement::xLeft | RectanglePlacement::yTop | RectanglePlacement::doNotResize };
+
+		icon_->setBounds(icon_placement.appliedTo(bounds, getLocalBounds()));
 		if (animation_icon_.get() != nullptr)
 		{
-			animation_icon_->setBounds(bounds);
+			animation_icon_->setBounds(icon_placement.appliedTo(bounds, getLocalBounds()));
 		}
 	}
 	else
 	{
 		auto width = (ICON_HEIGHT - 1)*icon_->getWidth() / icon_->getHeight();
-		auto bounds = juce::Rectangle<int>(0, close_button_.getY(), width, ICON_HEIGHT - 1);
+		auto bounds = juce::Rectangle<int>(0, 0, width, ICON_HEIGHT - 1);
 		icon_->setBounds(bounds);
-
-		placement = { RectanglePlacement::xLeft | RectanglePlacement::yMid | RectanglePlacement::doNotResize };
-		title_.setBounds(placement.appliedTo(title_.getLocalBounds(), getLocalBounds()).withX(width + 2));
+		title_.setBounds(left_placement.appliedTo(title_.getLocalBounds(), getLocalBounds()).withX(width + 2));
 	}
 
 	if (!toolbar_buttons_.empty())
 	{
-		int x = close_button_.getWidth() + 20;
-		for (auto button : toolbar_buttons_)
+		int x_right = close_button_.getWidth() + 20;
+		int x_left = icon_->getWidth() + 15;
+
+		for (auto& item : toolbar_buttons_)
 		{
-			auto destBounds = getLocalBounds().reduced(x, 0);
-			button->setBounds(placement.appliedTo(button->getLocalBounds(), destBounds));
-			x += button->getWidth() + 20;
+			auto* button = item.first;
+			auto right_aligned = item.second;
+
+			if (right_aligned)
+			{
+				auto destBounds = getLocalBounds().reduced(x_right, 0);
+				button->setBounds(right_placement.appliedTo(button->getLocalBounds(), destBounds));
+				x_right += button->getWidth() + 20;
+			}
+			else
+			{
+				auto destBounds = getLocalBounds().reduced(x_left, 0);
+				button->setBounds(left_placement.appliedTo(button->getLocalBounds(), destBounds));
+				x_left += button->getWidth() + 20;
+			}
 		}
 	}
 }
 
 void FxWindow::TitleBar::lookAndFeelChanged()
 {
-	updateLogo();
-
+	auto icon_alpha = icon_->getAlpha();
+	float animation_icon_alpha = 0.0f;
 	if (animation_icon_.get() != nullptr)
 	{
-		animation_icon_->setAlpha(animation_icon_->getAlpha());
+		animation_icon_alpha = animation_icon_->getAlpha();
+	}
+
+	updateLogo();
+
+	icon_->setAlpha(icon_alpha);
+	if (animation_icon_.get() != nullptr)
+	{
+		animation_icon_->setAlpha(animation_icon_alpha);
 	}
 }
 
