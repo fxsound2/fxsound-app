@@ -32,6 +32,13 @@ public:
     MainComponent(const String& name);
     ~MainComponent();
 
+    enum class ColorScheme {
+        Dark,
+        Midnight,
+        Grey,
+        Light
+    };
+
     //==============================================================================
 	void paint(Graphics& g) override;
 	void resized() override;
@@ -64,7 +71,7 @@ private:
 	double font_size_;
 	uint32 font_color_;
 
-	int colour_scheme_;
+	ColorScheme colour_scheme_;
 
 	enum FxViewType {MinView, ExpandedView} fx_view_;
 	bool resize_view_;
