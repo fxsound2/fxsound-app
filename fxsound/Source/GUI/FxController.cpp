@@ -971,6 +971,12 @@ void FxController::initOutputs(std::vector<SoundDevice>& sound_devices)
     selectOutput();
 }
 
+void FxController::refreshOutputs()
+{
+    std::vector<SoundDevice> sound_devices = audio_passthru_->getSoundDevices();
+    initOutputs(sound_devices);
+}
+
 void FxController::addPreferredOutput(std::vector<SoundDevice>& sound_devices)
 {
 	auto [pref_device_id, pref_device_name] = getPreferredOutput();

@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 /*
 */
-class FxProView  : public FxView
+class FxProView  : public FxView, public Button::Listener
 {
 public:
     FxProView();
@@ -42,10 +42,10 @@ public:
 	void paint(Graphics& g) override;
 
 private:
-	static constexpr int WIDTH = 960;
+	static constexpr int WIDTH = 1020;
 	static constexpr int HEIGHT = 474;
 	static constexpr int PRESET_LIST_X = 40;
-	static constexpr int OUTPUT_LIST_X = 500;
+	static constexpr int OUTPUT_LIST_X = 480;
 	static constexpr int LIST_Y = 32;
 	static constexpr int EFFECTS_X = 40;
 	static constexpr int EFFECTS_Y = 88;
@@ -58,10 +58,13 @@ private:
 	void mouseEnter(const MouseEvent& mouse_event) override;
 	void mouseExit(const MouseEvent& mouse_event) override;
 
+	void buttonClicked(Button* button) override;
+
 	FxEffects effects_;
 	FxEqualizer equalizer_;
     TooltipWindow tool_tip_;
     FxVisualizer visualizer_;
+    TextButton refresh_button_;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FxProView)
 };
