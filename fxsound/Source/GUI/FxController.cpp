@@ -395,6 +395,12 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		{
 			FxTheme::setThemeMode(static_cast<FxThemeMode>(theme_mode));
 			main_window_->sendLookAndFeelChange();
+
+			auto* theme = dynamic_cast<FxTheme*>(&LookAndFeel::getDefaultLookAndFeel());
+			if (theme != nullptr)
+			{
+				theme->loadFont(language_);
+			}
 		}
 
         survey_tip_ = !settings_.getBool("survey_displayed");
