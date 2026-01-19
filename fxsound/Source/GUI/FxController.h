@@ -116,6 +116,9 @@ public:
 	bool isNotificationsHidden();
 	void setNotificationsHidden(bool status);
 
+	bool isPerDevicePresetEnabled() const;
+	void setPerDevicePresetEnabled(bool enabled);
+
     String getLanguage() const;
     void setLanguage(String language_code);
     String getLanguageName(String language_code) const;
@@ -215,6 +218,7 @@ private:
 	bool hide_notifications_;
 	bool volume_normalization_enabled_;
 	float volume_normalization_rms_;
+	bool per_device_preset_enabled_;
 
 	unsigned long audio_process_time_;
 	int audio_process_on_counter_;

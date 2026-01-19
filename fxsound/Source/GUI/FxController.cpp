@@ -196,6 +196,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 
 	volume_normalization_enabled_ = settings_.getBool("volume_normalization_enabled");
 	volume_normalization_rms_ = checkRMSValue((float)settings_.getDouble("volume_normalization_rms"));
+	per_device_preset_enabled_ = settings_.getBool("per_device_preset_enabled");
 	
 	SetWindowLongPtr(message_window_.getHandle(), GWLP_USERDATA, (LONG_PTR)this);
 
@@ -346,6 +347,14 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
         {
             preset_name = "General";
         }
+		if (per_device_preset_enabled_ && output_device_id_.isNotEmpty())
+		{
+			auto device_preset = settings_.getString("device_preset_" + output_device_id_);
+			if (device_preset.isNotEmpty())
+			{
+				preset_name = device_preset;
+			}
+		}
 		auto selected_preset = FxModel::getModel().selectPreset(preset_name, false);
 		setPreset(selected_preset);
 
@@ -594,6 +603,11 @@ bool FxController::setPreset(int selected_preset)
             dfx_dsp_.setEqBandFrequency(b, dfx_dsp_.getEqBandFrequency(b));
             dfx_dsp_.setEqBandBoostCut(b, dfx_dsp_.getEqBandBoostCut(b));
         }
+
+        if (per_device_preset_enabled_ && output_device_id_.isNotEmpty())
+        {
+            settings_.setString("device_preset_" + output_device_id_, preset.name);
+        }
 	}
 
 	model.pushMessage(TRANS("Preset: ") + model.getPreset(selected_preset).name);
@@ -635,10 +649,24 @@ void FxController::setOutput(int output, bool notify)
 
                 if (output_device_id_ != sound_device.pwszID.c_str())
                 {
+                    auto prev_device_id = output_device_id_;
                     output_device_id_ = sound_device.pwszID.c_str();
                     output_device_name_ = sound_device.deviceFriendlyName.c_str();
 
 					setSelectedOutput(output_device_id_, output_device_name_);
+
+                    if (per_device_preset_enabled_ && prev_device_id.isNotEmpty())
+                    {
+                        auto saved_preset = settings_.getString("device_preset_" + output_device_id_);
+                        if (saved_preset.isNotEmpty())
+                        {
+                            auto preset_index = FxModel::getModel().selectPreset(saved_preset, false);
+                            if (preset_index >= 0)
+                            {
+                                setPreset(preset_index);
+                            }
+                        }
+                    }
                 }
 
                 if (!sound_device.isTargetedRealPlaybackDevice)
@@ -1003,6 +1031,7 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
     StringArray output_names;
     StringArray new_device_ids;
     int current_index = -1;
+    auto prev_device_id = output_device_id_;
 
     // If the playback devices are enumerated due to a change in the list,
     // find the newly connected device ids
@@ -1121,7 +1150,20 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 
         FxModel::getModel().setSelectedOutput(index, output_devices_[index]);
 
-		setOutput(index);       
+		setOutput(index);
+
+		if (per_device_preset_enabled_ && prev_device_id.isNotEmpty() && output_device_id_ != prev_device_id)
+		{
+			auto saved_preset = settings_.getString("device_preset_" + output_device_id_);
+			if (saved_preset.isNotEmpty())
+			{
+				auto preset_index = FxModel::getModel().selectPreset(saved_preset, false);
+				if (preset_index >= 0)
+				{
+					setPreset(preset_index);
+				}
+			}
+		}
     }
 }
 
@@ -1601,6 +1643,17 @@ void FxController::setNotificationsHidden(bool status)
 {
 	hide_notifications_ = status;
 	settings_.setBool("hide_notifications", status);
+}
+
+bool FxController::isPerDevicePresetEnabled() const
+{
+	return per_device_preset_enabled_;
+}
+
+void FxController::setPerDevicePresetEnabled(bool enabled)
+{
+	per_device_preset_enabled_ = enabled;
+	settings_.setBool("per_device_preset_enabled", enabled);
 }
 
 String FxController::getLanguage() const
