@@ -1683,6 +1683,9 @@
     <ClCompile Include="..\JuceLibraryCode\include_juce_opengl.cpp">
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Utils\Settings\DeviceConfig.cpp">
+      <Filter>FxSound\Source\Utils\Settings</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\GUI\FxAudioSlider.h">
@@ -3202,6 +3205,9 @@
     </ClInclude>
     <ClInclude Include="..\JuceLibraryCode\JuceHeader.h">
       <Filter>JUCE Library Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Utils\Settings\DeviceConfig.h">
+      <Filter>FxSound\Source\Utils\Settings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

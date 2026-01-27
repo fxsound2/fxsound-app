@@ -116,14 +116,14 @@ void AudioPassthruPrivate::setDspProcessingModule(DfxDsp* p_dfx_dsp)
 }
 
 
-std::vector<SoundDevice> AudioPassthruPrivate::getSoundDevices()
+std::vector<SoundDevice> AudioPassthruPrivate::getSoundDevices(bool active_devices)
 {
 	// Convert hp_sndDevices from C handle to C++ vector of SoundDevice.
-	sndDeviceHandleToSoundDevices();
+	sndDeviceHandleToSoundDevices(active_devices);
 	return sound_devices_;
 }
 
-int AudioPassthruPrivate::sndDeviceHandleToSoundDevices()
+int AudioPassthruPrivate::sndDeviceHandleToSoundDevices(bool active_devices)
 {
 	int i_resultFlag;
 	wchar_t wcp_user_seleted_playback_device_guid[PT_MAX_GENERIC_STRLEN];
@@ -155,11 +155,24 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices()
 			continue;
 		}
 
+		if (active_devices && cast_handle->deviceState[index] != DEVICE_STATE_ACTIVE)
+		{
+			continue;
+		}
+
 		SoundDevice sound_device;
 		sound_device.pwszID = std::wstring(cast_handle->pwszID[index]);
 		sound_device.deviceFriendlyName = std::wstring(cast_handle->deviceFriendlyName[index]);
 		sound_device.deviceDescription = std::wstring(cast_handle->deviceDescription[index] != NULL ? cast_handle->deviceDescription[index] : L"");
 		sound_device.deviceNumChannel = cast_handle->deviceNumChannel[index];
+		if (cast_handle->deviceState[index] == DEVICE_STATE_ACTIVE)
+		{
+			sound_device.isActive = true;
+		}
+		else
+		{
+			sound_device.isActive = false;
+        }
 
 		// Skip mono devices if SND_DEVICES_MONO_BUG_SKIP_MONO_DEVICES is IS_TRUE
 		if (SND_DEVICES_MONO_BUG_SKIP_MONO_DEVICES && sound_device.deviceNumChannel == 1)

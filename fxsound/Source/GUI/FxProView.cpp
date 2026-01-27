@@ -109,7 +109,7 @@ void FxProView::paint(Graphics& g)
 	g.setFillType(FillType(Colour(FXCOLOR(PanelBackground)).withAlpha(0.2f)));
 	g.fillRoundedRectangle(20, 16, 1000, 330+visualizer_offset, 8);
 
-    auto enable_controls = FxModel::getModel().getPowerState() && !FxModel::getModel().isMonoOutputSelected();
+    auto enable_controls = FxModel::getModel().getPowerState();
 
     preset_list_.setEnabled(enable_controls);
 	endpoint_list_.setEnabled(enable_controls);

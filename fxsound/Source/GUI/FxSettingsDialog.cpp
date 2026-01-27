@@ -226,19 +226,7 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 			{
 				auto pref_device_id = endpoints[id - 1].pwszID;
 				auto pref_device_name = endpoints[id - 1].deviceFriendlyName;
-				FxController::getInstance().setPreferredOutput(pref_device_id.c_str(), pref_device_name.c_str());
 				FxController::getInstance().setOutput(id - 1);
-			}
-			else
-			{
-				if (id == preferred_endpoint_.getNumItems() - 1)
-				{
-					FxController::getInstance().setPreferredOutput("", "Auto");
-				}
-				else
-				{
-					FxController::getInstance().setPreferredOutput("", "None");
-				}
 			}
 		};
 
@@ -549,10 +537,6 @@ void FxSettingsDialog::AudioSettingsPane::updateEndpointList()
 		{
 			preferred_endpoint_.setItemEnabled(i, false);
 		}
-		if (endpoint.pwszID == controller.getPreferredOutputId().toWideCharPointer())
-		{
-			pref_device_index = i;
-		}
 		i++;
 	}
 	preferred_endpoint_.addItem(TRANS("Newly connected output device"), i);
@@ -560,14 +544,7 @@ void FxSettingsDialog::AudioSettingsPane::updateEndpointList()
 	preferred_endpoint_.addItem(TRANS("None"), i);
 	auto none_index = i;
 
-	if (controller.getPreferredOutputName().equalsIgnoreCase(L"Auto"))
-	{
-		pref_device_index = auto_index;
-	}
-	else if (controller.getPreferredOutputName().equalsIgnoreCase(L"None"))
-	{
-		pref_device_index = none_index;
-	}
+
 
 	preferred_endpoint_.setSelectedId(pref_device_index, NotificationType::dontSendNotification);
 }

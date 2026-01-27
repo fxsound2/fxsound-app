@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxTheme.h"
 #include "FxEffects.h"
 #include "../Source/Utils/Settings/Settings.h"
+#include "../Source/Utils/Settings/DeviceConfig.h"
 #include "AudioPassthru.h"
 #include "DfxDsp.h"
 #include <wtsapi32.h>
@@ -78,6 +79,7 @@ public:
 
 	void setPowerState(bool power_state);
 	bool setPreset(int selected_preset);
+	void setOutput(const String output_device_id, bool notify=true);
 	void setOutput(int output, bool notify=true);
     
     bool isPlaybackDeviceAvailable();
@@ -118,10 +120,7 @@ public:
 	bool setHotkey(const String& command, int new_mod, int vk);
 	bool isValidHotkey(int mod, int new_vk);
 
-	std::tuple<String, String> getPreferredOutput();
-	String getPreferredOutputId();
-	String getPreferredOutputName();
-	void setPreferredOutput(String id, String name);
+	String getPreferredOutput();
 
 	FxThemeMode getThemeMode();
 	void setThemeMode(FxThemeMode mode);
@@ -211,10 +210,7 @@ private:
 	void onSoundDeviceChange(std::vector<SoundDevice> sound_devices) override;
 	
     void initOutputs(std::vector<SoundDevice>& sound_devices);
-	void addPreferredOutput(std::vector<SoundDevice>& sound_devices);
-    void selectOutput();
 	void updateOutputs(std::vector<SoundDevice>& sound_devices);
-	void setSelectedOutput(String id, String name);
 
 	void powerOn(bool on);
 
@@ -240,9 +236,7 @@ private:
 	bool output_changed_;
     bool playback_device_available_;
 	String output_device_id_;
-    String output_device_name_;
-    StringArray output_ids_;
-	std::vector<SoundDevice> output_devices_;
+	std::vector<SoundDevice> active_output_devices_;
 	bool always_on_top_;
     bool hide_help_tooltips_;
 	bool hide_notifications_;

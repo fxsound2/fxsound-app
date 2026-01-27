@@ -89,6 +89,16 @@ bool FxSound::Settings::getBool(StringRef key, bool default_value) noexcept
 	return user_settings_->getBoolValue(key, default_value);
 }
 
+juce::var FxSound::Settings::getJson(juce::StringRef key) noexcept
+{
+	if (user_settings_ == nullptr)
+		return {};
+
+	auto json = user_settings_->getValue(key);
+
+	return json.isNotEmpty() ? juce::JSON::parse(json) : juce::var{};
+}
+
 void FxSound::Settings::setString(StringRef key, String value, bool default) noexcept
 {
     if (default)
@@ -135,4 +145,9 @@ void FxSound::Settings::setBool(StringRef key, bool value, bool default) noexcep
     {
         user_settings_->setValue(key, value);
     }
+}
+
+void FxSound::Settings::setJson(juce::StringRef key, const juce::var& json) noexcept
+{
+	user_settings_->setValue(key, juce::JSON::toString(json));
 }

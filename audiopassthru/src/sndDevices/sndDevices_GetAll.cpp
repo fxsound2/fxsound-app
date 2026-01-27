@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //extern CsndDevicesMMNotificationClient g_DeviceEvents;	// This is for registering the device callbacks.
 
 // Gets an array of objects for all audio devices and stores indexes to the default device and DFX device if installed.
-int PT_DECLSPEC sndDevices_GetAll( PT_HANDLE *hp_sndDevices, int *ip_num_devices )
+int PT_DECLSPEC sndDevices_GetAll( PT_HANDLE *hp_sndDevices, int *ip_num_devices)
 {
 	HRESULT hr;
 	IMMDevicePtr pDefaultDevice = NULL;
@@ -88,7 +88,8 @@ int PT_DECLSPEC sndDevices_GetAll( PT_HANDLE *hp_sndDevices, int *ip_num_devices
 	if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_INSTANCE_CREATE_FAILED)
 
 	// Enumerate all playback audio devices, "eRender" means look only for playback devices.
-	hr = pEnumerator->EnumAudioEndpoints(eRender, DEVICE_STATE_ACTIVE, &pCollectionAllDevices);   
+	hr = pEnumerator->EnumAudioEndpoints(eRender, DEVICE_STATE_ACTIVE | DEVICE_STATE_UNPLUGGED, &pCollectionAllDevices);
+
 	if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_ENUMERATE_FAILED)
 
 	// Now get total number of playback devices
@@ -209,6 +210,15 @@ int PT_DECLSPEC sndDevices_GetAll( PT_HANDLE *hp_sndDevices, int *ip_num_devices
             }
             if (i_found_dfx_string)
                 cast_handle->dfxDeviceNum = i;
+
+			hr = cast_handle->pAllDevices[i]->GetState(&cast_handle->deviceState[i]);
+			if (FAILED(hr))
+			{
+				CoTaskMemFree(pwszIDdefault);
+				PropVariantClear(&FriendlyName);
+				PropVariantClear(&DeviceDesc);
+				return(NOT_OKAY);
+			}
 
             // If its not one of the DFX devices, store it as a real playback device
             if ((cast_handle->dfxDeviceNum != i))

@@ -92,14 +92,29 @@ public:
 		return output_devices_;
 	}
 
-	int getSelectedOutput()
+	SoundDevice getSelectedOutput()
 	{
-		return selected_output_;
+		return selected_output_device_;
 	}
 
-	void setSelectedOutput(int selected_output, const SoundDevice& sound_device, bool notify=true)
+	int getSelectedOutputIndex()
 	{
-		selected_output_ = selected_output;
+		int selected_output_id = 0;
+		for (auto& output_device : output_devices_)
+		{
+			if (output_device.pwszID == selected_output_device_.pwszID)
+			{
+				return selected_output_id;
+			}
+
+			selected_output_id++;
+		}
+
+		return -1;
+	}
+
+	void setSelectedOutput(const SoundDevice& sound_device, bool notify=true)
+	{
 		selected_output_device_ = sound_device;
 		if (notify)
 		{
@@ -107,20 +122,10 @@ public:
 		}
 	}
 
-	bool isMonoOutputSelected()
-	{
-		return selected_output_device_.deviceNumChannel < 2;
-	}
-
     void notifyOutputError()
     {
         notifyListeners(Event::OutputError);
     }
-
-
-
-
-
 
 	bool getHotkeySupport()
 	{
@@ -189,7 +194,6 @@ private:
 	bool preset_modified_;
 	StringArray output_names_;
 	int selected_preset_;
-	int selected_output_;
     bool output_disconnected_;
 
 	bool hotkey_support_;

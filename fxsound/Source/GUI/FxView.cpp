@@ -109,7 +109,7 @@ void FxView::modelChanged(FxModel::Event model_event)
 
 	if (model_event == FxModel::Event::OutputSelected)
 	{
-		endpoint_list_.setSelectedId(FxModel::getModel().getSelectedOutput() + 1, NotificationType::dontSendNotification);
+		endpoint_list_.setSelectedId(FxModel::getModel().getSelectedOutputIndex() + 1, NotificationType::dontSendNotification);
 
         if (endpoint_list_.getError())
         {
@@ -125,12 +125,12 @@ void FxView::modelChanged(FxModel::Event model_event)
     {
         if (!FxController::getInstance().isPlaybackDeviceAvailable())
         {
-            endpoint_list_.setItemEnabled(FxModel::getModel().getSelectedOutput() + 1, false);
+            endpoint_list_.setItemEnabled(FxModel::getModel().getSelectedOutputIndex() + 1, false);
             endpoint_list_.setError(true);
         }
         else
         {
-            endpoint_list_.setItemEnabled(FxModel::getModel().getSelectedOutput() + 1, true);
+            endpoint_list_.setItemEnabled(FxModel::getModel().getSelectedOutputIndex() + 1, true);
             endpoint_list_.setError(false);
             error_notification_.setVisible(false);
         }

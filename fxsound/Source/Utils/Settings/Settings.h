@@ -41,11 +41,13 @@ namespace FxSound
 		int    getInt(StringRef key, int default_value=0) noexcept;
 		double getDouble(StringRef key) noexcept;
 		bool   getBool(StringRef key, bool default_value=false) noexcept;
+		juce::var getJson(juce::StringRef key) noexcept;
 
 		void setString(StringRef key, String value, bool default=false) noexcept;
 		void setInt(StringRef key, int value, bool default = false) noexcept;
 		void setDouble(StringRef key, double value, bool default = false) noexcept;
 		void setBool(StringRef key, bool value, bool default = false) noexcept;
+		void setJson(juce::StringRef key, const juce::var& json) noexcept;
 
 	private:
 		ApplicationProperties app_default_properties_;

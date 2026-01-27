@@ -49,9 +49,9 @@ void AudioPassthru::setDspProcessingModule(DfxDsp* p_dfx_dsp)
 }
 
 
-std::vector<SoundDevice> AudioPassthru::getSoundDevices()
+std::vector<SoundDevice> AudioPassthru::getSoundDevices(bool active_devices)
 {
-	return data_->getSoundDevices();
+	return data_->getSoundDevices(active_devices);
 }
 
 void AudioPassthru::setAsPlaybackDevice(const SoundDevice sound_device)

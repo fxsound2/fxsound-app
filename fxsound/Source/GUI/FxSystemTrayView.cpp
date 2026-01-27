@@ -77,7 +77,7 @@ void FxSystemTrayView::setStatus(bool power, bool processing)
 	wcscat_s(tool_tip, 1024, L"\n\n");
     wcscat_s(tool_tip, 1024, String(TRANS("Output: ")).toWideCharPointer());
     auto& model = FxModel::getModel();
-	String output_device_name = model.getOutputNames()[model.getSelectedOutput()];
+	String output_device_name = model.getSelectedOutput().deviceFriendlyName.c_str();
 	wcscat_s(tool_tip, 1024, output_device_name.toWideCharPointer());
 
     NOTIFYICONDATA nid = { sizeof(nid) };
@@ -356,7 +356,7 @@ void FxSystemTrayView::addOutputDeviceMenu(PopupMenu* context_menu)
             menu_item.setEnabled(false);
         }
 
-        if (id - OUTPUT_MENU_ID_START == FxModel::getModel().getSelectedOutput())
+        if (id - OUTPUT_MENU_ID_START == FxModel::getModel().getSelectedOutputIndex())
         {
             menu_item.setTicked(true);
         }

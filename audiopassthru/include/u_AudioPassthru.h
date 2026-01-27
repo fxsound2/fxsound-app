@@ -40,7 +40,7 @@ public:
 	~AudioPassthruPrivate();
 	int init();
 	void mute(bool mute);
-	std::vector<SoundDevice> getSoundDevices();
+	std::vector<SoundDevice> getSoundDevices(bool active_devices = true);
 	int killProcessingThread(int *ip_timed_out);
 	int setBufferLength(int i_buffer_length_msecs);
 	int processTimer();
@@ -54,7 +54,7 @@ public:
 	void restoreDefaultPlaybackDevice();
 
 private:
-	int sndDeviceHandleToSoundDevices();
+	int sndDeviceHandleToSoundDevices(bool active_devices = true);
 
 	PT_HANDLE *hp_sndDevices_;
 	static sndDevicesHdlType s_sndDevices_;

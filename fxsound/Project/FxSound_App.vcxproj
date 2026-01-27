@@ -300,6 +300,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y</Command>
     <ClCompile Include="..\Source\GUI\FxWindow.cpp" />
     <ClCompile Include="..\Source\GUI\FxController.cpp" />
     <ClCompile Include="..\Source\GUI\FxModel.cpp" />
+    <ClCompile Include="..\Source\Utils\Settings\DeviceConfig.cpp" />
     <ClCompile Include="..\Source\Utils\SysInfo\SysInfo.cpp" />
     <ClCompile Include="..\Source\Utils\Settings\Settings.cpp" />
     <ClCompile Include="..\Source\Main.cpp" />
@@ -1614,6 +1615,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y</Command>
     <ClInclude Include="..\Source\GUI\FxWindow.h" />
     <ClInclude Include="..\Source\GUI\FxController.h" />
     <ClInclude Include="..\Source\GUI\FxModel.h" />
+    <ClInclude Include="..\Source\Utils\Settings\DeviceConfig.h" />
     <ClInclude Include="..\Source\Utils\SysInfo\SysInfo.h" />
     <ClInclude Include="..\Source\Utils\Settings\Settings.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE\modules\juce_core\containers\juce_AbstractFifo.h" />
