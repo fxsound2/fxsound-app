@@ -129,6 +129,7 @@ private:
 		Label equalizer_title_;
 		Label master_gain_title_;
 		Label normalizer_title_;
+		Label volume_leveling_title_;
 		Label filter_q_title_;
 		Label balance_title_;
 		Label left_label_;
@@ -139,6 +140,7 @@ private:
 		
 		FxAudioSlider master_gain_slider_;
 		FxAudioSlider normalizer_slider_;
+		FxAudioSlider volume_leveling_slider_;
 		FxAudioSlider filter_q_slider_;
 		FxBalanceSlider balance_slider_;
 		TextButton restore_defaults_button_;

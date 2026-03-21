@@ -247,7 +247,7 @@ void FxController::config(const String& commandline)
     setLanguage(language);
 
 	// ------------------------------------------------------------------------------------------
-	//  NumBands / Balance / FilterQ / MasterGain / Normalization - SET ON START
+	//  NumBands / Balance / FilterQ / MasterGain / Normalization / Volume Leveling - SET ON START
 	// ------------------------------------------------------------------------------------------
 	int nb = 10;
 	if (numbands == "")
@@ -272,6 +272,10 @@ void FxController::config(const String& commandline)
 	}
 	if (nm < -20 || nm > 0) nm = DEFAULT_NORMALIZATION;
 	setNormalization(nm);
+
+	float vl = settings_.getDouble("volume_leveling");
+	if (vl < 0 || vl > 4) vl = DEFAULT_VOLUME_LEVELING;
+	setVolumeLeveling(vl);
 
 	float bl = 0;
 	if (balance == "")
@@ -844,6 +848,7 @@ void FxController::resetPresets()
 
 	setNumEqBands(DEFAULT_NUM_EQ_BANDS);
 	setNormalization(DEFAULT_NORMALIZATION);
+	setVolumeLeveling(DEFAULT_VOLUME_LEVELING);
 	setBalance(DEFAULT_BALANCE);
 	setFilterQ(DEFAULT_FILTER_Q);
 	setMasterGain(DEFAULT_MASTER_GAIN);
@@ -1123,6 +1128,17 @@ void FxController::setNormalization(float normalization_db)
 {
 	dfx_dsp_.setNormalization(normalization_db);
 	settings_.setDouble("normalization", normalization_db);
+}
+
+float FxController::getVolumeLeveling()
+{
+	return dfx_dsp_.getVolumeLeveling();
+}
+
+void FxController::setVolumeLeveling(float gain_db)
+{
+	dfx_dsp_.setVolumeLeveling(gain_db);
+	settings_.setDouble("volume_leveling", gain_db);
 }
 
 float FxController::getBalance()

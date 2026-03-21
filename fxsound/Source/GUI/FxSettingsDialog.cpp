@@ -186,7 +186,8 @@ void FxSettingsDialog::SettingsPane::paint(Graphics&)
 FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 	SettingsPane("Audio"), 
 	master_gain_slider_("%0.0f dB", 0.0f), 
-	normalizer_slider_("%0.0f dB", 0.0f), 
+	normalizer_slider_("%0.0f dB", 0.0f),
+	volume_leveling_slider_("%.1f dB", 0.0f),
 	filter_q_slider_("%.1fx", 1.0f), balance_slider_(0.0f),
 	restore_defaults_button_(TRANS("Restore Defaults")),
 	reset_presets_button_(TRANS("Reset presets to factory defaults"))
@@ -206,6 +207,9 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 
 	normalizer_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	normalizer_title_.setJustificationType(Justification::centredLeft);
+
+	volume_leveling_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	volume_leveling_title_.setJustificationType(Justification::centredLeft);
 
 	filter_q_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	filter_q_title_.setJustificationType(Justification::centredLeft);
@@ -272,6 +276,18 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 		if (controller.getNormalization() != value)
 			controller.setNormalization((float)value);
 		};
+
+	volume_leveling_slider_.setSliderStyle(Slider::LinearHorizontal);
+	volume_leveling_slider_.setRange(0, 4, 0.5);
+	volume_leveling_slider_.setValue(controller.getVolumeLeveling());
+	volume_leveling_slider_.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	volume_leveling_slider_.onValueChange = [this]() {
+		auto value = volume_leveling_slider_.getValue();
+		auto& controller = FxController::getInstance();
+
+		if (controller.getVolumeLeveling() != value)
+			controller.setVolumeLeveling((float)value);
+		};
 	
 	filter_q_slider_.setSliderStyle(Slider::LinearHorizontal);
 	filter_q_slider_.setRange(1, 3, 0.5);
@@ -312,6 +328,8 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 	addAndMakeVisible(&master_gain_slider_);
 	addAndMakeVisible(&normalizer_title_);
 	addAndMakeVisible(&normalizer_slider_);
+	addAndMakeVisible(&volume_leveling_title_);
+	addAndMakeVisible(&volume_leveling_slider_);
 	addAndMakeVisible(&filter_q_title_);
 	addAndMakeVisible(&filter_q_slider_);
 	addAndMakeVisible(&balance_title_);
@@ -327,6 +345,7 @@ FxSettingsDialog::AudioSettingsPane::~AudioSettingsPane()
 	equalizer_.onChange = nullptr;
 	master_gain_slider_.onValueChange = nullptr;
 	normalizer_slider_.onValueChange = nullptr;
+	volume_leveling_slider_.onValueChange = nullptr;
 	filter_q_slider_.onValueChange = nullptr;
 
 	FxModel::getModel().removeListener(this);
@@ -358,6 +377,11 @@ void FxSettingsDialog::AudioSettingsPane::resized()
 	normalizer_slider_.setBounds(LABEL_WIDTH + X_MARGIN + 10, y, width, SLIDER_HEIGHT);
 
 	y = normalizer_slider_.getBottom() + 20;
+
+	volume_leveling_title_.setBounds(X_MARGIN, y, LABEL_WIDTH, SLIDER_HEIGHT);
+	volume_leveling_slider_.setBounds(LABEL_WIDTH + X_MARGIN + 10, y, width, SLIDER_HEIGHT);
+
+	y = volume_leveling_slider_.getBottom() + 20;
 
 	filter_q_title_.setBounds(X_MARGIN, y, LABEL_WIDTH, SLIDER_HEIGHT);
 	filter_q_slider_.setBounds(LABEL_WIDTH + X_MARGIN + 10, y, width, SLIDER_HEIGHT);
@@ -420,6 +444,8 @@ void FxSettingsDialog::AudioSettingsPane::setText()
 	master_gain_title_.setText(TRANS("Master Gain:"), NotificationType::dontSendNotification);
 	normalizer_title_.setFont(theme.getNormalFont());
 	normalizer_title_.setText(TRANS("Normalization:"), NotificationType::dontSendNotification);
+	volume_leveling_title_.setFont(theme.getNormalFont());
+	volume_leveling_title_.setText(TRANS("Volume Leveling:"), NotificationType::dontSendNotification);
 	filter_q_title_.setFont(theme.getNormalFont());
 	filter_q_title_.setText(TRANS("Filter Q:"), NotificationType::dontSendNotification);	
 	balance_title_.setFont(theme.getNormalFont());
@@ -497,6 +523,7 @@ void FxSettingsDialog::AudioSettingsPane::restoreDefaults()
 
 	controller.setNumEqBands(FxController::DEFAULT_NUM_EQ_BANDS);
 	controller.setNormalization(FxController::DEFAULT_NORMALIZATION);
+	controller.setVolumeLeveling(FxController::DEFAULT_VOLUME_LEVELING);
 	controller.setBalance(FxController::DEFAULT_BALANCE);
 	controller.setFilterQ(FxController::DEFAULT_FILTER_Q);
 	controller.setMasterGain(FxController::DEFAULT_MASTER_GAIN);
@@ -504,6 +531,7 @@ void FxSettingsDialog::AudioSettingsPane::restoreDefaults()
 	equalizer_.setSelectedId(controller.getNumEqBands(), NotificationType::dontSendNotification);
 	master_gain_slider_.setValue(controller.getMasterGain());
 	normalizer_slider_.setValue(controller.getNormalization());
+	volume_leveling_slider_.setValue(controller.getVolumeLeveling());
 	filter_q_slider_.setValue(controller.getFilterQ());
 	balance_slider_.setValue(controller.getBalance());
 }
