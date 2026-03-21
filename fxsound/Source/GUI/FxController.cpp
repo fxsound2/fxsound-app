@@ -618,7 +618,7 @@ bool FxController::setPreset(int selected_preset, bool notify)
         }
 
         auto num_bands = getNumEqBands();
-        for (auto b=1; b<num_bands; b++)
+        for (auto b=0; b<num_bands; b++)
         {
             dfx_dsp_.setEqBandFrequency(b, dfx_dsp_.getEqBandFrequency(b));
             dfx_dsp_.setEqBandBoostCut(b, dfx_dsp_.getEqBandBoostCut(b));
