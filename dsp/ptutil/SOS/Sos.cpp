@@ -66,6 +66,11 @@ int PT_DECLSPEC sosNew(PT_HANDLE **hpp_sos, CSlout *hp_slout, int i_num_sections
 	cast_handle->normalization_gain = (realtype)1.0;
 	cast_handle->volume_leveling_target_rms = (realtype)0.0;
 	cast_handle->volume_leveling_gain = (realtype)1.0;
+	cast_handle->volume_leveling_power_sum = (realtype)0.0;
+	cast_handle->volume_leveling_power_index = 0;
+	cast_handle->volume_leveling_power_count = 0;
+	cast_handle->volume_leveling_previous_average_rms = (realtype)0.0;
+	cast_handle->volume_leveling_previous_predicted_rms = (realtype)0.0;
     
 
     /* Allocate the sections */

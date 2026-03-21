@@ -153,6 +153,16 @@ int PT_DECLSPEC sosZeroStateAllSections(PT_HANDLE *hp_sos)
 	cast_handle->in2_old = (realtype)0.0;
 	cast_handle->outDC1_old = (realtype)0.0;
 	cast_handle->outDC2_old = (realtype)0.0;
+	cast_handle->volume_leveling_power_sum = (realtype)0.0;
+	cast_handle->volume_leveling_power_index = 0;
+	cast_handle->volume_leveling_power_count = 0;
+	cast_handle->volume_leveling_previous_average_rms = (realtype)0.0;
+	cast_handle->volume_leveling_previous_predicted_rms = (realtype)0.0;
+
+	for (i = 0; i < SOS_VOLUME_LEVELING_HISTORY_SIZE; i++)
+	{
+		cast_handle->volume_leveling_power_history[i] = (realtype)0.0;
+	}
 
 	for(i=0; i<8; i++)
 	{
@@ -257,6 +267,16 @@ int PT_DECLSPEC sosSetVolumeLeveling(PT_HANDLE* hp_sos, realtype r_target_rms)
 	if (r_target_rms <= (realtype)0.0)
 	{
 		cast_handle->volume_leveling_gain = (realtype)1.0;
+		cast_handle->volume_leveling_power_sum = (realtype)0.0;
+		cast_handle->volume_leveling_power_index = 0;
+		cast_handle->volume_leveling_power_count = 0;
+		cast_handle->volume_leveling_previous_average_rms = (realtype)0.0;
+		cast_handle->volume_leveling_previous_predicted_rms = (realtype)0.0;
+
+		for (int i = 0; i < SOS_VOLUME_LEVELING_HISTORY_SIZE; i++)
+		{
+			cast_handle->volume_leveling_power_history[i] = (realtype)0.0;
+		}
 	}
 
 	return(OKAY);

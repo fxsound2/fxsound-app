@@ -39,6 +39,9 @@ namespace
     constexpr realtype kVolumeLevelingCeiling = 1.0f;
     constexpr realtype kVolumeLevelingAttackAlpha = 0.15f;
     constexpr realtype kVolumeLevelingReleaseAlpha = 0.05f;
+    constexpr realtype kVolumeLevelingPredictionStrength = 0.35f;
+    constexpr realtype kVolumeLevelingPredictionClamp = 0.15f;
+    constexpr realtype kVolumeLevelingPredictionMissRatio = 0.35f;
 
     static realtype clampReal(realtype value, realtype min_value, realtype max_value)
     {
@@ -86,13 +89,75 @@ namespace
             index += i_num_channels;
         }
 
-        realtype current_rms = sqrtf(sum_squares / (i_num_sample_sets * analyzed_channels));
+        realtype current_power = sum_squares / (i_num_sample_sets * analyzed_channels);
+        realtype current_rms = sqrtf(current_power);
         realtype gain_start = cast_handle->volume_leveling_gain;
         realtype gain_end = gain_start;
 
+        if (cast_handle->volume_leveling_power_count == SOS_VOLUME_LEVELING_HISTORY_SIZE)
+        {
+            cast_handle->volume_leveling_power_sum -=
+                cast_handle->volume_leveling_power_history[cast_handle->volume_leveling_power_index];
+        }
+        else
+        {
+            cast_handle->volume_leveling_power_count++;
+        }
+
+        cast_handle->volume_leveling_power_history[cast_handle->volume_leveling_power_index] = current_power;
+        cast_handle->volume_leveling_power_sum += current_power;
+        cast_handle->volume_leveling_power_index =
+            (cast_handle->volume_leveling_power_index + 1) % SOS_VOLUME_LEVELING_HISTORY_SIZE;
+
+        realtype averaged_rms = current_rms;
+        if (cast_handle->volume_leveling_power_count > 0)
+        {
+            averaged_rms = sqrtf(cast_handle->volume_leveling_power_sum / cast_handle->volume_leveling_power_count);
+        }
+
+        realtype predicted_rms = averaged_rms;
+        bool prediction_missed = false;
+        if (cast_handle->volume_leveling_previous_average_rms > 1e-6f)
+        {
+            realtype previous_average_rms = cast_handle->volume_leveling_previous_average_rms;
+            realtype previous_predicted_rms = cast_handle->volume_leveling_previous_predicted_rms;
+            realtype predicted_delta = previous_predicted_rms - previous_average_rms;
+            realtype actual_delta = averaged_rms - previous_average_rms;
+            realtype miss_threshold = std::fmax(previous_average_rms * 0.01f, 1e-5f);
+
+            if (std::fabs(predicted_delta) > miss_threshold)
+            {
+                bool wrong_direction = (predicted_delta * actual_delta) < 0.0f;
+                bool overshot = std::fabs(actual_delta) < (std::fabs(predicted_delta) * kVolumeLevelingPredictionMissRatio);
+                if (wrong_direction || overshot)
+                {
+                    prediction_missed = true;
+                }
+            }
+        }
+
+        if (cast_handle->volume_leveling_previous_average_rms > 1e-6f)
+        {
+            realtype gradient = averaged_rms - cast_handle->volume_leveling_previous_average_rms;
+            predicted_rms += gradient * kVolumeLevelingPredictionStrength;
+
+            realtype min_predicted_rms = averaged_rms * (1.0f - kVolumeLevelingPredictionClamp);
+            realtype max_predicted_rms = averaged_rms * (1.0f + kVolumeLevelingPredictionClamp);
+            predicted_rms = clampReal(predicted_rms, min_predicted_rms, max_predicted_rms);
+        }
+
+        if (prediction_missed)
+        {
+            predicted_rms = averaged_rms;
+        }
+
+        predicted_rms = std::fmax(predicted_rms, 1e-6f);
+        cast_handle->volume_leveling_previous_average_rms = averaged_rms;
+        cast_handle->volume_leveling_previous_predicted_rms = predicted_rms;
+
         if (current_rms > 1e-6f)
         {
-            realtype desired_gain = cast_handle->volume_leveling_target_rms / current_rms;
+            realtype desired_gain = cast_handle->volume_leveling_target_rms / predicted_rms;
             desired_gain = std::fmin(desired_gain, cast_handle->volume_leveling_target_rms / 0.125f);
 
             realtype alpha = (desired_gain < cast_handle->volume_leveling_gain)

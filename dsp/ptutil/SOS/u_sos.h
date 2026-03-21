@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define SOS_FLOAT_BIAS 1.0e-30 // Was 1.0e-5 Thru 7/11/15, then changed to 1.0e-30 values that was being used in Hyperbass.
 #define SOS_DCBLOCK_ALPHA 0.999	// See http://peabody.sapp.org/class/dmp2/lab/dcblock/ for freq response curves for differen values, 0.999 is good for 44.1 and 48khz.
+#define SOS_VOLUME_LEVELING_HISTORY_SIZE 6
 
 /* Section type definition */
 struct sosSectionType {
@@ -77,6 +78,12 @@ struct sosHdlType {
    realtype normalization_gain; /* normalization gain */
    realtype volume_leveling_target_rms; /* Externally applied volume leveling rms for the combined sections */
    realtype volume_leveling_gain; /* volume leveling gain */
+   realtype volume_leveling_power_history[SOS_VOLUME_LEVELING_HISTORY_SIZE]; /* Recent power history for volume leveling */
+   realtype volume_leveling_power_sum; /* Running sum of recent power history */
+   int volume_leveling_power_index; /* Ring buffer write index for recent power history */
+   int volume_leveling_power_count; /* Number of valid entries in recent power history */
+   realtype volume_leveling_previous_average_rms; /* Previous averaged rms used for gradient prediction */
+   realtype volume_leveling_previous_predicted_rms; /* Previous predicted rms for miss detection */
    realtype master_gain; /* Externally applied master gain for the combined sections */
    int sos_type[SOS_MAX_NUM_SOS_SECTIONS]; /* SOS_PARA for parametric, SOS_SHELF for shelf type */
    struct sosSectionType *sections; 
