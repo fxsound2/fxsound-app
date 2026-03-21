@@ -73,10 +73,10 @@ struct sosHdlType {
    realtype sos_center_freq_response[SOS_MAX_NUM_SOS_SECTIONS];/* Contains power response at center freq */
    realtype balance_left;       /* Externally applied balance for the combined sections */
    realtype balance_right;      /* Externally applied balance for the combined sections */
-   realtype target_rms;         /* Externally applied normalization rms  for the combined sections */
+   realtype target_rms;         /* Externally applied normalization rms for the combined sections */
    realtype normalization_gain; /* normalization gain */
-   realtype volume_leveling_target_rms;
-   realtype volume_leveling_gain;
+   realtype volume_leveling_target_rms; /* Externally applied volume leveling rms for the combined sections */
+   realtype volume_leveling_gain; /* volume leveling gain */
    realtype master_gain; /* Externally applied master gain for the combined sections */
    int sos_type[SOS_MAX_NUM_SOS_SECTIONS]; /* SOS_PARA for parametric, SOS_SHELF for shelf type */
    struct sosSectionType *sections; 
