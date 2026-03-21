@@ -327,6 +327,18 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
             return;
         }
 
+		auto app_version = JUCEApplication::getInstance()->getApplicationVersion();
+		auto prev_version = settings_.getString("version");
+		if (prev_version != app_version)
+		{
+			RegDeleteTree(HKEY_CURRENT_USER, L"Software\\DFX");
+
+			FxModel::getModel().pushMessage(" ", { TRANS("Click here to see what's new on this version!"), "https://www.fxsound.com/changelog" });
+
+			settings_.setString("version", app_version);
+			settings_.setBool("run_minimized", false);
+		}
+
 		audio_passthru_->setDspProcessingModule(&dfx_dsp_);
 		initOutputs(audio_passthru_->getSoundDevices(false));
 		if (!dfx_enabled_)
@@ -354,22 +366,6 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		auto selected_preset = FxModel::getModel().selectPreset(preset_name, false);
 		setPreset(selected_preset);
 
-		auto app_version = JUCEApplication::getInstance()->getApplicationVersion();
-		auto prev_version = settings_.getString("version");
-        if (prev_version != app_version)
-        {
-			RegDeleteTree(HKEY_CURRENT_USER, L"Software\\DFX");
-
-            FxModel::getModel().pushMessage(" ", { TRANS("Click here to see what's new on this version!"), "https://www.fxsound.com/changelog" });			
-            settings_.setString("version", app_version);
-			if (!prev_version.startsWith("1.1.2") && app_version.startsWith("1.1.2"))
-			{
-				FxMessage::showMessage(TRANS("FxSound is now open-source"), { TRANS("GitHub"), "https://github.com/fxsound2/fxsound-app" });
-			}
-            view_ = ViewType::Pro;
-            settings_.setBool("run_minimized", false);
-        }
-		
 		showView();
 
 		auto theme_mode = settings_.getInt("theme_mode", 0);
@@ -614,7 +610,7 @@ bool FxController::setPreset(int selected_preset, bool notify)
         }
 
         auto num_bands = getNumEqBands();
-        for (auto b=1; b<num_bands; b++)
+        for (auto b=0; b<num_bands; b++)
         {
             dfx_dsp_.setEqBandFrequency(b, dfx_dsp_.getEqBandFrequency(b));
             dfx_dsp_.setEqBandBoostCut(b, dfx_dsp_.getEqBandBoostCut(b));
