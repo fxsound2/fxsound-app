@@ -56,12 +56,12 @@ int PT_DECLSPEC GraphicEqProcess(PT_HANDLE *hp_GraphicEq,
 	/* Call processing function */
 	if( i_num_channels <= 2 )
 	{
-		if( sosProcessBuffer( (PT_HANDLE *)(cast_handle->sos_hdl), rp_signal_in, rp_signal_out, i_num_sample_sets, i_num_channels) != OKAY)
+		if( sosProcessBuffer( (PT_HANDLE *)(cast_handle->sos_hdl), rp_signal_in, rp_signal_out, i_num_sample_sets, i_num_channels, r_samp_freq) != OKAY)
 			return(NOT_OKAY);
 	}
 	else if( (i_num_channels == 6) || (i_num_channels == 8) )
 	{
-		if( sosProcessSurroundBuffer( (PT_HANDLE *)(cast_handle->sos_hdl), rp_signal_in, rp_signal_out, i_num_sample_sets, i_num_channels) != OKAY)
+		if( sosProcessSurroundBuffer( (PT_HANDLE *)(cast_handle->sos_hdl), rp_signal_in, rp_signal_out, i_num_sample_sets, i_num_channels, r_samp_freq) != OKAY)
 			return(NOT_OKAY);
 	}
 	else

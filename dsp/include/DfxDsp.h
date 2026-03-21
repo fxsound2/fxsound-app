@@ -51,6 +51,8 @@ public:
 	void setBalance(float gain_db);
 	float getNormalization();
 	void setNormalization(float gain_db);
+	float getVolumeLeveling();
+	void setVolumeLeveling(float gain_db);
 	float getMasterGain();
 	void setMasterGain(float gain_db);
 	float getFilterQ();

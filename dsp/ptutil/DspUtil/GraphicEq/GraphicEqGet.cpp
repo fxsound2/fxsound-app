@@ -156,6 +156,20 @@ int PT_DECLSPEC GraphicEqGetNormalization(PT_HANDLE* hp_GraphicEq, float* gain_d
 	return(OKAY);
 }
 
+int PT_DECLSPEC GraphicEqGetVolumeLeveling(PT_HANDLE* hp_GraphicEq, float* gain_db)
+{
+	struct GraphicEqHdlType* cast_handle;
+
+	cast_handle = (struct GraphicEqHdlType*)(hp_GraphicEq);
+
+	if (cast_handle == NULL)
+		return(NOT_OKAY);
+
+	*gain_db = cast_handle->volume_leveling_gain_db;
+
+	return(OKAY);
+}
+
 
 int PT_DECLSPEC GraphicEqGetFilterQ(PT_HANDLE* hp_GraphicEq, float* q_multiplier)
 {

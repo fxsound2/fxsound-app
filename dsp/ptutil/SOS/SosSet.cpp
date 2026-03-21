@@ -243,6 +243,25 @@ int PT_DECLSPEC sosSetNormalization(PT_HANDLE* hp_sos, realtype r_normalization)
 	return(OKAY);
 }
 
+int PT_DECLSPEC sosSetVolumeLeveling(PT_HANDLE* hp_sos, realtype r_target_rms)
+{
+	struct sosHdlType* cast_handle;
+
+	cast_handle = (struct sosHdlType*)(hp_sos);
+
+	if (cast_handle == NULL)
+		return(NOT_OKAY);
+
+	cast_handle->volume_leveling_target_rms = r_target_rms;
+
+	if (r_target_rms <= (realtype)0.0)
+	{
+		cast_handle->volume_leveling_gain = (realtype)1.0;
+	}
+
+	return(OKAY);
+}
+
 /*
  * FUNCTION: sosSetMasterGain()
  * DESCRIPTION:

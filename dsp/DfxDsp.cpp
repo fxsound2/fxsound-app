@@ -135,6 +135,16 @@ void DfxDsp::setNormalization(float gain_db)
 	data_->setNormalization(gain_db);
 }
 
+float DfxDsp::getVolumeLeveling()
+{
+	return data_->getVolumeLeveling();
+}
+
+void DfxDsp::setVolumeLeveling(float gain_db)
+{
+	data_->setVolumeLeveling(gain_db);
+}
+
 float DfxDsp::getMasterGain()
 {
 	return data_->getMasterGain();

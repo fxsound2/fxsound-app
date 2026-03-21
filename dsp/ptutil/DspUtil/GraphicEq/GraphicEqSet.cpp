@@ -67,6 +67,22 @@ void PT_DECLSPEC GraphicEqSetNormalization(PT_HANDLE* hp_GraphicEq, float gain_d
 	sosSetNormalization((PT_HANDLE*)(cast_handle->sos_hdl), normalization);
 }
 
+void PT_DECLSPEC GraphicEqSetVolumeLeveling(PT_HANDLE* hp_GraphicEq, float gain_db)
+{
+	struct GraphicEqHdlType* cast_handle;
+	cast_handle = (struct GraphicEqHdlType*)(hp_GraphicEq);
+	if (cast_handle == NULL)
+		return;
+
+	cast_handle->volume_leveling_gain_db = gain_db;
+
+	float target_rms = 0.0f;
+	if (gain_db > 0.0f)
+		target_rms = 0.125f + (gain_db / 4.0f) * (0.5f - 0.125f);
+
+	sosSetVolumeLeveling((PT_HANDLE*)(cast_handle->sos_hdl), target_rms);
+}
+
 void PT_DECLSPEC GraphicEqSetMasterGain(PT_HANDLE* hp_GraphicEq, float gain_db)
 {
 	struct GraphicEqHdlType* cast_handle;

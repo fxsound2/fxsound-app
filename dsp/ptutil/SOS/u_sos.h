@@ -75,6 +75,8 @@ struct sosHdlType {
    realtype balance_right;      /* Externally applied balance for the combined sections */
    realtype target_rms;         /* Externally applied normalization rms  for the combined sections */
    realtype normalization_gain; /* normalization gain */
+   realtype volume_leveling_target_rms;
+   realtype volume_leveling_gain;
    realtype master_gain; /* Externally applied master gain for the combined sections */
    int sos_type[SOS_MAX_NUM_SOS_SECTIONS]; /* SOS_PARA for parametric, SOS_SHELF for shelf type */
    struct sosSectionType *sections; 

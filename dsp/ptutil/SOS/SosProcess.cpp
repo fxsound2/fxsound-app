@@ -34,6 +34,106 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sos.h"
 #include "u_sos.h"
 
+namespace
+{
+    constexpr realtype kVolumeLevelingCeiling = 1.0f;
+
+    static realtype clampReal(realtype value, realtype min_value, realtype max_value)
+    {
+        return std::fmax(min_value, std::fmin(value, max_value));
+    }
+
+    static void applyVolumeLeveling(struct sosHdlType* cast_handle,
+                                    realtype* rp_out_buf,
+                                    int i_num_sample_sets,
+                                    int i_num_channels,
+                                    realtype r_samp_freq,
+                                    int excluded_channel)
+    {
+        (void)r_samp_freq;
+
+        if ((cast_handle->volume_leveling_target_rms <= 0.0f) || (i_num_sample_sets <= 0) || (i_num_channels <= 0))
+        {
+            cast_handle->volume_leveling_gain = 1.0f;
+            return;
+        }
+
+        int analyzed_channels = (excluded_channel >= 0) ? (i_num_channels - 1) : i_num_channels;
+        if (analyzed_channels <= 0)
+            return;
+
+        realtype sum_squares = 0.0f;
+        realtype peak = 0.0f;
+        int index = 0;
+
+        for (int sample = 0; sample < i_num_sample_sets; sample++)
+        {
+            for (int channel = 0; channel < i_num_channels; channel++)
+            {
+                if (channel == excluded_channel)
+                    continue;
+
+                realtype value = rp_out_buf[index + channel];
+                sum_squares += value * value;
+
+                realtype abs_value = std::fabs(value);
+                if (abs_value > peak)
+                    peak = abs_value;
+            }
+
+            index += i_num_channels;
+        }
+
+        realtype current_rms = sqrtf(sum_squares / (i_num_sample_sets * analyzed_channels));
+        realtype gain_start = cast_handle->volume_leveling_gain;
+        realtype gain_end = gain_start;
+
+        if (current_rms > 1e-6f)
+        {
+            realtype desired_gain = cast_handle->volume_leveling_target_rms / current_rms;
+            desired_gain = std::fmin(desired_gain, cast_handle->volume_leveling_target_rms / 0.125f);
+
+            realtype alpha = (desired_gain < cast_handle->volume_leveling_gain) ? 0.3f : 0.05f;
+            gain_end = cast_handle->volume_leveling_gain * (1.0f - alpha) + desired_gain * alpha;
+        }
+
+        if (peak > 1e-6f)
+        {
+            realtype peak_safe_gain = kVolumeLevelingCeiling / peak;
+            if (gain_end > peak_safe_gain)
+                gain_end = peak_safe_gain;
+            if (gain_start > peak_safe_gain)
+                gain_start = peak_safe_gain;
+        }
+
+        gain_start = clampReal(gain_start, 0.0f, cast_handle->volume_leveling_target_rms / 0.125f);
+        gain_end = clampReal(gain_end, 0.0f, cast_handle->volume_leveling_target_rms / 0.125f);
+        cast_handle->volume_leveling_gain = gain_end;
+
+        index = 0;
+        for (int sample = 0; sample < i_num_sample_sets; sample++)
+        {
+            realtype t = (realtype)sample / (realtype)i_num_sample_sets;
+            realtype gain = gain_start + t * (gain_end - gain_start);
+
+            for (int channel = 0; channel < i_num_channels; channel++)
+            {
+                if (channel == excluded_channel)
+                    continue;
+
+                rp_out_buf[index + channel] *= gain;
+
+                if (rp_out_buf[index + channel] > kVolumeLevelingCeiling)
+                    rp_out_buf[index + channel] = kVolumeLevelingCeiling;
+                else if (rp_out_buf[index + channel] < -kVolumeLevelingCeiling)
+                    rp_out_buf[index + channel] = -kVolumeLevelingCeiling;
+            }
+
+            index += i_num_channels;
+        }
+    }
+}
+
 
 /*
  * FUNCTION: sosProcessBuffer_MasterGainOnly()
@@ -68,7 +168,7 @@ int PT_DECLSPEC sosProcessBuffer_MasterGainOnly(PT_HANDLE* hp_sos, realtype* rp_
  *   PTNOTE- this appears to have a serious problem with shelf functions, the processing
  *   method uses a form specific to the coeff symmetry that occurs with parametric filters.
  */
-int PT_DECLSPEC sosProcessBuffer(PT_HANDLE* hp_sos, realtype* rp_in_buf, realtype* rp_out_buf, int i_num_sample_sets, int i_num_channels)
+int PT_DECLSPEC sosProcessBuffer(PT_HANDLE* hp_sos, realtype* rp_in_buf, realtype* rp_out_buf, int i_num_sample_sets, int i_num_channels, realtype r_samp_freq)
 {
     struct sosHdlType* cast_handle;
 
@@ -265,6 +365,8 @@ int PT_DECLSPEC sosProcessBuffer(PT_HANDLE* hp_sos, realtype* rp_in_buf, realtyp
         }
     }
 
+    applyVolumeLeveling(cast_handle, rp_out_buf, i_num_sample_sets, i_num_channels, r_samp_freq, -1);
+
     return(OKAY);
 }
 
@@ -384,7 +486,7 @@ int PT_DECLSPEC sosProcessBuffer(PT_HANDLE* hp_sos, realtype* rp_in_buf, realtyp
   *   Processes the passed in buffer using the current sos handle settings.
   *   This function is for Surround Sound signals. Only puts bass boost on bass channel, no other eq on bass channel.
   */
-int PT_DECLSPEC sosProcessSurroundBuffer(PT_HANDLE* hp_sos, realtype* rp_in_buf, realtype* rp_out_buf, int i_num_sample_sets, int i_num_channels)
+int PT_DECLSPEC sosProcessSurroundBuffer(PT_HANDLE* hp_sos, realtype* rp_in_buf, realtype* rp_out_buf, int i_num_sample_sets, int i_num_channels, realtype r_samp_freq)
 {
     struct sosHdlType* cast_handle;
 
@@ -403,8 +505,8 @@ int PT_DECLSPEC sosProcessSurroundBuffer(PT_HANDLE* hp_sos, realtype* rp_in_buf,
     //Ordering for 5.1 is: Front Left, Front Right, Front Center, Low Frequency, Back Left, Back Right
     //Ordering for 7.1 is: Front Left, Front Right, Front Center, Low Frequency, Back Left, Back Right, Side Left, Side Right
     //Note - LFE channel only gets bands 0,1 others only get bands 2->max
-    for (j = 0; j < (i_num_sample_sets * i_num_channels); j += i_num_channels)
-    {
+	for (j = 0; j < (i_num_sample_sets * i_num_channels); j += i_num_channels)
+	{
         for (k = 0; k < i_num_channels; k++)
         {
             realtype in, out;
@@ -442,9 +544,11 @@ int PT_DECLSPEC sosProcessSurroundBuffer(PT_HANDLE* hp_sos, realtype* rp_in_buf,
                     in = out;
                 }
             }
-            rp_out_buf[j + k] = out * cast_handle->master_gain;
-        }
-    }
+			rp_out_buf[j + k] = out * cast_handle->master_gain;
+		}
+	}
+
+    applyVolumeLeveling(cast_handle, rp_out_buf, i_num_sample_sets, i_num_channels, r_samp_freq, 3);
 
     return(OKAY);
 }
