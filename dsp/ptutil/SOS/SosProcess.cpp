@@ -37,6 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace
 {
     constexpr realtype kVolumeLevelingCeiling = 1.0f;
+    constexpr realtype kVolumeLevelingAttackAlpha = 0.15f;
+    constexpr realtype kVolumeLevelingReleaseAlpha = 0.05f;
 
     static realtype clampReal(realtype value, realtype min_value, realtype max_value)
     {
@@ -93,7 +95,9 @@ namespace
             realtype desired_gain = cast_handle->volume_leveling_target_rms / current_rms;
             desired_gain = std::fmin(desired_gain, cast_handle->volume_leveling_target_rms / 0.125f);
 
-            realtype alpha = (desired_gain < cast_handle->volume_leveling_gain) ? 0.3f : 0.05f;
+            realtype alpha = (desired_gain < cast_handle->volume_leveling_gain)
+                ? kVolumeLevelingAttackAlpha
+                : kVolumeLevelingReleaseAlpha;
             gain_end = cast_handle->volume_leveling_gain * (1.0f - alpha) + desired_gain * alpha;
         }
 
