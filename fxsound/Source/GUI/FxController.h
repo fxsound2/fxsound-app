@@ -126,6 +126,7 @@ public:
     void saveDeviceConfigs(const juce::Array<DeviceConfig>& device_configs);
 	bool isOutputDeviceConnected(const String& output_device_name);
 	SoundDevice getPreferredOutput();
+	int compareOutputDevicePriority(const String& output_device_name1, const String& output_device_name2);
 	const String& getOutputName();
     void setOutputName(const String& output_device_name);
 
