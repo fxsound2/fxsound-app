@@ -170,6 +170,8 @@ int PT_DECLSPEC sosZeroStateAllSections(PT_HANDLE *hp_sos)
 		cast_handle->in2_oldSS[i] = (realtype)0.0;
 		cast_handle->outDC1_oldSS[i] = (realtype)0.0;
 		cast_handle->outDC2_oldSS[i] = (realtype)0.0;
+		cast_handle->volume_leveling_sc_prev_in[i] = (realtype)0.0;
+		cast_handle->volume_leveling_sc_prev_out[i] = (realtype)0.0;
 	}
        
 	for(section_num=0; section_num < cast_handle->num_allocated_sections; section_num++)
@@ -276,6 +278,12 @@ int PT_DECLSPEC sosSetVolumeLeveling(PT_HANDLE* hp_sos, realtype r_target_rms)
 		for (int i = 0; i < SOS_VOLUME_LEVELING_HISTORY_SIZE; i++)
 		{
 			cast_handle->volume_leveling_power_history[i] = (realtype)0.0;
+		}
+
+		for (int i = 0; i < 8; i++)
+		{
+			cast_handle->volume_leveling_sc_prev_in[i] = (realtype)0.0;
+			cast_handle->volume_leveling_sc_prev_out[i] = (realtype)0.0;
 		}
 	}
 

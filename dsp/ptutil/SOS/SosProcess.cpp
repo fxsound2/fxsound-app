@@ -37,11 +37,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace
 {
     constexpr realtype kVolumeLevelingCeiling = 1.0f;
-    constexpr realtype kVolumeLevelingAttackAlpha = 0.15f;
-    constexpr realtype kVolumeLevelingReleaseAlpha = 0.05f;
+    constexpr realtype kVolumeLevelingAttackAlpha = 0.10f;
+    constexpr realtype kVolumeLevelingReleaseAlphaFast = 0.05f;
+    constexpr realtype kVolumeLevelingReleaseAlphaSlow = 0.02f;
+    constexpr realtype kVolumeLevelingReleaseGapThreshold = 0.15f;
+    constexpr realtype kVolumeLevelingMaxReductionPerBufferDb = 1.0f;
     constexpr realtype kVolumeLevelingPredictionStrength = 0.35f;
     constexpr realtype kVolumeLevelingPredictionClamp = 0.15f;
     constexpr realtype kVolumeLevelingPredictionMissRatio = 0.35f;
+    constexpr realtype kVolumeLevelingSidechainHpfHz = 120.0f;
+    constexpr realtype kPi = 3.14159265358979323846f;
 
     static realtype clampReal(realtype value, realtype min_value, realtype max_value)
     {
@@ -55,8 +60,6 @@ namespace
                                     realtype r_samp_freq,
                                     int excluded_channel)
     {
-        (void)r_samp_freq;
-
         if ((cast_handle->volume_leveling_target_rms <= 0.0f) || (i_num_sample_sets <= 0) || (i_num_channels <= 0))
         {
             cast_handle->volume_leveling_gain = 1.0f;
@@ -70,6 +73,10 @@ namespace
         realtype sum_squares = 0.0f;
         realtype peak = 0.0f;
         int index = 0;
+        realtype effective_sample_rate = (r_samp_freq > 1000.0f) ? r_samp_freq : 48000.0f;
+        realtype dt = 1.0f / effective_sample_rate;
+        realtype rc = 1.0f / ((realtype)2.0f * kPi * kVolumeLevelingSidechainHpfHz);
+        realtype hpf_alpha = rc / (rc + dt);
 
         for (int sample = 0; sample < i_num_sample_sets; sample++)
         {
@@ -79,9 +86,15 @@ namespace
                     continue;
 
                 realtype value = rp_out_buf[index + channel];
-                sum_squares += value * value;
+                realtype sc_prev_in = cast_handle->volume_leveling_sc_prev_in[channel];
+                realtype sc_prev_out = cast_handle->volume_leveling_sc_prev_out[channel];
+                realtype sc_value = hpf_alpha * (sc_prev_out + value - sc_prev_in);
+                cast_handle->volume_leveling_sc_prev_in[channel] = value;
+                cast_handle->volume_leveling_sc_prev_out[channel] = sc_value;
 
-                realtype abs_value = std::fabs(value);
+                sum_squares += sc_value * sc_value;
+
+                realtype abs_value = std::fabs(sc_value);
                 if (abs_value > peak)
                     peak = abs_value;
             }
@@ -160,10 +173,25 @@ namespace
             realtype desired_gain = cast_handle->volume_leveling_target_rms / predicted_rms;
             desired_gain = std::fmin(desired_gain, cast_handle->volume_leveling_target_rms / 0.125f);
 
-            realtype alpha = (desired_gain < cast_handle->volume_leveling_gain)
-                ? kVolumeLevelingAttackAlpha
-                : kVolumeLevelingReleaseAlpha;
+            realtype alpha = kVolumeLevelingAttackAlpha;
+            if (desired_gain >= cast_handle->volume_leveling_gain)
+            {
+                realtype release_gap = desired_gain - cast_handle->volume_leveling_gain;
+                realtype release_gap_ratio = release_gap / std::fmax(cast_handle->volume_leveling_gain, (realtype)1e-6f);
+                alpha = (release_gap_ratio > kVolumeLevelingReleaseGapThreshold)
+                    ? kVolumeLevelingReleaseAlphaSlow
+                    : kVolumeLevelingReleaseAlphaFast;
+            }
             gain_end = cast_handle->volume_leveling_gain * (1.0f - alpha) + desired_gain * alpha;
+        }
+
+        // Avoid abrupt "crushed" sound: limit how much gain can drop within one buffer.
+        if (gain_end < gain_start)
+        {
+            const realtype min_ratio_per_buffer = std::pow((realtype)10.0f, -kVolumeLevelingMaxReductionPerBufferDb / (realtype)20.0f);
+            const realtype min_allowed_gain_end = gain_start * min_ratio_per_buffer;
+            if (gain_end < min_allowed_gain_end)
+                gain_end = min_allowed_gain_end;
         }
 
         if (peak > 1e-6f)
