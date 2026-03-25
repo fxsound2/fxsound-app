@@ -196,7 +196,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 
 	session_id_ = 0;
 	ProcessIdToSessionId(GetCurrentProcessId(), &session_id_);
-	WTSRegisterSessionNotification(message_window_.getHandle(), NOTIFY_FOR_ALL_SESSIONS);
+	WTSRegisterSessionNotification(message_window_.getHandle(), NOTIFY_FOR_THIS_SESSION);
 }
 
 FxController::~FxController()
@@ -566,10 +566,6 @@ void FxController::setPowerState(bool power_state)
 {
 	FxModel::getModel().setPowerState(power_state);
 	powerOn(power_state);
-	if (!power_state)
-	{
-		audio_passthru_->restoreDefaultPlaybackDevice();
-	}
 	settings_.setBool("power", power_state);
 
 	system_tray_view_->setStatus(power_state, audio_process_on_);
@@ -1098,6 +1094,8 @@ void FxController::powerOn(bool on)
 		{
 			stopTimer();
 		}
+
+		audio_passthru_->restoreDefaultPlaybackDevice();
 	}
 }
 
@@ -1310,16 +1308,16 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 
 		case WM_WTSSESSION_CHANGE:
 		{
-			if (w_param == WTS_CONSOLE_CONNECT || w_param == WTS_SESSION_UNLOCK)
+			auto os = SystemStats::getOperatingSystemType();
+			WPARAM login_event = (os == SystemStats::OperatingSystemType::Windows7) ? WTS_CONSOLE_CONNECT : WTS_SESSION_DESKTOP_READY;
+
+			if (w_param == login_event || w_param == WTS_SESSION_UNLOCK)
 			{
-				if ((DWORD)l_param == controller->session_id_)
-				{
-					controller->setPowerState(FxModel::getModel().getPowerState());
-				}
-				else
-				{
-					controller->powerOn(false);
-				}				
+				controller->setPowerState(FxModel::getModel().getPowerState());
+			}
+			else if (w_param == WTS_CONSOLE_DISCONNECT)
+			{
+				controller->powerOn(false);
 			}
 		}
 	}
@@ -1386,6 +1384,9 @@ void FxController::timerCallback()
 // Handled when FxSound processing is on
 void FxController::onSoundDeviceChange(std::vector<SoundDevice> sound_devices)
 {
+	if (session_id_ != WTSGetActiveConsoleSessionId())
+		return;   // another user is the active console session - do nothing
+
 	ScopedLock auto_lock(lock_);
 
 	auto available = audio_passthru_->isPlaybackDeviceAvailable();
@@ -1440,6 +1441,9 @@ void FxController::onSoundDeviceChange(std::vector<SoundDevice> sound_devices)
 // Handled when FxSound processing is off
 void FxController::onSoundDeviceChange()
 {
+	if (session_id_ != WTSGetActiveConsoleSessionId())
+		return;   // another user is the active console session - do nothing
+
 	if (!isTimerRunning())
 	{
 		ScopedLock auto_lock(lock_);
