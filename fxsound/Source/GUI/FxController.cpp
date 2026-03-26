@@ -1075,6 +1075,111 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 	setOutput(preferred_device.pwszID.c_str());
 }
 
+// Handled when FxSound processing is on
+void FxController::selectProcessingOutput(std::vector<SoundDevice>& sound_devices)
+{
+	auto available = audio_passthru_->isPlaybackDeviceAvailable();
+	if (available != playback_device_available_)
+	{
+		playback_device_available_ = available;
+		FxModel::getModel().notifyOutputError();
+	}
+
+	// New device is added or removed, so update the output device list and select a preferred output device based on the updated device list.
+	if (sound_devices.size() != device_count_)
+	{
+		updateOutputs(sound_devices);
+		device_count_ = (uint32_t)sound_devices.size();
+
+		if (!dfx_enabled_)
+		{
+			stopTimer();
+			main_window_->removeFromDesktop();
+			FxDeviceErrorMessage error_message;
+			error_message.runModalLoop();
+			JUCEApplication::getInstance()->systemRequestedQuit();
+			return;
+		}
+	}
+	else
+	{
+		for (auto sound_device : sound_devices)
+		{
+			// If the selected output device is different from the output device selected in application UI, update the application UI.
+			if (sound_device.isRealDevice && sound_device.isTargetedRealPlaybackDevice && getOutputName() != sound_device.deviceFriendlyName.c_str())
+			{
+				setOutputName(sound_device.deviceFriendlyName.c_str());
+				FxModel::getModel().setSelectedOutput(sound_device);
+
+				if (!FxModel::getModel().isPresetModified())
+				{
+					auto device_config = DeviceConfig::getDeviceConfig(settings_, getOutputName());
+					if (device_config.preset.isNotEmpty())
+					{
+						auto selected_preset = FxModel::getModel().selectPreset(device_config.preset, false);
+						setPreset(selected_preset, false);
+					}
+				}
+
+				break;
+			}
+		}
+	}
+}
+
+// Handled when FxSound processing is off
+void FxController::syncOutputWithSystemDefault(std::vector<SoundDevice>& sound_devices)
+{
+	active_output_devices_.clear();
+
+	for (auto sound_device : sound_devices)
+	{
+		if (sound_device.isRealDevice && sound_device.deviceNumChannel >= 2)
+		{
+			active_output_devices_.push_back(sound_device);
+		}
+	}
+
+	// Update the configuration as per the change in active devices and update the output device list in UI
+	if (sound_devices.size() != device_count_)
+	{
+		DeviceConfig::updateDeviceConfigs(settings_, sound_devices);
+
+		FxModel::getModel().initOutputs(active_output_devices_);
+
+		device_count_ = (uint32_t)sound_devices.size();
+	}
+
+	bool default_device_found = false;
+	for (auto& output_device : active_output_devices_)
+	{
+		// Change the selected device in UI
+		if (output_device.isDefaultDevice)
+		{
+			setOutputName(output_device.deviceFriendlyName.c_str());
+			FxModel::getModel().setSelectedOutput(output_device);
+
+			if (!FxModel::getModel().isPresetModified())
+			{
+				auto device_config = DeviceConfig::getDeviceConfig(settings_, getOutputName());
+				if (device_config.preset.isNotEmpty())
+				{
+					auto selected_preset = FxModel::getModel().selectPreset(device_config.preset, false);
+					setPreset(selected_preset, false);
+				}
+			}
+
+			default_device_found = true;
+			break;
+		}
+	}
+
+	if (!default_device_found)
+	{
+		setOutput(getPreferredOutput().pwszID.c_str());
+	}
+}
+
 void FxController::powerOn(bool on)
 {
 	if (on)
@@ -1211,6 +1316,7 @@ void FxController::setEqBandBoostCut(int band_num, float boost)
 
 LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, const WPARAM w_param, const LPARAM l_param)
 {
+	static auto os = SystemStats::getOperatingSystemType();
 	FxController* controller = (FxController*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
 	switch (message)
@@ -1308,7 +1414,6 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 
 		case WM_WTSSESSION_CHANGE:
 		{
-			auto os = SystemStats::getOperatingSystemType();
 			WPARAM login_event = (os == SystemStats::OperatingSystemType::Windows7) ? WTS_CONSOLE_CONNECT : WTS_SESSION_DESKTOP_READY;
 
 			if (w_param == login_event || w_param == WTS_SESSION_UNLOCK)
@@ -1381,124 +1486,27 @@ void FxController::timerCallback()
 	}
 }
 
-// Handled when FxSound processing is on
-void FxController::onSoundDeviceChange(std::vector<SoundDevice> sound_devices)
+void FxController::onSoundDeviceChange()
 {
 	if (session_id_ != WTSGetActiveConsoleSessionId())
 		return;   // another user is the active console session - do nothing
 
 	ScopedLock auto_lock(lock_);
 
-	auto available = audio_passthru_->isPlaybackDeviceAvailable();
-	if (available != playback_device_available_)
-	{
-		playback_device_available_ = available;
-		FxModel::getModel().notifyOutputError();
-	}
+	audio_passthru_->setDeviceChangePending(true);
 
-    // New device is added or removed, so update the output device list and select a preferred output device based on the updated device list.
-	if (sound_devices.size() != device_count_)
-	{
-		updateOutputs(sound_devices);
-		device_count_ = (uint32_t)sound_devices.size();
+	auto sound_devices = audio_passthru_->getSoundDevices(true);
 
-		if (!dfx_enabled_)
-		{
-			stopTimer();
-			main_window_->removeFromDesktop();
-			FxDeviceErrorMessage error_message;
-			error_message.runModalLoop();
-			JUCEApplication::getInstance()->systemRequestedQuit();
-			return;
-		}
+	if (isTimerRunning())
+	{
+        selectProcessingOutput(sound_devices);
 	}
 	else
 	{
-		for (auto sound_device : sound_devices)
-		{
-			// If the selected output device is different from the output device selected in application UI, update the application UI.
-			if (sound_device.isRealDevice && sound_device.isTargetedRealPlaybackDevice && getOutputName() != sound_device.deviceFriendlyName.c_str())
-			{
-                setOutputName(sound_device.deviceFriendlyName.c_str());
-				FxModel::getModel().setSelectedOutput(sound_device);
-
-				if (!FxModel::getModel().isPresetModified())
-				{
-					auto device_config = DeviceConfig::getDeviceConfig(settings_, getOutputName());
-					if (device_config.preset.isNotEmpty())
-					{
-						auto selected_preset = FxModel::getModel().selectPreset(device_config.preset, false);
-						setPreset(selected_preset, false);
-					}
-				}
-
-                break;
-			}
-        }
+        syncOutputWithSystemDefault(sound_devices);
 	}
-}
 
-// Handled when FxSound processing is off
-void FxController::onSoundDeviceChange()
-{
-	if (session_id_ != WTSGetActiveConsoleSessionId())
-		return;   // another user is the active console session - do nothing
-
-	if (!isTimerRunning())
-	{
-		ScopedLock auto_lock(lock_);
-
-		auto sound_devices = audio_passthru_->getSoundDevices(true);
-
-		active_output_devices_.clear();
-
-		for (auto sound_device : sound_devices)
-		{
-			if (sound_device.isRealDevice && sound_device.deviceNumChannel >= 2)
-			{
-				active_output_devices_.push_back(sound_device);
-			}
-		}
-
-		// Update the configuration as per the change in active devices and update the output device list in UI
-		if (sound_devices.size() != device_count_)
-		{
-			DeviceConfig::updateDeviceConfigs(settings_, sound_devices);
-
-			FxModel::getModel().initOutputs(active_output_devices_);
-
-			device_count_ = (uint32_t)sound_devices.size();
-		}
-		
-        bool default_device_found = false; 
-		for (auto& output_device : active_output_devices_)
-		{
-			// Change the selected device in UI
-			if (output_device.isDefaultDevice)
-			{
-                setOutputName(output_device.deviceFriendlyName.c_str());
-				FxModel::getModel().setSelectedOutput(output_device);
-
-				if (!FxModel::getModel().isPresetModified())
-				{
-					auto device_config = DeviceConfig::getDeviceConfig(settings_, getOutputName());
-					if (device_config.preset.isNotEmpty())
-					{
-						auto selected_preset = FxModel::getModel().selectPreset(device_config.preset, false);
-						setPreset(selected_preset, false);
-					}
-				}
-
-                default_device_found = true;
-				break;
-			}
-		}
-
-		if (!default_device_found)
-		{
-			setOutput(getPreferredOutput().pwszID.c_str());
-        }
-	}
+    audio_passthru_->setDeviceChangePending(false);
 }
 
 void FxController::enableHotkeys(bool enable)

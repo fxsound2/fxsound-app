@@ -214,12 +214,12 @@ private:
 
 	static LRESULT CALLBACK eventCallback(HWND hwnd, const UINT message, const WPARAM w_param, const LPARAM l_param);
 	void timerCallback() override;
-
-	void onSoundDeviceChange(std::vector<SoundDevice> sound_devices) override;
 	void onSoundDeviceChange() override;
 	
     void initOutputs(std::vector<SoundDevice>& sound_devices);
 	void updateOutputs(std::vector<SoundDevice>& sound_devices);
+    void selectProcessingOutput(std::vector<SoundDevice>& sound_devices);
+    void syncOutputWithSystemDefault(std::vector<SoundDevice>& sound_devices);
 
 	void powerOn(bool on);
 

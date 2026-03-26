@@ -123,9 +123,13 @@ HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDefaultDeviceChange
 	  /* Set the newly targeted playback device as the default.  It will then automatically become the targeted device */
 	  //if (sndDevicesSetDeviceType(g_sndDevicesCallbacks_hdl, SND_DEVICES_DEFAULT, &temp_string[0], &i_resultFlag) != OKAY)
 		//  return(NOT_OKAY);
-  	
-  	
-	  cast_handle->stopAudioCaptureAndPlaybackLoop = 1;
+  }
+
+  // Ignore the notification for the device selected in the application.
+  if (cast_handle->defaultDeviceNum != SND_DEVICES_DEVICE_NOT_PRESENT &&
+	  wcscmp(pwstrDeviceId, cast_handle->pwszID[cast_handle->defaultDeviceNum]) == 0)
+  {
+	  return(S_OK);
   }
 
   cast_handle->defaultDeviceNum = SND_DEVICES_DEVICE_NOT_PRESENT;
@@ -160,7 +164,6 @@ HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDeviceAdded(LPCWSTR
   if( cast_handle->ignoreDeviceCallbacks == FALSE )
   {
 	  SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDeviceAdded() setting processing thread kill flag");
-	  cast_handle->stopAudioCaptureAndPlaybackLoop = 1;
   }
 
   if (cast_handle->deviceChangeCallback != NULL)
@@ -184,8 +187,6 @@ HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDeviceRemoved(LPCWS
   if( cast_handle->ignoreDeviceCallbacks == FALSE )
   {
 	  SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDeviceRemoved() setting processing thread kill flag");
-
-	  cast_handle->stopAudioCaptureAndPlaybackLoop = 1;
   }
 
   if (cast_handle->deviceChangeCallback != NULL)
@@ -243,7 +244,6 @@ HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDeviceStateChanged(
   if( cast_handle->ignoreDeviceCallbacks == FALSE )
   {
 	  SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDeviceStateChanged() setting processing thread kill flag");
-	  cast_handle->stopAudioCaptureAndPlaybackLoop = 1;
   }
 
   if (cast_handle->deviceChangeCallback != NULL)

@@ -112,3 +112,8 @@ void AudioPassthru::restoreDefaultPlaybackDevice()
 {
     data_->restoreDefaultPlaybackDevice();
 }
+
+void AudioPassthru::setDeviceChangePending(bool value)
+{
+    data_->setDeviceChangePending(value);
+}
