@@ -46,11 +46,32 @@ namespace
     constexpr realtype kVolumeLevelingPredictionClamp = 0.15f;
     constexpr realtype kVolumeLevelingPredictionMissRatio = 0.35f;
     constexpr realtype kVolumeLevelingSidechainHpfHz = 120.0f;
+    constexpr realtype kVolumeLevelingToneLowHz = 180.0f;
+    constexpr realtype kVolumeLevelingToneBodyHz = 1200.0f;
+    constexpr realtype kVolumeLevelingTonePresenceHz = 4500.0f;
+    constexpr realtype kVolumeLevelingTonalityDbRange = 7.0f;
+    constexpr realtype kVolumeLevelingTonalitySmoothing = 0.08f;
+    constexpr realtype kVolumeLevelingMuffledTargetBoost = 0.12f;
+    constexpr realtype kVolumeLevelingClearTargetReduction = 0.18f;
+    constexpr realtype kVolumeLevelingClearCeilingReduction = 0.08f;
+    constexpr realtype kVolumeLevelingHeadroomTimeSeconds = 60.0f;
+    constexpr realtype kVolumeLevelingHeadroomTargetBoost = 0.08f;
+    constexpr realtype kVolumeLevelingHeadroomTargetReduction = 0.14f;
+    constexpr realtype kVolumeLevelingHeadroomComfortThreshold = 0.18f;
+    constexpr realtype kVolumeLevelingHeadroomNearCeilingThreshold = 0.985f;
+    constexpr realtype kVolumeLevelingHeadroomHitThreshold = 0.002f;
     constexpr realtype kPi = 3.14159265358979323846f;
 
     static realtype clampReal(realtype value, realtype min_value, realtype max_value)
     {
         return std::fmax(min_value, std::fmin(value, max_value));
+    }
+
+    static realtype calcOnePoleAlpha(realtype cutoff_hz, realtype sample_rate)
+    {
+        realtype dt = 1.0f / sample_rate;
+        realtype rc = 1.0f / ((realtype)2.0f * kPi * cutoff_hz);
+        return dt / (rc + dt);
     }
 
     static void applyVolumeLeveling(struct sosHdlType* cast_handle,
@@ -72,11 +93,18 @@ namespace
 
         realtype sum_squares = 0.0f;
         realtype peak = 0.0f;
+        realtype low_energy = 0.0f;
+        realtype body_energy = 0.0f;
+        realtype presence_energy = 0.0f;
+        realtype air_energy = 0.0f;
         int index = 0;
         realtype effective_sample_rate = (r_samp_freq > 1000.0f) ? r_samp_freq : 48000.0f;
         realtype dt = 1.0f / effective_sample_rate;
         realtype rc = 1.0f / ((realtype)2.0f * kPi * kVolumeLevelingSidechainHpfHz);
         realtype hpf_alpha = rc / (rc + dt);
+        realtype low_alpha = calcOnePoleAlpha(kVolumeLevelingToneLowHz, effective_sample_rate);
+        realtype body_alpha = calcOnePoleAlpha(kVolumeLevelingToneBodyHz, effective_sample_rate);
+        realtype presence_alpha = calcOnePoleAlpha(kVolumeLevelingTonePresenceHz, effective_sample_rate);
 
         for (int sample = 0; sample < i_num_sample_sets; sample++)
         {
@@ -97,6 +125,21 @@ namespace
                 realtype abs_value = std::fabs(sc_value);
                 if (abs_value > peak)
                     peak = abs_value;
+
+                realtype* tone_state = cast_handle->volume_leveling_tone_lp_state[channel];
+                tone_state[0] += low_alpha * (value - tone_state[0]);
+                tone_state[1] += body_alpha * (value - tone_state[1]);
+                tone_state[2] += presence_alpha * (value - tone_state[2]);
+
+                realtype low_band = tone_state[0];
+                realtype body_band = tone_state[1] - tone_state[0];
+                realtype presence_band = tone_state[2] - tone_state[1];
+                realtype air_band = value - tone_state[2];
+
+                low_energy += low_band * low_band;
+                body_energy += body_band * body_band;
+                presence_energy += presence_band * presence_band;
+                air_energy += air_band * air_band;
             }
 
             index += i_num_channels;
@@ -106,6 +149,28 @@ namespace
         realtype current_rms = sqrtf(current_power);
         realtype gain_start = cast_handle->volume_leveling_gain;
         realtype gain_end = gain_start;
+        realtype headroom_reduce_score = std::fmax(cast_handle->volume_leveling_headroom_score, (realtype)0.0f);
+        realtype headroom_boost_score = std::fmax(-cast_handle->volume_leveling_headroom_score, (realtype)0.0f);
+        realtype tonality_db =
+            (realtype)(10.0f * log10((double)((presence_energy + air_energy * 0.75f + 1e-12f) /
+                                              (body_energy * 1.15f + low_energy * 0.85f + 1e-12f))));
+        realtype target_tonality_score = clampReal(tonality_db / kVolumeLevelingTonalityDbRange, -1.0f, 1.0f);
+        cast_handle->volume_leveling_tonality_score =
+            cast_handle->volume_leveling_tonality_score * (1.0f - kVolumeLevelingTonalitySmoothing) +
+            target_tonality_score * kVolumeLevelingTonalitySmoothing;
+
+        realtype clear_score = std::fmax(cast_handle->volume_leveling_tonality_score, (realtype)0.0f);
+        realtype muffled_score = std::fmax(-cast_handle->volume_leveling_tonality_score, (realtype)0.0f);
+        realtype effective_target_rms = cast_handle->volume_leveling_target_rms *
+            (1.0f
+                + muffled_score * kVolumeLevelingMuffledTargetBoost
+                - clear_score * kVolumeLevelingClearTargetReduction
+                + headroom_boost_score * kVolumeLevelingHeadroomTargetBoost
+                - headroom_reduce_score * kVolumeLevelingHeadroomTargetReduction);
+        realtype effective_ceiling = clampReal(
+            kVolumeLevelingCeiling * (1.0f - clear_score * kVolumeLevelingClearCeilingReduction),
+            0.92f,
+            kVolumeLevelingCeiling);
 
         if (cast_handle->volume_leveling_power_count == SOS_VOLUME_LEVELING_HISTORY_SIZE)
         {
@@ -170,8 +235,8 @@ namespace
 
         if (current_rms > 1e-6f)
         {
-            realtype desired_gain = cast_handle->volume_leveling_target_rms / predicted_rms;
-            desired_gain = std::fmin(desired_gain, cast_handle->volume_leveling_target_rms / 0.125f);
+            realtype desired_gain = effective_target_rms / predicted_rms;
+            desired_gain = std::fmin(desired_gain, effective_target_rms / 0.125f);
 
             realtype alpha = kVolumeLevelingAttackAlpha;
             if (desired_gain >= cast_handle->volume_leveling_gain)
@@ -181,6 +246,8 @@ namespace
                 alpha = (release_gap_ratio > kVolumeLevelingReleaseGapThreshold)
                     ? kVolumeLevelingReleaseAlphaSlow
                     : kVolumeLevelingReleaseAlphaFast;
+
+                alpha *= clampReal(1.0f + muffled_score * 0.20f - clear_score * 0.35f, 0.55f, 1.20f);
             }
             gain_end = cast_handle->volume_leveling_gain * (1.0f - alpha) + desired_gain * alpha;
         }
@@ -196,18 +263,20 @@ namespace
 
         if (peak > 1e-6f)
         {
-            realtype peak_safe_gain = kVolumeLevelingCeiling / peak;
+            realtype peak_safe_gain = effective_ceiling / peak;
             if (gain_end > peak_safe_gain)
                 gain_end = peak_safe_gain;
             if (gain_start > peak_safe_gain)
                 gain_start = peak_safe_gain;
         }
 
-        gain_start = clampReal(gain_start, 0.0f, cast_handle->volume_leveling_target_rms / 0.125f);
-        gain_end = clampReal(gain_end, 0.0f, cast_handle->volume_leveling_target_rms / 0.125f);
+        gain_start = clampReal(gain_start, 0.0f, effective_target_rms / 0.125f);
+        gain_end = clampReal(gain_end, 0.0f, effective_target_rms / 0.125f);
         cast_handle->volume_leveling_gain = gain_end;
 
         index = 0;
+        realtype post_gain_peak_abs = 0.0f;
+        int ceiling_hit_count = 0;
         for (int sample = 0; sample < i_num_sample_sets; sample++)
         {
             realtype t = (realtype)sample / (realtype)i_num_sample_sets;
@@ -219,15 +288,50 @@ namespace
                     continue;
 
                 rp_out_buf[index + channel] *= gain;
+                realtype post_gain_abs = std::fabs(rp_out_buf[index + channel]);
+                if (post_gain_abs > post_gain_peak_abs)
+                    post_gain_peak_abs = post_gain_abs;
+                if (post_gain_abs >= (effective_ceiling * kVolumeLevelingHeadroomNearCeilingThreshold))
+                    ceiling_hit_count++;
 
-                if (rp_out_buf[index + channel] > kVolumeLevelingCeiling)
-                    rp_out_buf[index + channel] = kVolumeLevelingCeiling;
-                else if (rp_out_buf[index + channel] < -kVolumeLevelingCeiling)
-                    rp_out_buf[index + channel] = -kVolumeLevelingCeiling;
+                if (rp_out_buf[index + channel] > effective_ceiling)
+                    rp_out_buf[index + channel] = effective_ceiling;
+                else if (rp_out_buf[index + channel] < -effective_ceiling)
+                    rp_out_buf[index + channel] = -effective_ceiling;
             }
 
             index += i_num_channels;
         }
+
+        realtype ceiling_hit_ratio = (realtype)ceiling_hit_count / (realtype)(i_num_sample_sets * analyzed_channels);
+        realtype headroom_ratio = clampReal((effective_ceiling - post_gain_peak_abs) / effective_ceiling, 0.0f, 1.0f);
+        realtype target_headroom_score = 0.0f;
+
+        if (ceiling_hit_ratio > kVolumeLevelingHeadroomHitThreshold)
+        {
+            target_headroom_score = clampReal(ceiling_hit_ratio / 0.02f, 0.0f, 1.0f);
+        }
+        else if (post_gain_peak_abs >= (effective_ceiling * kVolumeLevelingHeadroomNearCeilingThreshold))
+        {
+            target_headroom_score = clampReal(
+                (post_gain_peak_abs / effective_ceiling - kVolumeLevelingHeadroomNearCeilingThreshold) /
+                (1.0f - kVolumeLevelingHeadroomNearCeilingThreshold),
+                0.0f,
+                1.0f);
+        }
+        else if (headroom_ratio > kVolumeLevelingHeadroomComfortThreshold)
+        {
+            target_headroom_score = -clampReal(
+                (headroom_ratio - kVolumeLevelingHeadroomComfortThreshold) / 0.25f,
+                0.0f,
+                1.0f);
+        }
+
+        realtype buffer_duration_seconds = (realtype)i_num_sample_sets / effective_sample_rate;
+        realtype headroom_alpha = clampReal(buffer_duration_seconds / kVolumeLevelingHeadroomTimeSeconds, 0.0005f, 0.05f);
+        cast_handle->volume_leveling_headroom_score =
+            cast_handle->volume_leveling_headroom_score * (1.0f - headroom_alpha) +
+            target_headroom_score * headroom_alpha;
     }
 }
 
