@@ -86,6 +86,9 @@ struct sosHdlType {
    realtype volume_leveling_previous_predicted_rms; /* Previous predicted rms for miss detection */
    realtype volume_leveling_sc_prev_in[8]; /* Sidechain HPF previous input per channel */
    realtype volume_leveling_sc_prev_out[8]; /* Sidechain HPF previous output per channel */
+   realtype volume_leveling_tone_lp_state[8][3]; /* Lowpass states used to estimate muffled vs clear balance */
+   realtype volume_leveling_tonality_score; /* -1.0 muffled ... +1.0 clear */
+   realtype volume_leveling_headroom_score; /* +1.0 ceiling pressure ... -1.0 comfortable headroom */
    realtype master_gain; /* Externally applied master gain for the combined sections */
    int sos_type[SOS_MAX_NUM_SOS_SECTIONS]; /* SOS_PARA for parametric, SOS_SHELF for shelf type */
    struct sosSectionType *sections; 

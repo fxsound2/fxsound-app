@@ -158,6 +158,8 @@ int PT_DECLSPEC sosZeroStateAllSections(PT_HANDLE *hp_sos)
 	cast_handle->volume_leveling_power_count = 0;
 	cast_handle->volume_leveling_previous_average_rms = (realtype)0.0;
 	cast_handle->volume_leveling_previous_predicted_rms = (realtype)0.0;
+	cast_handle->volume_leveling_tonality_score = (realtype)0.0;
+	cast_handle->volume_leveling_headroom_score = (realtype)0.0;
 
 	for (i = 0; i < SOS_VOLUME_LEVELING_HISTORY_SIZE; i++)
 	{
@@ -172,6 +174,11 @@ int PT_DECLSPEC sosZeroStateAllSections(PT_HANDLE *hp_sos)
 		cast_handle->outDC2_oldSS[i] = (realtype)0.0;
 		cast_handle->volume_leveling_sc_prev_in[i] = (realtype)0.0;
 		cast_handle->volume_leveling_sc_prev_out[i] = (realtype)0.0;
+
+		for (int tone_index = 0; tone_index < 3; tone_index++)
+		{
+			cast_handle->volume_leveling_tone_lp_state[i][tone_index] = (realtype)0.0;
+		}
 	}
        
 	for(section_num=0; section_num < cast_handle->num_allocated_sections; section_num++)
@@ -274,6 +281,8 @@ int PT_DECLSPEC sosSetVolumeLeveling(PT_HANDLE* hp_sos, realtype r_target_rms)
 		cast_handle->volume_leveling_power_count = 0;
 		cast_handle->volume_leveling_previous_average_rms = (realtype)0.0;
 		cast_handle->volume_leveling_previous_predicted_rms = (realtype)0.0;
+		cast_handle->volume_leveling_tonality_score = (realtype)0.0;
+		cast_handle->volume_leveling_headroom_score = (realtype)0.0;
 
 		for (int i = 0; i < SOS_VOLUME_LEVELING_HISTORY_SIZE; i++)
 		{
@@ -284,6 +293,11 @@ int PT_DECLSPEC sosSetVolumeLeveling(PT_HANDLE* hp_sos, realtype r_target_rms)
 		{
 			cast_handle->volume_leveling_sc_prev_in[i] = (realtype)0.0;
 			cast_handle->volume_leveling_sc_prev_out[i] = (realtype)0.0;
+
+			for (int tone_index = 0; tone_index < 3; tone_index++)
+			{
+				cast_handle->volume_leveling_tone_lp_state[i][tone_index] = (realtype)0.0;
+			}
 		}
 	}
 
