@@ -161,14 +161,24 @@ namespace
 
         realtype clear_score = std::fmax(cast_handle->volume_leveling_tonality_score, (realtype)0.0f);
         realtype muffled_score = std::fmax(-cast_handle->volume_leveling_tonality_score, (realtype)0.0f);
+        realtype tonal_upward_authority = clampReal(
+            1.0f - headroom_reduce_score * 1.5f + headroom_boost_score * 0.25f,
+            0.0f,
+            1.0f);
+        realtype tonal_downward_authority = clampReal(
+            0.35f + tonal_upward_authority * 0.65f,
+            0.35f,
+            1.0f);
+        realtype guarded_muffled_score = muffled_score * tonal_upward_authority;
+        realtype guarded_clear_score = clear_score * tonal_downward_authority;
         realtype effective_target_rms = cast_handle->volume_leveling_target_rms *
             (1.0f
-                + muffled_score * kVolumeLevelingMuffledTargetBoost
-                - clear_score * kVolumeLevelingClearTargetReduction
+                + guarded_muffled_score * kVolumeLevelingMuffledTargetBoost
+                - guarded_clear_score * kVolumeLevelingClearTargetReduction
                 + headroom_boost_score * kVolumeLevelingHeadroomTargetBoost
                 - headroom_reduce_score * kVolumeLevelingHeadroomTargetReduction);
         realtype effective_ceiling = clampReal(
-            kVolumeLevelingCeiling * (1.0f - clear_score * kVolumeLevelingClearCeilingReduction),
+            kVolumeLevelingCeiling * (1.0f - guarded_clear_score * kVolumeLevelingClearCeilingReduction),
             0.92f,
             kVolumeLevelingCeiling);
 
@@ -247,7 +257,7 @@ namespace
                     ? kVolumeLevelingReleaseAlphaSlow
                     : kVolumeLevelingReleaseAlphaFast;
 
-                alpha *= clampReal(1.0f + muffled_score * 0.20f - clear_score * 0.35f, 0.55f, 1.20f);
+                alpha *= clampReal(1.0f + guarded_muffled_score * 0.20f - guarded_clear_score * 0.35f, 0.55f, 1.20f);
             }
             gain_end = cast_handle->volume_leveling_gain * (1.0f - alpha) + desired_gain * alpha;
         }
