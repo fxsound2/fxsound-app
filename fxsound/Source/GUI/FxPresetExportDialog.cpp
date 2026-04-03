@@ -25,6 +25,7 @@ FxPresetExportDialog::FxPresetExportDialog() : FxWindow("Export Presets")
     centreWithSize(getWidth(), getHeight());
     addToDesktop(0);
     toFront(true);
+    setAlwaysOnTop(true);
 }
 
 bool FxPresetExportDialog::keyPressed(const KeyPress& key)
