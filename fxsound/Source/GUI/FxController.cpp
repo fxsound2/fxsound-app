@@ -551,11 +551,6 @@ bool FxController::exit()
 		FxPresetSaveDialog preset_save_dialog;
 		preset_save_dialog.runModalLoop();
 	}
-
-	if (FxModel::getModel().getPowerState())
-	{
-		audio_passthru_->restoreDefaultPlaybackDevice();
-	}
 	
 	JUCEApplication::getInstance()->systemRequestedQuit();
 

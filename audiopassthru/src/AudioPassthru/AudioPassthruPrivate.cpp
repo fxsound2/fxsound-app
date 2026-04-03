@@ -62,6 +62,10 @@ AudioPassthruPrivate::~AudioPassthruPrivate()
 	if (i_timed_out)
 		return;
 
+	/* Change the default soundcard to not be the DFX virtual one but instead the proper real one */
+	if (sndDevicesRestoreDefaultDevice(hp_sndDevices_, &i_result_flag) != OKAY)
+		return;
+
 	/*
 	* Disable the virtual soundcard
 	* NOTE: FOR NOW WE DON'T DO THE DISABLE BECAUSE THIS CAN CAUSE PROBLEMS
@@ -205,7 +209,8 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices(bool active_devices)
 		{
 			sound_device.isUserSelectedPlaybackDevice = true;
 		}
-		if (sound_device.pwszID == wcp_targeted_real_playback_device_guid)
+		if (sound_device.pwszID == wcp_targeted_real_playback_device_guid &&
+			sound_device.pwszID != wcp_dfx_device_guid)
 		{
 			sound_device.isTargetedRealPlaybackDevice = true;
 		}
