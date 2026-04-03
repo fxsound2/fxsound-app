@@ -44,7 +44,9 @@ FxOutputDeviceRow::FxOutputDeviceRow(FxOutputPreferenceListModel& model) : up_bu
     preset_list_.setColour(ComboBox::ColourIds::outlineColourId, Colour(FXCOLOR(DefaultText)).withAlpha(0.5f));
     preset_list_.setColour(ComboBox::ColourIds::focusedOutlineColourId, Colour(FXCOLOR(DefaultText)).withAlpha(1.0f));
     preset_list_.setWantsKeyboardFocus(true);
-    preset_list_.setJustificationType(Justification::centredLeft);   
+    preset_list_.setJustificationType(Justification::centredLeft);
+    preset_list_.setTextWhenNothingSelected(TRANS("Select preset"));
+
     preset_list_.onChange = [this]() {
         auto index = preset_list_.getSelectedItemIndex();
         if (index >= 0)
@@ -52,6 +54,11 @@ FxOutputDeviceRow::FxOutputDeviceRow(FxOutputPreferenceListModel& model) : up_bu
             auto preset = preset_list_.getItemText(index);
             device_config_.preset = preset;
             output_preference_list_model_.updateDeviceConfig(device_config_);
+            if (device_config_.device_name == FxController::getInstance().getOutputName())
+            {
+                auto selected_preset = FxModel::getModel().selectPreset(preset, false);
+                FxController::getInstance().setPreset(selected_preset);
+            }
         }
     };
 
@@ -112,22 +119,23 @@ void FxOutputDeviceRow::update(int index, const DeviceConfig& device_config)
     device_name_.setText(String::formatted("%d. ", row_index_ + 1) +  device_config.device_name, NotificationType::dontSendNotification);
     device_name_.setEnabled(FxController::getInstance().isOutputDeviceConnected(device_config.device_name));
 
-    preset_list_.clear();
-    preset_list_.setTextWhenNothingSelected(TRANS("Select preset"));
-    auto& model = FxModel::getModel();
-    int selected_id = 0;
-    for (auto i = 0; i < model.getPresetCount(); i++)
+    if (preset_list_.getNumItems() == 0)
     {
-        auto preset = FxModel::getModel().getPreset(i).name;
-        preset_list_.addItem(preset, i + 1);
-        if (preset == device_config.preset)
+        auto& model = FxModel::getModel();
+        int selected_id = 0;
+        for (auto i = 0; i < model.getPresetCount(); i++)
         {
-            selected_id = i + 1;
+            auto preset = FxModel::getModel().getPreset(i).name;
+            preset_list_.addItem(preset, i + 1);
+            if (preset == device_config.preset)
+            {
+                selected_id = i + 1;
+            }
         }
-    }
-    if (selected_id != 0)
-    {
-        preset_list_.setSelectedId(selected_id, false);
+        if (selected_id != 0)
+        {
+            preset_list_.setSelectedId(selected_id, NotificationType::dontSendNotification);
+        }
     }
 }
 

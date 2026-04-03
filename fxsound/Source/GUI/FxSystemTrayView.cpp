@@ -262,6 +262,7 @@ void FxSystemTrayView::showContextMenu()
     auto settingsClicked = []() {
         FxSettingsDialog settings_dialog;
         settings_dialog.runModalLoop();
+        FxController::getInstance().refreshOutputList();
     };
 
     auto darkModeClicked = [this]() {

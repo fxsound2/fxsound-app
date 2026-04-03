@@ -54,7 +54,7 @@ struct SoundDevice {
 class AudioPassthruCallback
 {
 public:
-	virtual void onSoundDeviceChange() = 0;
+	virtual void onSoundDeviceChange(bool processing) = 0;
 };
 
 class AudioPassthruPrivate;
@@ -74,7 +74,6 @@ public:
     bool isPlaybackDeviceAvailable();
 	bool checkDeviceChanges();
 	void restoreDefaultPlaybackDevice();
-    void setDeviceChangePending(bool value);
 
 private:
 	AudioPassthruPrivate *data_;

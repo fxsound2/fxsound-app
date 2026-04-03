@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Mmdeviceapi.h>
 #include <vector> 
 #include <map>
-#include <atomic>
 
 class DspProcessingModule
 {
@@ -53,7 +52,6 @@ public:
     bool isPlaybackDeviceAvailable();
 	bool checkDeviceChanges();
 	void restoreDefaultPlaybackDevice();
-    void setDeviceChangePending(bool value);
 
 private:
 	int sndDeviceHandleToSoundDevices(bool active_devices = true);
@@ -66,7 +64,6 @@ private:
 	HANDLE hProcessingThread_;
 	DWORD ProcessingThreadID_;
 	int i_kill_processing_thread_; /* Flag set from the outside telling processing thread to end */
-	std::atomic<bool> device_change_pending_ = false;
 	wchar_t wcp_playback_device_guid_[PT_MAX_GENERIC_STRLEN];
 	bool b_no_valid_snd_device_dialog_shown_; /* Flag stating whether we have shown the user a message to select a valid snd device.  We only want it shown once per session. */
 	int debug_;

@@ -644,6 +644,13 @@ void FxController::setOutput(const String output_device_id, bool notify)
 						break;
                     }
 				}
+				else
+				{
+					if (sound_device.isTargetedRealPlaybackDevice)
+					{
+						break;
+					}
+				}
 
 				audio_passthru_->setAsPlaybackDevice(sound_device);
 				output_changed_ = true;
@@ -955,10 +962,10 @@ void FxController::initOutputs(std::vector<SoundDevice>& sound_devices)
 		DeviceConfig::updateDeviceConfigs(settings_, sound_devices);
 	}
 
-    for (auto sound_device : sound_devices)
-    {
-        if (sound_device.isRealDevice)
-        {
+	for (auto sound_device : sound_devices)
+	{
+		if (sound_device.isRealDevice)
+		{
 			if (sound_device.isActive && sound_device.deviceNumChannel >= 2)
 			{
 				active_output_devices_.push_back(sound_device);
@@ -968,12 +975,14 @@ void FxController::initOutputs(std::vector<SoundDevice>& sound_devices)
 					default_output = sound_device;
 				}
 			}
-        }
-        else if (sound_device.deviceFriendlyName.find(L"FxSound Audio Enhancer") != std::wstring::npos)
-        {
-            dfx_enabled_ = true;
-        }
-    }
+		}
+		else if (sound_device.deviceFriendlyName.find(L"FxSound Audio Enhancer") != std::wstring::npos)
+		{
+			dfx_enabled_ = true;
+		}
+	}
+
+	sortByDeviceConfigPriority(active_output_devices_);
 
 	// If output is not set previously, use the system default output.
 	if (getOutputName().isEmpty() && default_output.deviceFriendlyName.size() > 0)
@@ -1017,12 +1026,15 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 		}
 	}
 
+	sortByDeviceConfigPriority(active_output_devices_);
+
 	SoundDevice preferred_device;
 
     // New device is connected, find the preferred device if the new device has higher priority than the current output device
 	if (sound_devices.size() > device_count_)
 	{
 		DeviceConfig::updateDeviceConfigs(settings_, sound_devices);
+		auto device_configs = DeviceConfig::loadDeviceConfigs(settings_, "device_configs");
 
 		for (auto& sound_device : sound_devices)
 		{
@@ -1038,7 +1050,7 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 			if (it == prev_active_devices.end())
 			{
 				// If the new device has higher priority, select it as output
-				if (compareOutputDevicePriority(sound_device.deviceFriendlyName.c_str(), getOutputName()) < 0)
+				if (compareOutputDevicePriority(sound_device.deviceFriendlyName.c_str(), getOutputName(), device_configs) < 0)
 				{
 					preferred_device = sound_device;
 					break;
@@ -1140,6 +1152,8 @@ void FxController::syncOutputWithSystemDefault(std::vector<SoundDevice>& sound_d
 		}
 	}
 
+	sortByDeviceConfigPriority(active_output_devices_);
+
 	// Update the configuration as per the change in active devices and update the output device list in UI
 	if (sound_devices.size() != device_count_)
 	{
@@ -1178,6 +1192,19 @@ void FxController::syncOutputWithSystemDefault(std::vector<SoundDevice>& sound_d
 	{
 		setOutput(getPreferredOutput().pwszID.c_str());
 	}
+}
+
+void FxController::sortByDeviceConfigPriority(std::vector<SoundDevice>& devices)
+{
+	auto device_configs = DeviceConfig::loadDeviceConfigs(settings_, "device_configs");
+
+	std::stable_sort(devices.begin(), devices.end(),
+		[&](const SoundDevice& a, const SoundDevice& b) {
+			return compareOutputDevicePriority(
+				String(a.deviceFriendlyName.c_str()),
+				String(b.deviceFriendlyName.c_str()),
+				device_configs) < 0;
+		});
 }
 
 void FxController::powerOn(bool on)
@@ -1486,27 +1513,26 @@ void FxController::timerCallback()
 	}
 }
 
-void FxController::onSoundDeviceChange()
+void FxController::onSoundDeviceChange(bool processing)
 {
 	if (session_id_ != WTSGetActiveConsoleSessionId())
-		return;   // another user is the active console session - do nothing
+		return; // Ignore device changes on another user session
 
 	ScopedLock auto_lock(lock_);
 
-	audio_passthru_->setDeviceChangePending(true);
-
-	auto sound_devices = audio_passthru_->getSoundDevices(true);
-
 	if (isTimerRunning())
 	{
-        selectProcessingOutput(sound_devices);
+		if (processing)
+		{
+			auto sound_devices = audio_passthru_->getSoundDevices(true);
+			selectProcessingOutput(sound_devices);
+		}
 	}
 	else
 	{
-        syncOutputWithSystemDefault(sound_devices);
+		auto sound_devices = audio_passthru_->getSoundDevices(true);
+		syncOutputWithSystemDefault(sound_devices);
 	}
-
-    audio_passthru_->setDeviceChangePending(false);
 }
 
 void FxController::enableHotkeys(bool enable)
@@ -2013,10 +2039,8 @@ SoundDevice FxController::getPreferredOutput()
 	return {};
 }
 
-int FxController::compareOutputDevicePriority(const String& output_device_name1, const String& output_device_name2)
+int FxController::compareOutputDevicePriority(const String& output_device_name1, const String& output_device_name2, const juce::Array<DeviceConfig>& device_configs)
 {
-	auto device_configs = DeviceConfig::loadDeviceConfigs(settings_, "device_configs");
-
 	int priority1 = (int)device_configs.size();
 	int priority2 = (int)device_configs.size();
 	int index = 0;
@@ -2035,6 +2059,13 @@ int FxController::compareOutputDevicePriority(const String& output_device_name1,
 	}
 
 	return priority1 - priority2;
+}
+
+void FxController::refreshOutputList()
+{
+	sortByDeviceConfigPriority(active_output_devices_);
+	FxModel::getModel().initOutputs(active_output_devices_);
+	FxModel::getModel().setSelectedOutput(FxModel::getModel().getSelectedOutput());
 }
 
 const String& FxController::getOutputName()

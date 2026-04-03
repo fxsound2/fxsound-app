@@ -41,7 +41,6 @@ AudioPassthruPrivate::AudioPassthruPrivate()
 	hProcessingThread_ = NULL;
 	ProcessingThreadID_ = (DWORD)0;
 	i_kill_processing_thread_ = IS_FALSE;
-	device_change_pending_ = false;
 	swprintf(wcp_playback_device_guid_, PT_MAX_GENERIC_STRLEN, L"");
 	b_no_valid_snd_device_dialog_shown_ = false;
 	debug_ = IS_TRUE;
@@ -233,7 +232,7 @@ void AudioPassthruPrivate::onDeviceChange()
 {
 	if (s_callback_ != nullptr)
 	{
-		s_callback_->onSoundDeviceChange();
+		s_callback_->onSoundDeviceChange(false);
 	}
 }
 
@@ -366,9 +365,6 @@ int AudioPassthruPrivate::processTimer()
 
 	if (b_need_to_start_thread)
 	{
-		if (device_change_pending_)
-			return(OKAY);
-
 		/* Initialize flag which can be set by the outside telling thread to end */
 		i_kill_processing_thread_ = IS_FALSE;
 
@@ -414,7 +410,11 @@ int AudioPassthruPrivate::processTimer()
 
 		/* PTNOTE - added check on DfxDeviceEnabledFlag status, may need to take additional steps if no DFX device is preset. */
 		if ((numRealDevices > 0) && (DfxDeviceEnabledFlag == IS_TRUE))
+		{
 			hProcessingThread_ = CreateThread(NULL, 0, processingThread, (LPVOID)this, 0L, &ProcessingThreadID_);
+			if (s_callback_ != nullptr)
+				s_callback_->onSoundDeviceChange(true);
+		}
 
 		/* Check if a new playback device has been selected */
 		/*
@@ -596,11 +596,6 @@ void AudioPassthruPrivate::restoreDefaultPlaybackDevice()
 	/* Change the default soundcard to not be the DFX virtual one but instead the proper real one */
 	if (sndDevicesRestoreDefaultDevice(hp_sndDevices_, &i_resultFlag) != OKAY)
 		return;
-}
-
-void AudioPassthruPrivate::setDeviceChangePending(bool value)
-{
-	device_change_pending_ = value;
 }
 
 int AudioPassthruPrivate::setTargetedRealPlaybackDevice(const std::wstring sound_device_guid)

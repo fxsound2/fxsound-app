@@ -425,6 +425,7 @@ void FxMainWindow::showMenu()
 
 		FxSettingsDialog settings_dialog;
 		settings_dialog.runModalLoop();
+		FxController::getInstance().refreshOutputList();
 	};
 
 	auto overwriteClicked = [this]() {

@@ -126,7 +126,8 @@ public:
     void saveDeviceConfigs(const juce::Array<DeviceConfig>& device_configs);
 	bool isOutputDeviceConnected(const String& output_device_name);
 	SoundDevice getPreferredOutput();
-	int compareOutputDevicePriority(const String& output_device_name1, const String& output_device_name2);
+	int compareOutputDevicePriority(const String& output_device_name1, const String& output_device_name2, const juce::Array<DeviceConfig>& device_configs);
+	void refreshOutputList();
 	const String& getOutputName();
     void setOutputName(const String& output_device_name);
 
@@ -214,12 +215,14 @@ private:
 
 	static LRESULT CALLBACK eventCallback(HWND hwnd, const UINT message, const WPARAM w_param, const LPARAM l_param);
 	void timerCallback() override;
-	void onSoundDeviceChange() override;
+	void onSoundDeviceChange(bool processing) override;
 	
     void initOutputs(std::vector<SoundDevice>& sound_devices);
 	void updateOutputs(std::vector<SoundDevice>& sound_devices);
     void selectProcessingOutput(std::vector<SoundDevice>& sound_devices);
     void syncOutputWithSystemDefault(std::vector<SoundDevice>& sound_devices);
+
+	void sortByDeviceConfigPriority(std::vector<SoundDevice>& devices);
 
 	void powerOn(bool on);
 
