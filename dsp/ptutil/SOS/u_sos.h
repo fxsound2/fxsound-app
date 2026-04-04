@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SOS_FLOAT_BIAS 1.0e-30 // Was 1.0e-5 Thru 7/11/15, then changed to 1.0e-30 values that was being used in Hyperbass.
 #define SOS_DCBLOCK_ALPHA 0.999	// See http://peabody.sapp.org/class/dmp2/lab/dcblock/ for freq response curves for differen values, 0.999 is good for 44.1 and 48khz.
 #define SOS_VOLUME_LEVELING_HISTORY_SIZE 6
+#define SOS_VOLUME_LEVELING_PEAK_WINDOW_SIZE 30
 
 /* Section type definition */
 struct sosSectionType {
@@ -96,6 +97,11 @@ struct sosHdlType {
    realtype volume_leveling_headroom_score; /* +1.0 ceiling pressure ... -1.0 comfortable headroom */
    realtype volume_leveling_quiet_duration_seconds; /* How long the leveled output has continuously stayed in the very quiet region */
    realtype volume_leveling_quiet_gain_floor; /* Retained gain floor after quiet boost has made the output audible */
+   realtype volume_leveling_quiet_peak_history[SOS_VOLUME_LEVELING_PEAK_WINDOW_SIZE]; /* One-second output peak buckets used for the 30-second headroom window */
+   realtype volume_leveling_quiet_peak_bucket_max; /* Peak accumulated in the current partial one-second bucket */
+   realtype volume_leveling_quiet_peak_bucket_seconds; /* Duration accumulated in the current partial one-second bucket */
+   int volume_leveling_quiet_peak_history_index; /* Ring buffer write index for one-second output peak buckets */
+   int volume_leveling_quiet_peak_history_count; /* Number of valid one-second output peak buckets */
    realtype master_gain; /* Externally applied master gain for the combined sections */
    int sos_type[SOS_MAX_NUM_SOS_SECTIONS]; /* SOS_PARA for parametric, SOS_SHELF for shelf type */
    struct sosSectionType *sections; 

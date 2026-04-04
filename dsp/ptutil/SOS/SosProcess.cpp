@@ -70,6 +70,9 @@ namespace
     constexpr realtype kVolumeLevelingQuietFloorReleaseRmsThreshold = 0.06f;
     constexpr realtype kVolumeLevelingQuietFloorReleaseAlpha = 0.02f;
     constexpr realtype kVolumeLevelingQuietFloorSilenceDecayAlpha = 0.08f;
+    constexpr realtype kVolumeLevelingQuietPeakBucketSeconds = 1.0f;
+    constexpr realtype kVolumeLevelingQuietPeakTargetRatio = 0.98f;
+    constexpr realtype kVolumeLevelingQuietPeakFloorRaiseTimeSeconds = 6.0f;
     constexpr realtype kPi = 3.14159265358979323846f;
 
     static realtype clampReal(realtype value, realtype min_value, realtype max_value)
@@ -96,6 +99,41 @@ namespace
         cast_handle->volume_leveling_tone_body_alpha = calcOnePoleAlpha(kVolumeLevelingToneBodyHz, sample_rate);
         cast_handle->volume_leveling_tone_presence_alpha = calcOnePoleAlpha(kVolumeLevelingTonePresenceHz, sample_rate);
         cast_handle->volume_leveling_alpha_sample_rate = sample_rate;
+    }
+
+    static void updateQuietPeakWindow(struct sosHdlType* cast_handle,
+                                      realtype post_gain_peak_abs,
+                                      realtype buffer_duration_seconds)
+    {
+        cast_handle->volume_leveling_quiet_peak_bucket_max =
+            std::fmax(cast_handle->volume_leveling_quiet_peak_bucket_max, post_gain_peak_abs);
+        cast_handle->volume_leveling_quiet_peak_bucket_seconds += buffer_duration_seconds;
+
+        while (cast_handle->volume_leveling_quiet_peak_bucket_seconds >= kVolumeLevelingQuietPeakBucketSeconds)
+        {
+            cast_handle->volume_leveling_quiet_peak_history[
+                cast_handle->volume_leveling_quiet_peak_history_index] =
+                cast_handle->volume_leveling_quiet_peak_bucket_max;
+
+            cast_handle->volume_leveling_quiet_peak_history_index =
+                (cast_handle->volume_leveling_quiet_peak_history_index + 1) % SOS_VOLUME_LEVELING_PEAK_WINDOW_SIZE;
+
+            if (cast_handle->volume_leveling_quiet_peak_history_count < SOS_VOLUME_LEVELING_PEAK_WINDOW_SIZE)
+                cast_handle->volume_leveling_quiet_peak_history_count++;
+
+            cast_handle->volume_leveling_quiet_peak_bucket_seconds -= kVolumeLevelingQuietPeakBucketSeconds;
+            cast_handle->volume_leveling_quiet_peak_bucket_max = (realtype)0.0f;
+        }
+    }
+
+    static realtype getQuietPeakWindowMax(const struct sosHdlType* cast_handle)
+    {
+        realtype rolling_peak_max = cast_handle->volume_leveling_quiet_peak_bucket_max;
+        for (int i = 0; i < cast_handle->volume_leveling_quiet_peak_history_count; i++)
+        {
+            rolling_peak_max = std::fmax(rolling_peak_max, cast_handle->volume_leveling_quiet_peak_history[i]);
+        }
+        return rolling_peak_max;
     }
 
     static void applyVolumeLeveling(struct sosHdlType* cast_handle,
@@ -362,6 +400,8 @@ namespace
         }
 
         realtype post_gain_rms = sqrtf(post_gain_sum_squares / (i_num_sample_sets * analyzed_channels));
+        updateQuietPeakWindow(cast_handle, post_gain_peak_abs, buffer_duration_seconds);
+        realtype rolling_peak_max = getQuietPeakWindowMax(cast_handle);
         bool post_gain_still_quiet =
             peak > kVolumeLevelingQuietAudiblePeakThreshold &&
             post_gain_rms < kVolumeLevelingVeryQuietRmsThreshold;
@@ -380,6 +420,30 @@ namespace
         if (quiet_boost_had_authority && gain_end > quiet_gain_floor)
         {
             quiet_gain_floor = gain_end;
+        }
+
+        bool quiet_peak_window_ready =
+            cast_handle->volume_leveling_quiet_peak_history_count == SOS_VOLUME_LEVELING_PEAK_WINDOW_SIZE;
+        bool quiet_floor_is_active =
+            quiet_duration_before >= kVolumeLevelingQuietActivationSeconds || quiet_gain_floor > 1.0f;
+        realtype quiet_peak_target = effective_ceiling * kVolumeLevelingQuietPeakTargetRatio;
+        bool sustained_headroom_available =
+            rolling_peak_max > kVolumeLevelingQuietAudiblePeakThreshold &&
+            rolling_peak_max < quiet_peak_target &&
+            headroom_reduce_score < 0.25f;
+        if (quiet_peak_window_ready && quiet_floor_is_active && sustained_headroom_available)
+        {
+            realtype desired_quiet_floor =
+                quiet_gain_floor * (quiet_peak_target / std::fmax(rolling_peak_max, (realtype)1e-6f));
+            desired_quiet_floor = clampReal(desired_quiet_floor, quiet_gain_floor, kVolumeLevelingQuietMaxGain);
+
+            realtype quiet_floor_raise_alpha = clampReal(
+                buffer_duration_seconds / kVolumeLevelingQuietPeakFloorRaiseTimeSeconds,
+                0.0005f,
+                0.05f);
+            quiet_gain_floor =
+                quiet_gain_floor * (1.0f - quiet_floor_raise_alpha) +
+                desired_quiet_floor * quiet_floor_raise_alpha;
         }
 
         if (peak <= kVolumeLevelingQuietAudiblePeakThreshold)

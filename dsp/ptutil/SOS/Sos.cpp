@@ -80,6 +80,10 @@ int PT_DECLSPEC sosNew(PT_HANDLE **hpp_sos, CSlout *hp_slout, int i_num_sections
 	cast_handle->volume_leveling_headroom_score = (realtype)0.0;
 	cast_handle->volume_leveling_quiet_duration_seconds = (realtype)0.0;
 	cast_handle->volume_leveling_quiet_gain_floor = (realtype)1.0;
+	cast_handle->volume_leveling_quiet_peak_bucket_max = (realtype)0.0;
+	cast_handle->volume_leveling_quiet_peak_bucket_seconds = (realtype)0.0;
+	cast_handle->volume_leveling_quiet_peak_history_index = 0;
+	cast_handle->volume_leveling_quiet_peak_history_count = 0;
     
 
     /* Allocate the sections */
