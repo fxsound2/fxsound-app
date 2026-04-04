@@ -94,6 +94,8 @@ struct sosHdlType {
    realtype volume_leveling_tone_lp_state[8][3]; /* Lowpass states used to estimate muffled vs clear balance */
    realtype volume_leveling_tonality_score; /* -1.0 muffled ... +1.0 clear */
    realtype volume_leveling_headroom_score; /* +1.0 ceiling pressure ... -1.0 comfortable headroom */
+   realtype volume_leveling_quiet_duration_seconds; /* How long the leveled output has continuously stayed in the very quiet region */
+   realtype volume_leveling_quiet_gain_floor; /* Retained gain floor after quiet boost has made the output audible */
    realtype master_gain; /* Externally applied master gain for the combined sections */
    int sos_type[SOS_MAX_NUM_SOS_SECTIONS]; /* SOS_PARA for parametric, SOS_SHELF for shelf type */
    struct sosSectionType *sections; 

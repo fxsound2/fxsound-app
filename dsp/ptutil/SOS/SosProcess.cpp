@@ -41,7 +41,6 @@ namespace
     constexpr realtype kVolumeLevelingReleaseAlphaFast = 0.05f;
     constexpr realtype kVolumeLevelingReleaseAlphaSlow = 0.02f;
     constexpr realtype kVolumeLevelingReleaseGapThreshold = 0.15f;
-    constexpr realtype kVolumeLevelingMaxReductionPerBufferDb = 1.0f;
     constexpr realtype kVolumeLevelingPredictionStrength = 0.35f;
     constexpr realtype kVolumeLevelingPredictionClamp = 0.15f;
     constexpr realtype kVolumeLevelingPredictionMissRatio = 0.35f;
@@ -49,6 +48,7 @@ namespace
     constexpr realtype kVolumeLevelingToneLowHz = 180.0f;
     constexpr realtype kVolumeLevelingToneBodyHz = 1200.0f;
     constexpr realtype kVolumeLevelingTonePresenceHz = 4500.0f;
+    constexpr realtype kVolumeLevelingMinRatioPerBuffer = 0.8912509381337456f; // 10 ^ (-1 dB / 20)
     constexpr realtype kVolumeLevelingTonalityDbRange = 7.0f;
     constexpr realtype kVolumeLevelingTonalitySmoothing = 0.08f;
     constexpr realtype kVolumeLevelingMuffledTargetBoost = 0.12f;
@@ -60,6 +60,16 @@ namespace
     constexpr realtype kVolumeLevelingHeadroomComfortThreshold = 0.18f;
     constexpr realtype kVolumeLevelingHeadroomNearCeilingThreshold = 0.985f;
     constexpr realtype kVolumeLevelingHeadroomHitThreshold = 0.002f;
+    constexpr realtype kVolumeLevelingVeryQuietRmsThreshold = 0.035f;
+    constexpr realtype kVolumeLevelingQuietAudiblePeakThreshold = 0.0035f;
+    constexpr realtype kVolumeLevelingQuietFullBoostPeak = 0.02f;
+    constexpr realtype kVolumeLevelingQuietMaxGain = 10.0f;
+    constexpr realtype kVolumeLevelingQuietReleaseAlpha = 0.18f;
+    constexpr realtype kVolumeLevelingQuietActivationSeconds = 10.0f;
+    constexpr realtype kVolumeLevelingQuietActivationRampSeconds = 2.0f;
+    constexpr realtype kVolumeLevelingQuietFloorReleaseRmsThreshold = 0.06f;
+    constexpr realtype kVolumeLevelingQuietFloorReleaseAlpha = 0.02f;
+    constexpr realtype kVolumeLevelingQuietFloorSilenceDecayAlpha = 0.08f;
     constexpr realtype kPi = 3.14159265358979323846f;
 
     static realtype clampReal(realtype value, realtype min_value, realtype max_value)
@@ -160,6 +170,8 @@ namespace
         realtype gain_end = gain_start;
         realtype headroom_reduce_score = std::fmax(cast_handle->volume_leveling_headroom_score, (realtype)0.0f);
         realtype headroom_boost_score = std::fmax(-cast_handle->volume_leveling_headroom_score, (realtype)0.0f);
+        realtype quiet_gain_floor = std::fmax(cast_handle->volume_leveling_quiet_gain_floor, (realtype)1.0f);
+        realtype quiet_duration_before = cast_handle->volume_leveling_quiet_duration_seconds;
         realtype tonality_db =
             (realtype)(10.0f * log10((double)((presence_energy + air_energy * 0.75f + 1e-12f) /
                                               (body_energy * 1.15f + low_energy * 0.85f + 1e-12f))));
@@ -170,6 +182,7 @@ namespace
 
         realtype clear_score = std::fmax(cast_handle->volume_leveling_tonality_score, (realtype)0.0f);
         realtype muffled_score = std::fmax(-cast_handle->volume_leveling_tonality_score, (realtype)0.0f);
+        realtype buffer_duration_seconds = (realtype)i_num_sample_sets / effective_sample_rate;
         realtype tonal_upward_authority = clampReal(
             1.0f - headroom_reduce_score * 1.5f + headroom_boost_score * 0.25f,
             0.0f,
@@ -190,6 +203,7 @@ namespace
             kVolumeLevelingCeiling * (1.0f - guarded_clear_score * kVolumeLevelingClearCeilingReduction),
             0.92f,
             kVolumeLevelingCeiling);
+        realtype max_gain_cap = std::fmax(effective_target_rms / 0.125f, quiet_gain_floor);
 
         if (cast_handle->volume_leveling_power_count == SOS_VOLUME_LEVELING_HISTORY_SIZE)
         {
@@ -254,8 +268,31 @@ namespace
 
         if (current_rms > 1e-6f)
         {
+            realtype quiet_activation_score = clampReal(
+                (cast_handle->volume_leveling_quiet_duration_seconds - kVolumeLevelingQuietActivationSeconds) /
+                    kVolumeLevelingQuietActivationRampSeconds,
+                0.0f,
+                1.0f);
+            realtype quiet_rms_score = clampReal(
+                (kVolumeLevelingVeryQuietRmsThreshold - predicted_rms) / kVolumeLevelingVeryQuietRmsThreshold,
+                0.0f,
+                1.0f);
+            realtype audible_peak_score = clampReal(
+                (peak - kVolumeLevelingQuietAudiblePeakThreshold) /
+                    (kVolumeLevelingQuietFullBoostPeak - kVolumeLevelingQuietAudiblePeakThreshold),
+                0.0f,
+                1.0f);
+            realtype quiet_detected_score = quiet_rms_score * audible_peak_score;
+            realtype quiet_boost_score = quiet_detected_score * quiet_activation_score;
+            if (quiet_boost_score > 0.0f)
+            {
+                realtype quiet_gain_cap = std::fmax(max_gain_cap, kVolumeLevelingQuietMaxGain);
+                max_gain_cap = max_gain_cap + (quiet_gain_cap - max_gain_cap) * quiet_boost_score;
+            }
+
             realtype desired_gain = effective_target_rms / predicted_rms;
-            desired_gain = std::fmin(desired_gain, effective_target_rms / 0.125f);
+            desired_gain = std::fmin(desired_gain, max_gain_cap);
+            desired_gain = std::fmax(desired_gain, quiet_gain_floor);
 
             realtype alpha = kVolumeLevelingAttackAlpha;
             if (desired_gain >= cast_handle->volume_leveling_gain)
@@ -267,6 +304,7 @@ namespace
                     : kVolumeLevelingReleaseAlphaFast;
 
                 alpha *= clampReal(1.0f + guarded_muffled_score * 0.20f - guarded_clear_score * 0.35f, 0.55f, 1.20f);
+                alpha = std::fmax(alpha, kVolumeLevelingQuietReleaseAlpha * quiet_boost_score);
             }
             gain_end = cast_handle->volume_leveling_gain * (1.0f - alpha) + desired_gain * alpha;
         }
@@ -274,8 +312,7 @@ namespace
         // Avoid abrupt "crushed" sound: limit how much gain can drop within one buffer.
         if (gain_end < gain_start)
         {
-            const realtype min_ratio_per_buffer = std::pow((realtype)10.0f, -kVolumeLevelingMaxReductionPerBufferDb / (realtype)20.0f);
-            const realtype min_allowed_gain_end = gain_start * min_ratio_per_buffer;
+            const realtype min_allowed_gain_end = gain_start * kVolumeLevelingMinRatioPerBuffer;
             if (gain_end < min_allowed_gain_end)
                 gain_end = min_allowed_gain_end;
         }
@@ -289,11 +326,12 @@ namespace
                 gain_start = peak_safe_gain;
         }
 
-        gain_start = clampReal(gain_start, 0.0f, effective_target_rms / 0.125f);
-        gain_end = clampReal(gain_end, 0.0f, effective_target_rms / 0.125f);
+        gain_start = clampReal(gain_start, 0.0f, max_gain_cap);
+        gain_end = clampReal(gain_end, 0.0f, max_gain_cap);
         cast_handle->volume_leveling_gain = gain_end;
 
         index = 0;
+        realtype post_gain_sum_squares = 0.0f;
         realtype post_gain_peak_abs = 0.0f;
         int ceiling_hit_count = 0;
         for (int sample = 0; sample < i_num_sample_sets; sample++)
@@ -308,6 +346,7 @@ namespace
 
                 rp_out_buf[index + channel] *= gain;
                 realtype post_gain_abs = std::fabs(rp_out_buf[index + channel]);
+                post_gain_sum_squares += rp_out_buf[index + channel] * rp_out_buf[index + channel];
                 if (post_gain_abs > post_gain_peak_abs)
                     post_gain_peak_abs = post_gain_abs;
                 if (post_gain_abs >= (effective_ceiling * kVolumeLevelingHeadroomNearCeilingThreshold))
@@ -321,6 +360,42 @@ namespace
 
             index += i_num_channels;
         }
+
+        realtype post_gain_rms = sqrtf(post_gain_sum_squares / (i_num_sample_sets * analyzed_channels));
+        bool post_gain_still_quiet =
+            peak > kVolumeLevelingQuietAudiblePeakThreshold &&
+            post_gain_rms < kVolumeLevelingVeryQuietRmsThreshold;
+        if (post_gain_still_quiet)
+        {
+            cast_handle->volume_leveling_quiet_duration_seconds += buffer_duration_seconds;
+        }
+        else
+        {
+            cast_handle->volume_leveling_quiet_duration_seconds = 0.0f;
+        }
+
+        bool quiet_boost_had_authority =
+            quiet_duration_before >= kVolumeLevelingQuietActivationSeconds &&
+            gain_end > (effective_target_rms / 0.125f);
+        if (quiet_boost_had_authority && gain_end > quiet_gain_floor)
+        {
+            quiet_gain_floor = gain_end;
+        }
+
+        if (peak <= kVolumeLevelingQuietAudiblePeakThreshold)
+        {
+            quiet_gain_floor += (1.0f - quiet_gain_floor) * kVolumeLevelingQuietFloorSilenceDecayAlpha;
+        }
+        else if (post_gain_rms > kVolumeLevelingQuietFloorReleaseRmsThreshold)
+        {
+            quiet_gain_floor += (1.0f - quiet_gain_floor) * kVolumeLevelingQuietFloorReleaseAlpha;
+        }
+
+        if (quiet_gain_floor < 1.0001f)
+        {
+            quiet_gain_floor = 1.0f;
+        }
+        cast_handle->volume_leveling_quiet_gain_floor = quiet_gain_floor;
 
         realtype ceiling_hit_ratio = (realtype)ceiling_hit_count / (realtype)(i_num_sample_sets * analyzed_channels);
         realtype headroom_ratio = clampReal((effective_ceiling - post_gain_peak_abs) / effective_ceiling, 0.0f, 1.0f);
@@ -346,7 +421,6 @@ namespace
                 1.0f);
         }
 
-        realtype buffer_duration_seconds = (realtype)i_num_sample_sets / effective_sample_rate;
         realtype headroom_alpha = clampReal(buffer_duration_seconds / kVolumeLevelingHeadroomTimeSeconds, 0.0005f, 0.05f);
         cast_handle->volume_leveling_headroom_score =
             cast_handle->volume_leveling_headroom_score * (1.0f - headroom_alpha) +
