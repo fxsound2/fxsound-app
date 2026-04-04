@@ -71,6 +71,11 @@ int PT_DECLSPEC sosNew(PT_HANDLE **hpp_sos, CSlout *hp_slout, int i_num_sections
 	cast_handle->volume_leveling_power_count = 0;
 	cast_handle->volume_leveling_previous_average_rms = (realtype)0.0;
 	cast_handle->volume_leveling_previous_predicted_rms = (realtype)0.0;
+	cast_handle->volume_leveling_alpha_sample_rate = (realtype)0.0;
+	cast_handle->volume_leveling_sc_hpf_alpha = (realtype)0.0;
+	cast_handle->volume_leveling_tone_low_alpha = (realtype)0.0;
+	cast_handle->volume_leveling_tone_body_alpha = (realtype)0.0;
+	cast_handle->volume_leveling_tone_presence_alpha = (realtype)0.0;
 	cast_handle->volume_leveling_tonality_score = (realtype)0.0;
 	cast_handle->volume_leveling_headroom_score = (realtype)0.0;
     

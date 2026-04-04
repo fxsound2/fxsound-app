@@ -74,6 +74,20 @@ namespace
         return dt / (rc + dt);
     }
 
+    static void updateVolumeLevelingCoefficients(struct sosHdlType* cast_handle, realtype sample_rate)
+    {
+        if (cast_handle->volume_leveling_alpha_sample_rate == sample_rate)
+            return;
+
+        realtype dt = 1.0f / sample_rate;
+        realtype rc = 1.0f / ((realtype)2.0f * kPi * kVolumeLevelingSidechainHpfHz);
+        cast_handle->volume_leveling_sc_hpf_alpha = rc / (rc + dt);
+        cast_handle->volume_leveling_tone_low_alpha = calcOnePoleAlpha(kVolumeLevelingToneLowHz, sample_rate);
+        cast_handle->volume_leveling_tone_body_alpha = calcOnePoleAlpha(kVolumeLevelingToneBodyHz, sample_rate);
+        cast_handle->volume_leveling_tone_presence_alpha = calcOnePoleAlpha(kVolumeLevelingTonePresenceHz, sample_rate);
+        cast_handle->volume_leveling_alpha_sample_rate = sample_rate;
+    }
+
     static void applyVolumeLeveling(struct sosHdlType* cast_handle,
                                     realtype* rp_out_buf,
                                     int i_num_sample_sets,
@@ -99,12 +113,7 @@ namespace
         realtype air_energy = 0.0f;
         int index = 0;
         realtype effective_sample_rate = (r_samp_freq > 1000.0f) ? r_samp_freq : 48000.0f;
-        realtype dt = 1.0f / effective_sample_rate;
-        realtype rc = 1.0f / ((realtype)2.0f * kPi * kVolumeLevelingSidechainHpfHz);
-        realtype hpf_alpha = rc / (rc + dt);
-        realtype low_alpha = calcOnePoleAlpha(kVolumeLevelingToneLowHz, effective_sample_rate);
-        realtype body_alpha = calcOnePoleAlpha(kVolumeLevelingToneBodyHz, effective_sample_rate);
-        realtype presence_alpha = calcOnePoleAlpha(kVolumeLevelingTonePresenceHz, effective_sample_rate);
+        updateVolumeLevelingCoefficients(cast_handle, effective_sample_rate);
 
         for (int sample = 0; sample < i_num_sample_sets; sample++)
         {
@@ -116,7 +125,7 @@ namespace
                 realtype value = rp_out_buf[index + channel];
                 realtype sc_prev_in = cast_handle->volume_leveling_sc_prev_in[channel];
                 realtype sc_prev_out = cast_handle->volume_leveling_sc_prev_out[channel];
-                realtype sc_value = hpf_alpha * (sc_prev_out + value - sc_prev_in);
+                realtype sc_value = cast_handle->volume_leveling_sc_hpf_alpha * (sc_prev_out + value - sc_prev_in);
                 cast_handle->volume_leveling_sc_prev_in[channel] = value;
                 cast_handle->volume_leveling_sc_prev_out[channel] = sc_value;
 
@@ -127,9 +136,9 @@ namespace
                     peak = abs_value;
 
                 realtype* tone_state = cast_handle->volume_leveling_tone_lp_state[channel];
-                tone_state[0] += low_alpha * (value - tone_state[0]);
-                tone_state[1] += body_alpha * (value - tone_state[1]);
-                tone_state[2] += presence_alpha * (value - tone_state[2]);
+                tone_state[0] += cast_handle->volume_leveling_tone_low_alpha * (value - tone_state[0]);
+                tone_state[1] += cast_handle->volume_leveling_tone_body_alpha * (value - tone_state[1]);
+                tone_state[2] += cast_handle->volume_leveling_tone_presence_alpha * (value - tone_state[2]);
 
                 realtype low_band = tone_state[0];
                 realtype body_band = tone_state[1] - tone_state[0];
