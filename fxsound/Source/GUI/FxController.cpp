@@ -888,8 +888,16 @@ void FxController::deletePreset()
 
 		initPresets();
 
-		setPreset(0);
-
+		auto device_config = DeviceConfig::getDeviceConfig(settings_, getOutputName());
+		if (device_config.preset.isNotEmpty())
+		{
+			setPreset(device_config.preset, false);
+		}
+		else
+		{
+			setPreset(0);
+		}
+		
 		FxModel::getModel().pushMessage(FormatString(TRANS("Preset %s is deleted."), preset.name));
 	}
 }
@@ -948,7 +956,15 @@ void FxController::resetPresets()
 	
 	initPresets();
 
-	setPreset(0);
+	auto device_config = DeviceConfig::getDeviceConfig(settings_, getOutputName());
+	if (device_config.preset.isNotEmpty())
+	{
+		setPreset(device_config.preset, false);
+	}
+	else
+	{
+		setPreset(0);
+	}
 
 	FxModel::getModel().pushMessage(TRANS("Presets are restored to factory defaults"));
 }
