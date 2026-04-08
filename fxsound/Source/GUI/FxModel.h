@@ -36,6 +36,7 @@ public:
 		String name;
 		String path;
 		PresetType type;
+		bool modified = false;
 	};
 
 	class Listener
@@ -61,14 +62,13 @@ public:
 	void initPresets(const Array<Preset>& presets);
 	int  addPreset(const Preset& preset);
 	void removePreset(int preset);
-	int  selectPreset(const String& selected_preset, bool notify=true);
 	void selectPreset(int selected_preset, bool notify=true);
 	int getSelectedPreset() const;
 	int getPresetCount() const;
 	int getUserPresetCount() const;
 	Preset getPreset(int preset) const;
-	bool isPresetModified() const;
-	void setPresetModified(bool preset_modified);
+	bool isPresetModified(int preset_index = -1) const;
+	void setPresetModified(int preset_index, bool preset_modified);
     bool isPresetNameValid(const String& preset_name);
 
 	bool getPowerState()
@@ -191,7 +191,6 @@ private:
 
 	bool power_state_;
 	Array<Preset> presets_;
-	bool preset_modified_;
 	StringArray output_names_;
 	int selected_preset_;
     bool output_disconnected_;

@@ -106,7 +106,7 @@ public:
     {
         if (main_window_.get() != nullptr)
         {
-            // Add your application's shutdown code here..
+            FxController::getInstance().autoSaveModifiedPreset();
 
             audio_passthru_.reset();
 
@@ -196,7 +196,7 @@ private:
 
         if (context == nullptr)
         {
-            // No crash context — capture live callstack
+            // No crash context - capture live callstack
             void* frames[MAX_FRAMES];
             USHORT capturedFrames = CaptureStackBackTrace(0, MAX_FRAMES, frames, NULL);
 
@@ -228,7 +228,7 @@ private:
         }
         else
         {
-            // Crash context — walk using StackWalk64
+            // Crash context - walk using StackWalk64
             STACKFRAME64 stackFrame = { 0 };
 #if defined(_M_IX86)
             DWORD machineType = IMAGE_FILE_MACHINE_I386;

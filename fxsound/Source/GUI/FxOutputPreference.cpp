@@ -56,8 +56,7 @@ FxOutputDeviceRow::FxOutputDeviceRow(FxOutputPreferenceListModel& model) : up_bu
             output_preference_list_model_.updateDeviceConfig(device_config_);
             if (device_config_.device_name == FxController::getInstance().getOutputName())
             {
-                auto selected_preset = FxModel::getModel().selectPreset(preset, false);
-                FxController::getInstance().setPreset(selected_preset);
+                FxController::getInstance().setPreset(preset);
             }
         }
     };

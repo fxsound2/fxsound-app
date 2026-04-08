@@ -80,13 +80,15 @@ public:
 	bool exit();
 
 	void setPowerState(bool power_state);
-	bool setPreset(int selected_preset, bool notify=true);
+    bool setPreset(const String& preset_name, bool notify = true);
+	bool setPreset(int preset_index, bool notify=true);
 	void setOutput(const String output_device_id, bool notify=true);
 	void setOutput(int output, bool notify=true);
     
     bool isPlaybackDeviceAvailable();
 	void checkDeviceChanges();
 
+	void autoSaveModifiedPreset();
 	void savePreset(const String& preset_name=L"");
 	void renamePreset(const String& new_name);
 	void deletePreset();
@@ -226,6 +228,11 @@ private:
 
 	void powerOn(bool on);
 
+	String getAutoSavePath() const;
+    String getAutoSavePresetPath(const String& preset_name) const;
+	void autoSavePreset(int preset_index);
+	void deleteAutoSavedPreset(const String& preset_name);
+
 	void registerHotkeys();
 	void unregisterHotkeys();
 
@@ -260,6 +267,9 @@ private:
 	bool audio_process_on_;
 	std::time_t audio_process_start_time_;
 
+	bool preset_dirty_;
+	int auto_save_counter_;
+
 	bool minimize_tip_;
 	bool survey_tip_;
 	int max_user_presets_;
@@ -267,4 +277,5 @@ private:
 	DWORD session_id_;
 
 	CriticalSection lock_;
+	CriticalSection save_lock_;
 };

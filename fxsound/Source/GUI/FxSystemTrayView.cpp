@@ -225,15 +225,11 @@ void FxSystemTrayView::showContextMenu()
     for (auto i = 0; i < count; i++)
     {
         auto preset = FxModel::getModel().getPreset(i);
-        PopupMenu::Item menu_item(preset.name);
+        PopupMenu::Item menu_item(preset.modified ? preset.name + L" *" : preset.name);
         menu_item.setID(id);
         if (id - PRESET_MENU_ID_START == FxModel::getModel().getSelectedPreset())
         {
             menu_item.setTicked(true);
-            if (FxModel::getModel().isPresetModified())
-            {
-                menu_item.text = preset.name + L" *";
-            }
         }
 
         if (preset_type != preset.type)

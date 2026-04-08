@@ -511,7 +511,7 @@ void FxMainWindow::showMenu()
 	popup_menu.addItem(overwrite_menu_name, model.isPresetModified() && user_preset && power_state, false, overwriteClicked);
 	popup_menu.addItem(TRANS("Undo Preset Changes"), model.isPresetModified() && power_state, false, undoClicked);
 	popup_menu.addSubMenu(TRANS("Rename Preset"), rename_menu, !model.isPresetModified() && user_preset && power_state);
-	popup_menu.addItem(TRANS("Delete Preset"), !model.isPresetModified() && user_preset && power_state, false, deleteClicked);
+	popup_menu.addItem(TRANS("Delete Preset"), user_preset && power_state, false, deleteClicked);
 	popup_menu.addSeparator();
 	popup_menu.addItem(TRANS("Export Presets"), !model.isPresetModified() && power_state, false, exportClicked);
 	popup_menu.addItem(TRANS("Import Presets"), !model.isPresetModified() && power_state, false, importClicked);
