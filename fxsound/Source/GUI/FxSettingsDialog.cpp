@@ -293,7 +293,19 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 
 	reset_presets_button_.setSize(RESET_PRESETS_BUTTON_WIDTH, BUTTON_HEIGHT);
 	reset_presets_button_.setMouseCursor(MouseCursor::PointingHandCursor);
-	reset_presets_button_.setEnabled(FxModel::getModel().getUserPresetCount() > 0);
+
+	auto preset_modified = false;
+	auto preset_count = FxModel::getModel().getPresetCount();
+	for (auto i = 0; i < preset_count; i++)
+	{
+		if (FxModel::getModel().isPresetModified(i))
+		{
+			preset_modified = true;
+			break;
+		}
+	}
+	reset_presets_button_.setEnabled(FxModel::getModel().getUserPresetCount() > 0 || preset_modified);
+
 	reset_presets_button_.onClick = [this]() {
 		auto& controller = FxController::getInstance();
 
