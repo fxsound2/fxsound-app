@@ -106,6 +106,9 @@ HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDefaultDeviceChange
   if (cast_handle->dfxDeviceNum == SND_DEVICES_DEVICE_NOT_PRESENT)
 	return(S_OK);
 
+  if (pwstrDeviceId == NULL)
+	  return(S_OK);
+
   SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDefaultDeviceChanged() enters");
 
   if( (flow == eRender) && (role == eMultimedia) && (cast_handle->ignoreDeviceCallbacks == FALSE) )
@@ -116,7 +119,7 @@ HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDefaultDeviceChange
 	  SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDefaultDeviceChanged() setting processing thread kill flag");
 
 	  // Don't think we need to kill process thread if DFX itself is selected as default from within our code
-	  if (wcscmp(pwstrDeviceId, cast_handle->pwszID[cast_handle->dfxDeviceNum]) == 0)
+	  if (cast_handle->pwszID[cast_handle->dfxDeviceNum] && wcscmp(pwstrDeviceId, cast_handle->pwszID[cast_handle->dfxDeviceNum]) == 0)
 		  return(S_OK);
 
 	  //std::wstring temp_string(pwstrDeviceId);
@@ -129,6 +132,7 @@ HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDefaultDeviceChange
 
   // Ignore the notification for the device selected in the application.
   if (cast_handle->defaultDeviceNum != SND_DEVICES_DEVICE_NOT_PRESENT &&
+	  cast_handle->pwszID[cast_handle->defaultDeviceNum] &&
 	  wcscmp(pwstrDeviceId, cast_handle->pwszID[cast_handle->defaultDeviceNum]) == 0)
   {
 	  return(S_OK);
@@ -138,7 +142,7 @@ HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDefaultDeviceChange
 
   for (int i = 0; i < cast_handle->totalNumDevices; i++)
   {
-	  if (wcscmp(cast_handle->pwszID[i], pwstrDeviceId) == 0)
+	  if (cast_handle->pwszID[i] && wcscmp(cast_handle->pwszID[i], pwstrDeviceId) == 0)
 	  {
 		  cast_handle->defaultDeviceNum = i;
 		  break;
