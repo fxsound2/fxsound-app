@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 6 5" width="6" height="5" xmlns="http://www.w3.org/2000/svg">
+  <polygon
+    fill="#B1B1B1"
+    fill-rule="nonzero"
+    points="0.5 1.25 
+            5.5 1.25 
+            3.0 3.75"
+  />
+</svg>

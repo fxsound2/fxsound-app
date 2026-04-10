@@ -132,6 +132,8 @@ public:
 	void refreshOutputList();
 	const String& getOutputName();
     void setOutputName(const String& output_device_name);
+    bool isNewOutputPrioritized();
+    void setNewOutputPrioritized(bool prioritize_new_devices);
 
 	FxThemeMode getThemeMode();
 	void setThemeMode(FxThemeMode mode);

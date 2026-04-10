@@ -1,0 +1,15 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="24 / basic / sliders">
+  <line x1="3" y1="7" x2="13.5" y2="7" stroke="#7E7E7E" stroke-width="2" stroke-linecap="round"/>
+  <line x1="18.5" y1="7" x2="21" y2="7" stroke="#7E7E7E" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="16" cy="7" r="2.5" fill="#7E7E7E"/>
+
+  <line x1="3" y1="12" x2="9.5" y2="12" stroke="#7E7E7E" stroke-width="2" stroke-linecap="round"/>
+  <line x1="14.5" y1="12" x2="21" y2="12" stroke="#7E7E7E" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="12" cy="12" r="2.5" fill="#7E7E7E"/>
+
+  <line x1="3" y1="17" x2="6.5" y2="17" stroke="#7E7E7E" stroke-width="2" stroke-linecap="round"/>
+  <line x1="11.5" y1="17" x2="21" y2="17" stroke="#7E7E7E" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="9" cy="17" r="2.5" fill="#7E7E7E"/>
+</g>
+</svg>

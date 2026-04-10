@@ -52,6 +52,7 @@ namespace FxSound
     void DeviceConfig::updateDeviceConfigs(Settings& settings, const std::vector<SoundDevice>& sound_devices)
     {
         juce::Array<DeviceConfig> device_configs = loadDeviceConfigs(settings, "device_configs");
+        auto prioritize_new_output = settings.getBool("prioritize_new_output");
 
         bool save_config = false;
         for (auto sound_device : sound_devices)
@@ -72,7 +73,14 @@ namespace FxSound
             {
                 save_config = true;
                 DeviceConfig device_config = { sound_device.pwszID.c_str() , sound_device.deviceFriendlyName.c_str(), "" };
-                device_configs.add(device_config);
+                if (prioritize_new_output)
+                {   
+                    device_configs.insert(0, device_config);
+                }
+                else
+                {
+                    device_configs.add(device_config);
+                }
             }
         }
 

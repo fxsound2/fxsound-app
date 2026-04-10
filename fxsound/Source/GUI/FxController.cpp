@@ -2195,6 +2195,16 @@ void FxController::setOutputName(const String& output_device_name)
 	settings_.setString("output_device_name", output_device_name);
 }
 
+bool FxController::isNewOutputPrioritized()
+{
+	return settings_.getBool("prioritize_new_output", false);
+}
+
+void FxController::setNewOutputPrioritized(bool prioritize)
+{
+	settings_.setBool("prioritize_new_output", prioritize);
+}
+
 FxThemeMode FxController::getThemeMode()
 {
 	return FxTheme::getThemeMode();

@@ -22,36 +22,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 const uint32 FxTheme::theme_colors_[FxThemeMode::NumModes][FxColor::NumColors] =
 { { 0x181818, 0x181818, 0x383838, 0x2b2b2b, 0xb1b1b1, 0x000000, 0xffffff, 0x0c0c0c, 0xffffff,
 	0x000000, 0xd51535, 0xe63462, 0x7f7f7f, 0x009cdd, 0xd51535, 0x0f0f0f, 0xe33250, 0xf7546f,
-	0xd51535, 0xfe566a, 0xef4b65, 0x742834, 0xf3f3f3, 0x414141, 0x000000 },
+	0xd51535, 0xfe566a, 0xef4b65, 0x742834, 0xf3f3f3, 0x414141, 0x000000, 0xb1b1b1, 0xe63462 },
 
   { 0xf5f5f5, 0xf5f5f5, 0xc7c7c7, 0xfafafa, 0x4e4e4e, 0xffffff, 0x000000, 0xe0e0e0, 0x000000,
 	0xd7d7d7, 0x1ac1ff, 0x23b6eb, 0x7f7f7f, 0x009cdd, 0xd51535, 0xe0e0e0, 0x0a4d66, 0x53ccff,
-	0x1ac1ff, 0x72d8ff, 0x33c8ff, 0x063244, 0x1c1c1c, 0xb9b9b9, 0xc0c0c0} };
+	0x1ac1ff, 0x72d8ff, 0x33c8ff, 0x063244, 0x1c1c1c, 0xb9b9b9, 0xc0c0c0, 0x4e4e4e, 0x23b6eb} };
 
 const char* FxTheme::theme_images_[FxThemeMode::NumModes][FxImage::NumImages] =
 { { BinaryData::logowhite_svg, BinaryData::logored_svg, BinaryData::FxSound_White_Bars_svg,
 	BinaryData::power_on_svg, BinaryData::power_off_svg, BinaryData::donate_svg, BinaryData::donate_hover_svg, BinaryData::menu_svg, BinaryData::menu_hover_svg,
 	BinaryData::minimize_svg, BinaryData::minimize_hover_svg, BinaryData::maximize_svg, BinaryData::maximize_hover_svg, BinaryData::min_window_svg, BinaryData::min_window_hover_svg,
-	BinaryData::arrow_next_svg, BinaryData::arrow_next_bw_svg, BinaryData::arrow_prev_svg, BinaryData::arrow_prev_bw_svg, BinaryData::arrow_up_svg, BinaryData::arrow_down_svg, BinaryData::dropdown_arrow_bw_svg, BinaryData::dropdown_arrow_hover_svg,
+	BinaryData::arrow_next_svg, BinaryData::arrow_next_bw_svg, BinaryData::arrow_prev_svg, BinaryData::arrow_prev_bw_svg, BinaryData::arrow_up_svg, BinaryData::arrow_up_white_svg, BinaryData::arrow_down_svg,  BinaryData::arrow_down_white_svg, BinaryData::dropdown_arrow_bw_svg, BinaryData::dropdown_arrow_hover_svg,
 	BinaryData::Slider_Thumb_svg, BinaryData::Slider_Thumb_bw_svg },
 
   { BinaryData::logoblack_svg, BinaryData::logoblue_svg, BinaryData::FxSound_Black_Bars_svg,
 	BinaryData::power_on_blue_svg, BinaryData::power_off_black_svg, BinaryData::donate_blue_svg, BinaryData::donate_hover_blue_svg, BinaryData::menu_black_svg, BinaryData::menu_hover_blue_svg,
 	BinaryData::minimize_black_svg, BinaryData::minimize_hover_blue_svg, BinaryData::maximize_black_svg, BinaryData::maximize_hover_blue_svg, BinaryData::min_window_black_svg, BinaryData::min_window_hover_blue_svg,
-	BinaryData::arrow_next_blue_svg, BinaryData::arrow_next_bw_svg, BinaryData::arrow_prev_blue_svg, BinaryData::arrow_prev_bw_svg, BinaryData::arrow_up_blue_svg, BinaryData::arrow_down_blue_svg, BinaryData::dropdown_arrow_bw_svg, BinaryData::dropdown_arrow_hover_blue_svg,
+	BinaryData::arrow_next_blue_svg, BinaryData::arrow_next_bw_svg, BinaryData::arrow_prev_blue_svg, BinaryData::arrow_prev_bw_svg, BinaryData::arrow_up_blue_svg, BinaryData::arrow_up_black_svg, BinaryData::arrow_down_blue_svg, BinaryData::arrow_down_black_svg, BinaryData::dropdown_arrow_bw_svg, BinaryData::dropdown_arrow_hover_blue_svg,
 	BinaryData::Slider_Thumb_blue_svg, BinaryData::Slider_Thumb_bw_svg } };
 
 const int FxTheme::theme_image_sizes_[FxThemeMode::NumModes][FxImage::NumImages] =
 { {BinaryData::logowhite_svgSize, BinaryData::logored_svgSize, BinaryData::FxSound_White_Bars_svgSize,
    BinaryData::power_on_svgSize, BinaryData::power_off_svgSize, BinaryData::donate_svgSize, BinaryData::donate_hover_svgSize, BinaryData::menu_svgSize, BinaryData::menu_hover_svgSize,
    BinaryData::minimize_svgSize, BinaryData::minimize_hover_svgSize, BinaryData::maximize_svgSize, BinaryData::maximize_hover_svgSize, BinaryData::min_window_svgSize, BinaryData::min_window_hover_svgSize,
-   BinaryData::arrow_next_svgSize, BinaryData::arrow_next_bw_svgSize, BinaryData::arrow_prev_svgSize, BinaryData::arrow_prev_bw_svgSize, BinaryData::arrow_up_svgSize, BinaryData::arrow_down_svgSize, BinaryData::dropdown_arrow_bw_svgSize, BinaryData::dropdown_arrow_hover_svgSize,
+   BinaryData::arrow_next_svgSize, BinaryData::arrow_next_bw_svgSize, BinaryData::arrow_prev_svgSize, BinaryData::arrow_prev_bw_svgSize, BinaryData::arrow_up_svgSize, BinaryData::arrow_up_white_svgSize, BinaryData::arrow_down_svgSize,  BinaryData::arrow_down_white_svgSize, BinaryData::dropdown_arrow_bw_svgSize, BinaryData::dropdown_arrow_hover_svgSize,
    BinaryData::Slider_Thumb_svgSize, BinaryData::Slider_Thumb_bw_svgSize},
 
   { BinaryData::logoblack_svgSize, BinaryData::logoblue_svgSize, BinaryData::FxSound_Black_Bars_svgSize,
 	BinaryData::power_on_blue_svgSize, BinaryData::power_off_black_svgSize, BinaryData::donate_blue_svgSize, BinaryData::donate_hover_blue_svgSize, BinaryData::menu_black_svgSize, BinaryData::menu_hover_blue_svgSize,
 	BinaryData::minimize_black_svgSize, BinaryData::minimize_hover_blue_svgSize, BinaryData::maximize_black_svgSize, BinaryData::maximize_hover_blue_svgSize, BinaryData::min_window_black_svgSize, BinaryData::min_window_hover_blue_svgSize,
-	BinaryData::arrow_next_blue_svgSize, BinaryData::arrow_next_bw_svgSize, BinaryData::arrow_prev_blue_svgSize, BinaryData::arrow_prev_bw_svgSize, BinaryData::arrow_up_blue_svgSize, BinaryData::arrow_down_blue_svgSize, BinaryData::dropdown_arrow_bw_svgSize, BinaryData::dropdown_arrow_hover_blue_svgSize,
+	BinaryData::arrow_next_blue_svgSize, BinaryData::arrow_next_bw_svgSize, BinaryData::arrow_prev_blue_svgSize, BinaryData::arrow_prev_bw_svgSize, BinaryData::arrow_up_blue_svgSize, BinaryData::arrow_up_black_svgSize, BinaryData::arrow_down_blue_svgSize, BinaryData::arrow_down_black_svgSize, BinaryData::dropdown_arrow_bw_svgSize, BinaryData::dropdown_arrow_hover_blue_svgSize,
 	BinaryData::Slider_Thumb_blue_svgSize, BinaryData::Slider_Thumb_bw_svgSize } };
 
 FxThemeMode FxTheme::theme_mode_ = FxThemeMode::Dark;
