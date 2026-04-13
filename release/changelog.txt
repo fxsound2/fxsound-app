@@ -1,3 +1,18 @@
+version 1.2.9.0
+----------------
+1. Auto save preset when Equalizer or Effects settings are changed
+2. Reset to factory defaults can reset the unsaved preset changes
+3. Settings dialog UI improvements for Audio and Equalizer sections
+4. Output device list is now displayed in the device preference order
+5. Preset is selected immediately when the preset for an active output device changes from settings
+6. Fixes and improvements in preferred output device selection
+7. Fixed crash issue #487
+8. Fixed preset not getting applied and EQ flat after update (#403 and #472)
+9. Fixed system audio device not being restored on reboot (#483)
+10. Fixed preset export and import dialogs not shown when always on top is enabled
+11. Fixed audio not being restored on exit after the preset save dialog
+12. Fixed FxSound on/off handling on Windows session changes
+
 version 1.2.8.0
 ----------------
 1. Fixed the bug which caused blank text on theme change

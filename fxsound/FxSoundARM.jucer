@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.8.0"
+<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.9.0"
               displaySplashScreen="1" jucerFormatVersion="1" companyName="FxSound LLC"
               companyWebsite="https://www.fxsound.com" companyCopyright="2026 FxSound&#8482;"
               defines="UNICODE" postExportShellCommandWin="type %%1%%\Project\status_icons.rc &gt;&gt; %%1%%\Project\resources.rc"
@@ -14,6 +14,15 @@
             file="Fonts/Gilroy-Semibold.ttf"/>
     </GROUP>
     <GROUP id="{1003D6EA-45C1-E8E4-DFD9-451D205D2F09}" name="Images">
+      <FILE id="Q5mIgS" name="arrow_down_black.svg" compile="0" resource="1"
+            file="Images/arrow_down_black.svg"/>
+      <FILE id="uNwSXC" name="arrow_down_white.svg" compile="0" resource="1"
+            file="Images/arrow_down_white.svg"/>
+      <FILE id="xRhpOC" name="arrow_up_black.svg" compile="0" resource="1"
+            file="Images/arrow_up_black.svg"/>
+      <FILE id="IfSChk" name="arrow_up_white.svg" compile="0" resource="1"
+            file="Images/arrow_up_white.svg"/>
+      <FILE id="LLs9LM" name="equalizer.svg" compile="0" resource="1" file="Images/equalizer.svg"/>
       <FILE id="JhrNeR" name="arrow_down.svg" compile="0" resource="1" file="Images/arrow_down.svg"/>
       <FILE id="oHJfgg" name="arrow_down_blue.svg" compile="0" resource="1"
             file="Images/arrow_down_blue.svg"/>
@@ -161,10 +170,6 @@
           <FILE id="zOgvhq" name="FxView.h" compile="0" resource="0" file="Source/GUI/FxView.h"/>
         </GROUP>
         <GROUP id="{1A4CB6D4-AC3C-F275-3031-1CBADB1439D6}" name="Dialogs">
-          <FILE id="DEOTyN" name="FxPresetSaveDialog.cpp" compile="1" resource="0"
-                file="Source/GUI/FxPresetSaveDialog.cpp"/>
-          <FILE id="uCnuzP" name="FxPresetSaveDialog.h" compile="0" resource="0"
-                file="Source/GUI/FxPresetSaveDialog.h"/>
           <FILE id="GLoltX" name="FxPresetImportDialog.cpp" compile="1" resource="0"
                 file="Source/GUI/FxPresetImportDialog.cpp"/>
           <FILE id="gZpHY4" name="FxPresetImportDialog.h" compile="0" resource="0"

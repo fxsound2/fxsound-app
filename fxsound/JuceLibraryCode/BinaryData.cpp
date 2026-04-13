@@ -4361,7 +4361,11 @@ static const unsigned char temp_binary_data_62[] =
 32,79,110,32,84,111,112,34,32,61,32,34,216,175,216,167,216,166,217,133,216,167,217,139,32,217,129,217,138,32,216,167,217,132,216,163,216,185,217,132,217,137,34,13,10,34,84,104,101,109,101,34,32,61,32,34,216,167,217,132,216,179,217,133,216,169,34,13,10,
 34,68,97,114,107,34,32,61,32,34,216,175,216,167,217,131,217,134,34,13,10,34,76,105,103,104,116,34,32,61,32,34,217,129,216,167,216,170,216,173,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,
 32,34,216,170,217,129,216,182,217,138,217,132,216,167,216,170,32,216,172,217,135,216,167,216,178,32,216,167,217,132,216,165,216,174,216,177,216,167,216,172,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,216,167,216,174,216,
-170,217,138,216,167,216,177,32,216,165,216,185,216,175,216,167,216,175,32,217,133,216,179,216,168,217,130,34,13,10,0,0 };
+170,217,138,216,167,216,177,32,216,165,216,185,216,175,216,167,216,175,32,217,133,216,179,216,168,217,130,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,216,167,217,132,216,165,217,131,217,136,217,132,216,167,217,138,216,178,216,177,34,
+13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,216,165,216,185,216,183,216,167,216,161,32,216,163,217,136,217,132,217,136,217,138,216,169,32,217,132,216,163,216,172,
+217,135,216,178,216,169,32,216,167,217,132,216,165,216,174,216,177,216,167,216,172,32,216,167,217,132,216,172,216,175,217,138,216,175,216,169,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,
+116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,216,167,216,179,216,170,216,174,216,175,217,133,32,83,104,105,102,116,43,85,112,32,216,163,217,136,32,83,104,105,102,116,43,68,
+111,119,110,32,217,132,216,170,216,186,217,138,217,138,216,177,32,216,163,217,136,217,132,217,136,217,138,216,169,32,216,167,217,132,216,172,217,135,216,167,216,178,34,0,0 };
 
 const char* FxSound_ar_txt = (const char*) temp_binary_data_62;
 
@@ -4517,7 +4521,10 @@ static const unsigned char temp_binary_data_63[] =
 "\"Dark\" = \"Tamna\"\r\n"
 "\"Light\" = \"Svijetla\"\r\n"
 "\"Output Device Preference\" = \"Postavke izlaznog ure\xc4\x91""aja\"\r\n"
-"\"Select preset\" = \"Odaberi unaprijed postavljenu postavku\"";
+"\"Select preset\" = \"Odaberi unaprijed postavljenu postavku\"\r\n"
+"\"Equalizer\" = \"Ekvilajzer\"\r\n"
+"\"Prioritize new output devices\" = \"Daj prioritet novim izlaznim ure\xc4\x91""ajima\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Koristite Shift+Up ili Shift+Down za promjenu prioriteta ure\xc4\x91""aja\"";
 
 const char* FxSound_ba_txt = (const char*) temp_binary_data_63;
 
@@ -4677,7 +4684,10 @@ static const unsigned char temp_binary_data_64[] =
 "\"Dark\" = \"Dunkel\"\r\n"
 "\"Light\" = \"Hell\"\r\n"
 "\"Output Device Preference\" = \"Einstellung f\xc3\xbcr Ausgabeger\xc3\xa4t\"\r\n"
-"\"Select preset\" = \"Voreinstellung ausw\xc3\xa4hlen\"";
+"\"Select preset\" = \"Voreinstellung ausw\xc3\xa4hlen\"\r\n"
+"\"Equalizer\" = \"Equalizer\"\r\n"
+"\"Prioritize new output devices\" = \"Neue Ausgabeger\xc3\xa4te priorisieren\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Verwenden Sie Shift+Up oder Shift+Down, um die Ger\xc3\xa4tepriorit\xc3\xa4t zu \xc3\xa4ndern\"";
 
 const char* FxSound_de_txt = (const char*) temp_binary_data_64;
 
@@ -4833,7 +4843,10 @@ static const unsigned char temp_binary_data_65[] =
 "\"Dark\" = \"Oscuro\"\r\n"
 "\"Light\" = \"Claro\"\r\n"
 "\"Output Device Preference\" = \"Preferencia de dispositivo de salida\"\r\n"
-"\"Select preset\" = \"Seleccionar preajuste\"";
+"\"Select preset\" = \"Seleccionar preajuste\"\r\n"
+"\"Equalizer\" = \"Ecualizador\"\r\n"
+"\"Prioritize new output devices\" = \"Priorizar nuevos dispositivos de salida\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Use Shift+Up o Shift+Down para cambiar la prioridad del dispositivo\"";
 
 const char* FxSound_es_txt = (const char*) temp_binary_data_65;
 
@@ -4994,7 +5007,10 @@ static const unsigned char temp_binary_data_66[] =
 "\"Dark\" = \"Sombre\"\r\n"
 "\"Light\" = \"Clair\"\r\n"
 "\"Output Device Preference\" = \"Pr\xc3\xa9""f\xc3\xa9rence du p\xc3\xa9riph\xc3\xa9rique de sortie\"\r\n"
-"\"Select preset\" = \"S\xc3\xa9lectionner un pr\xc3\xa9r\xc3\xa9glage\"";
+"\"Select preset\" = \"S\xc3\xa9lectionner un pr\xc3\xa9r\xc3\xa9glage\"\r\n"
+"\"Equalizer\" = \"\xc3\x89galiseur\"\r\n"
+"\"Prioritize new output devices\" = \"Prioriser les nouveaux p\xc3\xa9riph\xc3\xa9riques de sortie\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Utilisez Shift+Up ou Shift+Down pour modifier la priorit\xc3\xa9 de l\xe2\x80\x99""appareil\"";
 
 const char* FxSound_fr_txt = (const char*) temp_binary_data_66;
 
@@ -5149,7 +5165,10 @@ static const unsigned char temp_binary_data_67[] =
 "\"Dark\" = \"Tamna\"\r\n"
 "\"Light\" = \"Svijetla\"\r\n"
 "\"Output Device Preference\" = \"Postavke izlaznog ure\xc4\x91""aja\"\r\n"
-"\"Select preset\" = \"Odaberi unaprijed postavljenu postavku\"";
+"\"Select preset\" = \"Odaberi unaprijed postavljenu postavku\"\r\n"
+"\"Equalizer\" = \"Ekvilajzer\"\r\n"
+"\"Prioritize new output devices\" = \"Daj prioritet novim izlaznim ure\xc4\x91""ajima\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Koristite Shift+Up ili Shift+Down za promjenu prioriteta ure\xc4\x91""aja\"";
 
 const char* FxSound_hr_txt = (const char*) temp_binary_data_67;
 
@@ -5314,7 +5333,10 @@ static const unsigned char temp_binary_data_68[] =
 "\"Dark\" = \"S\xc3\xb6t\xc3\xa9t\"\r\n"
 "\"Light\" = \"Vil\xc3\xa1gos\"\r\n"
 "\"Output Device Preference\" = \"Kimeneti eszk\xc3\xb6z be\xc3\xa1ll\xc3\xadt\xc3\xa1sa\"\r\n"
-"\"Select preset\" = \"El\xc5\x91""be\xc3\xa1ll\xc3\xadt\xc3\xa1s kiv\xc3\xa1laszt\xc3\xa1sa\"";
+"\"Select preset\" = \"El\xc5\x91""be\xc3\xa1ll\xc3\xadt\xc3\xa1s kiv\xc3\xa1laszt\xc3\xa1sa\"\r\n"
+"\"Equalizer\" = \"Equalizer\"\r\n"
+"\"Prioritize new output devices\" = \"\xc3\x9aj kimeneti eszk\xc3\xb6z\xc3\xb6k el\xc5\x91nyben r\xc3\xa9szes\xc3\xadt\xc3\xa9se\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"A Shift+Up vagy Shift+Down haszn\xc3\xa1lat\xc3\xa1val m\xc3\xb3""dos\xc3\xadthatja az eszk\xc3\xb6z priorit\xc3\xa1s\xc3\xa1t\"";
 
 const char* fxsound_hu_txt = (const char*) temp_binary_data_68;
 
@@ -5469,7 +5491,10 @@ static const unsigned char temp_binary_data_69[] =
 "\"Dark\" = \"Gelap\"\r\n"
 "\"Light\" = \"Terang\"\r\n"
 "\"Output Device Preference\" = \"Preferensi perangkat keluaran\"\r\n"
-"\"Select preset\" = \"Pilih preset\"";
+"\"Select preset\" = \"Pilih preset\"\r\n"
+"\"Equalizer\" = \"Equalizer\"\r\n"
+"\"Prioritize new output devices\" = \"Prioritaskan perangkat keluaran baru\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Gunakan Shift+Up atau Shift+Down untuk mengubah prioritas perangkat\"";
 
 const char* FxSound_id_txt = (const char*) temp_binary_data_69;
 
@@ -5689,7 +5714,11 @@ static const unsigned char temp_binary_data_70[] =
 216,175,216,177,32,216,168,216,167,217,132,216,167,34,13,10,34,84,104,101,109,101,34,32,61,32,34,216,170,217,133,34,13,10,34,68,97,114,107,34,32,61,32,34,216,170,219,140,216,177,217,135,34,13,10,34,76,105,103,104,116,34,32,61,32,34,216,177,217,136,216,
 180,217,134,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,216,170,217,134,216,184,219,140,217,133,216,167,216,170,32,216,175,216,179,216,170,218,175,216,167,217,135,32,216,174,216,
 177,217,136,216,172,219,140,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,216,167,217,134,216,170,216,174,216,167,216,168,32,216,170,217,134,216,184,219,140,217,133,32,216,167,216,178,32,217,190,219,140,216,180,32,216,170,
-216,185,216,177,219,140,217,129,226,128,140,216,180,216,175,217,135,34,0,0 };
+216,185,216,177,219,140,217,129,226,128,140,216,180,216,175,217,135,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,216,167,218,169,217,136,217,132,216,167,219,140,216,178,216,177,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,
+101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,216,167,217,136,217,132,217,136,219,140,216,170,32,216,175,216,167,216,175,217,134,32,216,168,217,135,32,216,175,216,179,216,170,218,175,216,167,217,135,226,128,140,217,135,
+216,167,219,140,32,216,174,216,177,217,136,216,172,219,140,32,216,172,216,175,219,140,216,175,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,
+32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,216,168,216,177,216,167,219,140,32,216,170,216,186,219,140,219,140,216,177,32,216,167,217,136,217,132,217,136,219,140,216,170,32,216,175,216,179,216,170,218,175,216,167,217,135,
+32,216,167,216,178,32,83,104,105,102,116,43,85,112,32,219,140,216,167,32,83,104,105,102,116,43,68,111,119,110,32,216,167,216,179,216,170,217,129,216,167,216,175,217,135,32,218,169,217,134,219,140,216,175,34,0,0 };
 
 const char* FxSound_ir_txt = (const char*) temp_binary_data_70;
 
@@ -5847,7 +5876,10 @@ static const unsigned char temp_binary_data_71[] =
 "\"Dark\" = \"Scuro\"\r\n"
 "\"Light\" = \"Chiaro\"\r\n"
 "\"Output Device Preference\" = \"Preferenza dispositivo di uscita\"\r\n"
-"\"Select preset\" = \"Seleziona preset\"";
+"\"Select preset\" = \"Seleziona preset\"\r\n"
+"\"Equalizer\" = \"Equalizzatore\"\r\n"
+"\"Prioritize new output devices\" = \"Dai priorit\xc3\xa0 ai nuovi dispositivi di uscita\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Usa Shift+Up o Shift+Down per modificare la priorit\xc3\xa0 del dispositivo\"";
 
 const char* FxSound_it_txt = (const char*) temp_binary_data_71;
 
@@ -6052,7 +6084,11 @@ static const unsigned char temp_binary_data_72[] =
 32,117,112,100,97,116,101,115,34,32,61,32,34,232,135,170,229,139,149,230,155,180,230,150,176,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,229,184,184,227,129,171,230,156,128,229,137,141,233,157,162,227,129,171,232,161,168,
 231,164,186,34,13,10,34,84,104,101,109,101,34,32,61,32,34,227,131,134,227,131,188,227,131,158,34,13,10,34,68,97,114,107,34,32,61,32,34,227,131,128,227,131,188,227,130,175,34,13,10,34,76,105,103,104,116,34,32,61,32,34,227,131,169,227,130,164,227,131,136,
 34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,229,135,186,229,138,155,227,131,135,227,131,144,227,130,164,227,130,185,232,168,173,229,174,154,34,13,10,34,83,101,108,101,99,116,32,112,
-114,101,115,101,116,34,32,61,32,34,227,131,151,227,131,170,227,130,187,227,131,131,227,131,136,227,130,146,233,129,184,230,138,158,34,0,0 };
+114,101,115,101,116,34,32,61,32,34,227,131,151,227,131,170,227,130,187,227,131,131,227,131,136,227,130,146,233,129,184,230,138,158,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,227,130,164,227,130,179,227,131,169,227,130,164,227,130,182,
+227,131,188,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,230,150,176,227,129,151,227,129,132,229,135,186,229,138,155,227,131,135,227,131,144,227,130,164,227,
+130,185,227,130,146,229,132,170,229,133,136,227,129,153,227,130,139,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,
+32,112,114,105,111,114,105,116,121,34,32,61,32,34,83,104,105,102,116,43,85,112,32,227,129,190,227,129,159,227,129,175,32,83,104,105,102,116,43,68,111,119,110,32,227,130,146,228,189,191,231,148,168,227,129,151,227,129,166,227,131,135,227,131,144,227,130,
+164,227,130,185,227,129,174,229,132,170,229,133,136,233,160,134,228,189,141,227,130,146,229,164,137,230,155,180,227,129,151,227,129,190,227,129,153,34,0,0 };
 
 const char* FxSound_ja_txt = (const char*) temp_binary_data_72;
 
@@ -6238,7 +6274,11 @@ static const unsigned char temp_binary_data_73[] =
 176,235,179,184,234,176,146,32,235,179,181,236,155,144,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,236,158,144,235,143,153,32,236,151,133,235,141,176,236,157,180,237,138,184,34,13,10,34,65,108,119,97,121,
 115,32,79,110,32,84,111,112,34,32,61,32,34,237,149,173,236,131,129,32,235,167,168,32,236,156,132,236,151,144,34,13,10,34,84,104,101,109,101,34,32,61,32,34,237,133,140,235,167,136,34,13,10,34,68,97,114,107,34,32,61,32,34,236,150,180,235,145,144,236,154,
 180,34,13,10,34,76,105,103,104,116,34,32,61,32,34,235,176,157,236,157,128,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,236,182,156,235,160,165,32,236,158,165,236,185,152,32,236,132,
-164,236,160,149,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,237,148,132,235,166,172,236,133,139,32,236,132,160,237,131,157,34,13,10,0,0 };
+164,236,160,149,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,237,148,132,235,166,172,236,133,139,32,236,132,160,237,131,157,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,236,157,180,237,128,132,235,157,188,
+236,157,180,236,160,128,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,236,131,136,32,236,182,156,235,160,165,32,236,158,165,236,185,152,236,157,152,32,236,154,
+176,236,132,160,236,136,156,236,156,132,32,236,167,128,236,160,149,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,
+32,112,114,105,111,114,105,116,121,34,32,61,32,34,83,104,105,102,116,43,85,112,32,235,152,144,235,138,148,32,83,104,105,102,116,43,68,111,119,110,236,157,132,32,236,130,172,236,154,169,237,149,152,236,151,172,32,236,158,165,236,185,152,32,236,154,176,
+236,132,160,236,136,156,236,156,132,235,165,188,32,235,179,128,234,178,189,237,149,169,235,139,136,235,139,164,34,13,10,0,0 };
 
 const char* FxSound_ko_txt = (const char*) temp_binary_data_73;
 
@@ -6391,7 +6431,10 @@ static const unsigned char temp_binary_data_74[] =
 "\"Dark\" = \"Donker\"\r\n"
 "\"Light\" = \"Licht\"\r\n"
 "\"Output Device Preference\" = \"Voorkeur voor uitvoerapparaat\"\r\n"
-"\"Select preset\" = \"Voorinstelling selecteren\"";
+"\"Select preset\" = \"Voorinstelling selecteren\"\r\n"
+"\"Equalizer\" = \"Equalizer\"\r\n"
+"\"Prioritize new output devices\" = \"Nieuwe uitvoerapparaten prioriteit geven\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Gebruik Shift+Up of Shift+Down om de apparaatprioriteit te wijzigen\"";
 
 const char* FxSound_nl_txt = (const char*) temp_binary_data_74;
 
@@ -6546,7 +6589,10 @@ static const unsigned char temp_binary_data_75[] =
 "\"Dark\" = \"M\xc3\xb8rkt\"\r\n"
 "\"Light\" = \"Lyst\"\r\n"
 "\"Output Device Preference\" = \"Innstilling for utdataenhet\"\r\n"
-"\"Select preset\" = \"Velg forh\xc3\xa5ndsinnstilling\"";
+"\"Select preset\" = \"Velg forh\xc3\xa5ndsinnstilling\"\r\n"
+"\"Equalizer\" = \"Equalizer\"\r\n"
+"\"Prioritize new output devices\" = \"Prioriter nye utdataenheter\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Bruk Shift+Up eller Shift+Down for \xc3\xa5 endre enhetsprioriteten\"";
 
 const char* FxSound_no_txt = (const char*) temp_binary_data_75;
 
@@ -6710,7 +6756,10 @@ static const unsigned char temp_binary_data_76[] =
 "\"Dark\" = \"Ciemny\"\r\n"
 "\"Light\" = \"Jasny\"\r\n"
 "\"Output Device Preference\" = \"Preferencje urz\xc4\x85""dzenia wyj\xc5\x9b""ciowego\"\r\n"
-"\"Select preset\" = \"Wybierz preset\"";
+"\"Select preset\" = \"Wybierz preset\"\r\n"
+"\"Equalizer\" = \"Equalizer\"\r\n"
+"\"Prioritize new output devices\" = \"Nadaj priorytet nowym urz\xc4\x85""dzeniom wyj\xc5\x9b""ciowym\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"U\xc5\xbcyj Shift+Up lub Shift+Down, aby zmieni\xc4\x87 priorytet urz\xc4\x85""dzenia\"";
 
 const char* FxSound_pl_txt = (const char*) temp_binary_data_76;
 
@@ -6867,7 +6916,10 @@ static const unsigned char temp_binary_data_77[] =
 "\"Dark\" = \"Escuro\"\r\n"
 "\"Light\" = \"Claro\"\r\n"
 "\"Output Device Preference\" = \"Prefer\xc3\xaancia do dispositivo de sa\xc3\xad""da\"\r\n"
-"\"Select preset\" = \"Selecionar predefini\xc3\xa7\xc3\xa3o\"";
+"\"Select preset\" = \"Selecionar predefini\xc3\xa7\xc3\xa3o\"\r\n"
+"\"Equalizer\" = \"Equalizador\"\r\n"
+"\"Prioritize new output devices\" = \"Dar prioridade a novos dispositivos de sa\xc3\xad""da\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Use Shift+Up ou Shift+Down para alterar a prioridade do dispositivo\"";
 
 const char* FxSound_ptbr_txt = (const char*) temp_binary_data_77;
 
@@ -7023,7 +7075,10 @@ static const unsigned char temp_binary_data_78[] =
 "\"Dark\" = \"Escuro\"\r\n"
 "\"Light\" = \"Claro\"\r\n"
 "\"Output Device Preference\" = \"Preferencje urz\xc4\x85""dzenia wyj\xc5\x9b""ciowego\"\r\n"
-"\"Select preset\" = \"Wybierz preset\"";
+"\"Select preset\" = \"Wybierz preset\"\r\n"
+"\"Equalizer\" = \"Equalizador\"\r\n"
+"\"Prioritize new output devices\" = \"Dar prioridade a novos dispositivos de sa\xc3\xad""da\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Use Shift+Up ou Shift+Down para alterar a prioridade do dispositivo\"";
 
 const char* FxSound_pt_txt = (const char*) temp_binary_data_78;
 
@@ -7184,7 +7239,10 @@ static const unsigned char temp_binary_data_79[] =
 "\"Dark\" = \"\xc3\x8entunecat\"\r\n"
 "\"Light\" = \"Luminos\"\r\n"
 "\"Output Device Preference\" = \"Preferin\xc8\x9b\xc4\x83 dispozitiv de ie\xc8\x99ire\"\r\n"
-"\"Select preset\" = \"Selecteaz\xc4\x83 presetare\"";
+"\"Select preset\" = \"Selecteaz\xc4\x83 presetare\"\r\n"
+"\"Equalizer\" = \"Egalizator\"\r\n"
+"\"Prioritize new output devices\" = \"Prioritizeaz\xc4\x83 noile dispozitive de ie\xc8\x99ire\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Folose\xc8\x99te Shift+Up sau Shift+Down pentru a schimba prioritatea dispozitivului\"";
 
 const char* FxSound_ro_txt = (const char*) temp_binary_data_79;
 
@@ -7431,7 +7489,12 @@ static const unsigned char temp_binary_data_80[] =
 34,32,61,32,34,208,162,208,181,208,188,208,176,34,13,10,34,68,97,114,107,34,32,61,32,34,208,162,209,145,208,188,208,189,208,176,209,143,34,13,10,34,76,105,103,104,116,34,32,61,32,34,208,161,208,178,208,181,209,130,208,187,208,176,209,143,34,13,10,34,
 79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,208,159,209,128,208,181,208,180,208,191,208,190,209,135,209,130,208,181,208,189,208,184,208,181,32,209,131,209,129,209,130,209,128,208,190,208,185,
 209,129,209,130,208,178,208,176,32,208,178,209,139,208,178,208,190,208,180,208,176,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,208,146,209,139,208,177,209,128,208,176,209,130,209,140,32,208,191,209,128,208,181,209,129,
-208,181,209,130,34,0,0 };
+208,181,209,130,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,208,173,208,186,208,178,208,176,208,187,208,176,208,185,208,183,208,181,209,128,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,
+32,100,101,118,105,99,101,115,34,32,61,32,34,208,159,209,128,208,184,208,190,209,128,208,184,209,130,208,181,209,130,32,208,180,208,187,209,143,32,208,189,208,190,208,178,209,139,209,133,32,209,131,209,129,209,130,209,128,208,190,208,185,209,129,209,
+130,208,178,32,208,178,209,139,208,178,208,190,208,180,208,176,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,
+114,105,111,114,105,116,121,34,32,61,32,34,208,152,209,129,208,191,208,190,208,187,209,140,208,183,208,190,208,178,208,176,209,130,209,140,32,83,104,105,102,116,43,85,112,32,208,184,208,187,208,184,32,83,104,105,102,116,43,68,111,119,110,44,32,208,180,
+208,187,209,143,32,208,184,208,183,208,188,208,181,208,189,208,181,208,189,208,184,209,143,32,208,191,209,128,208,184,208,190,209,128,208,184,209,130,208,181,209,130,208,176,32,209,131,209,129,209,130,209,128,208,190,208,185,209,129,209,130,208,178,208,
+176,34,0,0 };
 
 const char* FxSound_ru_txt = (const char*) temp_binary_data_80;
 
@@ -7587,7 +7650,10 @@ static const unsigned char temp_binary_data_81[] =
 "\"Always On Top\" = \"Vedno na vrhu\"\r\n"
 "\"Theme\" = \"Tema\"\r\n"
 "\"Dark\" = \"Temna\"\r\n"
-"\"Light\" = \"Svetla\"";
+"\"Light\" = \"Svetla\"\r\n"
+"\"Equalizer\" = \"Izena\xc4\x8d""evalnik\"\r\n"
+"\"Prioritize new output devices\" = \"Daj prednost novim izhodnim napravam\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Uporabite Shift+Up ali Shift+Down za spremembo prioritete naprave\"";
 
 const char* FxSound_sl_txt = (const char*) temp_binary_data_81;
 
@@ -7745,7 +7811,10 @@ static const unsigned char temp_binary_data_82[] =
 "\"Dark\" = \"M\xc3\xb6rkt\"\r\n"
 "\"Light\" = \"Ljust\"\r\n"
 "\"Output Device Preference\" = \"Inst\xc3\xa4llning f\xc3\xb6r utg\xc3\xa5ngsenhet\"\r\n"
-"\"Select preset\" = \"V\xc3\xa4lj f\xc3\xb6rinst\xc3\xa4llning\"";
+"\"Select preset\" = \"V\xc3\xa4lj f\xc3\xb6rinst\xc3\xa4llning\"\r\n"
+"\"Equalizer\" = \"Equalizer\"\r\n"
+"\"Prioritize new output devices\" = \"Prioritera nya utg\xc3\xa5ngsenheter\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Anv\xc3\xa4nd Shift+Up eller Shift+Down f\xc3\xb6r att \xc3\xa4ndra enhetsprioriteten\"";
 
 const char* FxSound_sv_txt = (const char*) temp_binary_data_82;
 
@@ -8045,7 +8114,13 @@ static const unsigned char temp_binary_data_83[] =
 181,224,184,161,34,13,10,34,68,97,114,107,34,32,61,32,34,224,184,161,224,184,183,224,184,148,34,13,10,34,76,105,103,104,116,34,32,61,32,34,224,184,170,224,184,167,224,185,136,224,184,178,224,184,135,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,
 99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,224,184,129,224,184,178,224,184,163,224,184,149,224,184,177,224,185,137,224,184,135,224,184,132,224,185,136,224,184,178,224,184,173,224,184,184,224,184,155,224,184,129,224,184,163,224,184,
 147,224,185,140,224,185,128,224,184,173,224,184,178,224,184,149,224,185,140,224,184,158,224,184,184,224,184,149,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,224,185,128,224,184,165,224,184,183,224,184,173,224,184,129,224,
-184,158,224,184,163,224,184,181,224,185,128,224,184,139,224,185,135,224,184,149,34,0,0 };
+184,158,224,184,163,224,184,181,224,185,128,224,184,139,224,185,135,224,184,149,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,224,184,173,224,184,181,224,184,132,224,184,167,224,184,173,224,185,132,224,184,165,224,185,128,224,184,139,224,
+184,173,224,184,163,224,185,140,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,224,185,131,224,184,171,224,185,137,224,184,132,224,184,167,224,184,178,224,184,
+161,224,184,170,224,184,179,224,184,132,224,184,177,224,184,141,224,184,129,224,184,177,224,184,154,224,184,173,224,184,184,224,184,155,224,184,129,224,184,163,224,184,147,224,185,140,224,185,128,224,184,173,224,184,178,224,184,149,224,185,140,224,184,
+158,224,184,184,224,184,149,224,185,131,224,184,171,224,184,161,224,185,136,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,
+99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,224,185,131,224,184,138,224,185,137,32,83,104,105,102,116,43,85,112,32,224,184,171,224,184,163,224,184,183,224,184,173,32,83,104,105,102,116,43,68,111,119,110,32,224,185,128,224,184,158,224,184,
+183,224,185,136,224,184,173,224,185,128,224,184,155,224,184,165,224,184,181,224,185,136,224,184,162,224,184,153,224,184,165,224,184,179,224,184,148,224,184,177,224,184,154,224,184,132,224,184,167,224,184,178,224,184,161,224,184,170,224,184,179,224,184,
+132,224,184,177,224,184,141,224,184,130,224,184,173,224,184,135,224,184,173,224,184,184,224,184,155,224,184,129,224,184,163,224,184,147,224,185,140,34,0,0 };
 
 const char* FxSound_th_txt = (const char*) temp_binary_data_83;
 
@@ -8208,7 +8283,10 @@ static const unsigned char temp_binary_data_84[] =
 "\"Dark\" = \"Koyu\"\r\n"
 "\"Light\" = \"A\xc3\xa7\xc4\xb1k\"\r\n"
 "\"Output Device Preference\" = \"\xc3\x87\xc4\xb1k\xc4\xb1\xc5\x9f ayg\xc4\xb1t\xc4\xb1 tercihi\"\r\n"
-"\"Select preset\" = \"\xc3\x96n ayar se\xc3\xa7\"";
+"\"Select preset\" = \"\xc3\x96n ayar se\xc3\xa7\"\r\n"
+"\"Equalizer\" = \"Ekolayz\xc4\xb1r\"\r\n"
+"\"Prioritize new output devices\" = \"Yeni \xc3\xa7\xc4\xb1k\xc4\xb1\xc5\x9f ayg\xc4\xb1tlar\xc4\xb1na \xc3\xb6ncelik ver\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Ayg\xc4\xb1t \xc3\xb6nceli\xc4\x9fini de\xc4\x9fi\xc5\x9ftirmek i\xc3\xa7in Shift+Up veya Shift+Down kullan\xc4\xb1n\"";
 
 const char* FxSound_tr_txt = (const char*) temp_binary_data_84;
 
@@ -8362,7 +8440,10 @@ static const unsigned char temp_binary_data_85[] =
 "\"Dark\" = \"Dark\"\r\n"
 "\"Light\" = \"Light\"\r\n"
 "\"Output Device Preference\" = \"Output Device Preference\"\r\n"
-"\"Select preset\" = \"Select preset\"\r\n";
+"\"Select preset\" = \"Select preset\"\r\n"
+"\"Equalizer\" = \"Equalizer\"\r\n"
+"\"Prioritize new output devices\" = \"Prioritize new output devices\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Use Shift+Up or Shift+Down to change the device priority\"";
 
 const char* FxSound_txt = (const char*) temp_binary_data_85;
 
@@ -8602,7 +8683,12 @@ static const unsigned char temp_binary_data_86[] =
 13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,208,151,208,176,208,178,208,182,208,180,208,184,32,208,183,208,178,208,181,209,128,209,133,209,131,34,13,10,34,84,104,101,109,101,34,32,61,32,34,208,162,208,181,208,188,208,176,34,
 13,10,34,68,97,114,107,34,32,61,32,34,208,162,208,181,208,188,208,189,208,176,34,13,10,34,76,105,103,104,116,34,32,61,32,34,208,161,208,178,209,150,209,130,208,187,208,176,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,
 101,114,101,110,99,101,34,32,61,32,34,208,157,208,176,208,187,208,176,209,136,209,130,209,131,208,178,208,176,208,189,208,189,209,143,32,208,191,209,128,208,184,209,129,209,130,209,128,208,190,209,142,32,208,178,208,184,208,178,208,190,208,180,209,131,
-34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,208,146,208,184,208,177,209,128,208,176,209,130,208,184,32,208,191,209,128,208,181,209,129,208,181,209,130,34,0,0 };
+34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,208,146,208,184,208,177,209,128,208,176,209,130,208,184,32,208,191,209,128,208,181,209,129,208,181,209,130,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,
+111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,208,157,208,176,208,180,208,176,208,178,208,176,209,130,208,184,32,208,191,209,128,209,150,208,190,209,128,208,184,209,130,208,181,209,130,32,208,189,208,190,208,178,208,184,208,188,
+32,208,191,209,128,208,184,209,129,209,130,209,128,208,190,209,143,208,188,32,208,178,208,184,208,178,208,190,208,180,209,131,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,
+97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,208,146,208,184,208,186,208,190,209,128,208,184,209,129,209,130,208,190,208,178,209,131,208,185,209,130,208,181,32,83,104,105,102,116,43,85,112,
+32,208,176,208,177,208,190,32,83,104,105,102,116,43,68,111,119,110,44,32,209,137,208,190,208,177,32,208,183,208,188,209,150,208,189,208,184,209,130,208,184,32,208,191,209,128,209,150,208,190,209,128,208,184,209,130,208,181,209,130,32,208,191,209,128,
+208,184,209,129,209,130,209,128,208,190,209,142,34,0,0 };
 
 const char* FxSound_ua_txt = (const char*) temp_binary_data_86;
 
@@ -8783,7 +8869,11 @@ static const unsigned char temp_binary_data_87[] =
 "\"Dark\" = \"T\xe1\xbb\x91i\"\r\n"
 "\"Light\" = \"S\xc3\xa1ng\"\r\n"
 "\"Output Device Preference\" = \"T\xc3\xb9y ch\xe1\xbb\x8dn thi\xe1\xba\xbft b\xe1\xbb\x8b \xc4\x91\xe1\xba\xa7u ra\"\r\n"
-"\"Select preset\" = \"Ch\xe1\xbb\x8dn preset\"";
+"\"Select preset\" = \"Ch\xe1\xbb\x8dn preset\"\r\n"
+"\"Equalizer\" = \"Equalizer\"\r\n"
+"\"Prioritize new output devices\" = \"\xc6\xafu ti\xc3\xaan thi\xe1\xba\xbft b\xe1\xbb\x8b \xc4\x91\xe1\xba\xa7u ra m\xe1\xbb\x9bi\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"S\xe1\xbb\xad d\xe1\xbb\xa5ng Shift+Up ho\xe1\xba\xb7""c Shift+Down \xc4\x91\xe1\xbb\x83 thay \xc4\x91\xe1\xbb\x95i m\xe1\xbb\xa9""c \xc6\xb0u ti\xc3\xaan thi\xe1\xba\xbft b\xe1\xbb\x8b"
+"\"";
 
 const char* FxSound_vi_txt = (const char*) temp_binary_data_87;
 
@@ -8941,7 +9031,10 @@ static const unsigned char temp_binary_data_88[] =
 101,102,97,117,108,116,115,34,32,61,32,34,230,129,162,229,164,141,233,187,152,232,174,164,232,174,190,231,189,174,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,232,135,170,229,138,168,230,155,180,230,150,176,
 34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,229,167,139,231,187,136,231,189,174,233,161,182,34,13,10,34,84,104,101,109,101,34,32,61,32,34,228,184,187,233,162,152,34,13,10,34,68,97,114,107,34,32,61,32,34,230,183,177,232,137,
 178,34,13,10,34,76,105,103,104,116,34,32,61,32,34,230,181,133,232,137,178,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,232,190,147,229,135,186,232,174,190,229,164,135,232,174,190,
-231,189,174,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,233,128,137,230,139,169,233,162,132,232,174,190,34,0,0 };
+231,189,174,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,233,128,137,230,139,169,233,162,132,232,174,190,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,229,157,135,232,161,161,229,153,168,34,13,10,34,80,114,
+105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,228,188,152,229,133,136,228,189,191,231,148,168,230,150,176,231,154,132,232,190,147,229,135,186,232,174,190,229,164,135,34,13,10,34,
+85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,228,189,191,231,148,168,32,83,
+104,105,102,116,43,85,112,32,230,136,150,32,83,104,105,102,116,43,68,111,119,110,32,230,155,180,230,148,185,232,174,190,229,164,135,228,188,152,229,133,136,231,186,167,34,0,0 };
 
 const char* FxSound_zhCN_txt = (const char*) temp_binary_data_88;
 
@@ -9102,7 +9195,10 @@ static const unsigned char temp_binary_data_89[] =
 116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,232,135,170,229,139,149,230,155,180,230,150,176,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,230,176,184,233,129,160,231,189,174,233,160,130,34,13,10,34,
 84,104,101,109,101,34,32,61,32,34,228,184,187,233,161,140,34,13,10,34,68,97,114,107,34,32,61,32,34,230,183,177,232,137,178,34,13,10,34,76,105,103,104,116,34,32,61,32,34,230,183,186,232,137,178,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,
 32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,232,188,184,229,135,186,232,163,157,231,189,174,232,168,173,229,174,154,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,233,129,184,230,147,135,233,160,144,232,168,173,
-34,0,0 };
+34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,231,173,137,229,140,150,229,153,168,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,229,132,170,229,
+133,136,228,189,191,231,148,168,230,150,176,231,154,132,232,188,184,229,135,186,232,163,157,231,189,174,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,
+104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,228,189,191,231,148,168,32,83,104,105,102,116,43,85,112,32,230,136,150,32,83,104,105,102,116,43,68,111,119,110,32,232,174,138,230,155,180,232,163,157,231,189,174,229,
+132,170,229,133,136,233,160,134,229,186,143,34,0,0 };
 
 const char* FxSound_zhTW_txt = (const char*) temp_binary_data_89;
 
@@ -9180,34 +9276,34 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
         case 0x1fdee048:  numBytes = 1396; return settings_svg;
         case 0x9eeab69d:  numBytes = 4894; return Slider_Thumb_svg;
         case 0x36e2b8a1:  numBytes = 4109; return Slider_Thumb_bw_svg;
-        case 0xda29b4a4:  numBytes = 14745; return FxSound_ar_txt;
-        case 0xdaeefdb2:  numBytes = 11241; return FxSound_ba_txt;
-        case 0xde910cf4:  numBytes = 12455; return FxSound_de_txt;
-        case 0xe10b2ea1:  numBytes = 11940; return FxSound_es_txt;
-        case 0xe2b1efbf:  numBytes = 12334; return FxSound_fr_txt;
-        case 0xe61ba0fd:  numBytes = 11090; return FxSound_hr_txt;
-        case 0x1833c740:  numBytes = 12637; return fxsound_hu_txt;
-        case 0xe70b308e:  numBytes = 11568; return FxSound_id_txt;
-        case 0xe7d0799c:  numBytes = 14356; return FxSound_ir_txt;
-        case 0xe7eca89e:  numBytes = 11833; return FxSound_it_txt;
-        case 0xe895c2aa:  numBytes = 13243; return FxSound_ja_txt;
-        case 0xeb0fe457:  numBytes = 12197; return FxSound_ko_txt;
-        case 0xf00427b1:  numBytes = 11503; return FxSound_nl_txt;
-        case 0xf02e6e34:  numBytes = 11590; return FxSound_no_txt;
-        case 0xf36dd8ef:  numBytes = 12251; return FxSound_pl_txt;
-        case 0x7b843fc7:  numBytes = 11970; return FxSound_ptbr_txt;
-        case 0xf3de94f7:  numBytes = 11847; return FxSound_pt_txt;
-        case 0xf701d0b0:  numBytes = 12019; return FxSound_ro_txt;
-        case 0xf7565db6:  numBytes = 16021; return FxSound_ru_txt;
-        case 0xf88c62cc:  numBytes = 11334; return FxSound_sl_txt;
-        case 0xf9194dd6:  numBytes = 11649; return FxSound_sv_txt;
-        case 0xfa08dd67:  numBytes = 19236; return FxSound_th_txt;
-        case 0xfa95c871:  numBytes = 11742; return FxSound_tr_txt;
-        case 0x4464a26e:  numBytes = 10877; return FxSound_txt;
-        case 0xfb5b117f:  numBytes = 15609; return FxSound_ua_txt;
-        case 0xfd80a626:  numBytes = 12886; return FxSound_vi_txt;
-        case 0xd8a3b00c:  numBytes = 10301; return FxSound_zhCN_txt;
-        case 0xf624e624:  numBytes = 10455; return FxSound_zhTW_txt;
+        case 0xda29b4a4:  numBytes = 15026; return FxSound_ar_txt;
+        case 0xdaeefdb2:  numBytes = 11476; return FxSound_ba_txt;
+        case 0xde910cf4:  numBytes = 12692; return FxSound_de_txt;
+        case 0xe10b2ea1:  numBytes = 12178; return FxSound_es_txt;
+        case 0xe2b1efbf:  numBytes = 12587; return FxSound_fr_txt;
+        case 0xe61ba0fd:  numBytes = 11325; return FxSound_hr_txt;
+        case 0x1833c740:  numBytes = 12897; return fxsound_hu_txt;
+        case 0xe70b308e:  numBytes = 11801; return FxSound_id_txt;
+        case 0xe7d0799c:  numBytes = 14660; return FxSound_ir_txt;
+        case 0xe7eca89e:  numBytes = 12080; return FxSound_it_txt;
+        case 0xe895c2aa:  numBytes = 13514; return FxSound_ja_txt;
+        case 0xeb0fe457:  numBytes = 12454; return FxSound_ko_txt;
+        case 0xf00427b1:  numBytes = 11740; return FxSound_nl_txt;
+        case 0xf02e6e34:  numBytes = 11808; return FxSound_no_txt;
+        case 0xf36dd8ef:  numBytes = 12492; return FxSound_pl_txt;
+        case 0x7b843fc7:  numBytes = 12214; return FxSound_ptbr_txt;
+        case 0xf3de94f7:  numBytes = 12091; return FxSound_pt_txt;
+        case 0xf701d0b0:  numBytes = 12271; return FxSound_ro_txt;
+        case 0xf7565db6:  numBytes = 16350; return FxSound_ru_txt;
+        case 0xf88c62cc:  numBytes = 11570; return FxSound_sl_txt;
+        case 0xf9194dd6:  numBytes = 11876; return FxSound_sv_txt;
+        case 0xfa08dd67:  numBytes = 19646; return FxSound_th_txt;
+        case 0xfa95c871:  numBytes = 11988; return FxSound_tr_txt;
+        case 0x4464a26e:  numBytes = 11090; return FxSound_txt;
+        case 0xfb5b117f:  numBytes = 15904; return FxSound_ua_txt;
+        case 0xfd80a626:  numBytes = 13139; return FxSound_vi_txt;
+        case 0xd8a3b00c:  numBytes = 10513; return FxSound_zhCN_txt;
+        case 0xf624e624:  numBytes = 10670; return FxSound_zhTW_txt;
         default: break;
     }
 
