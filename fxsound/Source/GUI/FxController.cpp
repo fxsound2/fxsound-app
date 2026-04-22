@@ -523,9 +523,10 @@ void FxController::hideMainWindow()
 	
 	if (minimize_tip_)
 	{
-        Thread::sleep(2000);
-		FxModel::getModel().pushMessage(TRANS("FxSound in system tray\r\nClick FxSound icon to reopen"));
 		minimize_tip_ = false;
+		Timer::callAfterDelay(2000, []() {
+			FxModel::getModel().pushMessage(TRANS("FxSound in system tray\r\nClick FxSound icon to reopen"));
+			});
 	}
 }
 
