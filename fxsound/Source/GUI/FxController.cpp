@@ -228,6 +228,11 @@ void FxController::config(const String& commandline)
         settings_.setString("preset", preset);
     }
 
+	if (output_device.isNotEmpty())
+	{
+		setOutputName(output_device);
+	}
+
     if (view.isNotEmpty())
     {
         auto value = view.getIntValue();
