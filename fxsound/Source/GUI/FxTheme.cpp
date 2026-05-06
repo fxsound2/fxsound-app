@@ -109,6 +109,7 @@ Label* FxTheme::createComboBoxTextBox(ComboBox& box)
 {
 	auto label = LookAndFeel_V4::createComboBoxTextBox(box);
 	label->setMouseCursor(MouseCursor::PointingHandCursor);
+	box.setMouseCursor(MouseCursor::PointingHandCursor);
 	return label;
 }
 
@@ -121,7 +122,7 @@ void FxTheme::positionComboBoxText(ComboBox& box, Label& label)
 {
 	label.setMinimumHorizontalScale(1.0);
 	LookAndFeel_V4::positionComboBoxText(box, label);
-	label.setBounds(label.getBounds().withX(10));
+	label.setBounds(label.getBounds().withX(5).withRight(box.getWidth() - 37));
 }
 
 void FxTheme::drawComboBox(Graphics& g, int width, int height, bool,
