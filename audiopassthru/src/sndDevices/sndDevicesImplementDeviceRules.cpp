@@ -384,6 +384,12 @@ PlaybackDeviceIsSelected:  // Label to jump to when the playback device num has 
 	if( sndDevicesGetFormatFromID(hp_sndDevices, cast_handle->pwszID[cast_handle->playbackDeviceNum], &wfx, &resultFlag) != OKAY )
 		return(NOT_OKAY);
 
+	if( resultFlag != SND_DEVICES_DEVICE_OPERATION_COMPLETED )
+	{
+		*ip_resultFlag = SND_DEVICES_DEVICE_GET_FORMAT_FAILED;
+		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_DEVICE_GET_FORMAT_FAILED);
+	}
+
 	cast_handle->wfxDfxProcessing = wfx;	// Initialize DFX processing format to match playback device format, sampling frequency will be corrected below.
 
 	playbackSamplingFrequency = wfx.nSamplesPerSec;

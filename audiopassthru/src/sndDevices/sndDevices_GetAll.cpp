@@ -175,7 +175,10 @@ int PT_DECLSPEC sndDevices_GetAll(PT_HANDLE* hp_sndDevices, int* ip_num_devices)
 				PropVariantClear(&DeviceDesc);
 				return(NOT_OKAY);
 			}
-			cast_handle->deviceNumChannel[i] = wfx.nChannels;
+			if (resultFlag == SND_DEVICES_DEVICE_OPERATION_COMPLETED)
+				cast_handle->deviceNumChannel[i] = wfx.nChannels;
+			else
+				cast_handle->deviceNumChannel[i] = 0;
 
 			// Check ID strings to see if this is the default device.
 			if (pwszIDdefault != NULL && wcscmp(cast_handle->pwszID[i], pwszIDdefault) == 0)
