@@ -50,6 +50,11 @@ FxView::FxView()
     addChildComponent(&error_notification_);
 }
 
+FxView::~FxView()
+{
+	FxModel::getModel().removeListener(this);
+}
+
 void FxView::showErrorNotification(bool show)
 {
     if (show)

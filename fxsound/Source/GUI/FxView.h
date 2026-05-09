@@ -33,7 +33,7 @@ class FxView : public Component, public ComboBox::Listener, public FxModel::List
 {
 public:
 	FxView();
-	~FxView() = default;
+	~FxView();
 
 protected:
 	static constexpr int LIST_WIDTH = 225;

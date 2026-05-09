@@ -236,6 +236,8 @@ FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"men
 
 FxMainWindow::~FxMainWindow()
 {
+	help_bubble_.removeFromDesktop();
+	FxModel::getModel().removeListener(this);
 }
 
 void FxMainWindow::show()

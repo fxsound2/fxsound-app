@@ -107,14 +107,28 @@ public:
         if (main_window_.get() != nullptr)
         {
             FxController::getInstance().autoSaveModifiedPreset();
+            FxController::getInstance().stopTimer();
 
             audio_passthru_.reset();
+
+            // UIA holds COM references to AccessibilityNativeHandle objects for
+            // desktop-resident components. Call UiaDisconnectAllProviders to
+            // synchronously release those references before the components are
+            // destroyed, so their COM refcounts reach zero in the destructor
+            // chain rather than after static destructors have already run.
+            if (HMODULE hUia = GetModuleHandleW(L"UIAutomationCore.dll"))
+            {
+                typedef HRESULT (WINAPI* UiaDisconnectAllProvidersFunc)();
+                if (auto fn = (UiaDisconnectAllProvidersFunc)GetProcAddress(hUia, "UiaDisconnectAllProviders"))
+                    fn();
+            }
 
             system_tray_view_.reset();
 
             main_window_.reset(); // (deletes our window)
         }
 
+        LocalisedStrings::setCurrentMappings(nullptr);
         LookAndFeel::setDefaultLookAndFeel(nullptr);
 
         CoUninitialize();

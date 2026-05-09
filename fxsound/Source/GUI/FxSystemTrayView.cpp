@@ -45,10 +45,12 @@ FxSystemTrayView::FxSystemTrayView()
 
 FxSystemTrayView::~FxSystemTrayView()
 {
+    FxModel::getModel().removeListener(this);
+
     HWND hWnd = (HWND)getWindowHandle();
 
+    SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)componentWndProc_);
     SetWindowLongPtr(hWnd, GWLP_USERDATA, NULL);
-    SetWindowLongPtr(hWnd, GWLP_WNDPROC, NULL);
 
     NOTIFYICONDATA nid = { sizeof(nid) };
     nid.uFlags = NIF_GUID;
