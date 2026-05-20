@@ -432,8 +432,6 @@ int AudioPassthruPrivate::processTimer()
 		if ((numRealDevices > 0) && (DfxDeviceEnabledFlag == IS_TRUE))
 		{
 			hProcessingThread_ = CreateThread(NULL, 0, processingThread, (LPVOID)this, 0L, &ProcessingThreadID_);
-			if (s_callback_ != nullptr)
-				s_callback_->onSoundDeviceChange(true);
 		}
 		else if (s_sndDevices_.playbackDeviceIsUnavailable)
 		{
@@ -442,6 +440,9 @@ int AudioPassthruPrivate::processTimer()
 			// onDeviceChange() will clear playbackDeviceIsUnavailable when the device situation changes.
 			hProcessingThread_ = INVALID_HANDLE_VALUE;
 		}
+
+		if (s_callback_ != nullptr)
+			s_callback_->onSoundDeviceChange(true);
 
 		/* Check if a new playback device has been selected */
 		/*
