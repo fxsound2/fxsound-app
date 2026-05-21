@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace FxSound
 {
+    std::function<void()> DeviceConfig::onDeviceConfigsUpdate;
+
     void DeviceConfig::initDeviceConfigs(Settings& settings, std::vector<SoundDevice>& sound_devices)
     {
         juce::Array<DeviceConfig> device_configs;
@@ -84,9 +86,21 @@ namespace FxSound
             }
         }
 
+        if (device_configs.removeIf([&](const DeviceConfig& device_config) {
+            return std::find_if(sound_devices.begin(), sound_devices.end(),
+                [&](const SoundDevice& sound_device) {
+                    return sound_device.isRealDevice && device_config.device_name == sound_device.deviceFriendlyName.c_str();
+                }) == sound_devices.end();
+        }) > 0)
+        {
+            save_config = true;
+        }
+
         if (save_config)
         {
             saveDeviceConfigs(settings, "device_configs", device_configs);
+            if (onDeviceConfigsUpdate)
+                onDeviceConfigsUpdate();
         }
     }
 

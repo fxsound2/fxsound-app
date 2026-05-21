@@ -56,7 +56,7 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxOutputDeviceRow)
 };
 
-class FxOutputPreferenceListModel : public ListBoxModel, public FxModel::Listener
+class FxOutputPreferenceListModel : public ListBoxModel
 {
 public:
     FxOutputPreferenceListModel();
@@ -71,8 +71,6 @@ public:
     void moveRowUp(int index);
 
     void moveRowDown(int index);
-
-    void modelChanged(FxModel::Event model_event);
 
     void updateDeviceConfig(const DeviceConfig device_config);
 

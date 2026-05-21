@@ -180,14 +180,18 @@ void FxOutputDeviceRow::paint(Graphics& g)
 
 FxOutputPreferenceListModel::FxOutputPreferenceListModel()
 {
-    FxModel::getModel().addListener(this);
+    DeviceConfig::onDeviceConfigsUpdate = [this]() {
+        device_configs_ = FxController::getInstance().getDeviceConfigs();
+        if (onModelChanged)
+            onModelChanged();
+    };
 
     device_configs_ = FxController::getInstance().getDeviceConfigs();
 }
 
 FxOutputPreferenceListModel::~FxOutputPreferenceListModel()
 {
-    FxModel::getModel().removeListener(this);
+    DeviceConfig::onDeviceConfigsUpdate = nullptr;
 }
 
 int FxOutputPreferenceListModel::getNumRows()
@@ -233,16 +237,6 @@ void FxOutputPreferenceListModel::moveRowDown(int index)
 
     if (onRowMoved)
         onRowMoved(index + 1);
-}
-
-void FxOutputPreferenceListModel::modelChanged(FxModel::Event model_event)
-{
-    if (model_event == FxModel::Event::OutputListUpdated)
-    {
-        device_configs_ = FxController::getInstance().getDeviceConfigs();
-        if (onModelChanged)
-            onModelChanged();
-    }
 }
 
 void FxOutputPreferenceListModel::updateDeviceConfig(const DeviceConfig device_config)

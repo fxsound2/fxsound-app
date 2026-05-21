@@ -1142,7 +1142,6 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
     // New device is connected, find the preferred device if the new device has higher priority than the current output device
 	if (sound_devices.size() > device_count_)
 	{
-		DeviceConfig::updateDeviceConfigs(settings_, sound_devices);
 		auto device_configs = DeviceConfig::loadDeviceConfigs(settings_, "device_configs");
 
 		for (auto& sound_device : sound_devices)
@@ -1262,8 +1261,6 @@ void FxController::syncOutputWithSystemDefault(std::vector<SoundDevice>& sound_d
 	// Update the configuration as per the change in active devices and update the output device list in UI
 	if (sound_devices.size() != device_count_)
 	{
-		DeviceConfig::updateDeviceConfigs(settings_, sound_devices);
-
 		FxModel::getModel().initOutputs(active_output_devices_);
 
 		device_count_ = (uint32_t)sound_devices.size();
@@ -1642,12 +1639,14 @@ void FxController::onSoundDeviceChange(bool processing)
 	{
 		if (processing)
 		{
+            DeviceConfig::updateDeviceConfigs(settings_, audio_passthru_->getSoundDevices(false));
 			auto sound_devices = audio_passthru_->getSoundDevices(true);
 			selectProcessingOutput(sound_devices);
 		}
 	}
 	else
 	{
+		DeviceConfig::updateDeviceConfigs(settings_, audio_passthru_->getSoundDevices(false));
 		auto sound_devices = audio_passthru_->getSoundDevices(true);
 		syncOutputWithSystemDefault(sound_devices);
 	}

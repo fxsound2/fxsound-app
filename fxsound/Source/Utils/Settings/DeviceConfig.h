@@ -38,6 +38,8 @@ namespace FxSound
 
         static DeviceConfig getDeviceConfig(Settings& settings, juce::String device_name);
 
+        static std::function<void()> onDeviceConfigsUpdate;
+
     private:
         static juce::var toJson(const DeviceConfig& device_config);
         static DeviceConfig fromJson(const juce::var& v);
