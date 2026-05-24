@@ -156,6 +156,8 @@ public:
 	void saveWindowPosition(int x, int y);
 	void getWindowPosition(int& x, int& y);
 
+	void reloadDevices();
+
 	void logMessage(const String& message)
 	{
 		file_logger_->logMessage(message);
