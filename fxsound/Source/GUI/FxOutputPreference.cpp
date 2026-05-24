@@ -73,7 +73,7 @@ FxOutputDeviceRow::FxOutputDeviceRow(FxOutputPreferenceListModel& model) : up_bu
     addAndMakeVisible(up_button_);
     addAndMakeVisible(down_button_);
     addAndMakeVisible(device_name_);
-    addAndMakeVisible(preset_list_);
+    addAndMakeVisible(preset_list_);    
 
     row_index_ = -1;
     is_row_selected_ = false;
@@ -186,12 +186,16 @@ FxOutputPreferenceListModel::FxOutputPreferenceListModel()
             onModelChanged();
     };
 
+    FxModel::getModel().addListener(this);
+
     device_configs_ = FxController::getInstance().getDeviceConfigs();
 }
 
 FxOutputPreferenceListModel::~FxOutputPreferenceListModel()
 {
     DeviceConfig::onDeviceConfigsUpdate = nullptr;
+
+    FxModel::getModel().removeListener(this);
 }
 
 int FxOutputPreferenceListModel::getNumRows()
@@ -237,6 +241,15 @@ void FxOutputPreferenceListModel::moveRowDown(int index)
 
     if (onRowMoved)
         onRowMoved(index + 1);
+}
+
+void FxOutputPreferenceListModel::modelChanged(FxModel::Event event)
+{
+    if (event == FxModel::Event::OutputListUpdated || event == FxModel::Event::PresetListUpdated)
+    {
+        if (onModelChanged)
+            onModelChanged();
+    }
 }
 
 void FxOutputPreferenceListModel::updateDeviceConfig(const DeviceConfig device_config)
