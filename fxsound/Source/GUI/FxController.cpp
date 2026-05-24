@@ -730,6 +730,99 @@ void FxController::checkDeviceChanges()
 	audio_passthru_->checkDeviceChanges();
 }
 
+void FxController::reloadDevices()
+{
+    ScopedLock auto_lock(lock_);
+
+    logMessage("reloadDevices: Manual device reload triggered");
+
+    bool was_powered = FxModel::getModel().getPowerState();
+
+    auto sound_devices = audio_passthru_->getSoundDevices(false);
+
+    // Verify FxSound virtual device
+    dfx_enabled_ = false;
+    for (auto& sd : sound_devices)
+    {
+        if (!sd.isRealDevice &&
+            sd.deviceFriendlyName.find(L"FxSound Audio Enhancer") != std::wstring::npos)
+        {
+            dfx_enabled_ = true;
+            break;
+        }
+    }
+    if (!dfx_enabled_)
+    {
+        FxModel::getModel().pushMessage(TRANS("FxSound Audio Enhancer device not found"));
+        return;
+    }
+
+    // Rebuild active devices
+    active_output_devices_.clear();
+    SoundDevice default_output;
+    for (auto& sd : sound_devices)
+    {
+        if (sd.isRealDevice && sd.isActive && sd.deviceNumChannel >= 2)
+        {
+            active_output_devices_.push_back(sd);
+            if (sd.isDefaultDevice || sd.isTargetedRealPlaybackDevice)
+                default_output = sd;
+        }
+    }
+
+    DeviceConfig::updateDeviceConfigs(settings_, sound_devices);
+    device_count_ = (uint32_t)sound_devices.size();
+    FxModel::getModel().initOutputs(active_output_devices_);
+
+    if (active_output_devices_.size() == 0)
+    {
+        audio_passthru_->mute(true);
+        powerOn(false);
+        FxModel::getModel().pushMessage(TRANS("No output devices found"));
+        return;
+    }
+
+    // Find best device
+    SoundDevice target_device;
+    bool found = false;
+    for (auto& od : active_output_devices_)
+    {
+        if (getOutputName() == od.deviceFriendlyName.c_str())
+        {
+            target_device = od;
+            found = true;
+            break;
+        }
+    }
+    if (!found)
+    {
+        target_device = (default_output.deviceFriendlyName.size() > 0)
+                        ? default_output : getPreferredOutput();
+        setOutputName(target_device.deviceFriendlyName.c_str());
+    }
+
+    audio_passthru_->setAsPlaybackDevice(target_device);
+    output_changed_ = true;
+    FxModel::getModel().setSelectedOutput(target_device);
+
+    if (was_powered)
+    {
+        powerOn(true);
+        audio_passthru_->mute(false);
+    }
+
+    auto available = audio_passthru_->isPlaybackDeviceAvailable();
+    if (available != playback_device_available_)
+    {
+        playback_device_available_ = available;
+        FxModel::getModel().notifyOutputError();
+    }
+
+    system_tray_view_->setStatus(FxModel::getModel().getPowerState(), isAudioProcessing());
+    FxModel::getModel().pushMessage(TRANS("Devices reloaded"));
+    logMessage("reloadDevices: Found " + String(active_output_devices_.size()) + " devices");
+}
+
 void FxController::savePreset(const String& preset_name)
 {
 	auto& model = FxModel::getModel();
@@ -1024,7 +1117,7 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 
 	for (auto sound_device : sound_devices)
 	{
-		if (sound_device.isRealDevice && sound_device.deviceNumChannel >= 2)
+		if (sound_device.isRealDevice && sound_device.isActive && sound_device.deviceNumChannel >= 2)
 		{
 			active_output_devices_.push_back(sound_device);
 		}
@@ -1373,55 +1466,138 @@ void FxController::timerCallback()
 // Handled when FxSound processing is on
 void FxController::onSoundDeviceChange(std::vector<SoundDevice> sound_devices)
 {
-	ScopedLock auto_lock(lock_);
+    ScopedLock auto_lock(lock_);
 
-	auto available = audio_passthru_->isPlaybackDeviceAvailable();
-	if (available != playback_device_available_)
-	{
-		playback_device_available_ = available;
-		FxModel::getModel().notifyOutputError();
-	}
+    auto available = audio_passthru_->isPlaybackDeviceAvailable();
+    if (available != playback_device_available_)
+    {
+        playback_device_available_ = available;
+        FxModel::getModel().notifyOutputError();
+    }
 
-    // New device is added or removed, so update the output device list and select a preferred output device based on the updated device list.
-	if (sound_devices.size() != device_count_)
-	{
-		updateOutputs(sound_devices);
-		device_count_ = (uint32_t)sound_devices.size();
-
-		if (!dfx_enabled_)
-		{
-			stopTimer();
-			main_window_->removeFromDesktop();
-			FxDeviceErrorMessage error_message;
-			error_message.runModalLoop();
-			JUCEApplication::getInstance()->systemRequestedQuit();
-			return;
-		}
-	}
-	else
-	{
-		for (auto sound_device : sound_devices)
-		{
-			// If the selected output device is different from the output device selected in application UI, update the application UI.
-			if (sound_device.isRealDevice && sound_device.isTargetedRealPlaybackDevice && getOutputName() != sound_device.deviceFriendlyName.c_str())
-			{
-                setOutputName(sound_device.deviceFriendlyName.c_str());
-				FxModel::getModel().setSelectedOutput(sound_device);
-
-				if (!FxModel::getModel().isPresetModified())
-				{
-					auto device_config = DeviceConfig::getDeviceConfig(settings_, getOutputName());
-					if (device_config.preset.isNotEmpty())
-					{
-						auto selected_preset = FxModel::getModel().selectPreset(device_config.preset, false);
-						setPreset(selected_preset, false);
-					}
-				}
-
+    if (sound_devices.size() != device_count_)
+    {
+        // Verify FxSound virtual device is still present
+        bool dfx_found = false;
+        for (auto& sd : sound_devices)
+        {
+            if (!sd.isRealDevice &&
+                sd.deviceFriendlyName.find(L"FxSound Audio Enhancer") != std::wstring::npos)
+            {
+                dfx_found = true;
                 break;
-			}
+            }
         }
-	}
+
+        if (!dfx_found)
+        {
+            dfx_enabled_ = false;
+            stopTimer();
+            main_window_->removeFromDesktop();
+            FxDeviceErrorMessage error_message;
+            error_message.runModalLoop();
+            JUCEApplication::getInstance()->systemRequestedQuit();
+            return;
+        }
+
+        // Remember power state before any changes
+        bool was_powered = FxModel::getModel().getPowerState();
+
+        // Rebuild active device list WITH isActive check
+        active_output_devices_.clear();
+        for (auto& sd : sound_devices)
+        {
+            if (sd.isRealDevice && sd.isActive && sd.deviceNumChannel >= 2)
+            {
+                active_output_devices_.push_back(sd);
+            }
+        }
+
+        DeviceConfig::updateDeviceConfigs(settings_, sound_devices);
+        device_count_ = (uint32_t)sound_devices.size();
+        FxModel::getModel().initOutputs(active_output_devices_);
+
+        // No devices available — mute and wait
+        if (active_output_devices_.size() == 0)
+        {
+            audio_passthru_->mute(true);
+            powerOn(false);
+            FxModel::getModel().pushMessage(TRANS("Output Disconnected"));
+            return;
+        }
+
+        // Find best device: keep current if available, otherwise use preferred
+        SoundDevice target_device;
+        bool previous_found = false;
+
+        for (auto& od : active_output_devices_)
+        {
+            if (getOutputName() == od.deviceFriendlyName.c_str())
+            {
+                target_device = od;
+                previous_found = true;
+                break;
+            }
+        }
+
+        if (!previous_found)
+        {
+            target_device = getPreferredOutput();
+            setOutputName(target_device.deviceFriendlyName.c_str());
+        }
+
+        // Switch to target device
+        audio_passthru_->setAsPlaybackDevice(target_device);
+        output_changed_ = true;
+        FxModel::getModel().setSelectedOutput(target_device);
+
+        // Auto-select preset for the device
+        if (!FxModel::getModel().isPresetModified())
+        {
+            auto dc = DeviceConfig::getDeviceConfig(settings_,
+                          target_device.deviceFriendlyName.c_str());
+            if (dc.preset.isNotEmpty())
+            {
+                auto sp = FxModel::getModel().selectPreset(dc.preset, false);
+                setPreset(sp, false);
+            }
+        }
+
+        // KEY FIX: Re-power the audio pipeline
+        if (was_powered)
+        {
+            powerOn(true);
+            audio_passthru_->mute(false);
+            FxModel::getModel().pushMessage(
+                TRANS("Output: ") + String(target_device.deviceFriendlyName.c_str()));
+        }
+
+        system_tray_view_->setStatus(FxModel::getModel().getPowerState(), isAudioProcessing());
+    }
+    else
+    {
+        // Device count unchanged — just check if targeted device changed
+        for (auto sd : sound_devices)
+        {
+            if (sd.isRealDevice && sd.isTargetedRealPlaybackDevice &&
+                getOutputName() != sd.deviceFriendlyName.c_str())
+            {
+                setOutputName(sd.deviceFriendlyName.c_str());
+                FxModel::getModel().setSelectedOutput(sd);
+
+                if (!FxModel::getModel().isPresetModified())
+                {
+                    auto dc = DeviceConfig::getDeviceConfig(settings_, getOutputName());
+                    if (dc.preset.isNotEmpty())
+                    {
+                        auto sp = FxModel::getModel().selectPreset(dc.preset, false);
+                        setPreset(sp, false);
+                    }
+                }
+                break;
+            }
+        }
+    }
 }
 
 // Handled when FxSound processing is off
@@ -1437,7 +1613,7 @@ void FxController::onSoundDeviceChange()
 
 		for (auto sound_device : sound_devices)
 		{
-			if (sound_device.isRealDevice && sound_device.deviceNumChannel >= 2)
+			if (sound_device.isRealDevice && sound_device.isActive && sound_device.deviceNumChannel >= 2)
 			{
 				active_output_devices_.push_back(sound_device);
 			}
