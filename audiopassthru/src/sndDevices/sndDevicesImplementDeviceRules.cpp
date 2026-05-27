@@ -481,6 +481,38 @@ PlaybackDeviceIsSelected:  // Label to jump to when the playback device num has 
 		//cast_handle->ignoreDeviceCallbacks = FALSE;
 	}
 
+	// Validate that the selected playback device is in ACTIVE state. If it's not (e.g., BT
+	// headphones were disconnected/powered off and are now in UNPLUGGED state), fall back
+	// to the first ACTIVE device. This prevents the audio pipeline from trying to use a
+	// dead device, which would cause the Windows Audio service to spin at high CPU.
+	{
+		int i_active = SND_DEVICES_DEVICE_NOT_PRESENT;
+		for (i = 0; i < cast_handle->totalNumDevices; i++)
+		{
+			if (cast_handle->deviceState[i] == DEVICE_STATE_ACTIVE && i != cast_handle->dfxDeviceNum)
+			{
+				if (SND_DEVICES_MONO_BUG_SKIP_MONO_DEVICES)
+				{
+					if (sndDevicesGetNumberOfChannelsFromID(hp_sndDevices, cast_handle->pwszID[i], &i_numChannels, &i_resultFlag) != OKAY)
+						return(NOT_OKAY);
+					if (i_numChannels < 2)
+						continue;
+				}
+				i_active = i;
+				break;
+			}
+		}
+
+		if (i_active != SND_DEVICES_DEVICE_NOT_PRESENT && cast_handle->playbackDeviceNum != SND_DEVICES_DEVICE_NOT_PRESENT)
+		{
+			if (cast_handle->deviceState[cast_handle->playbackDeviceNum] != DEVICE_STATE_ACTIVE)
+			{
+				cast_handle->playbackDeviceNum = i_active;
+				WritePreviousDefault = 1;
+			}
+		}
+	}
+
 	// Setup selected capture device.
 	cast_handle->pCaptureDevice = cast_handle->pAllDevices[cast_handle->captureDeviceNum];
 
