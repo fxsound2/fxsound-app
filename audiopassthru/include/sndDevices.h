@@ -350,6 +350,7 @@ struct sndDevicesHdlType {
 	wchar_t *deviceFriendlyNameRealDevices[SND_DEVICES_MAX_NUM_DEVICES];  // Friendly names, just the real devices.
 	wchar_t *deviceDescriptionRealDevices[SND_DEVICES_MAX_NUM_DEVICES];  // Descriptive names, just the real devices.
 	int deviceNumChannel[SND_DEVICES_MAX_NUM_DEVICES]; // Number of channels for all devices.
+	wchar_t deviceFormFactor[SND_DEVICES_MAX_NUM_DEVICES][PT_MAX_GENERIC_STRLEN]; // Form factor type string, eg "HDMI", "Speakers", etc.
 
    IAudioClient *pAudioClientCapture;
    IAudioCaptureClient *pAudioCaptureLoopback;
@@ -414,6 +415,7 @@ struct sndDevicesHdlType {
 	int totalCallbackCount;			// For debugging.
 	int totalReInitCalls;			// For debugging.
 	BOOL ignoreDeviceCallbacks;
+	BOOL ignoreVolumeCallbacks;
 	int initializationMode;		// Will be either SND_DEVICES_INIT_FOR_PROCESSING or SND_DEVICES_INIT_NO_PROCESSING
 	int playbackIsActive;		// Will be either SND_DEVICES_PLAYBACK_IS_STOPPED or SND_DEVICES_PLAYBACK_IS_ACTIVE.
 	int playbackStreamIsTemporarilyPaused;	// Used to turn off playback stream when no capture or playback is occuring.

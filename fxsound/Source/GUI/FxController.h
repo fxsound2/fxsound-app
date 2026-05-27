@@ -220,6 +220,8 @@ private:
 	static LRESULT CALLBACK eventCallback(HWND hwnd, const UINT message, const WPARAM w_param, const LPARAM l_param);
 	void timerCallback() override;
 	void onSoundDeviceChange(bool processing) override;
+	void onSystemSuspend();
+	void onSystemResume();
 	
     void initOutputs(std::vector<SoundDevice>& sound_devices);
 	void updateOutputs(std::vector<SoundDevice>& sound_devices);
@@ -242,6 +244,7 @@ private:
 
 	MessageWindow message_window_;
 	bool hotkeys_registered_;
+	HPOWERNOTIFY powerNotify_;
 
 	FxMainWindow* main_window_;
 	FxSystemTrayView* system_tray_view_;

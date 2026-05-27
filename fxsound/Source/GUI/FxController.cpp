@@ -131,6 +131,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 	hotkeys_registered_ = false;
 	output_changed_ = false;
     playback_device_available_ = true;
+	powerNotify_ = nullptr;
 
 	device_count_ = 0;
 	output_device_name_ = L"";
@@ -204,6 +205,11 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 
 FxController::~FxController()
 {
+	if (powerNotify_ != nullptr)
+	{
+		UnregisterSuspendResumeNotification(powerNotify_);
+		powerNotify_ = nullptr;
+	}
 	stopTimer();
 	WTSUnRegisterSessionNotification(message_window_.getHandle());
 	unregisterHotkeys();
@@ -407,6 +413,11 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		auto power = FxModel::getModel().getPowerState();
 		main_window_->setIcon(power, false);
 		system_tray_view_->setStatus(power, false);
+
+		if (SystemStats::getOperatingSystemType() != SystemStats::OperatingSystemType::Windows7)
+		{
+			powerNotify_ = RegisterSuspendResumeNotification(message_window_.getHandle(), DEVICE_NOTIFY_WINDOW_HANDLE);
+		}
 	}
 }
 
@@ -1059,17 +1070,28 @@ void FxController::initOutputs(std::vector<SoundDevice>& sound_devices)
 
 	SoundDevice default_output;
 	
-	auto device_configs = DeviceConfig::loadDeviceConfigs(settings_, "device_configs");
-	if (device_configs.size() == 0)
+	auto device_configs_version = settings_.getInt("device_configs_version");
+	if (device_configs_version != 2)
 	{
-        // First time running the app, initialize device configs with sound devices
 		DeviceConfig::initDeviceConfigs(settings_, sound_devices);
+		settings_.setInt("device_configs_version", 2);
 	}
 	else
 	{
-        // Update device configs with when relaunching the app
-		DeviceConfig::updateDeviceConfigs(settings_, sound_devices);
+		auto device_configs = DeviceConfig::loadDeviceConfigs(settings_, "device_configs");
+		if (device_configs.size() == 0)
+		{
+			// First time running the app, initialize device configs with sound devices
+			DeviceConfig::initDeviceConfigs(settings_, sound_devices);
+			settings_.setInt("device_configs_version", 2);
+		}
+		else
+		{
+			// Update device configs when relaunching the app
+			DeviceConfig::updateDeviceConfigs(settings_, sound_devices);
+		}
 	}
+	
 
 	for (auto sound_device : sound_devices)
 	{
@@ -1543,6 +1565,19 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 		}
 		break;
 
+		case WM_POWERBROADCAST:
+		{
+			if (w_param == PBT_APMSUSPEND)
+			{
+				controller->onSystemSuspend();
+			}
+			else if (w_param == PBT_APMRESUMESUSPEND || w_param == PBT_APMRESUMEAUTOMATIC)
+			{
+				controller->onSystemResume();
+			}
+		}
+		break;
+
 		case WM_WTSSESSION_CHANGE:
 		{
 			WPARAM login_event = (os == SystemStats::OperatingSystemType::Windows7) ? WTS_CONSOLE_CONNECT : WTS_SESSION_DESKTOP_READY;
@@ -1569,7 +1604,7 @@ void FxController::timerCallback()
 		Thread::sleep(200);
 		return;
 	}
-
+	
     audio_passthru_->processTimer();
 	auto total_audio_process_time = dfx_dsp_.getTotalAudioProcessedTime();
 	if (audio_process_time_ != total_audio_process_time)
@@ -1639,7 +1674,7 @@ void FxController::onSoundDeviceChange(bool processing)
 	{
 		if (processing)
 		{
-            DeviceConfig::updateDeviceConfigs(settings_, audio_passthru_->getSoundDevices(false));
+			DeviceConfig::updateDeviceConfigs(settings_, audio_passthru_->getSoundDevices(false));
 			auto sound_devices = audio_passthru_->getSoundDevices(true);
 			selectProcessingOutput(sound_devices);
 		}
@@ -1651,6 +1686,23 @@ void FxController::onSoundDeviceChange(bool processing)
 		syncOutputWithSystemDefault(sound_devices);
 	}
 }
+
+void FxController::onSystemSuspend()
+{
+	if (FxModel::getModel().getPowerState())
+	{
+		audio_passthru_->mute(true);
+	}
+}
+
+void FxController::onSystemResume()
+{
+	if (FxModel::getModel().getPowerState())
+	{
+		audio_passthru_->mute(false);
+	}
+}
+
 
 void FxController::enableHotkeys(bool enable)
 {

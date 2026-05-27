@@ -92,16 +92,6 @@ public:
         }
     }
 
-    void suspended() override
-    {
-        FxController::getInstance().stopTimer();
-    }
-
-    void resumed() override
-    {
-        FxController::getInstance().startTimer(100);
-    }
-
     void shutdown() override
     {
         if (main_window_.get() != nullptr)

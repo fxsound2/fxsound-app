@@ -29,6 +29,7 @@ namespace FxSound
         juce::String device_id;
         juce::String device_name;
         juce::String preset;
+        juce::String device_form_factor;
 
         static void initDeviceConfigs(Settings& settings, std::vector<SoundDevice>& sound_devices);
         static void updateDeviceConfigs(Settings& settings, const std::vector<SoundDevice>& sound_devices);

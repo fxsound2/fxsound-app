@@ -64,6 +64,7 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 	cast_handle->function_status = SND_DEVICES_DEVICE_OPERATION_COMPLETED;	// Clear function error status code.
 
 	//cast_handle->ignoreDeviceCallbacks = TRUE;
+	cast_handle->ignoreVolumeCallbacks = TRUE;
 
 	cast_handle->totalNumDevices = SND_DEVICES_DEVICE_NOT_PRESENT;
 	cast_handle->dfxDeviceNum = SND_DEVICES_DEVICE_NOT_PRESENT;
@@ -307,6 +308,7 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 			}
 
 			cast_handle->ignoreDeviceCallbacks = FALSE;
+			cast_handle->ignoreVolumeCallbacks = FALSE;
 		}
 	}
 
@@ -375,7 +377,7 @@ int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE* hp_sndDevices, BOOL* bp_deviceC
 			{
 				deviceFound = TRUE;
 
-				// Device ID matched — now check if its state has changed
+				// Device ID matched - now check if its state has changed
 				DWORD currentState = 0;
 				hr = pDevice->GetState(&currentState);
 				if (SUCCEEDED(hr) && currentState != cast_handle->deviceState[j])

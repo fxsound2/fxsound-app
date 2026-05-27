@@ -62,6 +62,10 @@ AudioPassthruPrivate::~AudioPassthruPrivate()
 	if (i_timed_out)
 		return;
 
+	/* Disable volume callbacks before switching devices to prevent the DFX driver's
+	   volume state reset from propagating to the real speakers during shutdown. */
+	s_sndDevices_.ignoreVolumeCallbacks = TRUE;
+
 	/* Change the default soundcard to not be the DFX virtual one but instead the proper real one */
 	if (sndDevicesRestoreDefaultDevice(hp_sndDevices_, &i_result_flag) != OKAY)
 		return;
@@ -180,6 +184,7 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices(bool active_devices)
 		sound_device.deviceFriendlyName = std::wstring(cast_handle->deviceFriendlyName[index]);
 		sound_device.deviceDescription = std::wstring(cast_handle->deviceDescription[index] != NULL ? cast_handle->deviceDescription[index] : L"");
 		sound_device.deviceNumChannel = cast_handle->deviceNumChannel[index];
+		sound_device.deviceFormFactor = std::wstring(cast_handle->deviceFormFactor[index]);
 		if (cast_handle->deviceState[index] == DEVICE_STATE_ACTIVE)
 		{
 			sound_device.isActive = true;

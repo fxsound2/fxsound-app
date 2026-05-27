@@ -43,9 +43,9 @@ namespace FxSound
         {
             if (sound_device.isRealDevice)
             {
-                DeviceConfig device_config = { sound_device.pwszID.c_str() , sound_device.deviceFriendlyName.c_str(), "" };
+                DeviceConfig device_config = { sound_device.pwszID.c_str(), sound_device.deviceFriendlyName.c_str(), "", sound_device.deviceFormFactor.c_str() };
                 device_configs.add(device_config);
-            }            
+            }
         }
 
         saveDeviceConfigs(settings, "device_configs", device_configs);
@@ -74,7 +74,7 @@ namespace FxSound
             if (!device_found)
             {
                 save_config = true;
-                DeviceConfig device_config = { sound_device.pwszID.c_str() , sound_device.deviceFriendlyName.c_str(), "" };
+                DeviceConfig device_config = { sound_device.pwszID.c_str(), sound_device.deviceFriendlyName.c_str(), "", sound_device.deviceFormFactor.c_str() };
                 if (prioritize_new_output)
                 {   
                     device_configs.insert(0, device_config);
@@ -87,6 +87,8 @@ namespace FxSound
         }
 
         if (device_configs.removeIf([&](const DeviceConfig& device_config) {
+            if (device_config.device_form_factor == "HDMI")
+                return false;
             return std::find_if(sound_devices.begin(), sound_devices.end(),
                 [&](const SoundDevice& sound_device) {
                     return sound_device.isRealDevice && device_config.device_name == sound_device.deviceFriendlyName.c_str();
@@ -125,6 +127,7 @@ namespace FxSound
         obj->setProperty("device_id", device_config.device_id);
         obj->setProperty("device_name", device_config.device_name);
         obj->setProperty("preset", device_config.preset);
+        obj->setProperty("device_form_factor", device_config.device_form_factor);
 
         return juce::var(obj);
     }
@@ -138,6 +141,7 @@ namespace FxSound
             device_config.device_id = obj->getProperty("device_id").toString();
             device_config.device_name = obj->getProperty("device_name").toString();
             device_config.preset = obj->getProperty("preset").toString();
+            device_config.device_form_factor = obj->getProperty("device_form_factor").toString();
         }
 
         return device_config;

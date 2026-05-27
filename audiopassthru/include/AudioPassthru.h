@@ -48,6 +48,7 @@ struct SoundDevice {
 	std::wstring deviceDescription;  // Descriptive name, ie "Speakers", all devices.
 	std::wstring deviceFriendlyNameRealDevices;  // Friendly names, just the real devices.
 	std::wstring deviceDescriptionRealDevices;  // Descriptive names, just the real devices.
+	std::wstring deviceFormFactor;  // Form factor type string, eg "HDMI", "Speakers", etc.
 	int deviceNumChannel; // Number of channels for all devices.
 };
 

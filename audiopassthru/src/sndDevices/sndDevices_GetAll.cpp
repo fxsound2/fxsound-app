@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <math.h>
 
 #include <mmreg.h>
+#include <initguid.h>
 #include <Mmdeviceapi.h>
 #include <Audioclient.h>
 #include <Functiondiscoverykeys_devpkey.h>
@@ -166,6 +167,34 @@ int PT_DECLSPEC sndDevices_GetAll(PT_HANDLE* hp_sndDevices, int* ip_num_devices)
 		{
 			wcscpy(cast_handle->deviceFriendlyName[i], FriendlyName.pwszVal);
 			wcscpy(cast_handle->deviceDescription[i], DeviceDesc.pwszVal);
+
+			// Read the endpoint form factor and map it to a type string.
+			PROPVARIANT FormFactor;
+			PropVariantInit(&FormFactor);
+			if (SUCCEEDED(pProps->GetValue(PKEY_AudioEndpoint_FormFactor, &FormFactor)) && FormFactor.vt == VT_UI4)
+			{
+				const wchar_t* formFactorStr = L"Unknown";
+				switch (FormFactor.uintVal)
+				{
+				case RemoteNetworkDevice:       formFactorStr = L"NetworkDevice"; break;
+				case Speakers:                  formFactorStr = L"Speakers"; break;
+				case LineLevel:                 formFactorStr = L"LineLevel"; break;
+				case Headphones:                formFactorStr = L"Headphones"; break;
+				case Microphone:                formFactorStr = L"Microphone"; break;
+				case Headset:                   formFactorStr = L"Headset"; break;
+				case Handset:                   formFactorStr = L"Handset"; break;
+				case UnknownDigitalPassthrough: formFactorStr = L"DigitalPassthrough"; break;
+				case SPDIF:                     formFactorStr = L"SPDIF"; break;
+				case DigitalAudioDisplayDevice: formFactorStr = L"HDMI"; break;
+				default:                        formFactorStr = L"Unknown"; break;
+				}
+				wcscpy(cast_handle->deviceFormFactor[i], formFactorStr);
+			}
+			else
+			{
+				wcscpy(cast_handle->deviceFormFactor[i], L"Unknown");
+			}
+			PropVariantClear(&FormFactor);
 
 			// Get device number of channels.
 			if (sndDevicesGetFormatFromID(hp_sndDevices, cast_handle->pwszID[i], &wfx, &resultFlag) != OKAY)
