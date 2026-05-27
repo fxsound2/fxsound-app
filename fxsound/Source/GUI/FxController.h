@@ -137,6 +137,7 @@ public:
 
 	bool isLaunchOnStartup();
 	void setLaunchOnStartup(bool launch_on_startup);
+	void syncLaunchOnStartup();
 
     bool isHelpTooltipsHidden();
     void setHelpTooltipsHidden(bool status);
