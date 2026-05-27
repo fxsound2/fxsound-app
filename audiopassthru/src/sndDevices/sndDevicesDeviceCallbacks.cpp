@@ -119,6 +119,15 @@ HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDefaultDeviceChange
 	  if (wcscmp(pwstrDeviceId, cast_handle->pwszID[cast_handle->dfxDeviceNum]) == 0)
 		  return(S_OK);
 
+	  // If the new default device is the same as our current targeted playback device, skip re-init.
+	  // This avoids unnecessary restarts when the audio format changes on the same device
+	  // (e.g., Plex/video switching between tracks with different formats).
+	  if (cast_handle->playbackDeviceNum >= 0 && cast_handle->playbackDeviceNum < cast_handle->totalNumDevices)
+	  {
+		  if (wcscmp(pwstrDeviceId, cast_handle->pwszID[cast_handle->playbackDeviceNum]) == 0)
+			  return(S_OK);
+	  }
+
 	  //std::wstring temp_string(pwstrDeviceId);
 	  /* Set the newly targeted playback device as the default.  It will then automatically become the targeted device */
 	  //if (sndDevicesSetDeviceType(g_sndDevicesCallbacks_hdl, SND_DEVICES_DEFAULT, &temp_string[0], &i_resultFlag) != OKAY)
