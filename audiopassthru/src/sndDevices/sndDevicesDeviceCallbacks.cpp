@@ -200,13 +200,43 @@ HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDeviceStateChanged(
 {
   struct sndDevicesHdlType *cast_handle;
   int type;
-    
+  IMMDevice *pDevice = NULL;
+  IMMDeviceEnumerator *pEnumerator = NULL;
+  IMMEndpoint *pEndpoint = NULL;
+  EDataFlow flow;
+  HRESULT hr;
+
   cast_handle = (struct sndDevicesHdlType *)g_sndDevicesCallbacks_hdl;
 
   if (cast_handle == NULL)
     return(S_OK);
 
-  //SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDeviceStateChanged() enters");
+  // Only react to render (playback) device changes, not capture (input) devices
+  if (pwstrDeviceId != NULL)
+  {
+	  hr = CoCreateInstance(cast_handle->CLSID_MMDeviceEnumerator, NULL, CLSCTX_ALL, cast_handle->IID_IMMDeviceEnumerator, (void**)&pEnumerator);
+	  if (SUCCEEDED(hr) && pEnumerator != NULL)
+	  {
+		  hr = pEnumerator->GetDevice(pwstrDeviceId, &pDevice);
+		  if (SUCCEEDED(hr) && pDevice != NULL)
+		  {
+			  hr = pDevice->QueryInterface(__uuidof(IMMEndpoint), (void**)&pEndpoint);
+			  if (SUCCEEDED(hr) && pEndpoint != NULL)
+			  {
+				  hr = pEndpoint->GetDataFlow(&flow);
+				  if (pEndpoint) pEndpoint->Release();
+				  if (SUCCEEDED(hr) && flow != eRender)
+				  {
+					  if (pDevice) pDevice->Release();
+					  if (pEnumerator) pEnumerator->Release();
+					  return S_OK;
+				  }
+			  }
+			  if (pDevice) pDevice->Release();
+		  }
+		  if (pEnumerator) pEnumerator->Release();
+	  }
+  }
 
   switch (dwNewState)
   {
@@ -224,14 +254,22 @@ HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDeviceStateChanged(
       break;
   }
 
-  // Ignore identical callbacks from the same guid. Since device must be disconnected after being connected,
-  // we should never miss a connect or disconnect event.
   if( pwstrDeviceId != NULL )
-		if( (wcscmp(pwstrDeviceId, cast_handle->lastDeviceAddCallbackGuid) == 0) && ( dwNewState == cast_handle->lastDeviceAddCallbackGuidtype ) )
-		{
-			SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDeviceStateChanged() ignoring identical callback");
-		   return(S_OK);
-		}
+  {
+	  // Track reconnected device: when state changes to ACTIVE from a non-active state,
+	  // this is a device reconnection (e.g., Bluetooth headset connects after being paired/disconnected)
+	  if (dwNewState == DEVICE_STATE_ACTIVE)
+	  {
+		  wcscpy(cast_handle->reconnectedDeviceGuid, pwstrDeviceId);
+		  cast_handle->hasReconnectedDevice = TRUE;
+	  }
+
+	  // Ignore identical callbacks from the same guid (prevents callback storms)
+	  if( (wcscmp(pwstrDeviceId, cast_handle->lastDeviceAddCallbackGuid) == 0) && ( dwNewState == cast_handle->lastDeviceAddCallbackGuidtype ) )
+	  {
+		  return(S_OK);
+	  }
+  }
 
   if( pwstrDeviceId == NULL )
 		wcscpy(cast_handle->lastDeviceAddCallbackGuid, L"");
