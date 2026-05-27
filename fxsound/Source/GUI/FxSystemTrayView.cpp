@@ -66,6 +66,13 @@ void FxSystemTrayView::modelChanged(FxModel::Event model_event)
     }
 }
 
+static HICON LoadTrayIcon(HINSTANCE hInst, LPCWSTR iconName)
+{
+    return (HICON)LoadImage(hInst, iconName, IMAGE_ICON,
+                            GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON),
+                            LR_DEFAULTCOLOR);
+}
+
 void FxSystemTrayView::setStatus(bool power, bool processing)
 {
     HINSTANCE hInst = GetModuleHandle(NULL);
@@ -90,21 +97,21 @@ void FxSystemTrayView::setStatus(bool power, bool processing)
         {
             if (FxTheme::getThemeMode() == FxThemeMode::Dark)
             {
-                nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_RED");
+                nid.hIcon = LoadTrayIcon(hInst, L"IDI_LOGO_RED");
             }
             else
             {
-                nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_BLUE");
+                nid.hIcon = LoadTrayIcon(hInst, L"IDI_LOGO_BLUE");
             }
         }
         else
         {
-            nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_WHITE");
+            nid.hIcon = LoadTrayIcon(hInst, L"IDI_LOGO_WHITE");
         }
     }
     else
     {
-        nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_GRAY");
+        nid.hIcon = LoadTrayIcon(hInst, L"IDI_LOGO_GRAY");
     }
 
     if (nid.hIcon == NULL)
@@ -179,21 +186,21 @@ void FxSystemTrayView::addIcon()
         {
             if (FxTheme::getThemeMode() == FxThemeMode::Dark)
             {
-                nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_RED");
+                nid.hIcon = LoadTrayIcon(hInst, L"IDI_LOGO_RED");
             }
             else
             {
-                nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_BLUE");
+                nid.hIcon = LoadTrayIcon(hInst, L"IDI_LOGO_BLUE");
             }
         }
         else
         {
-            nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_WHITE");
+            nid.hIcon = LoadTrayIcon(hInst, L"IDI_LOGO_WHITE");
         }
     }
     else
     {
-        nid.hIcon = LoadIcon(hInst, L"IDI_LOGO_GRAY");
+        nid.hIcon = LoadTrayIcon(hInst, L"IDI_LOGO_GRAY");
     }
 
     nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE | NIF_SHOWTIP | NIF_GUID;

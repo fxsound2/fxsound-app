@@ -201,6 +201,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 
 FxController::~FxController()
 {
+	SetThreadExecutionState(ES_CONTINUOUS);
 	WTSUnRegisterSessionNotification(message_window_.getHandle());
 	unregisterHotkeys();
 }
@@ -370,6 +371,9 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
             settings_.setBool("run_minimized", false);
         }
 		
+		// Ensure startup Run key path is up-to-date (handles binary relocation after updates)
+		syncLaunchOnStartup();
+
 		showView();
 
 		auto theme_mode = settings_.getInt("theme_mode", 0);
@@ -1295,6 +1299,18 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 		}
 		break;
 
+		case WM_POWERBROADCAST:
+		{
+			if (w_param == PBT_APMRESUMEAUTOMATIC)
+			{
+				// System has resumed from sleep. Re-init audio passthru and restore power state.
+				controller->audio_passthru_->checkDeviceChanges();
+				controller->setPowerState(FxModel::getModel().getPowerState());
+				return TRUE;
+			}
+		}
+		break;
+
 		case WM_WTSSESSION_CHANGE:
 		{
 			if (w_param == WTS_CONSOLE_CONNECT || w_param == WTS_SESSION_UNLOCK)
@@ -1341,6 +1357,7 @@ void FxController::timerCallback()
 	if (audio_process_on_counter_ == 5 && !audio_process_on_)
 	{
 		audio_process_on_ = true;
+		SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED);
 		system_tray_view_->setStatus(power, true);
 		main_window_->setIcon(power, true);
 		main_window_->startLogoAnimation();
@@ -1353,6 +1370,7 @@ void FxController::timerCallback()
 	if (audio_process_off_counter_ == 5 && audio_process_on_)
 	{
 		audio_process_on_ = false;
+		SetThreadExecutionState(ES_CONTINUOUS);
 		system_tray_view_->setStatus(power, false);
 		main_window_->setIcon(power, false);
 		main_window_->stopLogoAnimation();
@@ -2040,26 +2058,47 @@ void FxController::setAlwaysOnTop(bool always_on_top)
 
 bool FxController::isLaunchOnStartup()
 {
+	wchar_t szStoredPath[MAX_PATH];
+	DWORD size = sizeof(szStoredPath);
+	DWORD type = 0;
+
 	HKEY hkey;
-	RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_QUERY_VALUE, &hkey);
-	DWORD type;
-	DWORD size = 0;
-	RegQueryValueEx(hkey, L"FxSound", NULL, &type, NULL, &size);
+	if (RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_QUERY_VALUE, &hkey) != ERROR_SUCCESS)
+		return false;
+
+	LSTATUS status = RegQueryValueEx(hkey, L"FxSound", NULL, &type, (LPBYTE)szStoredPath, &size);
 	RegCloseKey(hkey);
 
-	return size > 0;
+	if (status != ERROR_SUCCESS || type != REG_SZ || size < 2)
+		return false;
+
+	// Ensure the stored path is null-terminated
+	szStoredPath[(size / sizeof(wchar_t)) - 1] = L'\0';
+
+	// Verify the stored path points to our executable. After an update the binary
+	// may have moved, making the stored path stale — return false in that case
+	// so the caller (or sync code) can repair it.
+	wchar_t szCurrentPath[MAX_PATH];
+	if (GetModuleFileName(NULL, szCurrentPath, MAX_PATH) == 0)
+		return true;
+
+	return wcscmp(szStoredPath, szCurrentPath) == 0;
 }
 
 void FxController::setLaunchOnStartup(bool launch_on_startup)
 {
 	wchar_t szPath[MAX_PATH];
-	GetModuleFileName(NULL, szPath, MAX_PATH);
+	if (GetModuleFileName(NULL, szPath, MAX_PATH) == 0)
+		return;
+
 	HKEY hkey;
-	RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_SET_VALUE, &hkey);
+	if (RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_SET_VALUE, &hkey) != ERROR_SUCCESS)
+		return;
 
 	if (launch_on_startup)
 	{
-		RegSetValueEx(hkey, L"FxSound", 0, REG_SZ, (BYTE*)szPath, sizeof(szPath));
+		DWORD cbData = (DWORD)((wcslen(szPath) + 1) * sizeof(wchar_t));
+		RegSetValueEx(hkey, L"FxSound", 0, REG_SZ, (BYTE*)szPath, cbData);
 	}
 	else
 	{
@@ -2067,6 +2106,30 @@ void FxController::setLaunchOnStartup(bool launch_on_startup)
 	}
 
 	RegCloseKey(hkey);
+}
+
+void FxController::syncLaunchOnStartup()
+{
+	if (!isLaunchOnStartup())
+	{
+		// If the Run key exists but has a stale path (isLaunchOnStartup returned
+		// false because the stored path doesn't match), re-write it with the
+		// current executable path. This handles the case where an update moved
+		// the binary to a new location.
+		HKEY hkey;
+		if (RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_QUERY_VALUE, &hkey) == ERROR_SUCCESS)
+		{
+			DWORD size = 0;
+			DWORD type = 0;
+			LSTATUS status = RegQueryValueEx(hkey, L"FxSound", NULL, &type, NULL, &size);
+			RegCloseKey(hkey);
+
+			if (status == ERROR_SUCCESS && type == REG_SZ)
+			{
+				setLaunchOnStartup(true);
+			}
+		}
+	}
 }
 
 void FxController::registerHotkeys()
