@@ -201,6 +201,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC) even
 
 FxController::~FxController()
 {
+	SetThreadExecutionState(ES_CONTINUOUS);
 	WTSUnRegisterSessionNotification(message_window_.getHandle());
 	unregisterHotkeys();
 }
@@ -1295,6 +1296,18 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 		}
 		break;
 
+		case WM_POWERBROADCAST:
+		{
+			if (w_param == PBT_APMRESUMEAUTOMATIC)
+			{
+				// System has resumed from sleep. Re-init audio passthru and restore power state.
+				controller->audio_passthru_->checkDeviceChanges();
+				controller->setPowerState(FxModel::getModel().getPowerState());
+				return TRUE;
+			}
+		}
+		break;
+
 		case WM_WTSSESSION_CHANGE:
 		{
 			if (w_param == WTS_CONSOLE_CONNECT || w_param == WTS_SESSION_UNLOCK)
@@ -1341,6 +1354,7 @@ void FxController::timerCallback()
 	if (audio_process_on_counter_ == 5 && !audio_process_on_)
 	{
 		audio_process_on_ = true;
+		SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED);
 		system_tray_view_->setStatus(power, true);
 		main_window_->setIcon(power, true);
 		main_window_->startLogoAnimation();
@@ -1353,6 +1367,7 @@ void FxController::timerCallback()
 	if (audio_process_off_counter_ == 5 && audio_process_on_)
 	{
 		audio_process_on_ = false;
+		SetThreadExecutionState(ES_CONTINUOUS);
 		system_tray_view_->setStatus(power, false);
 		main_window_->setIcon(power, false);
 		main_window_->stopLogoAnimation();
