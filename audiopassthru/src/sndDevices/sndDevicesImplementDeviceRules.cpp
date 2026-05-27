@@ -231,6 +231,42 @@ int PT_DECLSPEC sndDevicesImplementDeviceRules(PT_HANDLE *hp_sndDevices, int *ip
 		}
 	}
 
+	// Check if a previously disconnected device has reconnected (state transitioned to ACTIVE).
+	// This handles the case where a paired Bluetooth device was in UNPLUGGED state and now connects:
+	// the device count stays the same (it was already enumerated), so the count-based check above
+	// would miss it. The reconnection is instead detected via OnDeviceStateChanged callback.
+	if (cast_handle->hasReconnectedDevice)
+	{
+		cast_handle->hasReconnectedDevice = FALSE;
+		for (i = 0; i < cast_handle->numRealDevices; i++)
+		{
+			if (wcscmp(cast_handle->reconnectedDeviceGuid, cast_handle->pwszIDRealDevices[i]) == 0)
+			{
+				if (SND_DEVICES_MONO_BUG_SKIP_MONO_DEVICES)
+				{
+					if (sndDevicesGetNumberOfChannelsFromID(hp_sndDevices, cast_handle->pwszIDRealDevices[i], &i_numChannels, &i_resultFlag) != OKAY)
+						return(NOT_OKAY);
+
+					if (i_numChannels < 2)
+					{
+						break;
+					}
+				}
+
+				if (sndDevices_UtilsGetIndexFromID(hp_sndDevices, cast_handle->pwszIDRealDevices[i], &deviceIndex) != OKAY)
+					return(NOT_OKAY);
+
+				if (deviceIndex != SND_DEVICES_DEVICE_NOT_PRESENT)
+				{
+					cast_handle->playbackDeviceNum = deviceIndex;
+					WritePreviousDefault = 1;
+					goto PlaybackDeviceIsSelected;
+				}
+				break;
+			}
+		}
+	}
+
 	// If we got here we have more than one real playback device and either the user hasn't manually selected one or
 	// the selected device is not present. Use rules to select the playback device based on the default device setting and history.
 	// First check to see if the current default device is not one of the DFX devices.
@@ -443,6 +479,38 @@ PlaybackDeviceIsSelected:  // Label to jump to when the playback device num has 
 		//Sleep(SND_DEVICES_DEFAULT_CHANGE_WAIT_TIME);
 
 		//cast_handle->ignoreDeviceCallbacks = FALSE;
+	}
+
+	// Validate that the selected playback device is in ACTIVE state. If it's not (e.g., BT
+	// headphones were disconnected/powered off and are now in UNPLUGGED state), fall back
+	// to the first ACTIVE device. This prevents the audio pipeline from trying to use a
+	// dead device, which would cause the Windows Audio service to spin at high CPU.
+	{
+		int i_active = SND_DEVICES_DEVICE_NOT_PRESENT;
+		for (i = 0; i < cast_handle->totalNumDevices; i++)
+		{
+			if (cast_handle->deviceState[i] == DEVICE_STATE_ACTIVE && i != cast_handle->dfxDeviceNum)
+			{
+				if (SND_DEVICES_MONO_BUG_SKIP_MONO_DEVICES)
+				{
+					if (sndDevicesGetNumberOfChannelsFromID(hp_sndDevices, cast_handle->pwszID[i], &i_numChannels, &i_resultFlag) != OKAY)
+						return(NOT_OKAY);
+					if (i_numChannels < 2)
+						continue;
+				}
+				i_active = i;
+				break;
+			}
+		}
+
+		if (i_active != SND_DEVICES_DEVICE_NOT_PRESENT && cast_handle->playbackDeviceNum != SND_DEVICES_DEVICE_NOT_PRESENT)
+		{
+			if (cast_handle->deviceState[cast_handle->playbackDeviceNum] != DEVICE_STATE_ACTIVE)
+			{
+				cast_handle->playbackDeviceNum = i_active;
+				WritePreviousDefault = 1;
+			}
+		}
 	}
 
 	// Setup selected capture device.

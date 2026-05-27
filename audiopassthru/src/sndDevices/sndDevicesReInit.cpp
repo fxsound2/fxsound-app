@@ -81,6 +81,9 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 
 	wcscpy(cast_handle->lastDeviceAddCallbackGuid, L"");
 	cast_handle->lastDeviceAddCallbackGuidtype = 0;
+
+	wcscpy(cast_handle->reconnectedDeviceGuid, L"");
+	cast_handle->hasReconnectedDevice = FALSE;
 	
 	cast_handle->noBufferCount = 0;
 	cast_handle->MeasuredVirtualSilentBufferCount = 0;
@@ -375,7 +378,7 @@ int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE* hp_sndDevices, BOOL* bp_deviceC
 			{
 				deviceFound = TRUE;
 
-				// Device ID matched — now check if its state has changed
+				// Device ID matched ï¿½ now check if its state has changed
 				DWORD currentState = 0;
 				hr = pDevice->GetState(&currentState);
 				if (SUCCEEDED(hr) && currentState != cast_handle->deviceState[j])

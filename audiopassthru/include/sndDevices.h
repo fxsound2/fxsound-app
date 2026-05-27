@@ -427,6 +427,9 @@ struct sndDevicesHdlType {
 	// Module common status flag, set by functions that can't complete their requestion operation
 	int function_status;
 
+	wchar_t reconnectedDeviceGuid[PT_MAX_GENERIC_STRLEN];
+	BOOL hasReconnectedDevice;
+
 	void (*deviceChangeCallback)();
 };
 
