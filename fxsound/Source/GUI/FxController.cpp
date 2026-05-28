@@ -1531,7 +1531,7 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 					controller->setPreset(preset_index);
 				}
 			}
-			if (w_param == CMD_NEXT_OUTPUT && FxModel::getModel().getPowerState())
+			if (w_param == CMD_NEXT_OUTPUT)
 			{
 				auto output_index = 0;
 				for (auto& output_device : controller->active_output_devices_)
