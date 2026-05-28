@@ -1723,10 +1723,13 @@ bool FxController::getHotkey(String cmdKey, int& mod, int& vk)
 	int cmd = settings_.getInt(cmdKey);
 	mod = (cmd >> 16) & 0x7;
 	vk = cmd & 0xff;
-	if ((mod == (MOD_CONTROL|MOD_ALT) || mod == (MOD_CONTROL|MOD_SHIFT)) && (vk >= 0x30 && vk <= 0x39) || (vk >= 'A' && vk <= 'Z'))
+	if ((mod == (MOD_CONTROL|MOD_ALT) || mod == (MOD_CONTROL|MOD_SHIFT)) && ((vk >= 0x30 && vk <= 0x39) || (vk >= 'A' && vk <= 'Z')))
 	{
 		return true;
 	}
+
+	mod = 0;
+	vk = 0;
 
 	return false;
 }
@@ -1753,56 +1756,58 @@ bool FxController::setHotkey(const String& command, int new_mod, int new_vk)
 	}
 
 	unsigned int code = (new_mod << 16) | new_vk;
-	settings_.setInt(command, code);
+	if (!isValidHotkey(new_mod, new_vk))
+	{
+		code = 0;
+	}
+
+	int hk_id = 0;
 
 	if (command == HK_CMD_ON_OFF)
 	{
-		::UnregisterHotKey(message_window_.getHandle(), CMD_ON_OFF);
-		if (isValidHotkey(new_mod, new_vk))
-		{
-			::RegisterHotKey(message_window_.getHandle(), CMD_ON_OFF, new_mod, new_vk);
-		}		
-		return true;
+		hk_id = CMD_ON_OFF;
 	}
 
 	if (command == HK_CMD_OPEN_CLOSE)
 	{
-		::UnregisterHotKey(message_window_.getHandle(), CMD_OPEN_CLOSE);
-		if (isValidHotkey(new_mod, new_vk))
-		{
-			::RegisterHotKey(message_window_.getHandle(), CMD_OPEN_CLOSE, new_mod, new_vk);
-		}		
-		return true;
+		hk_id = CMD_OPEN_CLOSE;
 	}
 
 	if (command == HK_CMD_NEXT_PRESET)
 	{
-		::UnregisterHotKey(message_window_.getHandle(), CMD_NEXT_PRESET);
-		if (isValidHotkey(new_mod, new_vk))
-		{
-			::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_PRESET, new_mod, new_vk);
-		}		
-		return true;
+		hk_id = CMD_NEXT_PRESET;
 	}
 
 	if (command == HK_CMD_PREVIOUS_PRESET)
 	{
-		::UnregisterHotKey(message_window_.getHandle(), CMD_PREVIOUS_PRESET);
-		if (isValidHotkey(new_mod, new_vk))
-		{
-			::RegisterHotKey(message_window_.getHandle(), CMD_PREVIOUS_PRESET, new_mod, new_vk);
-		}		
-		return true;
+		hk_id = CMD_PREVIOUS_PRESET;
 	}
 
 	if (command == HK_CMD_NEXT_OUTPUT)
 	{
-		::UnregisterHotKey(message_window_.getHandle(), CMD_NEXT_OUTPUT);
-		if (isValidHotkey(new_mod, new_vk))
+		hk_id = CMD_NEXT_OUTPUT;
+	}
+
+	if (hk_id != 0)
+	{
+		::UnregisterHotKey(message_window_.getHandle(), hk_id);
+
+		if (code == 0)
 		{
-			::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_OUTPUT, new_mod, new_vk);
-		}		
-		return true;
+			settings_.setInt(command, code);
+			return false;
+		}
+
+		if (::RegisterHotKey(message_window_.getHandle(), hk_id, new_mod, new_vk) != FALSE)
+		{
+			settings_.setInt(command, code);
+			return true;
+		}
+		else
+		{
+			settings_.setInt(command, 0);
+			return false;
+		}
 	}
 
 	return false;

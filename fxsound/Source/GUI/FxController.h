@@ -121,7 +121,7 @@ public:
 
 	void enableHotkeys(bool enable);
 	bool getHotkey(String cmdKey, int& mod, int& vk);
-	bool setHotkey(const String& command, int new_mod, int vk);
+	bool setHotkey(const String& command, int new_mod, int new_vk);
 	bool isValidHotkey(int mod, int new_vk);
 
 	juce::Array<DeviceConfig> getDeviceConfigs();
