@@ -206,6 +206,9 @@ namespace BinaryData
     extern const char*   FxSound_es_txt;
     const int            FxSound_es_txtSize = 12178;
 
+    extern const char*   FxSound_fi_txt;
+    const int            FxSound_fi_txtSize = 11931;
+
     extern const char*   FxSound_fr_txt;
     const int            FxSound_fr_txtSize = 12587;
 
@@ -219,7 +222,7 @@ namespace BinaryData
     const int            FxSound_id_txtSize = 11801;
 
     extern const char*   FxSound_ir_txt;
-    const int            FxSound_ir_txtSize = 14660;
+    const int            FxSound_ir_txtSize = 18001;
 
     extern const char*   FxSound_it_txt;
     const int            FxSound_it_txtSize = 12080;
@@ -228,7 +231,7 @@ namespace BinaryData
     const int            FxSound_ja_txtSize = 13514;
 
     extern const char*   FxSound_ko_txt;
-    const int            FxSound_ko_txtSize = 12454;
+    const int            FxSound_ko_txtSize = 12451;
 
     extern const char*   FxSound_nl_txt;
     const int            FxSound_nl_txtSize = 11740;
@@ -243,13 +246,13 @@ namespace BinaryData
     const int            FxSound_ptbr_txtSize = 12214;
 
     extern const char*   FxSound_pt_txt;
-    const int            FxSound_pt_txtSize = 12091;
+    const int            FxSound_pt_txtSize = 12103;
 
     extern const char*   FxSound_ro_txt;
     const int            FxSound_ro_txtSize = 12271;
 
     extern const char*   FxSound_ru_txt;
-    const int            FxSound_ru_txtSize = 16350;
+    const int            FxSound_ru_txtSize = 16344;
 
     extern const char*   FxSound_sl_txt;
     const int            FxSound_sl_txtSize = 11570;
@@ -264,7 +267,7 @@ namespace BinaryData
     const int            FxSound_tr_txtSize = 11988;
 
     extern const char*   FxSound_txt;
-    const int            FxSound_txtSize = 11090;
+    const int            FxSound_txtSize = 11091;
 
     extern const char*   FxSound_ua_txt;
     const int            FxSound_ua_txtSize = 15904;
@@ -279,7 +282,7 @@ namespace BinaryData
     const int            FxSound_zhTW_txtSize = 10670;
 
     // Number of elements in the namedResourceList and originalFileNames arrays.
-    const int namedResourceListSize = 90;
+    const int namedResourceListSize = 91;
 
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];

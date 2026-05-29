@@ -2155,6 +2155,10 @@ void FxController::setLanguage(String language_code)
 	{
 		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_sl_txt, BinaryData::FxSound_sl_txtSize), false));
 	}
+	else if (language_.startsWithIgnoreCase("fi"))
+	{
+		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_fi_txt, BinaryData::FxSound_fi_txtSize), false));
+	}
 
 	auto* theme = dynamic_cast<FxTheme*>(&LookAndFeel::getDefaultLookAndFeel());
 	if (theme != nullptr)
@@ -2280,6 +2284,10 @@ String FxController::getLanguageName(String language_code) const
 	else if (language_code.startsWithIgnoreCase("sl"))
 	{
 		return L"Sloven\u0161\u010dina";
+	}
+	else if (language_code.startsWithIgnoreCase("fi"))
+	{
+        return L"Suomi";
 	}
 
     return "English";

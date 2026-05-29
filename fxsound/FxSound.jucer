@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.9.0"
+<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.10.0"
               displaySplashScreen="1" jucerFormatVersion="1" companyName="FxSound LLC"
               companyWebsite="https://www.fxsound.com" companyCopyright="2026 FxSound&#8482;"
               defines="UNICODE" postExportShellCommandWin="type %%1%%\Project\status_icons.rc &gt;&gt; %%1%%\Project\resources.rc"
@@ -222,6 +222,7 @@
       <FILE id="cAIn3x" name="FxSound.ba.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ba.txt"/>
       <FILE id="gVyPZi" name="FxSound.de.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.de.txt"/>
       <FILE id="CQH7Jy" name="FxSound.es.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.es.txt"/>
+      <FILE id="mUcsRs" name="FxSound.fi.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.fi.txt"/>
       <FILE id="f64DAO" name="FxSound.fr.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.fr.txt"/>
       <FILE id="f1D4BE" name="FxSound.hr.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.hr.txt"/>
       <FILE id="Wj87Eh" name="fxsound.hu.txt" compile="0" resource="1" file="../Resources/Strings/fxsound.hu.txt"/>
