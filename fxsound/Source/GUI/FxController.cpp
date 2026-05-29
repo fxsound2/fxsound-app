@@ -229,6 +229,11 @@ void FxController::config(const String& commandline)
 	auto filterq = arg_list.getValueForOption("--filter_q");
 	auto mastergain = arg_list.getValueForOption("--master_gain");
 	auto normalization = arg_list.getValueForOption("--normalization");
+
+	if (arg_list.containsOption("--run_minimized"))
+	{
+		settings_.setBool("run_minimized", true);
+	}
     
     if (preset.isNotEmpty())
     {
