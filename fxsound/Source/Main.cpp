@@ -64,7 +64,7 @@ public:
 
             setWorkingDirectory();
 
-            FxController::getInstance().config(commandline);
+            FxController::getInstance().initConfig(commandline);
 
             audio_passthru_ = std::make_unique<AudioPassthru>();
             main_window_ = std::make_unique<FxMainWindow>();
@@ -133,9 +133,9 @@ public:
         quit();
     }
 
-    void anotherInstanceStarted (const String&) override
+    void anotherInstanceStarted (const String& commandline) override
     {
-        FxController::getInstance().showMainWindow();
+        FxController::getInstance().applyConfig(commandline);
     }
 
 private:

@@ -216,10 +216,11 @@ FxController::~FxController()
 }
 
 
-void FxController::config(const String& commandline)
+void FxController::initConfig(const String& commandline)
 {
     auto arg_list = ArgumentList(File::getSpecialLocation(File::SpecialLocationType::invokedExecutableFile).getFileName(), commandline);
 
+	auto power_state = arg_list.getValueForOption("--power");
     auto preset = arg_list.getValueForOption("--preset").unquoted();
     auto view = arg_list.getValueForOption("--view");
     auto output_device = arg_list.getValueForOption("--output").unquoted();
@@ -233,6 +234,14 @@ void FxController::config(const String& commandline)
 	if (arg_list.containsOption("--run_minimized"))
 	{
 		settings_.setBool("run_minimized", true);
+	}
+
+	if (power_state.isNotEmpty())
+	{
+		if (power_state.getIntValue() == 0)
+			settings_.setBool("power", false);
+		else
+			settings_.setBool("power", true);
 	}
     
     if (preset.isNotEmpty())
@@ -273,11 +282,11 @@ void FxController::config(const String& commandline)
 	if (numbands == "")
 	{
 		nb = settings_.getInt("num_bands");
-	}		
+	}
 	else
 	{
 		nb = numbands.getIntValue();
-	}	
+	}
 	if (nb < 5 || nb > 31) nb = DEFAULT_NUM_EQ_BANDS;
 	setNumEqBands(nb);
 
@@ -303,7 +312,7 @@ void FxController::config(const String& commandline)
 		bl = balance.getFloatValue();
 	}
 	if (bl < -20 || bl > +20) bl = DEFAULT_BALANCE;
-	setBalance(bl);	
+	setBalance(bl);
 
 	float fq = 0;
 	if (filterq == "")
@@ -325,9 +334,130 @@ void FxController::config(const String& commandline)
 	else
 	{
 		mg = mastergain.getFloatValue();
-	}		
+	}
 	if (mg < -20 || mg > +20) mg = DEFAULT_MASTER_GAIN;
 	setMasterGain(mg);
+}
+
+void FxController::applyConfig(const String& commandline)
+{
+	auto arg_list = ArgumentList(File::getSpecialLocation(File::SpecialLocationType::invokedExecutableFile).getFileName(), commandline);
+
+	auto power_state = arg_list.getValueForOption("--power");
+	auto preset = arg_list.getValueForOption("--preset").unquoted();
+	auto view = arg_list.getValueForOption("--view");
+	auto output_device = arg_list.getValueForOption("--output").unquoted();
+	auto language = arg_list.getValueForOption("--language");
+	auto numbands = arg_list.getValueForOption("--num_bands");
+	auto balance = arg_list.getValueForOption("--balance");
+	auto filterq = arg_list.getValueForOption("--filter_q");
+	auto mastergain = arg_list.getValueForOption("--master_gain");
+	auto normalization = arg_list.getValueForOption("--normalization");
+
+	if (power_state.isNotEmpty())
+	{
+		if (power_state.getIntValue() == 0)
+			setPowerState(false);
+		else
+			setPowerState(true);
+	}
+
+	if (preset.isNotEmpty())
+	{
+		if (FxModel::getModel().getPowerState())
+		{
+			setPreset(preset);
+		}
+	}
+
+	if (output_device.isNotEmpty())
+	{
+		setOutputName(output_device);
+		std::vector<SoundDevice> sound_devices = audio_passthru_->getSoundDevices();
+		for (auto& sound_device : sound_devices)
+		{
+			if (output_device == sound_device.deviceFriendlyName.c_str())
+			{
+				setOutput(sound_device.pwszID.c_str());
+			}
+		}
+	}
+
+	// ------------------------------------------------------------------------------------------
+	//  NumBands / Balance / FilterQ / MasterGain / Normalization
+	// ------------------------------------------------------------------------------------------
+	int nb = 10;
+	if (numbands.isNotEmpty())
+	{
+		nb = numbands.getIntValue();
+		if (nb < 5 || nb > 31) nb = DEFAULT_NUM_EQ_BANDS;
+		setNumEqBands(nb);
+	}
+
+	float nm = 0;
+	if (normalization.isNotEmpty())
+	{
+		nm = normalization.getFloatValue();
+		if (nm < -20 || nm > 0) nm = DEFAULT_NORMALIZATION;
+		setNormalization(nm);
+	}
+
+
+	float bl = 0;
+	if (balance.isNotEmpty())
+	{
+		bl = balance.getFloatValue();
+		if (bl < -20 || bl > +20) bl = DEFAULT_BALANCE;
+		setBalance(bl);
+	}
+
+	float fq = 0;
+	if (filterq.isNotEmpty())
+	{
+		fq = filterq.getFloatValue();
+		if (fq < 1 || fq > 3) fq = DEFAULT_FILTER_Q;
+		setFilterQ(fq);
+	}
+
+	float mg = 0;
+	if (mastergain.isNotEmpty())
+	{
+		mg = mastergain.getFloatValue();
+		if (mg < -20 || mg > +20) mg = DEFAULT_MASTER_GAIN;
+		setMasterGain(mg);
+	}
+
+	if (view.isNotEmpty())
+	{
+		auto value = view.getIntValue();
+		if (value == ViewType::Lite || value == ViewType::Pro)
+		{
+			settings_.setInt("view", value);
+			view_ = static_cast<ViewType>(value);
+		}
+		showView();
+	}
+
+	if (language.isEmpty())
+	{
+		language = settings_.getString("language");
+		if (language.isEmpty())
+		{
+			language = SystemStats::getDisplayLanguage();
+		}
+	}
+
+	setLanguage(language);
+
+	if (arg_list.containsOption("--run_minimized"))
+	{
+		settings_.setBool("run_minimized", true);
+		hideMainWindow();
+	}
+	else
+	{
+		showMainWindow();
+	}
 }
 
 void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray_view, AudioPassthru* audio_passthru)
@@ -1435,41 +1565,69 @@ bool FxController::isAudioProcessing()
 
 float FxController::getEqBandFrequency(int band_num)
 {
-	return dfx_dsp_.getEqBandFrequency(band_num);
+	if (band_num < getNumEqBands())
+	{
+		return dfx_dsp_.getEqBandFrequency(band_num);
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 void FxController::setEqBandFrequency(int band_num, float freq)
 {
-    dfx_dsp_.setEqBandFrequency(band_num, freq);
+	if (band_num < getNumEqBands())
+	{
+		dfx_dsp_.setEqBandFrequency(band_num, freq);
 
-	auto& model = FxModel::getModel();
-    if (!model.isPresetModified())
-    {
-        model.setPresetModified(model.getSelectedPreset(), true);
-    }
-	preset_dirty_ = true;
+		auto& model = FxModel::getModel();
+		if (!model.isPresetModified())
+		{
+			model.setPresetModified(model.getSelectedPreset(), true);
+		}
+		preset_dirty_ = true;
+	}
 }
 
 void FxController::getEqBandFrequencyRange(int band_num, float* min_freq, float* max_freq)
 {
-    dfx_dsp_.getEqBandFrequencyRange(band_num, min_freq, max_freq);
+	if (band_num < getNumEqBands())
+	{
+		dfx_dsp_.getEqBandFrequencyRange(band_num, min_freq, max_freq);
+	}
+	else
+	{
+		*min_freq = 0;
+		*max_freq = 0;
+	}
 }
 
 float FxController::getEqBandBoostCut(int band_num)
 {
-	return dfx_dsp_.getEqBandBoostCut(band_num);
+	if (band_num < getNumEqBands())
+	{
+		return dfx_dsp_.getEqBandBoostCut(band_num);
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 void FxController::setEqBandBoostCut(int band_num, float boost)
 {
-	dfx_dsp_.setEqBandBoostCut(band_num, boost);
-
-	auto& model = FxModel::getModel();
-	if (!model.isPresetModified())
+	if (band_num < getNumEqBands())
 	{
-		model.setPresetModified(model.getSelectedPreset(), true);
+		dfx_dsp_.setEqBandBoostCut(band_num, boost);
+
+		auto& model = FxModel::getModel();
+		if (!model.isPresetModified())
+		{
+			model.setPresetModified(model.getSelectedPreset(), true);
+		}
+		preset_dirty_ = true;
 	}
-	preset_dirty_ = true;
 }
 
 LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, const WPARAM w_param, const LPARAM l_param)

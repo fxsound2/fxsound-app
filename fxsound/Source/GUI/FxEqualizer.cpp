@@ -213,7 +213,7 @@ void FxEqualizer::update()
 {
     auto& controller = FxController::getInstance();
 
-    for (auto i = 0; i<band_boosts_.size(); i++)
+    for (auto i = 0; i<band_boosts_.size() && i<controller.getNumEqBands(); i++)
     {
         auto value = controller.getEqBandBoostCut(i);
         if (value >= -MAX_GAIN && value <= MAX_GAIN)
