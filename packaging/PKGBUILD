@@ -9,29 +9,31 @@ license=('AGPL3')
 depends=('pipewire' 'libx11' 'libxext' 'libxinerama' 'libxrandr' 'libxcursor'
          'freetype2' 'fontconfig' 'mesa' 'alsa-lib' 'glib2' 'gtk-update-icon-cache')
 makedepends=('cmake' 'ninja' 'git')
-source=("git+https://github.com/fxsound2/fxsound-app.git#branch=main"
-        "juce::git+https://github.com/juce-framework/JUCE.git#tag=6.1.6")
-sha256sums=('SKIP' 'SKIP')
+source=()
+sha256sums=()
+
+# Repo root — PKGBUILD lives in packaging/ inside the repo.
+_repo="$startdir/.."
 
 prepare() {
-    cd "$srcdir/fxsound-app"
-    git submodule update --init Resources
-    # Provide JUCE where the build expects it.
-    rm -rf third_party/JUCE
-    cp -r "$srcdir/juce" third_party/JUCE
+    git -C "$_repo" submodule update --init Resources
+    # Shallow-clone JUCE 6.1.6 only if not already present.
+    if [[ ! -d "$_repo/third_party/JUCE" ]]; then
+        git clone --depth=1 --branch 6.1.6 \
+            https://github.com/juce-framework/JUCE \
+            "$_repo/third_party/JUCE"
+    fi
 }
 
 build() {
-    cd "$srcdir/fxsound-app"
-    cmake -S . -B build -G Ninja \
+    cmake -S "$_repo" -B "$srcdir/build" -G Ninja \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr
-    cmake --build build
+    cmake --build "$srcdir/build" --parallel
 }
 
 package() {
-    cd "$srcdir/fxsound-app"
-    DESTDIR="$pkgdir" cmake --install build
+    DESTDIR="$pkgdir" cmake --install "$srcdir/build"
 }
 
 post_install() {
