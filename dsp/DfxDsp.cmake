@@ -111,11 +111,15 @@ foreach(d
 endforeach()
 
 # Case-insensitivity bridge: the Windows sources include headers with
-# inconsistent casing (e.g. "pwav.h" for Pwav.h). lc_headers holds lowercase
-# symlinks to the real headers and is searched LAST, so exact-case includes
-# still resolve to their real directory first. Regenerate with:
-#   find dsp -name '*.h' -not -path '*/linux/*' | while read h; do
-#     lc=$(basename "$h" | tr A-Z a-z); ln -sf "$(realpath "$h")" dsp/linux/lc_headers/$lc; done
+# inconsistent casing. lc_headers holds symlinks (both original-cased and
+# lowercase) so every variant resolves on a case-sensitive filesystem.
+# lc_headers/ is gitignored; regenerate after a fresh clone with:
+#   mkdir -p dsp/linux/lc_headers
+#   find . -name '*.h' -not -path '*/lc_headers/*' -not -path '*/.git/*' | while read h; do
+#     ln -sf "$(realpath "$h")" dsp/linux/lc_headers/$(basename "$h")
+#     lc=$(basename "$h" | tr A-Z a-z)
+#     ln -sf "$(realpath "$h")" dsp/linux/lc_headers/$lc
+#   done
 target_include_directories(DfxDsp PRIVATE ${DSP_DIR}/linux/lc_headers)
 
 # Project defines from dsp/DfxDsp.vcxproj (minus WIN32). DSPSOFT_TARGET selects
