@@ -1978,8 +1978,10 @@ void FxController::checkUpdates()
 		{
 			settings_.setInt("last_update_time", static_cast<uint32_t>(current_time));
 
+#ifdef _WIN32
 			ChildProcess child_process;
 			child_process.start("updater.exe /silent");
+#endif
 		}
 	}
 }

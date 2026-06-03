@@ -192,7 +192,8 @@ void FxPresetExportDialog::PresetExportComponent::buttonClicked(Button* button)
         if (show_explorer)
         {
             FxConfirmationMessage::showMessage(TRANS("Presets are exported successfully!"), FxConfirmationMessage::Style::OK);
-            File(File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory).getFullPathName()) + L"FxSound\\Presets\\Export\\").revealToUser();
+            File(File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory)
+                     .getChildFile("FxSound").getChildFile("Presets").getChildFile("Export")).revealToUser();
         }
 
         Component::getParentComponent()->exitModalState(0);
