@@ -16,8 +16,12 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifdef _WIN32
 #include <mmdeviceapi.h>
 #include <Functiondiscoverykeys_devpkey.h>
+#else
+#include "win_compat.h"
+#endif
 
 #include "../JuceLibraryCode/JuceHeader.h"
 

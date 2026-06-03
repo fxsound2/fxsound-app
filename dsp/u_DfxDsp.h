@@ -57,7 +57,7 @@ struct dfxg_vendor_specific_info_type {
 	int allow_close;
 	int i_freemium_version;
 	int display_close_dialog;
-	long splash_display_frequency_secs;
+	int32_t splash_display_frequency_secs;
 	int remix_capabilities;
 	int standalone_mode;
 	int allow_recording;
@@ -107,7 +107,7 @@ public:
 	float getEffectValue(DfxDsp::Effect effect);
 	void setEffectValue(DfxDsp::Effect effect, float value);
 	DfxPreset getPresetInfo(std::wstring preset_file_full_path);
-	unsigned long getTotalAudioProcessedTime();
+	uint32_t getTotalAudioProcessedTime();
 	void resetTotalAudioProcessedTime();
     void getSpectrumBandValues(float* rp_band_values, int i_array_size);
 
@@ -123,7 +123,7 @@ private:
 	int dfxpFreeAll();
 
 	// DfxDspRegistry.cpp
-	int writeRegistrySessionLongValue(long l_value, wchar_t *wcp_key_name);
+	int writeRegistrySessionLongValue(int32_t l_value, wchar_t *wcp_key_name);
 
 	// DfxDspEq.cpp
 	int eqSetProcessingOn(int i_storage_type, int i_on);

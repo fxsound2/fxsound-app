@@ -178,8 +178,10 @@ void FxNotification::showMessage(bool autohide)
 
     if (autohide)
     {
-        addToDesktop(0);
-        toFront(true);
+        // windowIsTemporary: popup hint — WM won't give it focus or a title bar.
+        // toFront(false): bring to front without stealing keyboard focus.
+        addToDesktop(ComponentPeer::windowIsTemporary);
+        toFront(false);
         Desktop::getInstance().getAnimator().fadeIn(this, 200);
 
         if (message_link_.getButtonText().isEmpty() && message_link_.getURL().isEmpty())

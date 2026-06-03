@@ -38,7 +38,7 @@
  */
 #if (defined(DUIO_B) | defined(DUIO_BA) | defined(DUIO_BD))
 #define load_parameter() \
-if( (*(volatile long *)(DSP_DMA_IN_TRANSFER)) == 0 ) \
+if( (*(volatile int32_t *)(DSP_DMA_IN_TRANSFER)) == 0 ) \
 { \
 	if( address_valid_flag_MACRO ) \
 	{ \
@@ -52,8 +52,8 @@ if( (*(volatile long *)(DSP_DMA_IN_TRANSFER)) == 0 ) \
 #elif (defined(DUIO_A) | defined(DUIO_D))
 #define load_parameter() \
 { \
-	static long parm_address_MACRO; \
-	static long address_valid_flag_MACRO = 0; \
+	static int32_t parm_address_MACRO; \
+	static int32_t address_valid_flag_MACRO = 0; \
 	if( address_valid_flag_MACRO ) \
 	{ \
 		load_mem_value(parm_address_MACRO, address_valid_flag_MACRO); \
@@ -89,9 +89,9 @@ volatile unsigned iflg;
 	asm("	STI	IOF,@_iflg"); \
 	if ( ! (iflg & 0x08) ) \
 	{ \
-		long parm_MACRO; \
+		int32_t parm_MACRO; \
 		parm_MACRO = io_adr->xfr_reg; \
-		*(volatile long *)parm_address = parm_MACRO; \
+		*(volatile int32_t *)parm_address = parm_MACRO; \
 		address_flag = 0; \
 	} \
 }
@@ -115,9 +115,9 @@ volatile unsigned iflg;
 { \
 	if( !(io_adr->comd_stat & 0x40) ) \
 	{ \
-		long parm_MACRO; \
+		int32_t parm_MACRO; \
 		parm_MACRO = io_adr->xfr_reg; \
-		*(volatile long *)parm_address = parm_MACRO; \
+		*(volatile int32_t *)parm_address = parm_MACRO; \
 		address_flag = 0; \
 	} \
 }
@@ -227,7 +227,7 @@ volatile unsigned iflg;
 
 /* For sending back averaged meter data in PC case.
  * Writes averaged meter data temporarily as a float.
- * Will be converted to long and factored in calling function.
+ * Will be converted to int32_t and factored in calling function.
  */
 #if defined(DSPSOFT_TARGET) & (PT_DSP_BUILD == PT_DSP_DSPFX)
 #define write_meter_average() \

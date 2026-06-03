@@ -252,12 +252,16 @@ void FxMainWindow::show()
 	auto* peer = getPeer();
 	if (peer)
 	{
+#ifdef _WIN32
 		HWND hwnd = (HWND)peer->getNativeHandle();
 		if (IsIconic(hwnd)) // If minimized, restore first
 			ShowWindow(hwnd, SW_RESTORE);
 
 		SetForegroundWindow(hwnd); // Bring to front
 		SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+#else
+		peer->toFront(true);
+#endif
 	}
 }
 
@@ -357,6 +361,7 @@ void FxMainWindow::setResizeImage()
 
 void FxMainWindow::setIcon(bool power, bool processing)
 {
+#ifdef _WIN32
 	HINSTANCE hInst = GetModuleHandle(NULL);
 	HWND hWnd = (HWND)getWindowHandle();
 
@@ -391,6 +396,9 @@ void FxMainWindow::setIcon(bool power, bool processing)
 	{
 		DestroyIcon(curr_icon);
 	}
+#else
+	ignoreUnused(power, processing);
+#endif
 }
 
 bool FxMainWindow::keyPressed(const KeyPress& key)
@@ -410,12 +418,14 @@ void FxMainWindow::visibilityChanged()
 	auto* peer = getPeer();
 	if (peer)
 	{
+#ifdef _WIN32
 		HWND hwnd = (HWND)peer->getNativeHandle();
 		LONG style = GetWindowLong(hwnd, GWL_STYLE);
 		if ((style & WS_MINIMIZEBOX) == 0)
 		{
 			SetWindowLong(hwnd, GWL_STYLE, style | WS_MINIMIZEBOX);
 		}
+#endif
 	}
 }
 
@@ -455,8 +465,10 @@ void FxMainWindow::showMenu()
 	};
 
 	auto checkForUpdatesClicked = []() {
+#ifdef _WIN32
 		ChildProcess child_process;
 		child_process.start("updater.exe /checknow");
+#endif
 	};
 
 	auto donateClicked = []() {
@@ -553,7 +565,11 @@ void FxMainWindow::buttonClicked(Button* button)
 	{
 		if (isOnDesktop())
 		{
+#ifdef _WIN32
 			ShowWindow((HWND)getWindowHandle(), SW_MINIMIZE);
+#else
+			if (auto* peer = getPeer()) peer->setMinimised(true);
+#endif
 		}
 	}
 }

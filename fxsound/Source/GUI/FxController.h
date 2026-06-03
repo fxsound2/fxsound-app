@@ -29,7 +29,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Source/Utils/Settings/DeviceConfig.h"
 #include "AudioPassthru.h"
 #include "DfxDsp.h"
+#ifdef _WIN32
 #include <wtsapi32.h>
+#else
+#include "win_compat.h"
+#endif
 
 using namespace FxSound;
 
@@ -169,6 +173,7 @@ private:
 	public:
 		MessageWindow(const WCHAR* const wnd_name, WNDPROC wnd_proc)
 		{
+#ifdef _WIN32
 			String class_name("FXSOUND_");
 			class_name << String::toHexString(Time::getHighResolutionTicks());
 
@@ -186,21 +191,28 @@ private:
 			hwnd_ = ::CreateWindowW(getClassNameFromAtom(), wnd_name,
 				0, 0, 0, 0, 0, 0, 0, h_module, 0);
 			jassert(hwnd_ != 0);
+#else
+			// Linux: no hidden message window; global hotkeys land in M5.
+			ignoreUnused(wnd_name, wnd_proc);
+#endif
 		}
 
 		~MessageWindow()
 		{
+#ifdef _WIN32
 			DestroyWindow(hwnd_);
 			UnregisterClassW(getClassNameFromAtom(), 0);
+#endif
 		}
 
 		inline HWND getHandle() const noexcept { return hwnd_; }
 
 	private:
+		HWND hwnd_ = nullptr;
+#ifdef _WIN32
 		ATOM atom_;
-		HWND hwnd_;
-
 		LPCWSTR getClassNameFromAtom() noexcept { return (LPCWSTR)(pointer_sized_uint)atom_; }
+#endif
 	};
 
 	static constexpr UINT CMD_ON_OFF = 1001;
@@ -221,6 +233,11 @@ private:
 	void updateOutputs(std::vector<SoundDevice>& sound_devices);
 
 	void powerOn(bool on);
+
+#ifndef _WIN32
+	static juce::File getAutostartDesktopFile();
+	juce::File getFactoryPresetDir();
+#endif
 
 	void registerHotkeys();
 	void unregisterHotkeys();

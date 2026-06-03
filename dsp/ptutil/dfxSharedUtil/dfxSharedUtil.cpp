@@ -71,9 +71,9 @@ int PT_DECLSPEC dfxSharedUtilInit(PT_HANDLE **hpp_dfxSharedUtil,
 
 	/* Construct full path to shared dll */
 #ifdef _WIN64
-	swprintf(wcp_dll_fullpath, L"%s\\Dlls\\dfxShared64.dll", wcp_top_shared_folder_path);
+	swprintf(wcp_dll_fullpath, sizeof(wcp_dll_fullpath)/sizeof(*(wcp_dll_fullpath)), L"%s\\Dlls\\dfxShared64.dll", wcp_top_shared_folder_path);
 #else
-	swprintf(wcp_dll_fullpath, L"%s\\Dlls\\dfxShared32.dll", wcp_top_shared_folder_path);
+	swprintf(wcp_dll_fullpath, sizeof(wcp_dll_fullpath)/sizeof(*(wcp_dll_fullpath)), L"%s\\Dlls\\dfxShared32.dll", wcp_top_shared_folder_path);
 #endif
 
 	cast_handle->shared_memory_hinst = LoadLibrary(wcp_dll_fullpath);		
@@ -136,15 +136,15 @@ int dfxSharedUtil_RegistryGetTopSharedFolderPath(PT_HANDLE *hp_dfxSharedUtil, wc
 	if (wcp_top_shared_folder_path == NULL)
 		return(NOT_OKAY);
 
-	swprintf(wcp_top_shared_folder_path, L"");
+	swprintf(wcp_top_shared_folder_path, 1024, L"");
 
-	swprintf(wcp_full_key_path, L"%s\\%s\\%s\\%s", DFXP_REGISTRY_TOP_WIDE, 
+	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%s\\%s\\%s\\%s", DFXP_REGISTRY_TOP_WIDE, 
 			     DFXP_REGISTRY_DFX_PRODUCT_NAME_WIDE, 
 				  DFXP_REGISTRY_SHARED_WIDE,
 		        DFXP_REGISTRY_TOP_SHARED_FOLDER_WIDE);
 
 	if (regReadKey_Wide(REG_LOCAL_MACHINE, wcp_full_key_path, &key_exists, wcp_top_shared_folder_path,
-				(unsigned long)DFXP_REGISTRY_BUFFER_LENGTH) != OKAY)
+				(uint32_t)DFXP_REGISTRY_BUFFER_LENGTH) != OKAY)
 	         return(NOT_OKAY);
 
 	return(OKAY);
@@ -189,7 +189,7 @@ int PT_DECLSPEC dfxSharedUtilSetSpectrumValues(PT_HANDLE *hp_dfxSharedUtil, real
  *  Stores the total number of msecs processed since shared memory was loaded.
  *
  */
-int PT_DECLSPEC dfxSharedUtilSetTotalProcessedTime(PT_HANDLE *hp_dfxSharedUtil, unsigned long ul_total_processed_time_msecs)
+int PT_DECLSPEC dfxSharedUtilSetTotalProcessedTime(PT_HANDLE *hp_dfxSharedUtil, uint32_t ul_total_processed_time_msecs)
 {
 	struct dfxSharedUtilHdlType *cast_handle;
     
@@ -213,7 +213,7 @@ int PT_DECLSPEC dfxSharedUtilSetTotalProcessedTime(PT_HANDLE *hp_dfxSharedUtil, 
  *  Passes back the total number of msecs processed since shared memory was loaded.
  *
  */
-int PT_DECLSPEC dfxSharedUtilGetTotalProcessedTime(PT_HANDLE *hp_dfxSharedUtil, unsigned long *ulp_total_processed_time_msecs)
+int PT_DECLSPEC dfxSharedUtilGetTotalProcessedTime(PT_HANDLE *hp_dfxSharedUtil, uint32_t *ulp_total_processed_time_msecs)
 {
 	struct dfxSharedUtilHdlType *cast_handle;
     

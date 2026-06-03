@@ -111,8 +111,8 @@ int PT_DECLSPEC pwavSetupReadFromInput(PT_HANDLE *hp_pwav, int i_num_channels_in
 	 */
 	cast_handle->pFormatIn->nChannels  = i_num_channels_in;
    cast_handle->pFormatOut->nChannels = i_num_channels_out;
-   cast_handle->pFormatIn->nSamplesPerSec  = (long)r_samples_per_sec;
-   cast_handle->pFormatOut->nSamplesPerSec = (long)r_samples_per_sec;
+   cast_handle->pFormatIn->nSamplesPerSec  = (int32_t)r_samples_per_sec;
+   cast_handle->pFormatOut->nSamplesPerSec = (int32_t)r_samples_per_sec;
 
    /* Set the pass back format info */
    cast_handle->input_num_channels  = i_num_channels_in;      
@@ -246,13 +246,13 @@ int PT_DECLSPEC pwavSetupReadFromInput(PT_HANDLE *hp_pwav, int i_num_channels_in
 	memset(cast_handle->lpDataOut[cast_handle->next_output_buffer], 0,
 			 (size_t)(cast_handle->buffer_length_samples * cast_handle->wBlockSizeIn) );
 
-	if (pwavPlayIOBuffer(hp_pwav, (long *)cast_handle->lpDataOut[cast_handle->next_output_buffer]) != OKAY)
+	if (pwavPlayIOBuffer(hp_pwav, (int32_t *)cast_handle->lpDataOut[cast_handle->next_output_buffer]) != OKAY)
 		return(NOT_OKAY);
 
 	memset(cast_handle->lpDataOut[cast_handle->next_output_buffer], 0,
 			 (size_t)(cast_handle->buffer_length_samples * cast_handle->wBlockSizeIn) );
 
-	if (pwavPlayIOBuffer(hp_pwav, (long *)cast_handle->lpDataOut[cast_handle->next_output_buffer]) != OKAY)
+	if (pwavPlayIOBuffer(hp_pwav, (int32_t *)cast_handle->lpDataOut[cast_handle->next_output_buffer]) != OKAY)
 		return(NOT_OKAY);
 
 	/* Queue 2 record buffers */
@@ -314,7 +314,7 @@ int PT_DECLSPEC pwavStartIOProcessing(PT_HANDLE *hp_pwav)
  *   Read the next block of data into to passed buffer.
  *
  */
-int PT_DECLSPEC pwavReadNextIOBuffer(PT_HANDLE *hp_pwav, long **lpp_buffer_data)
+int PT_DECLSPEC pwavReadNextIOBuffer(PT_HANDLE *hp_pwav, int32_t **lpp_buffer_data)
 {
    struct pwavHdlType *cast_handle;
    
@@ -328,7 +328,7 @@ int PT_DECLSPEC pwavReadNextIOBuffer(PT_HANDLE *hp_pwav, long **lpp_buffer_data)
 	   (cast_handle->next_input_buffer >= PWAV_NUM_INPUT_BUFFERS))
       return(NOT_OKAY);
    
-	*lpp_buffer_data = (long *)(cast_handle->lpDataIn[cast_handle->next_input_buffer]);
+	*lpp_buffer_data = (int32_t *)(cast_handle->lpDataIn[cast_handle->next_input_buffer]);
 
    return(OKAY);
 }   
@@ -377,7 +377,7 @@ int PT_DECLSPEC pwavQueueIOBuffer(PT_HANDLE *hp_pwav)
  * DESCRIPTION:
  *   Play the passed buffer.
  */
-int PT_DECLSPEC pwavPlayIOBuffer(PT_HANDLE *hp_pwav, long *lp_buffer_data)
+int PT_DECLSPEC pwavPlayIOBuffer(PT_HANDLE *hp_pwav, int32_t *lp_buffer_data)
 {
    struct pwavHdlType *cast_handle;
    WORD wResult;

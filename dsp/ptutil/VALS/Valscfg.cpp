@@ -69,7 +69,7 @@ int PT_DECLSPEC valsCfgRead(PT_HANDLE **hpp_vals_cfg, wchar_t *wcp_file_path,
 		return(NOT_OKAY);
 
     /* Store the filepath */
-    swprintf(cast_handle->wcp_filepath, L"%s", wcp_file_path);
+    swprintf(cast_handle->wcp_filepath, sizeof(cast_handle->wcp_filepath)/sizeof(*(cast_handle->wcp_filepath)), L"%s", wcp_file_path);
 
 	/* Skip past the first line */
 	fgetws(wcp_str, LINE_LENGTH, stream);
@@ -86,7 +86,7 @@ int PT_DECLSPEC valsCfgRead(PT_HANDLE **hpp_vals_cfg, wchar_t *wcp_file_path,
     if (title_length < 1)
        return(NOT_OKAY);
 	wcp_str[title_length - 1] = L'\0';
-	swprintf((cast_handle->wcp_title), L"%s", wcp_str);
+	swprintf((cast_handle->wcp_title), sizeof((cast_handle->wcp_title))/sizeof(*((cast_handle->wcp_title))), L"%s", wcp_str);
 
 	/* Get the number of elements */
 	fgetws(wcp_str, LINE_LENGTH, stream);
@@ -97,7 +97,7 @@ int PT_DECLSPEC valsCfgRead(PT_HANDLE **hpp_vals_cfg, wchar_t *wcp_file_path,
 	str_length = (int)wcslen(wcp_str);
 	if (str_length == 0)
 	{
-		swprintf(cast_handle->wcp_msg1, L"Illegal Mono/Stereo Input Specification");
+		swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Illegal Mono/Stereo Input Specification");
 		(cast_handle->slout_hdl)->Error_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 	}
 	if ((wcp_str[0] == L's') || (wcp_str[0] == L'S'))
@@ -110,7 +110,7 @@ int PT_DECLSPEC valsCfgRead(PT_HANDLE **hpp_vals_cfg, wchar_t *wcp_file_path,
 	str_length = (int)wcslen(wcp_str);
 	if (str_length == 0)
 	{
-		swprintf(cast_handle->wcp_msg1, L"Illegal Mono/Stereo Output Specification");
+		swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Illegal Mono/Stereo Output Specification");
 		(cast_handle->slout_hdl)->Error_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 	}
 	if ((wcp_str[0] == L's') || (wcp_str[0] == L'S'))
@@ -251,7 +251,7 @@ int PT_DECLSPEC valsCfgGetTitle(PT_HANDLE *hp_vals_cfg, wchar_t *wcp_title)
 	if (wcp_title == NULL)
 	   return(NOT_OKAY);
 	   
-	swprintf(wcp_title, L"%s", cast_handle->wcp_title);
+	swprintf(wcp_title, sizeof(wcp_title)/sizeof(*(wcp_title)), L"%s", cast_handle->wcp_title);
 
 	return(OKAY);
 }
@@ -356,7 +356,7 @@ int PT_DECLSPEC valsCfgGetMinUserPreset(PT_HANDLE *hp_vals_cfg, int *ip_min_user
  * DESCRIPTION:
  *  Pass back the time when the last preset was saved. (Seconds since 1/1/70)
  */
-int PT_DECLSPEC valsCfgGetPresetSaveTime(PT_HANDLE *hp_vals_cfg, long *lp_preset_save_time)
+int PT_DECLSPEC valsCfgGetPresetSaveTime(PT_HANDLE *hp_vals_cfg, int32_t *lp_preset_save_time)
 {
 	struct valsCfgHdlType *cast_handle;
 
@@ -470,7 +470,7 @@ int PT_DECLSPEC valsCfgSetMinUserPreset(PT_HANDLE *hp_vals_cfg, int i_min_user_p
  * DESCRIPTION:
  *   Sets the time that the last preset was saved. (Seconds since 1/1/70).
  */
-int PT_DECLSPEC valsCfgSetPresetSaveTime(PT_HANDLE *hp_vals_cfg, long l_preset_save_time)
+int PT_DECLSPEC valsCfgSetPresetSaveTime(PT_HANDLE *hp_vals_cfg, int32_t l_preset_save_time)
 {
 	struct valsCfgHdlType *cast_handle;
 

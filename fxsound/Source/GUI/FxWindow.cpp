@@ -216,7 +216,7 @@ void FxWindow::TitleBar::addToolbarButton(Button* toolbarButton, bool right_alig
 		// On repaint, the translated button text is updated
 		if (TextButton* text_button = dynamic_cast<TextButton*>(toolbarButton))
 		{
-			auto& text = text_button->getName();
+			const auto text = text_button->getName();
 			if (text.isNotEmpty())
 			{
 				text_button->setButtonText(TRANS(text));
@@ -249,7 +249,7 @@ void FxWindow::TitleBar::paint(Graphics& g)
 
 		if (TextButton* text_button = dynamic_cast<TextButton*>(button))
 		{
-			auto& text = text_button->getName();
+			const auto text = text_button->getName();
 			if (text.isNotEmpty())
 			{
 				text_button->setButtonText(TRANS(text));

@@ -64,7 +64,7 @@
 	float dl_in, dl_out;\
 	float *tmp_ptr;\
 	realtype y1, y2;\
-	long idly = (long)delay_real;\
+	int32_t idly = (int32_t)delay_real;\
 	float del = delay_real - idly;\
 	tmp_ptr = ptr - idly;\
 	if( tmp_ptr < mem_start )\

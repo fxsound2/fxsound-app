@@ -278,7 +278,7 @@ int DfxDspPrivate::eqSetProcessingOn(int i_storage_type, int i_on)
 	if ((i_storage_type == DFXP_STORAGE_TYPE_REGISTRY) ||
 		(i_storage_type == DFXP_STORAGE_TYPE_ALL))
 	{
-		swprintf(wcp_full_key_path, L"%s\\%s\\%d\\%d\\%s\\%s\\%s",
+		swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%s\\%s\\%d\\%d\\%s\\%s\\%s",
 			DFXP_REGISTRY_TOP_WIDE,
 			product_specific_.wcp_registry_product_name,
 			product_specific_.major_version,
@@ -287,7 +287,7 @@ int DfxDspPrivate::eqSetProcessingOn(int i_storage_type, int i_on)
 			DFXP_REGISTRY_EQ_FOLDER_NAME_WIDE,
 			DFXP_REGISTRY_EQ_ON_WIDE);
 
-		swprintf(wcp_key_value, L"%d", i_on);
+		swprintf(wcp_key_value, sizeof(wcp_key_value)/sizeof(*(wcp_key_value)), L"%d", i_on);
 
 		if (regCreateKey_Wide(REG_CURRENT_USER, wcp_full_key_path, wcp_key_value) != OKAY)
 			return(NOT_OKAY);
@@ -315,7 +315,7 @@ int DfxDspPrivate::eqGetProcessingOn(int i_storage_type, int *ip_on)
 		return(OKAY);
 	}
 
-	swprintf(wcp_full_key_path, L"%s\\%s\\%d\\%d\\%s\\%s\\%s",
+	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%s\\%s\\%d\\%d\\%s\\%s\\%s",
 		DFXP_REGISTRY_TOP_WIDE,
 		product_specific_.wcp_registry_product_name,
 		product_specific_.major_version,
@@ -325,7 +325,7 @@ int DfxDspPrivate::eqGetProcessingOn(int i_storage_type, int *ip_on)
 		DFXP_REGISTRY_EQ_ON_WIDE);
 
 	if (regReadKey_Wide(REG_CURRENT_USER, wcp_full_key_path, &key_exists, wcp_key_value,
-		(unsigned long)DFXP_REGISTRY_BUFFER_LENGTH) != OKAY)
+		(uint32_t)DFXP_REGISTRY_BUFFER_LENGTH) != OKAY)
 		return(NOT_OKAY);
 
 	use_default = IS_TRUE;
@@ -339,7 +339,7 @@ int DfxDspPrivate::eqGetProcessingOn(int i_storage_type, int *ip_on)
 	}
 
 	if (!use_default)
-		*ip_on = _wtoi(wcp_key_value);
+		*ip_on = (int)wcstol(wcp_key_value, nullptr, 10);
 
 	return(OKAY);
 }

@@ -38,15 +38,15 @@ int PT_DECLSPEC regRemoveKey(int, char *);
 int PT_DECLSPEC regRemoveKey_Wide(int, wchar_t *);
 int PT_DECLSPEC regCreateKey(int, char *, char *);
 int PT_DECLSPEC regCreateKey_Wide(int, wchar_t *, wchar_t *);
-int PT_DECLSPEC regReadKey(int, char *, int *, char *, unsigned long);
-int PT_DECLSPEC regReadKey_Wide(int, wchar_t *, int *, wchar_t *, unsigned long);
+int PT_DECLSPEC regReadKey(int, char *, int *, char *, uint32_t);
+int PT_DECLSPEC regReadKey_Wide(int, wchar_t *, int *, wchar_t *, uint32_t);
 int PT_DECLSPEC regCreateKeyTest_Wide(int, wchar_t *, wchar_t *, int *);
 
 /* regWithKeyname.cpp */
-int PT_DECLSPEC regCreateKeyWithKeyname_Dword_Wide(int, wchar_t *, wchar_t *, unsigned long);
+int PT_DECLSPEC regCreateKeyWithKeyname_Dword_Wide(int, wchar_t *, wchar_t *, uint32_t);
 int PT_DECLSPEC regCreateKeyWithKeyname_String_Wide(int, wchar_t *, wchar_t *, wchar_t *);
-int PT_DECLSPEC regReadKeyWithKeyname_String_Wide(int, wchar_t *, wchar_t *, int *, wchar_t *, unsigned long);
-int PT_DECLSPEC regReadKeyWithKeyname_Dword_Wide(int, wchar_t *, wchar_t *, int *, unsigned long *);
+int PT_DECLSPEC regReadKeyWithKeyname_String_Wide(int, wchar_t *, wchar_t *, int *, wchar_t *, uint32_t);
+int PT_DECLSPEC regReadKeyWithKeyname_Dword_Wide(int, wchar_t *, wchar_t *, int *, uint32_t *);
 
 /* regRecursiveDelete.cpp */
 int PT_DECLSPEC regRecursiveDeleteFolder_Wide(int, wchar_t *);

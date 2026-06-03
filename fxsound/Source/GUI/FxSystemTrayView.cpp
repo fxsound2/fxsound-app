@@ -30,6 +30,7 @@ FxSystemTrayView::FxSystemTrayView()
 
     custom_notification_ = true;
 
+#ifdef _WIN32
     addToDesktop(0);
 
     HWND hWnd = (HWND)getWindowHandle();
@@ -41,10 +42,71 @@ FxSystemTrayView::FxSystemTrayView()
     taskbar_created_message_ = RegisterWindowMessage(TEXT("TaskbarCreated"));
 
     addIcon();
+#else
+    // Linux: StatusNotifierItem tray icon (DBus). Callbacks arrive on the DBus
+    // thread, so marshal to the JUCE message thread. Left click toggles the
+    // window; right click renders the context menu as a JUCE popup at the cursor.
+    auto on_activate = []() {
+        juce::MessageManager::callAsync([]() {
+            auto& c = FxController::getInstance();
+            if (c.isMainWindowVisible()) c.hideMainWindow();
+            else c.showMainWindow();
+        });
+    };
+    auto on_menu = [this]() {
+        juce::MessageManager::callAsync([this]() { showContextMenu(); });
+    };
+    tray_sni_.reset(new FxTraySNI(on_activate, on_menu));
+    tray_sni_->setIconName("fxsound");
+
+    // Primary approach: write the embedded PNG to a temp dir in the hicolor
+    // icon theme layout and point the SNI IconThemePath at it. This lets the
+    // tray load the PNG directly (no byte-order ambiguity in raw pixmap data).
+    {
+        juce::File icon_dir = juce::File::getSpecialLocation(juce::File::tempDirectory)
+                                  .getChildFile("fxsound-tray-icons")
+                                  .getChildFile("hicolor")
+                                  .getChildFile("32x32")
+                                  .getChildFile("apps");
+        icon_dir.createDirectory();
+        juce::File icon_file = icon_dir.getChildFile("fxsound.png");
+        if (!icon_file.existsAsFile())
+            icon_file.replaceWithData(BinaryData::fxsound_png, (size_t)BinaryData::fxsound_pngSize);
+
+        juce::File theme_root = juce::File::getSpecialLocation(juce::File::tempDirectory)
+                                    .getChildFile("fxsound-tray-icons");
+        tray_sni_->setIconThemePath(theme_root.getFullPathName().toStdString());
+    }
+
+    // Fallback: supply a raw RGBA pixmap for trays that ignore IconThemePath.
+    {
+        juce::Image img = juce::ImageFileFormat::loadFrom(BinaryData::fxsound_png,
+                                                          BinaryData::fxsound_pngSize);
+        if (img.isValid())
+        {
+            img = img.rescaled(32, 32, juce::Graphics::highResamplingQuality);
+            const int w = img.getWidth(), h = img.getHeight();
+            std::vector<unsigned char> rgba;
+            rgba.reserve((size_t)w * h * 4);
+            juce::Image::BitmapData bd(img, juce::Image::BitmapData::readOnly);
+            for (int y = 0; y < h; ++y)
+                for (int x = 0; x < w; ++x)
+                {
+                    auto c = bd.getPixelColour(x, y);
+                    rgba.push_back(c.getRed());
+                    rgba.push_back(c.getGreen());
+                    rgba.push_back(c.getBlue());
+                    rgba.push_back(c.getAlpha());
+                }
+            tray_sni_->setIconPixmap(w, h, std::move(rgba));
+        }
+    }
+#endif
 }
 
 FxSystemTrayView::~FxSystemTrayView()
 {
+#ifdef _WIN32
     HWND hWnd = (HWND)getWindowHandle();
 
     SetWindowLongPtr(hWnd, GWLP_USERDATA, NULL);
@@ -56,6 +118,7 @@ FxSystemTrayView::~FxSystemTrayView()
     Shell_NotifyIcon(NIM_DELETE, &nid);
 
     removeFromDesktop();
+#endif
 }
 
 void FxSystemTrayView::modelChanged(FxModel::Event model_event)
@@ -68,6 +131,7 @@ void FxSystemTrayView::modelChanged(FxModel::Event model_event)
 
 void FxSystemTrayView::setStatus(bool power, bool processing)
 {
+#ifdef _WIN32
     HINSTANCE hInst = GetModuleHandle(NULL);
 
     String param = power ? TRANS(L"on") : TRANS(L"off");
@@ -115,12 +179,18 @@ void FxSystemTrayView::setStatus(bool power, bool processing)
     lstrcpy(nid.szTip, tool_tip);
 
     Shell_NotifyIcon(NIM_MODIFY, &nid);
+#else
+    // Linux: the SNI icon is theme-based and static for now; nothing to update
+    // per power/processing state here. (Icon-state variants are a follow-up.)
+    ignoreUnused(power, processing);
+#endif
 }
 
 Point<int> FxSystemTrayView::getSystemTrayWindowPosition(int width, int height)
 {
     Point<int> pos = { 0, 0 };
 
+#ifdef _WIN32
     NOTIFYICONIDENTIFIER icon_id = {};
     RECT rect;
 
@@ -162,12 +232,24 @@ Point<int> FxSystemTrayView::getSystemTrayWindowPosition(int width, int height)
             pos.y = area.getBottom() - height - 10;
         }
     }
+#else
+    // Linux: no tray-rect query; anchor the notification to the primary
+    // display's top-right corner (M5 refines against the real tray location).
+    auto display = Desktop::getInstance().getDisplays().getPrimaryDisplay();
+    if (display != nullptr)
+    {
+        auto area = display->userArea;
+        pos.x = area.getRight() - width - 10;
+        pos.y = area.getY() + 10;
+    }
+#endif
 
     return pos;
 }
 
 void FxSystemTrayView::addIcon()
 {
+#ifdef _WIN32
     NOTIFYICONDATA nid = { sizeof(nid) };
 
     HINSTANCE hInst = GetModuleHandle(NULL);
@@ -208,6 +290,7 @@ void FxSystemTrayView::addIcon()
     Shell_NotifyIcon(NIM_SETVERSION, &nid);
 
     setVisible(true);
+#endif
 }
 
 void FxSystemTrayView::showContextMenu()
@@ -320,10 +403,12 @@ void FxSystemTrayView::showContextMenu()
     context_menu.addItem(donate);
     context_menu.addItem(exit);
 
+#ifdef _WIN32
     HWND hWnd = (HWND)getWindowHandle();
 
     SetFocus(hWnd);
     SetForegroundWindow(hWnd);
+#endif
 
     context_menu.show();
 }
@@ -390,11 +475,13 @@ void FxSystemTrayView::showNotification()
     {
         if (custom_notification_ || link.first.isNotEmpty())
         {
+#ifdef _WIN32
             QUERY_USER_NOTIFICATION_STATE quns;
             if (FAILED(SHQueryUserNotificationState(&quns)) || quns != QUNS_ACCEPTS_NOTIFICATIONS)
             {
                 return;
             }
+#endif
 
             notification_.setMessage(message, link);
             Point<int> pos = getSystemTrayWindowPosition(notification_.getWidth(), notification_.getHeight());
@@ -403,6 +490,7 @@ void FxSystemTrayView::showNotification()
         }
         else
         {
+#ifdef _WIN32
             NOTIFYICONDATA nid = { sizeof(nid) };
 
             nid.uFlags = NIF_INFO | NIF_GUID | NIF_REALTIME;
@@ -414,6 +502,7 @@ void FxSystemTrayView::showNotification()
             message.copyToUTF16(nid.szInfo, sizeof(nid.szInfo) - 1);
 
             Shell_NotifyIcon(NIM_MODIFY, &nid);
+#endif
         }
     }
 }
@@ -430,6 +519,7 @@ String FxSystemTrayView::getTruncatedText(const String& text, int max_length)
     }
 }
 
+#ifdef _WIN32
 LRESULT CALLBACK FxSystemTrayView::wndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     auto tray_view = reinterpret_cast<FxSystemTrayView*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
@@ -475,3 +565,4 @@ LRESULT CALLBACK FxSystemTrayView::wndProc(HWND hwnd, UINT message, WPARAM wPara
 
     return 0;
 }
+#endif // _WIN32
