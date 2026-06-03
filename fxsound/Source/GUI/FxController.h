@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <wtsapi32.h>
 #else
 #include "win_compat.h"
+#include "LinuxHotkeys.h"
 #endif
 
 using namespace FxSound;
@@ -237,6 +238,7 @@ private:
 #ifndef _WIN32
 	static juce::File getAutostartDesktopFile();
 	juce::File getFactoryPresetDir();
+	void handleLinuxHotkey(int cmd);
 #endif
 
 	void registerHotkeys();
@@ -278,6 +280,10 @@ private:
 	int max_user_presets_;
 
 	DWORD session_id_;
+
+#ifndef _WIN32
+	std::unique_ptr<LinuxHotkeys> linux_hotkeys_;
+#endif
 
 	CriticalSection lock_;
 };

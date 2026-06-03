@@ -182,6 +182,11 @@ FxController::FxController()
 	{
 		view_ = static_cast<ViewType>(view);
 	}
+#ifndef _WIN32
+	linux_hotkeys_ = std::make_unique<LinuxHotkeys>([this](int cmd) {
+		juce::MessageManager::callAsync([this, cmd] { handleLinuxHotkey(cmd); });
+	});
+#endif
 	auto hotkeys_support = settings_.getBool("hotkeys") && SysInfo::canSupportHotkeys();
 	FxModel::getModel().setHotkeySupport(hotkeys_support);
 	if (hotkeys_support)
@@ -1368,6 +1373,76 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 }
 #endif // _WIN32
 
+#ifndef _WIN32
+void FxController::handleLinuxHotkey(int cmd)
+{
+	if (cmd == (int)CMD_ON_OFF)
+	{
+		auto power_state = !FxModel::getModel().getPowerState();
+		setPowerState(power_state);
+		String param = FxModel::getModel().getPowerState() ? TRANS(L"on") : TRANS(L"off");
+		FxModel::getModel().pushMessage(FormatString(TRANS("FxSound is %s."), param));
+	}
+	if (cmd == (int)CMD_OPEN_CLOSE)
+	{
+		if (main_window_->isOnDesktop())
+			hideMainWindow();
+		else
+			showMainWindow();
+	}
+	if (cmd == (int)CMD_NEXT_PRESET && FxModel::getModel().getPowerState())
+	{
+		auto preset_index = FxModel::getModel().getSelectedPreset();
+		auto preset_count = FxModel::getModel().getPresetCount();
+		if (preset_count > 1)
+		{
+			if (preset_index < preset_count - 1)
+				preset_index++;
+			else
+				preset_index = 0;
+			setPreset(preset_index);
+		}
+	}
+	if (cmd == (int)CMD_PREVIOUS_PRESET && FxModel::getModel().getPowerState())
+	{
+		auto preset_index = FxModel::getModel().getSelectedPreset();
+		auto preset_count = FxModel::getModel().getPresetCount();
+		if (preset_count > 1)
+		{
+			if (preset_index != 0)
+				preset_index--;
+			else
+				preset_index = preset_count - 1;
+			setPreset(preset_index);
+		}
+	}
+	if (cmd == (int)CMD_NEXT_OUTPUT && FxModel::getModel().getPowerState())
+	{
+		auto output_index = 0;
+		for (auto& output_device : active_output_devices_)
+		{
+			if (FxModel::getModel().getSelectedOutput().pwszID == output_device.pwszID)
+				break;
+			output_index++;
+		}
+		int count = 0;
+		while (count < (int)active_output_devices_.size())
+		{
+			count++;
+			if (output_index < (int)active_output_devices_.size() - 1)
+				output_index++;
+			else
+				output_index = 0;
+			if (active_output_devices_[output_index].deviceNumChannel >= 2)
+			{
+				setOutput(output_index);
+				break;
+			}
+		}
+	}
+}
+#endif // !_WIN32
+
 void FxController::timerCallback()
 {
 	if (output_changed_)
@@ -1591,51 +1666,61 @@ bool FxController::setHotkey(const String& command, int new_mod, int new_vk)
 
 	if (command == HK_CMD_ON_OFF)
 	{
+#ifdef _WIN32
 		::UnregisterHotKey(message_window_.getHandle(), CMD_ON_OFF);
 		if (isValidHotkey(new_mod, new_vk))
-		{
 			::RegisterHotKey(message_window_.getHandle(), CMD_ON_OFF, new_mod, new_vk);
-		}		
+#else
+		if (linux_hotkeys_) linux_hotkeys_->registerKey(CMD_ON_OFF, new_mod, new_vk);
+#endif
 		return true;
 	}
 
 	if (command == HK_CMD_OPEN_CLOSE)
 	{
+#ifdef _WIN32
 		::UnregisterHotKey(message_window_.getHandle(), CMD_OPEN_CLOSE);
 		if (isValidHotkey(new_mod, new_vk))
-		{
 			::RegisterHotKey(message_window_.getHandle(), CMD_OPEN_CLOSE, new_mod, new_vk);
-		}		
+#else
+		if (linux_hotkeys_) linux_hotkeys_->registerKey(CMD_OPEN_CLOSE, new_mod, new_vk);
+#endif
 		return true;
 	}
 
 	if (command == HK_CMD_NEXT_PRESET)
 	{
+#ifdef _WIN32
 		::UnregisterHotKey(message_window_.getHandle(), CMD_NEXT_PRESET);
 		if (isValidHotkey(new_mod, new_vk))
-		{
 			::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_PRESET, new_mod, new_vk);
-		}		
+#else
+		if (linux_hotkeys_) linux_hotkeys_->registerKey(CMD_NEXT_PRESET, new_mod, new_vk);
+#endif
 		return true;
 	}
 
 	if (command == HK_CMD_PREVIOUS_PRESET)
 	{
+#ifdef _WIN32
 		::UnregisterHotKey(message_window_.getHandle(), CMD_PREVIOUS_PRESET);
 		if (isValidHotkey(new_mod, new_vk))
-		{
 			::RegisterHotKey(message_window_.getHandle(), CMD_PREVIOUS_PRESET, new_mod, new_vk);
-		}		
+#else
+		if (linux_hotkeys_) linux_hotkeys_->registerKey(CMD_PREVIOUS_PRESET, new_mod, new_vk);
+#endif
 		return true;
 	}
 
 	if (command == HK_CMD_NEXT_OUTPUT)
 	{
+#ifdef _WIN32
 		::UnregisterHotKey(message_window_.getHandle(), CMD_NEXT_OUTPUT);
 		if (isValidHotkey(new_mod, new_vk))
-		{
 			::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_OUTPUT, new_mod, new_vk);
-		}		
+#else
+		if (linux_hotkeys_) linux_hotkeys_->registerKey(CMD_NEXT_OUTPUT, new_mod, new_vk);
+#endif
 		return true;
 	}
 
@@ -2167,63 +2252,44 @@ void FxController::registerHotkeys()
 	{
 		int mod;
 		int vk;
-
-		if (getHotkey(HK_CMD_ON_OFF, mod, vk))
+#ifdef _WIN32
+		if (getHotkey(HK_CMD_ON_OFF, mod, vk) && isValidHotkey(mod, vk))
+			::RegisterHotKey(message_window_.getHandle(), CMD_ON_OFF, mod, vk);
+		if (getHotkey(HK_CMD_OPEN_CLOSE, mod, vk) && isValidHotkey(mod, vk))
+			::RegisterHotKey(message_window_.getHandle(), CMD_OPEN_CLOSE, mod, vk);
+		if (getHotkey(HK_CMD_NEXT_PRESET, mod, vk) && isValidHotkey(mod, vk))
+			::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_PRESET, mod, vk);
+		if (getHotkey(HK_CMD_PREVIOUS_PRESET, mod, vk) && isValidHotkey(mod, vk))
+			::RegisterHotKey(message_window_.getHandle(), CMD_PREVIOUS_PRESET, mod, vk);
+		if (getHotkey(HK_CMD_NEXT_OUTPUT, mod, vk) && isValidHotkey(mod, vk))
+			::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_OUTPUT, mod, vk);
+#else
+		if (linux_hotkeys_)
 		{
-			if (isValidHotkey(mod, vk))
-			{
-				::RegisterHotKey(message_window_.getHandle(), CMD_ON_OFF, mod, vk);
-			}			
+			if (getHotkey(HK_CMD_ON_OFF, mod, vk))          linux_hotkeys_->registerKey(CMD_ON_OFF, mod, vk);
+			if (getHotkey(HK_CMD_OPEN_CLOSE, mod, vk))      linux_hotkeys_->registerKey(CMD_OPEN_CLOSE, mod, vk);
+			if (getHotkey(HK_CMD_NEXT_PRESET, mod, vk))     linux_hotkeys_->registerKey(CMD_NEXT_PRESET, mod, vk);
+			if (getHotkey(HK_CMD_PREVIOUS_PRESET, mod, vk)) linux_hotkeys_->registerKey(CMD_PREVIOUS_PRESET, mod, vk);
+			if (getHotkey(HK_CMD_NEXT_OUTPUT, mod, vk))     linux_hotkeys_->registerKey(CMD_NEXT_OUTPUT, mod, vk);
 		}
-		
-		if (getHotkey(HK_CMD_OPEN_CLOSE, mod, vk))
-		{
-			if (isValidHotkey(mod, vk))
-			{
-				::RegisterHotKey(message_window_.getHandle(), CMD_OPEN_CLOSE, mod, vk);
-			}
-			
-		}
-
-		if (getHotkey(HK_CMD_NEXT_PRESET, mod, vk))
-		{
-			if (isValidHotkey(mod, vk))
-			{
-				::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_PRESET, mod, vk);
-			}
-			
-		}
-
-		if (getHotkey(HK_CMD_PREVIOUS_PRESET, mod, vk))
-		{
-			if (isValidHotkey(mod, vk))
-			{
-				::RegisterHotKey(message_window_.getHandle(), CMD_PREVIOUS_PRESET, mod, vk);
-			}
-			
-		}
-
-		if (getHotkey(HK_CMD_NEXT_OUTPUT, mod, vk))
-		{
-			if (isValidHotkey(mod, vk))
-			{
-				::RegisterHotKey(message_window_.getHandle(), CMD_NEXT_OUTPUT, mod, vk);
-			}			
-		}
-		
+#endif
 		hotkeys_registered_ = true;
-	}	
+	}
 }
 
 void FxController::unregisterHotkeys()
 {
 	if (hotkeys_registered_)
 	{
+#ifdef _WIN32
 		::UnregisterHotKey(message_window_.getHandle(), CMD_ON_OFF);
 		::UnregisterHotKey(message_window_.getHandle(), CMD_OPEN_CLOSE);
 		::UnregisterHotKey(message_window_.getHandle(), CMD_NEXT_PRESET);
 		::UnregisterHotKey(message_window_.getHandle(), CMD_PREVIOUS_PRESET);
 		::UnregisterHotKey(message_window_.getHandle(), CMD_NEXT_OUTPUT);
+#else
+		if (linux_hotkeys_) linux_hotkeys_->unregisterAll();
+#endif
 		hotkeys_registered_ = false;
 	}
 }
