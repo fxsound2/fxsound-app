@@ -1,5 +1,5 @@
 /*
-FxSound — Linux build (M2/M3/M4: PipeWire backend)
+FxSound — Linux build: PipeWire backend
 
 Linux implementation of AudioPassthru on libpipewire. Two nodes:
   - "FxSound": a real null-audio-sink (support.null-audio-sink) so WirePlumber
@@ -8,10 +8,10 @@ Linux implementation of AudioPassthru on libpipewire. Two nodes:
     carry whatever apps played.
   - "FxSound Processor": a hidden pw_filter whose inputs are linked from the
     sink monitor and whose outputs are linked to the chosen device. The realtime
-    callback runs DfxDsp::processAudio between them (M3).
+    callback runs DfxDsp::processAudio between them.
 A registry listener enumerates real sinks (getSoundDevices), tracks our two
 nodes' ports, and (re)creates the monitor->processor and processor->device
-links; hot-plug add/remove notifies the app (M4).
+links; hot-plug add/remove notifies the app.
 
 Threading: all PipeWire calls happen on the pw_thread_loop thread; public
 methods take the loop lock. The realtime process callback is lock-free.
@@ -99,6 +99,7 @@ namespace {
 // ---- realtime processing ------------------------------------------------
 void on_process(void* userdata, struct spa_io_position* position)
 {
+    if (!position) return;
     auto* d = static_cast<AudioPassthruPrivate*>(userdata);
     uint32_t n = position->clock.duration;
 
