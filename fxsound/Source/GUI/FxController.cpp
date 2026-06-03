@@ -978,7 +978,7 @@ bool FxController::importPresets(const Array<File>& preset_files, StringArray& i
         auto preset_info = dfx_dsp_.getPresetInfo(preset_file.getFullPathName().toWideCharPointer());
         if (model.isPresetNameValid(preset_info.name.c_str()))
         {
-            File import_file(path_name + "\\" + preset_info.name.c_str() + ".fac");
+            File import_file(path_name + File::getSeparatorString() + preset_info.name.c_str() + ".fac");
             if (preset_file.copyFileTo(import_file))
             {
                 imported_presets.add(preset_info.name.c_str());
