@@ -1,6 +1,6 @@
 # FxSound
 
-FxSound is a digital audio program built for Windows PC's. The background processing, built on a high-fidelity audio engine, acts as a sort of digital soundcard for your system. This means that your signals will have the clean passthrough when FxSound is active. There are active effects for shaping and boosting your sound's volume, timbre, and equalization included on top of this clean processing, allowing you to customize and enhance your sound.
+FxSound is a digital audio program for Windows and Linux. The background processing, built on a high-fidelity audio engine, acts as a sort of digital soundcard for your system. This means that your signals will have the clean passthrough when FxSound is active. There are active effects for shaping and boosting your sound's volume, timbre, and equalization included on top of this clean processing, allowing you to customize and enhance your sound.
 
 ## General Information
 * Website: https://www.fxsound.com
@@ -11,7 +11,24 @@ FxSound is a digital audio program built for Windows PC's. The background proces
 * [Donate to FxSound](https://www.paypal.com/donate/?hosted_button_id=JVNQGYXCQ2GPG)
   
 ## Build Instructions
-### Prerequisites
+
+### Linux (PipeWire)
+
+See [`linux/README.md`](linux/README.md) for the full Linux build guide.
+Quick start:
+
+```sh
+git submodule update --init Resources
+git clone --depth 1 --branch 6.1.6 https://github.com/juce-framework/JUCE third_party/JUCE
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+cmake --build build
+sudo cmake --install build
+```
+
+An AppImage can be built with `./packaging/build-appimage.sh` (downloads
+tooling automatically) or downloaded from the [releases page](https://github.com/fxsound2/fxsound-app/releases).
+
+### Windows — Prerequisites
 * Download and install the [latest version of FxSound](https://download.fxsound.com/fxsoundlatest)
 * Install [Visual Studio 2022](https://visualstudio.microsoft.com/vs)
 * Install [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk)

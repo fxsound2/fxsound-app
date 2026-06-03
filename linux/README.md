@@ -4,56 +4,55 @@ Linux port of FxSound. The Windows build (Visual Studio solutions under
 `fxsound/Project`) is unchanged; this tree adds a CMake build that targets
 Linux + PipeWire.
 
-## Status (milestones)
+## Status
 
-- [x] **M0** — Linux build bootstrap. JUCE GUI compiles and launches; DSP and
-  audio backends are stubbed (no audio yet).
-- [x] **M1** — Port DfxDsp. The real DSP engine builds and runs on Linux; the
-  app defaults to it. Verified with `dsp_selftest` (processAudio responds to
-  power and EQ changes). Build the test with `-DFXSOUND_STUB_DSP=OFF` and run
-  `./build/dsp_selftest`.
-- [x] **M2** — PipeWire backend. A stereo `FxSound` node (`Audio/Sink`) created
-  via libpipewire with input + output ports and a realtime callback. Verified
-  with `passthru_selftest` (`pw-cli ls Node`, `pw-link`).
-- [x] **M3** — DSP wired into the realtime callback (interleave → int16 →
-  `DfxDsp::processAudio` → float). Verified end-to-end: a tone played to the
-  FxSound sink is processed and reaches the hardware device.
-- [x] **M4** — Device management. Registry-driven sink enumeration
-  (`getSoundDevices`), selection (`setAsPlaybackDevice`) and default routing
-  (`restoreDefaultPlaybackDevice`), output ports linked to the chosen device via
-  the PipeWire link factory, and hot-plug add/remove → `onSoundDeviceChange`.
-  Verified: FxSound output auto-links to the real ALSA device.
-- [x] **M5** — GUI platform parity. Tray icon via JUCE `SystemTrayIconComponent`
-  (left-click toggles window, right-click menu, icon dims when off); autostart
-  via `~/.config/autostart/fxsound.desktop`; signal-based crash handler
-  (`sigaction` + `backtrace_symbols_fd` → `~/.config/FxSound/fxsound-crash.log`,
-  then re-raise for a core dump). **Deferred:** global hotkeys — the settings
-  UI/persistence is cross-platform, but OS-level key grabbing needs an X11
-  `XGrabKey` backend *and* an xdg-desktop-portal GlobalShortcuts backend
-  (Wayland). Tracked for a follow-up.
-- [x] **M6** — Packaging. CMake `install()` rules (freedesktop layout:
-  `/usr/bin/fxsound`, `.desktop`, hicolor icon, presets under
-  `/usr/share/fxsound`) — verified by a staged `DESTDIR` install; the `.desktop`
-  passes `desktop-file-validate`. AUR `packaging/PKGBUILD` provided. **Follow-up:**
-  AppImage/Flatpak recipes; resolve installed-app preset path (see M7).
-- [x] **M7 (core)** — Preset handling fixed for Linux: factory presets resolved
-  from `<cwd>/Factsoft` → exe-relative `../share/fxsound/Factsoft` →
-  `/usr/share`, and the Windows `FxSound\Presets` backslash paths made portable
-  (`File::getSeparatorString()`). Verified: installed binary launches from a
-  neutral cwd. **Ongoing QA:** PipeWire latency/quantum tuning, sample-rate
-  switching, suspend/resume, multi-distro testing.
+All core milestones are complete. The app builds, installs, and runs on
+PipeWire-based distros (Arch, Fedora 34+, Ubuntu 22.04+, etc.).
+
+| Milestone | What shipped |
+|-----------|-------------|
+| **M0** | Linux CMake bootstrap. JUCE GUI compiles and launches. |
+| **M1** | DfxDsp ported. Real DSP engine builds on Linux; verified with `dsp_selftest`. |
+| **M2** | PipeWire backend. Stereo `FxSound` node created via libpipewire with realtime callback. |
+| **M3** | DSP wired into the PipeWire callback (interleave → int16 → `processAudio` → float). |
+| **M4** | Device management. Registry-driven enumeration, selection, and hot-plug via PipeWire link factory. |
+| **M5** | GUI platform parity. Tray icon via `org.kde.StatusNotifierItem` + `com.canonical.dbusmenu` (GDBus) — full Windows context-menu parity on Wayland panels (Waybar, KDE Plasma). Autostart via `~/.config/autostart/fxsound.desktop`. Signal-based crash handler (`sigaction` + `backtrace_symbols_fd`). |
+| **M6** | Packaging. CMake install rules (freedesktop layout), AppImage (`packaging/build-appimage.sh`), AUR PKGBUILD. |
+| **M7** | Preset handling. Factory presets resolved exe-relative; Windows backslash paths made portable. Bug fixes: EQ band frequency control, digital clipping guard, import/export path separators. |
+
+**Deferred:** Global hotkeys. Settings UI and persistence are cross-platform;
+OS-level key grabbing requires an X11 `XGrabKey` backend and an
+xdg-desktop-portal `GlobalShortcuts` backend for Wayland. Tracked for a
+follow-up PR.
 
 ## Install
+
+### AppImage (recommended — no install needed)
+
+```sh
+# Build locally:
+./packaging/build-appimage.sh
+./FxSound-1.2.8.0-x86_64.AppImage
+
+# Or grab the AppImage from the GitHub Actions artifacts / release page.
+```
+
+### System install
 
 ```sh
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
 cmake --build build
-sudo cmake --install build      # or: DESTDIR=/tmp/stage cmake --install build
+sudo cmake --install build
 ```
 
-Arch users can build a package with `makepkg` from `packaging/PKGBUILD`.
+### Arch / CachyOS (AUR)
 
-## Build
+```sh
+cd packaging
+makepkg -si
+```
+
+## Build from source
 
 ```sh
 # One-time: fetch JUCE 6.1.6 and the Resources submodule
@@ -65,40 +64,76 @@ cmake --build build
 ./build/FxSound
 ```
 
-### Toolchain (Arch/CachyOS)
+### Dependencies (Arch / CachyOS)
 
 ```sh
 sudo pacman -S --needed base-devel cmake ninja \
   libx11 libxext libxinerama libxrandr libxcursor \
-  freetype2 fontconfig mesa alsa-lib pipewire
+  freetype2 fontconfig mesa alsa-lib \
+  xcb-util-keysyms libxcb \
+  glib2 pipewire
 ```
+
+### Dependencies (Ubuntu / Debian)
+
+```sh
+sudo apt-get install -y \
+  cmake ninja-build \
+  libx11-dev libxext-dev libxinerama-dev libxrandr-dev libxcursor-dev \
+  libfreetype6-dev libfontconfig1-dev libgl1-mesa-dev libasound2-dev \
+  libxcb-dev libxcb-keysyms1-dev libglib2.0-dev libpipewire-0.3-dev
+```
+
+## CI
+
+GitHub Actions builds an AppImage on every push and pull request using an
+`ubuntu-20.04` runner (glibc 2.31 baseline). The workflow is at
+`.github/workflows/build-appimage.yml`. Artifacts are uploaded for 30 days;
+tagged releases (`v*.*.*.*`) produce a draft GitHub Release automatically.
 
 ## Layout of the Linux port
 
-- `CMakeLists.txt` (repo root) — Linux build. Replicates the Projucer export
-  for the JUCE GUI and links the DSP + audio-passthru libs.
+**Build system**
+- `CMakeLists.txt` — root Linux CMake build. Replicates the Projucer export
+  and links DfxDsp + AudioPassthru.
+- `dsp/DfxDsp.cmake` — builds the real DSP + shared util sources.
+- `audiopassthru/AudioPassthruLinux.cmake` — builds the PipeWire backend.
+- `packaging/fxsound.desktop` — freedesktop desktop entry.
+- `packaging/PKGBUILD` — AUR package recipe.
+- `packaging/build-appimage.sh` — AppImage builder (downloads linuxdeploy +
+  appimagetool automatically).
+- `.github/workflows/build-appimage.yml` — CI workflow.
+
+**Linux support layer**
 - `linux/win_compat.h` — minimal Win32 *type* aliases so Windows-typed GUI
   declarations parse on Linux. Types only; no faked Win32 functions.
-- `linux/stubs/` — M0 stub `AudioPassthru` (replaced in M2).
-- `linux/SysInfo_linux.cpp` — Linux `SysInfo` (the Windows one is COM-based).
-- `dsp/DfxDsp.cmake` — builds the real DSP + shared util sources on Linux.
-- `dsp/linux/` — DSP Linux support layer:
-  - `windows.h`, `conio.h`, `dos.h`, `direct.h`, `io.h`, `share.h`, `shlobj.h`,
-    `Shlwapi.h`, `winbase.h`, `mmsystem.h` — stand-ins for Windows SDK headers
-    the DSP includes (mostly typedefs + a few POSIX-backed helpers).
-  - `lc_headers/` — generated symlinks bridging the DSP's inconsistent include
-    casing to the real (case-sensitive) header files.
-  - `reg_linux.cpp` — in-process key/value store replacing the Windows registry
-    settings backend (config-file persistence is a follow-up).
-  - `slout_linux.cpp`, `file_linux.cpp`, `pwav_convert_linux.cpp` — Linux
-    implementations of the logger, file helpers, and sample converters.
-  - `test_dsp.cpp` — the `dsp_selftest` target.
+- `linux/SysInfo_linux.cpp` — Linux `SysInfo` (the Windows version is COM-based).
+- `linux/LinuxHotkeys.cpp/.h` — global hotkey stub (pending XDG portal backend).
+- `linux/stubs/` — stub `AudioPassthru` and `DfxDsp` used when the real
+  backends are disabled via CMake options (see below).
 
-Windows-only code paths in the shared GUI sources are guarded with
-`#ifdef _WIN32`; the Linux `#else` branch is either a portable JUCE call or a
-clearly-marked stub deferred to a later milestone (grep for `M5`, `M1`, etc.).
+**Tray icon**
+- `linux/tray/fx_tray_sni.h` / `fx_tray_sni.cpp` — `org.kde.StatusNotifierItem`
+  + `com.canonical.dbusmenu` over GDBus. Runs its own GLib main loop on a
+  background thread. Left-click toggles the main window; the dbusmenu serves
+  the full context menu to Wayland panels (Waybar, KDE Plasma) natively —
+  no JUCE popup required. Menu refreshes automatically on model state changes.
 
-## Build options
+**DSP Linux support layer** (`dsp/linux/`)
+- `windows.h`, `conio.h`, `dos.h`, `direct.h`, `io.h`, `share.h`, `shlobj.h`,
+  `Shlwapi.h`, `winbase.h`, `mmsystem.h` — stand-ins for Windows SDK headers.
+- `lc_headers/` — symlinks bridging the DSP's inconsistent include casing to
+  the real (case-sensitive) header files.
+- `reg_linux.cpp` — in-process key/value store replacing the Windows registry.
+- `slout_linux.cpp`, `file_linux.cpp`, `pwav_convert_linux.cpp` — Linux
+  implementations of the logger, file helpers, and sample converters.
+- `test_dsp.cpp` — the `dsp_selftest` binary.
 
-- `-DFXSOUND_STUB_DSP=OFF` — build the real ported DSP (M1+).
-- `-DFXSOUND_STUB_AUDIO=OFF` — build the PipeWire backend (M2+).
+Windows-only code paths in shared GUI sources are guarded with `#ifdef _WIN32`.
+
+## CMake options
+
+| Option | Default | Purpose |
+|--------|---------|---------|
+| `FXSOUND_STUB_DSP` | `OFF` | Use stub DfxDsp instead of the ported engine |
+| `FXSOUND_STUB_AUDIO` | `OFF` | Use stub AudioPassthru instead of PipeWire |
