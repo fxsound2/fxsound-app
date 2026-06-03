@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <map>
+#include <mutex>
 #include <thread>
 #include <atomic>
 #include <xcb/xcb.h>
@@ -38,6 +39,7 @@ private:
     xcb_connection_t* conn_  = nullptr;
     xcb_key_symbols_t* syms_ = nullptr;
     xcb_window_t     root_   = 0;
+    std::mutex       bindings_mutex_;
     std::map<int, Binding> bindings_;
     std::thread      thread_;
     std::atomic<bool> running_{false};
