@@ -81,7 +81,7 @@ sudo apt-get install -y \
   cmake ninja-build \
   libx11-dev libxext-dev libxinerama-dev libxrandr-dev libxcursor-dev \
   libfreetype6-dev libfontconfig1-dev libgl1-mesa-dev libasound2-dev \
-  libxcb-dev libxcb-keysyms1-dev libglib2.0-dev libpipewire-0.3-dev
+  libxcb1-dev libxcb-keysyms1-dev libglib2.0-dev libpipewire-0.3-dev
 ```
 
 ## CI
