@@ -48,13 +48,13 @@ LinuxHotkeys::LinuxHotkeys(Callback cb) : callback_(std::move(cb))
 
 LinuxHotkeys::~LinuxHotkeys()
 {
-    unregisterAll();
     running_ = false;
     if (pipe_[1] >= 0) {
         char b = 0;
         (void)write(pipe_[1], &b, 1);
     }
     if (thread_.joinable()) thread_.join();
+    unregisterAll();
     if (pipe_[0] >= 0) { close(pipe_[0]); close(pipe_[1]); }
     if (syms_)  xcb_key_symbols_free(syms_);
     if (conn_)  xcb_disconnect(conn_);
@@ -92,6 +92,7 @@ bool LinuxHotkeys::registerKey(int cmd_id, int win_mod, int win_vk)
 
     uint16_t xmod = winModToXcb(win_mod);
 
+    std::lock_guard<std::mutex> lk(bindings_mutex_);
     auto it = bindings_.find(cmd_id);
     if (it != bindings_.end()) {
         ungrabKey(it->second.xmod, it->second.kc);
@@ -105,6 +106,7 @@ bool LinuxHotkeys::registerKey(int cmd_id, int win_mod, int win_vk)
 
 void LinuxHotkeys::unregisterKey(int cmd_id)
 {
+    std::lock_guard<std::mutex> lk(bindings_mutex_);
     auto it = bindings_.find(cmd_id);
     if (it == bindings_.end()) return;
     ungrabKey(it->second.xmod, it->second.kc);
@@ -114,6 +116,7 @@ void LinuxHotkeys::unregisterKey(int cmd_id)
 void LinuxHotkeys::unregisterAll()
 {
     if (!conn_) return;
+    std::lock_guard<std::mutex> lk(bindings_mutex_);
     for (auto& [cmd, b] : bindings_) ungrabKey(b.xmod, b.kc);
     bindings_.clear();
 }
@@ -164,15 +167,18 @@ void LinuxHotkeys::loop()
                 if ((ev->response_type & ~0x80) == XCB_KEY_PRESS) {
                     auto* kp = reinterpret_cast<xcb_key_press_event_t*>(ev);
                     uint16_t clean = kp->state & ~uint16_t(XCB_MOD_MASK_2 | XCB_MOD_MASK_LOCK);
-                    for (auto& [cmd, b] : bindings_) {
-                        if (kp->detail == b.kc && clean == b.xmod) {
-                            int c = cmd;
-                            // Post to JUCE message thread via the callback.
-                            // The caller (FxController) wraps this in callAsync.
-                            callback_(c);
-                            break;
+                    int matched_cmd = -1;
+                    {
+                        std::lock_guard<std::mutex> lk(bindings_mutex_);
+                        for (auto& [cmd, b] : bindings_) {
+                            if (kp->detail == b.kc && clean == b.xmod) {
+                                matched_cmd = cmd;
+                                break;
+                            }
                         }
                     }
+                    if (matched_cmd >= 0)
+                        callback_(matched_cmd);
                 }
                 free(ev);
             }
