@@ -210,6 +210,7 @@ struct FxTraySNI::Impl
     std::function<void(int)> on_item_activated;
 
     // SNI icon state
+    std::string title_          = "FxSound";
     std::string icon_name       = "fxsound";
     std::string icon_theme_path;
     int         px_w = 0, px_h = 0;
@@ -256,7 +257,7 @@ struct FxTraySNI::Impl
         auto* self = static_cast<Impl*>(user);
         if (g_strcmp0(prop, "Category")      == 0) return g_variant_new_string("ApplicationStatus");
         if (g_strcmp0(prop, "Id")            == 0) return g_variant_new_string("fxsound");
-        if (g_strcmp0(prop, "Title")         == 0) return g_variant_new_string("FxSound");
+        if (g_strcmp0(prop, "Title")         == 0) return g_variant_new_string(self->title_.c_str());
         if (g_strcmp0(prop, "Status")        == 0) return g_variant_new_string("Active");
         if (g_strcmp0(prop, "IconName")      == 0) return g_variant_new_string(self->icon_name.c_str());
         if (g_strcmp0(prop, "IconThemePath") == 0) return g_variant_new_string(self->icon_theme_path.c_str());
@@ -523,6 +524,13 @@ void FxTraySNI::updateMenu(MenuItem root)
         impl_->revision++;
     }
     impl_->emitLayoutUpdated();
+}
+
+void FxTraySNI::setTitle(const std::string& title)
+{
+    if (!impl_) return;
+    impl_->title_ = title;
+    impl_->emitSNISignal("NewTitle", nullptr);
 }
 
 void FxTraySNI::setIconName(const std::string& name)
