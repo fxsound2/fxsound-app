@@ -157,13 +157,21 @@ void FxSystemTrayView::setStatus(bool power, bool processing)
 
     String param = power ? TRANS(L"on") : TRANS(L"off");
 
+    auto& model = FxModel::getModel();
+    String preset_name = model.getPreset(model.getSelectedPreset()).name;
+
     wchar_t tool_tip[1024];
     swprintf_s(tool_tip, String(TRANS("FxSound is %s.")).toWideCharPointer(), param.toWideCharPointer());
 	wcscat_s(tool_tip, 1024, L"\n\n");
     wcscat_s(tool_tip, 1024, String(TRANS("Output: ")).toWideCharPointer());
-    auto& model = FxModel::getModel();
 	String output_device_name = model.getSelectedOutput().deviceFriendlyName.c_str();
 	wcscat_s(tool_tip, 1024, output_device_name.toWideCharPointer());
+    if (preset_name.isNotEmpty())
+    {
+        wcscat_s(tool_tip, 1024, L"\n");
+        wcscat_s(tool_tip, 1024, String(TRANS("Preset: ")).toWideCharPointer());
+        wcscat_s(tool_tip, 1024, preset_name.toWideCharPointer());
+    }
 
     NOTIFYICONDATA nid = { sizeof(nid) };
 
@@ -201,9 +209,16 @@ void FxSystemTrayView::setStatus(bool power, bool processing)
 
     Shell_NotifyIcon(NIM_MODIFY, &nid);
 #else
-    // Linux: the SNI icon is theme-based and static for now; nothing to update
-    // per power/processing state here. (Icon-state variants are a follow-up.)
-    ignoreUnused(power, processing);
+    ignoreUnused(processing);
+    if (tray_sni_)
+    {
+        auto& model = FxModel::getModel();
+        String preset_name = model.getPreset(model.getSelectedPreset()).name;
+        String title = String("FxSound ") + (power ? TRANS("on") : TRANS("off"));
+        if (preset_name.isNotEmpty())
+            title += "\n" + TRANS("Preset: ") + preset_name;
+        tray_sni_->setTitle(title.toStdString());
+    }
 #endif
 }
 
@@ -255,7 +270,7 @@ Point<int> FxSystemTrayView::getSystemTrayWindowPosition(int width, int height)
     }
 #else
     // Linux: no tray-rect query; anchor the notification to the primary
-    // display's top-right corner (M5 refines against the real tray location).
+    // display's top-right corner.
     auto display = Desktop::getInstance().getDisplays().getPrimaryDisplay();
     if (display != nullptr)
     {

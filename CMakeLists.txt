@@ -22,10 +22,6 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # ---- Options --------------------------------------------------------------
-# M0 bootstrap: stub the DSP and audio backends so the GUI compiles & launches.
-# Later milestones flip these on to build the real ported DSP (M1) and the
-# PipeWire backend (M2/M3).
-# DSP is ported (M1) and the PipeWire backend works (M2-M4): default to both.
 option(FXSOUND_STUB_DSP        "Use stub DfxDsp instead of the ported engine"    OFF)
 option(FXSOUND_STUB_AUDIO      "Use stub AudioPassthru instead of PipeWire"       OFF)
 
@@ -48,7 +44,7 @@ if(FXSOUND_STUB_DSP)
     add_library(DfxDsp STATIC ${FX_ROOT}/linux/stubs/DfxDsp_stub.cpp)
     target_include_directories(DfxDsp PUBLIC ${FX_ROOT}/dsp/include)
 else()
-    # M1 wires the real ported DSP sources here.
+
     include(${FX_ROOT}/dsp/DfxDsp.cmake)
 endif()
 
@@ -60,7 +56,7 @@ if(FXSOUND_STUB_AUDIO)
     target_include_directories(AudioPassthru PUBLIC ${FX_ROOT}/audiopassthru/include)
     target_link_libraries(AudioPassthru PUBLIC DfxDsp)
 else()
-    # M2/M3 wire the real PipeWire backend here.
+
     include(${FX_ROOT}/audiopassthru/AudioPassthruLinux.cmake)
 endif()
 
@@ -138,7 +134,7 @@ target_include_directories(FxSound PRIVATE ${GUI_DEPS_INCLUDE_DIRS})
 target_compile_options(FxSound PRIVATE ${GUI_DEPS_CFLAGS_OTHER})
 
 # ===========================================================================
-#  Install (M6) — standard freedesktop layout
+#  Install — standard freedesktop layout
 # ===========================================================================
 include(GNUInstallDirs)
 

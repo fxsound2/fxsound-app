@@ -56,6 +56,9 @@ public:
     // Push a new menu tree; thread-safe, signals LayoutUpdated to the host.
     void updateMenu(MenuItem root);
 
+    // Update the SNI Title property (shown as tooltip by many panel implementations).
+    void setTitle(const std::string& title);
+
     // Icon helpers (same semantics as before).
     void setIconName(const std::string& icon_name);
     void setIconThemePath(const std::string& path);

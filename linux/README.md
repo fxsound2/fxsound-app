@@ -6,22 +6,10 @@ Linux + PipeWire.
 
 ## Status
 
-All core milestones are complete. The app builds, installs, and runs on
-PipeWire-based distros (Arch, Fedora 34+, Ubuntu 22.04+, etc.).
+The app builds, installs, and runs on PipeWire-based distros (Arch, Fedora
+34+, Ubuntu 22.04+, etc.).
 
-| Milestone | What shipped |
-|-----------|-------------|
-| **M0** | Linux CMake bootstrap. JUCE GUI compiles and launches. |
-| **M1** | DfxDsp ported. Real DSP engine builds on Linux; verified with `dsp_selftest`. |
-| **M2** | PipeWire backend. Stereo `FxSound` node created via libpipewire with realtime callback. |
-| **M3** | DSP wired into the PipeWire callback (interleave → int16 → `processAudio` → float). |
-| **M4** | Device management. Registry-driven enumeration, selection, and hot-plug via PipeWire link factory. |
-| **M5** | GUI platform parity. Tray icon via `org.kde.StatusNotifierItem` + `com.canonical.dbusmenu` (GDBus) — full Windows context-menu parity on Wayland panels (Waybar, KDE Plasma). Autostart via `~/.config/autostart/fxsound.desktop`. Signal-based crash handler (`sigaction` + `backtrace_symbols_fd`). |
-| **M6** | Packaging. CMake install rules (freedesktop layout), AppImage (`packaging/build-appimage.sh`), AUR PKGBUILD. |
-| **M7** | Preset handling. Factory presets resolved exe-relative; Windows backslash paths made portable. Bug fixes: EQ band frequency control, digital clipping guard, import/export path separators. |
-
-**Deferred:** Global hotkeys. Settings UI and persistence are cross-platform;
-OS-level key grabbing requires an X11 `XGrabKey` backend and an
+**Note:** Global hotkeys require an X11 `XGrabKey` backend or an
 xdg-desktop-portal `GlobalShortcuts` backend for Wayland. Tracked for a
 follow-up PR.
 

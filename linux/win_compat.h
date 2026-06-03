@@ -8,10 +8,6 @@ This header deliberately provides TYPES ONLY (plus a couple of constants used in
 class-scope constexpr initializers). It does NOT fake the Win32 *functions*
 (RegisterHotKey, Shell_NotifyIcon, CoInitializeEx, MiniDumpWriteDump, ...).
 Every call site for those is guarded with `#ifdef _WIN32`; the Linux side gets a
-proper implementation in later milestones:
-  - global hotkeys / session notifications -> M5 (FxController)
-  - system tray (StatusNotifierItem)        -> M5 (FxSystemTrayView)
-  - crash handler (signal/backtrace)         -> M5 (Main)
 */
 
 #ifndef FXSOUND_WIN_COMPAT_H
@@ -84,7 +80,7 @@ struct GUID {
 //
 // The hotkey *settings* logic (validation, persistence) in FxController is
 // platform-neutral and we keep it compiling/working. Only the OS-level
-// registration is a no-op on Linux until M5 wires X11/portal global hotkeys.
+
 // These are intentionally trivial leaf shims, not a real Win32 emulation.
 // ---------------------------------------------------------------------------
 #ifndef MOD_ALT
