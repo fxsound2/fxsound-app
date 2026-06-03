@@ -1,0 +1,35 @@
+# Maintainer: FxSound community
+pkgname=fxsound
+pkgver=1.2.8.0
+pkgrel=1
+pkgdesc="Real-time audio enhancer and equalizer (Linux/PipeWire port)"
+arch=('x86_64' 'aarch64')
+url="https://github.com/fxsound2/fxsound-app"
+license=('AGPL3')
+depends=('pipewire' 'libx11' 'libxext' 'libxinerama' 'libxrandr' 'libxcursor'
+         'freetype2' 'fontconfig' 'mesa' 'alsa-lib')
+makedepends=('cmake' 'ninja' 'git')
+source=("git+https://github.com/fxsound2/fxsound-app.git#branch=main"
+        "juce::git+https://github.com/juce-framework/JUCE.git#tag=6.1.6")
+sha256sums=('SKIP' 'SKIP')
+
+prepare() {
+    cd "$srcdir/fxsound-app"
+    git submodule update --init Resources
+    # Provide JUCE where the build expects it.
+    rm -rf third_party/JUCE
+    cp -r "$srcdir/juce" third_party/JUCE
+}
+
+build() {
+    cd "$srcdir/fxsound-app"
+    cmake -S . -B build -G Ninja \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr
+    cmake --build build
+}
+
+package() {
+    cd "$srcdir/fxsound-app"
+    DESTDIR="$pkgdir" cmake --install build
+}
