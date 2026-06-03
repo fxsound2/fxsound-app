@@ -497,7 +497,12 @@ float DfxDspPrivate::getEqBandBoostCut(int band_num)
 
 void DfxDspPrivate::setEqBandBoostCut(int band_num, float boost)
 {
-	update_from_registry_ = true;
-
+	// Write both memory (filter coefficients) and registry atomically before
+	// letting the audio thread see update_from_registry_=true.  If we set the
+	// flag first, the PipeWire RT thread can call eqUpdateFromRegistry between
+	// the memory write and the registry write, see a mismatch (memory=new,
+	// registry=old), and reset the filter back to 0 -- leaving the flag false
+	// so the reset is never corrected.
 	dfxpEqSetBandBoostCut(dfxp_handle_, DFXP_STORAGE_TYPE_ALL, band_num + 1, boost);
+	update_from_registry_ = false;
 }

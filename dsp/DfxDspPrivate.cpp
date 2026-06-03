@@ -221,9 +221,10 @@ void DfxDspPrivate::powerOn(bool on)
 bool DfxDspPrivate::isPowerOn()
 {
 	int value;
-	
+
 	dfxpGetButtonValue(dfxp_handle_, DFX_UI_BUTTON_BYPASS, &value);
-	if (value != 0)
+	// bypass=0 means NOT bypassed = power ON; bypass=1 means bypassed = power OFF
+	if (value == 0)
 	{
 		return true;
 	}
