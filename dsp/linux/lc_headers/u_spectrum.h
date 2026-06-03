@@ -1,1 +1,0 @@
-/home/nyverino/Documents/fxsound-app/dsp/ptutil/DspUtil/spectrum/u_spectrum.h

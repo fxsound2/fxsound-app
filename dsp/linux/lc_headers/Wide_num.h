@@ -1,1 +1,0 @@
-/home/nyverino/Documents/fxsound-app/dsp/ptechDsp/wide/Wide16/Wide_num.h

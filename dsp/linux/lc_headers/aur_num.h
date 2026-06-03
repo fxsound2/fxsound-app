@@ -1,1 +1,0 @@
-/home/nyverino/Documents/fxsound-app/dsp/ptechDsp/Aural/Aural0/Aur_num.h

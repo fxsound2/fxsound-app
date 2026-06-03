@@ -1,1 +1,0 @@
-/home/nyverino/Documents/fxsound-app/dsp/ptutil/Qnt/u_qnt.h
