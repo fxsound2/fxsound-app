@@ -16,9 +16,9 @@
  * DESCRIPTION: Get Analog Inputs 1 and 2 (Left and Right)
  * Note that this input function uses the MSB's to hold the value.  This
  * causes the signal to be clipped automatically when assigned from a
- * float back to a long if the float value is out of range of the long.
- * float representation of max long is 2.1474836e9
- * Max positive long is 2147483647 . Max negative int appears to be -2147483647
+ * float back to a int32_t if the float value is out of range of the int32_t.
+ * float representation of max int32_t is 2.1474836e9
+ * Max positive int32_t is 2147483647 . Max negative int appears to be -2147483647
  * when assigned from a more negative float.
  */
 /* Faster way is to rotate number and use carry detect, as in
@@ -36,7 +36,7 @@
                                                               
 #ifdef DUIO_D /* AES VERSION - is_output_ready() is defined to NULL */
 #define dutilGetInputsAndMeter(r1, r2, imeter1, imeter2, ometer1, ometer2) \
-if( *(volatile long *)(DSP_STEREO_IN_FLAG) ) \
+if( *(volatile int32_t *)(DSP_STEREO_IN_FLAG) ) \
 { \
   is_input_ready(); \
   imeter2 = ser_adr->rcv_data; \
@@ -61,9 +61,9 @@ else \
 /* Pure analog version */
 #define dutilGetInputsAndMeter(r1, r2, imeter1, imeter2, ometer1, ometer2) \
 is_input_ready(); \
-if( *(volatile long *)(DSP_STEREO_IN_FLAG) ) \
+if( *(volatile int32_t *)(DSP_STEREO_IN_FLAG) ) \
 { \
-  imeter1 = *(volatile unsigned long *) AD_DATA_REG; \
+  imeter1 = *(volatile uint32_t *) AD_DATA_REG; \
   imeter2 = imeter1; \
   imeter1 &= 0xFFFF0000; \
   imeter2 <<= 16; \
@@ -72,7 +72,7 @@ if( *(volatile long *)(DSP_STEREO_IN_FLAG) ) \
 } \
 else \
 { \
-  imeter1 = *(volatile unsigned long *) AD_DATA_REG; \
+  imeter1 = *(volatile uint32_t *) AD_DATA_REG; \
   imeter1 &= 0xFFFF0000; \
   r1 = r2 = imeter1; \
   imeter2 = 0L; \
@@ -85,7 +85,7 @@ else \
 #if defined(DUIO_B)
 /* Pure buffered i/o version (wave, saw track only, direct x track only */
 #define dutilGetInputsAndMeter(r1, r2, imeter1, imeter2, ometer1, ometer2) \
-if( *(volatile long *)(DSP_STEREO_IN_FLAG) ) \
+if( *(volatile int32_t *)(DSP_STEREO_IN_FLAG) ) \
 { \
   imeter1 = read_in_buf[data_index]; \
   imeter2 = imeter1; \
@@ -112,7 +112,7 @@ else \
 #if (PT_DSP_BUILD == PT_DSP_DSPFX)
 #if defined(DSPSOFT_32_BIT)
 #define dutilGetInputsAndMeter(in1, in2, status)\
-if( *(volatile long *)(DSP_STEREO_IN_FLAG) )\
+if( *(volatile int32_t *)(DSP_STEREO_IN_FLAG) )\
 {\
   float r_tmp;\
   in1 = ((float *)read_in_buf)[data_index];\
@@ -137,7 +137,7 @@ else\
 }
 #else /* 16 bit I/O case */
 #define dutilGetInputsAndMeter(in1, in2, status)\
-if( *(volatile long *)(DSP_STEREO_IN_FLAG) )\
+if( *(volatile int32_t *)(DSP_STEREO_IN_FLAG) )\
 {\
   float r_tmp;\
   short int *short_in = (short int *)&(read_in_buf[data_index]);\
@@ -171,7 +171,7 @@ else\
 #if defined(DSPSOFT_TARGET)
 #if (PT_DSP_BUILD == PT_DSP_DFX)
 #define dutilGetInputsAndMeter(in1, in2, status)\
-if( *(volatile long *)(DSP_STEREO_IN_FLAG) )\
+if( *(volatile int32_t *)(DSP_STEREO_IN_FLAG) )\
 {\
   in1 = ((float *)read_in_buf)[data_index];\
   in2 = ((float *)read_in_buf)[data_index + 1];\
@@ -189,8 +189,8 @@ else\
  */
 #define dutilGetInputsAndMeter(r1, r2, imeter1, imeter2, ometer1, ometer2) \
 is_input_ready(); \
-imeter1 = *(volatile unsigned long *) AD_DATA_REG; \
-if( *(volatile long *)(DSP_STEREO_IN_FLAG) ) \
+imeter1 = *(volatile uint32_t *) AD_DATA_REG; \
+if( *(volatile int32_t *)(DSP_STEREO_IN_FLAG) ) \
 { \
   imeter1 = read_in_buf[data_index]; \
   imeter2 = imeter1; \
@@ -245,18 +245,18 @@ ser_adr->xmit_data = ometer1;
 #ifndef BM
 #ifdef DUIO_D
 #define is_input_ready() \
-	 while( ((*(volatile unsigned long *) AD_CNTRL_REG)&0x0001) == 0) INPUT_WAIT_COUNT;
+	 while( ((*(volatile uint32_t *) AD_CNTRL_REG)&0x0001) == 0) INPUT_WAIT_COUNT;
 #define is_output_ready() ; /* Currently assumming output frame sync matches input */
 #endif
 #if (defined(DUIO_A) | defined(DUIO_BA))
 #define is_input_ready() \
-	 while( ((*(volatile unsigned long *) AD_CNTRL_REG)&0x0001) == 0) INPUT_WAIT_COUNT;
+	 while( ((*(volatile uint32_t *) AD_CNTRL_REG)&0x0001) == 0) INPUT_WAIT_COUNT;
 #define is_output_ready() \
-	 while( ((*(volatile unsigned long *) AD_CNTRL_REG)&0x0002) == 0) OUTPUT_WAIT_COUNT;
+	 while( ((*(volatile uint32_t *) AD_CNTRL_REG)&0x0002) == 0) OUTPUT_WAIT_COUNT;
 #endif
 #if (defined(DUIO_B) | defined(DUIO_BA))
 #define is_input_ready() \
-	 while( ((*(volatile unsigned long *) AD_CNTRL_REG)&0x0001) == 0) INPUT_WAIT_COUNT;
+	 while( ((*(volatile uint32_t *) AD_CNTRL_REG)&0x0001) == 0) INPUT_WAIT_COUNT;
 #endif	 
 #else /* BM (benchmarking) is defined */
 #define is_input_ready() ;
@@ -269,7 +269,7 @@ ser_adr->xmit_data = ometer1;
 /* Without left and right shifts on i_val1, got wrap around on positive clip */
 #define dutilPutOutputs(r_val1, r_val2) \
 { \
-	 long int i_val1_MACRO, i_val2_MACRO; \
+	 int32_t int i_val1_MACRO, i_val2_MACRO; \
 	 i_val1_MACRO = r_val1; \
 	 i_val1_MACRO >>= 16; \
 	 i_val1_MACRO <<= 16; \
@@ -277,7 +277,7 @@ ser_adr->xmit_data = ometer1;
 	 i_val2_MACRO >>= 16; \
 	 i_val2_MACRO &= 0x0000FFFF; \
 	 i_val1_MACRO |= i_val2_MACRO; \
-	 *(volatile unsigned long *) DA_DATA_REG = i_val1_MACRO; \
+	 *(volatile uint32_t *) DA_DATA_REG = i_val1_MACRO; \
 }
 
 /* Note- based on compiler option, float to int conversion can
@@ -295,7 +295,7 @@ ser_adr->xmit_data = ometer1;
 #ifdef DUIO_A
 #define dutilPutOutputsAndMeter(r_val1, r_val2, ometer1, ometer2) \
 { \
-	 long int i_val1_MACRO, i_val2_MACRO; \
+	 int32_t int i_val1_MACRO, i_val2_MACRO; \
 	 ometer1 = i_val1_MACRO = r_val1; \
 	 ometer2 = i_val2_MACRO = r_val2; \
 	 i_val1_MACRO >>= 16; \
@@ -303,7 +303,7 @@ ser_adr->xmit_data = ometer1;
 	 i_val2_MACRO >>= 16; \
 	 i_val2_MACRO &= 0x0000FFFF; \
 	 i_val1_MACRO |= i_val2_MACRO; \
-	 *(volatile unsigned long *) DA_DATA_REG = i_val1_MACRO; \
+	 *(volatile uint32_t *) DA_DATA_REG = i_val1_MACRO; \
 }
 #endif /* DUIO_A */
 
@@ -311,9 +311,9 @@ ser_adr->xmit_data = ometer1;
 #if defined(DUIO_B)
 #define dutilPutOutputsAndMeter(r_val1, r_val2, ometer1, ometer2) \
 { \
-	 long int i_val1_MACRO, i_val2_MACRO; \
-	 ometer1 = i_val1_MACRO = (long)r_val1; \
-	 ometer2 = i_val2_MACRO = (long)r_val2; \
+	 int32_t int i_val1_MACRO, i_val2_MACRO; \
+	 ometer1 = i_val1_MACRO = (int32_t)r_val1; \
+	 ometer2 = i_val2_MACRO = (int32_t)r_val2; \
 	 i_val2_MACRO >>= 16; \
   	 out_meter2_dma += labs(i_val2_MACRO); \
 	 i_val2_MACRO <<= 16; \
@@ -334,7 +334,7 @@ ser_adr->xmit_data = ometer1;
 #if defined(DSPSOFT_TARGET) & (PT_DSP_BUILD == PT_DSP_DSPFX)
 #if defined(DSPSOFT_32_BIT)
 #define dutilPutOutputsAndMeter(r_val1, r_val2, status)\
-if( *(volatile long *)(DSP_STEREO_IN_FLAG) )\
+if( *(volatile int32_t *)(DSP_STEREO_IN_FLAG) )\
 {\
 	 float r_tmp;\
 	 ((float *)read_out_buf)[data_index++] = r_val1;\
@@ -360,7 +360,7 @@ else\
 }
 #else /* 16 bit I/O */
 #define dutilPutOutputsAndMeter(r_val1, r_val2, status)\
-if( *(volatile long *)(DSP_STEREO_IN_FLAG) )\
+if( *(volatile int32_t *)(DSP_STEREO_IN_FLAG) )\
 {\
 	 float r_tmp;\
 	 short int *short_out = (short int *)&(read_out_buf[data_index]);\
@@ -413,7 +413,7 @@ else\
 /* Note that we only need to handle 32 float case. */
 #if defined(DSPSOFT_TARGET) & (PT_DSP_BUILD == PT_DSP_DFX)
 #define dutilPutOutputsAndMeter(r_val1, r_val2, status)\
-if( *(volatile long *)(DSP_STEREO_IN_FLAG) )\
+if( *(volatile int32_t *)(DSP_STEREO_IN_FLAG) )\
 {\
 	 ((float *)read_out_buf)[data_index++] = r_val1;\
 	 ((float *)read_out_buf)[data_index++] = r_val2;\
@@ -426,14 +426,14 @@ else\
 #endif /* DSPSOFT_TARGET, DFX CASE */
 
 #ifdef DUIO_BA
-/* Note- Wave file format regards upper 16 bits of long as right
+/* Note- Wave file format regards upper 16 bits of int32_t as right
  * channel(in2) and lower 16 bits as left channel (in1). This
  * is reverse of what we need to play them on the DSP/FX codec,
  * so they are reversed in this macro.
  */
 #define dutilPutOutputsAndMeter(r_val1, r_val2, ometer1, ometer2) \
 { \
-	 long int i_val1_MACRO, i_val2_MACRO; \
+	 int32_t int i_val1_MACRO, i_val2_MACRO; \
 	 ometer1 = i_val1_MACRO = r_val1; \
 	 ometer2 = i_val2_MACRO = r_val2; \
 	 i_val1_MACRO >>= 16; \
@@ -443,7 +443,7 @@ else\
   	 out_meter2_dma += labs(i_val2_MACRO); \
 	 i_val2_MACRO &= 0x0000FFFF; \
 	 i_val1_MACRO |= i_val2_MACRO; \
-	 *(volatile unsigned long *) DA_DATA_REG = i_val1_MACRO; \
+	 *(volatile uint32_t *) DA_DATA_REG = i_val1_MACRO; \
 	 if( data_index < (dma_buf_size)) \
 	  	data_index++; \
 }

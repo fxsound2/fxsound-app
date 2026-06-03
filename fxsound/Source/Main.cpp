@@ -17,22 +17,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <JuceHeader.h>
+#ifdef _WIN32
 #include <comdef.h>
+#endif
 #include "GUI/FxSystemTrayView.h"
 #include "GUI/FxController.h"
 #include "GUI/FxTheme.h"
 #include "GUI/FxMainWindow.h"
 #include "AudioPassthru.h"
+#ifdef _WIN32
 #include <dbghelp.h>
-
 #pragma comment(lib, "dbghelp.lib")
+#else
+#include <csignal>
+#include <cstring>
+#include <execinfo.h>
+#include <unistd.h>
+#include <fcntl.h>
+#endif
 
 // Do not use high-performance GPU on laptops with dual graphics adapters
+#ifdef _WIN32
 extern "C" {
     __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000000;
 
     __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 0;
 }
+#endif
 
 //==============================================================================
 class FxSoundApplication : public JUCEApplication
@@ -51,6 +62,7 @@ public:
         // This method is where you should put your application's initialisation code..
         try
         {
+#ifdef _WIN32
             SetUnhandledExceptionFilter(unhandledExceptionFilter);
 
             HRESULT hRes = CoInitializeEx(0, COINIT_MULTITHREADED);
@@ -59,7 +71,10 @@ public:
                 CoInitializeSecurity(NULL, -1, NULL, NULL, RPC_C_AUTHN_LEVEL_DEFAULT,
                     RPC_C_IMP_LEVEL_IMPERSONATE, NULL, EOAC_NONE, NULL);
             }
-            
+#else
+            installCrashHandler();
+#endif
+
             LookAndFeel::setDefaultLookAndFeel(&theme_);
 
             setWorkingDirectory();
@@ -117,7 +132,9 @@ public:
 
         LookAndFeel::setDefaultLookAndFeel(nullptr);
 
+#ifdef _WIN32
         CoUninitialize();
+#endif
     }
 
     //==============================================================================
@@ -138,6 +155,7 @@ private:
     FxTheme theme_;
     static constexpr int MAX_FRAMES = 64;
 
+#ifdef _WIN32
     static LONG WINAPI unhandledExceptionFilter(EXCEPTION_POINTERS* exception_info)
     {
         auto& controller = FxController::getInstance();
@@ -196,7 +214,7 @@ private:
 
         if (context == nullptr)
         {
-            // No crash context — capture live callstack
+            // No crash context ï¿½ capture live callstack
             void* frames[MAX_FRAMES];
             USHORT capturedFrames = CaptureStackBackTrace(0, MAX_FRAMES, frames, NULL);
 
@@ -228,7 +246,7 @@ private:
         }
         else
         {
-            // Crash context — walk using StackWalk64
+            // Crash context ï¿½ walk using StackWalk64
             STACKFRAME64 stackFrame = { 0 };
 #if defined(_M_IX86)
             DWORD machineType = IMAGE_FILE_MACHINE_I386;
@@ -300,9 +318,56 @@ private:
 
         controller.logMessage(stacktrace_info);
     }
+#else  // !_WIN32
+    static void CaptureAndLogCallStack()
+    {
+        FxController::getInstance().logMessage("\n" + SystemStats::getStackBacktrace());
+    }
+
+    // Async-signal-safe-ish fatal handler: dump a native backtrace to a crash
+    // log and stderr, then re-raise with the default disposition so the OS can
+    // still produce a core dump.
+    static void fatalSignalHandler(int sig)
+    {
+        const char* name = strsignal(sig);
+        auto crashDir = File::getSpecialLocation(File::userApplicationDataDirectory).getChildFile("FxSound");
+        crashDir.createDirectory();
+        auto crashFile = crashDir.getChildFile("fxsound-crash.log");
+
+        void* frames[64];
+        int n = backtrace(frames, 64);
+
+        int fd = ::open(crashFile.getFullPathName().toRawUTF8(),
+                        O_WRONLY | O_CREAT | O_APPEND, 0644);
+        if (fd >= 0)
+        {
+            ::write(fd, "\n--- FxSound crash: ", 20);
+            if (name) ::write(fd, name, strlen(name));
+            ::write(fd, " ---\n", 5);
+            backtrace_symbols_fd(frames, n, fd);
+            ::close(fd);
+        }
+        backtrace_symbols_fd(frames, n, STDERR_FILENO);
+
+        signal(sig, SIG_DFL);
+        ::raise(sig);
+    }
+
+    static void installCrashHandler()
+    {
+        struct sigaction sa;
+        memset(&sa, 0, sizeof(sa));
+        sa.sa_handler = fatalSignalHandler;
+        sa.sa_flags = SA_RESETHAND;
+        sigemptyset(&sa.sa_mask);
+        for (int sig : { SIGSEGV, SIGABRT, SIGFPE, SIGILL, SIGBUS })
+            sigaction(sig, &sa, nullptr);
+    }
+#endif // _WIN32
 
     void setWorkingDirectory()
     {
+#ifdef _WIN32
         wchar_t module_file[MAX_PATH];
         DWORD length = GetModuleFileName(NULL, module_file, MAX_PATH);
         if (length > 0)
@@ -314,6 +379,10 @@ private:
                 SetCurrentDirectory(path.substr(0, pos).c_str());
             }
         }
+#else
+        auto exe_dir = File::getSpecialLocation(File::currentExecutableFile).getParentDirectory();
+        exe_dir.setAsCurrentWorkingDirectory();
+#endif
     };
 
     std::unique_ptr<FxMainWindow> main_window_;

@@ -24,7 +24,7 @@
 	  r_out = *rp_data; \
 	  *rp_data = r_in + *(volatile float *)rp_feedback_gain * (*rp_data); \
 	  rp_data++; \
-	  if(rp_data >= ((float *)rp_start + *(volatile long *)ip_delay) ) \
+	  if(rp_data >= ((float *)rp_start + *(volatile int32_t *)ip_delay) ) \
 	  { \
 		 rp_data = (float *)rp_start; \
 	  }
@@ -63,7 +63,7 @@
 { \
 	float *rp_MACRO; \
 	rp_MACRO = (float *)(rp_data - i_delay ); \
-	if((long)rp_MACRO < (long)rp_start) \
+	if((int32_t)rp_MACRO < (int32_t)rp_start) \
 		rp_MACRO += (i_line_len); \
 	r_out = *rp_MACRO; \
 	*rp_data = r_in; \
@@ -87,8 +87,8 @@
 #define kerRunDelayLineFdBkNoPop(r_in, r_out, rp_start, rp_data, ip_del, rp_fdbk, i_line_len) \
 { \
 	float *rp_MACRO; \
-	rp_MACRO = (float *)(rp_data - *(volatile long *)ip_del ); \
-	if((long)rp_MACRO < (long)rp_start) \
+	rp_MACRO = (float *)(rp_data - *(volatile int32_t *)ip_del ); \
+	if((int32_t)rp_MACRO < (int32_t)rp_start) \
 		rp_MACRO += (i_line_len); \
 	r_out = *rp_MACRO; \
 	*rp_data = r_in + *(volatile float *)rp_fdbk * r_out; \
@@ -113,8 +113,8 @@
 #define kerRunDelayLineFdBkNoPopRev(r_in, r_out, rp_start, rp_data, i_del, r_fdbk, i_line_len) \
 { \
 	float *rp_MACRO; \
-	rp_MACRO = (float *)(rp_data - (long)i_del ); \
-	if((long)rp_MACRO < (long)rp_start) \
+	rp_MACRO = (float *)(rp_data - (int32_t)i_del ); \
+	if((int32_t)rp_MACRO < (int32_t)rp_start) \
 		rp_MACRO += (i_line_len); \
 	r_out = *rp_MACRO; \
 	*rp_data = r_in + (float)r_fdbk * r_out; \
@@ -132,7 +132,7 @@
 	  r_out = *rp_data; \
 	  *rp_data = r_in; \
 	  rp_data++; \
-	  if(rp_data >= ((float *)rp_start + *(volatile long *)ip_delay) ) \
+	  if(rp_data >= ((float *)rp_start + *(volatile int32_t *)ip_delay) ) \
 	  { \
 		 rp_data = (float *)rp_start; \
 	  }
@@ -164,14 +164,14 @@
  * NOTE-BE CAREFUL WHEN SUBTRACTING FROM POINTERS, THEY ARE UNSIGNED
  */
 #define kerGetDelayData(rp_start, i_line_len, rp_oldest, ip_delay, rp_out) \
-	rp_out = (float *)(rp_oldest - *(volatile long *)ip_delay ); \
-	if((long)rp_out < (long)rp_start) \
+	rp_out = (float *)(rp_oldest - *(volatile int32_t *)ip_delay ); \
+	if((int32_t)rp_out < (int32_t)rp_start) \
 		rp_out += i_line_len;
 		
 /* This is similar to above, but gets value directly instead of via a delay pointers */
 #define kerGetDelayDataDirect(rp_start, i_line_len, rp_oldest, i_delay, rp_out) \
-	rp_out = (float *)(rp_oldest - (long )i_delay ); \
-	if((long)rp_out < (long)rp_start) \
+	rp_out = (float *)(rp_oldest - (int32_t )i_delay ); \
+	if((int32_t)rp_out < (int32_t)rp_start) \
 		rp_out += i_line_len;
 
 /*
@@ -224,7 +224,7 @@
 	  r_tmp = (r_out = *rp_data) + r_filt_coef * r_tmp; \
 	  *rp_data = r_in + *(volatile float *)rp_feedback_gain * r_tmp; \
 	  rp_data++; \
-	  if(rp_data >= ((float *)rp_start + *(volatile long *)ip_delay) ) \
+	  if(rp_data >= ((float *)rp_start + *(volatile int32_t *)ip_delay) ) \
 		 rp_data = (float *)rp_start; \
 
 /* This version references the filter coeff via a pointer */ 
@@ -235,7 +235,7 @@
 	  r_tmp = r_out + *(volatile float *)rp_filt_coef * r_tmp; \
 	  *rp_data = r_in + *(volatile float *)rp_feedback_gain * r_tmp; \
 	  rp_data++; \
-	  if(rp_data >= ((float *)rp_start + *(volatile long *)ip_delay) ) \
+	  if(rp_data >= ((float *)rp_start + *(volatile int32_t *)ip_delay) ) \
 		 rp_data = (float *)rp_start; \
 */		
 /* Version that requires endpoint of circular buffer be supplied, not just the length */		 
@@ -245,7 +245,7 @@
 	  r_tmp = r_out + *(volatile float *)rp_filt_coef * r_tmp; \
 	  *rp_data = r_in + *(volatile float *)rp_feedback_gain * r_tmp; \
 	  rp_data++; \
-	  if(rp_data >= (float *)*(volatile long *)ip_delay ) \
+	  if(rp_data >= (float *)*(volatile int32_t *)ip_delay ) \
 		 rp_data = (float *)rp_start; \
 
 /*
@@ -283,7 +283,7 @@
 	  r_out = *rp_data + r_tmp_MACRO; \
 	  *rp_data = r_in + r_tmp_MACRO; \
 	  rp_data++; \
-	  if(rp_data >= ((float *)rp_start + *(volatile long *)ip_delay) ) \
+	  if(rp_data >= ((float *)rp_start + *(volatile int32_t *)ip_delay) ) \
 		 rp_data = (float *)rp_start; \
 }
  

@@ -62,26 +62,26 @@ struct dspWideStructType
 {
 	/* Parameters common to all dsp functions */
 	/* Note- must occupy same 32 word locations as defines in Boardrv1.h */
-	long pc_to_dsp_flags;
-	long dsp_to_pc_flags;
-	long dsp_number_of_elements;
+	int32_t pc_to_dsp_flags;
+	int32_t dsp_to_pc_flags;
+	int32_t dsp_number_of_elements;
 	realtype dsp_sampling_freq;
-	long stereo_in_flag;
-	long dsp_mute_in_flag;
-	long unassigned6;
-	long unassigned7;
-	long unassigned8;
-	long unassigned9;
+	int32_t stereo_in_flag;
+	int32_t dsp_mute_in_flag;
+	int32_t unassigned6;
+	int32_t unassigned7;
+	int32_t unassigned8;
+	int32_t unassigned9;
 	realtype dry_gain;
 	realtype wet_gain;
 	realtype master_gain;
-	long dsp_dma_in_transfer;
-	long unassigned14;
-	long unassigned15;
-	long unassigned16;
-	long unassigned17;
-	long unassigned18;
-	long unassigned19;
+	int32_t dsp_dma_in_transfer;
+	int32_t unassigned14;
+	int32_t unassigned15;
+	int32_t unassigned16;
+	int32_t unassigned17;
+	int32_t unassigned18;
+	int32_t unassigned19;
 
 	/* Note- algorithm specific parameters must occupy same 32 word locations
 	 * as defines above.
@@ -89,14 +89,14 @@ struct dspWideStructType
 	realtype intensity;
 	realtype width;
 	realtype reverse_width;
-	long dispersion_l;
-	long dispersion_r;
+	int32_t dispersion_l;
+	int32_t dispersion_r;
 	realtype center_gain;
-	long center_depth;
+	int32_t center_depth;
 	realtype gain;
 	realtype a1;
 	realtype a0;
-	long bypass_flag;
+	int32_t bypass_flag;
 
 	/* Algorithm state variables */
 	realtype *ptr_l;

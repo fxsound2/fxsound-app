@@ -135,7 +135,7 @@ int PT_DECLSPEC pstrCalcFilenameFromFullpath_Wide(wchar_t *wcp_fullpath, wchar_t
 	/* If there is no slash, simply copy the fullpath to the filename */
 	if (!(*ip_filename_found))
 	{
-		swprintf(wcp_filename, L"%s", wcp_fullpath);
+		swprintf(wcp_filename, sizeof(wcp_filename)/sizeof(*(wcp_filename)), L"%s", wcp_fullpath);
 	}
    else
 	{

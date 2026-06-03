@@ -17,8 +17,8 @@
 
 /* Functions */ 
 /* huteep.c - DSP EEPROM related functions */
-int COMHRDWR_DECL comHrdEepromReadUlong(short unsigned board_address, short unsigned address, unsigned long *ulpdata);
-int COMHRDWR_DECL comHrdEepromWriteUlong(short unsigned board_address, short unsigned address, unsigned long uldata);
+int COMHRDWR_DECL comHrdEepromReadUlong(short unsigned board_address, short unsigned address, uint32_t *ulpdata);
+int COMHRDWR_DECL comHrdEepromWriteUlong(short unsigned board_address, short unsigned address, uint32_t uldata);
 
 /* hutbtld.c - Boots and Loads chosen DSP */
 int COMHRDWR_DECL hutBootLoad(char *file_name, unsigned short us_processor_num);

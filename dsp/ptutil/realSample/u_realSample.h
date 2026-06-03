@@ -32,10 +32,10 @@ struct realSampleHdlType {
 
 	/* Attributes */
 	int num_channels;
-	long samples_per_sec;
+	int32_t samples_per_sec;
 
 	/* Samples info */
-	long num_samples;
+	int32_t num_samples;
 	realtype *rp_samples;
 };
 

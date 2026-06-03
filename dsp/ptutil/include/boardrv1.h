@@ -92,12 +92,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Note that clipped longs received from Crystal 16 bit part via a DSP float
  * variable are +2147418112 -2147483648, as contrasted to 
- * max long values +/- 2147483647 defined in limit.h .
+ * max int32_t values +/- 2147483647 defined in limit.h .
  */
 #define LONG_OUTPUT_CLIP_LEVEL_CRYSTAL 2147418122L
 
-/* The clipped negative long number from the cystal 16 bit part.
- * Note that this is the max neg legal long - 1 (-2147483648 or 0x80000000).
+/* The clipped negative int32_t number from the cystal 16 bit part.
+ * Note that this is the max neg legal int32_t - 1 (-2147483648 or 0x80000000).
  */
 #define LONG_MAX_NEGATIVE_CRYSTAL 0x80000000
 

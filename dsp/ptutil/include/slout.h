@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /************************ 
  * FUNCTIONS            *
  ************************/
-int sloutDisplayFileAndLine(char *, long);
+int sloutDisplayFileAndLine(char *, int32_t);
 
 /************************ 
  * CLASSES              *
@@ -50,7 +50,7 @@ public:
 
    virtual int Display_Wide(int, wchar_t *);
 
-#if defined( WIN32 ) // Wide char functions only supported in WIN32 builds.
+#if defined( WIN32 ) || defined( __linux__ ) || defined( __APPLE__ ) // Wide char functions.
    virtual int Message_Wide(int, wchar_t *);
    virtual int Error_Wide(int, wchar_t *);
    virtual int Warning_Wide(int, wchar_t *);

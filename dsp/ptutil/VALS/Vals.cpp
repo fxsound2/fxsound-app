@@ -363,7 +363,7 @@ int PT_DECLSPEC valsCopy(PT_HANDLE *hp_from_vals, PT_HANDLE **hpp_to_vals)
 	     return(NOT_OKAY);
 
       /* Set the string */
-	  swprintf(cast_to_hdl->wcp_comment, L"%s", cast_from_hdl->wcp_comment);
+	  swprintf(cast_to_hdl->wcp_comment, sizeof(cast_to_hdl->wcp_comment)/sizeof(*(cast_to_hdl->wcp_comment)), L"%s", cast_from_hdl->wcp_comment);
    }
 
    /* Copy the main params */
@@ -574,7 +574,7 @@ int PT_DECLSPEC valsFreeUp(PT_HANDLE **hpp_vals)
 	{
 		if (cast_handle->i_trace_mode)
 		{
-			swprintf(cast_handle->wcp_msg1, L"valsFreeUp(): Calling GraphicEqFreeUp()");
+			swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"valsFreeUp(): Calling GraphicEqFreeUp()");
 			(cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 		}
 
@@ -618,34 +618,34 @@ int PT_DECLSPEC valsDump(PT_HANDLE *hp_vals)
 	if (cast_handle->slout_hdl == NULL)
        return(NOT_OKAY);
 
-	swprintf(cast_handle->wcp_msg1, L"Num Elements = %d\n", cast_handle->total_num_elements);
+	swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Num Elements = %d\n", cast_handle->total_num_elements);
 	cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 	
-	swprintf(cast_handle->wcp_msg1, L"File Version = %g\n", cast_handle->file_version);
+	swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"File Version = %g\n", cast_handle->file_version);
 	cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);	
 
 	if (cast_handle->wcp_comment == NULL)
-       swprintf(cast_handle->wcp_msg1, L"Comment is NULL\n");
+       swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Comment is NULL\n");
 	else
-	   swprintf(cast_handle->wcp_msg1, L"Comment: %s\n", cast_handle->wcp_comment);
+	   swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Comment: %s\n", cast_handle->wcp_comment);
 	cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
  
-	swprintf(cast_handle->wcp_msg1, L"Double Params = %d\n", cast_handle->double_params);
+	swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Double Params = %d\n", cast_handle->double_params);
 	cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);	 
 	
-	swprintf(cast_handle->wcp_msg1, L"Param Set = %d\n", cast_handle->param_set);
+	swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Param Set = %d\n", cast_handle->param_set);
 	cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);	 	
  
 	/* Display the main values */
 	for (param_index = 0; param_index < VALS_NUM_MAIN_PARAMS; param_index++)
 	{
-	   swprintf(cast_handle->wcp_msg1, L"MainParam[%d] = %d\n", param_index, 
+	   swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"MainParam[%d] = %d\n", param_index, 
 	           cast_handle->main_params[param_index]);
        cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);  
        
        if (cast_handle->double_params)
        {
-          swprintf(cast_handle->wcp_msg1, L"MainParam_2[%d] = %d\n", param_index, 
+          swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"MainParam_2[%d] = %d\n", param_index, 
 	              cast_handle->main_params_2[param_index]);
           cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);  
        }
@@ -658,13 +658,13 @@ int PT_DECLSPEC valsDump(PT_HANDLE *hp_vals)
 		for (param_index = 0; param_index < VALS_NUM_ELEMENT_PARAMS; 
 		     param_index++)
 		{
-		   swprintf(cast_handle->wcp_msg1, L"ElementParam[%d][%d] = %d\n", element_index, 
+		   swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"ElementParam[%d][%d] = %d\n", element_index, 
 		           param_index, cast_handle->element_params[element_index][param_index]);
 		   cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 	       
 	       if (cast_handle->double_params)
 	       {
-		      swprintf(cast_handle->wcp_msg1, L"ElementParam_2[%d][%d] = %d\n", element_index, 
+		      swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"ElementParam_2[%d][%d] = %d\n", element_index, 
 		              param_index, cast_handle->element_params_2[element_index][param_index]);
 		      cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);	      
 	       }
@@ -674,74 +674,74 @@ int PT_DECLSPEC valsDump(PT_HANDLE *hp_vals)
     /* Display the max info */
 	for (param_index = 0; param_index < VALS_NUM_ELEMENT_PARAMS; param_index++)
 	{
-	   swprintf(cast_handle->wcp_msg1, L"Max[%d].calc_flag = %d\n", param_index, 
+	   swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Max[%d].calc_flag = %d\n", param_index, 
 	      (cast_handle->max[param_index]).calc_flag);
 	   cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 
-	   swprintf(cast_handle->wcp_msg1, L"Max[%d].abs_flag = %d\n", param_index, 
+	   swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Max[%d].abs_flag = %d\n", param_index, 
 	      (cast_handle->max[param_index]).abs_flag);
 	   cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);	
 	  
-	   swprintf(cast_handle->wcp_msg1, L"Max[%d].value = %d\n", param_index, 
+	   swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Max[%d].value = %d\n", param_index, 
 	      (cast_handle->max[param_index]).value);
 	   cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 	  	
-	   swprintf(cast_handle->wcp_msg1, L"Max[%d].index = %d\n", param_index, 
+	   swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Max[%d].index = %d\n", param_index, 
 	      (cast_handle->max[param_index]).index);
        cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
     }
     
     /* Display max sum of 1 and 4 info */
-    swprintf(cast_handle->wcp_msg1, L"maxSum1_4.calc_flag = %d\n", 
+    swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"maxSum1_4.calc_flag = %d\n", 
             cast_handle->maxSum1_4.calc_flag);
 	cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 
-    swprintf(cast_handle->wcp_msg1, L"maxSum1_4.abs_flag = %d\n", 
+    swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"maxSum1_4.abs_flag = %d\n", 
             cast_handle->maxSum1_4.abs_flag);
 	cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
     
-    swprintf(cast_handle->wcp_msg1, L"maxSum1_4.sum_scale_val = %ld\n", 
+    swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"maxSum1_4.sum_scale_val = %ld\n", 
             cast_handle->maxSum1_4.sum_scale_val);
 	cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 
-    swprintf(cast_handle->wcp_msg1, L"maxSum1_4.index = %d\n", 
+    swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"maxSum1_4.index = %d\n", 
             cast_handle->maxSum1_4.index);
 	cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
-    swprintf(cast_handle->wcp_msg1, L"factor_1_to_4 = %d\n", 
+    swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"factor_1_to_4 = %d\n", 
             cast_handle->factor_1_to_4);
 	cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 
     /* Display the app dependent info */
-    swprintf(cast_handle->wcp_msg1, L"Number of App. Dependent ints: %d\n",
+    swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Number of App. Dependent ints: %d\n",
             cast_handle->app_depend.num_ints);
 	cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
     for (index = 0; index < cast_handle->app_depend.num_ints; index++)
     {
        if (valsGetAppDependentInt((PT_HANDLE *)cast_handle, index, &int_val) != OKAY)
           return(NOT_OKAY);     
-       swprintf(cast_handle->wcp_msg1, L"   int_vals[%d] = %d\n", index, int_val);
+       swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"   int_vals[%d] = %d\n", index, int_val);
        cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
     }
     
-    swprintf(cast_handle->wcp_msg1, L"Number of App. Dependent reals: %d\n",
+    swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Number of App. Dependent reals: %d\n",
             cast_handle->app_depend.num_reals);
 	cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
     for (index = 0; index < cast_handle->app_depend.num_reals; index++)
     {
        if (valsGetAppDependentReal((PT_HANDLE *)cast_handle, index, &real_val) != OKAY)
           return(NOT_OKAY);       
-       swprintf(cast_handle->wcp_msg1, L"   real_vals[%d] = %g\n", index, real_val);
+       swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"   real_vals[%d] = %g\n", index, real_val);
        cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);   
    }
     
-    swprintf(cast_handle->wcp_msg1, L"Number of App. Dependent strings: %d\n",
+    swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Number of App. Dependent strings: %d\n",
             cast_handle->app_depend.num_strings);
 	cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
     for (index = 0; index < cast_handle->app_depend.num_strings; index++)
     {
        if (valsGetAppDependentString((PT_HANDLE *)cast_handle, index, &wcp_string_val) != OKAY)
           return(NOT_OKAY);       
-       swprintf(cast_handle->wcp_msg1, L"   strings[%d] = %s\n", index, wcp_string_val);
+       swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"   strings[%d] = %s\n", index, wcp_string_val);
        cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
     }    
     

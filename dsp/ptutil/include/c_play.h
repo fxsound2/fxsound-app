@@ -214,54 +214,54 @@ struct dspPlayStructType
 {
 	/* Parameters common to all dsp functions */
 	/* Note- must occupy same 32 word locations as defines in Boardrv1.h */
-	long pc_to_dsp_flags;
-	long dsp_to_pc_flags;
-	long dsp_number_of_elements;
+	int32_t pc_to_dsp_flags;
+	int32_t dsp_to_pc_flags;
+	int32_t dsp_number_of_elements;
 	realtype dsp_sampling_freq;
-	long stereo_in_flag;
-	long dsp_mute_in_flag;
-	long unassigned6;
-	long unassigned7;
-	long unassigned8;
-	long unassigned9;
+	int32_t stereo_in_flag;
+	int32_t dsp_mute_in_flag;
+	int32_t unassigned6;
+	int32_t unassigned7;
+	int32_t unassigned8;
+	int32_t unassigned9;
 	realtype dry_gain;
 	realtype wet_gain;
 	realtype master_gain;
-	long dsp_dma_in_transfer;
-	long unassigned14;
-	long unassigned15;
-	long unassigned16;
-	long unassigned17;
-	long unassigned18;
-	long unassigned19;
-	long unassigned20; 
-	long unassigned21;
-	long unassigned22;
-	long unassigned23;
-	long unassigned24;
-	long unassigned25;
-	long unassigned26;
-	long unassigned27;
-	long unassigned28;
-	long unassigned29;
-	long unassigned30;
-	long unassigned31;
-	long unassigned32;
-	long unassigned33; /* End of currently assigned Aural Activator parameters/states */
-	long unassigned34; /* Room for 2 more if needed */
-	long unassigned35;
+	int32_t dsp_dma_in_transfer;
+	int32_t unassigned14;
+	int32_t unassigned15;
+	int32_t unassigned16;
+	int32_t unassigned17;
+	int32_t unassigned18;
+	int32_t unassigned19;
+	int32_t unassigned20; 
+	int32_t unassigned21;
+	int32_t unassigned22;
+	int32_t unassigned23;
+	int32_t unassigned24;
+	int32_t unassigned25;
+	int32_t unassigned26;
+	int32_t unassigned27;
+	int32_t unassigned28;
+	int32_t unassigned29;
+	int32_t unassigned30;
+	int32_t unassigned31;
+	int32_t unassigned32;
+	int32_t unassigned33; /* End of currently assigned Aural Activator parameters/states */
+	int32_t unassigned34; /* Room for 2 more if needed */
+	int32_t unassigned35;
 
 	/* Start play specific parameters, above activator parameters */
 	/* Note- algorithm specific parameters must occupy same 32 word locations
 	 * as defines below.
 	 */
-	long bypass_on;
-	long activator_on;
-	long ambience_on;
-	long widener_on;
-	long bassboost_on;
-	long headphone_on;
-	long reset_demo_count;
+	int32_t bypass_on;
+	int32_t activator_on;
+	int32_t ambience_on;
+	int32_t widener_on;
+	int32_t bassboost_on;
+	int32_t headphone_on;
+	int32_t reset_demo_count;
 
 	/* Bass boost coeffs */
 	realtype b0;
@@ -290,17 +290,17 @@ struct dspPlayStructType
 	realtype a2_hp;
     */
 
-	unsigned long vocal_elim_val;
-	long vocal_elim_on;
-	long vocal_mode;
+	uint32_t vocal_elim_val;
+	int32_t vocal_elim_on;
+	int32_t vocal_mode;
 
 	/* Play internal state parameters */
-	long bypass_mode;
-	unsigned long sample_count;
-	unsigned long max_sample_count_process;
-	unsigned long max_sample_count_demo;
-	unsigned long last_vocal_val;
-	long last_mode;
+	int32_t bypass_mode;
+	uint32_t sample_count;
+	uint32_t max_sample_count_process;
+	uint32_t max_sample_count_demo;
+	uint32_t last_vocal_val;
+	int32_t last_mode;
 
 	/* Play algorithm state variables */
 	/* The filter coeffs will be set during initialization, not from parameter changes */
@@ -341,8 +341,8 @@ struct dspPlayStructType
 	 * Note that the delay_lines param must be the last parameter since
 	 * there will be an array of data written at that address space.
 	 */
-	unsigned long head_delay;
-	unsigned long delay_line_index;
+	uint32_t head_delay;
+	uint32_t delay_line_index;
 	realtype delay_lines;
 };
 
