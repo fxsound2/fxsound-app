@@ -1,0 +1,1 @@
+/home/nyverino/Documents/fxsound-app/dsp/ptechDsp/Peq/Peq832/peq_num.h
