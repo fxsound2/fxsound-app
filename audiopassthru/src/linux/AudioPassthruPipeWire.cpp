@@ -99,6 +99,7 @@ namespace {
 // ---- realtime processing ------------------------------------------------
 void on_process(void* userdata, struct spa_io_position* position)
 {
+    if (!position) return;
     auto* d = static_cast<AudioPassthruPrivate*>(userdata);
     uint32_t n = position->clock.duration;
 
