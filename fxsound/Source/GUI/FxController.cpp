@@ -1283,7 +1283,7 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 					controller->showMainWindow();
 				}
 			}
-			if (w_param == CMD_NEXT_PRESET && FxModel::getModel().getPowerState())
+			if (w_param == CMD_NEXT_PRESET)
 			{
 				auto preset_index = FxModel::getModel().getSelectedPreset();
 				auto preset_count = FxModel::getModel().getPresetCount();
@@ -1301,7 +1301,7 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 					controller->setPreset(preset_index);
 				}
 			}
-			if (w_param == CMD_PREVIOUS_PRESET && FxModel::getModel().getPowerState())
+			if (w_param == CMD_PREVIOUS_PRESET)
 			{
 				auto preset_index = FxModel::getModel().getSelectedPreset();
 				auto preset_count = FxModel::getModel().getPresetCount();
@@ -1319,7 +1319,7 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 					controller->setPreset(preset_index);
 				}
 			}
-			if (w_param == CMD_NEXT_OUTPUT && FxModel::getModel().getPowerState())
+			if (w_param == CMD_NEXT_OUTPUT)
 			{
 				auto output_index = 0;
 				for (auto& output_device : controller->active_output_devices_)
@@ -1390,7 +1390,7 @@ void FxController::handleLinuxHotkey(int cmd)
 		else
 			showMainWindow();
 	}
-	if (cmd == (int)CMD_NEXT_PRESET && FxModel::getModel().getPowerState())
+	if (cmd == (int)CMD_NEXT_PRESET)
 	{
 		auto preset_index = FxModel::getModel().getSelectedPreset();
 		auto preset_count = FxModel::getModel().getPresetCount();
@@ -1403,7 +1403,7 @@ void FxController::handleLinuxHotkey(int cmd)
 			setPreset(preset_index);
 		}
 	}
-	if (cmd == (int)CMD_PREVIOUS_PRESET && FxModel::getModel().getPowerState())
+	if (cmd == (int)CMD_PREVIOUS_PRESET)
 	{
 		auto preset_index = FxModel::getModel().getSelectedPreset();
 		auto preset_count = FxModel::getModel().getPresetCount();
@@ -1416,7 +1416,7 @@ void FxController::handleLinuxHotkey(int cmd)
 			setPreset(preset_index);
 		}
 	}
-	if (cmd == (int)CMD_NEXT_OUTPUT && FxModel::getModel().getPowerState())
+	if (cmd == (int)CMD_NEXT_OUTPUT)
 	{
 		auto output_index = 0;
 		for (auto& output_device : active_output_devices_)
