@@ -1,6 +1,6 @@
 # FxSound
 
-FxSound is a digital audio program built for Windows PC's. The background processing, built on a high-fidelity audio engine, acts as a sort of digital soundcard for your system. This means that your signals will have the clean passthrough when FxSound is active. There are active effects for shaping and boosting your sound's volume, timbre, and equalization included on top of this clean processing, allowing you to customize and enhance your sound.
+FxSound is a digital audio program for Windows and Linux. The background processing, built on a high-fidelity audio engine, acts as a sort of digital soundcard for your system. This means that your signals will have the clean passthrough when FxSound is active. There are active effects for shaping and boosting your sound's volume, timbre, and equalization included on top of this clean processing, allowing you to customize and enhance your sound.
 
 ## General Information
 * Website: https://www.fxsound.com
@@ -11,7 +11,10 @@ FxSound is a digital audio program built for Windows PC's. The background proces
 * [Donate to FxSound](https://www.paypal.com/donate/?hosted_button_id=JVNQGYXCQ2GPG)
   
 ## Build Instructions
-### Prerequisites
+
+### Windows
+
+#### Prerequisites
 * Download and install the [latest version of FxSound](https://download.fxsound.com/fxsoundlatest)
 * Install [Visual Studio 2022](https://visualstudio.microsoft.com/vs)
 * Install [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk)
@@ -20,11 +23,11 @@ FxSound is a digital audio program built for Windows PC's. The background proces
 
 FxSound application requires FxSound Audio Enhancer virtual audio driver. So, to run FxSound application built from source, we need to install FxSound which installs the audio driver.
 
-### Build FxSound from Visual Studio
+#### Build FxSound from Visual Studio
 * Open [fxsound/Project/FxSound.sln](https://github.com/fxsound2/fxsound-app/blob/main/fxsound/Project/FxSound.sln) in Visual Studio
 * Build the required configuration and platform and run
 
-### Build after exporting the project form Projucer
+#### Build after exporting the project from Projucer
 FxSound application has three components. 
 1. FxSound GUI application which uses JUCE framework
 2. Audiopassthru module which is used by the application to interact with the audio devices
@@ -34,6 +37,22 @@ Due to the some limitations with Projucer, after exporting the Visual Studio sol
 1. Since the audiopassthru and DfxDsp dependency projects cannot be added to the solution when FxSound.sln is exported, open fxsound/Project/FxSound.sln in Visual Studio and add the existing projects audiopassthru/audiopassthru.vcxproj, dsp/DfxDsp.vcxproj.
 2. From FxSound_App project, add reference to audiopassthru and DfxDsp.
 3. If you run FxSound from Visual Studio, to let the application to use the presets, set the Working Directory to ```$(SolutionDir)..\..\bin\$(PlatformTarget)``` in FxSound_App Project->Properties->Debugging setting.
+
+### Linux (PipeWire)
+
+See [`linux/README.md`](linux/README.md) for the full Linux build guide.
+Quick start:
+
+```sh
+git submodule update --init Resources
+git clone --depth 1 --branch 6.1.6 https://github.com/juce-framework/JUCE third_party/JUCE
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+cmake --build build
+sudo cmake --install build
+```
+
+An AppImage can be built with `./packaging/build-appimage.sh` (downloads
+tooling automatically) or downloaded from the [releases page](https://github.com/fxsound2/fxsound-app/releases).
 
 ## How to contribute
 We welcome anyone who wants to contribute to this project. For more details on how to contribute, follow [this contributing guideline](./CONTRIBUTING.md).

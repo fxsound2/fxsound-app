@@ -37,7 +37,7 @@ struct valsMaxElementData {
 	int calc_flag;      /* Whether or not to caluclate max on set */
 	int abs_flag;       /* Whether of not to base max on absolute value */
 	int value;          /* The max value */
-	long sum_scale_val; /* Scaled compare value for sum1and4 case */
+	int32_t sum_scale_val; /* Scaled compare value for sum1and4 case */
 	int index;          /* The element index which has max value */
 };
 
@@ -109,9 +109,9 @@ struct valsCfgHdlType {
 	int stereo_input_mode;  /* IS_TRUE, or IS_FALSE */
 	int stereo_output_mode;  /* IS_TRUE, or IS_FALSE */
 	int default_preset;
-	long total_samples;
+	int32_t total_samples;
 	int min_user_preset;
-   long preset_save_time;  /* Number of seconds since 1/1/70 that a preset was saved */
+   int32_t preset_save_time;  /* Number of seconds since 1/1/70 that a preset was saved */
 };
 
 /* Local function definitions */

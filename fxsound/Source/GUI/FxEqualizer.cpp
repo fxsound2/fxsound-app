@@ -112,6 +112,7 @@ void FxEqualizer::reinit(int num_bands)
     resized();
 
     FxController::getInstance().undoPreset();
+    update();
 }
 
 void FxEqualizer::sliderValueChanged(Slider* slider)
@@ -223,6 +224,9 @@ void FxEqualizer::update()
         auto freq = controller.getEqBandFrequency(i);
         center_frequencies_[i]->setFrequency(freq);
     }
+    // Redraw FR response curve after any bulk update (e.g. preset switch).
+    // setGainValue uses dontSendNotification so valueChanged() won't fire.
+    repaint();
 }
 
 void FxEqualizer::showValues(bool show)
@@ -455,6 +459,9 @@ void FxEqualizer::FxEqSlider::valueChanged()
         auto y = getPositionOfValue(value) - (FxTheme::SLIDER_THUMB_RADIUS*3);
         gain_label_.setBounds(gain_label_.getBounds().withY(y));
     }
+    // Repaint parent so the FR response curve updates between knobs.
+    if (auto* parent = getParentComponent())
+        parent->repaint();
 }
 
 bool FxEqualizer::FxEqSlider::keyPressed(const KeyPress& key)

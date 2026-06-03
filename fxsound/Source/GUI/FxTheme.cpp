@@ -192,7 +192,7 @@ void FxTheme::drawLinearSlider(Graphics& g, int x, int y, int width, int height,
         }
 
 		g.setGradientFill(ColourGradient(colour1, { 0, 0 }, colour2, { 0, (float)height }, false));
-		g.drawDashedLine(Line<float>(x+width/2, y, x+width/2, y+height), dash_lengths, _countof(dash_lengths), 1.0f);
+		g.drawDashedLine(Line<float>(x+width/2, y, x+width/2, y+height), dash_lengths, numElementsInArray(dash_lengths), 1.0f);
 
         if (slider.isEnabled())
 		    slider_thumb_->drawWithin(g, Rectangle<float>(x+width/2-radius, sliderPos-radius, radius*2, radius*2), { RectanglePlacement::centred }, 1.0f);

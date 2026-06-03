@@ -480,7 +480,7 @@ int PT_DECLSPEC fileGetModifiedDateString_Wide(wchar_t *wcp_fullpath, wchar_t *w
 	GetDateFormatW(LOCALE_SYSTEM_DEFAULT, LOCALE_NOUSEROVERRIDE , &local_st, NULL, wcp_date, PT_MAX_GENERIC_STRLEN);
 	GetTimeFormatW(LOCALE_SYSTEM_DEFAULT, LOCALE_NOUSEROVERRIDE , &local_st, NULL, wcp_time, PT_MAX_GENERIC_STRLEN);
 
-	swprintf(wcp_formatted_datetime, L"%s %s", wcp_date, wcp_time);
+	swprintf(wcp_formatted_datetime, sizeof(wcp_formatted_datetime)/sizeof(*(wcp_formatted_datetime)), L"%s %s", wcp_date, wcp_time);
 
 	return(OKAY);
 }

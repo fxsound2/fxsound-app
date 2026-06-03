@@ -13,6 +13,14 @@
 
 #pragma once
 
+// Linux/GCC: JUCE 6.1.6 predates libstdc++ requiring explicit includes for
+// std::exchange and fixed-width integer types. Pull them in before any module.
+#if defined(__linux__)
+#include <utility>
+#include <cstdint>
+#include <cstddef>
+#endif
+
 //==============================================================================
 // [BEGIN_USER_CODE_SECTION]
 

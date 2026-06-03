@@ -35,9 +35,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *   of the previous sample pt. 
  */
 int PT_DECLSPEC realSampleForceLegalValues_ArrayOnly(realtype *rp_samples, 
-													              long l_num_sample_pts)
+													              int32_t l_num_sample_pts)
 {
-   long l_sample_pt_index;
+   int32_t l_sample_pt_index;
    realtype r_previous_value;
 
 	if (rp_samples == NULL)

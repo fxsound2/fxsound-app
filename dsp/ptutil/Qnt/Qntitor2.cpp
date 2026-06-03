@@ -606,7 +606,7 @@ int PT_DECLSPEC qntIToRGetHalfDelta(PT_HANDLE *hp_qnt, realtype *rp_half_delta)
  * FUNCTION: qntIToRCalcFromOut()
  * DESCRIPTION:
  *   Based on the passed output value figure out and pass back what input value
- *   would be the closest to generating this output (as long as it is less than 
+ *   would be the closest to generating this output (as int32_t as it is less than 
  *   or equal).
  *
  *   Note: This function assumes that the output values are in increasing order.

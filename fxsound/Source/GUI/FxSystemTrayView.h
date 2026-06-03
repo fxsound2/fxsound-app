@@ -20,6 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define FXSYSTEMTRAYVIEW_H
 
 #include <JuceHeader.h>
+#ifndef _WIN32
+#include "fx_tray_sni.h"
+#endif
 #include "FxModel.h"
 #include "FxController.h"
 #include "FxNotification.h"
@@ -53,7 +56,7 @@ private:
 	static LRESULT CALLBACK wndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 	void addIcon();
-	void showContextMenu();
+	void showContextMenu(int x = 0, int y = 0);
 	void addOutputDeviceMenu(PopupMenu* context_menu);
 	void showNotification();
 	String getTruncatedText(const String& text, int max_length);
@@ -62,6 +65,14 @@ private:
 	FxNotification notification_;
 	WNDPROC componentWndProc_;
 	UINT taskbar_created_message_;
+
+#ifndef _WIN32
+	// Linux tray icon via StatusNotifierItem + dbusmenu (DBus); see linux/tray.
+	std::unique_ptr<FxTraySNI> tray_sni_;
+	MenuItem buildDbusmenu();
+	void     pushDbusmenu();
+	void     handleMenuActivation(int item_id);
+#endif
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxSystemTrayView)
 };

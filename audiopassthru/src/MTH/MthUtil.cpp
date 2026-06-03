@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "u_mth.h"
 
 #include "slout.h"
+#include "pstr.h"
 
 // String related mth functions only built in WIN32 builds.
 #if defined( WIN32 )
@@ -424,7 +425,7 @@ realtype PT_DECLSPEC mthFastSqrt(realtype r_x)
         return u.x;
 }
 
-#if defined( WIN32 ) // String functions are only built in WIN32 builds.
+#if defined( WIN32 ) || defined( __linux__ ) || defined( __APPLE__ ) // String functions (portable).
 
 /*
  * FUNCTION: mthRotN()

@@ -311,7 +311,7 @@ int PT_DECLSPEC pstrUrlConvertLocalPathToHttpProtocol(wchar_t *wcp_original, wch
 	i_converted_pos = 0;
 
 	/* Put the http protocol prefix ( file:// ) at the beginning of the converted string */
-	swprintf(wcp_converted, PSTR_URL_HTTP_PROTOCOL_LOCAL_PATH_PREFIX);
+	swprintf(wcp_converted, sizeof(wcp_converted)/sizeof(*(wcp_converted)), PSTR_URL_HTTP_PROTOCOL_LOCAL_PATH_PREFIX);
 	i_converted_pos = wcslen(PSTR_URL_HTTP_PROTOCOL_LOCAL_PATH_PREFIX);
 
 	for (i_orig_pos = 0; i_orig_pos <= i_strlen_original; i_orig_pos++)

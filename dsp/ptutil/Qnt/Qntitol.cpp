@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 int PT_DECLSPEC qntIToLInit(PT_HANDLE **hpp_qnt, CSlout *hp_slout,
 					 int i_input_min, int i_input_max,
-					 long l_output_min, long l_output_max,
+					 int32_t l_output_min, int32_t l_output_max,
 					 int i_output_quantized, int i_num_output_levels,
 					 int i_symetric_flag)
 {
@@ -60,8 +60,8 @@ int PT_DECLSPEC qntIToLInit(PT_HANDLE **hpp_qnt, CSlout *hp_slout,
     
    /* Allocate the array of longs */
 	cast_handle->array_size = i_input_max - i_input_min + 1;
-	cast_handle->long_array = (long *)calloc(cast_handle->array_size,
-				               sizeof(long));
+	cast_handle->long_array = (int32_t *)calloc(cast_handle->array_size,
+				               sizeof(int32_t));
 	if (cast_handle->long_array == NULL)
 		return(NOT_OKAY);   
                    
@@ -77,7 +77,7 @@ int PT_DECLSPEC qntIToLInit(PT_HANDLE **hpp_qnt, CSlout *hp_slout,
 
 			tmp_val = l_output_min + scale * index;
 			tmp_val -= (realtype)fmod(tmp_val, mod_val);
- 			cast_handle->long_array[index] = (long)(tmp_val + 0.5);
+ 			cast_handle->long_array[index] = (int32_t)(tmp_val + 0.5);
  		} 
 
 		/* Hard set endpoint to override any roundoff inaccuracies */
@@ -90,7 +90,7 @@ int PT_DECLSPEC qntIToLInit(PT_HANDLE **hpp_qnt, CSlout *hp_slout,
     		
 		for (index=0; index < (cast_handle->array_size - 1); index++)
 		{
- 			cast_handle->long_array[index] = (long)(l_output_min + scale * index + 0.5);
+ 			cast_handle->long_array[index] = (int32_t)(l_output_min + scale * index + 0.5);
  		} 
 
 		/* Hard set endpoint to override any roundoff inaccuracies */
@@ -106,15 +106,15 @@ int PT_DECLSPEC qntIToLInit(PT_HANDLE **hpp_qnt, CSlout *hp_slout,
  * FUNCTION: qntIToLInitTrackIToR()
  * DESCRIPTION:
  *  Allocates and initializes the passed qnt handle.
- *  NOTE- This is a special version that causes a long
+ *  NOTE- This is a special version that causes a int32_t
  *  control output value, such as delay, to exactly track
  *  the values of a warped or quantized qntIToR handle.
  *  The function assumes a linear relationship between the
- *  reference values and the long output values such that if
- *  the real output is zero, the long output is the min val.
+ *  reference values and the int32_t output values such that if
+ *  the real output is zero, the int32_t output is the min val.
  */
 int PT_DECLSPEC qntIToLInitTrackIToR(PT_HANDLE **hpp_qnt, PT_HANDLE *hp_qnt_IToR,
-					 CSlout *hp_slout, long l_output_min, long l_output_max)
+					 CSlout *hp_slout, int32_t l_output_min, int32_t l_output_max)
 {
 	struct qntHdlType *cast_handle;
 	struct qntHdlType *cast_handle_ref;
@@ -146,8 +146,8 @@ int PT_DECLSPEC qntIToLInitTrackIToR(PT_HANDLE **hpp_qnt, PT_HANDLE *hp_qnt_IToR
     
     /* Allocate the array of longs */
 	cast_handle->array_size = cast_handle_ref->array_size;
-	cast_handle->long_array = (long *)calloc(cast_handle->array_size,
-				               sizeof(long));
+	cast_handle->long_array = (int32_t *)calloc(cast_handle->array_size,
+				               sizeof(int32_t));
 	if (cast_handle->long_array == NULL)
 		return(NOT_OKAY);                       
 		
@@ -158,7 +158,7 @@ int PT_DECLSPEC qntIToLInitTrackIToR(PT_HANDLE **hpp_qnt, PT_HANDLE *hp_qnt_IToR
     for (index=0; index < (cast_handle->array_size - 1); index++)
     {
  		cast_handle->long_array[index] = 
- 				(long)(l_output_min + scale * cast_handle_ref->real_array[index] + 0.5);
+ 				(int32_t)(l_output_min + scale * cast_handle_ref->real_array[index] + 0.5);
  		if( cast_handle->long_array[index] > l_output_max )
  			  cast_handle->long_array[index] = l_output_max;
  		if( cast_handle->long_array[index] < l_output_min )
@@ -177,9 +177,9 @@ int PT_DECLSPEC qntIToLInitTrackIToR(PT_HANDLE **hpp_qnt, PT_HANDLE *hp_qnt_IToR
 /*
  * FUNCTION: qntIToLCalc()
  * DESCRIPTION:
- *  Calculates the long output based on the passed integer input.
+ *  Calculates the int32_t output based on the passed integer input.
  */
-int PT_DECLSPEC qntIToLCalc(PT_HANDLE *hp_qnt, int i_input, long *lp_output)
+int PT_DECLSPEC qntIToLCalc(PT_HANDLE *hp_qnt, int i_input, int32_t *lp_output)
 {
 	struct qntHdlType *cast_handle;
    int index;

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=FxSound
+GenericName=Audio Enhancer
+Comment=Real-time audio enhancement and equalizer
+Exec=fxsound
+Icon=fxsound
+Terminal=false
+Categories=AudioVideo;Audio;
+Keywords=audio;equalizer;eq;sound;dsp;pipewire;
+StartupNotify=false

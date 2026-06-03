@@ -30,6 +30,7 @@ FxSystemTrayView::FxSystemTrayView()
 
     custom_notification_ = true;
 
+#ifdef _WIN32
     addToDesktop(0);
 
     HWND hWnd = (HWND)getWindowHandle();
@@ -41,10 +42,76 @@ FxSystemTrayView::FxSystemTrayView()
     taskbar_created_message_ = RegisterWindowMessage(TEXT("TaskbarCreated"));
 
     addIcon();
+#else
+    // Linux: StatusNotifierItem + com.canonical.dbusmenu (GDBus).
+    // Callbacks arrive on the GLib thread; marshal to the JUCE message thread.
+    // Left click toggles the main window.
+    // Menu items are served via dbusmenu so Wayland panels (Waybar, KDE) render
+    // the menu natively — no JUCE popup required.
+    auto on_activate = []() {
+        juce::MessageManager::callAsync([]() {
+            auto& c = FxController::getInstance();
+            if (c.isMainWindowVisible()) c.hideMainWindow();
+            else c.showMainWindow();
+        });
+    };
+    auto on_item_activated = [this](int id) {
+        juce::MessageManager::callAsync([this, id]() { handleMenuActivation(id); });
+    };
+    tray_sni_.reset(new FxTraySNI(on_activate, on_item_activated));
+    tray_sni_->setIconName("fxsound");
+
+    // Write the embedded PNG into a temp hicolor tree so the SNI host can load
+    // it by name (avoids byte-order issues in raw pixmap delivery).
+    {
+        juce::File icon_dir = juce::File::getSpecialLocation(juce::File::tempDirectory)
+                                  .getChildFile("fxsound-tray-icons")
+                                  .getChildFile("hicolor")
+                                  .getChildFile("32x32")
+                                  .getChildFile("apps");
+        icon_dir.createDirectory();
+        juce::File icon_file = icon_dir.getChildFile("fxsound.png");
+        if (!icon_file.existsAsFile())
+            icon_file.replaceWithData(BinaryData::fxsound_png,
+                                      (size_t)BinaryData::fxsound_pngSize);
+
+        juce::File theme_root = juce::File::getSpecialLocation(juce::File::tempDirectory)
+                                    .getChildFile("fxsound-tray-icons");
+        tray_sni_->setIconThemePath(theme_root.getFullPathName().toStdString());
+    }
+
+    // Fallback raw RGBA pixmap for hosts that ignore IconThemePath.
+    {
+        juce::Image img = juce::ImageFileFormat::loadFrom(BinaryData::fxsound_png,
+                                                          BinaryData::fxsound_pngSize);
+        if (img.isValid())
+        {
+            img = img.rescaled(32, 32, juce::Graphics::highResamplingQuality);
+            const int w = img.getWidth(), h = img.getHeight();
+            std::vector<unsigned char> rgba;
+            rgba.reserve((size_t)w * h * 4);
+            juce::Image::BitmapData bd(img, juce::Image::BitmapData::readOnly);
+            for (int py = 0; py < h; ++py)
+                for (int px = 0; px < w; ++px)
+                {
+                    auto col = bd.getPixelColour(px, py);
+                    rgba.push_back(col.getRed());
+                    rgba.push_back(col.getGreen());
+                    rgba.push_back(col.getBlue());
+                    rgba.push_back(col.getAlpha());
+                }
+            tray_sni_->setIconPixmap(w, h, std::move(rgba));
+        }
+    }
+
+    // Push the initial menu so the host has something to display immediately.
+    pushDbusmenu();
+#endif
 }
 
 FxSystemTrayView::~FxSystemTrayView()
 {
+#ifdef _WIN32
     HWND hWnd = (HWND)getWindowHandle();
 
     SetWindowLongPtr(hWnd, GWLP_USERDATA, NULL);
@@ -56,6 +123,7 @@ FxSystemTrayView::~FxSystemTrayView()
     Shell_NotifyIcon(NIM_DELETE, &nid);
 
     removeFromDesktop();
+#endif
 }
 
 void FxSystemTrayView::modelChanged(FxModel::Event model_event)
@@ -64,21 +132,46 @@ void FxSystemTrayView::modelChanged(FxModel::Event model_event)
     {
         showNotification();
     }
+#ifndef _WIN32
+    // Rebuild the dbusmenu whenever any model state that affects the menu changes.
+    switch (model_event)
+    {
+    case FxModel::Event::PresetSelected:
+    case FxModel::Event::PresetListUpdated:
+    case FxModel::Event::PresetModified:
+    case FxModel::Event::OutputSelected:
+    case FxModel::Event::OutputListUpdated:
+    case FxModel::Event::Other:
+        pushDbusmenu();
+        break;
+    default:
+        break;
+    }
+#endif
 }
 
 void FxSystemTrayView::setStatus(bool power, bool processing)
 {
+#ifdef _WIN32
     HINSTANCE hInst = GetModuleHandle(NULL);
 
     String param = power ? TRANS(L"on") : TRANS(L"off");
+
+    auto& model = FxModel::getModel();
+    String preset_name = model.getPreset(model.getSelectedPreset()).name;
 
     wchar_t tool_tip[1024];
     swprintf_s(tool_tip, String(TRANS("FxSound is %s.")).toWideCharPointer(), param.toWideCharPointer());
 	wcscat_s(tool_tip, 1024, L"\n\n");
     wcscat_s(tool_tip, 1024, String(TRANS("Output: ")).toWideCharPointer());
-    auto& model = FxModel::getModel();
 	String output_device_name = model.getSelectedOutput().deviceFriendlyName.c_str();
 	wcscat_s(tool_tip, 1024, output_device_name.toWideCharPointer());
+    if (preset_name.isNotEmpty())
+    {
+        wcscat_s(tool_tip, 1024, L"\n");
+        wcscat_s(tool_tip, 1024, String(TRANS("Preset: ")).toWideCharPointer());
+        wcscat_s(tool_tip, 1024, preset_name.toWideCharPointer());
+    }
 
     NOTIFYICONDATA nid = { sizeof(nid) };
 
@@ -115,12 +208,25 @@ void FxSystemTrayView::setStatus(bool power, bool processing)
     lstrcpy(nid.szTip, tool_tip);
 
     Shell_NotifyIcon(NIM_MODIFY, &nid);
+#else
+    ignoreUnused(processing);
+    if (tray_sni_)
+    {
+        auto& model = FxModel::getModel();
+        String preset_name = model.getPreset(model.getSelectedPreset()).name;
+        String title = String("FxSound ") + (power ? TRANS("on") : TRANS("off"));
+        if (preset_name.isNotEmpty())
+            title += "\n" + TRANS("Preset: ") + preset_name;
+        tray_sni_->setTitle(title.toStdString());
+    }
+#endif
 }
 
 Point<int> FxSystemTrayView::getSystemTrayWindowPosition(int width, int height)
 {
     Point<int> pos = { 0, 0 };
 
+#ifdef _WIN32
     NOTIFYICONIDENTIFIER icon_id = {};
     RECT rect;
 
@@ -162,12 +268,24 @@ Point<int> FxSystemTrayView::getSystemTrayWindowPosition(int width, int height)
             pos.y = area.getBottom() - height - 10;
         }
     }
+#else
+    // Linux: no tray-rect query; anchor the notification to the primary
+    // display's top-right corner.
+    auto display = Desktop::getInstance().getDisplays().getPrimaryDisplay();
+    if (display != nullptr)
+    {
+        auto area = display->userArea;
+        pos.x = area.getRight() - width - 10;
+        pos.y = area.getY() + 10;
+    }
+#endif
 
     return pos;
 }
 
 void FxSystemTrayView::addIcon()
 {
+#ifdef _WIN32
     NOTIFYICONDATA nid = { sizeof(nid) };
 
     HINSTANCE hInst = GetModuleHandle(NULL);
@@ -208,10 +326,11 @@ void FxSystemTrayView::addIcon()
     Shell_NotifyIcon(NIM_SETVERSION, &nid);
 
     setVisible(true);
+#endif
 }
 
-void FxSystemTrayView::showContextMenu()
-{    
+void FxSystemTrayView::showContextMenu(int x, int y)
+{
     PopupMenu context_menu;
 
     PopupMenu preset_menu;
@@ -320,12 +439,28 @@ void FxSystemTrayView::showContextMenu()
     context_menu.addItem(donate);
     context_menu.addItem(exit);
 
+#ifdef _WIN32
     HWND hWnd = (HWND)getWindowHandle();
 
     SetFocus(hWnd);
     SetForegroundWindow(hWnd);
-
     context_menu.show();
+#else
+    // Use the screen coordinates from the SNI host so the popup appears near
+    // the tray icon. If the host sent (0,0) fall back to the cursor position.
+    if (x != 0 || y != 0)
+    {
+        juce::Rectangle<int> anchor(x, y, 1, 1);
+        context_menu.showMenuAsync(PopupMenu::Options()
+            .withTargetScreenArea(anchor)
+            .withMinimumWidth(180));
+    }
+    else
+    {
+        context_menu.showMenuAsync(PopupMenu::Options()
+            .withMinimumWidth(180));
+    }
+#endif
 }
 
 void FxSystemTrayView::addOutputDeviceMenu(PopupMenu* context_menu)
@@ -390,11 +525,13 @@ void FxSystemTrayView::showNotification()
     {
         if (custom_notification_ || link.first.isNotEmpty())
         {
+#ifdef _WIN32
             QUERY_USER_NOTIFICATION_STATE quns;
             if (FAILED(SHQueryUserNotificationState(&quns)) || quns != QUNS_ACCEPTS_NOTIFICATIONS)
             {
                 return;
             }
+#endif
 
             notification_.setMessage(message, link);
             Point<int> pos = getSystemTrayWindowPosition(notification_.getWidth(), notification_.getHeight());
@@ -403,6 +540,7 @@ void FxSystemTrayView::showNotification()
         }
         else
         {
+#ifdef _WIN32
             NOTIFYICONDATA nid = { sizeof(nid) };
 
             nid.uFlags = NIF_INFO | NIF_GUID | NIF_REALTIME;
@@ -414,6 +552,7 @@ void FxSystemTrayView::showNotification()
             message.copyToUTF16(nid.szInfo, sizeof(nid.szInfo) - 1);
 
             Shell_NotifyIcon(NIM_MODIFY, &nid);
+#endif
         }
     }
 }
@@ -430,6 +569,224 @@ String FxSystemTrayView::getTruncatedText(const String& text, int max_length)
     }
 }
 
+// ---------------------------------------------------------------------------
+// Linux-only: dbusmenu builder + item activation handler
+// ---------------------------------------------------------------------------
+#ifndef _WIN32
+
+// Item ID constants — must match handleMenuActivation switch.
+static constexpr int kIdOpen       =  1;
+static constexpr int kIdPower      =  2;
+static constexpr int kIdSep1       =  3;
+static constexpr int kIdPresets    =  4;
+static constexpr int kIdOutputs    =  5;
+static constexpr int kIdSep2       =  6;
+static constexpr int kIdSettings   =  7;
+static constexpr int kIdTheme      =  8;
+static constexpr int kIdThemeDark  =  9;
+static constexpr int kIdThemeLight = 10;
+static constexpr int kIdAlwaysTop  = 11;
+static constexpr int kIdSep3       = 12;
+static constexpr int kIdDonate     = 13;
+static constexpr int kIdExit       = 14;
+static constexpr int kPresetBase   = 101; // 101..199
+static constexpr int kOutputBase   = 201; // 201..299
+
+MenuItem FxSystemTrayView::buildDbusmenu()
+{
+    auto& model = FxModel::getModel();
+    auto& ctrl  = FxController::getInstance();
+
+    bool power          = model.getPowerState();
+    int  selPreset      = model.getSelectedPreset();
+    bool presetModified = model.isPresetModified();
+    int  selOutput      = model.getSelectedOutputIndex();
+    bool aot            = ctrl.isAlwaysOnTop();
+    bool isDark         = FxTheme::getThemeMode() == FxThemeMode::Dark;
+
+    MenuItem root;
+    root.id = 0;
+
+    // Open
+    MenuItem open; open.id = kIdOpen; open.label = TRANS("Open").toStdString();
+    root.children.push_back(open);
+
+    // Power toggle
+    MenuItem pwr;
+    pwr.id    = kIdPower;
+    pwr.label = power ? TRANS("Turn Off").toStdString() : TRANS("Turn On").toStdString();
+    root.children.push_back(pwr);
+
+    root.children.push_back(MenuItem::separator(kIdSep1));
+
+    // Presets submenu
+    {
+        MenuItem presets;
+        presets.id               = kIdPresets;
+        presets.label            = TRANS("Preset Select").toStdString();
+        presets.children_display = "submenu";
+        presets.enabled          = power;
+
+        int count = model.getPresetCount();
+        FxModel::PresetType last_type = FxModel::PresetType::AppPreset;
+        static constexpr int kSepBase = 150;
+        int sep_id = kSepBase;
+        for (int i = 0; i < count; ++i)
+        {
+            auto preset = model.getPreset(i);
+            if (i > 0 && preset.type != last_type)
+            {
+                presets.children.push_back(MenuItem::separator(sep_id++));
+                last_type = preset.type;
+            }
+            MenuItem pi;
+            pi.id          = kPresetBase + i;
+            pi.label       = (i == selPreset && presetModified)
+                             ? (preset.name + " *").toStdString()
+                             : preset.name.toStdString();
+            pi.toggle_type  = "radio";
+            pi.toggle_state = (i == selPreset) ? 1 : 0;
+            presets.children.push_back(pi);
+        }
+        root.children.push_back(presets);
+    }
+
+    // Outputs submenu
+    {
+        MenuItem outputs;
+        outputs.id               = kIdOutputs;
+        outputs.label            = TRANS("Playback Device Select").toStdString();
+        outputs.children_display = "submenu";
+
+        auto devices = model.getOutputDevices();
+        for (int i = 0; i < (int)devices.size(); ++i)
+        {
+            MenuItem oi;
+            oi.id          = kOutputBase + i;
+            oi.label       = getTruncatedText(
+                                 String(devices[i].deviceFriendlyName.c_str()), 35)
+                                 .toStdString();
+            oi.enabled     = (devices[i].deviceNumChannel >= 2);
+            oi.toggle_type  = "radio";
+            oi.toggle_state = (i == selOutput) ? 1 : 0;
+            outputs.children.push_back(oi);
+        }
+        root.children.push_back(outputs);
+    }
+
+    root.children.push_back(MenuItem::separator(kIdSep2));
+
+    // Settings
+    MenuItem settings;
+    settings.id = kIdSettings; settings.label = TRANS("Settings").toStdString();
+    root.children.push_back(settings);
+
+    // Theme submenu
+    {
+        MenuItem theme;
+        theme.id               = kIdTheme;
+        theme.label            = TRANS("Theme").toStdString();
+        theme.children_display = "submenu";
+
+        MenuItem dark;
+        dark.id = kIdThemeDark; dark.label = TRANS("Dark").toStdString();
+        dark.toggle_type = "radio"; dark.toggle_state = isDark ? 1 : 0;
+        theme.children.push_back(dark);
+
+        MenuItem light;
+        light.id = kIdThemeLight; light.label = TRANS("Light").toStdString();
+        light.toggle_type = "radio"; light.toggle_state = isDark ? 0 : 1;
+        theme.children.push_back(light);
+
+        root.children.push_back(theme);
+    }
+
+    // Always On Top
+    MenuItem aotItem;
+    aotItem.id          = kIdAlwaysTop;
+    aotItem.label       = TRANS("Always On Top").toStdString();
+    aotItem.toggle_type  = "checkmark";
+    aotItem.toggle_state = aot ? 1 : 0;
+    root.children.push_back(aotItem);
+
+    root.children.push_back(MenuItem::separator(kIdSep3));
+
+    // Donate
+    MenuItem donate;
+    donate.id = kIdDonate; donate.label = TRANS("Donate").toStdString();
+    root.children.push_back(donate);
+
+    // Exit
+    MenuItem exitItem;
+    exitItem.id = kIdExit; exitItem.label = TRANS("Exit").toStdString();
+    root.children.push_back(exitItem);
+
+    return root;
+}
+
+void FxSystemTrayView::pushDbusmenu()
+{
+    if (tray_sni_)
+        tray_sni_->updateMenu(buildDbusmenu());
+}
+
+void FxSystemTrayView::handleMenuActivation(int id)
+{
+    auto& ctrl  = FxController::getInstance();
+    auto& model = FxModel::getModel();
+
+    if (id == kIdOpen)
+    {
+        ctrl.showMainWindow();
+    }
+    else if (id == kIdPower)
+    {
+        ctrl.setPowerState(!model.getPowerState());
+        pushDbusmenu(); // reflect new state immediately
+    }
+    else if (id == kIdSettings)
+    {
+        FxSettingsDialog dlg;
+        dlg.runModalLoop();
+    }
+    else if (id == kIdThemeDark)
+    {
+        ctrl.setThemeMode(FxThemeMode::Dark);
+        pushDbusmenu();
+    }
+    else if (id == kIdThemeLight)
+    {
+        ctrl.setThemeMode(FxThemeMode::Light);
+        pushDbusmenu();
+    }
+    else if (id == kIdAlwaysTop)
+    {
+        ctrl.setAlwaysOnTop(!ctrl.isAlwaysOnTop());
+        pushDbusmenu();
+    }
+    else if (id == kIdDonate)
+    {
+        URL("https://www.paypal.com/donate/?hosted_button_id=JVNQGYXCQ2GPG")
+            .launchInDefaultBrowser();
+    }
+    else if (id == kIdExit)
+    {
+        ctrl.exit();
+    }
+    else if (id >= kPresetBase && id < kPresetBase + 99)
+    {
+        ctrl.setPreset(id - kPresetBase);
+    }
+    else if (id >= kOutputBase && id < kOutputBase + 99)
+    {
+        ctrl.setOutput(id - kOutputBase);
+    }
+}
+
+#endif // !_WIN32
+
+// ---------------------------------------------------------------------------
+#ifdef _WIN32
 LRESULT CALLBACK FxSystemTrayView::wndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     auto tray_view = reinterpret_cast<FxSystemTrayView*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
@@ -475,3 +832,4 @@ LRESULT CALLBACK FxSystemTrayView::wndProc(HWND hwnd, UINT message, WPARAM wPara
 
     return 0;
 }
+#endif // _WIN32

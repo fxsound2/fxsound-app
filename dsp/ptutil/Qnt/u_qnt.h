@@ -36,7 +36,7 @@ struct qntHdlType {
    int array_size;
    int min_int_input;    
    int *int_array;
-   long *long_array;
+   int32_t *long_array;
    realtype *real_array;
 	struct filt2ndOrderBoostCutShelfFilterType *filt_array;
 
@@ -47,8 +47,8 @@ struct qntHdlType {
 	int i_output_max;
 	realtype r_output_min;
 	realtype r_output_max;
-	long l_output_min;
-	long l_output_max;
+	int32_t l_output_min;
+	int32_t l_output_max;
 
 	int output_quantized_flag;
 	int num_output_levels;

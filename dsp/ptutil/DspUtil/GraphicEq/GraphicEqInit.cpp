@@ -54,7 +54,7 @@ int PT_DECLSPEC GraphicEqNew( PT_HANDLE **hpp_GraphicEq, int i_num_bands, int i_
 
 	if (i_trace_mode)
 	{
-		swprintf(cast_handle->wcp_msg1, L"GraphicEqNew(): Entered, i_num_bands = %d", i_num_bands);
+		swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"GraphicEqNew(): Entered, i_num_bands = %d", i_num_bands);
 		(cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);	
 	}
 

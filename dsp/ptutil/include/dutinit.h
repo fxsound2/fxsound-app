@@ -11,10 +11,10 @@
  * This version had mods to run AES transmitter from receiver clock
  */
 
-static long main_mem_size = 0;	/* Sizes of primary, secondary mem banks */
-static long exp_mem_size = 0L;
-static long dma_buf_size = 16000L;	/* Length of dma_buffers in longs */
-static long dma_read_size = 16000L;	/* Length of dma_buffers in longs */
+static int32_t main_mem_size = 0;	/* Sizes of primary, secondary mem banks */
+static int32_t exp_mem_size = 0L;
+static int32_t dma_buf_size = 16000L;	/* Length of dma_buffers in longs */
+static int32_t dma_read_size = 16000L;	/* Length of dma_buffers in longs */
 
 /* Defines, Macros and globals for DSPFX1 Board */
 #if (defined(DSPFX1) & defined(DSP_TARGET)) 
@@ -85,11 +85,11 @@ unsigned aes_x_ctl2_shadow;             /* shadow register for AES xmitter ctl2 
 unsigned rev_c_board;                   /* For specifying board rev */
 
 /* For counting number of entries into AES interrupt routine */
-long aes_int_count = 0;
+int32_t aes_int_count = 0;
 										/* Shadows are for examining values later */
 void T3x_hinit(void);
 void delay_us(unsigned t);              /* delay in us  */
-void putchr(long d);                    /* long getchr(void); */
+void putchr(int32_t d);                    /* int32_t getchr(void); */
 
 unsigned codec_control(unsigned cdin)
 {
@@ -195,10 +195,10 @@ void c_int03()		/* interrupt routine; name is c_intxx (xx = 01..99)*/
 	  	aes_adr->x_ctl2 = aes_x_ctl2_shadow = 0xA7;	/* 384x, V, release transmitter set RST, MUTE */
     	while(1)
     	{
-			long status = AES_READ_ERROR;
-			long transfer_state = STATUS_STATE;
+			int32_t status = AES_READ_ERROR;
+			int32_t transfer_state = STATUS_STATE;
 	  		load_parameter(); /* If its been sent, loads a parameter into memory */
-	  		if( *(volatile long *)(PC_TO_DSP_FLAGS) & PC_GOT_AES_READ_ERROR )
+	  		if( *(volatile int32_t *)(PC_TO_DSP_FLAGS) & PC_GOT_AES_READ_ERROR )
 	  		{
 				while(1);                                    
 			}
@@ -211,7 +211,7 @@ void c_int03()		/* interrupt routine; name is c_intxx (xx = 01..99)*/
 
 #ifdef NILS_NEW_METHOD
 /* Nil's version that allows running with serial card */
-void putchr(long d)
+void putchr(int32_t d)
 {
 	do {
 	    asm("	STI	IF,@_iflg"); \
@@ -225,7 +225,7 @@ void putchr(long d)
 }
 #else
 /* Original version that checked status bit */
-void putchr(long d)
+void putchr(int32_t d)
 {
 	while (io_adr->comd_stat & 0x80)
 		;
@@ -264,7 +264,7 @@ static void dutilInitMem()
 {
 #ifdef DSP_TARGET
 
-	long i, len;
+	int32_t i, len;
 	float *tmp_ptr;
 	tmp_ptr = (float *)(MEMBANK0_START);
 
@@ -294,21 +294,21 @@ static void dutilInitAIO()
 #ifdef DSP_TARGET
 	register unsigned i, j, k;
 	int c,d;
-	long cdin;
-	long dummy;
-	long samp_freq_status, fx_link_flag, io_type, serial_num;
+	int32_t cdin;
+	int32_t dummy;
+	int32_t samp_freq_status, fx_link_flag, io_type, serial_num;
 #endif
 	
 #if (defined(DUIO_B) | defined(DUIO_BA) | defined(DUIO_BD))
 	/* Need access to these DMA global vars */
-	extern long *in_data_buf0;
-	extern long *in_data_buf1;
-	extern long *out_data_buf0;
-	extern long *out_data_buf1;
-	extern long *read_in_buf;
-	extern long *read_out_buf;
-	extern long parm_address_MACRO;
-	extern long address_valid_flag_MACRO;
+	extern int32_t *in_data_buf0;
+	extern int32_t *in_data_buf1;
+	extern int32_t *out_data_buf0;
+	extern int32_t *out_data_buf1;
+	extern int32_t *read_in_buf;
+	extern int32_t *read_out_buf;
+	extern int32_t parm_address_MACRO;
+	extern int32_t address_valid_flag_MACRO;
 #endif	
 
 	/* Initialize common DSP parameter memory values */

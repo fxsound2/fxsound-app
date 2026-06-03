@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "midi.h"
 #include "filt.h"
 
-#include "C_Play.h"
+#include "c_play.h"
 #include "C_aural.h"
 #include "C_dsps.h"
 #include "c_lex.h"
@@ -68,7 +68,7 @@ int dfxp_CommunicateInit(PT_HANDLE *hp_dfxp)
 	   int softdsp_mode;
 	   int board_address;
 	   int processor_num;
-	   long base_address;
+	   int32_t base_address;
 	   char cp_dsp_dirpath[64];
 	   int num_cards_configured;
 	} obsolete;
@@ -388,6 +388,12 @@ int dfxp_CommunicateBypassSettings(PT_HANDLE *hp_dfxp)
 	if (dfxpGetButtonValue(hp_dfxp, DFX_UI_BUTTON_HEADPHONE, &headphone_on) != OKAY)
 		return(NOT_OKAY);
 	cast_handle->binaural_headphone_on_flag = headphone_on;
+#if defined(__linux__) || defined(__APPLE__)
+	// Binaural headphone (HRTF) virtualization is not exposed in the Linux UI
+	// and badly muffles audio on speakers. The engine defaults it on, so force
+	// it off here regardless of the (registry-backed) headphone button state.
+	cast_handle->binaural_headphone_on_flag = IS_FALSE;
+#endif
 
 	if (dfxpGetButtonValue(hp_dfxp, DFX_UI_BUTTON_VOCAL_REDUCTION_ON, &vocal_reduction_on) != OKAY)
 		return(NOT_OKAY);
@@ -1164,7 +1170,7 @@ int dfxp_CommunicateFixedQnts_Delay(PT_HANDLE *hp_dfxp)
 	if (cast_handle == NULL)
 		return(OKAY);
 
-	long dsp_total_dly; 
+	int32_t dsp_total_dly; 
 	int i;
 	realtype r_total_delay[DSP_MAX_NUM_OF_DELAY_ELEMENTS];
 	realtype r_pan_setting[DSP_MAX_NUM_OF_DELAY_ELEMENTS];
@@ -1566,8 +1572,8 @@ int dfxp_WidCommunicateDispersion(PT_HANDLE *hp_dfxp)
 		return(OKAY);
 
 	int pc_dispersion;
-	long dsp_dispersion_left;
-	long dsp_dispersion_right;
+	int32_t dsp_dispersion_left;
+	int32_t dsp_dispersion_right;
 
    pc_dispersion = DSP_PLAY_WID_DISPERSION_MIDI;
 
@@ -1579,7 +1585,7 @@ int dfxp_WidCommunicateDispersion(PT_HANDLE *hp_dfxp)
 	/* Calculate the left dispersion value that should be sent to the dsp card.
 	 * This is factored down from the right value.
 	 */
-	dsp_dispersion_left = (long)(dsp_dispersion_right * (realtype)DSP_WID_LEFT_RIGHT_DISPERSION_FACTOR);
+	dsp_dispersion_left = (int32_t)(dsp_dispersion_right * (realtype)DSP_WID_LEFT_RIGHT_DISPERSION_FACTOR);
 
 	/* Write both values */
 	// Widener is only active in front and rear dsp processors.

@@ -224,7 +224,7 @@ struct dfxpHdlType {
 	int i_freemium_version;
 	int oem_build;
 	int major_version; /* Major version number (ex. 7) */
-	long l_host_buffer_delay_msecs;
+	int32_t l_host_buffer_delay_msecs;
 	int processing_only;
 
 	// Buffers for internal signal manipulations
@@ -285,7 +285,7 @@ struct dfxpHdlType {
 	int i_communicate_slowly_count;
 
 	/* Total audio processed time in the session in milliseconds */
-	unsigned long ul_total_msecs_audio_processed_time;
+	uint32_t ul_total_msecs_audio_processed_time;
 
 	/* Shared memory */
 	PT_HANDLE *hp_sharedUtil;

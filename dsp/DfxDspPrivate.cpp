@@ -22,13 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "codedefs.h"
 #include "DfxSdk.h"
 #include "dfxp.h"
-#include "prelst.h"
-#include "file.h"
+#include "Prelst.h"
+#include "File.h"
 #include "qnt.h"
 #include <string>
 
 #include "BinauralSyn.h"
-#include "ptutil\dfxp\u_dfxp.h"
+#include "ptutil/dfxp/u_dfxp.h"
 #include "com.h"
 #include "dfxSharedUtil.h"
 #include "GraphicEq.h"
@@ -75,8 +75,15 @@ DfxDspPrivate::DfxDspPrivate()
 		MessageBox(NULL, L"TTEST", L"TEST", MB_OK);
 	}
 
-	// Make sure the vocal reduction is turned off 
+	// Make sure the vocal reduction is turned off
 	if (dfxpSetButtonValue(dfxp_handle_, DFX_UI_BUTTON_VOCAL_REDUCTION_ON, IS_FALSE) != OKAY)
+	{
+		//return(NOT_OKAY);
+	}
+
+	// Headphone (binaural HRTF) virtualization defaults ON in the engine, which
+	// muffles audio on speakers and is not exposed in the UI. Force it off.
+	if (dfxpSetButtonValue(dfxp_handle_, DFX_UI_BUTTON_HEADPHONE, IS_FALSE) != OKAY)
 	{
 		//return(NOT_OKAY);
 	}
@@ -214,9 +221,10 @@ void DfxDspPrivate::powerOn(bool on)
 bool DfxDspPrivate::isPowerOn()
 {
 	int value;
-	
+
 	dfxpGetButtonValue(dfxp_handle_, DFX_UI_BUTTON_BYPASS, &value);
-	if (value != 0)
+	// bypass=0 means NOT bypassed = power ON; bypass=1 means bypassed = power OFF
+	if (value == 0)
 	{
 		return true;
 	}
@@ -302,9 +310,9 @@ void DfxDspPrivate::setEffectValue(DfxDsp::Effect effect, float value)
 	dfxpSetKnobValue(dfxp_handle_, knob, (realtype)value / (realtype)10.0, false);
 }
 
-unsigned long DfxDspPrivate::getTotalAudioProcessedTime()
+uint32_t DfxDspPrivate::getTotalAudioProcessedTime()
 {
-	unsigned long value;
+	uint32_t value;
 
 	dfxpGetTotalAudioProcessedTime(dfxp_handle_, &value);
 

@@ -81,9 +81,9 @@ int PT_DECLSPEC pstrCalcHourMinSecondsString_Wide(int i_num_seconds, wchar_t *wc
    num_seconds = tmp_seconds_left % 60;
 
 	if (num_hours > 0)
-      swprintf(wcp_hms_representation, L"%d:%02d:%02d", num_hours, num_minutes, num_seconds);
+      swprintf(wcp_hms_representation, sizeof(wcp_hms_representation)/sizeof(*(wcp_hms_representation)), L"%d:%02d:%02d", num_hours, num_minutes, num_seconds);
 	else
-      swprintf(wcp_hms_representation, L"%d:%02d", num_minutes, num_seconds);
+      swprintf(wcp_hms_representation, sizeof(wcp_hms_representation)/sizeof(*(wcp_hms_representation)), L"%d:%02d", num_minutes, num_seconds);
 
 	return(OKAY);
 }

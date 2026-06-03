@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _DFX_DSP_H_
 
 #include <string>
+#include <cstdint>
 
 struct DfxPreset {
 	std::wstring full_path;
@@ -66,7 +67,7 @@ public:
 	float getEffectValue(Effect effect);
 	void setEffectValue(Effect effect, float value);
 	DfxPreset getPresetInfo(std::wstring preset_file_full_path);
-	unsigned long getTotalAudioProcessedTime();
+	uint32_t getTotalAudioProcessedTime();
 	void resetTotalAudioProcessedTime();
     void getSpectrumBandValues(float* rp_band_values, int i_array_size);
 

@@ -72,7 +72,7 @@ int DfxDspPrivate::loadPreset(std::wstring preset_file_full_path)
 
 	/* Store the preset num in the registry */
 	// SHOULD LET JUCE REMEMBER CURRENT PRESET SELECTION
-	//if (writeRegistrySessionLongValue((long)i_prelst_index, DFXG_REGISTRY_CURRENT_PRESET_NUM_WIDE) != OKAY)
+	//if (writeRegistrySessionLongValue((int32_t)i_prelst_index, DFXG_REGISTRY_CURRENT_PRESET_NUM_WIDE) != OKAY)
 	//return(NOT_OKAY);
 
 	/* Store the new clean preset settigns */
@@ -232,6 +232,9 @@ int DfxDspPrivate::getStateInfoFromVals(PT_HANDLE *hp_vals, bool b_include_eq)
 		if (valsGetAppDependentInt(hp_vals, DFXG_VALS_APP_DEPEND_HEADPHONE_INDEX, &(headphone_on_)) != OKAY)
 			return(NOT_OKAY);
 	}
+	// Binaural headphone virtualization is not exposed in the UI and muffles
+	// audio on speakers; keep it off regardless of what the preset stored.
+	headphone_on_ = IS_FALSE;
 
 	/*
 	* Set the music information
@@ -363,34 +366,26 @@ int DfxDspPrivate::createValsFromStateInfo(wchar_t *preset_name, PT_HANDLE **hpp
 DfxPreset DfxDspPrivate::getPresetInfo(std::wstring preset_file_full_path)
 {
 	DfxPreset dfx_preset;
-	PT_HANDLE *vals_hdl;
-	wchar_t *wcp_comment;
+	PT_HANDLE *vals_hdl = NULL;
+	wchar_t *wcp_comment = NULL;
 
 	dfx_preset.full_path = preset_file_full_path;
 
-	// Read the file
-	if (valsRead(&preset_file_full_path[0], IS_FALSE, NULL, &vals_hdl) != OKAY)
+	// Read the file. On failure valsRead leaves vals_hdl untouched, so it must
+	// be initialized to NULL above and checked before use.
+	if (valsRead(&preset_file_full_path[0], IS_FALSE, NULL, &vals_hdl) != OKAY || vals_hdl == NULL)
 	{
+		return dfx_preset;
 	}
 
-	if (vals_hdl == NULL)
-	{
-	}
-
-	/* Get the comment */
-	if (valsGetComment(vals_hdl, &wcp_comment) != OKAY)
-	{
-	}
-	if (wcp_comment != NULL)
+	/* Get the comment (used as the preset display name) */
+	if (valsGetComment(vals_hdl, &wcp_comment) == OKAY && wcp_comment != NULL)
 	{
 		dfx_preset.name = wcp_comment;
-		//swprintf(wcp_line_str, L"%s", wcp_comment);
 	}
 
-	// Free up the vals handle 
-	if (valsFreeUp(&vals_hdl) != OKAY)
-	{
-	}
+	// Free up the vals handle
+	valsFreeUp(&vals_hdl);
 
 	return dfx_preset;
 
@@ -451,8 +446,8 @@ if (wcp_comment == NULL)
 return(NOT_OKAY);
 
 // Construct the line
-//	      swprintf(wcp_line_str, L"(%d) %s", index + 1, wcp_comment);
-swprintf(wcp_line_str, L"%s", wcp_comment);
+//	      swprintf(wcp_line_str, sizeof(wcp_line_str)/sizeof(*(wcp_line_str)), L"(%d) %s", index + 1, wcp_comment);
+swprintf(wcp_line_str, sizeof(wcp_line_str)/sizeof(*(wcp_line_str)), L"%s", wcp_comment);
 
 SendDlgItemMessage(hDlg, IDC_PRESET_LIST, LB_ADDSTRING,
 0, (LPARAM)(LPSTR)wcp_line_str);
@@ -535,7 +530,7 @@ return(OKAY);
 // If it does not exist , set the current preset to be the default one
 if (!preset_exists)
 {
-if (dfxg_WriteRegistrySessionLongValue(hp_dfxg, (long)DFXG_DEFAULT_PRESET_INDEX, DFXG_REGISTRY_CURRENT_PRESET_NUM_WIDE) != OKAY)
+if (dfxg_WriteRegistrySessionLongValue(hp_dfxg, (int32_t)DFXG_DEFAULT_PRESET_INDEX, DFXG_REGISTRY_CURRENT_PRESET_NUM_WIDE) != OKAY)
 return(NOT_OKAY);
 }
 

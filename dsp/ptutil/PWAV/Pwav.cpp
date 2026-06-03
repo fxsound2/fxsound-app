@@ -47,7 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 int PT_DECLSPEC pwavNew(PT_HANDLE **hpp_pwav, CSlout *hp_slout, 
-            long l_buffer_length_samples, DWORD master_hwnd,
+            int32_t l_buffer_length_samples, DWORD master_hwnd,
             int i_num_buffers)
 {
    struct pwavHdlType *cast_handle;  
@@ -184,7 +184,7 @@ int pwav_AllocateBuffers(PT_HANDLE *hp_pwav)
  *   Changes the number of buffer and the buffer length.
  *
  */
-int PT_DECLSPEC pwavResetBufferSize(PT_HANDLE *hp_pwav, long l_buffer_length_samples, 
+int PT_DECLSPEC pwavResetBufferSize(PT_HANDLE *hp_pwav, int32_t l_buffer_length_samples, 
 						int i_num_buffers)
 {
    struct pwavHdlType *cast_handle;
@@ -234,8 +234,8 @@ int PT_DECLSPEC pwavResetBufferSize(PT_HANDLE *hp_pwav, long l_buffer_length_sam
 int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav, 
 						 wchar_t *wcp_filepath_in, wchar_t *wcp_filepath_out,
                    int i_num_channels_out, int i_waveout_dev, 
-                   int *ip_num_channels_in, long *lp_size_samples, 
-                   long *lp_samples_per_sec, int *ip_bits_per_sample)
+                   int *ip_num_channels_in, int32_t *lp_size_samples, 
+                   int32_t *lp_samples_per_sec, int *ip_bits_per_sample)
 {
    struct pwavHdlType *cast_handle;
    HANDLE hFormatIn;
@@ -259,7 +259,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
    if (!(cast_handle->hmmio_in = 
       mmioOpenW(wcp_filepath_in, NULL, MMIO_READ | MMIO_ALLOCBUF)))
    {
-      swprintf(cast_handle->wcp_msg1, L"Unable to open input file");
+      swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Unable to open input file");
       (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);    
       return(NOT_OKAY);
    }
@@ -270,11 +270,11 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
 	  if (!(cast_handle->hmmio_out = 
          mmioOpenW(wcp_filepath_out, NULL, MMIO_ALLOCBUF | MMIO_WRITE | MMIO_CREATE)))
       {
-         swprintf(cast_handle->wcp_msg1, L"Unable to open output file.");
+         swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Unable to open output file.");
          (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);    
-         swprintf(cast_handle->wcp_msg1, L"   File is probably in use by");
+         swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"   File is probably in use by");
          (cast_handle->slout_hdl)->Message_Wide(NEXT_LINE, cast_handle->wcp_msg1);   
-         swprintf(cast_handle->wcp_msg1, L"   another application.");
+         swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"   another application.");
          (cast_handle->slout_hdl)->Message_Wide(NEXT_LINE, cast_handle->wcp_msg1);             
          return(NOT_OKAY);
       }
@@ -288,7 +288,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
    if (mmioDescend(cast_handle->hmmio_in, (LPMMCKINFO) &(mmckinfoParent), 
                    NULL, MMIO_FINDRIFF))
    {
-      swprintf(cast_handle->wcp_msg1, L"Illegal WAVE file");
+      swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Illegal WAVE file");
       (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
       return(NOT_OKAY); 
    }
@@ -301,7 +301,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
    if (mmioDescend(cast_handle->hmmio_in, &(mmckinfoSubchunk),
                    &(mmckinfoParent), MMIO_FINDCHUNK))
    {
-      swprintf(cast_handle->wcp_msg1, L"WAVE file is corrupted");
+      swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"WAVE file is corrupted");
       (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
       return(NOT_OKAY);   
    }
@@ -311,14 +311,14 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
    hFormatIn = LocalAlloc(LMEM_MOVEABLE, LOWORD(dwFmtSize));
    if (!hFormatIn)
    {
-      swprintf(cast_handle->wcp_msg1, L"Out of memory");
+      swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Out of memory");
       (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
       return(NOT_OKAY);     
    }
    cast_handle->pFormatIn = (WAVEFORMATEX *)LocalLock(hFormatIn);
    if (!(cast_handle->pFormatIn))
    {
-      swprintf(cast_handle->wcp_msg1, L"Failed to lock memory");
+      swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Failed to lock memory");
       (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
       return(NOT_OKAY);     
    }   
@@ -327,14 +327,14 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
    hFormatOut = LocalAlloc(LMEM_MOVEABLE, LOWORD(dwFmtSize));
    if (!hFormatOut)
    {
-      swprintf(cast_handle->wcp_msg1, L"Out of memory");
+      swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Out of memory");
       (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
       return(NOT_OKAY);     
    }
    cast_handle->pFormatOut = (WAVEFORMATEX *)LocalLock(hFormatOut);
    if (!(cast_handle->pFormatOut))
    {
-      swprintf(cast_handle->wcp_msg1, L"Failed to lock memory");
+      swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Failed to lock memory");
       (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
       return(NOT_OKAY);     
    }
@@ -343,7 +343,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
    if (mmioRead(cast_handle->hmmio_in, (HPSTR)cast_handle->pFormatIn, 
                 dwFmtSize) != (LONG) dwFmtSize)
    {
-      swprintf(cast_handle->wcp_msg1, L"Failed to read format chunk");
+      swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Failed to read format chunk");
       (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);    
       LocalUnlock(hFormatIn);
       LocalFree(hFormatIn);   
@@ -355,7 +355,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
    /* Make sure it's a PCM file */
    if ((cast_handle->pFormatIn)->wFormatTag != WAVE_FORMAT_PCM)
 	{
-      swprintf(cast_handle->wcp_msg1, L"Not a PCM file");
+      swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Not a PCM file");
       (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);    
       LocalUnlock(hFormatIn);
       LocalFree(hFormatIn); 
@@ -367,7 +367,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
    /* Set the pass back format info */
    cast_handle->input_num_channels = (int)((cast_handle->pFormatIn)->nChannels);      
    *ip_num_channels_in = cast_handle->input_num_channels;   
-   *lp_samples_per_sec = (long)((cast_handle->pFormatIn)->nSamplesPerSec); 
+   *lp_samples_per_sec = (int32_t)((cast_handle->pFormatIn)->nSamplesPerSec); 
    
    /* Store number of output channels */
    cast_handle->output_num_channels = i_num_channels_out;
@@ -402,7 +402,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
    if (mmioDescend(cast_handle->hmmio_in, &(mmckinfoSubchunk), 
                   &(mmckinfoParent), MMIO_FINDCHUNK))
    {
-      swprintf(cast_handle->wcp_msg1, L"No data chunk");
+      swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"No data chunk");
       (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);    
       LocalUnlock(hFormatIn);
       LocalFree(hFormatIn);    
@@ -416,7 +416,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
    
    if (cast_handle->dwDataSize == 0L)
    {
-      swprintf(cast_handle->wcp_msg1, L"The data chunk has no data");
+      swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"The data chunk has no data");
       (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);    
       LocalUnlock(hFormatIn);
       LocalFree(hFormatIn);   
@@ -426,7 +426,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
    }
 
    /* Set the pass back size */
-   cast_handle->bytes_left_to_read = (long)(cast_handle->dwDataSize);
+   cast_handle->bytes_left_to_read = (int32_t)(cast_handle->dwDataSize);
    *lp_size_samples = cast_handle->bytes_left_to_read / cast_handle->wBlockSizeIn;
       
    /* Create the output file RIFF chunk of form type wave */  
@@ -438,7 +438,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
       if (mmioCreateChunk(cast_handle->hmmio_out, &(cast_handle->ckOutRiff), 
                           MMIO_CREATERIFF) != 0)
       {
-         swprintf(cast_handle->wcp_msg1, L"Failed to create wave chunk");
+         swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Failed to create wave chunk");
          (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);    
          LocalUnlock(hFormatIn);
          LocalFree(hFormatIn); 
@@ -457,7 +457,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
       (cast_handle->ckOut).cksize = sizeof(WAVEFORMATEX);
       if (mmioCreateChunk(cast_handle->hmmio_out, &(cast_handle->ckOut), 0) != 0)
       {
-         swprintf(cast_handle->wcp_msg1, L"Failed to create format chunk");
+         swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Failed to create format chunk");
          (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);    
          LocalUnlock(hFormatIn);
          LocalFree(hFormatIn);
@@ -473,7 +473,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
       if (mmioWrite(cast_handle->hmmio_out, (HPSTR)(cast_handle->pFormatOut), 
                  sizeof(WAVEFORMATEX)) != sizeof(WAVEFORMATEX))
       {
-         swprintf(cast_handle->wcp_msg1, L"Failed to write format chunk");
+         swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Failed to write format chunk");
          (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);    
          LocalUnlock(hFormatIn);
          LocalFree(hFormatIn);     
@@ -485,7 +485,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
       /* Ascend out of the 'fmt' chunk, back into the 'RIFF' chunk. */
       if (mmioAscend(cast_handle->hmmio_out, &(cast_handle->ckOut), 0) != 0)
       {
-         swprintf(cast_handle->wcp_msg1, L"Unable to write file");
+         swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Unable to write file");
          (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);    
          LocalUnlock(hFormatIn);
          LocalFree(hFormatIn); 
@@ -500,7 +500,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
       (cast_handle->ckOut).cksize = 0L;
       if (mmioCreateChunk(cast_handle->hmmio_out, &(cast_handle->ckOut), 0) != 0)
       {
-         swprintf(cast_handle->wcp_msg1, L"Unable to create data chunk");
+         swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Unable to create data chunk");
          (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);    
          LocalUnlock(hFormatIn);
          LocalFree(hFormatIn); 
@@ -515,11 +515,11 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
                   cast_handle->pFormatOut, 0L, 
                   0L, WAVE_FORMAT_QUERY))
 	{
-      swprintf(cast_handle->wcp_msg1, L"No soundcard support.");
+      swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"No soundcard support.");
       (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1); 
-      swprintf(cast_handle->wcp_msg1, L"   A soundcard must be installed");
+      swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"   A soundcard must be installed");
       (cast_handle->slout_hdl)->Message_Wide(NEXT_LINE, cast_handle->wcp_msg1);  
-      swprintf(cast_handle->wcp_msg1, L"   which can play the output.");
+      swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"   which can play the output.");
       (cast_handle->slout_hdl)->Message_Wide(NEXT_LINE, cast_handle->wcp_msg1);               
       LocalUnlock(hFormatIn);
       LocalFree(hFormatIn);   
@@ -536,7 +536,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
                       (DWORD)cast_handle->master_hwnd, 
                       0L, (DWORD)CALLBACK_WINDOW))
 		{
-         swprintf(cast_handle->wcp_msg1, L"Failed to open soundcard.");
+         swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Failed to open soundcard.");
          (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);    
          LocalUnlock(hFormatIn);
          LocalFree(hFormatIn);
@@ -565,13 +565,13 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
  *   It also passes back the total number of samples left to read.
  */
 int PT_DECLSPEC pwavReadNextBuffer(PT_HANDLE *hp_pwav, int i_buffer_num,
-                       long **lpp_buffer_data, long *lp_buffer_length_samples,
-                       long *lp_samples_left, int i_first_time, int i_prepare_header)
+                       int32_t **lpp_buffer_data, int32_t *lp_buffer_length_samples,
+                       int32_t *lp_samples_left, int i_first_time, int i_prepare_header)
 {
    struct pwavHdlType *cast_handle;
-   long num_bytes_to_read;
-   long read_buffer_length_bytes;
-   long read_return_bytes;
+   int32_t num_bytes_to_read;
+   int32_t read_buffer_length_bytes;
+   int32_t read_return_bytes;
    
    cast_handle = (struct pwavHdlType *)(hp_pwav);
 
@@ -596,7 +596,7 @@ int PT_DECLSPEC pwavReadNextBuffer(PT_HANDLE *hp_pwav, int i_buffer_num,
    /* Read the waveform data subchunk */
    if (num_bytes_to_read == 0)
    {
-      *lp_buffer_length_samples = (long)0L;
+      *lp_buffer_length_samples = (int32_t)0L;
       *lpp_buffer_data = NULL;      
    }
    else
@@ -609,10 +609,10 @@ int PT_DECLSPEC pwavReadNextBuffer(PT_HANDLE *hp_pwav, int i_buffer_num,
 		 (cast_handle->headerFlagsOut)[i_buffer_num] = IS_FALSE;
       }
       read_return_bytes = 
-          (long)(mmioRead(cast_handle->hmmio_in, 
+          (int32_t)(mmioRead(cast_handle->hmmio_in, 
                          (HPSTR)(cast_handle->lpDataOut[i_buffer_num]), 
                          num_bytes_to_read));
-      *lpp_buffer_data = (long *)(cast_handle->lpDataOut[i_buffer_num]);
+      *lpp_buffer_data = (int32_t *)(cast_handle->lpDataOut[i_buffer_num]);
    }
   
    *lp_buffer_length_samples = num_bytes_to_read / cast_handle->wBlockSizeIn;
@@ -662,7 +662,7 @@ int PT_DECLSPEC pwavReadNextBuffer(PT_HANDLE *hp_pwav, int i_buffer_num,
  */
 int PT_DECLSPEC pwavGetBuffer(PT_HANDLE *hp_pwav, 
                   int i_buffer_num, 
-                  long **lpp_buffer_data)
+                  int32_t **lpp_buffer_data)
                        
 {
    struct pwavHdlType *cast_handle;
@@ -672,7 +672,7 @@ int PT_DECLSPEC pwavGetBuffer(PT_HANDLE *hp_pwav,
    if (cast_handle == NULL)
       return(NOT_OKAY);
 
-   *lpp_buffer_data = (long *)(cast_handle->lpDataOut[i_buffer_num]); 
+   *lpp_buffer_data = (int32_t *)(cast_handle->lpDataOut[i_buffer_num]); 
    
    return(OKAY);
 }      
@@ -725,11 +725,11 @@ int PT_DECLSPEC pwavGetDoneReading(PT_HANDLE *hp_pwav, int *ip_done)
  * DESCRIPTION:
  *   Play the passed buffer for the passed length.
  */
-int PT_DECLSPEC pwavPlayBuffer(PT_HANDLE *hp_pwav, int i_buffer_num, long l_length_samples)
+int PT_DECLSPEC pwavPlayBuffer(PT_HANDLE *hp_pwav, int i_buffer_num, int32_t l_length_samples)
 {
    struct pwavHdlType *cast_handle;
    WORD wResult;
-   long length_bytes;
+   int32_t length_bytes;
   
    cast_handle = (struct pwavHdlType *)(hp_pwav);
 
@@ -744,7 +744,7 @@ int PT_DECLSPEC pwavPlayBuffer(PT_HANDLE *hp_pwav, int i_buffer_num, long l_leng
    if (cast_handle->save_mode)
    {
       mmioWrite(cast_handle->hmmio_out, (HPSTR)cast_handle->lpDataOut[i_buffer_num], 
-               (long)length_bytes);
+               (int32_t)length_bytes);
    } 
      
 	/* For debugging
