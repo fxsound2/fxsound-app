@@ -29,5 +29,6 @@ bool SysInfo::isServiceRunning(LPCWSTR /*service_name*/)
 
 bool SysInfo::canSupportHotkeys()
 {
-    return true;
+    // Requires XWayland / X11 display for xcb_grab_key.
+    return getenv("DISPLAY") != nullptr;
 }

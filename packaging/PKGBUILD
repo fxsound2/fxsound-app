@@ -7,7 +7,7 @@ arch=('x86_64' 'aarch64')
 url="https://github.com/fxsound2/fxsound-app"
 license=('AGPL3')
 depends=('pipewire' 'libx11' 'libxext' 'libxinerama' 'libxrandr' 'libxcursor'
-         'freetype2' 'fontconfig' 'mesa' 'alsa-lib')
+         'freetype2' 'fontconfig' 'mesa' 'alsa-lib' 'glib2' 'gtk-update-icon-cache')
 makedepends=('cmake' 'ninja' 'git')
 source=("git+https://github.com/fxsound2/fxsound-app.git#branch=main"
         "juce::git+https://github.com/juce-framework/JUCE.git#tag=6.1.6")
@@ -32,4 +32,13 @@ build() {
 package() {
     cd "$srcdir/fxsound-app"
     DESTDIR="$pkgdir" cmake --install build
+}
+
+post_install() {
+    gtk-update-icon-cache -qtf usr/share/icons/hicolor
+    update-desktop-database -q
+}
+
+post_upgrade() {
+    post_install
 }

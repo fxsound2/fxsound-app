@@ -56,7 +56,7 @@ private:
 	static LRESULT CALLBACK wndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 	void addIcon();
-	void showContextMenu();
+	void showContextMenu(int x = 0, int y = 0);
 	void addOutputDeviceMenu(PopupMenu* context_menu);
 	void showNotification();
 	String getTruncatedText(const String& text, int max_length);
@@ -67,8 +67,11 @@ private:
 	UINT taskbar_created_message_;
 
 #ifndef _WIN32
-	// Linux tray icon via StatusNotifierItem (DBus); see linux/tray.
+	// Linux tray icon via StatusNotifierItem + dbusmenu (DBus); see linux/tray.
 	std::unique_ptr<FxTraySNI> tray_sni_;
+	MenuItem buildDbusmenu();
+	void     pushDbusmenu();
+	void     handleMenuActivation(int item_id);
 #endif
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxSystemTrayView)

@@ -70,7 +70,8 @@ endif()
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GUI_DEPS REQUIRED
     x11 xext xinerama xrandr xcursor
-    freetype2 fontconfig gl alsa)
+    freetype2 fontconfig gl alsa
+    xcb xcb-keysyms)
 # GIO/GDBus for the StatusNotifierItem tray.
 pkg_check_modules(GIO REQUIRED gio-2.0)
 find_package(Threads REQUIRED)
@@ -97,7 +98,8 @@ add_executable(FxSound
     ${FX_GUI_SOURCES}
     ${JUCE_WRAPPERS}
     ${FX_JLC}/BinaryData.cpp
-    ${FX_ROOT}/linux/tray/fx_tray_sni.cpp)
+    ${FX_ROOT}/linux/tray/fx_tray_sni.cpp
+    ${FX_ROOT}/linux/LinuxHotkeys.cpp)
 
 target_include_directories(FxSound PRIVATE
     ${FX_JLC}
@@ -149,9 +151,15 @@ install(PROGRAMS $<TARGET_FILE:FxSound>
 install(FILES ${FX_ROOT}/packaging/fxsound.desktop
         DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 
-install(FILES ${FX_ROOT}/fxsound/Images/fxsound.png
+install(FILES ${FX_ROOT}/fxsound/Images/fxsound_large.png
         DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/256x256/apps
         RENAME fxsound.png)
+install(FILES ${FX_ROOT}/fxsound/Images/fxsound.png
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/32x32/apps
+        RENAME fxsound.png)
+install(CODE "execute_process(COMMAND gtk-update-icon-cache -qtf \
+    \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/icons/hicolor\" \
+    ERROR_QUIET)")
 
 # Factory presets: the app loads these from <prefix>/share/fxsound/Factsoft
 # (see FxController::getFactoryPresetDir).
