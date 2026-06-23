@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.9.0"
+<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.10.0"
               displaySplashScreen="1" jucerFormatVersion="1" companyName="FxSound LLC"
               companyWebsite="https://www.fxsound.com" companyCopyright="2026 FxSound&#8482;"
-              defines="UNICODE" postExportShellCommandWin="type %%1%%\Project\status_icons.rc &gt;&gt; %%1%%\Project\resources.rc"
+              defines="UNICODE" postExportShellCommandWin="type %%1%%\ProjectARM\status_icons.rc &gt;&gt; %%1%%\ProjectARM\resources.rc"
               cppLanguageStandard="17">
   <MAINGROUP id="fy4sG5" name="FxSound">
     <GROUP id="{9737D476-EEC4-7E5E-0B04-48E2783CC448}" name="Fonts">
@@ -228,11 +228,12 @@
       <FILE id="cAIn3x" name="FxSound.ba.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ba.txt"/>
       <FILE id="gVyPZi" name="FxSound.de.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.de.txt"/>
       <FILE id="CQH7Jy" name="FxSound.es.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.es.txt"/>
+      <FILE id="dw8pYo" name="FxSound.fa.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.fa.txt"/>
+      <FILE id="P4JZ3A" name="FxSound.fi.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.fi.txt"/>
       <FILE id="f64DAO" name="FxSound.fr.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.fr.txt"/>
       <FILE id="f1D4BE" name="FxSound.hr.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.hr.txt"/>
       <FILE id="Wj87Eh" name="fxsound.hu.txt" compile="0" resource="1" file="../Resources/Strings/fxsound.hu.txt"/>
       <FILE id="KRZtVd" name="FxSound.id.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.id.txt"/>
-      <FILE id="OWtECq" name="FxSound.ir.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ir.txt"/>
       <FILE id="zxfPfh" name="FxSound.it.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.it.txt"/>
       <FILE id="JRQzN4" name="FxSound.ja.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ja.txt"/>
       <FILE id="JZUDxv" name="FxSound.ko.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ko.txt"/>
