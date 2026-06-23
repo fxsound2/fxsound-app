@@ -75,6 +75,15 @@ FxHotkeyEditor::FxHotkeyEditor(const String& command)
 
 bool FxHotkeyEditor::keyPressed(const KeyPress& key)
 {
+	if (key.getKeyCode() == KeyPress::deleteKey)
+	{
+		mod_ = 0;
+		vk_ = 0;
+		FxController::getInstance().setHotkey(command_, 0, 0);
+		setKeyText();
+		return true;
+	}
+
 	int mod = 0;
 	int vk = 0;
 
@@ -147,8 +156,13 @@ bool FxHotkeyEditor::keyPressed(const KeyPress& key)
 		mod_ = mod;
 		vk_ = vk;
 
+		if (!FxController::getInstance().setHotkey(command_, mod_, vk_))
+		{
+			mod_ = 0;
+			vk_ = 0;
+		}
+
 		setKeyText();
-		FxController::getInstance().setHotkey(command_, mod_, vk_);
 
 		return true;
 	}
@@ -237,7 +251,7 @@ void FxHotkeyEditor::setKeyText()
 		{
 			key_text_ += static_cast<WCHAR>(vk_);
 		}
-
-		setText(key_text_, NotificationType::dontSendNotification);
 	}
+
+	setText(key_text_, NotificationType::dontSendNotification);
 }

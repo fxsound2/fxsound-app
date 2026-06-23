@@ -105,11 +105,14 @@ HRESULT STDMETHODCALLTYPE CsndDevicesAudioEndpointVolumeCallbackCapture::OnNotif
 	float captureVolSetting;
    struct sndDevicesHdlType *cast_handle;
 	BOOL captureMute;
-    
+
    cast_handle = (struct sndDevicesHdlType *)g_sndDevicesVolumeCallbackCapture_hdl;
 
    if (cast_handle == NULL)
      return(S_FALSE);
+
+	if (cast_handle->ignoreVolumeCallbacks)
+		return(S_OK);
 
 	if (pNotify == NULL)
 	{
@@ -204,11 +207,14 @@ HRESULT STDMETHODCALLTYPE CsndDevicesAudioEndpointVolumeCallbackPlayback::OnNoti
 	float playbackVolSetting;
    struct sndDevicesHdlType *cast_handle;
 	BOOL playbackMute;
-    
+
    cast_handle = (struct sndDevicesHdlType *)g_sndDevicesVolumeCallbackPlayback_hdl;
 
    if (cast_handle == NULL)
      return(S_FALSE);
+
+   if (cast_handle->ignoreVolumeCallbacks)
+		return(S_OK);
 
 	if (pNotify == NULL)
 	{

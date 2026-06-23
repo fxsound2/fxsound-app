@@ -45,10 +45,12 @@ FxSystemTrayView::FxSystemTrayView()
 
 FxSystemTrayView::~FxSystemTrayView()
 {
+    FxModel::getModel().removeListener(this);
+
     HWND hWnd = (HWND)getWindowHandle();
 
+    SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)componentWndProc_);
     SetWindowLongPtr(hWnd, GWLP_USERDATA, NULL);
-    SetWindowLongPtr(hWnd, GWLP_WNDPROC, NULL);
 
     NOTIFYICONDATA nid = { sizeof(nid) };
     nid.uFlags = NIF_GUID;
@@ -225,15 +227,11 @@ void FxSystemTrayView::showContextMenu()
     for (auto i = 0; i < count; i++)
     {
         auto preset = FxModel::getModel().getPreset(i);
-        PopupMenu::Item menu_item(preset.name);
+        PopupMenu::Item menu_item(preset.modified ? preset.name + L" *" : preset.name);
         menu_item.setID(id);
         if (id - PRESET_MENU_ID_START == FxModel::getModel().getSelectedPreset())
         {
             menu_item.setTicked(true);
-            if (FxModel::getModel().isPresetModified())
-            {
-                menu_item.text = preset.name + L" *";
-            }
         }
 
         if (preset_type != preset.type)
@@ -262,6 +260,7 @@ void FxSystemTrayView::showContextMenu()
     auto settingsClicked = []() {
         FxSettingsDialog settings_dialog;
         settings_dialog.runModalLoop();
+        FxController::getInstance().refreshOutputList();
     };
 
     auto darkModeClicked = [this]() {

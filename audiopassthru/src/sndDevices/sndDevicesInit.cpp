@@ -114,6 +114,7 @@ int PT_DECLSPEC sndDevicesInit(PT_HANDLE *hp_sndDevices, CSlout *hp_slout, int i
 		cast_handle->deviceFriendlyNameRealDevices[i] = NULL;
 		cast_handle->deviceDescriptionRealDevices[i] = NULL;
 		cast_handle->deviceState[i] = 0;
+		wcscpy(cast_handle->deviceFormFactor[i], L"");
 	}
 
 	cast_handle->numRealDevices = 0;
@@ -191,6 +192,7 @@ int PT_DECLSPEC sndDevices_FreeReuseableObjects(PT_HANDLE *hp_sndDevices)
 		//CoTaskMemFree(cast_handle->pwszIDRealDevices[i]);
 		wcscpy(cast_handle->deviceFriendlyName[i], L"");
 		wcscpy(cast_handle->deviceDescription[i], L"");
+		wcscpy(cast_handle->deviceFormFactor[i], L"");
 		cast_handle->deviceFriendlyNameRealDevices[i] = NULL;
 		cast_handle->deviceDescriptionRealDevices[i] = NULL;
 		cast_handle->deviceState[i] = 0;

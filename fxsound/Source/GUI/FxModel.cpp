@@ -23,7 +23,6 @@ FxModel::FxModel()
 	power_state_ = false;
 	
 	selected_preset_ = 0;
-	preset_modified_ = false;
 	hotkey_support_ = true;
 	language_ = 1;
 	debug_logging_ = false;
@@ -66,34 +65,6 @@ void FxModel::removePreset(int preset)
 
 		notifyListeners(Event::PresetListUpdated);
 	}
-}
-
-int FxModel::selectPreset(const String& selected_preset, bool notify)
-{
-	if (selected_preset.isNotEmpty())
-	{
-		auto i = 0;
-		for (auto preset : presets_)
-		{
-			if (preset.name == selected_preset)
-			{
-				selected_preset_ = i;
-				break;
-			}
-			i++;
-		}
-	}
-	else
-	{
-		selected_preset_ = 0;
-	}
-
-	if (notify)
-	{
-		notifyListeners(Event::PresetSelected);
-	}
-
-	return selected_preset_;
 }
 
 void FxModel::selectPreset(int selected_preset, bool notify)
@@ -143,17 +114,26 @@ FxModel::Preset FxModel::getPreset(int preset) const
 	return {};
 }
 
-bool FxModel::isPresetModified() const
+bool FxModel::isPresetModified(int preset_index) const
 {
-	return preset_modified_;
+	if (preset_index < 0)
+		preset_index = selected_preset_;
+
+	if (preset_index >= 0 && preset_index < presets_.size())
+		return presets_[preset_index].modified;
+
+	return false;
 }
 
-void FxModel::setPresetModified(bool preset_modified)
+void FxModel::setPresetModified(int preset_index, bool preset_modified)
 {
-	bool notify = (preset_modified_ != preset_modified);
-	preset_modified_ = preset_modified;
+	if (preset_index < 0 || preset_index >= presets_.size())
+		return;
 
-	if (notify)
+	bool notify = (presets_[preset_index].modified != preset_modified);
+	presets_.getReference(preset_index).modified = preset_modified;
+
+	if (notify && preset_index == selected_preset_)
 	{
 		notifyListeners(Event::PresetModified);
 	}

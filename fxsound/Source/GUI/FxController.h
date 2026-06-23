@@ -64,7 +64,8 @@ public:
 	FxController(const FxController&) = delete;
 	void operator=(FxController&) = delete;
 
-    void config(const String& commandline);
+    void initConfig(const String& commandline);
+	void applyConfig(const String& commandline);
 	void init(FxMainWindow* main_window, FxSystemTrayView* system_tray_view, AudioPassthru* audio_passthru);
 	void initPresets();
 
@@ -80,13 +81,15 @@ public:
 	bool exit();
 
 	void setPowerState(bool power_state);
-	bool setPreset(int selected_preset, bool notify=true);
+    bool setPreset(const String& preset_name, bool notify = true);
+	bool setPreset(int preset_index, bool notify=true);
 	void setOutput(const String output_device_id, bool notify=true);
 	void setOutput(int output, bool notify=true);
     
     bool isPlaybackDeviceAvailable();
 	void checkDeviceChanges();
 
+	void autoSaveModifiedPreset();
 	void savePreset(const String& preset_name=L"");
 	void renamePreset(const String& new_name);
 	void deletePreset();
@@ -119,15 +122,19 @@ public:
 
 	void enableHotkeys(bool enable);
 	bool getHotkey(String cmdKey, int& mod, int& vk);
-	bool setHotkey(const String& command, int new_mod, int vk);
+	bool setHotkey(const String& command, int new_mod, int new_vk);
 	bool isValidHotkey(int mod, int new_vk);
 
 	juce::Array<DeviceConfig> getDeviceConfigs();
     void saveDeviceConfigs(const juce::Array<DeviceConfig>& device_configs);
 	bool isOutputDeviceConnected(const String& output_device_name);
 	SoundDevice getPreferredOutput();
+	int compareOutputDevicePriority(const String& output_device_name1, const String& output_device_name2, const juce::Array<DeviceConfig>& device_configs);
+	void refreshOutputList();
 	const String& getOutputName();
     void setOutputName(const String& output_device_name);
+    bool isNewOutputPrioritized();
+    void setNewOutputPrioritized(bool prioritize_new_devices);
 
 	FxThemeMode getThemeMode();
 	void setThemeMode(FxThemeMode mode);
@@ -213,14 +220,23 @@ private:
 
 	static LRESULT CALLBACK eventCallback(HWND hwnd, const UINT message, const WPARAM w_param, const LPARAM l_param);
 	void timerCallback() override;
-
-	void onSoundDeviceChange(std::vector<SoundDevice> sound_devices) override;
-	void onSoundDeviceChange() override;
+	void onSoundDeviceChange(bool processing) override;
+	void onSystemSuspend();
+	void onSystemResume();
 	
     void initOutputs(std::vector<SoundDevice>& sound_devices);
 	void updateOutputs(std::vector<SoundDevice>& sound_devices);
+    void selectProcessingOutput(std::vector<SoundDevice>& sound_devices);
+    void syncOutputWithSystemDefault(std::vector<SoundDevice>& sound_devices);
+
+	void sortByDeviceConfigPriority(std::vector<SoundDevice>& devices);
 
 	void powerOn(bool on);
+
+	String getAutoSavePath() const;
+    String getAutoSavePresetPath(const String& preset_name) const;
+	void autoSavePreset(int preset_index);
+	void deleteAutoSavedPreset(const String& preset_name);
 
 	void registerHotkeys();
 	void unregisterHotkeys();
@@ -229,6 +245,7 @@ private:
 
 	MessageWindow message_window_;
 	bool hotkeys_registered_;
+	HPOWERNOTIFY powerNotify_;
 
 	FxMainWindow* main_window_;
 	FxSystemTrayView* system_tray_view_;
@@ -256,6 +273,9 @@ private:
 	bool audio_process_on_;
 	std::time_t audio_process_start_time_;
 
+	bool preset_dirty_;
+	int auto_save_counter_;
+
 	bool minimize_tip_;
 	bool survey_tip_;
 	int max_user_presets_;
@@ -263,4 +283,5 @@ private:
 	DWORD session_id_;
 
 	CriticalSection lock_;
+	CriticalSection save_lock_;
 };

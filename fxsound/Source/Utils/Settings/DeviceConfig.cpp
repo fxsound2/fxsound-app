@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace FxSound
 {
+    std::function<void()> DeviceConfig::onDeviceConfigsUpdate;
+
     void DeviceConfig::initDeviceConfigs(Settings& settings, std::vector<SoundDevice>& sound_devices)
     {
         juce::Array<DeviceConfig> device_configs;
@@ -41,9 +43,9 @@ namespace FxSound
         {
             if (sound_device.isRealDevice)
             {
-                DeviceConfig device_config = { sound_device.pwszID.c_str() , sound_device.deviceFriendlyName.c_str(), "" };
+                DeviceConfig device_config = { sound_device.pwszID.c_str(), sound_device.deviceFriendlyName.c_str(), "", sound_device.deviceFormFactor.c_str() };
                 device_configs.add(device_config);
-            }            
+            }
         }
 
         saveDeviceConfigs(settings, "device_configs", device_configs);
@@ -52,6 +54,7 @@ namespace FxSound
     void DeviceConfig::updateDeviceConfigs(Settings& settings, const std::vector<SoundDevice>& sound_devices)
     {
         juce::Array<DeviceConfig> device_configs = loadDeviceConfigs(settings, "device_configs");
+        auto prioritize_new_output = settings.getBool("prioritize_new_output");
 
         bool save_config = false;
         for (auto sound_device : sound_devices)
@@ -71,14 +74,35 @@ namespace FxSound
             if (!device_found)
             {
                 save_config = true;
-                DeviceConfig device_config = { sound_device.pwszID.c_str() , sound_device.deviceFriendlyName.c_str(), "" };
-                device_configs.add(device_config);
+                DeviceConfig device_config = { sound_device.pwszID.c_str(), sound_device.deviceFriendlyName.c_str(), "", sound_device.deviceFormFactor.c_str() };
+                if (prioritize_new_output)
+                {   
+                    device_configs.insert(0, device_config);
+                }
+                else
+                {
+                    device_configs.add(device_config);
+                }
             }
+        }
+
+        if (device_configs.removeIf([&](const DeviceConfig& device_config) {
+            if (device_config.device_form_factor == "HDMI")
+                return false;
+            return std::find_if(sound_devices.begin(), sound_devices.end(),
+                [&](const SoundDevice& sound_device) {
+                    return sound_device.isRealDevice && device_config.device_name == sound_device.deviceFriendlyName.c_str();
+                }) == sound_devices.end();
+        }) > 0)
+        {
+            save_config = true;
         }
 
         if (save_config)
         {
             saveDeviceConfigs(settings, "device_configs", device_configs);
+            if (onDeviceConfigsUpdate)
+                onDeviceConfigsUpdate();
         }
     }
 
@@ -103,6 +127,7 @@ namespace FxSound
         obj->setProperty("device_id", device_config.device_id);
         obj->setProperty("device_name", device_config.device_name);
         obj->setProperty("preset", device_config.preset);
+        obj->setProperty("device_form_factor", device_config.device_form_factor);
 
         return juce::var(obj);
     }
@@ -116,6 +141,7 @@ namespace FxSound
             device_config.device_id = obj->getProperty("device_id").toString();
             device_config.device_name = obj->getProperty("device_name").toString();
             device_config.preset = obj->getProperty("preset").toString();
+            device_config.device_form_factor = obj->getProperty("device_form_factor").toString();
         }
 
         return device_config;

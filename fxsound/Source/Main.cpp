@@ -64,7 +64,7 @@ public:
 
             setWorkingDirectory();
 
-            FxController::getInstance().config(commandline);
+            FxController::getInstance().initConfig(commandline);
 
             audio_passthru_ = std::make_unique<AudioPassthru>();
             main_window_ = std::make_unique<FxMainWindow>();
@@ -92,29 +92,33 @@ public:
         }
     }
 
-    void suspended() override
-    {
-        FxController::getInstance().stopTimer();
-    }
-
-    void resumed() override
-    {
-        FxController::getInstance().startTimer(100);
-    }
-
     void shutdown() override
     {
         if (main_window_.get() != nullptr)
         {
-            // Add your application's shutdown code here..
+            FxController::getInstance().autoSaveModifiedPreset();
+            FxController::getInstance().stopTimer();
 
             audio_passthru_.reset();
+
+            // UIA holds COM references to AccessibilityNativeHandle objects for
+            // desktop-resident components. Call UiaDisconnectAllProviders to
+            // synchronously release those references before the components are
+            // destroyed, so their COM refcounts reach zero in the destructor
+            // chain rather than after static destructors have already run.
+            if (HMODULE hUia = GetModuleHandleW(L"UIAutomationCore.dll"))
+            {
+                typedef HRESULT (WINAPI* UiaDisconnectAllProvidersFunc)();
+                if (auto fn = (UiaDisconnectAllProvidersFunc)GetProcAddress(hUia, "UiaDisconnectAllProviders"))
+                    fn();
+            }
 
             system_tray_view_.reset();
 
             main_window_.reset(); // (deletes our window)
         }
 
+        LocalisedStrings::setCurrentMappings(nullptr);
         LookAndFeel::setDefaultLookAndFeel(nullptr);
 
         CoUninitialize();
@@ -129,9 +133,9 @@ public:
         quit();
     }
 
-    void anotherInstanceStarted (const String&) override
+    void anotherInstanceStarted (const String& commandline) override
     {
-        FxController::getInstance().showMainWindow();
+        FxController::getInstance().applyConfig(commandline);
     }
 
 private:
@@ -196,7 +200,7 @@ private:
 
         if (context == nullptr)
         {
-            // No crash context — capture live callstack
+            // No crash context - capture live callstack
             void* frames[MAX_FRAMES];
             USHORT capturedFrames = CaptureStackBackTrace(0, MAX_FRAMES, frames, NULL);
 
@@ -228,7 +232,7 @@ private:
         }
         else
         {
-            // Crash context — walk using StackWalk64
+            // Crash context - walk using StackWalk64
             STACKFRAME64 stackFrame = { 0 };
 #if defined(_M_IX86)
             DWORD machineType = IMAGE_FILE_MACHINE_I386;
