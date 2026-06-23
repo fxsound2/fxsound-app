@@ -3409,6 +3409,9 @@
     <None Include="..\..\Resources\Strings\FxSound.es.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
+    <None Include="..\..\Resources\Strings\FxSound.fa.txt">
+      <Filter>FxSound\Strings</Filter>
+    </None>
     <None Include="..\..\Resources\Strings\FxSound.fi.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
@@ -3422,9 +3425,6 @@
       <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Resources\Strings\FxSound.id.txt">
-      <Filter>FxSound\Strings</Filter>
-    </None>
-    <None Include="..\..\Resources\Strings\FxSound.ir.txt">
       <Filter>FxSound\Strings</Filter>
     </None>
     <None Include="..\..\Resources\Strings\FxSound.it.txt">

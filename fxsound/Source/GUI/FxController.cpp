@@ -2141,7 +2141,7 @@ void FxController::setLanguage(String language_code)
 	}
 	else if (language_.startsWithIgnoreCase("fa"))
 	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ir_txt, BinaryData::FxSound_ir_txtSize), false));
+		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_fa_txt, BinaryData::FxSound_fa_txtSize), false));
 	}
 	else if (language_.startsWithIgnoreCase("ua"))
 	{

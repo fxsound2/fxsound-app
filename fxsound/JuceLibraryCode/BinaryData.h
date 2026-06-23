@@ -206,6 +206,9 @@ namespace BinaryData
     extern const char*   FxSound_es_txt;
     const int            FxSound_es_txtSize = 12178;
 
+    extern const char*   FxSound_fa_txt;
+    const int            FxSound_fa_txtSize = 15704;
+
     extern const char*   FxSound_fi_txt;
     const int            FxSound_fi_txtSize = 11931;
 
@@ -220,9 +223,6 @@ namespace BinaryData
 
     extern const char*   FxSound_id_txt;
     const int            FxSound_id_txtSize = 11801;
-
-    extern const char*   FxSound_ir_txt;
-    const int            FxSound_ir_txtSize = 18001;
 
     extern const char*   FxSound_it_txt;
     const int            FxSound_it_txtSize = 12080;
