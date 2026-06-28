@@ -113,14 +113,16 @@ int PT_DECLSPEC sndDevicesInitialSetupCaptureDevice(PT_HANDLE *hp_sndDevices, in
 	// PTNOTE - Retrieves format of captured stream, will always be the current setting of the sound card, with
 	// the exception that the signal format appears to always be 32 bit float.
 	// This apparently allocates space and modified the pointer to point to that new space.
+	pwfx = NULL;
 	hr = cast_handle->pAudioClientCapture->GetMixFormat(&pwfx);
-	if (FAILED(hr))
+	if (FAILED(hr) || pwfx == NULL)
 	{
 		*ip_status = SND_DEVICES_DEVICE_GET_FORMAT_FAILED;
 		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_DEVICE_GET_FORMAT_FAILED);
 	}
 
 	cast_handle->wfxCapture = *pwfx;
+	CoTaskMemFree(pwfx);
 
 	return(OKAY);
 }
@@ -169,8 +171,9 @@ int PT_DECLSPEC sndDevicesFinalSetupCaptureDevice(PT_HANDLE *hp_sndDevices, int 
 		StreamFlags = AUDCLNT_STREAMFLAGS_LOOPBACK|AUDCLNT_SESSIONFLAGS_DISPLAY_HIDE;
 
 	// For some reason next call won't take our copied version of this format, likely its expecting WAVEFORMATEXTENSIBLE
+	pwfx = NULL;
 	hr = cast_handle->pAudioClientCapture->GetMixFormat(&pwfx);
-	if (FAILED(hr))
+	if (FAILED(hr) || pwfx == NULL)
 	{
 		*ip_status = SND_DEVICES_DEVICE_GET_FORMAT_FAILED;
 		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_DEVICE_GET_FORMAT_FAILED);
@@ -179,6 +182,7 @@ int PT_DECLSPEC sndDevicesFinalSetupCaptureDevice(PT_HANDLE *hp_sndDevices, int 
 	// Set capture device up to perform loopback capture. Shared mode allows multiple apps to do capture.
 	hr = cast_handle->pAudioClientCapture->Initialize(AUDCLNT_SHAREMODE_SHARED, StreamFlags,
 																	  cast_handle->hnsRequestedDurationCapture,0, pwfx, NULL);
+	CoTaskMemFree(pwfx);
 	if (FAILED(hr))
 	{
 		*ip_status = SND_DEVICES_DEVICE_INIT_PROP_FAILED;
@@ -251,7 +255,6 @@ int PT_DECLSPEC sndDevicesInitialSetupPlaybackDevice(PT_HANDLE *hp_sndDevices, i
 	}
 
 	if( cast_handle->pAudioClientPlayback == NULL )
-	if (FAILED(hr))
 	{
 		*ip_status = SND_DEVICES_NULL_PLAYBACK_CLIENT;
 		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_NULL_PLAYBACK_CLIENT);
@@ -283,14 +286,16 @@ int PT_DECLSPEC sndDevicesInitialSetupPlaybackDevice(PT_HANDLE *hp_sndDevices, i
 	}
 
 	// Get playback device format, this apparently allocates space and modified the pointer to point to that new space.
+	pwfx = NULL;
 	hr = cast_handle->pAudioClientPlayback->GetMixFormat(&pwfx);
-	if (FAILED(hr))
+	if (FAILED(hr) || pwfx == NULL)
 	{
 		*ip_status = SND_DEVICES_DEVICE_GET_FORMAT_FAILED;
 		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_DEVICE_GET_FORMAT_FAILED);
 	}
 
 	cast_handle->wfxPlayback = *pwfx;
+	CoTaskMemFree(pwfx);
 
 	return(OKAY);
 }
@@ -315,6 +320,21 @@ int PT_DECLSPEC sndDevicesFinalSetupPlaybackDevice(PT_HANDLE *hp_sndDevices, int
 
 	*ip_status = SND_DEVICES_DEVICE_OPERATION_COMPLETED;
 
+	if( cast_handle->pPlaybackDevice == NULL )
+	{
+		*ip_status = SND_DEVICES_NULL_PLAYBACK_DEVICE;
+		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_NULL_PLAYBACK_DEVICE);
+	}
+
+	// Release and re-activate to get a fresh, uninitialized IAudioClient.
+	SAFE_RELEASE(cast_handle->pAudioClientPlayback);
+	hr = cast_handle->pPlaybackDevice->Activate(cast_handle->IID_IAudioClient, CLSCTX_ALL, NULL, (void**)&cast_handle->pAudioClientPlayback);
+	if (FAILED(hr))
+	{
+		*ip_status = SND_DEVICES_DEVICE_ACTIVATION_FAILED;
+		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_DEVICE_ACTIVATION_FAILED);
+	}
+
 	if( cast_handle->pAudioClientPlayback == NULL )
 	{
 		*ip_status = SND_DEVICES_NULL_PLAYBACK_CLIENT;
@@ -332,23 +352,58 @@ int PT_DECLSPEC sndDevicesFinalSetupPlaybackDevice(PT_HANDLE *hp_sndDevices, int
 		// The AUDCLNT_SESSIONFLAGS_DISPLAY_HIDE flag hides extra occurences of our volume control in Mixer dialog.
 		StreamFlags = AUDCLNT_SESSIONFLAGS_DISPLAY_HIDE;
 
-	// For some reason next call won't take our copied version of this format, likely its expecting WAVEFORMATEXTENSIBLE
+	// Must call GetMixFormat on the freshly activated client; a copied WAVEFORMATEX is not accepted by Initialize.
+	pwfx = NULL;
 	hr = cast_handle->pAudioClientPlayback->GetMixFormat(&pwfx);
-	if (FAILED(hr))
+	if (FAILED(hr) || pwfx == NULL)
 	{
 		*ip_status = SND_DEVICES_DEVICE_GET_FORMAT_FAILED;
 		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_DEVICE_GET_FORMAT_FAILED);
 	}
 
-    cast_handle->playbackDeviceIsUnavailable = FALSE;
-	// Set up playback device for playback in shared mode (multiples apps can play audio).
-	hr = cast_handle->pAudioClientPlayback->Initialize( AUDCLNT_SHAREMODE_SHARED, StreamFlags, cast_handle->hnsRequestedDurationPlayback, 0, pwfx, NULL);
+	// Query for the closest supported format before calling Initialize.
+	// Some devices (e.g. Bluetooth) return a mix format from GetMixFormat that their driver
+	// then rejects in Initialize with AUDCLNT_E_UNSUPPORTED_FORMAT.
+	WAVEFORMATEX *pClosestMatch = NULL;
+
+	cast_handle->playbackDeviceIsUnavailable = FALSE;
+
+	if (cast_handle->pAudioClientPlayback->IsFormatSupported(AUDCLNT_SHAREMODE_SHARED, pwfx, &pClosestMatch) == S_FALSE && pClosestMatch != NULL)
+	{
+		// Format is known to be unsupported — skip trying pwfx and go straight to closest match.
+		CoTaskMemFree(pwfx);
+		pwfx = NULL;
+		SAFE_RELEASE(cast_handle->pAudioClientPlayback);
+		hr = cast_handle->pPlaybackDevice->Activate(cast_handle->IID_IAudioClient, CLSCTX_ALL, NULL, (void**)&cast_handle->pAudioClientPlayback);
+		if (SUCCEEDED(hr) && cast_handle->pAudioClientPlayback != NULL)
+			hr = cast_handle->pAudioClientPlayback->Initialize(AUDCLNT_SHAREMODE_SHARED, StreamFlags, cast_handle->hnsRequestedDurationPlayback, 0, pClosestMatch, NULL);
+		else
+			hr = E_FAIL;
+	}
+	else
+	{
+		// Format is supported (S_OK) or IsFormatSupported gave no match — try pwfx directly.
+		hr = cast_handle->pAudioClientPlayback->Initialize(AUDCLNT_SHAREMODE_SHARED, StreamFlags, cast_handle->hnsRequestedDurationPlayback, 0, pwfx, NULL);
+		CoTaskMemFree(pwfx);
+		pwfx = NULL;
+
+		if (hr == AUDCLNT_E_UNSUPPORTED_FORMAT && pClosestMatch != NULL)
+		{
+			// Unexpected rejection — retry with closest match as a fallback.
+			SAFE_RELEASE(cast_handle->pAudioClientPlayback);
+			hr = cast_handle->pPlaybackDevice->Activate(cast_handle->IID_IAudioClient, CLSCTX_ALL, NULL, (void**)&cast_handle->pAudioClientPlayback);
+			if (SUCCEEDED(hr) && cast_handle->pAudioClientPlayback != NULL)
+				hr = cast_handle->pAudioClientPlayback->Initialize(AUDCLNT_SHAREMODE_SHARED, StreamFlags, cast_handle->hnsRequestedDurationPlayback, 0, pClosestMatch, NULL);
+			else
+				hr = E_FAIL;
+		}
+	}
+	CoTaskMemFree(pClosestMatch);
+
 	if (FAILED(hr))
 	{
-        if (hr == AUDCLNT_E_DEVICE_IN_USE)
-        {
-            cast_handle->playbackDeviceIsUnavailable = TRUE;
-        }
+		if (hr == AUDCLNT_E_DEVICE_IN_USE || hr == AUDCLNT_E_UNSUPPORTED_FORMAT)
+			cast_handle->playbackDeviceIsUnavailable = TRUE;
 		*ip_status = SND_DEVICES_AUDIO_CLIENT_INIT_FAILED;
 		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_AUDIO_CLIENT_INIT_FAILED);
 	}

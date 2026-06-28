@@ -28,11 +28,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 enum FxThemeMode : int {Dark=0, Light, NumModes};
 enum FxColor : int { WindowBackground, WidgetBackground, MenuBackground, Outline, DefaultText, DefaultFill, HighlightedText, HighlightedFill, MenuText,
 					 ComboBoxBackground, TextButtonBackground, ImageButton, HintText, ValidTextBorder, InvalidTextBorder, ControlBackground, SliderTrack, SliderHighlight,
-					 GraphHigh, GraphLow, EqStart, EqEnd, VerticalSliderLow, MenuHighlightBackground, PanelBackground, NumColors};
+					 GraphHigh, GraphLow, EqStart, EqEnd, VerticalSliderLow, MenuHighlightBackground, PanelBackground, RowOutline, SelectedRowOutline, NumColors};
 enum FxImage : int { DefaultLogo, HighlightedLogo, IconLogo,
 					 PowerOnButton, PowerOffButton, DonateButton, DonateButtonHover, MenuButton, MenuButtonHover,
 					 MinimizeButton, MinimizeButtonHover, MaximizeButton, MaximizeButtonHover, MinimizeWindowButton, MinimizeWindowButtonHover,
-				     ArrowNext, ArrowNextBW, ArrowPrev, ArrowPrevBW, ArrowUp, ArrowDown, DropDownArrow, DropDownArrowHover,
+				     ArrowNext, ArrowNextBW, ArrowPrev, ArrowPrevBW, ArrowUpSelected, ArrowUp, ArrowDownSelected, ArrowDown, DropDownArrow, DropDownArrowHover,
 	                 SliderThumb, SliderThumbBW, NumImages };
 
 class FxTheme : public LookAndFeel_V4

@@ -62,6 +62,14 @@ AudioPassthruPrivate::~AudioPassthruPrivate()
 	if (i_timed_out)
 		return;
 
+	/* Disable volume callbacks before switching devices to prevent the DFX driver's
+	   volume state reset from propagating to the real speakers during shutdown. */
+	s_sndDevices_.ignoreVolumeCallbacks = TRUE;
+
+	/* Change the default soundcard to not be the DFX virtual one but instead the proper real one */
+	if (sndDevicesRestoreDefaultDevice(hp_sndDevices_, &i_result_flag) != OKAY)
+		return;
+
 	/*
 	* Disable the virtual soundcard
 	* NOTE: FOR NOW WE DON'T DO THE DISABLE BECAUSE THIS CAN CAUSE PROBLEMS
@@ -176,6 +184,7 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices(bool active_devices)
 		sound_device.deviceFriendlyName = std::wstring(cast_handle->deviceFriendlyName[index]);
 		sound_device.deviceDescription = std::wstring(cast_handle->deviceDescription[index] != NULL ? cast_handle->deviceDescription[index] : L"");
 		sound_device.deviceNumChannel = cast_handle->deviceNumChannel[index];
+		sound_device.deviceFormFactor = std::wstring(cast_handle->deviceFormFactor[index]);
 		if (cast_handle->deviceState[index] == DEVICE_STATE_ACTIVE)
 		{
 			sound_device.isActive = true;
@@ -205,7 +214,8 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices(bool active_devices)
 		{
 			sound_device.isUserSelectedPlaybackDevice = true;
 		}
-		if (sound_device.pwszID == wcp_targeted_real_playback_device_guid)
+		if (sound_device.pwszID == wcp_targeted_real_playback_device_guid &&
+			sound_device.pwszID != wcp_dfx_device_guid)
 		{
 			sound_device.isTargetedRealPlaybackDevice = true;
 		}
@@ -230,10 +240,13 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices(bool active_devices)
 
 void AudioPassthruPrivate::onDeviceChange()
 {
+	// Clear the unavailability flag so processTimer() can retry after this device change.
+	s_sndDevices_.playbackDeviceIsUnavailable = FALSE;
+
 	if (s_callback_ != nullptr)
 	{
-		s_callback_->onSoundDeviceChange();
-	}	
+		s_callback_->onSoundDeviceChange(false);
+	}
 }
 
 /*
@@ -258,13 +271,17 @@ int AudioPassthruPrivate::killProcessingThread(int *ip_timed_out)
 	/* Check if we should kill the processing thread */
 	b_need_to_kill_thread = FALSE;
 
-	if (hProcessingThread_ != NULL)
+	if (hProcessingThread_ != NULL && hProcessingThread_ != INVALID_HANDLE_VALUE)
 	{
 		bReturn = GetExitCodeThread(hProcessingThread_, &d_ExitCode);
 		if (d_ExitCode == STILL_ACTIVE)
 		{
 			b_need_to_kill_thread = TRUE;
 		}
+	}
+	else if (hProcessingThread_ == INVALID_HANDLE_VALUE)
+	{
+		hProcessingThread_ = NULL;  // clear sentinel — no thread is running
 	}
 
 	/* Kill the thread */
@@ -354,12 +371,20 @@ int AudioPassthruPrivate::processTimer()
 	*/
 	if (hProcessingThread_ == NULL)
 		b_need_to_start_thread = TRUE;
+	else if (hProcessingThread_ == INVALID_HANDLE_VALUE)
+	{
+		// Playback device was unavailable on the last attempt. Wait for onDeviceChange() to
+		// clear playbackDeviceIsUnavailable before retrying, to avoid hammering sndDevicesReInit.
+		if (!s_sndDevices_.playbackDeviceIsUnavailable)
+			hProcessingThread_ = NULL;  // flag cleared — allow retry on next tick
+	}
 	else
 	{
 		bReturn = GetExitCodeThread(hProcessingThread_, &d_ExitCode);
 		if (d_ExitCode != STILL_ACTIVE)
 		{
 			b_need_to_start_thread = TRUE;
+			hProcessingThread_ = NULL;
 		}
 	}
 
@@ -410,15 +435,25 @@ int AudioPassthruPrivate::processTimer()
 
 		/* PTNOTE - added check on DfxDeviceEnabledFlag status, may need to take additional steps if no DFX device is preset. */
 		if ((numRealDevices > 0) && (DfxDeviceEnabledFlag == IS_TRUE))
+		{
 			hProcessingThread_ = CreateThread(NULL, 0, processingThread, (LPVOID)this, 0L, &ProcessingThreadID_);
+		}
+		else if (s_sndDevices_.playbackDeviceIsUnavailable)
+		{
+			// Device is unavailable (e.g. AUDCLNT_E_UNSUPPORTED_FORMAT or AUDCLNT_E_DEVICE_IN_USE).
+			// Use INVALID_HANDLE_VALUE as a sentinel to stop retrying every 100ms.
+			// onDeviceChange() will clear playbackDeviceIsUnavailable when the device situation changes.
+			hProcessingThread_ = INVALID_HANDLE_VALUE;
+		}
+
+		if (s_callback_ != nullptr)
+			s_callback_->onSoundDeviceChange(true);
 
 		/* Check if a new playback device has been selected */
 		/*
 		if (dfxg_SndServerHdmiFixCheckForNewPlaybackDevice(hp_dfxg) != OKAY)
 			return(NOT_OKAY);
 		*/
-
-		s_callback_->onSoundDeviceChange(getSoundDevices());
 	}
 
 	return(OKAY);

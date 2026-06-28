@@ -88,7 +88,7 @@ private:
 		String name_;
 	};
 
-	class AudioSettingsPane : public SettingsPane, public FxModel::Listener
+	class AudioSettingsPane : public SettingsPane
 	{
 	public:
 		AudioSettingsPane();
@@ -99,33 +99,57 @@ private:
 
 	private:
 		static constexpr int GROUP_MARGIN = 10;
-		static constexpr int ENDPOINT_Y = 42;
-		static constexpr int TOGGLE_BUTTON_HEIGHT = 30;
+		static constexpr int ENDPOINT_Y = 50;
 		static constexpr int LABEL_WIDTH = 220;
-		static constexpr int COMBOBOX_HEIGHT = 30;
-		static constexpr int OUTPUT_PREFERENCE_HEIGHT = 100;
-		static constexpr int SLIDER_HEIGHT = 18;
+		static constexpr int OUTPUT_PREFERENCE_HEIGHT = 260;
 		static constexpr int LABEL_HEIGHT = 14;
-		static constexpr int RESTORE_DEFAULTS_BUTTON_WIDTH = 220;
+		static constexpr int TOGGLE_BUTTON_HEIGHT = 30;
 		static constexpr int RESET_PRESETS_BUTTON_WIDTH = 220;
 		static constexpr int BUTTON_HEIGHT = 24;
-		static constexpr int MAX_BUTTON_WIDTH = 315;		
-
-		std::vector<int> equalizer_bands_ = { 5, 10, 15, 20, 31 };
+		static constexpr int MAX_BUTTON_WIDTH = 315;
 
 		void setText();
 		void resizeResetButton(int x, int y);
-		void modelChanged(FxModel::Event model_event);
-		void updateEndpointList();
-		void updateEqualizerBandsText();
-		void selectEqualizerBands();
-		void restoreDefaults();
 
 		void visibilityChanged() override;
 		void mouseEnter(const MouseEvent& mouse_event) override;
 		void mouseExit(const MouseEvent& mouse_event) override;
 
-		Label output_preference_title_;		
+		Label output_preference_title_;
+		FxOutputPreference output_preference_;
+		ToggleButton prioritize_new_output_toggle_;
+
+		TextButton reset_presets_button_;
+
+		juce::Rectangle<float> output_preference_bounds_;
+	};
+
+	class EqualizerSettingsPane : public SettingsPane
+	{
+	public:
+		EqualizerSettingsPane();
+		~EqualizerSettingsPane();
+
+		void resized() override;
+		void paint(Graphics& g) override;
+
+	private:
+		static constexpr int GROUP_MARGIN = 10;
+		static constexpr int LABEL_WIDTH = 220;
+		static constexpr int COMBOBOX_HEIGHT = 30;
+		static constexpr int SLIDER_HEIGHT = 18;
+		static constexpr int LABEL_HEIGHT = 14;
+		static constexpr int RESTORE_DEFAULTS_BUTTON_WIDTH = 220;
+		static constexpr int BUTTON_HEIGHT = 24;
+		static constexpr int MAX_BUTTON_WIDTH = 315;
+
+		std::vector<int> equalizer_bands_ = { 5, 10, 15, 20, 31 };
+
+		void setText();
+		void updateEqualizerBandsText();
+		void selectEqualizerBands();
+		void restoreDefaults();
+
 		Label equalizer_title_;
 		Label master_gain_title_;
 		Label normalizer_title_;
@@ -135,19 +159,15 @@ private:
 		Label left_label_;
 		Label right_label_;
 
-		FxOutputPreference output_preference_;
 		ComboBox equalizer_;
-		
 		FxAudioSlider master_gain_slider_;
 		FxAudioSlider normalizer_slider_;
 		FxAudioSlider volume_leveling_slider_;
 		FxAudioSlider filter_q_slider_;
 		FxBalanceSlider balance_slider_;
 		TextButton restore_defaults_button_;
-		TextButton reset_presets_button_;
 
-		juce::Rectangle<float> output_preference_bounds_;
-		juce::Rectangle<float> audio_settings_bounds_;
+		juce::Rectangle<float> equalizer_settings_bounds_;
 	};
 
 	class GeneralSettingsPane : public SettingsPane
@@ -231,12 +251,14 @@ private:
 		static constexpr int SEPARATOR_X = 152;
 
 		std::unique_ptr<SettingsButton> audio_button_;
+        std::unique_ptr<SettingsButton> equalizer_button_;
 		std::unique_ptr<SettingsButton> general_button_;
 		std::unique_ptr<SettingsButton> help_button_;
 
 		AudioSettingsPane audio_settings_pane_;
+		EqualizerSettingsPane equalizer_settings_pane_;
 		GeneralSettingsPane general_settings_pane_;
-		HelpSettingsPane help_settings_pane_; 
+		HelpSettingsPane help_settings_pane_;
 	};
 
 	SettingsComponent settings_content_;

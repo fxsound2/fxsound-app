@@ -50,6 +50,8 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 	int loopCount;
 	int captureAllocSize, playbackAllocSize;
 	int captureBufferChannelsForAllocation;
+	BOOL captureMuteState;
+	BOOL playbackMuteState;
     
 	cast_handle = (struct sndDevicesHdlType *)hp_sndDevices;
 
@@ -64,6 +66,7 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 	cast_handle->function_status = SND_DEVICES_DEVICE_OPERATION_COMPLETED;	// Clear function error status code.
 
 	//cast_handle->ignoreDeviceCallbacks = TRUE;
+	cast_handle->ignoreVolumeCallbacks = TRUE;
 
 	cast_handle->totalNumDevices = SND_DEVICES_DEVICE_NOT_PRESENT;
 	cast_handle->dfxDeviceNum = SND_DEVICES_DEVICE_NOT_PRESENT;
@@ -186,22 +189,46 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MASTER_VOLUME_FAILED);
 			}
 
-			// Turn off mute on DFX device
-			hr = cast_handle->pEndptVolCapture->SetMute(FALSE, &(cast_handle->guidThisApplication));
-			if ((hr != S_OK) && (hr != S_FALSE))	// Note, will return S_FALSE if the mute was already off, check for other errors.
+			// Turn off mute on DFX device, but only if the user hasn't muted it themselves
+			// (e.g. via Windows sound settings on the "FxSound Audio Enhancer" device), otherwise
+			// reinit would silently undo that mute.
+			hr = cast_handle->pEndptVolCapture->GetMute(&captureMuteState);
+			if (hr != S_OK)
 			{
 				*ipDfxDeviceEnabledFlag = IS_FALSE;
 				*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
 				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MUTE_FAILED);
 			}
 
-			// Turn off mute on playback device
-			hr = cast_handle->pEndptVolPlayback->SetMute(FALSE, &(cast_handle->guidThisApplication));
-			if ((hr != S_OK) && (hr != S_FALSE))	// Note, will return S_FALSE if the mute was already off, check for other errors.
+			if (!captureMuteState)
+			{
+				hr = cast_handle->pEndptVolCapture->SetMute(FALSE, &(cast_handle->guidThisApplication));
+				if ((hr != S_OK) && (hr != S_FALSE))	// Note, will return S_FALSE if the mute was already off, check for other errors.
+				{
+					*ipDfxDeviceEnabledFlag = IS_FALSE;
+					*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
+					SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MUTE_FAILED);
+				}
+			}
+
+			// Turn off mute on playback device, but only if the user hasn't muted it themselves.
+			hr = cast_handle->pEndptVolPlayback->GetMute(&playbackMuteState);
+			if (hr != S_OK)
 			{
 				*ipDfxDeviceEnabledFlag = IS_FALSE;
 				*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
 				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MUTE_FAILED);
+			}
+
+			if (!playbackMuteState)
+			{
+				hr = cast_handle->pEndptVolPlayback->SetMute(FALSE, &(cast_handle->guidThisApplication));
+				if ((hr != S_OK) && (hr != S_FALSE))	// Note, will return S_FALSE if the mute was already off, check for other errors.
+				{
+					*ipDfxDeviceEnabledFlag = IS_FALSE;
+					*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
+					SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MUTE_FAILED);
+				}
 			}
 
 			// Setup capture and playback buffers
@@ -307,6 +334,7 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 			}
 
 			cast_handle->ignoreDeviceCallbacks = FALSE;
+			cast_handle->ignoreVolumeCallbacks = FALSE;
 		}
 	}
 
@@ -375,7 +403,7 @@ int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE* hp_sndDevices, BOOL* bp_deviceC
 			{
 				deviceFound = TRUE;
 
-				// Device ID matched — now check if its state has changed
+				// Device ID matched - now check if its state has changed
 				DWORD currentState = 0;
 				hr = pDevice->GetState(&currentState);
 				if (SUCCEEDED(hr) && currentState != cast_handle->deviceState[j])

@@ -236,6 +236,8 @@ FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"men
 
 FxMainWindow::~FxMainWindow()
 {
+	help_bubble_.removeFromDesktop();
+	FxModel::getModel().removeListener(this);
 }
 
 void FxMainWindow::show()
@@ -425,6 +427,7 @@ void FxMainWindow::showMenu()
 
 		FxSettingsDialog settings_dialog;
 		settings_dialog.runModalLoop();
+		FxController::getInstance().refreshOutputList();
 	};
 
 	auto overwriteClicked = [this]() {
@@ -510,7 +513,7 @@ void FxMainWindow::showMenu()
 	popup_menu.addItem(overwrite_menu_name, model.isPresetModified() && user_preset && power_state, false, overwriteClicked);
 	popup_menu.addItem(TRANS("Undo Preset Changes"), model.isPresetModified() && power_state, false, undoClicked);
 	popup_menu.addSubMenu(TRANS("Rename Preset"), rename_menu, !model.isPresetModified() && user_preset && power_state);
-	popup_menu.addItem(TRANS("Delete Preset"), !model.isPresetModified() && user_preset && power_state, false, deleteClicked);
+	popup_menu.addItem(TRANS("Delete Preset"), user_preset && power_state, false, deleteClicked);
 	popup_menu.addSeparator();
 	popup_menu.addItem(TRANS("Export Presets"), !model.isPresetModified() && power_state, false, exportClicked);
 	popup_menu.addItem(TRANS("Import Presets"), !model.isPresetModified() && power_state, false, importClicked);

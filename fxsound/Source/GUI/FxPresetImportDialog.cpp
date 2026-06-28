@@ -27,6 +27,7 @@ public:
         setContent(&message_content_);
         centreWithSize(getWidth(), getHeight());
         addToDesktop(0);
+        toFront(true);
         setAlwaysOnTop(true);
     }
     ~FxImportCompleteMessage() = default;
@@ -174,6 +175,7 @@ FxPresetImportDialog::FxPresetImportDialog() : FxWindow("Import Presets")
     centreWithSize(getWidth(), getHeight());
     addToDesktop(0);
     toFront(true);
+    setAlwaysOnTop(true);
 }
 
 bool FxPresetImportDialog::keyPressed(const KeyPress& key)

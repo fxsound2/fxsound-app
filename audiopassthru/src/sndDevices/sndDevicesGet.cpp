@@ -437,16 +437,21 @@ int PT_DECLSPEC sndDevicesGetFormatFromID(PT_HANDLE *hp_sndDevices, wchar_t *wcp
 			}
 
 			// Get the format.
-			hr = pAudioClient->GetMixFormat(&(pwfx));
-			if( hr != S_OK )
+			pwfx = NULL;
+			hr = pAudioClient->GetMixFormat(&pwfx);
+			if( hr != S_OK || pwfx == NULL )
 			{
 				*ip_resultFlag = SND_DEVICES_DEVICE_GET_FORMAT_FAILED;
 
+				pAudioClient->Release();
 				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_DEVICE_GET_FORMAT_FAILED);
 			}
 
 			// Copy the format structure.
 			*p_wfx = *pwfx;
+
+			// Free the buffer allocated by GetMixFormat.
+			CoTaskMemFree(pwfx);
 
 			*ip_resultFlag = SND_DEVICES_DEVICE_OPERATION_COMPLETED;
 

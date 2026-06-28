@@ -29,6 +29,7 @@ namespace FxSound
         juce::String device_id;
         juce::String device_name;
         juce::String preset;
+        juce::String device_form_factor;
 
         static void initDeviceConfigs(Settings& settings, std::vector<SoundDevice>& sound_devices);
         static void updateDeviceConfigs(Settings& settings, const std::vector<SoundDevice>& sound_devices);
@@ -37,6 +38,8 @@ namespace FxSound
         static void saveDeviceConfigs(Settings& settings, juce::StringRef key, const juce::Array<DeviceConfig>& device_configs);
 
         static DeviceConfig getDeviceConfig(Settings& settings, juce::String device_name);
+
+        static std::function<void()> onDeviceConfigsUpdate;
 
     private:
         static juce::var toJson(const DeviceConfig& device_config);
