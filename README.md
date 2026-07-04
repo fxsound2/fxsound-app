@@ -9,6 +9,10 @@ FxSound is a digital audio program built for Windows PC's. The background proces
 * Issue tracker: https://github.com/fxsound2/fxsound-app/issues
 * Forum: https://forum.fxsound.com
 * [Donate to FxSound](https://www.paypal.com/donate/?hosted_button_id=JVNQGYXCQ2GPG)
+
+## Documentation
+
+- [Command Line Options](docs/COMMAND_LINE_OPTIONS.md)
   
 ## Build Instructions
 ### Prerequisites

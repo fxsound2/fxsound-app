@@ -1,6 +1,6 @@
 # FxSound Command Line Options
 
-FxSound (`fxsound.exe`) accepts a set of command line options that let you configure the app on launch, or push new settings to an already-running instance.
+FxSound accepts a set of command line options that let you configure the app on launch, or push new settings to an already-running instance.
 
 For example, run `fxsound.exe --preset "Bass Booster"` at any time to switch the running instance's preset without restarting it or affecting any other setting.
 
