@@ -8,8 +8,6 @@ Options with numeric values that fall outside their valid range are silently res
 
 Values containing spaces (preset names, device names) must be wrapped in double quotes.
 
-## Options reference
-
 | Option | Value | Description |
 |---|---|---|
 | `--power <0\|1>` | `0` = off, `1` = on | Turns FxSound's audio processing (DFX) on or off. |
