@@ -307,6 +307,11 @@ void FxMainWindow::showProView()
 	}	
 }
 
+void FxMainWindow::update()
+{
+	pro_view_.update();
+}
+
 void FxMainWindow::startVisualizer()
 {
     pro_view_.startVisualizer();
