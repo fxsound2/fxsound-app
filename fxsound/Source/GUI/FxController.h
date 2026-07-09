@@ -48,6 +48,8 @@ public:
 	static constexpr float DEFAULT_BALANCE = 0.0f;
 	static constexpr float DEFAULT_FILTER_Q = 1.0f;
 	static constexpr float DEFAULT_MASTER_GAIN = 0.0f;
+	static constexpr float MIN_GAIN = -12.0f;
+	static constexpr float MAX_GAIN = 12.0f;
 	static constexpr char HK_CMD_ON_OFF[] = "cmd_on_off";
 	static constexpr char HK_CMD_OPEN_CLOSE[] = "cmd_open_close";
 	static constexpr char HK_CMD_NEXT_PRESET[] = "cmd_next_preset";
@@ -68,6 +70,8 @@ public:
 	void applyConfig(const String& commandline);
 	void init(FxMainWindow* main_window, FxSystemTrayView* system_tray_view, AudioPassthru* audio_passthru);
 	void initPresets();
+	void printStatus();
+	static File getStatusFile();
 
 	void showView();
 	void switchView();

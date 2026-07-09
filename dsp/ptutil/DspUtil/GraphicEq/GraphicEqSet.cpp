@@ -110,6 +110,21 @@ int PT_DECLSPEC GraphicEqSetNumBands(PT_HANDLE* hp_GraphicEq, int num_bands)
 	if (cast_handle->num_bands == num_bands)
 		return(OKAY);
 
+	// Save the boost/cut of each existing band so it can be remapped by
+	// relative position onto the new band layout below. Gain is stored by
+	// section index, not by frequency, so simply changing the frequencies
+	// would otherwise leave each band's gain pinned to its old index.
+	int old_num_bands = cast_handle->num_bands;
+	realtype old_boost_cut[GRAPHIC_EQ_MAX_NUM_BANDS];
+	if (old_num_bands >= 1)
+	{
+		for (int i = 1; i <= old_num_bands; i++)
+		{
+			if (GraphicEqGetBandBoostCut(hp_GraphicEq, i, &old_boost_cut[i - 1]) != OKAY)
+				return(NOT_OKAY);
+		}
+	}
+
 	// Update the number of bands in the structure
 	cast_handle->num_bands = num_bands;
 
@@ -162,6 +177,49 @@ int PT_DECLSPEC GraphicEqSetNumBands(PT_HANDLE* hp_GraphicEq, int num_bands)
 	{
 		if (GraphicEq_InitSections(hp_GraphicEq) != OKAY)
 			return(NOT_OKAY);
+	}
+
+	// Remap the previous gains onto the new band layout by relative
+	// position (first band -> first band, last band -> last band) instead
+	// of leaving them pinned to the section index they used to occupy.
+	if (old_num_bands >= 1)
+	{
+		for (int i = 1; i <= num_bands; i++)
+		{
+			realtype remapped_boost_cut;
+
+			if (old_num_bands == 1)
+			{
+				remapped_boost_cut = old_boost_cut[0];
+			}
+			else if (num_bands < old_num_bands)
+			{
+				// Fewer bands: pick the nearest old band (equidistant selection)
+				int source_index = 1 + (int)((i - 1.0) * (old_num_bands - 1.0) / (num_bands - 1.0) + 0.5);
+				remapped_boost_cut = old_boost_cut[source_index - 1];
+			}
+			else
+			{
+				// Same or more bands: linear interpolation between old bands
+				realtype source_index = 1.0 + (realtype)(i - 1) * (old_num_bands - 1.0) / (num_bands - 1.0);
+				int lower_index = (int)source_index;
+				int upper_index = lower_index + 1;
+				realtype fraction = source_index - lower_index;
+
+				if (upper_index <= old_num_bands)
+				{
+					remapped_boost_cut = old_boost_cut[lower_index - 1] +
+						(old_boost_cut[upper_index - 1] - old_boost_cut[lower_index - 1]) * fraction;
+				}
+				else
+				{
+					remapped_boost_cut = old_boost_cut[lower_index - 1];
+				}
+			}
+
+			if (GraphicEqSetBandBoostCut(hp_GraphicEq, i, remapped_boost_cut) != OKAY)
+				return(NOT_OKAY);
+		}
 	}
 
 	return(OKAY);
