@@ -134,6 +134,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 	output_changed_ = false;
 	playback_device_available_ = true;
 	powerNotify_ = nullptr;
+	unregister_suspend_resume_notification_ = nullptr;
 
 	device_count_ = 0;
 	output_device_name_ = L"";
@@ -207,9 +208,9 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 
 FxController::~FxController()
 {
-	if (powerNotify_ != nullptr)
+	if (powerNotify_ != nullptr && unregister_suspend_resume_notification_ != nullptr)
 	{
-		UnregisterSuspendResumeNotification(powerNotify_);
+		unregister_suspend_resume_notification_(powerNotify_);
 		powerNotify_ = nullptr;
 	}
 	stopTimer();
@@ -712,9 +713,18 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		main_window_->setIcon(power, false);
 		system_tray_view_->setStatus(power, false);
 
-		if (SystemStats::getOperatingSystemType() != SystemStats::OperatingSystemType::Windows7)
+		HMODULE user32_module = GetModuleHandleW(L"user32.dll");
+		if (user32_module != nullptr)
 		{
-			powerNotify_ = RegisterSuspendResumeNotification(message_window_.getHandle(), DEVICE_NOTIFY_WINDOW_HANDLE);
+			auto register_suspend_resume_notification = reinterpret_cast<RegisterSuspendResumeNotificationFunc>(
+				GetProcAddress(user32_module, "RegisterSuspendResumeNotification"));
+			unregister_suspend_resume_notification_ = reinterpret_cast<UnregisterSuspendResumeNotificationFunc>(
+				GetProcAddress(user32_module, "UnregisterSuspendResumeNotification"));
+
+			if (register_suspend_resume_notification != nullptr && unregister_suspend_resume_notification_ != nullptr)
+			{
+				powerNotify_ = register_suspend_resume_notification(message_window_.getHandle(), DEVICE_NOTIFY_WINDOW_HANDLE);
+			}
 		}
 	}
 }
