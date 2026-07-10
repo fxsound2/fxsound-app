@@ -30,6 +30,7 @@ public:
 	static void enumAudioOutputs(StringArray& audioOutputNames);
     static bool isServiceRunning(LPCWSTR service_name);
     static bool canSupportHotkeys();
+	static bool isRemoteSession();
 
 private:
 	static String getAudioOutputName(IMMDevice *pDevice);

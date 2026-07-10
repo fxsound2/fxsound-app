@@ -400,6 +400,23 @@ void FxMainWindow::setIcon(bool power, bool processing)
 	}
 }
 
+void FxMainWindow::enablePowerButton(bool enable)
+{
+	if (power_button_.isEnabled() != enable)
+	{
+		power_button_.setEnabled(enable);
+
+		if (!enable)
+		{
+			power_button_.setTooltip(TRANS("Audio enhancements are not available over Remote Desktop"));
+		}
+		else
+		{
+			power_button_.setTooltip("");
+		}
+	}
+}
+
 bool FxMainWindow::keyPressed(const KeyPress& key)
 {
 	if (key.getModifiers().isAltDown() && key.getKeyCode() == juce::KeyPress::returnKey)

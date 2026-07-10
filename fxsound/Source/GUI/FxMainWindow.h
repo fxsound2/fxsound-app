@@ -45,6 +45,7 @@ public:
 	void setLookAndFeel();
     void setResizeImage();
     void setIcon(bool power, bool processing);
+    void enablePowerButton(bool enable);
 
     bool keyPressed(const KeyPress& key) override;
     void visibilityChanged() override;

@@ -366,7 +366,7 @@ void FxController::applyConfig(const String& commandline)
 	auto band_gain = arg_list.getValueForOption("--set_band_gain").unquoted();
 	auto effect = arg_list.getValueForOption("--set_effect").unquoted();
 
-	if (power_state.isNotEmpty())
+	if (power_state.isNotEmpty() && !SysInfo::isRemoteSession())
 	{
 		if (power_state.getIntValue() == 0)
 			setPowerState(false);
@@ -655,7 +655,8 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 
 		audio_passthru_->setDspProcessingModule(&dfx_dsp_);
 		initOutputs(audio_passthru_->getSoundDevices(false));
-		if (!dfx_enabled_)
+
+		if (!dfx_enabled_ && !SysInfo::isRemoteSession())
 		{
 			main_window_->removeFromDesktop();
 			FxDeviceErrorMessage error_message;
@@ -672,7 +673,7 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 			path.createDirectory();
 		}
 
-		setPowerState(dfx_enabled_ && settings_.getBool("power"));
+		setPowerState(settings_.getBool("power"));
 
 		initPresets();
 
@@ -935,7 +936,22 @@ bool FxController::exit()
 
 void FxController::setPowerState(bool power_state)
 {
-	FxModel::getModel().setPowerState(power_state);
+	if (!dfx_enabled_ || SysInfo::isRemoteSession())
+	{
+		main_window_->enablePowerButton(false);
+
+		FxModel::getModel().setPowerState(false);
+		powerOn(false);
+
+		system_tray_view_->setStatus(false, false);
+		main_window_->setIcon(false, false);
+		
+		return;
+    }
+	
+	main_window_->enablePowerButton(true);
+
+	FxModel::getModel().setPowerState(power_state);	
 	powerOn(power_state);
 	settings_.setBool("power", power_state);
 
@@ -1544,11 +1560,14 @@ void FxController::selectProcessingOutput(std::vector<SoundDevice>& sound_device
 		if (!dfx_enabled_)
 		{
 			stopTimer();
-			main_window_->removeFromDesktop();
-			FxDeviceErrorMessage error_message;
-			error_message.runModalLoop();
-			JUCEApplication::getInstance()->systemRequestedQuit();
-			return;
+			if (!SysInfo::isRemoteSession())
+			{
+				main_window_->removeFromDesktop();
+				FxDeviceErrorMessage error_message;
+				error_message.runModalLoop();
+				JUCEApplication::getInstance()->systemRequestedQuit();
+				return;
+			}
 		}
 	}
 	else
@@ -1837,11 +1856,14 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 	{
 		if (w_param == CMD_ON_OFF)
 		{
-			auto power_state = !FxModel::getModel().getPowerState();
-			controller->setPowerState(power_state);
+			if (!SysInfo::isRemoteSession())
+			{
+				auto power_state = !FxModel::getModel().getPowerState();
+				controller->setPowerState(power_state);
 
-			String param = FxModel::getModel().getPowerState() ? TRANS(L"on") : TRANS(L"off");
-			FxModel::getModel().pushMessage(controller->FormatString(TRANS("FxSound is %s."), param));
+				String param = FxModel::getModel().getPowerState() ? TRANS(L"on") : TRANS(L"off");
+				FxModel::getModel().pushMessage(controller->FormatString(TRANS("FxSound is %s."), param));
+			}
 		}
 		if (w_param == CMD_OPEN_CLOSE)
 		{
@@ -1943,11 +1965,15 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 
 		if (w_param == login_event || w_param == WTS_SESSION_UNLOCK)
 		{
-			controller->setPowerState(FxModel::getModel().getPowerState());
+			controller->setPowerState(controller->settings_.getBool("power"));
 		}
 		else if (w_param == WTS_CONSOLE_DISCONNECT)
 		{
 			controller->powerOn(false);
+		}
+		else if (w_param == WTS_REMOTE_CONNECT)
+		{
+			controller->setPowerState(controller->settings_.getBool("power"));
 		}
 	}
 	}
