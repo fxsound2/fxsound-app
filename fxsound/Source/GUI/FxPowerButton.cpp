@@ -38,12 +38,13 @@ void FxPowerButton::paint(Graphics& g)
 	if (power_state_)
 	{
 		power_on_image_->drawWithin(g, placement.appliedTo(image_area, bounds).toFloat(),
-			RectanglePlacement(RectanglePlacement::Flags::stretchToFit | RectanglePlacement::Flags::centred), 1.0f);
+			RectanglePlacement(RectanglePlacement::Flags::stretchToFit | RectanglePlacement::Flags::centred), isEnabled() ? 1.0f : 0.5f
+		);
 	}
 	else
 	{
 		power_off_image_->drawWithin(g, placement.appliedTo(image_area, bounds).toFloat(),
-			RectanglePlacement(RectanglePlacement::Flags::stretchToFit | RectanglePlacement::Flags::centred), 1.0f);
+			RectanglePlacement(RectanglePlacement::Flags::stretchToFit | RectanglePlacement::Flags::centred), isEnabled() ? 1.0f : 0.5f);
 	}
 }
 
