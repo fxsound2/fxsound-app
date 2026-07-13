@@ -907,8 +907,8 @@ int PT_DECLSPEC sosProcessSurroundBuffer(PT_HANDLE* hp_sos, realtype* rp_in_buf,
     //Ordering for 5.1 is: Front Left, Front Right, Front Center, Low Frequency, Back Left, Back Right
     //Ordering for 7.1 is: Front Left, Front Right, Front Center, Low Frequency, Back Left, Back Right, Side Left, Side Right
     //Note - LFE channel only gets bands 0,1 others only get bands 2->max
-	for (j = 0; j < (i_num_sample_sets * i_num_channels); j += i_num_channels)
-	{
+    for (j = 0; j < (i_num_sample_sets * i_num_channels); j += i_num_channels)
+    {
         for (k = 0; k < i_num_channels; k++)
         {
             realtype in, out;
@@ -946,9 +946,9 @@ int PT_DECLSPEC sosProcessSurroundBuffer(PT_HANDLE* hp_sos, realtype* rp_in_buf,
                     in = out;
                 }
             }
-			rp_out_buf[j + k] = out * cast_handle->master_gain;
-		}
-	}
+            rp_out_buf[j + k] = out * cast_handle->master_gain;
+        }
+    }
 
     applyVolumeLeveling(cast_handle, rp_out_buf, i_num_sample_sets, i_num_channels, r_samp_freq, 3);
 
