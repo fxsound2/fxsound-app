@@ -144,6 +144,8 @@ int dfxpModifyRealtypeSamples(PT_HANDLE *hp_dfxp, realtype *rp_samples, int i_nu
 		if (dfxpEqGetProcessingOn(hp_dfxp, DFXP_STORAGE_TYPE_MEMORY, &i_eq_on) != OKAY)
 			return(NOT_OKAY);
 
+		// Disabling EQ bypasses the full GraphicEq chain. When EQ is enabled,
+		// flat EQ bands remain pass-through while volume leveling is still applied.
 		if (i_eq_on &&
 			((cast_handle->num_channels_out <= 2) || (cast_handle->num_channels_out == 6) || (cast_handle->num_channels_out == 8)))
 		{
