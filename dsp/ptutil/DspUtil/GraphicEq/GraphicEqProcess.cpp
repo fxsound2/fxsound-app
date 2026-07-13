@@ -103,31 +103,3 @@ int PT_DECLSPEC GraphicEqProcess_MasterGainOnly(PT_HANDLE* hp_GraphicEq,
 
 	return(OKAY);
 }
-
-/*
- * FUNCTION: GraphicEqProcess_VolumeLevelingOnly()
- * DESCRIPTION:
- *  Apply volume leveling without enabling the EQ filter chain or its other
- *  gain stages.
- */
-int PT_DECLSPEC GraphicEqProcess_VolumeLevelingOnly(PT_HANDLE* hp_GraphicEq,
-												 realtype* rp_signal_in,
-												 realtype* rp_signal_out,
-												 int i_num_sample_sets,
-												 int i_num_channels,
-												 realtype r_samp_freq)
-{
-	struct GraphicEqHdlType* cast_handle = (struct GraphicEqHdlType*)(hp_GraphicEq);
-	if (cast_handle == NULL)
-		return(NOT_OKAY);
-
-	if (sosProcessBuffer_VolumeLevelingOnly((PT_HANDLE*)(cast_handle->sos_hdl),
-											 rp_signal_in,
-											 rp_signal_out,
-											 i_num_sample_sets,
-											 i_num_channels,
-											 r_samp_freq) != OKAY)
-		return(NOT_OKAY);
-
-	return(OKAY);
-}
