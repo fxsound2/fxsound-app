@@ -92,4 +92,12 @@ int PT_DECLSPEC GraphicEqProcess_MasterGainOnly(PT_HANDLE* hp_GraphicEq,
 												realtype r_samp_freq     /* Sampling frequency in hz. */
 											   );
 
+int PT_DECLSPEC GraphicEqProcess_VolumeLevelingOnly(PT_HANDLE* hp_GraphicEq,
+												 realtype* rp_signal_in,  /* Input signal, points interleaved */
+												 realtype* rp_signal_out, /* Array to store the processed signal */
+												 int i_num_sample_sets,   /* Number of mono samples or interleaved sample frames */
+												 int i_num_channels,      /* 1, 2, 6, or 8 channels */
+												 realtype r_samp_freq     /* Sampling frequency in hz. */
+												);
+
 #endif //_GRAPHIC_EQ_H

@@ -518,6 +518,50 @@ int PT_DECLSPEC sosProcessBuffer_MasterGainOnly(PT_HANDLE* hp_sos, realtype* rp_
 
 
 /*
+ * FUNCTION: sosProcessBuffer_VolumeLevelingOnly()
+ * DESCRIPTION:
+ *   Copies the input unchanged and applies only volume leveling. This keeps
+ *   volume leveling independent from the EQ section, master gain, balance,
+ *   and legacy normalization stages owned by the full SOS processing paths.
+ */
+int PT_DECLSPEC sosProcessBuffer_VolumeLevelingOnly(PT_HANDLE* hp_sos,
+                                                     realtype* rp_in_buf,
+                                                     realtype* rp_out_buf,
+                                                     int i_num_sample_sets,
+                                                     int i_num_channels,
+                                                     realtype r_samp_freq)
+{
+    struct sosHdlType* cast_handle = (struct sosHdlType*)(hp_sos);
+    if (cast_handle == NULL)
+        return(NOT_OKAY);
+
+    if ((i_num_channels != 1) && (i_num_channels != 2) &&
+        (i_num_channels != 6) && (i_num_channels != 8))
+        return(NOT_OKAY);
+
+    if (i_num_sample_sets < 0)
+        return(NOT_OKAY);
+
+    int total_samples = i_num_sample_sets * i_num_channels;
+    if ((total_samples > 0) && ((rp_in_buf == NULL) || (rp_out_buf == NULL)))
+        return(NOT_OKAY);
+
+    if ((total_samples > 0) && (rp_in_buf != rp_out_buf))
+        memmove(rp_out_buf, rp_in_buf, total_samples * sizeof(realtype));
+
+    int excluded_channel = (i_num_channels > 2) ? 3 : -1;
+    applyVolumeLeveling(cast_handle,
+                        rp_out_buf,
+                        i_num_sample_sets,
+                        i_num_channels,
+                        r_samp_freq,
+                        excluded_channel);
+
+    return(OKAY);
+}
+
+
+/*
  * FUNCTION: sosProcessBuffer()
  * DESCRIPTION:
  *   Processes the passed in buffer using the current sos handle settings.
