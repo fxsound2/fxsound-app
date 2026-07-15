@@ -1,6 +1,6 @@
 /*
 FxSound
-Copyright (C) 2025  FxSound LLC
+Copyright (C) 2026  FxSound LLC
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -18,12 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "fxdiag.h"
 #include "AudioDevice.h"
+#include "JsonWriter.h"
 
 const wchar_t* RESET_COLOR_FORMAT = L"\033[0m\n";
 
 void ReportDeviceFeatures(const AudioDevice& audioDevice);
 
-AudioDevice::AudioDevice(IMMDevice* pDevice) : deviceState_(DeviceState::NotPresent), channels_(0), samplesPerSec_(0), bitsPerSample_(0)
+AudioDevice::AudioDevice(IMMDevice* pDevice) : deviceState_(DeviceState::NotPresent), channels_(0), samplesPerSec_(0), bitsPerSample_(0), volumeLevel_(0.0f)
 {
 	if (pDevice == NULL)
 	{
@@ -257,4 +258,57 @@ std::wstring ColorFormat(int colorCode)
 	format << L"\033[38;5;" << colorCode << L"m";
 
 	return format.str();
+}
+
+std::wstring DeviceStateToString(DeviceState deviceState)
+{
+	switch (deviceState)
+	{
+	case DeviceState::Active:
+		return L"Active";
+	case DeviceState::NotPresent:
+		return L"Not Present";
+	case DeviceState::Disabled:
+		return L"Disabled";
+	case DeviceState::Unplugged:
+		return L"Unplugged";
+	default:
+		return L"Unknown";
+	}
+}
+
+std::wstring ToJson(const AudioDevice& audioDevice)
+{
+	std::wstringstream json;
+
+	json << L"{"
+		<< JsonString(L"deviceId", audioDevice.deviceId_) << L","
+		<< JsonString(L"deviceName", audioDevice.deviceName_) << L","
+		<< JsonString(L"deviceType", audioDevice.deviceType_) << L","
+		<< JsonString(L"state", DeviceStateToString(audioDevice.deviceState_)) << L","
+		<< JsonNumber(L"channels", static_cast<long long>(audioDevice.channels_)) << L","
+		<< JsonNumber(L"samplesPerSec", static_cast<long long>(audioDevice.samplesPerSec_)) << L","
+		<< JsonNumber(L"bitsPerSample", static_cast<long long>(audioDevice.bitsPerSample_)) << L","
+		<< JsonNumber(L"volumeLevel", static_cast<double>(audioDevice.volumeLevel_))
+		<< L"}";
+
+	return json.str();
+}
+
+std::wstring ReportAudioDevicesJson(const std::vector<AudioDevice>& audioDevices)
+{
+	std::wstringstream json;
+
+	json << L"[";
+	for (size_t i = 0; i < audioDevices.size(); i++)
+	{
+		if (i > 0)
+		{
+			json << L",";
+		}
+		json << ToJson(audioDevices[i]);
+	}
+	json << L"]";
+
+	return json.str();
 }
