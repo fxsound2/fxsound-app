@@ -1,3 +1,10 @@
+version 1.2.11.0
+----------------
+1. Command line options added to set equalizer band frequency and gain, set effect levels, and print the running instance's status as JSON (--set_band_freq, --set_band_gain, --set_effect, --status)
+2. Equalizer band gains are now remapped proportionally instead of staying pinned to the old band index when the number of bands is changed. The modified preset will not be reset when the number of bands are changed.
+3. Fixed application not working correctly on Windows 7 due to a missing suspend/resume notification API (#551)
+4. Fixed Remote Desktop session behaviour. FxSound audio processing is disabled in Remote Desktop.
+
 version 1.2.10.0
 ----------------
 1. Command line options can now be applied to an already running instance of FxSound
