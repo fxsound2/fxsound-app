@@ -353,7 +353,6 @@ void FxController::applyConfig(const String& commandline)
 	}
 
 	auto power_state = arg_list.getValueForOption("--power");
-	auto preset = arg_list.getValueForOption("--preset").unquoted();
 	auto view = arg_list.getValueForOption("--view");
 	auto output_device = arg_list.getValueForOption("--output").unquoted();
 	auto language = arg_list.getValueForOption("--language");
@@ -374,11 +373,79 @@ void FxController::applyConfig(const String& commandline)
 			setPowerState(true);
 	}
 
-	if (preset.isNotEmpty())
-	{
-		if (FxModel::getModel().getPowerState())
+	auto& model = FxModel::getModel();
+
+	auto sanitizePresetName = [&model](const String& name) -> String {
+		String preset_name = name.removeCharacters("<>:\"/\\|?*");
+
+		if (preset_name.length() > 64)
 		{
-			setPreset(preset);
+			preset_name = preset_name.substring(0, 64);
+		}
+
+		if (preset_name.isNotEmpty() && model.isPresetNameValid(preset_name))
+		{
+			return preset_name;
+		}
+
+		return "";
+    };
+
+	if (model.getPowerState())
+	{
+		if (arg_list.containsOption("--preset"))
+		{
+			if (auto preset_name = arg_list.getValueForOption("--preset").unquoted(); preset_name.isNotEmpty())
+			{
+				setPreset(preset_name);
+			}
+		}
+		else if (arg_list.containsOption("--save_preset"))
+		{
+			auto arg_val = arg_list.getValueForOption("--save_preset").unquoted();
+			if (auto preset_name = sanitizePresetName(arg_val); preset_name.isNotEmpty())
+			{
+				if (model.isPresetModified() && model.getUserPresetCount() < getMaxUserPresets())
+				{
+					savePreset(preset_name);
+				}
+			}
+		}
+		else if (arg_list.containsOption("--overwrite_preset"))
+		{
+			auto preset = model.getPreset(model.getSelectedPreset());
+			if (model.isPresetModified() && preset.type == FxModel::PresetType::UserPreset)
+			{
+				savePreset();
+			}
+		}
+		else if (arg_list.containsOption("--undo_preset"))
+		{
+			if (model.isPresetModified())
+			{
+                undoPreset();
+			}
+        }
+		else if (arg_list.containsOption("--rename_preset"))
+		{
+			auto arg_val = arg_list.getValueForOption("--rename_preset").unquoted();
+
+			if (auto preset_name = sanitizePresetName(arg_val); preset_name.isNotEmpty())
+			{
+				auto preset = model.getPreset(model.getSelectedPreset());
+				if (!model.isPresetModified() && preset.type == FxModel::PresetType::UserPreset)
+				{
+					renamePreset(preset_name);
+				}
+			}
+		}
+		else if (arg_list.containsOption("--delete_preset"))
+		{
+			auto preset = model.getPreset(model.getSelectedPreset());
+			if (preset.type == FxModel::PresetType::UserPreset)
+			{
+				deletePreset();
+			}
 		}
 	}
 
