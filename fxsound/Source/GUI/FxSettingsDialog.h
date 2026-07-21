@@ -234,7 +234,7 @@ private:
 	{
 	public:
         static constexpr int WIDTH = 600;
-        static constexpr int HEIGHT = 560;
+        static constexpr int HEIGHT = 510;
 
 		SettingsComponent();
         ~SettingsComponent() = default;
