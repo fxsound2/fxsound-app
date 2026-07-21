@@ -8,6 +8,8 @@ Each option's value must be attached directly to the option with `=` — e.g. `-
 
 Options with numeric values that fall outside their valid range are silently reset to their default — no error is shown.
 
+`--balance`, `--master_gain`, and `--normalization` are additionally rounded to the nearest whole number, and `--filter_q` and `--volume_leveling` to the nearest `0.5`, matching the step size of their equivalent sliders in the Settings dialog.
+
 Values containing spaces (preset names, device names) must be wrapped in double quotes immediately after the `=`, e.g. `--preset="Bass Booster"`.
 
 | Option | Value | Description |
@@ -27,6 +29,7 @@ Values containing spaces (preset names, device names) must be wrapped in double 
 | `--filter_q=<n>` | Decimal, `1.0`–`3.0` | Sets the EQ filter Q factor (controls the bandwidth of each band). Default: `1.0`. |
 | `--master_gain=<n>` | Decimal, `-20.0`–`+20.0` | Sets the master gain in dB. Default: `0`. |
 | `--normalization=<n>` | Decimal, `-20.0`–`0.0` | Sets the normalization level in dB. Default: `0`. |
+| `--volume_leveling=<n>` | Decimal, `0.0`–`4.0` | Sets the volume leveling amount in dB. Default: `0`. |
 | `--set_band_freq=<band:freq[,band:freq...]>` | `band` = 0-based band index, `freq` = frequency in Hz | Sets one or more equalizer band center frequencies on a running instance. `band` must be less than the current number of bands; `freq` must fall within that band's allowed range or the pair is ignored. Running instance only. |
 | `--set_band_gain=<band:gain[,band:gain...]>` | `band` = 0-based band index, `gain` = decimal, `-12.0`–`+12.0` | Sets one or more equalizer band boost/cut values in dB on a running instance. `band` must be less than the current number of bands, or the pair is ignored. Running instance only. |
 | `--set_effect=<name:value[,name:value...]>` | `name` = one of `fidelity`/`clarity`, `ambience`, `surround`, `dynamicboost`/`dynamic_boost`, `bass`/`bassboost`/`bass_boost`; `value` = decimal, `0.0`–`10.0` | Sets one or more effect levels on a running instance. Out-of-range values are ignored (left unchanged) rather than reset to a default. Running instance only. |
@@ -98,7 +101,7 @@ fxsound.exe --view=2 --power=1
 Tune the equalizer on a running instance:
 
 ```
-fxsound.exe --num_bands=15 --filter_q=2.0 --master_gain=3.0 --normalization=-6.0
+fxsound.exe --num_bands=15 --filter_q=2.0 --master_gain=3.0 --normalization=-6.0 --volume_leveling=2.0
 ```
 
 Set individual equalizer band frequencies and gains on a running instance:

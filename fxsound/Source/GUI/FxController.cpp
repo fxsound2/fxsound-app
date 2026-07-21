@@ -679,6 +679,11 @@ void FxController::printStatus()
 
 	auto* eq_obj = new DynamicObject();
 	eq_obj->setProperty("num_bands", getNumEqBands());
+	eq_obj->setProperty("master_gain", getMasterGain());
+	eq_obj->setProperty("normalization", getNormalization());
+	eq_obj->setProperty("volume_leveling", getVolumeLeveling());
+	eq_obj->setProperty("filter_q", getFilterQ());
+	eq_obj->setProperty("balance", getBalance());
 	eq_obj->setProperty("bands", bands);
 	settings->setProperty("equalizer", var(eq_obj));
 
