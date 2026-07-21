@@ -153,6 +153,34 @@ int PT_DECLSPEC sosZeroStateAllSections(PT_HANDLE *hp_sos)
 	cast_handle->in2_old = (realtype)0.0;
 	cast_handle->outDC1_old = (realtype)0.0;
 	cast_handle->outDC2_old = (realtype)0.0;
+	cast_handle->volume_leveling_power_sum = (realtype)0.0;
+	cast_handle->volume_leveling_power_index = 0;
+	cast_handle->volume_leveling_power_count = 0;
+	cast_handle->volume_leveling_previous_average_rms = (realtype)0.0;
+	cast_handle->volume_leveling_previous_predicted_rms = (realtype)0.0;
+	cast_handle->volume_leveling_alpha_sample_rate = (realtype)0.0;
+	cast_handle->volume_leveling_sc_hpf_alpha = (realtype)0.0;
+	cast_handle->volume_leveling_tone_low_alpha = (realtype)0.0;
+	cast_handle->volume_leveling_tone_body_alpha = (realtype)0.0;
+	cast_handle->volume_leveling_tone_presence_alpha = (realtype)0.0;
+	cast_handle->volume_leveling_tonality_score = (realtype)0.0;
+	cast_handle->volume_leveling_headroom_score = (realtype)0.0;
+	cast_handle->volume_leveling_quiet_duration_seconds = (realtype)0.0;
+	cast_handle->volume_leveling_quiet_gain_floor = (realtype)1.0;
+	cast_handle->volume_leveling_quiet_peak_bucket_max = (realtype)0.0;
+	cast_handle->volume_leveling_quiet_peak_bucket_seconds = (realtype)0.0;
+	cast_handle->volume_leveling_quiet_peak_history_index = 0;
+	cast_handle->volume_leveling_quiet_peak_history_count = 0;
+
+	for (i = 0; i < SOS_VOLUME_LEVELING_HISTORY_SIZE; i++)
+	{
+		cast_handle->volume_leveling_power_history[i] = (realtype)0.0;
+	}
+
+	for (i = 0; i < SOS_VOLUME_LEVELING_PEAK_WINDOW_SIZE; i++)
+	{
+		cast_handle->volume_leveling_quiet_peak_history[i] = (realtype)0.0;
+	}
 
 	for(i=0; i<8; i++)
 	{
@@ -160,6 +188,13 @@ int PT_DECLSPEC sosZeroStateAllSections(PT_HANDLE *hp_sos)
 		cast_handle->in2_oldSS[i] = (realtype)0.0;
 		cast_handle->outDC1_oldSS[i] = (realtype)0.0;
 		cast_handle->outDC2_oldSS[i] = (realtype)0.0;
+		cast_handle->volume_leveling_sc_prev_in[i] = (realtype)0.0;
+		cast_handle->volume_leveling_sc_prev_out[i] = (realtype)0.0;
+
+		for (int tone_index = 0; tone_index < 3; tone_index++)
+		{
+			cast_handle->volume_leveling_tone_lp_state[i][tone_index] = (realtype)0.0;
+		}
 	}
        
 	for(section_num=0; section_num < cast_handle->num_allocated_sections; section_num++)
@@ -239,6 +274,64 @@ int PT_DECLSPEC sosSetNormalization(PT_HANDLE* hp_sos, realtype r_normalization)
 		return(NOT_OKAY);
 
 	cast_handle->target_rms = r_normalization;
+
+	return(OKAY);
+}
+
+int PT_DECLSPEC sosSetVolumeLeveling(PT_HANDLE* hp_sos, realtype r_target_rms)
+{
+	struct sosHdlType* cast_handle;
+
+	cast_handle = (struct sosHdlType*)(hp_sos);
+
+	if (cast_handle == NULL)
+		return(NOT_OKAY);
+
+	cast_handle->volume_leveling_target_rms = r_target_rms;
+
+	if (r_target_rms <= (realtype)0.0)
+	{
+		cast_handle->volume_leveling_gain = (realtype)1.0;
+		cast_handle->volume_leveling_power_sum = (realtype)0.0;
+		cast_handle->volume_leveling_power_index = 0;
+		cast_handle->volume_leveling_power_count = 0;
+		cast_handle->volume_leveling_previous_average_rms = (realtype)0.0;
+		cast_handle->volume_leveling_previous_predicted_rms = (realtype)0.0;
+		cast_handle->volume_leveling_alpha_sample_rate = (realtype)0.0;
+		cast_handle->volume_leveling_sc_hpf_alpha = (realtype)0.0;
+		cast_handle->volume_leveling_tone_low_alpha = (realtype)0.0;
+		cast_handle->volume_leveling_tone_body_alpha = (realtype)0.0;
+		cast_handle->volume_leveling_tone_presence_alpha = (realtype)0.0;
+		cast_handle->volume_leveling_tonality_score = (realtype)0.0;
+		cast_handle->volume_leveling_headroom_score = (realtype)0.0;
+		cast_handle->volume_leveling_quiet_duration_seconds = (realtype)0.0;
+		cast_handle->volume_leveling_quiet_gain_floor = (realtype)1.0;
+		cast_handle->volume_leveling_quiet_peak_bucket_max = (realtype)0.0;
+		cast_handle->volume_leveling_quiet_peak_bucket_seconds = (realtype)0.0;
+		cast_handle->volume_leveling_quiet_peak_history_index = 0;
+		cast_handle->volume_leveling_quiet_peak_history_count = 0;
+
+		for (int i = 0; i < SOS_VOLUME_LEVELING_HISTORY_SIZE; i++)
+		{
+			cast_handle->volume_leveling_power_history[i] = (realtype)0.0;
+		}
+
+		for (int i = 0; i < SOS_VOLUME_LEVELING_PEAK_WINDOW_SIZE; i++)
+		{
+			cast_handle->volume_leveling_quiet_peak_history[i] = (realtype)0.0;
+		}
+
+		for (int i = 0; i < 8; i++)
+		{
+			cast_handle->volume_leveling_sc_prev_in[i] = (realtype)0.0;
+			cast_handle->volume_leveling_sc_prev_out[i] = (realtype)0.0;
+
+			for (int tone_index = 0; tone_index < 3; tone_index++)
+			{
+				cast_handle->volume_leveling_tone_lp_state[i][tone_index] = (realtype)0.0;
+			}
+		}
+	}
 
 	return(OKAY);
 }

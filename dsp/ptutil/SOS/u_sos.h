@@ -40,6 +40,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define SOS_FLOAT_BIAS 1.0e-30 // Was 1.0e-5 Thru 7/11/15, then changed to 1.0e-30 values that was being used in Hyperbass.
 #define SOS_DCBLOCK_ALPHA 0.999	// See http://peabody.sapp.org/class/dmp2/lab/dcblock/ for freq response curves for differen values, 0.999 is good for 44.1 and 48khz.
+#define SOS_VOLUME_LEVELING_HISTORY_SIZE 6
+#define SOS_VOLUME_LEVELING_PEAK_WINDOW_SIZE 30
 
 /* Section type definition */
 struct sosSectionType {
@@ -75,6 +77,31 @@ struct sosHdlType {
    realtype balance_right;      /* Externally applied balance for the combined sections */
    realtype target_rms;         /* Externally applied normalization rms  for the combined sections */
    realtype normalization_gain; /* normalization gain */
+   realtype volume_leveling_target_rms; /* Externally applied volume leveling rms for the combined sections */
+   realtype volume_leveling_gain; /* volume leveling gain */
+   realtype volume_leveling_power_history[SOS_VOLUME_LEVELING_HISTORY_SIZE]; /* Recent power history for volume leveling */
+   realtype volume_leveling_power_sum; /* Running sum of recent power history */
+   int volume_leveling_power_index; /* Ring buffer write index for recent power history */
+   int volume_leveling_power_count; /* Number of valid entries in recent power history */
+   realtype volume_leveling_previous_average_rms; /* Previous averaged rms used for gradient prediction */
+   realtype volume_leveling_previous_predicted_rms; /* Previous predicted rms for miss detection */
+   realtype volume_leveling_alpha_sample_rate; /* Sample rate used for cached detector coefficients */
+   realtype volume_leveling_sc_hpf_alpha; /* Cached sidechain high-pass coefficient */
+   realtype volume_leveling_tone_low_alpha; /* Cached low-band detector coefficient */
+   realtype volume_leveling_tone_body_alpha; /* Cached body-band detector coefficient */
+   realtype volume_leveling_tone_presence_alpha; /* Cached presence-band detector coefficient */
+   realtype volume_leveling_sc_prev_in[8]; /* Sidechain HPF previous input per channel */
+   realtype volume_leveling_sc_prev_out[8]; /* Sidechain HPF previous output per channel */
+   realtype volume_leveling_tone_lp_state[8][3]; /* Lowpass states used to estimate muffled vs clear balance */
+   realtype volume_leveling_tonality_score; /* -1.0 muffled ... +1.0 clear */
+   realtype volume_leveling_headroom_score; /* +1.0 ceiling pressure ... -1.0 comfortable headroom */
+   realtype volume_leveling_quiet_duration_seconds; /* How long the leveled output has continuously stayed in the very quiet region */
+   realtype volume_leveling_quiet_gain_floor; /* Retained gain floor after quiet boost has made the output audible */
+   realtype volume_leveling_quiet_peak_history[SOS_VOLUME_LEVELING_PEAK_WINDOW_SIZE]; /* One-second output peak buckets used for the 30-second headroom window */
+   realtype volume_leveling_quiet_peak_bucket_max; /* Peak accumulated in the current partial one-second bucket */
+   realtype volume_leveling_quiet_peak_bucket_seconds; /* Duration accumulated in the current partial one-second bucket */
+   int volume_leveling_quiet_peak_history_index; /* Ring buffer write index for one-second output peak buckets */
+   int volume_leveling_quiet_peak_history_count; /* Number of valid one-second output peak buckets */
    realtype master_gain; /* Externally applied master gain for the combined sections */
    int sos_type[SOS_MAX_NUM_SOS_SECTIONS]; /* SOS_PARA for parametric, SOS_SHELF for shelf type */
    struct sosSectionType *sections; 

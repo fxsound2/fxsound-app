@@ -50,6 +50,7 @@ int PT_DECLSPEC GraphicEqNew( PT_HANDLE **hpp_GraphicEq, int i_num_bands, int i_
 
 	cast_handle->master_gain = 0.0f;
 	cast_handle->normalization_gain = 0.0f;
+	cast_handle->volume_leveling_gain_db = 0.0f;
 	cast_handle->balance = 0.0f;
 
 	if (i_trace_mode)

@@ -29,6 +29,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "dfxpDefs.h"
 
+namespace
+{
+	constexpr float kVolumeLevelingMaxControlValue = 4.0f;
+	constexpr float kVolumeLevelingMaxTargetRms = 0.5f;
+}
+
 void PT_DECLSPEC GraphicEqSetBalance(PT_HANDLE* hp_GraphicEq, float balance_db)
 {
 	struct GraphicEqHdlType* cast_handle;
@@ -65,6 +71,22 @@ void PT_DECLSPEC GraphicEqSetNormalization(PT_HANDLE* hp_GraphicEq, float gain_d
 	float normalization = powf(10.0f, gain_db / 20.0f);
 	
 	sosSetNormalization((PT_HANDLE*)(cast_handle->sos_hdl), normalization);
+}
+
+void PT_DECLSPEC GraphicEqSetVolumeLeveling(PT_HANDLE* hp_GraphicEq, float gain_db)
+{
+	struct GraphicEqHdlType* cast_handle;
+	cast_handle = (struct GraphicEqHdlType*)(hp_GraphicEq);
+	if (cast_handle == NULL)
+		return;
+
+	const float control_value = fmaxf(0.0f, fminf(gain_db, kVolumeLevelingMaxControlValue));
+	cast_handle->volume_leveling_gain_db = control_value;
+
+	const float target_rms =
+		(control_value / kVolumeLevelingMaxControlValue) * kVolumeLevelingMaxTargetRms;
+
+	sosSetVolumeLeveling((PT_HANDLE*)(cast_handle->sos_hdl), target_rms);
 }
 
 void PT_DECLSPEC GraphicEqSetMasterGain(PT_HANDLE* hp_GraphicEq, float gain_db)

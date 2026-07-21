@@ -406,6 +406,24 @@ void DfxDspPrivate::setNormalization(float gain_db)
 	GraphicEqSetNormalization(graphic_eq_handle, gain_db);
 }
 
+float DfxDspPrivate::getVolumeLeveling()
+{
+	float gain_db;
+
+	PT_HANDLE* graphic_eq_handle;
+	dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
+	GraphicEqGetVolumeLeveling(graphic_eq_handle, &gain_db);
+
+	return gain_db;
+}
+
+void DfxDspPrivate::setVolumeLeveling(float gain_db)
+{
+	PT_HANDLE* graphic_eq_handle;
+	dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
+	GraphicEqSetVolumeLeveling(graphic_eq_handle, gain_db);
+}
+
 float DfxDspPrivate::getMasterGain()
 {
 	float gain_db;
