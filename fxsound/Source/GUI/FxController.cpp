@@ -233,6 +233,7 @@ void FxController::initConfig(const String& commandline)
 	auto filterq = arg_list.getValueForOption("--filter_q");
 	auto mastergain = arg_list.getValueForOption("--master_gain");
 	auto normalization = arg_list.getValueForOption("--normalization");
+	auto volume_leveling = arg_list.getValueForOption("--volume_leveling");
 
 	if (arg_list.containsOption("--run_minimized"))
 	{
@@ -305,7 +306,15 @@ void FxController::initConfig(const String& commandline)
 	if (nm < -20 || nm > 0) nm = DEFAULT_NORMALIZATION;
 	setNormalization(nm);
 
-	float vl = settings_.getDouble("volume_leveling");
+	float vl = 0;
+	if (volume_leveling.isEmpty())
+	{
+		vl = settings_.getDouble("volume_leveling");
+	}
+	else
+	{
+		vl = volume_leveling.getFloatValue();
+	}
 	if (vl < 0 || vl > 4) vl = DEFAULT_VOLUME_LEVELING;
 	setVolumeLeveling(vl);
 
@@ -365,6 +374,7 @@ void FxController::applyConfig(const String& commandline)
 	auto filterq = arg_list.getValueForOption("--filter_q");
 	auto mastergain = arg_list.getValueForOption("--master_gain");
 	auto normalization = arg_list.getValueForOption("--normalization");
+	auto volume_leveling = arg_list.getValueForOption("--volume_leveling");
 	auto band_freq = arg_list.getValueForOption("--set_band_freq").unquoted();
 	auto band_gain = arg_list.getValueForOption("--set_band_gain").unquoted();
 	auto effect = arg_list.getValueForOption("--set_effect").unquoted();
@@ -467,7 +477,7 @@ void FxController::applyConfig(const String& commandline)
 	}
 
 	// ------------------------------------------------------------------------------------------
-	//  NumBands / Balance / FilterQ / MasterGain / Normalization
+	//  NumBands / Balance / FilterQ / MasterGain / Normalization / Volume Leveling
 	// ------------------------------------------------------------------------------------------
 	int nb = DEFAULT_NUM_EQ_BANDS;
 	if (numbands.isNotEmpty())
@@ -485,6 +495,13 @@ void FxController::applyConfig(const String& commandline)
 		setNormalization(nm);
 	}
 
+	float vl = 0;
+	if (volume_leveling.isNotEmpty())
+	{
+		vl = volume_leveling.getFloatValue();
+		if (vl < 0 || vl > 4) vl = DEFAULT_VOLUME_LEVELING;
+		setVolumeLeveling(vl);
+	}
 
 	float bl = 0;
 	if (balance.isNotEmpty())
@@ -662,6 +679,11 @@ void FxController::printStatus()
 
 	auto* eq_obj = new DynamicObject();
 	eq_obj->setProperty("num_bands", getNumEqBands());
+	eq_obj->setProperty("master_gain", getMasterGain());
+	eq_obj->setProperty("normalization", getNormalization());
+	eq_obj->setProperty("volume_leveling", getVolumeLeveling());
+	eq_obj->setProperty("filter_q", getFilterQ());
+	eq_obj->setProperty("balance", getBalance());
 	eq_obj->setProperty("bands", bands);
 	settings->setProperty("equalizer", var(eq_obj));
 
@@ -1796,6 +1818,7 @@ float FxController::getNormalization()
 
 void FxController::setNormalization(float normalization_db)
 {
+	normalization_db = std::round(normalization_db);
 	dfx_dsp_.setNormalization(normalization_db);
 	settings_.setDouble("normalization", normalization_db);
 }
@@ -1807,6 +1830,7 @@ float FxController::getVolumeLeveling()
 
 void FxController::setVolumeLeveling(float gain_db)
 {
+	gain_db = std::round(gain_db * 2.0f) / 2.0f;
 	dfx_dsp_.setVolumeLeveling(gain_db);
 	settings_.setDouble("volume_leveling", gain_db);
 }
@@ -1818,6 +1842,7 @@ float FxController::getBalance()
 
 void FxController::setBalance(float balance_db)
 {
+	balance_db = std::round(balance_db);
 	dfx_dsp_.setBalance(balance_db);
 	settings_.setDouble("balance", balance_db);
 }
@@ -1829,6 +1854,7 @@ float FxController::getMasterGain()
 
 void FxController::setMasterGain(float gain_db)
 {
+	gain_db = std::round(gain_db);
 	dfx_dsp_.setMasterGain(gain_db);
 	settings_.setDouble("master_gain", gain_db);
 }
@@ -1840,6 +1866,7 @@ float FxController::getFilterQ()
 
 void FxController::setFilterQ(float q_multiplier)
 {
+	q_multiplier = std::round(q_multiplier * 2.0f) / 2.0f;
 	dfx_dsp_.setFilterQ(q_multiplier);
 	settings_.setDouble("filter_q", q_multiplier);
 }
