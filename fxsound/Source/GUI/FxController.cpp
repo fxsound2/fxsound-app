@@ -1803,12 +1803,6 @@ void FxController::setNumEqBands(int num_bands)
 {
 	dfx_dsp_.setNumBands(num_bands);
 	settings_.setInt("num_bands", num_bands);
-
-	auto& model = FxModel::getModel();
-	if (!model.isPresetModified())
-	{
-		setPreset(model.getSelectedPreset(), false);
-	}
 }
 
 float FxController::getNormalization()
