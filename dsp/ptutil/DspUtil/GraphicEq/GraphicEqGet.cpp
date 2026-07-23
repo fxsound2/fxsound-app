@@ -120,11 +120,48 @@ int PT_DECLSPEC GraphicEqGetBandFrequencyRange(PT_HANDLE *hp_GraphicEq, int i_ba
     if (sosGetCenterFreqArray((PT_HANDLE *)(cast_handle->sos_hdl), &rp_freq_array) != OKAY)
         return(NOT_OKAY);
 
-    // ---------------------------------------------------- Compute fp_min_freq fp_max_freq
+    if (cast_handle->num_bands == 1)
+    {
+        cast_handle->Q = (realtype)1.0;
 
-    *fp_min_freq = rp_freq_array[i_band_num - 1] * 0.7;
-    *fp_max_freq = rp_freq_array[i_band_num - 1] * 1.3;
-    
+        *fp_min_freq = rp_freq_array[i_band_num - 1];
+        *fp_max_freq = rp_freq_array[i_band_num - 1];
+    }
+    else
+    {
+        d_ratio = (double)cast_handle->max_band_freq / (double)cast_handle->min_band_freq;
+
+        if (i_band_num == 1)
+        {
+            *fp_min_freq = rp_freq_array[i_band_num - 1];
+        }
+        else
+        {
+            d_power = (double)((i_band_num-1)*2 - 1) / (double)(cast_handle->num_bands*2 - 2);
+
+            d_factor = pow(d_ratio, d_power);
+
+            *fp_min_freq = round((realtype)(cast_handle->min_band_freq * d_factor));
+            if (*fp_min_freq < 1000)
+                (*fp_min_freq)++;
+            else
+                (*fp_min_freq)+=10;
+        }
+
+        if (i_band_num == cast_handle->num_bands)
+        {
+            *fp_max_freq = rp_freq_array[i_band_num - 1];
+        }
+        else
+        {
+            d_power = (double)(i_band_num*2 - 1) / (double)(cast_handle->num_bands*2 - 2);
+
+            d_factor = pow(d_ratio, d_power);
+
+            *fp_max_freq = round((realtype)(cast_handle->min_band_freq * d_factor));
+        }
+    }
+
     return(OKAY);
 }
 
