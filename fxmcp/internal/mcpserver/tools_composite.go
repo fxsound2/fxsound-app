@@ -43,7 +43,7 @@ type applySettingsInput struct {
 	DeletePreset    bool                 `json:"delete_preset,omitempty" jsonschema:"delete the selected user preset"`
 	OutputDevice    string               `json:"output_device,omitempty" jsonschema:"select this output device by exact Windows friendly name"`
 	View            string               `json:"view,omitempty" jsonschema:"\"lite\" or \"full\""`
-	Language        string               `json:"language,omitempty" jsonschema:"display language code, e.g. en, fr, fi"`
+	Language        string               `json:"language,omitempty" jsonschema:"display language code as a BCP 47 tag, e.g. en, fr, fi"`
 	NumEqBands      int                  `json:"num_eq_bands,omitempty" jsonschema:"one of 5, 10, 15, 20, 31"`
 	Balance         *float64             `json:"balance,omitempty" jsonschema:"stereo balance in dB, -20 to 20"`
 	FilterQ         *float64             `json:"filter_q,omitempty" jsonschema:"EQ filter Q factor, 1 to 3"`
@@ -167,6 +167,9 @@ func (a *App) toolApplySettings(ctx context.Context, _ *mcp.CallToolRequest, in 
 		flags["view"] = v
 	}
 	if in.Language != "" {
+		if err := fxsound.ValidateLanguageCode(in.Language); err != nil {
+			return nil, applyResult{}, err
+		}
 		flags["language"] = in.Language
 	}
 	if in.NumEqBands != 0 {

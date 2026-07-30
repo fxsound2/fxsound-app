@@ -36,7 +36,10 @@ func TestBuildCommandLine(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := BuildCommandLine(tt.flags)
+			got, err := BuildCommandLine(tt.flags)
+			if err != nil {
+				t.Fatalf("BuildCommandLine(%v): unexpected error: %v", tt.flags, err)
+			}
 			if len(got) != len(tt.want) {
 				t.Fatalf("BuildCommandLine(%v) = %v, want %v", tt.flags, got, tt.want)
 			}
@@ -46,6 +49,25 @@ func TestBuildCommandLine(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+// TestBuildCommandLineRejectsEmbeddedQuote guards against the
+// argument-injection path found in review: FxController's tokenizer has
+// no backslash-escape awareness, so a value containing a literal `"`
+// could break out of its quoted segment and splice extra --flag=value
+// tokens into the command line actually sent to FxSound.exe. This must be
+// rejected before BuildCommandLine ever quotes/joins it.
+func TestBuildCommandLineRejectsEmbeddedQuote(t *testing.T) {
+	tests := []map[string]string{
+		{"preset": `Foo" --power=0 --preset="Foo`},
+		{"output": `Speakers" --power=0`},
+		{"preset": `"`},
+	}
+	for _, flags := range tests {
+		if _, err := BuildCommandLine(flags); err == nil {
+			t.Errorf("BuildCommandLine(%v): expected error for embedded quote, got nil", flags)
+		}
 	}
 }
 
@@ -86,6 +108,27 @@ func TestApplySpawnsExactlyOnce(t *testing.T) {
 		if !strings.Contains(joined, want) {
 			t.Errorf("command line %q missing %q", joined, want)
 		}
+	}
+}
+
+// TestApplyRejectsInjectionWithoutSpawning confirms Apply refuses an
+// embedded-quote injection payload before ever spawning a process.
+func TestApplyRejectsInjectionWithoutSpawning(t *testing.T) {
+	spawned := false
+	orig := runProcess
+	runProcess = func(_ context.Context, _ string, _ []string, _, _ *bytes.Buffer) error {
+		spawned = true
+		return nil
+	}
+	t.Cleanup(func() { runProcess = orig })
+
+	paths := &Paths{FxSoundExe: `C:\fake\FxSound.exe`}
+	flags := map[string]string{"preset": `Foo" --power=0 --preset="Foo`}
+	if err := Apply(context.Background(), paths, flags, false); err == nil {
+		t.Error("Apply: expected error for embedded-quote injection payload, got nil")
+	}
+	if spawned {
+		t.Error("Apply: spawned a process despite the rejected value")
 	}
 }
 

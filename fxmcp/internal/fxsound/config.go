@@ -30,9 +30,22 @@ const (
 // preset/device names; FxController's ArgumentList parsing strips a
 // matching pair of quotes via .unquoted() before use.
 //
+// A value containing a literal `"` character is rejected outright rather
+// than quoted, escaped, or stripped. FxController's own re-tokenizer (see
+// buildRawCmdLine's doc comment in process.go) treats every `"` as a bare
+// quote-region toggle with no backslash-escape awareness, so a value like
+// `Foo" --power=0 --preset="Foo` would break out of its quoted segment and
+// splice extra --flag=value tokens into the literal command line sent to
+// FxSound.exe -- an argument-injection path, since these values can
+// originate from an untrusted upstream MCP client/LLM. None of the flags
+// this builds have a legitimate reason to contain a literal quote
+// character (preset/device names and language codes never do), so
+// rejecting is safe and simpler than trying to escape a tokenizer that
+// has no escape syntax of its own.
+//
 // Map keys are sorted for deterministic output; argument order does not
 // matter to FxController's flag-by-name parsing.
-func BuildCommandLine(flags map[string]string) []string {
+func BuildCommandLine(flags map[string]string) ([]string, error) {
 	keys := make([]string, 0, len(flags))
 	for k := range flags {
 		keys = append(keys, k)
@@ -42,6 +55,9 @@ func BuildCommandLine(flags map[string]string) []string {
 	args := make([]string, 0, len(keys))
 	for _, k := range keys {
 		v := flags[k]
+		if strings.Contains(v, `"`) {
+			return nil, newError(ErrKindValueRejected, nil, "value for --%s contains a literal double-quote character, which is not allowed", k)
+		}
 		if v == "" {
 			args = append(args, "--"+k)
 			continue
@@ -51,7 +67,7 @@ func BuildCommandLine(flags map[string]string) []string {
 		}
 		args = append(args, "--"+k+"="+v)
 	}
-	return args
+	return args, nil
 }
 
 // Apply builds a command line from flags and sends it to FxSound.exe.
@@ -72,7 +88,10 @@ func Apply(ctx context.Context, paths *Paths, flags map[string]string, requireRu
 			return err
 		}
 	}
-	args := BuildCommandLine(flags)
+	args, err := BuildCommandLine(flags)
+	if err != nil {
+		return err
+	}
 	if _, err := Run(ctx, applyConfigTimeout, paths.FxSoundExe, args...); err != nil {
 		return err
 	}
