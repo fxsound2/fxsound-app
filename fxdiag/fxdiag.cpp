@@ -45,7 +45,7 @@ int wmain(int argc, wchar_t* argv[])
 		EnableVirtualTerminalProcessing();
 	}
 
-	hr = CoInitializeEx(0, COINIT_APARTMENTTHREADED);
+	hr = CoInitializeEx(0, COINIT_MULTITHREADED);
 	if (FAILED(hr))
 		return -1;
 
