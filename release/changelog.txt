@@ -5,7 +5,7 @@ version 1.2.11.0
 3. Equalizer band gains are interpolated according to the band mappings when the number of bands change. The modified preset will not be reset when the number of bands are changed.
 4. Fixed application not working correctly on Windows 7 due to a missing suspend/resume notification API (#551)
 5. Fixed Remote Desktop session behaviour. FxSound audio processing is disabled in Remote Desktop.
-6. Added volume leveling
+6. Volume leveling with 0.0 to 4.0dB range
 
 version 1.2.10.0
 ----------------
