@@ -4367,7 +4367,8 @@ static const unsigned char temp_binary_data_62[] =
 116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,216,167,216,179,216,170,216,174,216,175,217,133,32,83,104,105,102,116,43,85,112,32,216,163,217,136,32,83,104,105,102,116,43,68,
 111,119,110,32,217,132,216,170,216,186,217,138,217,138,216,177,32,216,163,217,136,217,132,217,136,217,138,216,169,32,216,167,217,132,216,172,217,135,216,167,216,178,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,
 110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,217,133,216,185,216,167,217,132,216,172,216,169,32,216,167,217,132,216,181,217,136,216,170,32,216,186,217,138,216,
-177,32,217,133,216,170,217,136,217,129,216,177,216,169,32,216,185,216,168,216,177,32,216,179,216,183,216,173,32,216,167,217,132,217,133,217,131,216,170,216,168,32,216,167,217,132,216,168,216,185,217,138,216,175,34,0,0 };
+177,32,217,133,216,170,217,136,217,129,216,177,216,169,32,216,185,216,168,216,177,32,216,179,216,183,216,173,32,216,167,217,132,217,133,217,131,216,170,216,168,32,216,167,217,132,216,168,216,185,217,138,216,175,34,13,10,34,86,111,108,117,109,101,32,76,
+101,118,101,108,105,110,103,58,34,32,61,32,34,217,133,217,136,216,167,216,178,217,134,216,169,32,217,133,216,179,216,170,217,136,217,137,32,216,167,217,132,216,181,217,136,216,170,58,34,0,0 };
 
 const char* FxSound_ar_txt = (const char*) temp_binary_data_62;
 
@@ -4527,7 +4528,8 @@ static const unsigned char temp_binary_data_63[] =
 "\"Equalizer\" = \"Ekvilajzer\"\r\n"
 "\"Prioritize new output devices\" = \"Daj prioritet novim izlaznim ure\xc4\x91""ajima\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Koristite Shift+Up ili Shift+Down za promjenu prioriteta ure\xc4\x91""aja\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"Audio obrada nije dostupna putem udaljene radne povr\xc5\xa1ine\"";
+"\"Audio processing is not available over Remote Desktop\" = \"Audio obrada nije dostupna putem udaljene radne povr\xc5\xa1ine\"\r\n"
+"\"Volume Leveling:\" = \"Ujedna\xc4\x8d""avanje glasno\xc4\x87""e:\"";
 
 const char* FxSound_ba_txt = (const char*) temp_binary_data_63;
 
@@ -4691,7 +4693,8 @@ static const unsigned char temp_binary_data_64[] =
 "\"Equalizer\" = \"Equalizer\"\r\n"
 "\"Prioritize new output devices\" = \"Neue Ausgabeger\xc3\xa4te priorisieren\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Verwenden Sie Shift+Up oder Shift+Down, um die Ger\xc3\xa4tepriorit\xc3\xa4t zu \xc3\xa4ndern\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"Audioverarbeitung ist \xc3\xbc""ber Remotedesktop nicht verf\xc3\xbcgbar\"";
+"\"Audio processing is not available over Remote Desktop\" = \"Audioverarbeitung ist \xc3\xbc""ber Remotedesktop nicht verf\xc3\xbcgbar\"\r\n"
+"\"Volume Leveling:\" = \"Lautst\xc3\xa4rkeausgleich:\"";
 
 const char* FxSound_de_txt = (const char*) temp_binary_data_64;
 
@@ -4851,7 +4854,8 @@ static const unsigned char temp_binary_data_65[] =
 "\"Equalizer\" = \"Ecualizador\"\r\n"
 "\"Prioritize new output devices\" = \"Priorizar nuevos dispositivos de salida\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Use Shift+Up o Shift+Down para cambiar la prioridad del dispositivo\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"El procesamiento de audio no est\xc3\xa1 disponible a trav\xc3\xa9s de Escritorio remoto\"";
+"\"Audio processing is not available over Remote Desktop\" = \"El procesamiento de audio no est\xc3\xa1 disponible a trav\xc3\xa9s de Escritorio remoto\"\r\n"
+"\"Volume Leveling:\" = \"Nivelaci\xc3\xb3n de volumen:\"";
 
 const char* FxSound_es_txt = (const char*) temp_binary_data_65;
 
@@ -5094,7 +5098,8 @@ static const unsigned char temp_binary_data_66[] =
 217,136,217,132,217,136,219,140,216,170,32,216,175,216,179,216,170,218,175,216,167,217,135,32,216,167,216,178,32,83,104,105,102,116,43,85,112,32,219,140,216,167,32,83,104,105,102,116,43,68,111,119,110,32,216,167,216,179,216,170,217,129,216,167,216,175,
 217,135,32,218,169,217,134,219,140,216,175,46,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,
 112,34,32,61,32,34,217,190,216,177,216,175,216,167,216,178,216,180,32,216,181,216,175,216,167,32,216,167,216,178,32,216,183,216,177,219,140,217,130,32,216,175,216,179,218,169,216,170,216,167,217,190,32,216,167,216,178,32,216,177,216,167,217,135,32,216,
-175,217,136,216,177,32,216,175,216,177,32,216,175,216,179,216,170,216,177,216,179,32,217,134,219,140,216,179,216,170,34,13,10,0,0 };
+175,217,136,216,177,32,216,175,216,177,32,216,175,216,179,216,170,216,177,216,179,32,217,134,219,140,216,179,216,170,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,58,34,32,61,32,34,216,170,216,177,216,167,216,178,32,218,169,216,
+177,216,175,217,134,32,216,181,216,175,216,167,58,34,13,10,0,0 };
 
 const char* FxSound_fa_txt = (const char*) temp_binary_data_66;
 
@@ -5257,7 +5262,8 @@ static const unsigned char temp_binary_data_67[] =
 "\"Equalizer\" = \"Taajuuskorjain\"\r\n"
 "\"Prioritize new output devices\" = \"Priorisoi uudet ulostulolaitteet\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Muuta laitteen prioriteettia Shift+Yl\xc3\xb6s- tai Shift+Alas-n\xc3\xa4pp\xc3\xa4imell\xc3\xa4\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"\xc3\x84\xc3\xa4nenk\xc3\xa4sittely ei ole k\xc3\xa4ytett\xc3\xa4viss\xc3\xa4 et\xc3\xa4ty\xc3\xb6p\xc3\xb6yd\xc3\xa4n kautta\"";
+"\"Audio processing is not available over Remote Desktop\" = \"\xc3\x84\xc3\xa4nenk\xc3\xa4sittely ei ole k\xc3\xa4ytett\xc3\xa4viss\xc3\xa4 et\xc3\xa4ty\xc3\xb6p\xc3\xb6yd\xc3\xa4n kautta\"\r\n"
+"\"Volume Leveling:\" = \"\xc3\x84\xc3\xa4nenvoimakkuuden tasoitus:\"";
 
 const char* FxSound_fi_txt = (const char*) temp_binary_data_67;
 
@@ -5422,7 +5428,8 @@ static const unsigned char temp_binary_data_68[] =
 "\"Equalizer\" = \"\xc3\x89galiseur\"\r\n"
 "\"Prioritize new output devices\" = \"Prioriser les nouveaux p\xc3\xa9riph\xc3\xa9riques de sortie\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Utilisez Shift+Up ou Shift+Down pour modifier la priorit\xc3\xa9 de l\xe2\x80\x99""appareil\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"Le traitement audio n\xe2\x80\x99""est pas disponible via le Bureau \xc3\xa0 distance\"";
+"\"Audio processing is not available over Remote Desktop\" = \"Le traitement audio n\xe2\x80\x99""est pas disponible via le Bureau \xc3\xa0 distance\"\r\n"
+"\"Volume Leveling:\" = \"Nivellement du volume :\"";
 
 const char* FxSound_fr_txt = (const char*) temp_binary_data_68;
 
@@ -5581,7 +5588,8 @@ static const unsigned char temp_binary_data_69[] =
 "\"Equalizer\" = \"Ekvilajzer\"\r\n"
 "\"Prioritize new output devices\" = \"Daj prioritet novim izlaznim ure\xc4\x91""ajima\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Koristite Shift+Up ili Shift+Down za promjenu prioriteta ure\xc4\x91""aja\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"Audio obrada nije dostupna putem udaljene radne povr\xc5\xa1ine\"";
+"\"Audio processing is not available over Remote Desktop\" = \"Audio obrada nije dostupna putem udaljene radne povr\xc5\xa1ine\"\r\n"
+"\"Volume Leveling:\" = \"Ujedna\xc4\x8d""avanje glasno\xc4\x87""e:\"";
 
 const char* FxSound_hr_txt = (const char*) temp_binary_data_69;
 
@@ -5750,7 +5758,8 @@ static const unsigned char temp_binary_data_70[] =
 "\"Equalizer\" = \"Equalizer\"\r\n"
 "\"Prioritize new output devices\" = \"\xc3\x9aj kimeneti eszk\xc3\xb6z\xc3\xb6k el\xc5\x91nyben r\xc3\xa9szes\xc3\xadt\xc3\xa9se\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"A Shift+Up vagy Shift+Down haszn\xc3\xa1lat\xc3\xa1val m\xc3\xb3""dos\xc3\xadthatja az eszk\xc3\xb6z priorit\xc3\xa1s\xc3\xa1t\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"A hangfeldolgoz\xc3\xa1s nem \xc3\xa9rhet\xc5\x91 el T\xc3\xa1voli asztalon kereszt\xc3\xbcl\"";
+"\"Audio processing is not available over Remote Desktop\" = \"A hangfeldolgoz\xc3\xa1s nem \xc3\xa9rhet\xc5\x91 el T\xc3\xa1voli asztalon kereszt\xc3\xbcl\"\r\n"
+"\"Volume Leveling:\" = \"Hanger\xc5\x91-kiegyenl\xc3\xadt\xc3\xa9s:\"";
 
 const char* fxsound_hu_txt = (const char*) temp_binary_data_70;
 
@@ -5909,7 +5918,8 @@ static const unsigned char temp_binary_data_71[] =
 "\"Equalizer\" = \"Equalizer\"\r\n"
 "\"Prioritize new output devices\" = \"Prioritaskan perangkat keluaran baru\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Gunakan Shift+Up atau Shift+Down untuk mengubah prioritas perangkat\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"Pemrosesan audio tidak tersedia melalui Desktop Jauh\"";
+"\"Audio processing is not available over Remote Desktop\" = \"Pemrosesan audio tidak tersedia melalui Desktop Jauh\"\r\n"
+"\"Volume Leveling:\" = \"Perataan Volume:\"";
 
 const char* FxSound_id_txt = (const char*) temp_binary_data_71;
 
@@ -6071,7 +6081,8 @@ static const unsigned char temp_binary_data_72[] =
 "\"Equalizer\" = \"Equalizzatore\"\r\n"
 "\"Prioritize new output devices\" = \"Dai priorit\xc3\xa0 ai nuovi dispositivi di uscita\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Usa Shift+Up o Shift+Down per modificare la priorit\xc3\xa0 del dispositivo\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"L'elaborazione audio non \xc3\xa8 disponibile tramite Desktop remoto\"";
+"\"Audio processing is not available over Remote Desktop\" = \"L'elaborazione audio non \xc3\xa8 disponibile tramite Desktop remoto\"\r\n"
+"\"Volume Leveling:\" = \"Livellamento del volume:\"";
 
 const char* FxSound_it_txt = (const char*) temp_binary_data_72;
 
@@ -6282,7 +6293,8 @@ static const unsigned char temp_binary_data_73[] =
 32,112,114,105,111,114,105,116,121,34,32,61,32,34,83,104,105,102,116,43,85,112,32,227,129,190,227,129,159,227,129,175,32,83,104,105,102,116,43,68,111,119,110,32,227,130,146,228,189,191,231,148,168,227,129,151,227,129,166,227,131,135,227,131,144,227,130,
 164,227,130,185,227,129,174,229,132,170,229,133,136,233,160,134,228,189,141,227,130,146,229,164,137,230,155,180,227,129,151,227,129,190,227,129,153,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,
 97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,227,130,170,227,131,188,227,131,135,227,130,163,227,130,170,229,135,166,231,144,134,227,129,175,227,131,170,227,131,162,227,131,
-188,227,131,136,32,227,131,135,227,130,185,227,130,175,227,131,136,227,131,131,227,131,151,227,129,167,227,129,175,229,136,169,231,148,168,227,129,167,227,129,141,227,129,190,227,129,155,227,130,147,34,0,0 };
+188,227,131,136,32,227,131,135,227,130,185,227,130,175,227,131,136,227,131,131,227,131,151,227,129,167,227,129,175,229,136,169,231,148,168,227,129,167,227,129,141,227,129,190,227,129,155,227,130,147,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,
+108,105,110,103,58,34,32,61,32,34,233,159,179,233,135,143,229,185,179,230,186,150,229,140,150,58,34,0,0 };
 
 const char* FxSound_ja_txt = (const char*) temp_binary_data_73;
 
@@ -6474,7 +6486,8 @@ static const unsigned char temp_binary_data_74[] =
 32,112,114,105,111,114,105,116,121,34,32,61,32,34,83,104,105,102,116,43,85,112,32,235,152,144,235,138,148,32,83,104,105,102,116,43,68,111,119,110,236,157,132,32,236,130,172,236,154,169,237,149,152,236,151,172,32,236,158,165,236,185,152,32,236,154,176,
 236,132,160,236,136,156,236,156,132,235,165,188,32,235,179,128,234,178,189,237,149,169,235,139,136,235,139,164,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,
 118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,236,152,164,235,148,148,236,152,164,32,236,178,152,235,166,172,235,138,148,32,236,155,144,234,178,169,32,235,141,176,236,138,164,237,129,172,237,134,177,236,151,144,236,
-132,156,32,236,130,172,236,154,169,237,149,160,32,236,136,152,32,236,151,134,236,138,181,235,139,136,235,139,164,34,13,10,0,0 };
+132,156,32,236,130,172,236,154,169,237,149,160,32,236,136,152,32,236,151,134,236,138,181,235,139,136,235,139,164,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,58,34,32,61,32,34,235,179,188,235,165,168,32,237,143,137,236,164,128,
+237,153,148,58,34,13,10,0,0 };
 
 const char* FxSound_ko_txt = (const char*) temp_binary_data_74;
 
@@ -6631,7 +6644,8 @@ static const unsigned char temp_binary_data_75[] =
 "\"Equalizer\" = \"Equalizer\"\r\n"
 "\"Prioritize new output devices\" = \"Nieuwe uitvoerapparaten prioriteit geven\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Gebruik Shift+Up of Shift+Down om de apparaatprioriteit te wijzigen\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"Audioverwerking is niet beschikbaar via extern bureaublad\"";
+"\"Audio processing is not available over Remote Desktop\" = \"Audioverwerking is niet beschikbaar via extern bureaublad\"\r\n"
+"\"Volume Leveling:\" = \"Volume-egalisatie:\"";
 
 const char* FxSound_nl_txt = (const char*) temp_binary_data_75;
 
@@ -6790,7 +6804,8 @@ static const unsigned char temp_binary_data_76[] =
 "\"Equalizer\" = \"Equalizer\"\r\n"
 "\"Prioritize new output devices\" = \"Prioriter nye utdataenheter\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Bruk Shift+Up eller Shift+Down for \xc3\xa5 endre enhetsprioriteten\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"Lydprosessering er ikke tilgjengelig over Eksternt skrivebord\"";
+"\"Audio processing is not available over Remote Desktop\" = \"Lydprosessering er ikke tilgjengelig over Eksternt skrivebord\"\r\n"
+"\"Volume Leveling:\" = \"Volumutjevning:\"";
 
 const char* FxSound_no_txt = (const char*) temp_binary_data_76;
 
@@ -6958,7 +6973,8 @@ static const unsigned char temp_binary_data_77[] =
 "\"Equalizer\" = \"Equalizer\"\r\n"
 "\"Prioritize new output devices\" = \"Nadaj priorytet nowym urz\xc4\x85""dzeniom wyj\xc5\x9b""ciowym\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"U\xc5\xbcyj Shift+Up lub Shift+Down, aby zmieni\xc4\x87 priorytet urz\xc4\x85""dzenia\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"Przetwarzanie d\xc5\xbawi\xc4\x99ku nie jest dost\xc4\x99pne przez Pulpit zdalny\"";
+"\"Audio processing is not available over Remote Desktop\" = \"Przetwarzanie d\xc5\xbawi\xc4\x99ku nie jest dost\xc4\x99pne przez Pulpit zdalny\"\r\n"
+"\"Volume Leveling:\" = \"Wyr\xc3\xb3wnywanie g\xc5\x82o\xc5\x9bno\xc5\x9b""ci:\"";
 
 const char* FxSound_pl_txt = (const char*) temp_binary_data_77;
 
@@ -7119,7 +7135,8 @@ static const unsigned char temp_binary_data_78[] =
 "\"Equalizer\" = \"Equalizador\"\r\n"
 "\"Prioritize new output devices\" = \"Dar prioridade a novos dispositivos de sa\xc3\xad""da\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Use Shift+Up ou Shift+Down para alterar a prioridade do dispositivo\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"O processamento de \xc3\xa1udio n\xc3\xa3o est\xc3\xa1 dispon\xc3\xadvel atrav\xc3\xa9s da \xc3\x81rea de Trabalho Remota\"";
+"\"Audio processing is not available over Remote Desktop\" = \"O processamento de \xc3\xa1udio n\xc3\xa3o est\xc3\xa1 dispon\xc3\xadvel atrav\xc3\xa9s da \xc3\x81rea de Trabalho Remota\"\r\n"
+"\"Volume Leveling:\" = \"Nivelamento de volume:\"";
 
 const char* FxSound_ptbr_txt = (const char*) temp_binary_data_78;
 
@@ -7279,7 +7296,8 @@ static const unsigned char temp_binary_data_79[] =
 "\"Equalizer\" = \"Equalizador\"\r\n"
 "\"Prioritize new output devices\" = \"Dar prioridade a novos dispositivos de sa\xc3\xad""da\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Use Shift+Up ou Shift+Down para alterar a prioridade do dispositivo\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"O processamento de \xc3\xa1udio n\xc3\xa3o est\xc3\xa1 dispon\xc3\xadvel atrav\xc3\xa9s do Ambiente de Trabalho Remoto\"";
+"\"Audio processing is not available over Remote Desktop\" = \"O processamento de \xc3\xa1udio n\xc3\xa3o est\xc3\xa1 dispon\xc3\xadvel atrav\xc3\xa9s do Ambiente de Trabalho Remoto\"\r\n"
+"\"Volume Leveling:\" = \"Nivelamento de volume:\"";
 
 const char* FxSound_pt_txt = (const char*) temp_binary_data_79;
 
@@ -7444,7 +7462,8 @@ static const unsigned char temp_binary_data_80[] =
 "\"Equalizer\" = \"Egalizator\"\r\n"
 "\"Prioritize new output devices\" = \"Prioritizeaz\xc4\x83 noile dispozitive de ie\xc8\x99ire\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Folose\xc8\x99te Shift+Up sau Shift+Down pentru a schimba prioritatea dispozitivului\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"Procesarea audio nu este disponibil\xc4\x83 prin Desktop la distan\xc8\x9b\xc4\x83\"";
+"\"Audio processing is not available over Remote Desktop\" = \"Procesarea audio nu este disponibil\xc4\x83 prin Desktop la distan\xc8\x9b\xc4\x83\"\r\n"
+"\"Volume Leveling:\" = \"Nivelare volum:\"";
 
 const char* FxSound_ro_txt = (const char*) temp_binary_data_80;
 
@@ -7698,7 +7717,8 @@ static const unsigned char temp_binary_data_81[] =
 184,208,183,208,188,208,181,208,189,208,181,208,189,208,184,209,143,32,208,191,209,128,208,184,208,190,209,128,208,184,209,130,208,181,209,130,208,176,32,209,131,209,129,209,130,209,128,208,190,208,185,209,129,209,130,208,178,208,176,34,13,10,34,65,117,
 100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,208,158,208,177,209,128,208,176,208,177,208,190,
 209,130,208,186,208,176,32,208,176,209,131,208,180,208,184,208,190,32,208,189,208,181,208,180,208,190,209,129,209,130,209,131,208,191,208,189,208,176,32,209,135,208,181,209,128,208,181,208,183,32,209,131,208,180,208,176,208,187,209,145,208,189,208,189,
-209,139,208,185,32,209,128,208,176,208,177,208,190,209,135,208,184,208,185,32,209,129,209,130,208,190,208,187,34,0,0 };
+209,139,208,185,32,209,128,208,176,208,177,208,190,209,135,208,184,208,185,32,209,129,209,130,208,190,208,187,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,58,34,32,61,32,34,208,146,209,139,209,128,208,176,208,178,208,189,208,184,
+208,178,208,176,208,189,208,184,208,181,32,208,179,209,128,208,190,208,188,208,186,208,190,209,129,209,130,208,184,58,34,0,0 };
 
 const char* FxSound_ru_txt = (const char*) temp_binary_data_81;
 
@@ -7858,7 +7878,8 @@ static const unsigned char temp_binary_data_82[] =
 "\"Equalizer\" = \"Izena\xc4\x8d""evalnik\"\r\n"
 "\"Prioritize new output devices\" = \"Daj prednost novim izhodnim napravam\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Uporabite Shift+Up ali Shift+Down za spremembo prioritete naprave\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"Obdelava zvoka ni na voljo prek oddaljenega namizja\"";
+"\"Audio processing is not available over Remote Desktop\" = \"Obdelava zvoka ni na voljo prek oddaljenega namizja\"\r\n"
+"\"Volume Leveling:\" = \"Izena\xc4\x8d""evanje glasnosti:\"";
 
 const char* FxSound_sl_txt = (const char*) temp_binary_data_82;
 
@@ -8020,7 +8041,8 @@ static const unsigned char temp_binary_data_83[] =
 "\"Equalizer\" = \"Equalizer\"\r\n"
 "\"Prioritize new output devices\" = \"Prioritera nya utg\xc3\xa5ngsenheter\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Anv\xc3\xa4nd Shift+Up eller Shift+Down f\xc3\xb6r att \xc3\xa4ndra enhetsprioriteten\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"Ljudbearbetning \xc3\xa4r inte tillg\xc3\xa4nglig via Fj\xc3\xa4rrskrivbord\"";
+"\"Audio processing is not available over Remote Desktop\" = \"Ljudbearbetning \xc3\xa4r inte tillg\xc3\xa4nglig via Fj\xc3\xa4rrskrivbord\"\r\n"
+"\"Volume Leveling:\" = \"Volymutj\xc3\xa4mning:\"";
 
 const char* FxSound_sv_txt = (const char*) temp_binary_data_83;
 
@@ -8329,7 +8351,9 @@ static const unsigned char temp_binary_data_84[] =
 132,224,184,177,224,184,141,224,184,130,224,184,173,224,184,135,224,184,173,224,184,184,224,184,155,224,184,129,224,184,163,224,184,147,224,185,140,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,
 97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,224,184,129,224,184,178,224,184,163,224,184,155,224,184,163,224,184,176,224,184,161,224,184,167,224,184,165,224,184,156,224,184,
 165,224,185,128,224,184,170,224,184,181,224,184,162,224,184,135,224,185,132,224,184,161,224,185,136,224,184,170,224,184,178,224,184,161,224,184,178,224,184,163,224,184,150,224,185,131,224,184,138,224,185,137,224,184,135,224,184,178,224,184,153,224,185,
-132,224,184,148,224,185,137,224,184,156,224,185,136,224,184,178,224,184,153,224,184,163,224,184,181,224,185,130,224,184,161,224,184,149,224,185,128,224,184,148,224,184,170,224,184,129,224,185,140,224,184,151,224,185,135,224,184,173,224,184,155,34,0,0 };
+132,224,184,148,224,185,137,224,184,156,224,185,136,224,184,178,224,184,153,224,184,163,224,184,181,224,185,130,224,184,161,224,184,149,224,185,128,224,184,148,224,184,170,224,184,129,224,185,140,224,184,151,224,185,135,224,184,173,224,184,155,34,13,
+10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,58,34,32,61,32,34,224,184,155,224,184,163,224,184,177,224,184,154,224,184,170,224,184,161,224,184,148,224,184,184,224,184,165,224,184,163,224,184,176,224,184,148,224,184,177,224,184,154,224,
+185,128,224,184,170,224,184,181,224,184,162,224,184,135,58,34,0,0 };
 
 const char* FxSound_th_txt = (const char*) temp_binary_data_84;
 
@@ -8496,7 +8520,8 @@ static const unsigned char temp_binary_data_85[] =
 "\"Equalizer\" = \"Ekolayz\xc4\xb1r\"\r\n"
 "\"Prioritize new output devices\" = \"Yeni \xc3\xa7\xc4\xb1k\xc4\xb1\xc5\x9f ayg\xc4\xb1tlar\xc4\xb1na \xc3\xb6ncelik ver\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Ayg\xc4\xb1t \xc3\xb6nceli\xc4\x9fini de\xc4\x9fi\xc5\x9ftirmek i\xc3\xa7in Shift+Up veya Shift+Down kullan\xc4\xb1n\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"Ses i\xc5\x9fleme Uzak Masa\xc3\xbcst\xc3\xbc \xc3\xbczerinden kullan\xc4\xb1lamaz\"";
+"\"Audio processing is not available over Remote Desktop\" = \"Ses i\xc5\x9fleme Uzak Masa\xc3\xbcst\xc3\xbc \xc3\xbczerinden kullan\xc4\xb1lamaz\"\r\n"
+"\"Volume Leveling:\" = \"Ses D\xc3\xbczeyi Dengeleme:\"";
 
 const char* FxSound_tr_txt = (const char*) temp_binary_data_85;
 
@@ -8654,7 +8679,8 @@ static const unsigned char temp_binary_data_86[] =
 "\"Equalizer\" = \"Equalizer\"\r\n"
 "\"Prioritize new output devices\" = \"Prioritize new output devices\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Use Shift+Up or Shift+Down to change the device priority\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"Audio processing is not available over Remote Desktop\"";
+"\"Audio processing is not available over Remote Desktop\" = \"Audio processing is not available over Remote Desktop\"\r\n"
+"\"Volume Leveling:\" = \"Volume Leveling:\"";
 
 const char* FxSound_txt = (const char*) temp_binary_data_86;
 
@@ -8901,7 +8927,8 @@ static const unsigned char temp_binary_data_87[] =
 32,208,176,208,177,208,190,32,83,104,105,102,116,43,68,111,119,110,44,32,209,137,208,190,208,177,32,208,183,208,188,209,150,208,189,208,184,209,130,208,184,32,208,191,209,128,209,150,208,190,209,128,208,184,209,130,208,181,209,130,32,208,191,209,128,
 208,184,209,129,209,130,209,128,208,190,209,142,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,
 112,34,32,61,32,34,208,158,208,177,209,128,208,190,208,177,208,186,208,176,32,208,176,209,131,208,180,209,150,208,190,32,208,189,208,181,208,180,208,190,209,129,209,130,209,131,208,191,208,189,208,176,32,209,135,208,181,209,128,208,181,208,183,32,208,
-178,209,150,208,180,208,180,208,176,208,187,208,181,208,189,208,184,208,185,32,209,128,208,190,208,177,208,190,209,135,208,184,208,185,32,209,129,209,130,209,150,208,187,34,0,0 };
+178,209,150,208,180,208,180,208,176,208,187,208,181,208,189,208,184,208,185,32,209,128,208,190,208,177,208,190,209,135,208,184,208,185,32,209,129,209,130,209,150,208,187,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,58,34,32,61,
+32,34,208,146,208,184,209,128,209,150,208,178,208,189,209,142,208,178,208,176,208,189,208,189,209,143,32,208,179,209,131,209,135,208,189,208,190,209,129,209,130,209,150,58,34,0,0 };
 
 const char* FxSound_ua_txt = (const char*) temp_binary_data_87;
 
@@ -9087,7 +9114,8 @@ static const unsigned char temp_binary_data_88[] =
 "\"Prioritize new output devices\" = \"\xc6\xafu ti\xc3\xaan thi\xe1\xba\xbft b\xe1\xbb\x8b \xc4\x91\xe1\xba\xa7u ra m\xe1\xbb\x9bi\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"S\xe1\xbb\xad d\xe1\xbb\xa5ng Shift+Up ho\xe1\xba\xb7""c Shift+Down \xc4\x91\xe1\xbb\x83 thay \xc4\x91\xe1\xbb\x95i m\xe1\xbb\xa9""c \xc6\xb0u ti\xc3\xaan thi\xe1\xba\xbft b\xe1\xbb\x8b"
 "\"\r\n"
-"\"Audio processing is not available over Remote Desktop\" = \"X\xe1\xbb\xad l\xc3\xbd \xc3\xa2m thanh kh\xc3\xb4ng kh\xe1\xba\xa3 d\xe1\xbb\xa5ng qua M\xc3\xa1y t\xc3\xadnh t\xe1\xbb\xab xa\"";
+"\"Audio processing is not available over Remote Desktop\" = \"X\xe1\xbb\xad l\xc3\xbd \xc3\xa2m thanh kh\xc3\xb4ng kh\xe1\xba\xa3 d\xe1\xbb\xa5ng qua M\xc3\xa1y t\xc3\xadnh t\xe1\xbb\xab xa\"\r\n"
+"\"Volume Leveling:\" = \"C\xc3\xa2n b\xe1\xba\xb1ng \xc3\xa2m l\xc6\xb0\xe1\xbb\xa3ng:\"";
 
 const char* FxSound_vi_txt = (const char*) temp_binary_data_88;
 
@@ -9250,7 +9278,7 @@ static const unsigned char temp_binary_data_89[] =
 85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,228,189,191,231,148,168,32,83,
 104,105,102,116,43,85,112,32,230,136,150,32,83,104,105,102,116,43,68,111,119,110,32,230,155,180,230,148,185,232,174,190,229,164,135,228,188,152,229,133,136,231,186,167,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,
 32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,232,191,156,231,168,139,230,161,140,233,157,162,228,184,141,230,148,175,230,140,129,233,159,179,233,162,145,229,
-164,132,231,144,134,34,0,0 };
+164,132,231,144,134,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,58,34,32,61,32,34,233,159,179,233,135,143,229,157,135,232,161,161,58,34,0,0 };
 
 const char* FxSound_zhCN_txt = (const char*) temp_binary_data_89;
 
@@ -9415,7 +9443,8 @@ static const unsigned char temp_binary_data_90[] =
 133,136,228,189,191,231,148,168,230,150,176,231,154,132,232,188,184,229,135,186,232,163,157,231,189,174,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,
 104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,228,189,191,231,148,168,32,83,104,105,102,116,43,85,112,32,230,136,150,32,83,104,105,102,116,43,68,111,119,110,32,232,174,138,230,155,180,232,163,157,231,189,174,229,
 132,170,229,133,136,233,160,134,229,186,143,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,
-34,32,61,32,34,233,129,160,231,171,175,230,161,140,233,157,162,228,184,141,230,148,175,230,143,180,233,159,179,232,168,138,232,153,149,231,144,134,34,0,0 };
+34,32,61,32,34,233,129,160,231,171,175,230,161,140,233,157,162,228,184,141,230,148,175,230,143,180,233,159,179,232,168,138,232,153,149,231,144,134,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,58,34,32,61,32,34,233,159,179,233,
+135,143,229,157,135,232,161,161,58,34,0,0 };
 
 const char* FxSound_zhTW_txt = (const char*) temp_binary_data_90;
 
@@ -9493,35 +9522,35 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
         case 0x1fdee048:  numBytes = 1396; return settings_svg;
         case 0x9eeab69d:  numBytes = 4894; return Slider_Thumb_svg;
         case 0x36e2b8a1:  numBytes = 4109; return Slider_Thumb_bw_svg;
-        case 0xda29b4a4:  numBytes = 15171; return FxSound_ar_txt;
-        case 0xdaeefdb2:  numBytes = 11595; return FxSound_ba_txt;
-        case 0xde910cf4:  numBytes = 12812; return FxSound_de_txt;
-        case 0xe10b2ea1:  numBytes = 12316; return FxSound_es_txt;
-        case 0xe1c2602e:  numBytes = 15856; return FxSound_fa_txt;
-        case 0xe2331c36:  numBytes = 12058; return FxSound_fi_txt;
-        case 0xe2b1efbf:  numBytes = 12717; return FxSound_fr_txt;
-        case 0xe61ba0fd:  numBytes = 11444; return FxSound_hr_txt;
-        case 0x1833c740:  numBytes = 13021; return fxsound_hu_txt;
-        case 0xe70b308e:  numBytes = 11915; return FxSound_id_txt;
-        case 0xe7eca89e:  numBytes = 12204; return FxSound_it_txt;
-        case 0xe895c2aa:  numBytes = 13658; return FxSound_ja_txt;
-        case 0xeb0fe457:  numBytes = 12585; return FxSound_ko_txt;
-        case 0xf00427b1:  numBytes = 11859; return FxSound_nl_txt;
-        case 0xf02e6e34:  numBytes = 11931; return FxSound_no_txt;
-        case 0xf36dd8ef:  numBytes = 12616; return FxSound_pl_txt;
-        case 0x7b843fc7:  numBytes = 12361; return FxSound_ptbr_txt;
-        case 0xf3de94f7:  numBytes = 12253; return FxSound_pt_txt;
-        case 0xf701d0b0:  numBytes = 12397; return FxSound_ro_txt;
-        case 0xf7565db6:  numBytes = 16510; return FxSound_ru_txt;
-        case 0xf88c62cc:  numBytes = 11683; return FxSound_sl_txt;
-        case 0xf9194dd6:  numBytes = 11995; return FxSound_sv_txt;
-        case 0xfa08dd67:  numBytes = 19864; return FxSound_th_txt;
-        case 0xfa95c871:  numBytes = 12102; return FxSound_tr_txt;
-        case 0x4464a26e:  numBytes = 11206; return FxSound_txt;
-        case 0xfb5b117f:  numBytes = 16068; return FxSound_ua_txt;
-        case 0xfd80a626:  numBytes = 13262; return FxSound_vi_txt;
-        case 0xd8a3b00c:  numBytes = 10608; return FxSound_zhCN_txt;
-        case 0xf624e624:  numBytes = 10765; return FxSound_zhTW_txt;
+        case 0xda29b4a4:  numBytes = 15231; return FxSound_ar_txt;
+        case 0xdaeefdb2:  numBytes = 11645; return FxSound_ba_txt;
+        case 0xde910cf4:  numBytes = 12858; return FxSound_de_txt;
+        case 0xe10b2ea1:  numBytes = 12364; return FxSound_es_txt;
+        case 0xe1c2602e:  numBytes = 15906; return FxSound_fa_txt;
+        case 0xe2331c36:  numBytes = 12112; return FxSound_fi_txt;
+        case 0xe2b1efbf:  numBytes = 12765; return FxSound_fr_txt;
+        case 0xe61ba0fd:  numBytes = 11494; return FxSound_hr_txt;
+        case 0x1833c740:  numBytes = 13070; return fxsound_hu_txt;
+        case 0xe70b308e:  numBytes = 11956; return FxSound_id_txt;
+        case 0xe7eca89e:  numBytes = 12253; return FxSound_it_txt;
+        case 0xe895c2aa:  numBytes = 13699; return FxSound_ja_txt;
+        case 0xeb0fe457:  numBytes = 12627; return FxSound_ko_txt;
+        case 0xf00427b1:  numBytes = 11902; return FxSound_nl_txt;
+        case 0xf02e6e34:  numBytes = 11971; return FxSound_no_txt;
+        case 0xf36dd8ef:  numBytes = 12668; return FxSound_pl_txt;
+        case 0x7b843fc7:  numBytes = 12408; return FxSound_ptbr_txt;
+        case 0xf3de94f7:  numBytes = 12300; return FxSound_pt_txt;
+        case 0xf701d0b0:  numBytes = 12437; return FxSound_ro_txt;
+        case 0xf7565db6:  numBytes = 16579; return FxSound_ru_txt;
+        case 0xf88c62cc:  numBytes = 11732; return FxSound_sl_txt;
+        case 0xf9194dd6:  numBytes = 12036; return FxSound_sv_txt;
+        case 0xfa08dd67:  numBytes = 19947; return FxSound_th_txt;
+        case 0xfa95c871:  numBytes = 12149; return FxSound_tr_txt;
+        case 0x4464a26e:  numBytes = 11247; return FxSound_txt;
+        case 0xfb5b117f:  numBytes = 16135; return FxSound_ua_txt;
+        case 0xfd80a626:  numBytes = 13312; return FxSound_vi_txt;
+        case 0xd8a3b00c:  numBytes = 10646; return FxSound_zhCN_txt;
+        case 0xf624e624:  numBytes = 10803; return FxSound_zhTW_txt;
         default: break;
     }
 
