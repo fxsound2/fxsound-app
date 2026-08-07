@@ -52,7 +52,7 @@ func (a *App) registerResources(s *mcp.Server) {
 		URI:  uriEqualizer,
 		Name: "equalizer",
 		Description: "The running FxSound instance's equalizer state: band count, per-band frequency/gain, " +
-			"master gain, normalization, volume leveling, filter Q, and balance. A narrower view of " +
+			"master gain, volume leveling, filter Q, and balance. A narrower view of " +
 			"fxsound://status. Requires FxSound to be running.",
 		MIMEType: "application/json",
 	}, a.readEqualizer)

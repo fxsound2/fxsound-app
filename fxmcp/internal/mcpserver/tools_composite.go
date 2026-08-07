@@ -19,7 +19,7 @@ func (a *App) registerCompositeTool(s *mcp.Server) {
 			"selection or preset management (save_preset/overwrite_preset/undo_preset/rename_preset/" +
 			"delete_preset -- exactly one of these preset actions may be set per call), output device, view " +
 			"(\"lite\" or \"full\"), language, num_eq_bands (5/10/15/20/31), balance, filter_q, master_gain, " +
-			"normalization, volume_leveling, eq_bands (per-band frequency), eq_band_gains (per-band boost/" +
+			"volume_leveling, eq_bands (per-band frequency), eq_band_gains (per-band boost/" +
 			"cut), effects (fidelity/clarity, ambience, surround, dynamicboost, bass), and run_minimized. " +
 			"Multiple fields are sent as one atomic command line (a single FxSound.exe invocation), which is " +
 			"more efficient than several separate tool calls and avoids intermediate UI states. Prefer the " +
@@ -48,7 +48,6 @@ type applySettingsInput struct {
 	Balance         *float64             `json:"balance,omitempty" jsonschema:"stereo balance in dB, -20 to 20"`
 	FilterQ         *float64             `json:"filter_q,omitempty" jsonschema:"EQ filter Q factor, 1 to 3"`
 	MasterGain      *float64             `json:"master_gain,omitempty" jsonschema:"master gain in dB, -20 to 20"`
-	Normalization   *float64             `json:"normalization,omitempty" jsonschema:"normalization in dB, -20 to 0"`
 	VolumeLeveling  *float64             `json:"volume_leveling,omitempty" jsonschema:"volume leveling amount, 0 to 4"`
 	EqBands         []bandFrequencyInput `json:"eq_bands,omitempty" jsonschema:"per-band center frequency settings"`
 	EqBandGains     []bandGainInput      `json:"eq_band_gains,omitempty" jsonschema:"per-band boost/cut settings in dB"`
@@ -195,12 +194,6 @@ func (a *App) toolApplySettings(ctx context.Context, _ *mcp.CallToolRequest, in 
 			return nil, applyResult{}, err
 		}
 		flags["master_gain"] = formatFloat(*in.MasterGain)
-	}
-	if in.Normalization != nil {
-		if err := fxsound.ValidateRange("normalization", *in.Normalization, -20, 0); err != nil {
-			return nil, applyResult{}, err
-		}
-		flags["normalization"] = formatFloat(*in.Normalization)
 	}
 	if in.VolumeLeveling != nil {
 		if err := fxsound.ValidateRange("volume_leveling", *in.VolumeLeveling, 0, 4); err != nil {

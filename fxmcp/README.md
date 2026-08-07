@@ -114,7 +114,7 @@ common cause.
 | `fxsound://diagnostics` | Windows playback device + audio session snapshot (from `fxdiag.exe --json`) |
 | `fxsound://status` | Full live FxSound state: power, presets, output, equalizer, effects |
 | `fxsound://presets` | Selected preset + built-in/user-defined preset lists |
-| `fxsound://equalizer` | Band count, per-band frequency/gain, master gain, normalization, volume leveling, filter Q, balance |
+| `fxsound://equalizer` | Band count, per-band frequency/gain, master gain, volume leveling, filter Q, balance |
 | `fxsound://effects` | Clarity/ambience/surround/dynamicboost/bass levels (0-10 scale) |
 | `fxsound://docs/command-line-options` | The authoritative option reference (ranges, rounding, preset-command rules) |
 

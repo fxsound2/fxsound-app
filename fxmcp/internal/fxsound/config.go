@@ -80,7 +80,7 @@ func BuildCommandLine(flags map[string]string) ([]string, error) {
 // invocation uses -- sending them to a cold start would silently no-op.
 // Flags that both initConfig and applyConfig understand (power, preset,
 // output, view, language, num_bands, balance, filter_q, master_gain,
-// normalization, volume_leveling, run_minimized) don't need this: a single
+// volume_leveling, run_minimized) don't need this: a single
 // invocation works whether or not FxSound is already running.
 func Apply(ctx context.Context, paths *Paths, flags map[string]string, requireRunning bool) error {
 	if requireRunning {
@@ -183,7 +183,7 @@ func FormatPairs(pairs []KV) string {
 // ValidateRange checks that v falls within [min, max], returning an error
 // naming label if not. FxController.cpp's applyConfig silently resets an
 // out-of-range global EQ value (balance, filter_q, master_gain,
-// normalization, volume_leveling) to its default instead of erroring; this
+// volume_leveling) to its default instead of erroring; this
 // turns that into an explicit error before the value is ever sent.
 func ValidateRange(label string, v, min, max float64) error {
 	if v < min || v > max {

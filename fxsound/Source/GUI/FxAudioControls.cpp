@@ -531,7 +531,6 @@ void FxEqualizerControl::restoreDefaults()
 	auto& controller = FxController::getInstance();
 
 	controller.setNumEqBands(FxController::DEFAULT_NUM_EQ_BANDS);
-	controller.setNormalization(FxController::DEFAULT_NORMALIZATION);
 	controller.setVolumeLeveling(FxController::DEFAULT_VOLUME_LEVELING);
 	controller.setBalance(FxController::DEFAULT_BALANCE);
 	controller.setFilterQ(FxController::DEFAULT_FILTER_Q);

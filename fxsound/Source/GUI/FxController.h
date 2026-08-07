@@ -108,8 +108,6 @@ public:
 
 	int getNumEqBands();
 	void setNumEqBands(int num_bands);
-	float getNormalization();
-	void setNormalization(float gain_db);
 	float getVolumeLeveling();
 	void setVolumeLeveling(float gain_db);
 	void setBalance(float gain_db);
