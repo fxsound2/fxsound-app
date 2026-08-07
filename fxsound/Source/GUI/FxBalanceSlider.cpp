@@ -150,4 +150,7 @@ void FxBalanceSlider::updateValueLabel()
 	auto pos = getPositionOfValue(value);
 	auto x = pos + FxTheme::SLIDER_THUMB_RADIUS / 2 + 1;
 	value_label_.setBounds(x, (getHeight() - LABEL_HEIGHT) / 2, LABEL_WIDTH, LABEL_HEIGHT);
+
+	slider_thumb_ = Drawable::createFromImageData(FXIMAGE(SliderThumb), FXIMAGESIZE(SliderThumb));
+	slider_thumb_grey_ = Drawable::createFromImageData(FXIMAGE(SliderThumbBW), FXIMAGESIZE(SliderThumbBW));
 }

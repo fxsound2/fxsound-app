@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <JuceHeader.h>
 #include "FxView.h"
-#include "FxEffects.h"
+#include "FxAudioControls.h"
 #include "FxEqualizer.h"
 #include "FxVisualizer.h"
 
@@ -38,14 +38,16 @@ public:
 
 	void update();
 
+    void setLookAndFeel();
+
 private:
 	static constexpr int WIDTH = 1040;
-	static constexpr int HEIGHT = 474;
+	static constexpr int HEIGHT = 491;
 	static constexpr int PRESET_LIST_X = 40;
 	static constexpr int OUTPUT_LIST_X = 530;
 	static constexpr int LIST_Y = 32;
-	static constexpr int EFFECTS_X = 40;
-	static constexpr int EFFECTS_Y = 88;
+	static constexpr int AUDIO_X = 40;
+	static constexpr int AUDIO_Y = 88;
 	static constexpr int LIST_WIDTH = 470;
 	static constexpr int LIST_HEIGHT = 40;
 
@@ -57,7 +59,7 @@ private:
 	void mouseEnter(const MouseEvent& mouse_event) override;
 	void mouseExit(const MouseEvent& mouse_event) override;
 
-	FxEffects effects_;
+	FxAudioControls audio_controls_;
 	FxEqualizer equalizer_;
     TooltipWindow tool_tip_;
     FxVisualizer visualizer_;

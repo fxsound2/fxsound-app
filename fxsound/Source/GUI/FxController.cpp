@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxMainWindow.h"
 #include "FxSystemTrayView.h"
 #include "FxMessage.h"
-#include "FxEffects.h"
 #include "../Utils/SysInfo/SysInfo.h"
 #include <iostream>
 #include <cstdio>

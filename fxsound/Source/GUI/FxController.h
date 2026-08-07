@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <JuceHeader.h>
 #include "FxModel.h"
 #include "FxTheme.h"
-#include "FxEffects.h"
+#include "FxAudioControls.h"
 #include "../Source/Utils/Settings/Settings.h"
 #include "../Source/Utils/Settings/DeviceConfig.h"
 #include "AudioPassthru.h"

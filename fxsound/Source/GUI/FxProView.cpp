@@ -27,12 +27,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 FxProView::FxProView() : tool_tip_(this)
 {
-	addAndMakeVisible(effects_);
+	addAndMakeVisible(audio_controls_);
 	addAndMakeVisible(equalizer_);
     addChildComponent(visualizer_);
 
 	equalizer_.addMouseListener(this, true);
-	effects_.addMouseListener(this, true);
+	audio_controls_.addMouseListener(this, true);
 
     auto& theme = dynamic_cast<LookAndFeel_V4&>(getLookAndFeel());
 
@@ -55,7 +55,7 @@ void FxProView::pauseVisualizer()
 
 void FxProView::update()
 {
-	effects_.update();
+	audio_controls_.update();
 	equalizer_.update();
 
 	visualizer_.calcGradient();
@@ -69,7 +69,12 @@ void FxProView::update()
 	setSize(WIDTH, HEIGHT + 20);
 	// -------------------------- Values always visible since version 2.0 (otherwise they do not appear on touch screens)
 	equalizer_.showValues(true);
-	effects_.showValues(true);
+	audio_controls_.showValues(true);
+}
+
+void FxProView::setLookAndFeel()
+{
+	audio_controls_.setLookAndFeel();
 }
 
 void FxProView::resized()
@@ -89,8 +94,8 @@ void FxProView::resized()
 
     auto bounds = getLocalBounds();
 
-	effects_.setBounds(effects_.getBounds().withX(EFFECTS_X).withY(EFFECTS_Y+visualizer_offset));
-	equalizer_.setBounds(equalizer_.getBounds().withX(effects_.getRight() + 16).withY(EFFECTS_Y+visualizer_offset));
+	audio_controls_.setBounds(audio_controls_.getBounds().withX(AUDIO_X).withY(AUDIO_Y+visualizer_offset));
+	equalizer_.setBounds(equalizer_.getBounds().withX(audio_controls_.getRight() + 16).withY(AUDIO_Y+visualizer_offset));
 }
 
 void FxProView::paint(Graphics& g)
@@ -107,12 +112,12 @@ void FxProView::paint(Graphics& g)
 	g.fillAll();
 
 	g.setFillType(FillType(Colour(FXCOLOR(PanelBackground)).withAlpha(0.2f)));
-	g.fillRoundedRectangle(20, 16, 1000, 330+visualizer_offset, 8);
+	g.fillRoundedRectangle(20, 16, 1000, 347+visualizer_offset, 8);
 
     auto enable_controls = FxModel::getModel().getPowerState();
 
     preset_list_.setEnabled(enable_controls);
-    effects_.setEnabled(enable_controls);
+    audio_controls_.setEnabled(enable_controls);
     equalizer_.setEnabled(enable_controls);
 	visualizer_.setEnabled(enable_controls);
 }
