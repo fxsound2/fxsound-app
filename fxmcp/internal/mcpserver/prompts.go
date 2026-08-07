@@ -71,7 +71,7 @@ func (a *App) promptDiagnoseAudioIssue(_ context.Context, req *mcp.GetPromptRequ
 		"app's session (e.g. zoom.exe, ms-teams.exe) muted or at a low volumeLevel? Is the currently " +
 		"selected output device's state Active, or is it Not Present/Disabled/Unplugged?\n" +
 		"2. Read fxsound://status for FxSound's own state -- is power on? Is the selected output device " +
-		"the one you'd expect? Could master_gain, normalization, or volume_leveling be suppressing " +
+		"the one you'd expect? Could master_gain or volume_leveling be suppressing " +
 		"loudness?\n" +
 		"3. Cross-reference both to identify the most likely cause.\n" +
 		"4. Explain the cause, and if it's something a tool can fix (fxsound_set_power, " +

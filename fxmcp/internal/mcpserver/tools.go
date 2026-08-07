@@ -22,7 +22,7 @@ func (a *App) registerTools(s *mcp.Server) {
 		Name: "fxsound_get_status",
 		Description: "Reads the running FxSound instance's current state: power, presets (built-in and " +
 			"user-defined, each with a modified flag), selected preset, output devices, selected output, " +
-			"equalizer (band count/frequencies/gains, master gain, normalization, volume leveling, filter Q, " +
+			"equalizer (band count/frequencies/gains, master gain, volume leveling, filter Q, " +
 			"balance), and effect levels on a 0-10 scale (clarity, ambience, surround, dynamicboost, bass). " +
 			"Requires FxSound to be running; call fxsound_is_running first if unsure.",
 		Annotations: &mcp.ToolAnnotations{ReadOnlyHint: true, DestructiveHint: boolPtr(false)},

@@ -39,7 +39,6 @@ type Presets struct {
 type Equalizer struct {
 	NumBands       int      `json:"num_bands"`
 	MasterGain     float64  `json:"master_gain"`
-	Normalization  float64  `json:"normalization"`
 	VolumeLeveling float64  `json:"volume_leveling"`
 	FilterQ        float64  `json:"filter_q"`
 	Balance        float64  `json:"balance"`

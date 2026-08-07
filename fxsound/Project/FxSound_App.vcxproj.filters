@@ -297,6 +297,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\GUI\FxAudioControls.cpp">
+      <Filter>FxSound\Source\GUI\Components</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\GUI\FxOutputPreference.cpp">
       <Filter>FxSound\Source\GUI\Components</Filter>
     </ClCompile>
@@ -319,9 +322,6 @@
       <Filter>FxSound\Source\GUI\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxEqualizer.cpp">
-      <Filter>FxSound\Source\GUI\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\GUI\FxEffects.cpp">
       <Filter>FxSound\Source\GUI\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\GUI\FxNotification.cpp">
@@ -1688,6 +1688,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\GUI\FxAudioControls.h">
+      <Filter>FxSound\Source\GUI\Components</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\GUI\FxOutputPreference.h">
       <Filter>FxSound\Source\GUI\Components</Filter>
     </ClInclude>
@@ -1707,9 +1710,6 @@
       <Filter>FxSound\Source\GUI\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxVisualizer.h">
-      <Filter>FxSound\Source\GUI\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\GUI\FxEffects.h">
       <Filter>FxSound\Source\GUI\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxEqualizer.h">
@@ -3219,6 +3219,30 @@
     </None>
     <None Include="..\Fonts\Gilroy-Semibold.ttf">
       <Filter>FxSound\Fonts</Filter>
+    </None>
+    <None Include="..\Images\restore_defaults.svg">
+      <Filter>FxSound\Images</Filter>
+    </None>
+    <None Include="..\Images\restore_defaults_black.svg">
+      <Filter>FxSound\Images</Filter>
+    </None>
+    <None Include="..\Images\restore_defaults_blue.svg">
+      <Filter>FxSound\Images</Filter>
+    </None>
+    <None Include="..\Images\restore_defaults_white.svg">
+      <Filter>FxSound\Images</Filter>
+    </None>
+    <None Include="..\Images\flip.svg">
+      <Filter>FxSound\Images</Filter>
+    </None>
+    <None Include="..\Images\flip_black.svg">
+      <Filter>FxSound\Images</Filter>
+    </None>
+    <None Include="..\Images\flip_blue.svg">
+      <Filter>FxSound\Images</Filter>
+    </None>
+    <None Include="..\Images\flip_white.svg">
+      <Filter>FxSound\Images</Filter>
     </None>
     <None Include="..\Images\arrow_down_black.svg">
       <Filter>FxSound\Images</Filter>

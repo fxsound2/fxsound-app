@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxMainWindow.h"
 #include "FxSystemTrayView.h"
 #include "FxMessage.h"
-#include "FxEffects.h"
 #include "../Utils/SysInfo/SysInfo.h"
 #include <iostream>
 #include <cstdio>
@@ -232,7 +231,6 @@ void FxController::initConfig(const String& commandline)
 	auto balance = arg_list.getValueForOption("--balance");
 	auto filterq = arg_list.getValueForOption("--filter_q");
 	auto mastergain = arg_list.getValueForOption("--master_gain");
-	auto normalization = arg_list.getValueForOption("--normalization");
 	auto volume_leveling = arg_list.getValueForOption("--volume_leveling");
 
 	if (arg_list.containsOption("--run_minimized"))
@@ -280,7 +278,7 @@ void FxController::initConfig(const String& commandline)
 	setLanguage(language);
 
 	// ------------------------------------------------------------------------------------------
-	//  NumBands / Balance / FilterQ / MasterGain / Normalization / Volume Leveling - SET ON START
+	//  NumBands / Balance / FilterQ / MasterGain  / Volume Leveling - SET ON START
 	// ------------------------------------------------------------------------------------------
 	int nb = 10;
 	if (numbands == "")
@@ -293,18 +291,6 @@ void FxController::initConfig(const String& commandline)
 	}
 	if (nb != 5 && nb != 10 && nb != 15 && nb != 20 && nb != 31) nb = DEFAULT_NUM_EQ_BANDS;
 	setNumEqBands(nb);
-
-	float nm = 0;
-	if (normalization == "")
-	{
-		nm = settings_.getDouble("normalization");
-	}
-	else
-	{
-		nm = normalization.getFloatValue();
-	}
-	if (nm < -20 || nm > 0) nm = DEFAULT_NORMALIZATION;
-	setNormalization(nm);
 
 	float vl = 0;
 	if (volume_leveling.isEmpty())
@@ -373,7 +359,6 @@ void FxController::applyConfig(const String& commandline)
 	auto balance = arg_list.getValueForOption("--balance");
 	auto filterq = arg_list.getValueForOption("--filter_q");
 	auto mastergain = arg_list.getValueForOption("--master_gain");
-	auto normalization = arg_list.getValueForOption("--normalization");
 	auto volume_leveling = arg_list.getValueForOption("--volume_leveling");
 	auto band_freq = arg_list.getValueForOption("--set_band_freq").unquoted();
 	auto band_gain = arg_list.getValueForOption("--set_band_gain").unquoted();
@@ -477,7 +462,7 @@ void FxController::applyConfig(const String& commandline)
 	}
 
 	// ------------------------------------------------------------------------------------------
-	//  NumBands / Balance / FilterQ / MasterGain / Normalization / Volume Leveling
+	//  NumBands / Balance / FilterQ / MasterGain / Volume Leveling
 	// ------------------------------------------------------------------------------------------
 	int nb = DEFAULT_NUM_EQ_BANDS;
 	if (numbands.isNotEmpty())
@@ -485,14 +470,6 @@ void FxController::applyConfig(const String& commandline)
 		nb = numbands.getIntValue();
 		if (nb != 5 && nb != 10 && nb != 15 && nb != 20 && nb != 31) nb = DEFAULT_NUM_EQ_BANDS;
 		setNumEqBands(nb);
-	}
-
-	float nm = 0;
-	if (normalization.isNotEmpty())
-	{
-		nm = normalization.getFloatValue();
-		if (nm < -20 || nm > 0) nm = DEFAULT_NORMALIZATION;
-		setNormalization(nm);
 	}
 
 	float vl = 0;
@@ -680,7 +657,6 @@ void FxController::printStatus()
 	auto* eq_obj = new DynamicObject();
 	eq_obj->setProperty("num_bands", getNumEqBands());
 	eq_obj->setProperty("master_gain", getMasterGain());
-	eq_obj->setProperty("normalization", getNormalization());
 	eq_obj->setProperty("volume_leveling", getVolumeLeveling());
 	eq_obj->setProperty("filter_q", getFilterQ());
 	eq_obj->setProperty("balance", getBalance());
@@ -1359,7 +1335,6 @@ void FxController::resetPresets()
 	auto& model = FxModel::getModel();
 
 	setNumEqBands(DEFAULT_NUM_EQ_BANDS);
-	setNormalization(DEFAULT_NORMALIZATION);
 	setVolumeLeveling(DEFAULT_VOLUME_LEVELING);
 	setBalance(DEFAULT_BALANCE);
 	setFilterQ(DEFAULT_FILTER_Q);
@@ -1803,18 +1778,6 @@ void FxController::setNumEqBands(int num_bands)
 {
 	dfx_dsp_.setNumBands(num_bands);
 	settings_.setInt("num_bands", num_bands);
-}
-
-float FxController::getNormalization()
-{
-	return dfx_dsp_.getNormalization();
-}
-
-void FxController::setNormalization(float normalization_db)
-{
-	normalization_db = std::round(normalization_db);
-	dfx_dsp_.setNormalization(normalization_db);
-	settings_.setDouble("normalization", normalization_db);
 }
 
 float FxController::getVolumeLeveling()

@@ -94,8 +94,8 @@ private:
     };
 
 	static constexpr int WIDTH = 776;
-	static constexpr int HEIGHT = 242;
-	static constexpr int SLIDER_HEIGHT = 170;
+	static constexpr int HEIGHT = 257;
+	static constexpr int SLIDER_HEIGHT = 180;
 	static constexpr int LABEL_HEIGHT = 12;
 	static constexpr int SMALL_FONT = 10;
     static constexpr int ROTARY_SLIDER_HEIGHT = 36;

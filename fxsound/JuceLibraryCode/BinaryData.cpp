@@ -2852,136 +2852,244 @@ static const unsigned char temp_binary_data_2[] =
 
 const char* GilroySemibold_ttf = (const char*) temp_binary_data_2;
 
-//================== arrow_down_black.svg ==================
+//================== restore_defaults.svg ==================
 static const unsigned char temp_binary_data_3[] =
-"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
-"<svg viewBox=\"0 0 6 5\" width=\"6\" height=\"5\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
-"  <polygon\r\n"
-"    fill=\"#4E4E4E\"\r\n"
-"    fill-rule=\"nonzero\"\r\n"
-"    points=\"0.5 1.25 \r\n"
-"            5.5 1.25 \r\n"
-"            3.0 3.75\"\r\n"
-"  />\r\n"
-"</svg>";
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
+"    <title>restore_defaults</title>\n"
+"    <desc>Created with Sketch.</desc>\n"
+"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n"
+"        <g id=\"restore_defaults\" stroke=\"#E63462\" stroke-width=\"1\" fill=\"none\">\n"
+"            <path d=\"M4,7 L1,4 L4,1\" id=\"Arrowhead\"></path>\n"
+"            <path d=\"M1,4 L9,4 A5,5 0 1 1 9,14 L2,14\" id=\"Body\"></path>\n"
+"        </g>\n"
+"    </g>\n"
+"</svg>\n";
 
-const char* arrow_down_black_svg = (const char*) temp_binary_data_3;
+const char* restore_defaults_svg = (const char*) temp_binary_data_3;
 
-//================== arrow_down_white.svg ==================
+//================== restore_defaults_black.svg ==================
 static const unsigned char temp_binary_data_4[] =
-"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
-"<svg viewBox=\"0 0 6 5\" width=\"6\" height=\"5\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
-"  <polygon\r\n"
-"    fill=\"#B1B1B1\"\r\n"
-"    fill-rule=\"nonzero\"\r\n"
-"    points=\"0.5 1.25 \r\n"
-"            5.5 1.25 \r\n"
-"            3.0 3.75\"\r\n"
-"  />\r\n"
-"</svg>";
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
+"    <title>restore_defaults_black</title>\n"
+"    <desc>Created with Sketch.</desc>\n"
+"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n"
+"        <g id=\"restore_defaults_black\" stroke=\"#000000\" stroke-width=\"1\" fill=\"none\">\n"
+"            <path d=\"M4,7 L1,4 L4,1\" id=\"Arrowhead\"></path>\n"
+"            <path d=\"M1,4 L9,4 A5,5 0 1 1 9,14 L2,14\" id=\"Body\"></path>\n"
+"        </g>\n"
+"    </g>\n"
+"</svg>\n";
 
-const char* arrow_down_white_svg = (const char*) temp_binary_data_4;
+const char* restore_defaults_black_svg = (const char*) temp_binary_data_4;
 
-//================== arrow_up_black.svg ==================
+//================== restore_defaults_blue.svg ==================
 static const unsigned char temp_binary_data_5[] =
-"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
-"<svg viewBox=\"0 0 6 5\" width=\"6\" height=\"5\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
-"  <polygon\r\n"
-"    fill=\"#4E4E4E\"\r\n"
-"    fill-rule=\"nonzero\"\r\n"
-"    points=\"3.0 1.25 \r\n"
-"            0.5 3.75 \r\n"
-"            5.5 3.75\"\r\n"
-"  />\r\n"
-"</svg>\r\n";
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
+"    <title>restore_defaults_blue</title>\n"
+"    <desc>Created with Sketch.</desc>\n"
+"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n"
+"        <g id=\"restore_defaults_blue\" stroke=\"#23B6EB\" stroke-width=\"1\" fill=\"none\">\n"
+"            <path d=\"M4,7 L1,4 L4,1\" id=\"Arrowhead\"></path>\n"
+"            <path d=\"M1,4 L9,4 A5,5 0 1 1 9,14 L2,14\" id=\"Body\"></path>\n"
+"        </g>\n"
+"    </g>\n"
+"</svg>\n";
 
-const char* arrow_up_black_svg = (const char*) temp_binary_data_5;
+const char* restore_defaults_blue_svg = (const char*) temp_binary_data_5;
 
-//================== arrow_up_white.svg ==================
+//================== restore_defaults_white.svg ==================
 static const unsigned char temp_binary_data_6[] =
-"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
-"<svg viewBox=\"0 0 6 5\" width=\"6\" height=\"5\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
-"  <polygon\r\n"
-"    fill=\"#B1B1B1\"\r\n"
-"    fill-rule=\"nonzero\"\r\n"
-"    points=\"3.0 1.25 \r\n"
-"            0.5 3.75 \r\n"
-"            5.5 3.75\"\r\n"
-"  />\r\n"
-"</svg>\r\n";
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
+"    <title>restore_defaults_white</title>\n"
+"    <desc>Created with Sketch.</desc>\n"
+"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n"
+"        <g id=\"restore_defaults_white\" stroke=\"#FFFFFF\" stroke-width=\"1\" fill=\"none\">\n"
+"            <path d=\"M4,7 L1,4 L4,1\" id=\"Arrowhead\"></path>\n"
+"            <path d=\"M1,4 L9,4 A5,5 0 1 1 9,14 L2,14\" id=\"Body\"></path>\n"
+"        </g>\n"
+"    </g>\n"
+"</svg>\n";
 
-const char* arrow_up_white_svg = (const char*) temp_binary_data_6;
+const char* restore_defaults_white_svg = (const char*) temp_binary_data_6;
 
-//================== equalizer.svg ==================
+//================== flip.svg ==================
 static const unsigned char temp_binary_data_7[] =
-"<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
-"<g id=\"24 / basic / sliders\">\r\n"
-"  <line x1=\"3\" y1=\"7\" x2=\"13.5\" y2=\"7\" stroke=\"#7E7E7E\" stroke-width=\"2\" stroke-linecap=\"round\"/>\r\n"
-"  <line x1=\"18.5\" y1=\"7\" x2=\"21\" y2=\"7\" stroke=\"#7E7E7E\" stroke-width=\"2\" stroke-linecap=\"round\"/>\r\n"
-"  <circle cx=\"16\" cy=\"7\" r=\"2.5\" fill=\"#7E7E7E\"/>\r\n"
-"\r\n"
-"  <line x1=\"3\" y1=\"12\" x2=\"9.5\" y2=\"12\" stroke=\"#7E7E7E\" stroke-width=\"2\" stroke-linecap=\"round\"/>\r\n"
-"  <line x1=\"14.5\" y1=\"12\" x2=\"21\" y2=\"12\" stroke=\"#7E7E7E\" stroke-width=\"2\" stroke-linecap=\"round\"/>\r\n"
-"  <circle cx=\"12\" cy=\"12\" r=\"2.5\" fill=\"#7E7E7E\"/>\r\n"
-"\r\n"
-"  <line x1=\"3\" y1=\"17\" x2=\"6.5\" y2=\"17\" stroke=\"#7E7E7E\" stroke-width=\"2\" stroke-linecap=\"round\"/>\r\n"
-"  <line x1=\"11.5\" y1=\"17\" x2=\"21\" y2=\"17\" stroke=\"#7E7E7E\" stroke-width=\"2\" stroke-linecap=\"round\"/>\r\n"
-"  <circle cx=\"9\" cy=\"17\" r=\"2.5\" fill=\"#7E7E7E\"/>\r\n"
-"</g>\r\n"
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+"<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
+"    <title>flip</title>\r\n"
+"    <desc>Created with Sketch.</desc>\r\n"
+"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\r\n"
+"        <g id=\"flip\" stroke=\"#E63462\" stroke-width=\"1\" fill=\"none\">\r\n"
+"            <path d=\"M1,4 L14,4 M11,1 L14,4 L11,7\" id=\"RightArrow\"></path>\r\n"
+"            <path d=\"M14,11 L1,11 M4,8 L1,11 L4,14\" id=\"LeftArrow\"></path>\r\n"
+"        </g>\r\n"
+"    </g>\r\n"
 "</svg>";
 
-const char* equalizer_svg = (const char*) temp_binary_data_7;
+const char* flip_svg = (const char*) temp_binary_data_7;
 
-//================== arrow_down.svg ==================
+//================== flip_black.svg ==================
 static const unsigned char temp_binary_data_8[] =
-"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
-"<svg viewBox=\"0 0 6 5\" width=\"6\" height=\"5\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
-"  <polygon\r\n"
-"    fill=\"#E63462\"\r\n"
-"    fill-rule=\"nonzero\"\r\n"
-"    points=\"0.5 1.25 \r\n"
-"            5.5 1.25 \r\n"
-"            3.0 3.75\"\r\n"
-"  />\r\n"
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+"<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
+"    <title>flip_black</title>\r\n"
+"    <desc>Created with Sketch.</desc>\r\n"
+"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\r\n"
+"        <g id=\"flip_black\" stroke=\"#000000\" stroke-width=\"1\" fill=\"none\">\r\n"
+"            <path d=\"M1,4 L14,4 M11,1 L14,4 L11,7\" id=\"RightArrow\"></path>\r\n"
+"            <path d=\"M14,11 L1,11 M4,8 L1,11 L4,14\" id=\"LeftArrow\"></path>\r\n"
+"        </g>\r\n"
+"    </g>\r\n"
 "</svg>";
 
-const char* arrow_down_svg = (const char*) temp_binary_data_8;
+const char* flip_black_svg = (const char*) temp_binary_data_8;
 
-//================== arrow_down_blue.svg ==================
+//================== flip_blue.svg ==================
 static const unsigned char temp_binary_data_9[] =
-"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
-"<svg viewBox=\"0 0 6 5\" width=\"6\" height=\"5\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
-"  <polygon\r\n"
-"    fill=\"#23B6EB\"\r\n"
-"    fill-rule=\"nonzero\"\r\n"
-"    points=\"0.5 1.25 \r\n"
-"            5.5 1.25 \r\n"
-"            3.0 3.75\"\r\n"
-"  />\r\n"
-"</svg>";
-
-const char* arrow_down_blue_svg = (const char*) temp_binary_data_9;
-
-//================== arrow_up.svg ==================
-static const unsigned char temp_binary_data_10[] =
-"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
-"<svg viewBox=\"0 0 6 5\" width=\"6\" height=\"5\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
-"  <polygon\r\n"
-"    fill=\"#E63462\"\r\n"
-"    fill-rule=\"nonzero\"\r\n"
-"    points=\"3.0 1.25 \r\n"
-"            0.5 3.75 \r\n"
-"            5.5 3.75\"\r\n"
-"  />\r\n"
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+"<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
+"    <title>flip_blue</title>\r\n"
+"    <desc>Created with Sketch.</desc>\r\n"
+"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\r\n"
+"        <g id=\"flip_blue\" stroke=\"#23B6EB\" stroke-width=\"1\" fill=\"none\">\r\n"
+"            <path d=\"M1,4 L14,4 M11,1 L14,4 L11,7\" id=\"RightArrow\"></path>\r\n"
+"            <path d=\"M14,11 L1,11 M4,8 L1,11 L4,14\" id=\"LeftArrow\"></path>\r\n"
+"        </g>\r\n"
+"    </g>\r\n"
 "</svg>\r\n";
 
-const char* arrow_up_svg = (const char*) temp_binary_data_10;
+const char* flip_blue_svg = (const char*) temp_binary_data_9;
 
-//================== arrow_up_blue.svg ==================
+//================== flip_white.svg ==================
+static const unsigned char temp_binary_data_10[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+"<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
+"    <title>flip_white</title>\r\n"
+"    <desc>Created with Sketch.</desc>\r\n"
+"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\r\n"
+"        <g id=\"flip_white\" stroke=\"#FFFFFF\" stroke-width=\"1\" fill=\"none\">\r\n"
+"            <path d=\"M1,4 L14,4 M11,1 L14,4 L11,7\" id=\"RightArrow\"></path>\r\n"
+"            <path d=\"M14,11 L1,11 M4,8 L1,11 L4,14\" id=\"LeftArrow\"></path>\r\n"
+"        </g>\r\n"
+"    </g>\r\n"
+"</svg>";
+
+const char* flip_white_svg = (const char*) temp_binary_data_10;
+
+//================== arrow_down_black.svg ==================
 static const unsigned char temp_binary_data_11[] =
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
 "<svg viewBox=\"0 0 6 5\" width=\"6\" height=\"5\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <polygon\r\n"
+"    fill=\"#4E4E4E\"\r\n"
+"    fill-rule=\"nonzero\"\r\n"
+"    points=\"0.5 1.25 \r\n"
+"            5.5 1.25 \r\n"
+"            3.0 3.75\"\r\n"
+"  />\r\n"
+"</svg>";
+
+const char* arrow_down_black_svg = (const char*) temp_binary_data_11;
+
+//================== arrow_down_white.svg ==================
+static const unsigned char temp_binary_data_12[] =
+"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
+"<svg viewBox=\"0 0 6 5\" width=\"6\" height=\"5\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
+"  <polygon\r\n"
+"    fill=\"#B1B1B1\"\r\n"
+"    fill-rule=\"nonzero\"\r\n"
+"    points=\"0.5 1.25 \r\n"
+"            5.5 1.25 \r\n"
+"            3.0 3.75\"\r\n"
+"  />\r\n"
+"</svg>";
+
+const char* arrow_down_white_svg = (const char*) temp_binary_data_12;
+
+//================== arrow_up_black.svg ==================
+static const unsigned char temp_binary_data_13[] =
+"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
+"<svg viewBox=\"0 0 6 5\" width=\"6\" height=\"5\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
+"  <polygon\r\n"
+"    fill=\"#4E4E4E\"\r\n"
+"    fill-rule=\"nonzero\"\r\n"
+"    points=\"3.0 1.25 \r\n"
+"            0.5 3.75 \r\n"
+"            5.5 3.75\"\r\n"
+"  />\r\n"
+"</svg>\r\n";
+
+const char* arrow_up_black_svg = (const char*) temp_binary_data_13;
+
+//================== arrow_up_white.svg ==================
+static const unsigned char temp_binary_data_14[] =
+"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
+"<svg viewBox=\"0 0 6 5\" width=\"6\" height=\"5\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
+"  <polygon\r\n"
+"    fill=\"#B1B1B1\"\r\n"
+"    fill-rule=\"nonzero\"\r\n"
+"    points=\"3.0 1.25 \r\n"
+"            0.5 3.75 \r\n"
+"            5.5 3.75\"\r\n"
+"  />\r\n"
+"</svg>\r\n";
+
+const char* arrow_up_white_svg = (const char*) temp_binary_data_14;
+
+//================== arrow_down.svg ==================
+static const unsigned char temp_binary_data_15[] =
+"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
+"<svg viewBox=\"0 0 6 5\" width=\"6\" height=\"5\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
+"  <polygon\r\n"
+"    fill=\"#E63462\"\r\n"
+"    fill-rule=\"nonzero\"\r\n"
+"    points=\"0.5 1.25 \r\n"
+"            5.5 1.25 \r\n"
+"            3.0 3.75\"\r\n"
+"  />\r\n"
+"</svg>";
+
+const char* arrow_down_svg = (const char*) temp_binary_data_15;
+
+//================== arrow_down_blue.svg ==================
+static const unsigned char temp_binary_data_16[] =
+"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
+"<svg viewBox=\"0 0 6 5\" width=\"6\" height=\"5\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
+"  <polygon\r\n"
+"    fill=\"#23B6EB\"\r\n"
+"    fill-rule=\"nonzero\"\r\n"
+"    points=\"0.5 1.25 \r\n"
+"            5.5 1.25 \r\n"
+"            3.0 3.75\"\r\n"
+"  />\r\n"
+"</svg>";
+
+const char* arrow_down_blue_svg = (const char*) temp_binary_data_16;
+
+//================== arrow_up.svg ==================
+static const unsigned char temp_binary_data_17[] =
+"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
+"<svg viewBox=\"0 0 6 5\" width=\"6\" height=\"5\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
+"  <polygon\r\n"
+"    fill=\"#E63462\"\r\n"
+"    fill-rule=\"nonzero\"\r\n"
+"    points=\"3.0 1.25 \r\n"
+"            0.5 3.75 \r\n"
+"            5.5 3.75\"\r\n"
+"  />\r\n"
+"</svg>\r\n";
+
+const char* arrow_up_svg = (const char*) temp_binary_data_17;
+
+//================== arrow_up_blue.svg ==================
+static const unsigned char temp_binary_data_18[] =
+"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
+"<svg viewBox=\"0 0 6 5\" width=\"6\" height=\"5\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
+"  <polygon\r\n"
 "    fill=\"#23B6EB\"\r\n"
 "    fill-rule=\"nonzero\"\r\n"
 "    points=\"3.0 1.25 \r\n"
@@ -2990,10 +3098,10 @@ static const unsigned char temp_binary_data_11[] =
 "  />\r\n"
 "</svg>";
 
-const char* arrow_up_blue_svg = (const char*) temp_binary_data_11;
+const char* arrow_up_blue_svg = (const char*) temp_binary_data_18;
 
 //================== logo-red.svg ==================
-static const unsigned char temp_binary_data_12[] =
+static const unsigned char temp_binary_data_19[] =
 "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 526.19 75.15\"><defs><style>.cls-1{fill:#e63462;}</style></defs><g id=\"Layer_2\" data-name=\"Layer 2\"><g id=\"Layer_1-2\" data-name=\"Layer 1\"><rect class=\"cls-1\" x=\"80\" y=\"46.8\" width="
 "\"13.48\" height=\"27.36\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"60\" y=\"24.8\" width=\"13.48\" height=\"49.35\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"40\" y=\"5.79\" width=\"13.48\" height=\"68.36\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"20\" y=\""
 "24.8\" width=\"13.48\" height=\"49.35\" rx=\"2.83\"/><rect class=\"cls-1\" y=\"46.79\" width=\"13.48\" height=\"27.36\" rx=\"2.83\"/><path class=\"cls-1\" d=\"M118.51,9.36A2,2,0,0,1,119,7.85a2,2,0,0,1,1.37-.56h42.75q2.07,0,2.07,2.16v7.83a2.22,2.22,0,"
@@ -3025,10 +3133,10 @@ static const unsigned char temp_binary_data_12[] =
 "0,6.64,1.4,16.55,16.55,0,0,0,6.71-1.38,17.45,17.45,0,0,0,5.49-3.73,18.21,18.21,0,0,0,3.71-5.49A17.67,17.67,0,0,0,514,46v-.32a17.55,17.55,0,0,0-1.35-6.8A18.48,18.48,0,0,0,509,33.14a17.92,17.92,0,0,0-5.51-3.91,16,16,0,0,0-6.82-1.46A15.05,15.05,0,0,0,49"
 "0,29.23a17.29,17.29,0,0,0-5.28,3.91,18,18,0,0,0-3.51,5.69A18.65,18.65,0,0,0,480,45.63Z\"/></g></g></svg>";
 
-const char* logored_svg = (const char*) temp_binary_data_12;
+const char* logored_svg = (const char*) temp_binary_data_19;
 
 //================== logo-white.svg ==================
-static const unsigned char temp_binary_data_13[] =
+static const unsigned char temp_binary_data_20[] =
 "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 526.19 75.15\"><defs><style>.cls-1{fill:#fff;}</style></defs><g id=\"Layer_2\" data-name=\"Layer 2\"><g id=\"Layer_1-2\" data-name=\"Layer 1\"><rect class=\"cls-1\" x=\"80\" y=\"46.8\" width=\"1"
 "3.48\" height=\"27.36\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"60\" y=\"24.8\" width=\"13.48\" height=\"49.35\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"40\" y=\"5.79\" width=\"13.48\" height=\"68.36\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"20\" y=\"24"
 ".8\" width=\"13.48\" height=\"49.35\" rx=\"2.83\"/><rect class=\"cls-1\" y=\"46.79\" width=\"13.48\" height=\"27.36\" rx=\"2.83\"/><path class=\"cls-1\" d=\"M118.51,9.36A2,2,0,0,1,119,7.85a2,2,0,0,1,1.37-.56h42.75q2.07,0,2.07,2.16v7.83a2.22,2.22,0,0,"
@@ -3060,10 +3168,10 @@ static const unsigned char temp_binary_data_13[] =
 "6.64,1.4,16.55,16.55,0,0,0,6.71-1.38,17.45,17.45,0,0,0,5.49-3.73,18.21,18.21,0,0,0,3.71-5.49A17.67,17.67,0,0,0,514,46v-.32a17.55,17.55,0,0,0-1.35-6.8A18.48,18.48,0,0,0,509,33.14a17.92,17.92,0,0,0-5.51-3.91,16,16,0,0,0-6.82-1.46A15.05,15.05,0,0,0,490,"
 "29.23a17.29,17.29,0,0,0-5.28,3.91,18,18,0,0,0-3.51,5.69A18.65,18.65,0,0,0,480,45.63Z\"/></g></g></svg>";
 
-const char* logowhite_svg = (const char*) temp_binary_data_13;
+const char* logowhite_svg = (const char*) temp_binary_data_20;
 
 //================== maximize_black.svg ==================
-static const unsigned char temp_binary_data_14[] =
+static const unsigned char temp_binary_data_21[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3077,10 +3185,10 @@ static const unsigned char temp_binary_data_14[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* maximize_black_svg = (const char*) temp_binary_data_14;
+const char* maximize_black_svg = (const char*) temp_binary_data_21;
 
 //================== maximize_hover_blue.svg ==================
-static const unsigned char temp_binary_data_15[] =
+static const unsigned char temp_binary_data_22[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3094,10 +3202,10 @@ static const unsigned char temp_binary_data_15[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* maximize_hover_blue_svg = (const char*) temp_binary_data_15;
+const char* maximize_hover_blue_svg = (const char*) temp_binary_data_22;
 
 //================== menu_black.svg ==================
-static const unsigned char temp_binary_data_16[] =
+static const unsigned char temp_binary_data_23[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"14px\" height=\"10px\" viewBox=\"0 0 14 10\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3110,10 +3218,10 @@ static const unsigned char temp_binary_data_16[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* menu_black_svg = (const char*) temp_binary_data_16;
+const char* menu_black_svg = (const char*) temp_binary_data_23;
 
 //================== menu_hover_blue.svg ==================
-static const unsigned char temp_binary_data_17[] =
+static const unsigned char temp_binary_data_24[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"14px\" height=\"10px\" viewBox=\"0 0 14 10\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3126,10 +3234,10 @@ static const unsigned char temp_binary_data_17[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* menu_hover_blue_svg = (const char*) temp_binary_data_17;
+const char* menu_hover_blue_svg = (const char*) temp_binary_data_24;
 
 //================== min_window_black.svg ==================
-static const unsigned char temp_binary_data_18[] =
+static const unsigned char temp_binary_data_25[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"14px\" height=\"10px\" viewBox=\"0 0 14 10\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3142,10 +3250,10 @@ static const unsigned char temp_binary_data_18[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* min_window_black_svg = (const char*) temp_binary_data_18;
+const char* min_window_black_svg = (const char*) temp_binary_data_25;
 
 //================== min_window_hover_blue.svg ==================
-static const unsigned char temp_binary_data_19[] =
+static const unsigned char temp_binary_data_26[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"14px\" height=\"10px\" viewBox=\"0 0 14 10\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3158,10 +3266,10 @@ static const unsigned char temp_binary_data_19[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* min_window_hover_blue_svg = (const char*) temp_binary_data_19;
+const char* min_window_hover_blue_svg = (const char*) temp_binary_data_26;
 
 //================== logo-blue.svg ==================
-static const unsigned char temp_binary_data_20[] =
+static const unsigned char temp_binary_data_27[] =
 "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 526.19 75.15\"><defs><style>.cls-1{fill:#23B6EB;}</style></defs><g id=\"Layer_2\" data-name=\"Layer 2\"><g id=\"Layer_1-2\" data-name=\"Layer 1\"><rect class=\"cls-1\" x=\"80\" y=\"46.8\" width="
 "\"13.48\" height=\"27.36\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"60\" y=\"24.8\" width=\"13.48\" height=\"49.35\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"40\" y=\"5.79\" width=\"13.48\" height=\"68.36\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"20\" y=\""
 "24.8\" width=\"13.48\" height=\"49.35\" rx=\"2.83\"/><rect class=\"cls-1\" y=\"46.79\" width=\"13.48\" height=\"27.36\" rx=\"2.83\"/><path class=\"cls-1\" d=\"M118.51,9.36A2,2,0,0,1,119,7.85a2,2,0,0,1,1.37-.56h42.75q2.07,0,2.07,2.16v7.83a2.22,2.22,0,"
@@ -3193,10 +3301,10 @@ static const unsigned char temp_binary_data_20[] =
 "0,6.64,1.4,16.55,16.55,0,0,0,6.71-1.38,17.45,17.45,0,0,0,5.49-3.73,18.21,18.21,0,0,0,3.71-5.49A17.67,17.67,0,0,0,514,46v-.32a17.55,17.55,0,0,0-1.35-6.8A18.48,18.48,0,0,0,509,33.14a17.92,17.92,0,0,0-5.51-3.91,16,16,0,0,0-6.82-1.46A15.05,15.05,0,0,0,49"
 "0,29.23a17.29,17.29,0,0,0-5.28,3.91,18,18,0,0,0-3.51,5.69A18.65,18.65,0,0,0,480,45.63Z\"/></g></g></svg>";
 
-const char* logoblue_svg = (const char*) temp_binary_data_20;
+const char* logoblue_svg = (const char*) temp_binary_data_27;
 
 //================== donate_blue.svg ==================
-static const unsigned char temp_binary_data_21[] =
+static const unsigned char temp_binary_data_28[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"30px\" height=\"31px\" viewBox=\"0 0 30 31\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <g fill=\"none\" stroke=\"#23B6EB\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\r\n"
@@ -3208,10 +3316,10 @@ static const unsigned char temp_binary_data_21[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* donate_blue_svg = (const char*) temp_binary_data_21;
+const char* donate_blue_svg = (const char*) temp_binary_data_28;
 
 //================== donate_hover_blue.svg ==================
-static const unsigned char temp_binary_data_22[] =
+static const unsigned char temp_binary_data_29[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"30px\" height=\"31px\" viewBox=\"0 0 30 31\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <g fill=\"none\" stroke=\"#23B6EB\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\r\n"
@@ -3223,10 +3331,10 @@ static const unsigned char temp_binary_data_22[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* donate_hover_blue_svg = (const char*) temp_binary_data_22;
+const char* donate_hover_blue_svg = (const char*) temp_binary_data_29;
 
 //================== dropdown_arrow_hover_blue.svg ==================
-static const unsigned char temp_binary_data_23[] =
+static const unsigned char temp_binary_data_30[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"11px\" height=\"7px\" viewBox=\"0 0 11 7\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3239,10 +3347,10 @@ static const unsigned char temp_binary_data_23[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* dropdown_arrow_hover_blue_svg = (const char*) temp_binary_data_23;
+const char* dropdown_arrow_hover_blue_svg = (const char*) temp_binary_data_30;
 
 //================== arrow_next_blue.svg ==================
-static const unsigned char temp_binary_data_24[] =
+static const unsigned char temp_binary_data_31[] =
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
 "<svg viewBox=\"0 0 7 11\" width=\"7\" height=\"11\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" transform=\"matrix(0, -1, 1, 0, -0.096447, 11.303554)\">\r\n"
@@ -3252,10 +3360,10 @@ static const unsigned char temp_binary_data_24[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* arrow_next_blue_svg = (const char*) temp_binary_data_24;
+const char* arrow_next_blue_svg = (const char*) temp_binary_data_31;
 
 //================== arrow_prev_blue.svg ==================
-static const unsigned char temp_binary_data_25[] =
+static const unsigned char temp_binary_data_32[] =
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
 "<svg viewBox=\"0 0 7 11\" width=\"7\" height=\"11\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" transform=\"matrix(0, 1, -1, 0, 7.057106, -0.296447)\">\r\n"
@@ -3265,18 +3373,18 @@ static const unsigned char temp_binary_data_25[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* arrow_prev_blue_svg = (const char*) temp_binary_data_25;
+const char* arrow_prev_blue_svg = (const char*) temp_binary_data_32;
 
 //================== FxSound Black Bars.svg ==================
-static const unsigned char temp_binary_data_26[] =
+static const unsigned char temp_binary_data_33[] =
 "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 299.83 219.26\"><defs><style>.cls-1{fill:#000;}</style></defs><g id=\"Layer_2\" data-name=\"Layer 2\"><g id=\"Layer_1-2\" data-name=\"Layer 1\"><rect class=\"cls-1\" x=\"256.61\" y=\"131.52\" wi"
 "dth=\"43.22\" height=\"87.75\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"192.46\" y=\"60.97\" width=\"43.22\" height=\"158.29\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"128.31\" width=\"43.22\" height=\"219.26\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"64.1"
 "6\" y=\"60.96\" width=\"43.22\" height=\"158.3\" rx=\"2.83\"/><rect class=\"cls-1\" y=\"131.51\" width=\"43.22\" height=\"87.75\" rx=\"2.83\"/></g></g></svg>";
 
-const char* FxSound_Black_Bars_svg = (const char*) temp_binary_data_26;
+const char* FxSound_Black_Bars_svg = (const char*) temp_binary_data_33;
 
 //================== minimize_black.svg ==================
-static const unsigned char temp_binary_data_27[] =
+static const unsigned char temp_binary_data_34[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"18px\" height=\"18px\" viewBox=\"0 0 18 18\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3291,10 +3399,10 @@ static const unsigned char temp_binary_data_27[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* minimize_black_svg = (const char*) temp_binary_data_27;
+const char* minimize_black_svg = (const char*) temp_binary_data_34;
 
 //================== minimize_hover_blue.svg ==================
-static const unsigned char temp_binary_data_28[] =
+static const unsigned char temp_binary_data_35[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"18px\" height=\"18px\" viewBox=\"0 0 18 18\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3309,10 +3417,10 @@ static const unsigned char temp_binary_data_28[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* minimize_hover_blue_svg = (const char*) temp_binary_data_28;
+const char* minimize_hover_blue_svg = (const char*) temp_binary_data_35;
 
 //================== power_off_black.svg ==================
-static const unsigned char temp_binary_data_29[] =
+static const unsigned char temp_binary_data_36[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"30px\" height=\"31px\" viewBox=\"0 0 30 31\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->\r\n"
@@ -3338,10 +3446,10 @@ static const unsigned char temp_binary_data_29[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* power_off_black_svg = (const char*) temp_binary_data_29;
+const char* power_off_black_svg = (const char*) temp_binary_data_36;
 
 //================== power_on_blue.svg ==================
-static const unsigned char temp_binary_data_30[] =
+static const unsigned char temp_binary_data_37[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"30px\" height=\"31px\" viewBox=\"0 0 30 31\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->\r\n"
@@ -3367,10 +3475,10 @@ static const unsigned char temp_binary_data_30[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* power_on_blue_svg = (const char*) temp_binary_data_30;
+const char* power_on_blue_svg = (const char*) temp_binary_data_37;
 
 //================== Slider_Thumb_blue.svg ==================
-static const unsigned char temp_binary_data_31[] =
+static const unsigned char temp_binary_data_38[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"64px\" height=\"64px\" viewBox=\"0 0 64 64\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <title>E5470804-7859-4DCC-BEE7-06AD729626EC</title>\r\n"
@@ -3430,10 +3538,10 @@ static const unsigned char temp_binary_data_31[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* Slider_Thumb_blue_svg = (const char*) temp_binary_data_31;
+const char* Slider_Thumb_blue_svg = (const char*) temp_binary_data_38;
 
 //================== logo-black.svg ==================
-static const unsigned char temp_binary_data_32[] =
+static const unsigned char temp_binary_data_39[] =
 "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 526.19 75.15\"><defs><style>.cls-1{fill:#000;}</style></defs><g id=\"Layer_2\" data-name=\"Layer 2\"><g id=\"Layer_1-2\" data-name=\"Layer 1\"><rect class=\"cls-1\" x=\"80\" y=\"46.8\" width=\"1"
 "3.48\" height=\"27.36\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"60\" y=\"24.8\" width=\"13.48\" height=\"49.35\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"40\" y=\"5.79\" width=\"13.48\" height=\"68.36\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"20\" y=\"24"
 ".8\" width=\"13.48\" height=\"49.35\" rx=\"2.83\"/><rect class=\"cls-1\" y=\"46.79\" width=\"13.48\" height=\"27.36\" rx=\"2.83\"/><path class=\"cls-1\" d=\"M118.51,9.36A2,2,0,0,1,119,7.85a2,2,0,0,1,1.37-.56h42.75q2.07,0,2.07,2.16v7.83a2.22,2.22,0,0,"
@@ -3465,10 +3573,10 @@ static const unsigned char temp_binary_data_32[] =
 "6.64,1.4,16.55,16.55,0,0,0,6.71-1.38,17.45,17.45,0,0,0,5.49-3.73,18.21,18.21,0,0,0,3.71-5.49A17.67,17.67,0,0,0,514,46v-.32a17.55,17.55,0,0,0-1.35-6.8A18.48,18.48,0,0,0,509,33.14a17.92,17.92,0,0,0-5.51-3.91,16,16,0,0,0-6.82-1.46A15.05,15.05,0,0,0,490,"
 "29.23a17.29,17.29,0,0,0-5.28,3.91,18,18,0,0,0-3.51,5.69A18.65,18.65,0,0,0,480,45.63Z\"/></g></g></svg>";
 
-const char* logoblack_svg = (const char*) temp_binary_data_32;
+const char* logoblack_svg = (const char*) temp_binary_data_39;
 
 //================== donate.svg ==================
-static const unsigned char temp_binary_data_33[] =
+static const unsigned char temp_binary_data_40[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"30px\" height=\"31px\" viewBox=\"0 0 30 31\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <g fill=\"none\" stroke=\"#E63462\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\r\n"
@@ -3480,10 +3588,10 @@ static const unsigned char temp_binary_data_33[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* donate_svg = (const char*) temp_binary_data_33;
+const char* donate_svg = (const char*) temp_binary_data_40;
 
 //================== donate_hover.svg ==================
-static const unsigned char temp_binary_data_34[] =
+static const unsigned char temp_binary_data_41[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"30px\" height=\"31px\" viewBox=\"0 0 30 31\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <g fill=\"none\" stroke=\"#E63462\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\r\n"
@@ -3495,10 +3603,10 @@ static const unsigned char temp_binary_data_34[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* donate_hover_svg = (const char*) temp_binary_data_34;
+const char* donate_hover_svg = (const char*) temp_binary_data_41;
 
 //================== speaker.svg ==================
-static const unsigned char temp_binary_data_35[] =
+static const unsigned char temp_binary_data_42[] =
 "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <g id=\"24 / basic / speaker\">\r\n"
 "    <!-- Speaker body with rounded corners -->\r\n"
@@ -3511,10 +3619,10 @@ static const unsigned char temp_binary_data_35[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* speaker_svg = (const char*) temp_binary_data_35;
+const char* speaker_svg = (const char*) temp_binary_data_42;
 
 //================== min_window.svg ==================
-static const unsigned char temp_binary_data_36[] =
+static const unsigned char temp_binary_data_43[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"14px\" height=\"10px\" viewBox=\"0 0 14 10\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3527,10 +3635,10 @@ static const unsigned char temp_binary_data_36[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* min_window_svg = (const char*) temp_binary_data_36;
+const char* min_window_svg = (const char*) temp_binary_data_43;
 
 //================== min_window_hover.svg ==================
-static const unsigned char temp_binary_data_37[] =
+static const unsigned char temp_binary_data_44[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"14px\" height=\"10px\" viewBox=\"0 0 14 10\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3543,10 +3651,10 @@ static const unsigned char temp_binary_data_37[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* min_window_hover_svg = (const char*) temp_binary_data_37;
+const char* min_window_hover_svg = (const char*) temp_binary_data_44;
 
 //================== arrow_next_bw.svg ==================
-static const unsigned char temp_binary_data_38[] =
+static const unsigned char temp_binary_data_45[] =
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
 "<svg viewBox=\"0 0 7 11\" width=\"7\" height=\"11\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" transform=\"matrix(0, -1, 1, 0, 0.1, 11.300002)\">\r\n"
@@ -3560,10 +3668,10 @@ static const unsigned char temp_binary_data_38[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* arrow_next_bw_svg = (const char*) temp_binary_data_38;
+const char* arrow_next_bw_svg = (const char*) temp_binary_data_45;
 
 //================== arrow_prev.svg ==================
-static const unsigned char temp_binary_data_39[] =
+static const unsigned char temp_binary_data_46[] =
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
 "<svg viewBox=\"0 0 7 11\" width=\"7\" height=\"11\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" transform=\"matrix(0, 1, -1, 0, 7.057106, -0.296447)\">\r\n"
@@ -3573,10 +3681,10 @@ static const unsigned char temp_binary_data_39[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* arrow_prev_svg = (const char*) temp_binary_data_39;
+const char* arrow_prev_svg = (const char*) temp_binary_data_46;
 
 //================== arrow_next.svg ==================
-static const unsigned char temp_binary_data_40[] =
+static const unsigned char temp_binary_data_47[] =
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
 "<svg viewBox=\"0 0 7 11\" width=\"7\" height=\"11\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" transform=\"matrix(0, -1, 1, 0, -0.096447, 11.303554)\">\r\n"
@@ -3586,10 +3694,10 @@ static const unsigned char temp_binary_data_40[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* arrow_next_svg = (const char*) temp_binary_data_40;
+const char* arrow_next_svg = (const char*) temp_binary_data_47;
 
 //================== arrow_prev_bw.svg ==================
-static const unsigned char temp_binary_data_41[] =
+static const unsigned char temp_binary_data_48[] =
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
 "<svg viewBox=\"0 0 7 11\" width=\"7\" height=\"11\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" transform=\"matrix(0, 1, -1, 0, 6.9, -0.3)\">\r\n"
@@ -3603,10 +3711,10 @@ static const unsigned char temp_binary_data_41[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* arrow_prev_bw_svg = (const char*) temp_binary_data_41;
+const char* arrow_prev_bw_svg = (const char*) temp_binary_data_48;
 
 //================== Button_OFF.svg ==================
-static const unsigned char temp_binary_data_42[] =
+static const unsigned char temp_binary_data_49[] =
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
 "<svg width=\"100px\" height=\"100px\" viewBox=\"0 0 100 100\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <title>Oval</title>\r\n"
@@ -3641,10 +3749,10 @@ static const unsigned char temp_binary_data_42[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* Button_OFF_svg = (const char*) temp_binary_data_42;
+const char* Button_OFF_svg = (const char*) temp_binary_data_49;
 
 //================== Button_ON.svg ==================
-static const unsigned char temp_binary_data_43[] =
+static const unsigned char temp_binary_data_50[] =
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n"
 "<svg width=\"102px\" height=\"102px\" viewBox=\"0 0 102 102\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "  <title>Oval</title>\r\n"
@@ -3690,10 +3798,10 @@ static const unsigned char temp_binary_data_43[] =
 "  </g>\r\n"
 "</svg>";
 
-const char* Button_ON_svg = (const char*) temp_binary_data_43;
+const char* Button_ON_svg = (const char*) temp_binary_data_50;
 
 //================== dropdown_arrow_bw.svg ==================
-static const unsigned char temp_binary_data_44[] =
+static const unsigned char temp_binary_data_51[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"11px\" height=\"7px\" viewBox=\"0 0 11 7\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <title>chevron-down</title>\r\n"
@@ -3708,10 +3816,10 @@ static const unsigned char temp_binary_data_44[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* dropdown_arrow_bw_svg = (const char*) temp_binary_data_44;
+const char* dropdown_arrow_bw_svg = (const char*) temp_binary_data_51;
 
 //================== dropdown_arrow_hover.svg ==================
-static const unsigned char temp_binary_data_45[] =
+static const unsigned char temp_binary_data_52[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"11px\" height=\"7px\" viewBox=\"0 0 11 7\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3724,10 +3832,10 @@ static const unsigned char temp_binary_data_45[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* dropdown_arrow_hover_svg = (const char*) temp_binary_data_45;
+const char* dropdown_arrow_hover_svg = (const char*) temp_binary_data_52;
 
 //================== FxSound Logo.svg ==================
-static const unsigned char temp_binary_data_46[] =
+static const unsigned char temp_binary_data_53[] =
 "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 526.19 75.15\"><defs><style>.cls-1{fill:#fff;}</style></defs><g id=\"Layer_2\" data-name=\"Layer 2\"><g id=\"Layer_1-2\" data-name=\"Layer 1\"><rect class=\"cls-1\" x=\"80\" y=\"46.8\" width=\"1"
 "3.48\" height=\"27.36\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"60\" y=\"24.8\" width=\"13.48\" height=\"49.35\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"40\" y=\"5.79\" width=\"13.48\" height=\"68.36\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"20\" y=\"24"
 ".8\" width=\"13.48\" height=\"49.35\" rx=\"2.83\"/><rect class=\"cls-1\" y=\"46.79\" width=\"13.48\" height=\"27.36\" rx=\"2.83\"/><path class=\"cls-1\" d=\"M118.51,9.36A2,2,0,0,1,119,7.85a2,2,0,0,1,1.37-.56h42.75q2.07,0,2.07,2.16v7.83a2.22,2.22,0,0,"
@@ -3759,18 +3867,18 @@ static const unsigned char temp_binary_data_46[] =
 "6.64,1.4,16.55,16.55,0,0,0,6.71-1.38,17.45,17.45,0,0,0,5.49-3.73,18.21,18.21,0,0,0,3.71-5.49A17.67,17.67,0,0,0,514,46v-.32a17.55,17.55,0,0,0-1.35-6.8A18.48,18.48,0,0,0,509,33.14a17.92,17.92,0,0,0-5.51-3.91,16,16,0,0,0-6.82-1.46A15.05,15.05,0,0,0,490,"
 "29.23a17.29,17.29,0,0,0-5.28,3.91,18,18,0,0,0-3.51,5.69A18.65,18.65,0,0,0,480,45.63Z\"/></g></g></svg>";
 
-const char* FxSound_Logo_svg = (const char*) temp_binary_data_46;
+const char* FxSound_Logo_svg = (const char*) temp_binary_data_53;
 
 //================== FxSound White Bars.svg ==================
-static const unsigned char temp_binary_data_47[] =
+static const unsigned char temp_binary_data_54[] =
 "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 299.83 219.26\"><defs><style>.cls-1{fill:#fff;}</style></defs><g id=\"Layer_2\" data-name=\"Layer 2\"><g id=\"Layer_1-2\" data-name=\"Layer 1\"><rect class=\"cls-1\" x=\"256.61\" y=\"131.52\" wi"
 "dth=\"43.22\" height=\"87.75\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"192.46\" y=\"60.97\" width=\"43.22\" height=\"158.29\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"128.31\" width=\"43.22\" height=\"219.26\" rx=\"2.83\"/><rect class=\"cls-1\" x=\"64.1"
 "6\" y=\"60.96\" width=\"43.22\" height=\"158.3\" rx=\"2.83\"/><rect class=\"cls-1\" y=\"131.51\" width=\"43.22\" height=\"87.75\" rx=\"2.83\"/></g></g></svg>";
 
-const char* FxSound_White_Bars_svg = (const char*) temp_binary_data_47;
+const char* FxSound_White_Bars_svg = (const char*) temp_binary_data_54;
 
 //================== fxsound.png ==================
-static const unsigned char temp_binary_data_48[] =
+static const unsigned char temp_binary_data_55[] =
 { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,32,0,0,0,32,8,6,0,0,0,115,122,122,244,0,0,0,9,112,72,89,115,0,0,11,18,0,0,11,18,1,210,221,126,252,0,0,1,54,73,68,65,84,88,133,237,87,219,141,131,48,16,156,228,82,128,75,128,191,251,52,29,80,130,75,112,
 9,148,224,14,40,193,37,152,14,104,129,18,232,0,58,240,105,173,24,57,22,247,8,38,56,39,49,210,42,246,176,222,25,161,213,18,35,64,13,192,0,176,47,14,115,215,122,128,60,64,56,14,233,13,212,25,196,125,212,31,0,90,0,159,241,43,57,8,236,114,119,146,13,215,
 156,226,132,205,6,24,99,208,90,187,160,117,10,54,53,144,49,198,122,208,122,107,157,164,55,176,182,126,22,255,183,7,14,53,208,182,45,172,181,152,166,9,69,81,124,155,71,207,40,135,114,149,82,127,54,241,107,163,132,80,74,57,174,239,251,133,165,53,113,244,
@@ -3778,10 +3886,10 @@ static const unsigned char temp_binary_data_48[] =
 218,30,241,104,20,66,184,209,218,52,205,194,113,206,221,55,159,70,45,99,204,113,244,171,181,118,17,114,148,67,185,116,198,159,151,82,186,154,84,59,214,59,255,19,158,6,200,192,62,3,127,27,156,118,214,171,153,183,157,245,114,234,113,252,245,28,192,23,38,
 203,148,221,53,152,2,5,0,0,0,0,73,69,78,68,174,66,96,130,0,0 };
 
-const char* fxsound_png = (const char*) temp_binary_data_48;
+const char* fxsound_png = (const char*) temp_binary_data_55;
 
 //================== fxsound_large.png ==================
-static const unsigned char temp_binary_data_49[] =
+static const unsigned char temp_binary_data_56[] =
 { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,1,0,0,0,1,0,8,6,0,0,0,92,114,168,102,0,0,0,9,112,72,89,115,0,0,11,18,0,0,11,18,1,210,221,126,252,0,0,12,184,73,68,65,84,120,156,237,221,63,114,219,72,22,199,241,39,143,115,195,39,16,148,109,38,204,9,200,
 57,129,184,225,70,226,132,27,137,115,2,107,79,192,73,55,162,125,2,81,39,32,149,109,70,234,4,164,194,137,200,116,35,110,61,108,195,69,211,164,248,7,221,64,3,239,251,169,234,82,149,45,129,141,70,247,15,221,0,72,94,73,92,18,17,201,68,164,43,34,215,34,146,
 110,21,160,105,150,91,229,77,68,166,34,50,23,145,117,44,251,17,67,0,244,68,164,227,6,125,22,65,125,128,208,230,46,12,94,68,100,92,103,107,215,21,0,58,232,239,220,207,164,166,58,0,49,88,187,16,120,174,35,12,170,12,0,29,232,3,17,185,23,166,244,192,62,186,
@@ -3829,10 +3937,10 @@ static const unsigned char temp_binary_data_49[] =
 224,206,253,228,105,66,88,86,124,20,255,115,29,31,201,95,87,0,108,211,16,232,184,107,5,60,80,4,11,230,238,138,254,75,221,223,195,17,67,0,108,75,92,8,104,24,92,187,165,66,202,146,1,13,165,83,250,162,188,185,65,175,131,63,142,59,100,34,242,63,172,144,216,
 108,214,152,214,2,0,0,0,0,73,69,78,68,174,66,96,130,0,0 };
 
-const char* fxsound_large_png = (const char*) temp_binary_data_49;
+const char* fxsound_large_png = (const char*) temp_binary_data_56;
 
 //================== maximize.svg ==================
-static const unsigned char temp_binary_data_50[] =
+static const unsigned char temp_binary_data_57[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3846,10 +3954,10 @@ static const unsigned char temp_binary_data_50[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* maximize_svg = (const char*) temp_binary_data_50;
+const char* maximize_svg = (const char*) temp_binary_data_57;
 
 //================== maximize_hover.svg ==================
-static const unsigned char temp_binary_data_51[] =
+static const unsigned char temp_binary_data_58[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3863,10 +3971,10 @@ static const unsigned char temp_binary_data_51[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* maximize_hover_svg = (const char*) temp_binary_data_51;
+const char* maximize_hover_svg = (const char*) temp_binary_data_58;
 
 //================== menu.svg ==================
-static const unsigned char temp_binary_data_52[] =
+static const unsigned char temp_binary_data_59[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"14px\" height=\"10px\" viewBox=\"0 0 14 10\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3879,10 +3987,10 @@ static const unsigned char temp_binary_data_52[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* menu_svg = (const char*) temp_binary_data_52;
+const char* menu_svg = (const char*) temp_binary_data_59;
 
 //================== menu_hover.svg ==================
-static const unsigned char temp_binary_data_53[] =
+static const unsigned char temp_binary_data_60[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"14px\" height=\"10px\" viewBox=\"0 0 14 10\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3895,10 +4003,10 @@ static const unsigned char temp_binary_data_53[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* menu_hover_svg = (const char*) temp_binary_data_53;
+const char* menu_hover_svg = (const char*) temp_binary_data_60;
 
 //================== minimize.svg ==================
-static const unsigned char temp_binary_data_54[] =
+static const unsigned char temp_binary_data_61[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"18px\" height=\"18px\" viewBox=\"0 0 18 18\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3913,10 +4021,10 @@ static const unsigned char temp_binary_data_54[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* minimize_svg = (const char*) temp_binary_data_54;
+const char* minimize_svg = (const char*) temp_binary_data_61;
 
 //================== minimize_hover.svg ==================
-static const unsigned char temp_binary_data_55[] =
+static const unsigned char temp_binary_data_62[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"18px\" height=\"18px\" viewBox=\"0 0 18 18\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->\r\n"
@@ -3931,10 +4039,10 @@ static const unsigned char temp_binary_data_55[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* minimize_hover_svg = (const char*) temp_binary_data_55;
+const char* minimize_hover_svg = (const char*) temp_binary_data_62;
 
 //================== power_off.svg ==================
-static const unsigned char temp_binary_data_56[] =
+static const unsigned char temp_binary_data_63[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"30px\" height=\"31px\" viewBox=\"0 0 30 31\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->\r\n"
@@ -3960,10 +4068,10 @@ static const unsigned char temp_binary_data_56[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* power_off_svg = (const char*) temp_binary_data_56;
+const char* power_off_svg = (const char*) temp_binary_data_63;
 
 //================== power_on.svg ==================
-static const unsigned char temp_binary_data_57[] =
+static const unsigned char temp_binary_data_64[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"30px\" height=\"31px\" viewBox=\"0 0 30 31\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->\r\n"
@@ -3989,10 +4097,10 @@ static const unsigned char temp_binary_data_57[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* power_on_svg = (const char*) temp_binary_data_57;
+const char* power_on_svg = (const char*) temp_binary_data_64;
 
 //================== question.svg ==================
-static const unsigned char temp_binary_data_58[] =
+static const unsigned char temp_binary_data_65[] =
 "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "<g id=\"24 / chatting / question\">\r\n"
 "<path id=\"Path\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M12 22C13.7246 22 15.387 21.562 16.8595 20.7418L21.0947 21.0947L20.7418 16.8595C21.562 15.387 22 13.7246 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 1"
@@ -4003,10 +4111,10 @@ static const unsigned char temp_binary_data_58[] =
 "</g>\r\n"
 "</svg>\r\n";
 
-const char* question_svg = (const char*) temp_binary_data_58;
+const char* question_svg = (const char*) temp_binary_data_65;
 
 //================== settings.svg ==================
-static const unsigned char temp_binary_data_59[] =
+static const unsigned char temp_binary_data_66[] =
 "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\r\n"
 "<g id=\"24 / basic / settings\">\r\n"
 "<path id=\"icon\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M18.6562 20.897L20.8733 18.6798L20.0925 15.843L20.4327 15.0305L23 13.5818V10.4464L20.44 8.99173L20.1055 8.18067L20.8961 5.34235L18.6774 3.12683L15.8403 3.90748L15.0296 3.56758L13.5808 "
@@ -4018,10 +4126,10 @@ static const unsigned char temp_binary_data_59[] =
 "</g>\r\n"
 "</svg>\r\n";
 
-const char* settings_svg = (const char*) temp_binary_data_59;
+const char* settings_svg = (const char*) temp_binary_data_66;
 
 //================== Slider_Thumb.svg ==================
-static const unsigned char temp_binary_data_60[] =
+static const unsigned char temp_binary_data_67[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"64px\" height=\"64px\" viewBox=\"0 0 64 64\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <title>E5470804-7859-4DCC-BEE7-06AD729626EC</title>\r\n"
@@ -4081,10 +4189,10 @@ static const unsigned char temp_binary_data_60[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* Slider_Thumb_svg = (const char*) temp_binary_data_60;
+const char* Slider_Thumb_svg = (const char*) temp_binary_data_67;
 
 //================== Slider_Thumb_bw.svg ==================
-static const unsigned char temp_binary_data_61[] =
+static const unsigned char temp_binary_data_68[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
 "<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
 "    <title>oval</title>\r\n"
@@ -4137,10 +4245,10 @@ static const unsigned char temp_binary_data_61[] =
 "    </g>\r\n"
 "</svg>";
 
-const char* Slider_Thumb_bw_svg = (const char*) temp_binary_data_61;
+const char* Slider_Thumb_bw_svg = (const char*) temp_binary_data_68;
 
 //================== FxSound.ar.txt ==================
-static const unsigned char temp_binary_data_62[] =
+static const unsigned char temp_binary_data_69[] =
 { 108,97,110,103,117,97,103,101,58,32,65,114,97,98,105,99,13,10,99,111,117,110,116,114,105,101,115,58,32,69,71,32,115,97,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,
 114,32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,
 104,114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,216,185,216,176,216,177,216,167,33,32,217,138,216,168,216,175,217,136,32,216,163,217,134,32,217,135,217,134,216,167,217,131,32,217,133,216,180,217,131,217,132,216,169,32,217,129,217,138,32,216,
@@ -4352,28 +4460,28 @@ static const unsigned char temp_binary_data_62[] =
 216,185,217,132,217,133,32,216,168,216,163,217,134,217,135,32,217,132,217,133,32,217,138,216,170,217,133,32,216,173,217,129,216,184,32,216,167,217,132,216,170,216,186,217,138,217,138,216,177,216,167,216,170,32,216,167,217,132,216,170,217,138,32,216,163,
 216,172,216,177,217,138,216,170,217,135,216,167,32,46,92,114,92,110,217,135,217,132,32,216,170,216,177,217,138,216,175,32,216,173,217,129,216,184,217,135,216,167,216,159,34,13,10,34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,216,173,217,129,
 216,184,32,216,167,217,132,216,165,216,185,216,175,216,167,216,175,32,216,167,217,132,217,133,216,179,216,168,217,130,34,13,10,34,83,97,118,101,34,32,61,32,34,216,173,217,129,216,184,34,13,10,34,67,97,110,99,101,108,34,32,61,32,34,216,165,217,132,216,
-186,216,167,216,161,34,13,10,34,69,113,117,97,108,105,122,101,114,58,34,32,61,32,34,58,216,167,217,132,216,165,217,131,217,136,217,132,216,167,217,138,216,178,216,177,34,13,10,34,77,97,115,116,101,114,32,71,97,105,110,58,34,32,61,32,34,217,133,216,179,
-216,170,217,136,217,137,32,216,167,217,132,216,181,217,136,216,170,32,216,167,217,132,216,177,216,166,217,138,216,179,217,138,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,110,58,34,32,61,32,34,216,170,216,183,216,168,217,138,216,185,34,13,
-10,34,70,105,108,116,101,114,32,81,58,34,32,61,32,34,81,32,216,167,217,132,217,129,217,132,216,170,216,177,34,13,10,34,66,97,108,97,110,99,101,58,34,32,61,32,34,216,170,217,136,216,167,216,178,217,134,34,13,10,34,76,101,102,116,34,32,61,32,34,217,138,
-216,179,216,167,216,177,34,13,10,34,82,105,103,104,116,34,32,61,32,34,217,138,217,133,217,138,217,134,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,216,168,216,167,217,134,216,175,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,
-115,34,32,61,32,34,216,167,216,179,216,170,216,185,216,167,216,175,216,169,32,216,167,217,132,216,165,216,185,216,175,216,167,216,175,216,167,216,170,32,216,167,217,132,216,167,217,129,216,170,216,177,216,167,216,182,217,138,216,169,34,13,10,34,65,117,
-116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,216,167,217,132,216,170,216,173,216,175,217,138,216,171,216,167,216,170,32,216,167,217,132,216,170,217,132,217,130,216,167,216,166,217,138,216,169,34,13,10,34,65,108,119,97,121,115,
-32,79,110,32,84,111,112,34,32,61,32,34,216,175,216,167,216,166,217,133,216,167,217,139,32,217,129,217,138,32,216,167,217,132,216,163,216,185,217,132,217,137,34,13,10,34,84,104,101,109,101,34,32,61,32,34,216,167,217,132,216,179,217,133,216,169,34,13,10,
-34,68,97,114,107,34,32,61,32,34,216,175,216,167,217,131,217,134,34,13,10,34,76,105,103,104,116,34,32,61,32,34,217,129,216,167,216,170,216,173,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,
-32,34,216,170,217,129,216,182,217,138,217,132,216,167,216,170,32,216,172,217,135,216,167,216,178,32,216,167,217,132,216,165,216,174,216,177,216,167,216,172,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,216,167,216,174,216,
-170,217,138,216,167,216,177,32,216,165,216,185,216,175,216,167,216,175,32,217,133,216,179,216,168,217,130,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,216,167,217,132,216,165,217,131,217,136,217,132,216,167,217,138,216,178,216,177,34,
-13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,216,165,216,185,216,183,216,167,216,161,32,216,163,217,136,217,132,217,136,217,138,216,169,32,217,132,216,163,216,172,
-217,135,216,178,216,169,32,216,167,217,132,216,165,216,174,216,177,216,167,216,172,32,216,167,217,132,216,172,216,175,217,138,216,175,216,169,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,
-116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,216,167,216,179,216,170,216,174,216,175,217,133,32,83,104,105,102,116,43,85,112,32,216,163,217,136,32,83,104,105,102,116,43,68,
-111,119,110,32,217,132,216,170,216,186,217,138,217,138,216,177,32,216,163,217,136,217,132,217,136,217,138,216,169,32,216,167,217,132,216,172,217,135,216,167,216,178,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,
-110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,217,133,216,185,216,167,217,132,216,172,216,169,32,216,167,217,132,216,181,217,136,216,170,32,216,186,217,138,216,
-177,32,217,133,216,170,217,136,217,129,216,177,216,169,32,216,185,216,168,216,177,32,216,179,216,183,216,173,32,216,167,217,132,217,133,217,131,216,170,216,168,32,216,167,217,132,216,168,216,185,217,138,216,175,34,13,10,34,86,111,108,117,109,101,32,76,
-101,118,101,108,105,110,103,58,34,32,61,32,34,217,133,217,136,216,167,216,178,217,134,216,169,32,217,133,216,179,216,170,217,136,217,137,32,216,167,217,132,216,181,217,136,216,170,58,34,0,0 };
+186,216,167,216,161,34,13,10,34,69,113,117,97,108,105,122,101,114,58,34,32,61,32,34,58,216,167,217,132,216,165,217,131,217,136,217,132,216,167,217,138,216,178,216,177,34,13,10,34,77,97,115,116,101,114,32,71,97,105,110,34,32,61,32,34,217,133,216,179,216,
+170,217,136,217,137,32,216,167,217,132,216,181,217,136,216,170,32,216,167,217,132,216,177,216,166,217,138,216,179,217,138,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,110,34,32,61,32,34,216,170,216,183,216,168,217,138,216,185,34,13,10,34,
+70,105,108,116,101,114,32,81,34,32,61,32,34,81,32,216,167,217,132,217,129,217,132,216,170,216,177,34,13,10,34,66,97,108,97,110,99,101,34,32,61,32,34,216,170,217,136,216,167,216,178,217,134,34,13,10,34,76,101,102,116,34,32,61,32,34,217,138,216,179,216,
+167,216,177,34,13,10,34,82,105,103,104,116,34,32,61,32,34,217,138,217,133,217,138,217,134,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,216,168,216,167,217,134,216,175,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,
+61,32,34,216,167,216,179,216,170,216,185,216,167,216,175,216,169,32,216,167,217,132,216,165,216,185,216,175,216,167,216,175,216,167,216,170,32,216,167,217,132,216,167,217,129,216,170,216,177,216,167,216,182,217,138,216,169,34,13,10,34,65,117,116,111,
+109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,216,167,217,132,216,170,216,173,216,175,217,138,216,171,216,167,216,170,32,216,167,217,132,216,170,217,132,217,130,216,167,216,166,217,138,216,169,34,13,10,34,65,108,119,97,121,115,32,79,
+110,32,84,111,112,34,32,61,32,34,216,175,216,167,216,166,217,133,216,167,217,139,32,217,129,217,138,32,216,167,217,132,216,163,216,185,217,132,217,137,34,13,10,34,84,104,101,109,101,34,32,61,32,34,216,167,217,132,216,179,217,133,216,169,34,13,10,34,68,
+97,114,107,34,32,61,32,34,216,175,216,167,217,131,217,134,34,13,10,34,76,105,103,104,116,34,32,61,32,34,217,129,216,167,216,170,216,173,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,
+216,170,217,129,216,182,217,138,217,132,216,167,216,170,32,216,172,217,135,216,167,216,178,32,216,167,217,132,216,165,216,174,216,177,216,167,216,172,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,216,167,216,174,216,170,
+217,138,216,167,216,177,32,216,165,216,185,216,175,216,167,216,175,32,217,133,216,179,216,168,217,130,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,216,167,217,132,216,165,217,131,217,136,217,132,216,167,217,138,216,178,216,177,34,13,10,
+34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,216,165,216,185,216,183,216,167,216,161,32,216,163,217,136,217,132,217,136,217,138,216,169,32,217,132,216,163,216,172,217,
+135,216,178,216,169,32,216,167,217,132,216,165,216,174,216,177,216,167,216,172,32,216,167,217,132,216,172,216,175,217,138,216,175,216,169,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,
+111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,216,167,216,179,216,170,216,174,216,175,217,133,32,83,104,105,102,116,43,85,112,32,216,163,217,136,32,83,104,105,102,116,43,68,111,
+119,110,32,217,132,216,170,216,186,217,138,217,138,216,177,32,216,163,217,136,217,132,217,136,217,138,216,169,32,216,167,217,132,216,172,217,135,216,167,216,178,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,
+111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,217,133,216,185,216,167,217,132,216,172,216,169,32,216,167,217,132,216,181,217,136,216,170,32,216,186,217,138,216,177,
+32,217,133,216,170,217,136,217,129,216,177,216,169,32,216,185,216,168,216,177,32,216,179,216,183,216,173,32,216,167,217,132,217,133,217,131,216,170,216,168,32,216,167,217,132,216,168,216,185,217,138,216,175,34,13,10,34,86,111,108,117,109,101,32,76,101,
+118,101,108,105,110,103,34,32,61,32,34,217,133,217,136,216,167,216,178,217,134,216,169,32,217,133,216,179,216,170,217,136,217,137,32,216,167,217,132,216,181,217,136,216,170,34,0,0 };
 
-const char* FxSound_ar_txt = (const char*) temp_binary_data_62;
+const char* FxSound_ar_txt = (const char*) temp_binary_data_69;
 
 //================== FxSound.ba.txt ==================
-static const unsigned char temp_binary_data_63[] =
+static const unsigned char temp_binary_data_70[] =
 "language: Bosnian\r\n"
 "countries: ba\r\n"
 "\r\n"
@@ -4510,10 +4618,10 @@ static const unsigned char temp_binary_data_63[] =
 "\"Save\" = \"Sa\xc4\x8duvaj\"\r\n"
 "\"Cancel\" = \"Otka\xc5\xbei\"\r\n"
 "\"Equalizer:\" = \"Ekvilajzer:\"\r\n"
-"\"Master Gain:\" = \"Glavna glasno\xc4\x87""a:\"\r\n"
-"\"Normalization:\" = \"Normalizacija:\"\r\n"
-"\"Filter Q:\" = \"Q filtra:\"\r\n"
-"\"Balance:\" = \"Balans:\"\r\n"
+"\"Master Gain\" = \"Glavna glasno\xc4\x87""a\"\r\n"
+"\"Normalization\" = \"Normalizacija\"\r\n"
+"\"Filter Q\" = \"Q filtra\"\r\n"
+"\"Balance\" = \"Balans\"\r\n"
 "\"Left\" = \"Lijevo\"\r\n"
 "\"Right\" = \"Desno\"\r\n"
 "\" Bands\" = \" opsega\"\r\n"
@@ -4529,12 +4637,12 @@ static const unsigned char temp_binary_data_63[] =
 "\"Prioritize new output devices\" = \"Daj prioritet novim izlaznim ure\xc4\x91""ajima\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Koristite Shift+Up ili Shift+Down za promjenu prioriteta ure\xc4\x91""aja\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"Audio obrada nije dostupna putem udaljene radne povr\xc5\xa1ine\"\r\n"
-"\"Volume Leveling:\" = \"Ujedna\xc4\x8d""avanje glasno\xc4\x87""e:\"";
+"\"Volume Leveling\" = \"Ujedna\xc4\x8d""avanje glasno\xc4\x87""e\"";
 
-const char* FxSound_ba_txt = (const char*) temp_binary_data_63;
+const char* FxSound_ba_txt = (const char*) temp_binary_data_70;
 
 //================== FxSound.de.txt ==================
-static const unsigned char temp_binary_data_64[] =
+static const unsigned char temp_binary_data_71[] =
 "language: German\r\n"
 "countries: de at ch\r\n"
 "\r\n"
@@ -4675,10 +4783,10 @@ static const unsigned char temp_binary_data_64[] =
 "\"Save\" = \"Speichern\"\r\n"
 "\"Cancel\" = \"Abbrechen\"\r\n"
 "\"Equalizer:\" = \"Equalizer:\"\r\n"
-"\"Master Gain:\" = \"Master-Lautst\xc3\xa4rke:\"\r\n"
-"\"Normalization:\" = \"Normalisierung:\"\r\n"
-"\"Filter Q:\" = \"Filter-Q:\"\r\n"
-"\"Balance:\" = \"Balance:\"\r\n"
+"\"Master Gain\" = \"Master-Lautst\xc3\xa4rke\"\r\n"
+"\"Normalization\" = \"Normalisierung\"\r\n"
+"\"Filter Q\" = \"Filter-Q\"\r\n"
+"\"Balance\" = \"Balance\"\r\n"
 "\"Left\" = \"Links\"\r\n"
 "\"Right\" = \"Rechts\"\r\n"
 "\" Bands\" = \" B\xc3\xa4nder\"\r\n"
@@ -4694,12 +4802,12 @@ static const unsigned char temp_binary_data_64[] =
 "\"Prioritize new output devices\" = \"Neue Ausgabeger\xc3\xa4te priorisieren\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Verwenden Sie Shift+Up oder Shift+Down, um die Ger\xc3\xa4tepriorit\xc3\xa4t zu \xc3\xa4ndern\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"Audioverarbeitung ist \xc3\xbc""ber Remotedesktop nicht verf\xc3\xbcgbar\"\r\n"
-"\"Volume Leveling:\" = \"Lautst\xc3\xa4rkeausgleich:\"";
+"\"Volume Leveling\" = \"Lautst\xc3\xa4rkeausgleich\"";
 
-const char* FxSound_de_txt = (const char*) temp_binary_data_64;
+const char* FxSound_de_txt = (const char*) temp_binary_data_71;
 
 //================== FxSound.es.txt ==================
-static const unsigned char temp_binary_data_65[] =
+static const unsigned char temp_binary_data_72[] =
 "language: Spanish\r\n"
 "countries: ar co es mx\r\n"
 "\r\n"
@@ -4836,10 +4944,10 @@ static const unsigned char temp_binary_data_65[] =
 "\"Save\" = \"Guardar\"\r\n"
 "\"Cancel\" = \"Cancelar\"\r\n"
 "\"Equalizer:\" = \"Ecualizador:\"\r\n"
-"\"Master Gain:\" = \"Volumen maestro:\"\r\n"
-"\"Normalization:\" = \"Normalizaci\xc3\xb3n:\"\r\n"
-"\"Filter Q:\" = \"Q del filtro:\"\r\n"
-"\"Balance:\" = \"Balance:\"\r\n"
+"\"Master Gain\" = \"Volumen maestro\"\r\n"
+"\"Normalization\" = \"Normalizaci\xc3\xb3n\"\r\n"
+"\"Filter Q\" = \"Q del filtro\"\r\n"
+"\"Balance\" = \"Balance\"\r\n"
 "\"Left\" = \"Izquierda\"\r\n"
 "\"Right\" = \"Derecha\"\r\n"
 "\" Bands\" = \" bandas\"\r\n"
@@ -4855,12 +4963,12 @@ static const unsigned char temp_binary_data_65[] =
 "\"Prioritize new output devices\" = \"Priorizar nuevos dispositivos de salida\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Use Shift+Up o Shift+Down para cambiar la prioridad del dispositivo\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"El procesamiento de audio no est\xc3\xa1 disponible a trav\xc3\xa9s de Escritorio remoto\"\r\n"
-"\"Volume Leveling:\" = \"Nivelaci\xc3\xb3n de volumen:\"";
+"\"Volume Leveling\" = \"Nivelaci\xc3\xb3n de volumen\"";
 
-const char* FxSound_es_txt = (const char*) temp_binary_data_65;
+const char* FxSound_es_txt = (const char*) temp_binary_data_72;
 
 //================== FxSound.fa.txt ==================
-static const unsigned char temp_binary_data_66[] =
+static const unsigned char temp_binary_data_73[] =
 { 108,97,110,103,117,97,103,101,58,32,80,101,114,115,105,97,110,13,10,99,111,117,110,116,114,105,101,115,58,32,105,114,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,114,
 32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,104,
 114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,216,167,217,136,217,135,33,32,217,133,216,180,218,169,217,132,219,140,32,216,175,216,177,32,216,170,217,134,216,184,219,140,217,133,216,167,216,170,32,216,175,216,179,216,170,218,175,216,167,217,135,
@@ -5083,28 +5191,28 @@ static const unsigned char temp_binary_data_66[] =
 167,32,216,176,216,174,219,140,216,177,217,135,32,217,134,217,133,219,140,226,128,140,216,180,217,136,217,134,216,175,46,92,114,92,110,216,162,219,140,216,167,32,217,133,219,140,226,128,140,216,174,217,136,216,167,217,135,219,140,216,175,32,216,176,216,
 174,219,140,216,177,217,135,32,218,169,217,134,219,140,216,175,216,159,34,13,10,34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,216,176,216,174,219,140,216,177,217,135,32,217,190,219,140,216,180,226,128,140,216,170,217,134,216,184,219,140,217,
 133,34,13,10,34,83,97,118,101,34,32,61,32,34,216,176,216,174,219,140,216,177,217,135,34,13,10,34,67,97,110,99,101,108,34,32,61,32,34,217,132,216,186,217,136,34,13,10,34,69,113,117,97,108,105,122,101,114,58,34,32,61,32,34,216,167,218,169,217,136,217,132,
-216,167,219,140,216,178,216,177,58,34,13,10,34,77,97,115,116,101,114,32,71,97,105,110,58,34,32,61,32,34,216,168,217,135,216,168,217,136,216,175,32,216,167,216,181,217,132,219,140,58,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,110,58,34,32,
-61,32,34,217,134,216,177,217,133,216,167,217,132,226,128,140,216,179,216,167,216,178,219,140,58,34,13,10,34,70,105,108,116,101,114,32,81,58,34,32,61,32,34,217,129,219,140,217,132,216,170,216,177,32,218,169,219,140,217,129,219,140,216,170,58,34,13,10,
-34,66,97,108,97,110,99,101,58,34,32,61,32,34,216,170,216,185,216,167,216,175,217,132,58,34,13,10,34,76,101,102,116,34,32,61,32,34,218,134,217,190,34,13,10,34,82,105,103,104,116,34,32,61,32,34,216,177,216,167,216,179,216,170,34,13,10,34,32,66,97,110,100,
-115,34,32,61,32,34,32,216,168,216,167,217,134,216,175,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,216,168,216,167,216,178,219,140,216,167,216,168,219,140,32,217,190,219,140,216,180,226,128,140,217,129,216,177,
-216,182,226,128,140,217,135,216,167,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,216,168,217,135,226,128,140,216,177,217,136,216,178,216,177,216,179,216,167,217,134,219,140,226,128,140,217,135,216,167,219,
-140,32,216,174,217,136,216,175,218,169,216,167,216,177,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,217,135,217,133,219,140,216,180,217,135,32,216,175,216,177,32,216,168,216,167,217,132,216,167,34,13,10,34,84,104,101,109,101,
-34,32,61,32,34,217,190,217,136,216,179,216,170,217,135,34,13,10,34,68,97,114,107,34,32,61,32,34,216,170,216,167,216,177,219,140,218,169,34,13,10,34,76,105,103,104,116,34,32,61,32,34,216,177,217,136,216,180,217,134,34,13,10,34,79,117,116,112,117,116,32,
-68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,216,170,216,177,216,172,219,140,216,173,32,216,175,216,179,216,170,218,175,216,167,217,135,32,216,174,216,177,217,136,216,172,219,140,34,13,10,34,83,101,108,101,99,116,32,112,
-114,101,115,101,116,34,32,61,32,34,216,167,217,134,216,170,216,174,216,167,216,168,32,217,190,219,140,216,180,226,128,140,216,170,217,134,216,184,219,140,217,133,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,216,167,218,169,217,136,217,
-132,216,167,219,140,216,178,216,177,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,216,167,217,136,217,132,217,136,219,140,216,170,226,128,140,216,168,217,134,
-216,175,219,140,32,216,175,216,179,216,170,218,175,216,167,217,135,226,128,140,217,135,216,167,219,140,32,216,174,216,177,217,136,216,172,219,140,32,216,172,216,175,219,140,216,175,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,
-83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,216,168,216,177,216,167,219,140,32,216,170,216,186,219,140,219,140,216,177,32,216,167,
-217,136,217,132,217,136,219,140,216,170,32,216,175,216,179,216,170,218,175,216,167,217,135,32,216,167,216,178,32,83,104,105,102,116,43,85,112,32,219,140,216,167,32,83,104,105,102,116,43,68,111,119,110,32,216,167,216,179,216,170,217,129,216,167,216,175,
-217,135,32,218,169,217,134,219,140,216,175,46,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,
-112,34,32,61,32,34,217,190,216,177,216,175,216,167,216,178,216,180,32,216,181,216,175,216,167,32,216,167,216,178,32,216,183,216,177,219,140,217,130,32,216,175,216,179,218,169,216,170,216,167,217,190,32,216,167,216,178,32,216,177,216,167,217,135,32,216,
-175,217,136,216,177,32,216,175,216,177,32,216,175,216,179,216,170,216,177,216,179,32,217,134,219,140,216,179,216,170,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,58,34,32,61,32,34,216,170,216,177,216,167,216,178,32,218,169,216,
-177,216,175,217,134,32,216,181,216,175,216,167,58,34,13,10,0,0 };
+216,167,219,140,216,178,216,177,58,34,13,10,34,77,97,115,116,101,114,32,71,97,105,110,34,32,61,32,34,216,168,217,135,216,168,217,136,216,175,32,216,167,216,181,217,132,219,140,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,110,34,32,61,32,34,
+217,134,216,177,217,133,216,167,217,132,226,128,140,216,179,216,167,216,178,219,140,34,13,10,34,70,105,108,116,101,114,32,81,34,32,61,32,34,217,129,219,140,217,132,216,170,216,177,32,218,169,219,140,217,129,219,140,216,170,34,13,10,34,66,97,108,97,110,
+99,101,34,32,61,32,34,216,170,216,185,216,167,216,175,217,132,34,13,10,34,76,101,102,116,34,32,61,32,34,218,134,217,190,34,13,10,34,82,105,103,104,116,34,32,61,32,34,216,177,216,167,216,179,216,170,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,216,
+168,216,167,217,134,216,175,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,216,168,216,167,216,178,219,140,216,167,216,168,219,140,32,217,190,219,140,216,180,226,128,140,217,129,216,177,216,182,226,128,140,217,
+135,216,167,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,216,168,217,135,226,128,140,216,177,217,136,216,178,216,177,216,179,216,167,217,134,219,140,226,128,140,217,135,216,167,219,140,32,216,174,217,136,216,
+175,218,169,216,167,216,177,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,217,135,217,133,219,140,216,180,217,135,32,216,175,216,177,32,216,168,216,167,217,132,216,167,34,13,10,34,84,104,101,109,101,34,32,61,32,34,217,190,217,
+136,216,179,216,170,217,135,34,13,10,34,68,97,114,107,34,32,61,32,34,216,170,216,167,216,177,219,140,218,169,34,13,10,34,76,105,103,104,116,34,32,61,32,34,216,177,217,136,216,180,217,134,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,
+80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,216,170,216,177,216,172,219,140,216,173,32,216,175,216,179,216,170,218,175,216,167,217,135,32,216,174,216,177,217,136,216,172,219,140,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,
+32,61,32,34,216,167,217,134,216,170,216,174,216,167,216,168,32,217,190,219,140,216,180,226,128,140,216,170,217,134,216,184,219,140,217,133,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,216,167,218,169,217,136,217,132,216,167,219,140,216,
+178,216,177,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,216,167,217,136,217,132,217,136,219,140,216,170,226,128,140,216,168,217,134,216,175,219,140,32,216,175,
+216,179,216,170,218,175,216,167,217,135,226,128,140,217,135,216,167,219,140,32,216,174,216,177,217,136,216,172,219,140,32,216,172,216,175,219,140,216,175,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,
+119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,216,168,216,177,216,167,219,140,32,216,170,216,186,219,140,219,140,216,177,32,216,167,217,136,217,132,217,136,219,140,
+216,170,32,216,175,216,179,216,170,218,175,216,167,217,135,32,216,167,216,178,32,83,104,105,102,116,43,85,112,32,219,140,216,167,32,83,104,105,102,116,43,68,111,119,110,32,216,167,216,179,216,170,217,129,216,167,216,175,217,135,32,218,169,217,134,219,
+140,216,175,46,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,217,190,216,
+177,216,175,216,167,216,178,216,180,32,216,181,216,175,216,167,32,216,167,216,178,32,216,183,216,177,219,140,217,130,32,216,175,216,179,218,169,216,170,216,167,217,190,32,216,167,216,178,32,216,177,216,167,217,135,32,216,175,217,136,216,177,32,216,175,
+216,177,32,216,175,216,179,216,170,216,177,216,179,32,217,134,219,140,216,179,216,170,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,34,32,61,32,34,216,170,216,177,216,167,216,178,32,218,169,216,177,216,175,217,134,32,216,181,216,
+175,216,167,34,13,10,0,0 };
 
-const char* FxSound_fa_txt = (const char*) temp_binary_data_66;
+const char* FxSound_fa_txt = (const char*) temp_binary_data_73;
 
 //================== FxSound.fi.txt ==================
-static const unsigned char temp_binary_data_67[] =
+static const unsigned char temp_binary_data_74[] =
 "language: Finnish\r\n"
 "countries: fi\r\n"
 "\r\n"
@@ -5244,10 +5352,10 @@ static const unsigned char temp_binary_data_67[] =
 "\"Save\" = \"Tallenna\"\r\n"
 "\"Cancel\" = \"Peruuta\"\r\n"
 "\"Equalizer:\" = \"Taajuuskorjain:\"\r\n"
-"\"Master Gain:\" = \"Yleisvahvistus:\"\r\n"
-"\"Normalization:\" = \"Normalisointi:\"\r\n"
-"\"Filter Q:\" = \"Suodattimen Q-arvo:\"\r\n"
-"\"Balance:\" = \"Tasapaino:\"\r\n"
+"\"Master Gain\" = \"Yleisvahvistus\"\r\n"
+"\"Normalization\" = \"Normalisointi\"\r\n"
+"\"Filter Q\" = \"Suodattimen Q-arvo\"\r\n"
+"\"Balance\" = \"Tasapaino\"\r\n"
 "\"Left\" = \"Vasen\"\r\n"
 "\"Right\" = \"Oikea\"\r\n"
 "\" Bands\" = \" Kaistaa\"\r\n"
@@ -5263,12 +5371,12 @@ static const unsigned char temp_binary_data_67[] =
 "\"Prioritize new output devices\" = \"Priorisoi uudet ulostulolaitteet\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Muuta laitteen prioriteettia Shift+Yl\xc3\xb6s- tai Shift+Alas-n\xc3\xa4pp\xc3\xa4imell\xc3\xa4\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"\xc3\x84\xc3\xa4nenk\xc3\xa4sittely ei ole k\xc3\xa4ytett\xc3\xa4viss\xc3\xa4 et\xc3\xa4ty\xc3\xb6p\xc3\xb6yd\xc3\xa4n kautta\"\r\n"
-"\"Volume Leveling:\" = \"\xc3\x84\xc3\xa4nenvoimakkuuden tasoitus:\"";
+"\"Volume Leveling\" = \"\xc3\x84\xc3\xa4nenvoimakkuuden tasoitus\"";
 
-const char* FxSound_fi_txt = (const char*) temp_binary_data_67;
+const char* FxSound_fi_txt = (const char*) temp_binary_data_74;
 
 //================== FxSound.fr.txt ==================
-static const unsigned char temp_binary_data_68[] =
+static const unsigned char temp_binary_data_75[] =
 "language: French\r\n"
 "countries: fr\r\n"
 "\r\n"
@@ -5410,10 +5518,10 @@ static const unsigned char temp_binary_data_68[] =
 "\"Save\" = \"Enregistrer\"\r\n"
 "\"Cancel\" = \"Annuler\"\r\n"
 "\"Equalizer:\" = \"\xc3\x89galiseur :\"\r\n"
-"\"Master Gain:\" = \"Volume principal :\"\r\n"
-"\"Normalization:\" = \"Normalisation :\"\r\n"
-"\"Filter Q:\" = \"Facteur Q du filtre :\"\r\n"
-"\"Balance:\" = \"Balance :\"\r\n"
+"\"Master Gain\" = \"Volume principal\"\r\n"
+"\"Normalization\" = \"Normalisation\"\r\n"
+"\"Filter Q\" = \"Facteur Q du filtre\"\r\n"
+"\"Balance\" = \"Balance\"\r\n"
 "\"Left\" = \"Gauche\"\r\n"
 "\"Right\" = \"Droite\"\r\n"
 "\" Bands\" = \" bandes\"\r\n"
@@ -5429,12 +5537,12 @@ static const unsigned char temp_binary_data_68[] =
 "\"Prioritize new output devices\" = \"Prioriser les nouveaux p\xc3\xa9riph\xc3\xa9riques de sortie\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Utilisez Shift+Up ou Shift+Down pour modifier la priorit\xc3\xa9 de l\xe2\x80\x99""appareil\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"Le traitement audio n\xe2\x80\x99""est pas disponible via le Bureau \xc3\xa0 distance\"\r\n"
-"\"Volume Leveling:\" = \"Nivellement du volume :\"";
+"\"Volume Leveling\" = \"Nivellement du volume\"";
 
-const char* FxSound_fr_txt = (const char*) temp_binary_data_68;
+const char* FxSound_fr_txt = (const char*) temp_binary_data_75;
 
 //================== FxSound.hr.txt ==================
-static const unsigned char temp_binary_data_69[] =
+static const unsigned char temp_binary_data_76[] =
 "language: Croatian\r\n"
 "countries: HR\r\n"
 "\r\n"
@@ -5570,10 +5678,10 @@ static const unsigned char temp_binary_data_69[] =
 "\"Save\" = \"Spremi\"\r\n"
 "\"Cancel\" = \"Odustani\"\r\n"
 "\"Equalizer:\" = \"Ekvilajzer:\"\r\n"
-"\"Master Gain:\" = \"Glavna glasno\xc4\x87""a:\"\r\n"
-"\"Normalization:\" = \"Normalizacija:\"\r\n"
-"\"Filter Q:\" = \"Q filtra:\"\r\n"
-"\"Balance:\" = \"Balans:\"\r\n"
+"\"Master Gain\" = \"Glavna glasno\xc4\x87""a\"\r\n"
+"\"Normalization\" = \"Normalizacija\"\r\n"
+"\"Filter Q\" = \"Q filtra\"\r\n"
+"\"Balance\" = \"Balans\"\r\n"
 "\"Left\" = \"Lijevo\"\r\n"
 "\"Right\" = \"Desno\"\r\n"
 "\" Bands\" = \" pojaseva\"\r\n"
@@ -5589,12 +5697,12 @@ static const unsigned char temp_binary_data_69[] =
 "\"Prioritize new output devices\" = \"Daj prioritet novim izlaznim ure\xc4\x91""ajima\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Koristite Shift+Up ili Shift+Down za promjenu prioriteta ure\xc4\x91""aja\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"Audio obrada nije dostupna putem udaljene radne povr\xc5\xa1ine\"\r\n"
-"\"Volume Leveling:\" = \"Ujedna\xc4\x8d""avanje glasno\xc4\x87""e:\"";
+"\"Volume Leveling\" = \"Ujedna\xc4\x8d""avanje glasno\xc4\x87""e\"";
 
-const char* FxSound_hr_txt = (const char*) temp_binary_data_69;
+const char* FxSound_hr_txt = (const char*) temp_binary_data_76;
 
 //================== fxsound.hu.txt ==================
-static const unsigned char temp_binary_data_70[] =
+static const unsigned char temp_binary_data_77[] =
 "language: Hungarian\r\n"
 "countries: hu\r\n"
 "\r\n"
@@ -5740,10 +5848,10 @@ static const unsigned char temp_binary_data_70[] =
 "\"Save\" = \"Ment\xc3\xa9s\"\r\n"
 "\"Cancel\" = \"M\xc3\xa9gse\"\r\n"
 "\"Equalizer:\" = \"Equalizer:\"\r\n"
-"\"Master Gain:\" = \"F\xc5\x91 hanger\xc5\x91:\"\r\n"
-"\"Normalization:\" = \"Normaliz\xc3\xa1l\xc3\xa1s:\"\r\n"
-"\"Filter Q:\" = \"Sz\xc5\xb1r\xc5\x91 Q:\"\r\n"
-"\"Balance:\" = \"Egyens\xc3\xbaly:\"\r\n"
+"\"Master Gain\" = \"F\xc5\x91 hanger\xc5\x91\"\r\n"
+"\"Normalization\" = \"Normaliz\xc3\xa1l\xc3\xa1s\"\r\n"
+"\"Filter Q\" = \"Sz\xc5\xb1r\xc5\x91 Q\"\r\n"
+"\"Balance\" = \"Egyens\xc3\xbaly\"\r\n"
 "\"Left\" = \"Bal\"\r\n"
 "\"Right\" = \"Jobb\"\r\n"
 "\" Bands\" = \" s\xc3\xa1v\"\r\n"
@@ -5759,12 +5867,12 @@ static const unsigned char temp_binary_data_70[] =
 "\"Prioritize new output devices\" = \"\xc3\x9aj kimeneti eszk\xc3\xb6z\xc3\xb6k el\xc5\x91nyben r\xc3\xa9szes\xc3\xadt\xc3\xa9se\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"A Shift+Up vagy Shift+Down haszn\xc3\xa1lat\xc3\xa1val m\xc3\xb3""dos\xc3\xadthatja az eszk\xc3\xb6z priorit\xc3\xa1s\xc3\xa1t\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"A hangfeldolgoz\xc3\xa1s nem \xc3\xa9rhet\xc5\x91 el T\xc3\xa1voli asztalon kereszt\xc3\xbcl\"\r\n"
-"\"Volume Leveling:\" = \"Hanger\xc5\x91-kiegyenl\xc3\xadt\xc3\xa9s:\"";
+"\"Volume Leveling\" = \"Hanger\xc5\x91-kiegyenl\xc3\xadt\xc3\xa9s\"";
 
-const char* fxsound_hu_txt = (const char*) temp_binary_data_70;
+const char* fxsound_hu_txt = (const char*) temp_binary_data_77;
 
 //================== FxSound.id.txt ==================
-static const unsigned char temp_binary_data_71[] =
+static const unsigned char temp_binary_data_78[] =
 "language: Indonesian\r\n"
 "countries: id\r\n"
 "\r\n"
@@ -5900,10 +6008,10 @@ static const unsigned char temp_binary_data_71[] =
 "\"Save\" = \"Simpan\"\r\n"
 "\"Cancel\" = \"Batal\"\r\n"
 "\"Equalizer:\" = \"Equalizer:\"\r\n"
-"\"Master Gain:\" = \"Volume utama:\"\r\n"
-"\"Normalization:\" = \"Normalisasi:\"\r\n"
-"\"Filter Q:\" = \"Filter Q:\"\r\n"
-"\"Balance:\" = \"Keseimbangan:\"\r\n"
+"\"Master Gain\" = \"Volume utama\"\r\n"
+"\"Normalization\" = \"Normalisasi\"\r\n"
+"\"Filter Q\" = \"Filter Q\"\r\n"
+"\"Balance\" = \"Keseimbangan\"\r\n"
 "\"Left\" = \"Kiri\"\r\n"
 "\"Right\" = \"Kanan\"\r\n"
 "\" Bands\" = \" pita\"\r\n"
@@ -5919,12 +6027,12 @@ static const unsigned char temp_binary_data_71[] =
 "\"Prioritize new output devices\" = \"Prioritaskan perangkat keluaran baru\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Gunakan Shift+Up atau Shift+Down untuk mengubah prioritas perangkat\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"Pemrosesan audio tidak tersedia melalui Desktop Jauh\"\r\n"
-"\"Volume Leveling:\" = \"Perataan Volume:\"";
+"\"Volume Leveling\" = \"Perataan Volume\"";
 
-const char* FxSound_id_txt = (const char*) temp_binary_data_71;
+const char* FxSound_id_txt = (const char*) temp_binary_data_78;
 
 //================== FxSound.it.txt ==================
-static const unsigned char temp_binary_data_72[] =
+static const unsigned char temp_binary_data_79[] =
 "language: Italiano\r\n"
 "countries: it\r\n"
 "\r\n"
@@ -6063,10 +6171,10 @@ static const unsigned char temp_binary_data_72[] =
 "\"Save\" = \"Salva\"\r\n"
 "\"Cancel\" = \"Annulla\"\r\n"
 "\"Equalizer:\" = \"Equalizzatore:\"\r\n"
-"\"Master Gain:\" = \"Volume master:\"\r\n"
-"\"Normalization:\" = \"Normalizzazione:\"\r\n"
-"\"Filter Q:\" = \"Q del filtro:\"\r\n"
-"\"Balance:\" = \"Bilanciamento:\"\r\n"
+"\"Master Gain\" = \"Volume master\"\r\n"
+"\"Normalization\" = \"Normalizzazione\"\r\n"
+"\"Filter Q\" = \"Q del filtro\"\r\n"
+"\"Balance\" = \"Bilanciamento\"\r\n"
 "\"Left\" = \"Sinistra\"\r\n"
 "\"Right\" = \"Destra\"\r\n"
 "\" Bands\" = \" bande\"\r\n"
@@ -6082,12 +6190,12 @@ static const unsigned char temp_binary_data_72[] =
 "\"Prioritize new output devices\" = \"Dai priorit\xc3\xa0 ai nuovi dispositivi di uscita\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Usa Shift+Up o Shift+Down per modificare la priorit\xc3\xa0 del dispositivo\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"L'elaborazione audio non \xc3\xa8 disponibile tramite Desktop remoto\"\r\n"
-"\"Volume Leveling:\" = \"Livellamento del volume:\"";
+"\"Volume Leveling\" = \"Livellamento del volume\"";
 
-const char* FxSound_it_txt = (const char*) temp_binary_data_72;
+const char* FxSound_it_txt = (const char*) temp_binary_data_79;
 
 //================== FxSound.ja.txt ==================
-static const unsigned char temp_binary_data_73[] =
+static const unsigned char temp_binary_data_80[] =
 { 108,97,110,103,117,97,103,101,58,32,74,97,112,97,110,101,115,101,13,10,99,111,117,110,116,114,105,101,115,58,32,106,97,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,
 114,32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,
 104,114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,227,129,138,227,129,163,227,129,168,239,188,129,229,134,141,231,148,159,227,131,135,227,131,144,227,130,164,227,130,185,227,129,174,232,168,173,229,174,154,227,129,171,229,149,143,233,161,140,227,
@@ -6280,26 +6388,26 @@ static const unsigned char temp_binary_data_73[] =
 131,227,131,136,227,129,184,227,129,174,229,164,137,230,155,180,227,129,175,228,191,157,229,173,152,227,129,149,227,130,140,227,129,166,227,129,132,227,129,190,227,129,155,227,130,147,227,128,130,92,114,92,110,228,191,157,229,173,152,227,129,151,227,
 129,190,227,129,153,227,129,139,239,188,159,34,13,10,34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,227,131,151,227,131,170,227,130,187,227,131,131,227,131,136,227,130,146,228,191,157,229,173,152,34,13,10,34,83,97,118,101,34,32,61,32,34,228,
 191,157,229,173,152,34,13,10,34,67,97,110,99,101,108,34,32,61,32,34,227,130,173,227,131,163,227,131,179,227,130,187,227,131,171,34,13,10,34,69,113,117,97,108,105,122,101,114,58,34,32,61,32,34,227,130,164,227,130,179,227,131,169,227,130,164,227,130,182,
-227,131,188,58,34,13,10,34,77,97,115,116,101,114,32,71,97,105,110,58,34,32,61,32,34,227,131,158,227,130,185,227,130,191,227,131,188,227,131,156,227,131,170,227,131,165,227,131,188,227,131,160,58,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,
-110,58,34,32,61,32,34,227,131,142,227,131,188,227,131,158,227,131,169,227,130,164,227,130,186,58,34,13,10,34,70,105,108,116,101,114,32,81,58,34,32,61,32,34,227,131,149,227,130,163,227,131,171,227,130,191,227,131,188,81,58,34,13,10,34,66,97,108,97,110,
-99,101,58,34,32,61,32,34,227,131,144,227,131,169,227,131,179,227,130,185,58,34,13,10,34,76,101,102,116,34,32,61,32,34,229,183,166,34,13,10,34,82,105,103,104,116,34,32,61,32,34,229,143,179,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,227,131,144,
-227,131,179,227,131,137,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,227,131,135,227,131,149,227,130,169,227,131,171,227,131,136,227,129,171,230,136,187,227,129,153,34,13,10,34,65,117,116,111,109,97,116,105,99,
-32,117,112,100,97,116,101,115,34,32,61,32,34,232,135,170,229,139,149,230,155,180,230,150,176,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,229,184,184,227,129,171,230,156,128,229,137,141,233,157,162,227,129,171,232,161,168,
-231,164,186,34,13,10,34,84,104,101,109,101,34,32,61,32,34,227,131,134,227,131,188,227,131,158,34,13,10,34,68,97,114,107,34,32,61,32,34,227,131,128,227,131,188,227,130,175,34,13,10,34,76,105,103,104,116,34,32,61,32,34,227,131,169,227,130,164,227,131,136,
-34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,229,135,186,229,138,155,227,131,135,227,131,144,227,130,164,227,130,185,232,168,173,229,174,154,34,13,10,34,83,101,108,101,99,116,32,112,
-114,101,115,101,116,34,32,61,32,34,227,131,151,227,131,170,227,130,187,227,131,131,227,131,136,227,130,146,233,129,184,230,138,158,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,227,130,164,227,130,179,227,131,169,227,130,164,227,130,182,
-227,131,188,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,230,150,176,227,129,151,227,129,132,229,135,186,229,138,155,227,131,135,227,131,144,227,130,164,227,
-130,185,227,130,146,229,132,170,229,133,136,227,129,153,227,130,139,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,
-32,112,114,105,111,114,105,116,121,34,32,61,32,34,83,104,105,102,116,43,85,112,32,227,129,190,227,129,159,227,129,175,32,83,104,105,102,116,43,68,111,119,110,32,227,130,146,228,189,191,231,148,168,227,129,151,227,129,166,227,131,135,227,131,144,227,130,
-164,227,130,185,227,129,174,229,132,170,229,133,136,233,160,134,228,189,141,227,130,146,229,164,137,230,155,180,227,129,151,227,129,190,227,129,153,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,
-97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,227,130,170,227,131,188,227,131,135,227,130,163,227,130,170,229,135,166,231,144,134,227,129,175,227,131,170,227,131,162,227,131,
-188,227,131,136,32,227,131,135,227,130,185,227,130,175,227,131,136,227,131,131,227,131,151,227,129,167,227,129,175,229,136,169,231,148,168,227,129,167,227,129,141,227,129,190,227,129,155,227,130,147,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,
-108,105,110,103,58,34,32,61,32,34,233,159,179,233,135,143,229,185,179,230,186,150,229,140,150,58,34,0,0 };
+227,131,188,58,34,13,10,34,77,97,115,116,101,114,32,71,97,105,110,34,32,61,32,34,227,131,158,227,130,185,227,130,191,227,131,188,227,131,156,227,131,170,227,131,165,227,131,188,227,131,160,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,110,
+34,32,61,32,34,227,131,142,227,131,188,227,131,158,227,131,169,227,130,164,227,130,186,34,13,10,34,70,105,108,116,101,114,32,81,34,32,61,32,34,227,131,149,227,130,163,227,131,171,227,130,191,227,131,188,81,34,13,10,34,66,97,108,97,110,99,101,34,32,61,
+32,34,227,131,144,227,131,169,227,131,179,227,130,185,34,13,10,34,76,101,102,116,34,32,61,32,34,229,183,166,34,13,10,34,82,105,103,104,116,34,32,61,32,34,229,143,179,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,227,131,144,227,131,179,227,131,137,
+34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,227,131,135,227,131,149,227,130,169,227,131,171,227,131,136,227,129,171,230,136,187,227,129,153,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,
+101,115,34,32,61,32,34,232,135,170,229,139,149,230,155,180,230,150,176,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,229,184,184,227,129,171,230,156,128,229,137,141,233,157,162,227,129,171,232,161,168,231,164,186,34,13,10,34,
+84,104,101,109,101,34,32,61,32,34,227,131,134,227,131,188,227,131,158,34,13,10,34,68,97,114,107,34,32,61,32,34,227,131,128,227,131,188,227,130,175,34,13,10,34,76,105,103,104,116,34,32,61,32,34,227,131,169,227,130,164,227,131,136,34,13,10,34,79,117,116,
+112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,229,135,186,229,138,155,227,131,135,227,131,144,227,130,164,227,130,185,232,168,173,229,174,154,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,
+34,32,61,32,34,227,131,151,227,131,170,227,130,187,227,131,131,227,131,136,227,130,146,233,129,184,230,138,158,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,227,130,164,227,130,179,227,131,169,227,130,164,227,130,182,227,131,188,34,13,
+10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,230,150,176,227,129,151,227,129,132,229,135,186,229,138,155,227,131,135,227,131,144,227,130,164,227,130,185,227,130,146,
+229,132,170,229,133,136,227,129,153,227,130,139,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,
+114,105,116,121,34,32,61,32,34,83,104,105,102,116,43,85,112,32,227,129,190,227,129,159,227,129,175,32,83,104,105,102,116,43,68,111,119,110,32,227,130,146,228,189,191,231,148,168,227,129,151,227,129,166,227,131,135,227,131,144,227,130,164,227,130,185,
+227,129,174,229,132,170,229,133,136,233,160,134,228,189,141,227,130,146,229,164,137,230,155,180,227,129,151,227,129,190,227,129,153,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,97,105,108,
+97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,227,130,170,227,131,188,227,131,135,227,130,163,227,130,170,229,135,166,231,144,134,227,129,175,227,131,170,227,131,162,227,131,188,227,131,136,32,
+227,131,135,227,130,185,227,130,175,227,131,136,227,131,131,227,131,151,227,129,167,227,129,175,229,136,169,231,148,168,227,129,167,227,129,141,227,129,190,227,129,155,227,130,147,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,34,
+32,61,32,34,233,159,179,233,135,143,229,185,179,230,186,150,229,140,150,34,0,0 };
 
-const char* FxSound_ja_txt = (const char*) temp_binary_data_73;
+const char* FxSound_ja_txt = (const char*) temp_binary_data_80;
 
 //================== FxSound.ko.txt ==================
-static const unsigned char temp_binary_data_74[] =
+static const unsigned char temp_binary_data_81[] =
 { 108,97,110,103,117,97,103,101,58,32,75,111,114,101,97,110,13,10,99,111,117,110,116,114,105,101,115,58,32,107,114,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,114,32,
 112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,104,114,
 111,117,103,104,32,116,104,101,32,34,32,61,32,34,236,157,180,235,159,176,33,32,236,158,172,236,131,157,32,236,158,165,236,185,152,32,236,132,164,236,160,149,236,151,144,32,235,172,184,236,160,156,234,176,128,32,236,158,136,236,138,181,235,139,136,235,
@@ -6474,25 +6582,24 @@ static const unsigned char temp_binary_data_74[] =
 32,115,97,118,101,63,34,32,61,32,34,237,148,132,235,166,172,236,133,139,32,235,179,128,234,178,189,32,236,130,172,237,149,173,236,157,180,32,236,160,128,236,158,165,235,144,152,236,167,128,32,236,149,138,236,138,181,235,139,136,235,139,164,46,92,114,
 92,110,236,160,128,236,158,165,237,149,152,236,139,156,234,178,160,236,138,181,235,139,136,234,185,140,63,34,13,10,34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,237,148,132,235,166,172,236,133,139,32,236,160,128,236,158,165,34,13,10,34,83,
 97,118,101,34,32,61,32,34,236,160,128,236,158,165,34,13,10,34,67,97,110,99,101,108,34,32,61,32,34,236,183,168,236,134,140,34,13,10,34,69,113,117,97,108,105,122,101,114,58,34,32,61,32,34,236,157,180,237,128,132,235,157,188,236,157,180,236,160,128,58,34,
-13,10,34,77,97,115,116,101,114,32,71,97,105,110,58,34,32,61,32,34,235,167,136,236,138,164,237,132,176,32,234,178,140,236,157,184,58,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,110,58,34,32,61,32,34,236,160,149,234,183,156,237,153,148,58,
-34,13,10,34,70,105,108,116,101,114,32,81,58,34,32,61,32,34,237,149,132,237,132,176,32,81,58,34,13,10,34,66,97,108,97,110,99,101,58,34,32,61,32,34,236,157,140,234,183,160,237,152,149,58,34,13,10,34,76,101,102,116,34,32,61,32,34,236,153,188,236,170,189,
-34,13,10,34,82,105,103,104,116,34,32,61,32,34,236,152,164,235,165,184,236,170,189,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,235,176,180,235,147,156,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,234,184,
-176,235,179,184,234,176,146,32,235,179,181,236,155,144,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,236,158,144,235,143,153,32,236,151,133,235,141,176,236,157,180,237,138,184,34,13,10,34,65,108,119,97,121,
-115,32,79,110,32,84,111,112,34,32,61,32,34,237,149,173,236,131,129,32,235,167,168,32,236,156,132,236,151,144,34,13,10,34,84,104,101,109,101,34,32,61,32,34,237,133,140,235,167,136,34,13,10,34,68,97,114,107,34,32,61,32,34,236,150,180,235,145,144,236,154,
-180,34,13,10,34,76,105,103,104,116,34,32,61,32,34,235,176,157,236,157,128,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,236,182,156,235,160,165,32,236,158,165,236,185,152,32,236,132,
-164,236,160,149,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,237,148,132,235,166,172,236,133,139,32,236,132,160,237,131,157,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,236,157,180,237,128,132,235,157,188,
-236,157,180,236,160,128,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,236,131,136,32,236,182,156,235,160,165,32,236,158,165,236,185,152,236,157,152,32,236,154,
-176,236,132,160,236,136,156,236,156,132,32,236,167,128,236,160,149,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,
-32,112,114,105,111,114,105,116,121,34,32,61,32,34,83,104,105,102,116,43,85,112,32,235,152,144,235,138,148,32,83,104,105,102,116,43,68,111,119,110,236,157,132,32,236,130,172,236,154,169,237,149,152,236,151,172,32,236,158,165,236,185,152,32,236,154,176,
-236,132,160,236,136,156,236,156,132,235,165,188,32,235,179,128,234,178,189,237,149,169,235,139,136,235,139,164,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,
-118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,236,152,164,235,148,148,236,152,164,32,236,178,152,235,166,172,235,138,148,32,236,155,144,234,178,169,32,235,141,176,236,138,164,237,129,172,237,134,177,236,151,144,236,
-132,156,32,236,130,172,236,154,169,237,149,160,32,236,136,152,32,236,151,134,236,138,181,235,139,136,235,139,164,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,58,34,32,61,32,34,235,179,188,235,165,168,32,237,143,137,236,164,128,
-237,153,148,58,34,13,10,0,0 };
+13,10,34,77,97,115,116,101,114,32,71,97,105,110,34,32,61,32,34,235,167,136,236,138,164,237,132,176,32,234,178,140,236,157,184,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,110,34,32,61,32,34,236,160,149,234,183,156,237,153,148,34,13,10,34,
+70,105,108,116,101,114,32,81,34,32,61,32,34,237,149,132,237,132,176,32,81,34,13,10,34,66,97,108,97,110,99,101,34,32,61,32,34,236,157,140,234,183,160,237,152,149,34,13,10,34,76,101,102,116,34,32,61,32,34,236,153,188,236,170,189,34,13,10,34,82,105,103,
+104,116,34,32,61,32,34,236,152,164,235,165,184,236,170,189,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,235,176,180,235,147,156,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,234,184,176,235,179,184,234,176,
+146,32,235,179,181,236,155,144,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,236,158,144,235,143,153,32,236,151,133,235,141,176,236,157,180,237,138,184,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,
+112,34,32,61,32,34,237,149,173,236,131,129,32,235,167,168,32,236,156,132,236,151,144,34,13,10,34,84,104,101,109,101,34,32,61,32,34,237,133,140,235,167,136,34,13,10,34,68,97,114,107,34,32,61,32,34,236,150,180,235,145,144,236,154,180,34,13,10,34,76,105,
+103,104,116,34,32,61,32,34,235,176,157,236,157,128,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,236,182,156,235,160,165,32,236,158,165,236,185,152,32,236,132,164,236,160,149,34,13,
+10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,237,148,132,235,166,172,236,133,139,32,236,132,160,237,131,157,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,236,157,180,237,128,132,235,157,188,236,157,180,236,160,
+128,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,236,131,136,32,236,182,156,235,160,165,32,236,158,165,236,185,152,236,157,152,32,236,154,176,236,132,160,236,
+136,156,236,156,132,32,236,167,128,236,160,149,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,
+105,116,121,34,32,61,32,34,83,104,105,102,116,43,85,112,32,235,152,144,235,138,148,32,83,104,105,102,116,43,68,111,119,110,236,157,132,32,236,130,172,236,154,169,237,149,152,236,151,172,32,236,158,165,236,185,152,32,236,154,176,236,132,160,236,136,156,
+236,156,132,235,165,188,32,235,179,128,234,178,189,237,149,169,235,139,136,235,139,164,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,
+109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,236,152,164,235,148,148,236,152,164,32,236,178,152,235,166,172,235,138,148,32,236,155,144,234,178,169,32,235,141,176,236,138,164,237,129,172,237,134,177,236,151,144,236,132,156,32,236,130,172,
+236,154,169,237,149,160,32,236,136,152,32,236,151,134,236,138,181,235,139,136,235,139,164,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,34,32,61,32,34,235,179,188,235,165,168,32,237,143,137,236,164,128,237,153,148,34,13,10,0,0 };
 
-const char* FxSound_ko_txt = (const char*) temp_binary_data_74;
+const char* FxSound_ko_txt = (const char*) temp_binary_data_81;
 
 //================== FxSound.nl.txt ==================
-static const unsigned char temp_binary_data_75[] =
+static const unsigned char temp_binary_data_82[] =
 "\"Oops! There\\'s an issue with your playback device settings.\\r\\nBefore we can get started, please go through the \" = \"Oeps! Er is een probleem met de instellingen van uw afspeelapparaat.\\r\\nVoordat we kunnen beginnen, doorloopt u eerst de \"\r"
 "\n"
 "\"troubleshooting steps here.\" = \"probleemoplossingsstappen hier.\"\r\n"
@@ -6626,10 +6733,10 @@ static const unsigned char temp_binary_data_75[] =
 "\"Save\" = \"Opslaan\"\r\n"
 "\"Cancel\" = \"Annuleren\"\r\n"
 "\"Equalizer:\" = \"Equalizer:\"\r\n"
-"\"Master Gain:\" = \"Mastervolume:\"\r\n"
-"\"Normalization:\" = \"Normalisatie:\"\r\n"
-"\"Filter Q:\" = \"Filter-Q:\"\r\n"
-"\"Balance:\" = \"Balans:\"\r\n"
+"\"Master Gain\" = \"Mastervolume\"\r\n"
+"\"Normalization\" = \"Normalisatie\"\r\n"
+"\"Filter Q\" = \"Filter-Q\"\r\n"
+"\"Balance\" = \"Balans\"\r\n"
 "\"Left\" = \"Links\"\r\n"
 "\"Right\" = \"Rechts\"\r\n"
 "\" Bands\" = \" banden\"\r\n"
@@ -6645,12 +6752,12 @@ static const unsigned char temp_binary_data_75[] =
 "\"Prioritize new output devices\" = \"Nieuwe uitvoerapparaten prioriteit geven\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Gebruik Shift+Up of Shift+Down om de apparaatprioriteit te wijzigen\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"Audioverwerking is niet beschikbaar via extern bureaublad\"\r\n"
-"\"Volume Leveling:\" = \"Volume-egalisatie:\"";
+"\"Volume Leveling\" = \"Volume-egalisatie\"";
 
-const char* FxSound_nl_txt = (const char*) temp_binary_data_75;
+const char* FxSound_nl_txt = (const char*) temp_binary_data_82;
 
 //================== FxSound.no.txt ==================
-static const unsigned char temp_binary_data_76[] =
+static const unsigned char temp_binary_data_83[] =
 "language: Norsk\r\n"
 "countries: no\r\n"
 "\r\n"
@@ -6786,10 +6893,10 @@ static const unsigned char temp_binary_data_76[] =
 "\"Save\" = \"Lagre\"\r\n"
 "\"Cancel\" = \"Avbryt\"\r\n"
 "\"Equalizer:\" = \"Equalizer:\"\r\n"
-"\"Master Gain: = \"Mastervolum:\"\r\n"
-"\"Normalization:\" = \"Normalisering:\"\r\n"
-"\"Filter Q:\" = \"Filter Q:\"\r\n"
-"\"Balance:\" = \"Balanse:\"\r\n"
+"\"Master Gain\" = \"Mastervolum\"\r\n"
+"\"Normalization\" = \"Normalisering\"\r\n"
+"\"Filter Q\" = \"Filter Q\"\r\n"
+"\"Balance\" = \"Balanse\"\r\n"
 "\"Left\" = \"Venstre\"\r\n"
 "\"Right\" = \"H\xc3\xb8yre\"\r\n"
 "\" Bands\" = \" Band\"\r\n"
@@ -6805,12 +6912,12 @@ static const unsigned char temp_binary_data_76[] =
 "\"Prioritize new output devices\" = \"Prioriter nye utdataenheter\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Bruk Shift+Up eller Shift+Down for \xc3\xa5 endre enhetsprioriteten\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"Lydprosessering er ikke tilgjengelig over Eksternt skrivebord\"\r\n"
-"\"Volume Leveling:\" = \"Volumutjevning:\"";
+"\"Volume Leveling\" = \"Volumutjevning\"";
 
-const char* FxSound_no_txt = (const char*) temp_binary_data_76;
+const char* FxSound_no_txt = (const char*) temp_binary_data_83;
 
 //================== FxSound.pl.txt ==================
-static const unsigned char temp_binary_data_77[] =
+static const unsigned char temp_binary_data_84[] =
 "language: Polish\r\n"
 "countries: pl\r\n"
 "\r\n"
@@ -6955,10 +7062,10 @@ static const unsigned char temp_binary_data_77[] =
 "\"Save\" = \"Zapisz\"\r\n"
 "\"Cancel\" = \"Anuluj\"\r\n"
 "\"Equalizer:\" = \"Equalizer:\"\r\n"
-"\"Master Gain:\" = \"G\xc5\x82\xc3\xb3wna g\xc5\x82o\xc5\x9bno\xc5\x9b\xc4\x87:\"\r\n"
-"\"Normalization:\" = \"Normalizacja:\"\r\n"
-"\"Filter Q:\" = \"Q filtra:\"\r\n"
-"\"Balance:\" = \"Balans:\"\r\n"
+"\"Master Gain\" = \"G\xc5\x82\xc3\xb3wna g\xc5\x82o\xc5\x9bno\xc5\x9b\xc4\x87\"\r\n"
+"\"Normalization\" = \"Normalizacja\"\r\n"
+"\"Filter Q\" = \"Q filtra\"\r\n"
+"\"Balance\" = \"Balans\"\r\n"
 "\"Left\" = \"Lewo\"\r\n"
 "\"Right\" = \"Prawo\"\r\n"
 "\" Bands\" = \" pasm\"\r\n"
@@ -6974,12 +7081,12 @@ static const unsigned char temp_binary_data_77[] =
 "\"Prioritize new output devices\" = \"Nadaj priorytet nowym urz\xc4\x85""dzeniom wyj\xc5\x9b""ciowym\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"U\xc5\xbcyj Shift+Up lub Shift+Down, aby zmieni\xc4\x87 priorytet urz\xc4\x85""dzenia\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"Przetwarzanie d\xc5\xbawi\xc4\x99ku nie jest dost\xc4\x99pne przez Pulpit zdalny\"\r\n"
-"\"Volume Leveling:\" = \"Wyr\xc3\xb3wnywanie g\xc5\x82o\xc5\x9bno\xc5\x9b""ci:\"";
+"\"Volume Leveling\" = \"Wyr\xc3\xb3wnywanie g\xc5\x82o\xc5\x9bno\xc5\x9b""ci\"";
 
-const char* FxSound_pl_txt = (const char*) temp_binary_data_77;
+const char* FxSound_pl_txt = (const char*) temp_binary_data_84;
 
 //================== FxSound.pt-br.txt ==================
-static const unsigned char temp_binary_data_78[] =
+static const unsigned char temp_binary_data_85[] =
 "language: Brazilian Portuguese \r\n"
 "countries: br\r\n"
 "\r\n"
@@ -7117,10 +7224,10 @@ static const unsigned char temp_binary_data_78[] =
 "\"Save\" = \"Salvar\"\r\n"
 "\"Cancel\" = \"Cancelar\"\r\n"
 "\"Equalizer:\" = \"Equalizador:\"\r\n"
-"\"Master Gain:\" = \"Volume master:\"\r\n"
-"\"Normalization:\" = \"Normaliza\xc3\xa7\xc3\xa3o:\"\r\n"
-"\"Filter Q:\" = \"Q do filtro:\"\r\n"
-"\"Balance:\" = \"Balan\xc3\xa7o:\"\r\n"
+"\"Master Gain\" = \"Volume master\"\r\n"
+"\"Normalization\" = \"Normaliza\xc3\xa7\xc3\xa3o\"\r\n"
+"\"Filter Q\" = \"Q do filtro\"\r\n"
+"\"Balance\" = \"Balan\xc3\xa7o\"\r\n"
 "\"Left\" = \"Esquerda\"\r\n"
 "\"Right\" = \"Direita\"\r\n"
 "\" Bands\" = \" bandas\"\r\n"
@@ -7136,12 +7243,12 @@ static const unsigned char temp_binary_data_78[] =
 "\"Prioritize new output devices\" = \"Dar prioridade a novos dispositivos de sa\xc3\xad""da\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Use Shift+Up ou Shift+Down para alterar a prioridade do dispositivo\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"O processamento de \xc3\xa1udio n\xc3\xa3o est\xc3\xa1 dispon\xc3\xadvel atrav\xc3\xa9s da \xc3\x81rea de Trabalho Remota\"\r\n"
-"\"Volume Leveling:\" = \"Nivelamento de volume:\"";
+"\"Volume Leveling\" = \"Nivelamento de volume\"";
 
-const char* FxSound_ptbr_txt = (const char*) temp_binary_data_78;
+const char* FxSound_ptbr_txt = (const char*) temp_binary_data_85;
 
 //================== FxSound.pt.txt ==================
-static const unsigned char temp_binary_data_79[] =
+static const unsigned char temp_binary_data_86[] =
 "language: Portuguese\r\n"
 "countries: pt\r\n"
 "\r\n"
@@ -7278,10 +7385,10 @@ static const unsigned char temp_binary_data_79[] =
 "\"Save\" = \"Guardar\"\r\n"
 "\"Cancel\" = \"Cancelar\"\r\n"
 "\"Equalizer:\" = \"Equalizador:\"\r\n"
-"\"Master Gain:\" = \"Volume principal:\"\r\n"
-"\"Normalization:\" = \"Normaliza\xc3\xa7\xc3\xa3o:\"\r\n"
-"\"Filter Q:\" = \"Q do filtro:\"\r\n"
-"\"Balance:\" = \"Equil\xc3\xad""brio:\"\r\n"
+"\"Master Gain\" = \"Volume principal\"\r\n"
+"\"Normalization\" = \"Normaliza\xc3\xa7\xc3\xa3o\"\r\n"
+"\"Filter Q\" = \"Q do filtro\"\r\n"
+"\"Balance\" = \"Equil\xc3\xad""brio\"\r\n"
 "\"Left\" = \"Esquerda\"\r\n"
 "\"Right\" = \"Direita\"\r\n"
 "\" Bands\" = \" bandas\"\r\n"
@@ -7297,12 +7404,12 @@ static const unsigned char temp_binary_data_79[] =
 "\"Prioritize new output devices\" = \"Dar prioridade a novos dispositivos de sa\xc3\xad""da\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Use Shift+Up ou Shift+Down para alterar a prioridade do dispositivo\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"O processamento de \xc3\xa1udio n\xc3\xa3o est\xc3\xa1 dispon\xc3\xadvel atrav\xc3\xa9s do Ambiente de Trabalho Remoto\"\r\n"
-"\"Volume Leveling:\" = \"Nivelamento de volume:\"";
+"\"Volume Leveling\" = \"Nivelamento de volume\"";
 
-const char* FxSound_pt_txt = (const char*) temp_binary_data_79;
+const char* FxSound_pt_txt = (const char*) temp_binary_data_86;
 
 //================== FxSound.ro.txt ==================
-static const unsigned char temp_binary_data_80[] =
+static const unsigned char temp_binary_data_87[] =
 "language: Romanian\r\n"
 "countries: ro\r\n"
 "\r\n"
@@ -7444,10 +7551,10 @@ static const unsigned char temp_binary_data_80[] =
 "\"Save\" = \"Salveaz\xc4\x83\"\r\n"
 "\"Cancel\" = \"Anuleaz\xc4\x83\"\r\n"
 "\"Equalizer:\" = \"Egalizator:\"\r\n"
-"\"Master Gain:\" = \"Volum principal:\"\r\n"
-"\"Normalization:\" = \"Normalizare:\"\r\n"
-"\"Filter Q:\" = \"Q filtru:\"\r\n"
-"\"Balance:\" = \"Balans:\"\r\n"
+"\"Master Gain\" = \"Volum principal\"\r\n"
+"\"Normalization\" = \"Normalizare\"\r\n"
+"\"Filter Q\" = \"Q filtru\"\r\n"
+"\"Balance\" = \"Balans\"\r\n"
 "\"Left\" = \"St\xc3\xa2nga\"\r\n"
 "\"Right\" = \"Dreapta\"\r\n"
 "\" Bands\" = \" benzi\"\r\n"
@@ -7463,12 +7570,12 @@ static const unsigned char temp_binary_data_80[] =
 "\"Prioritize new output devices\" = \"Prioritizeaz\xc4\x83 noile dispozitive de ie\xc8\x99ire\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Folose\xc8\x99te Shift+Up sau Shift+Down pentru a schimba prioritatea dispozitivului\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"Procesarea audio nu este disponibil\xc4\x83 prin Desktop la distan\xc8\x9b\xc4\x83\"\r\n"
-"\"Volume Leveling:\" = \"Nivelare volum:\"";
+"\"Volume Leveling\" = \"Nivelare volum\"";
 
-const char* FxSound_ro_txt = (const char*) temp_binary_data_80;
+const char* FxSound_ro_txt = (const char*) temp_binary_data_87;
 
 //================== FxSound.ru.txt ==================
-static const unsigned char temp_binary_data_81[] =
+static const unsigned char temp_binary_data_88[] =
 { 108,97,110,103,117,97,103,101,58,32,82,117,115,115,105,97,110,13,10,99,111,117,110,116,114,105,101,115,58,32,114,117,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,114,
 32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,104,
 114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,208,158,208,185,33,32,208,146,208,190,208,183,208,189,208,184,208,186,208,187,208,184,32,208,191,209,128,208,190,208,177,208,187,208,181,208,188,209,139,32,209,129,32,209,131,209,129,209,130,209,128,
@@ -7700,30 +7807,30 @@ static const unsigned char temp_binary_data_81[] =
 184,32,209,129,208,190,209,133,209,128,208,176,208,189,208,181,208,189,209,139,46,92,114,92,110,208,165,208,190,209,130,208,184,209,130,208,181,32,208,184,209,133,32,209,129,208,190,209,133,209,128,208,176,208,189,208,184,209,130,209,140,63,34,13,10,
 34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,208,161,208,190,209,133,209,128,208,176,208,189,208,184,209,130,209,140,32,209,136,208,176,208,177,208,187,208,190,208,189,34,13,10,34,83,97,118,101,34,32,61,32,34,208,161,208,190,209,133,209,
 128,208,176,208,189,208,184,209,130,209,140,34,13,10,34,67,97,110,99,101,108,34,32,61,32,34,208,158,209,130,208,188,208,181,208,189,208,176,34,13,10,34,69,113,117,97,108,105,122,101,114,58,34,32,61,32,34,208,173,208,186,208,178,208,176,208,187,208,176,
-208,185,208,183,208,181,209,128,58,34,13,10,34,77,97,115,116,101,114,32,71,97,105,110,58,34,32,61,32,34,208,158,209,129,208,189,208,190,208,178,208,189,208,190,208,181,32,209,131,209,129,208,184,208,187,208,181,208,189,208,184,208,181,58,34,13,10,34,
-78,111,114,109,97,108,105,122,97,116,105,111,110,58,34,32,61,32,34,208,157,208,190,209,128,208,188,208,176,208,187,208,184,208,183,208,176,209,134,208,184,209,143,58,34,13,10,34,70,105,108,116,101,114,32,81,58,34,32,61,32,34,81,32,209,132,208,184,208,
-187,209,140,209,130,209,128,58,34,13,10,34,66,97,108,97,110,99,101,58,34,32,61,32,34,208,145,208,176,208,187,208,176,208,189,209,129,58,34,13,10,34,76,101,102,116,34,32,61,32,34,208,155,208,181,208,178,209,139,208,185,34,13,10,34,82,105,103,104,116,34,
-32,61,32,34,208,159,209,128,208,176,208,178,209,139,208,185,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,208,191,208,190,208,187,208,190,209,129,208,189,209,139,208,185,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,
-32,61,32,34,208,146,208,190,209,129,209,129,209,130,208,176,208,189,208,190,208,178,208,184,209,130,209,140,32,208,183,208,189,208,176,209,135,208,181,208,189,208,184,209,143,32,208,191,208,190,32,209,131,208,188,208,190,208,187,209,135,208,176,208,189,
-208,184,209,142,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,208,144,208,178,209,130,208,190,208,188,208,176,209,130,208,184,209,135,208,181,209,129,208,186,208,184,208,181,32,208,190,208,177,208,189,208,190,
-208,178,208,187,208,181,208,189,208,184,209,143,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,208,146,209,129,208,181,208,179,208,180,208,176,32,209,129,208,178,208,181,209,128,209,133,209,131,34,13,10,34,84,104,101,109,101,
-34,32,61,32,34,208,162,208,181,208,188,208,176,34,13,10,34,68,97,114,107,34,32,61,32,34,208,162,209,145,208,188,208,189,208,176,209,143,34,13,10,34,76,105,103,104,116,34,32,61,32,34,208,161,208,178,208,181,209,130,208,187,208,176,209,143,34,13,10,34,
-79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,208,157,208,176,209,129,209,130,209,128,208,190,208,185,208,186,208,176,32,209,131,209,129,209,130,209,128,208,190,208,185,209,129,209,130,208,178,
-208,176,32,208,178,209,139,208,178,208,190,208,180,208,176,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,208,146,209,139,208,177,209,128,208,176,209,130,209,140,32,209,136,208,176,208,177,208,187,208,190,208,189,34,13,10,
-34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,208,173,208,186,208,178,208,176,208,187,208,176,208,185,208,183,208,181,209,128,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,
-115,34,32,61,32,34,208,159,209,128,208,184,208,190,209,128,208,184,209,130,208,181,209,130,32,208,180,208,187,209,143,32,208,189,208,190,208,178,209,139,209,133,32,209,131,209,129,209,130,209,128,208,190,208,185,209,129,209,130,208,178,32,208,178,209,
-139,208,178,208,190,208,180,208,176,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,
-121,34,32,61,32,34,208,152,209,129,208,191,208,190,208,187,209,140,208,183,208,190,208,178,208,176,209,130,209,140,32,83,104,105,102,116,43,85,112,32,208,184,208,187,208,184,32,83,104,105,102,116,43,68,111,119,110,44,32,208,180,208,187,209,143,32,208,
-184,208,183,208,188,208,181,208,189,208,181,208,189,208,184,209,143,32,208,191,209,128,208,184,208,190,209,128,208,184,209,130,208,181,209,130,208,176,32,209,131,209,129,209,130,209,128,208,190,208,185,209,129,209,130,208,178,208,176,34,13,10,34,65,117,
-100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,208,158,208,177,209,128,208,176,208,177,208,190,
-209,130,208,186,208,176,32,208,176,209,131,208,180,208,184,208,190,32,208,189,208,181,208,180,208,190,209,129,209,130,209,131,208,191,208,189,208,176,32,209,135,208,181,209,128,208,181,208,183,32,209,131,208,180,208,176,208,187,209,145,208,189,208,189,
-209,139,208,185,32,209,128,208,176,208,177,208,190,209,135,208,184,208,185,32,209,129,209,130,208,190,208,187,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,58,34,32,61,32,34,208,146,209,139,209,128,208,176,208,178,208,189,208,184,
-208,178,208,176,208,189,208,184,208,181,32,208,179,209,128,208,190,208,188,208,186,208,190,209,129,209,130,208,184,58,34,0,0 };
+208,185,208,183,208,181,209,128,58,34,13,10,34,77,97,115,116,101,114,32,71,97,105,110,34,32,61,32,34,208,158,209,129,208,189,208,190,208,178,208,189,208,190,208,181,32,209,131,209,129,208,184,208,187,208,181,208,189,208,184,208,181,34,13,10,34,78,111,
+114,109,97,108,105,122,97,116,105,111,110,34,32,61,32,34,208,157,208,190,209,128,208,188,208,176,208,187,208,184,208,183,208,176,209,134,208,184,209,143,34,13,10,34,70,105,108,116,101,114,32,81,34,32,61,32,34,81,32,209,132,208,184,208,187,209,140,209,
+130,209,128,34,13,10,34,66,97,108,97,110,99,101,34,32,61,32,34,208,145,208,176,208,187,208,176,208,189,209,129,34,13,10,34,76,101,102,116,34,32,61,32,34,208,155,208,181,208,178,209,139,208,185,34,13,10,34,82,105,103,104,116,34,32,61,32,34,208,159,209,
+128,208,176,208,178,209,139,208,185,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,208,191,208,190,208,187,208,190,209,129,208,189,209,139,208,185,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,208,146,208,
+190,209,129,209,129,209,130,208,176,208,189,208,190,208,178,208,184,209,130,209,140,32,208,183,208,189,208,176,209,135,208,181,208,189,208,184,209,143,32,208,191,208,190,32,209,131,208,188,208,190,208,187,209,135,208,176,208,189,208,184,209,142,34,13,
+10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,208,144,208,178,209,130,208,190,208,188,208,176,209,130,208,184,209,135,208,181,209,129,208,186,208,184,208,181,32,208,190,208,177,208,189,208,190,208,178,208,187,208,
+181,208,189,208,184,209,143,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,208,146,209,129,208,181,208,179,208,180,208,176,32,209,129,208,178,208,181,209,128,209,133,209,131,34,13,10,34,84,104,101,109,101,34,32,61,32,34,208,
+162,208,181,208,188,208,176,34,13,10,34,68,97,114,107,34,32,61,32,34,208,162,209,145,208,188,208,189,208,176,209,143,34,13,10,34,76,105,103,104,116,34,32,61,32,34,208,161,208,178,208,181,209,130,208,187,208,176,209,143,34,13,10,34,79,117,116,112,117,
+116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,208,157,208,176,209,129,209,130,209,128,208,190,208,185,208,186,208,176,32,209,131,209,129,209,130,209,128,208,190,208,185,209,129,209,130,208,178,208,176,32,208,178,
+209,139,208,178,208,190,208,180,208,176,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,208,146,209,139,208,177,209,128,208,176,209,130,209,140,32,209,136,208,176,208,177,208,187,208,190,208,189,34,13,10,34,69,113,117,97,108,
+105,122,101,114,34,32,61,32,34,208,173,208,186,208,178,208,176,208,187,208,176,208,185,208,183,208,181,209,128,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,208,
+159,209,128,208,184,208,190,209,128,208,184,209,130,208,181,209,130,32,208,180,208,187,209,143,32,208,189,208,190,208,178,209,139,209,133,32,209,131,209,129,209,130,209,128,208,190,208,185,209,129,209,130,208,178,32,208,178,209,139,208,178,208,190,208,
+180,208,176,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,208,152,
+209,129,208,191,208,190,208,187,209,140,208,183,208,190,208,178,208,176,209,130,209,140,32,83,104,105,102,116,43,85,112,32,208,184,208,187,208,184,32,83,104,105,102,116,43,68,111,119,110,44,32,208,180,208,187,209,143,32,208,184,208,183,208,188,208,181,
+208,189,208,181,208,189,208,184,209,143,32,208,191,209,128,208,184,208,190,209,128,208,184,209,130,208,181,209,130,208,176,32,209,131,209,129,209,130,209,128,208,190,208,185,209,129,209,130,208,178,208,176,34,13,10,34,65,117,100,105,111,32,112,114,111,
+99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,208,158,208,177,209,128,208,176,208,177,208,190,209,130,208,186,208,176,
+32,208,176,209,131,208,180,208,184,208,190,32,208,189,208,181,208,180,208,190,209,129,209,130,209,131,208,191,208,189,208,176,32,209,135,208,181,209,128,208,181,208,183,32,209,131,208,180,208,176,208,187,209,145,208,189,208,189,209,139,208,185,32,209,
+128,208,176,208,177,208,190,209,135,208,184,208,185,32,209,129,209,130,208,190,208,187,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,34,32,61,32,34,208,146,209,139,209,128,208,176,208,178,208,189,208,184,208,178,208,176,208,189,
+208,184,208,181,32,208,179,209,128,208,190,208,188,208,186,208,190,209,129,209,130,208,184,34,0,0 };
 
-const char* FxSound_ru_txt = (const char*) temp_binary_data_81;
+const char* FxSound_ru_txt = (const char*) temp_binary_data_88;
 
 //================== FxSound.sl.txt ==================
-static const unsigned char temp_binary_data_82[] =
+static const unsigned char temp_binary_data_89[] =
 "language: Slovenian\r\n"
 "countries: sl\r\n"
 "\r\n"
@@ -7862,10 +7969,10 @@ static const unsigned char temp_binary_data_82[] =
 "\"Save\" = \"Shrani\"\r\n"
 "\"Cancel\" = \"Prekli\xc4\x8di\"\r\n"
 "\"Equalizer:\" = \"Izena\xc4\x8d""evalnik:\"\r\n"
-"\"Master Gain: = \"Glavno oja\xc4\x8d""anje:\"\r\n"
-"\"Normalization:\" = \"Normalizacija:\"\r\n"
-"\"Filter Q:\" = \"Q Filter:\"\r\n"
-"\"Balance:\" = \"Ravnovesje:\"\r\n"
+"\"Master Gain\" = \"Glavno oja\xc4\x8d""anje\"\r\n"
+"\"Normalization\" = \"Normalizacija\"\r\n"
+"\"Filter Q\" = \"Q Filter\"\r\n"
+"\"Balance\" = \"Ravnovesje\"\r\n"
 "\"Left\" = \"Levo\"\r\n"
 "\"Right\" = \"Desno\"\r\n"
 "\" Bands\" = \" Pasovi\"\r\n"
@@ -7879,12 +7986,12 @@ static const unsigned char temp_binary_data_82[] =
 "\"Prioritize new output devices\" = \"Daj prednost novim izhodnim napravam\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Uporabite Shift+Up ali Shift+Down za spremembo prioritete naprave\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"Obdelava zvoka ni na voljo prek oddaljenega namizja\"\r\n"
-"\"Volume Leveling:\" = \"Izena\xc4\x8d""evanje glasnosti:\"";
+"\"Volume Leveling\" = \"Izena\xc4\x8d""evanje glasnosti\"";
 
-const char* FxSound_sl_txt = (const char*) temp_binary_data_82;
+const char* FxSound_sl_txt = (const char*) temp_binary_data_89;
 
 //================== FxSound.sv.txt ==================
-static const unsigned char temp_binary_data_83[] =
+static const unsigned char temp_binary_data_90[] =
 "language: Swedish\r\n"
 "countries: se\r\n"
 "\r\n"
@@ -8023,10 +8130,10 @@ static const unsigned char temp_binary_data_83[] =
 "\"Save\" = \"Spara\"\r\n"
 "\"Cancel\" = \"Avbryt\"\r\n"
 "\"Equalizer:\" = \"Equalizer:\"\r\n"
-"\"Master Gain:\" = \"Mastervolym:\"\r\n"
-"\"Normalization:\" = \"Normalisering:\"\r\n"
-"\"Filter Q:\" = \"Filter-Q:\"\r\n"
-"\"Balance:\" = \"Balans:\"\r\n"
+"\"Master Gain\" = \"Mastervolym\"\r\n"
+"\"Normalization\" = \"Normalisering\"\r\n"
+"\"Filter Q\" = \"Filter-Q\"\r\n"
+"\"Balance\" = \"Balans\"\r\n"
 "\"Left\" = \"V\xc3\xa4nster\"\r\n"
 "\"Right\" = \"H\xc3\xb6ger\"\r\n"
 "\" Bands\" = \" band\"\r\n"
@@ -8042,12 +8149,12 @@ static const unsigned char temp_binary_data_83[] =
 "\"Prioritize new output devices\" = \"Prioritera nya utg\xc3\xa5ngsenheter\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Anv\xc3\xa4nd Shift+Up eller Shift+Down f\xc3\xb6r att \xc3\xa4ndra enhetsprioriteten\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"Ljudbearbetning \xc3\xa4r inte tillg\xc3\xa4nglig via Fj\xc3\xa4rrskrivbord\"\r\n"
-"\"Volume Leveling:\" = \"Volymutj\xc3\xa4mning:\"";
+"\"Volume Leveling\" = \"Volymutj\xc3\xa4mning\"";
 
-const char* FxSound_sv_txt = (const char*) temp_binary_data_83;
+const char* FxSound_sv_txt = (const char*) temp_binary_data_90;
 
 //================== FxSound.th.txt ==================
-static const unsigned char temp_binary_data_84[] =
+static const unsigned char temp_binary_data_91[] =
 { 108,97,110,103,117,97,103,101,58,32,84,104,97,105,13,10,99,111,117,110,116,114,105,101,115,58,32,116,104,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,114,32,112,108,
 97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,104,114,111,117,
 103,104,32,116,104,101,32,34,32,61,32,34,224,184,173,224,185,138,224,184,176,33,32,224,184,161,224,184,181,224,184,155,224,184,177,224,184,141,224,184,171,224,184,178,224,185,128,224,184,129,224,184,181,224,185,136,224,184,162,224,184,167,224,184,129,
@@ -8330,35 +8437,35 @@ static const unsigned char temp_binary_data_84[] =
 92,114,92,110,224,184,132,224,184,184,224,184,147,224,184,149,224,185,137,224,184,173,224,184,135,224,184,129,224,184,178,224,184,163,224,184,154,224,184,177,224,184,153,224,184,151,224,184,182,224,184,129,224,184,171,224,184,163,224,184,183,224,184,
 173,224,185,132,224,184,161,224,185,136,63,34,13,10,34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,224,184,154,224,184,177,224,184,153,224,184,151,224,184,182,224,184,129,224,184,158,224,184,163,224,184,181,224,185,128,224,184,139,224,184,
 149,34,13,10,34,83,97,118,101,34,32,61,32,34,224,184,154,224,184,177,224,184,153,224,184,151,224,184,182,224,184,129,34,13,10,34,67,97,110,99,101,108,34,32,61,32,34,224,184,162,224,184,129,224,185,128,224,184,165,224,184,180,224,184,129,34,13,10,34,69,
-113,117,97,108,105,122,101,114,58,34,32,61,32,34,224,184,173,224,184,181,224,184,132,224,184,167,224,184,173,224,185,132,224,184,165,224,185,128,224,184,139,224,184,173,224,184,163,224,185,140,58,34,13,10,34,77,97,115,116,101,114,32,71,97,105,110,58,
-34,32,61,32,34,224,184,167,224,184,173,224,184,165,224,184,184,224,185,136,224,184,161,224,184,171,224,184,165,224,184,177,224,184,129,58,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,110,58,34,32,61,32,34,224,184,155,224,184,163,224,184,177,
-224,184,154,224,184,163,224,184,176,224,184,148,224,184,177,224,184,154,224,185,128,224,184,170,224,184,181,224,184,162,224,184,135,224,185,131,224,184,171,224,185,137,224,185,128,224,184,151,224,185,136,224,184,178,224,184,129,224,184,177,224,184,153,
-58,34,13,10,34,70,105,108,116,101,114,32,81,58,34,32,61,32,34,224,184,132,224,185,136,224,184,178,32,81,32,224,184,130,224,184,173,224,184,135,224,184,159,224,184,180,224,184,165,224,185,128,224,184,149,224,184,173,224,184,163,224,185,140,58,34,13,10,
-34,66,97,108,97,110,99,101,58,34,32,61,32,34,224,184,154,224,184,178,224,184,165,224,184,178,224,184,153,224,184,139,224,185,140,58,34,13,10,34,76,101,102,116,34,32,61,32,34,224,184,139,224,185,137,224,184,178,224,184,162,34,13,10,34,82,105,103,104,116,
-34,32,61,32,34,224,184,130,224,184,167,224,184,178,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,224,185,129,224,184,150,224,184,154,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,224,184,132,224,184,183,224,
-184,153,224,184,132,224,185,136,224,184,178,224,185,128,224,184,163,224,184,180,224,185,136,224,184,161,224,184,149,224,185,137,224,184,153,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,224,184,173,224,184,
-177,224,184,155,224,185,128,224,184,148,224,184,149,224,184,173,224,184,177,224,184,149,224,185,130,224,184,153,224,184,161,224,184,177,224,184,149,224,184,180,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,224,185,129,224,184,
-170,224,184,148,224,184,135,224,185,132,224,184,167,224,185,137,224,184,148,224,185,137,224,184,178,224,184,153,224,184,154,224,184,153,224,185,128,224,184,170,224,184,161,224,184,173,34,13,10,34,84,104,101,109,101,34,32,61,32,34,224,184,152,224,184,
-181,224,184,161,34,13,10,34,68,97,114,107,34,32,61,32,34,224,184,161,224,184,183,224,184,148,34,13,10,34,76,105,103,104,116,34,32,61,32,34,224,184,170,224,184,167,224,185,136,224,184,178,224,184,135,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,
-99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,224,184,129,224,184,178,224,184,163,224,184,149,224,184,177,224,185,137,224,184,135,224,184,132,224,185,136,224,184,178,224,184,173,224,184,184,224,184,155,224,184,129,224,184,163,224,184,
-147,224,185,140,224,185,128,224,184,173,224,184,178,224,184,149,224,185,140,224,184,158,224,184,184,224,184,149,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,224,185,128,224,184,165,224,184,183,224,184,173,224,184,129,224,
-184,158,224,184,163,224,184,181,224,185,128,224,184,139,224,185,135,224,184,149,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,224,184,173,224,184,181,224,184,132,224,184,167,224,184,173,224,185,132,224,184,165,224,185,128,224,184,139,224,
-184,173,224,184,163,224,185,140,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,224,185,131,224,184,171,224,185,137,224,184,132,224,184,167,224,184,178,224,184,
-161,224,184,170,224,184,179,224,184,132,224,184,177,224,184,141,224,184,129,224,184,177,224,184,154,224,184,173,224,184,184,224,184,155,224,184,129,224,184,163,224,184,147,224,185,140,224,185,128,224,184,173,224,184,178,224,184,149,224,185,140,224,184,
-158,224,184,184,224,184,149,224,185,131,224,184,171,224,184,161,224,185,136,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,
-99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,224,185,131,224,184,138,224,185,137,32,83,104,105,102,116,43,85,112,32,224,184,171,224,184,163,224,184,183,224,184,173,32,83,104,105,102,116,43,68,111,119,110,32,224,185,128,224,184,158,224,184,
-183,224,185,136,224,184,173,224,185,128,224,184,155,224,184,165,224,184,181,224,185,136,224,184,162,224,184,153,224,184,165,224,184,179,224,184,148,224,184,177,224,184,154,224,184,132,224,184,167,224,184,178,224,184,161,224,184,170,224,184,179,224,184,
-132,224,184,177,224,184,141,224,184,130,224,184,173,224,184,135,224,184,173,224,184,184,224,184,155,224,184,129,224,184,163,224,184,147,224,185,140,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,
-97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,224,184,129,224,184,178,224,184,163,224,184,155,224,184,163,224,184,176,224,184,161,224,184,167,224,184,165,224,184,156,224,184,
-165,224,185,128,224,184,170,224,184,181,224,184,162,224,184,135,224,185,132,224,184,161,224,185,136,224,184,170,224,184,178,224,184,161,224,184,178,224,184,163,224,184,150,224,185,131,224,184,138,224,185,137,224,184,135,224,184,178,224,184,153,224,185,
-132,224,184,148,224,185,137,224,184,156,224,185,136,224,184,178,224,184,153,224,184,163,224,184,181,224,185,130,224,184,161,224,184,149,224,185,128,224,184,148,224,184,170,224,184,129,224,185,140,224,184,151,224,185,135,224,184,173,224,184,155,34,13,
-10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,58,34,32,61,32,34,224,184,155,224,184,163,224,184,177,224,184,154,224,184,170,224,184,161,224,184,148,224,184,184,224,184,165,224,184,163,224,184,176,224,184,148,224,184,177,224,184,154,224,
-185,128,224,184,170,224,184,181,224,184,162,224,184,135,58,34,0,0 };
+113,117,97,108,105,122,101,114,58,34,32,61,32,34,224,184,173,224,184,181,224,184,132,224,184,167,224,184,173,224,185,132,224,184,165,224,185,128,224,184,139,224,184,173,224,184,163,224,185,140,58,34,13,10,34,77,97,115,116,101,114,32,71,97,105,110,34,
+32,61,32,34,224,184,167,224,184,173,224,184,165,224,184,184,224,185,136,224,184,161,224,184,171,224,184,165,224,184,177,224,184,129,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,110,34,32,61,32,34,224,184,155,224,184,163,224,184,177,224,184,
+154,224,184,163,224,184,176,224,184,148,224,184,177,224,184,154,224,185,128,224,184,170,224,184,181,224,184,162,224,184,135,224,185,131,224,184,171,224,185,137,224,185,128,224,184,151,224,185,136,224,184,178,224,184,129,224,184,177,224,184,153,34,13,
+10,34,70,105,108,116,101,114,32,81,34,32,61,32,34,224,184,132,224,185,136,224,184,178,32,81,32,224,184,130,224,184,173,224,184,135,224,184,159,224,184,180,224,184,165,224,185,128,224,184,149,224,184,173,224,184,163,224,185,140,34,13,10,34,66,97,108,97,
+110,99,101,34,32,61,32,34,224,184,154,224,184,178,224,184,165,224,184,178,224,184,153,224,184,139,224,185,140,34,13,10,34,76,101,102,116,34,32,61,32,34,224,184,139,224,185,137,224,184,178,224,184,162,34,13,10,34,82,105,103,104,116,34,32,61,32,34,224,
+184,130,224,184,167,224,184,178,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,224,185,129,224,184,150,224,184,154,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,224,184,132,224,184,183,224,184,153,224,184,
+132,224,185,136,224,184,178,224,185,128,224,184,163,224,184,180,224,185,136,224,184,161,224,184,149,224,185,137,224,184,153,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,224,184,173,224,184,177,224,184,155,
+224,185,128,224,184,148,224,184,149,224,184,173,224,184,177,224,184,149,224,185,130,224,184,153,224,184,161,224,184,177,224,184,149,224,184,180,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,224,185,129,224,184,170,224,184,148,
+224,184,135,224,185,132,224,184,167,224,185,137,224,184,148,224,185,137,224,184,178,224,184,153,224,184,154,224,184,153,224,185,128,224,184,170,224,184,161,224,184,173,34,13,10,34,84,104,101,109,101,34,32,61,32,34,224,184,152,224,184,181,224,184,161,
+34,13,10,34,68,97,114,107,34,32,61,32,34,224,184,161,224,184,183,224,184,148,34,13,10,34,76,105,103,104,116,34,32,61,32,34,224,184,170,224,184,167,224,185,136,224,184,178,224,184,135,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,
+101,102,101,114,101,110,99,101,34,32,61,32,34,224,184,129,224,184,178,224,184,163,224,184,149,224,184,177,224,185,137,224,184,135,224,184,132,224,185,136,224,184,178,224,184,173,224,184,184,224,184,155,224,184,129,224,184,163,224,184,147,224,185,140,
+224,185,128,224,184,173,224,184,178,224,184,149,224,185,140,224,184,158,224,184,184,224,184,149,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,224,185,128,224,184,165,224,184,183,224,184,173,224,184,129,224,184,158,224,184,
+163,224,184,181,224,185,128,224,184,139,224,185,135,224,184,149,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,224,184,173,224,184,181,224,184,132,224,184,167,224,184,173,224,185,132,224,184,165,224,185,128,224,184,139,224,184,173,224,184,
+163,224,185,140,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,224,185,131,224,184,171,224,185,137,224,184,132,224,184,167,224,184,178,224,184,161,224,184,170,
+224,184,179,224,184,132,224,184,177,224,184,141,224,184,129,224,184,177,224,184,154,224,184,173,224,184,184,224,184,155,224,184,129,224,184,163,224,184,147,224,185,140,224,185,128,224,184,173,224,184,178,224,184,149,224,185,140,224,184,158,224,184,184,
+224,184,149,224,185,131,224,184,171,224,184,161,224,185,136,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,
+114,105,111,114,105,116,121,34,32,61,32,34,224,185,131,224,184,138,224,185,137,32,83,104,105,102,116,43,85,112,32,224,184,171,224,184,163,224,184,183,224,184,173,32,83,104,105,102,116,43,68,111,119,110,32,224,185,128,224,184,158,224,184,183,224,185,136,
+224,184,173,224,185,128,224,184,155,224,184,165,224,184,181,224,185,136,224,184,162,224,184,153,224,184,165,224,184,179,224,184,148,224,184,177,224,184,154,224,184,132,224,184,167,224,184,178,224,184,161,224,184,170,224,184,179,224,184,132,224,184,177,
+224,184,141,224,184,130,224,184,173,224,184,135,224,184,173,224,184,184,224,184,155,224,184,129,224,184,163,224,184,147,224,185,140,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,97,105,108,
+97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,224,184,129,224,184,178,224,184,163,224,184,155,224,184,163,224,184,176,224,184,161,224,184,167,224,184,165,224,184,156,224,184,165,224,185,128,224,
+184,170,224,184,181,224,184,162,224,184,135,224,185,132,224,184,161,224,185,136,224,184,170,224,184,178,224,184,161,224,184,178,224,184,163,224,184,150,224,185,131,224,184,138,224,185,137,224,184,135,224,184,178,224,184,153,224,185,132,224,184,148,224,
+185,137,224,184,156,224,185,136,224,184,178,224,184,153,224,184,163,224,184,181,224,185,130,224,184,161,224,184,149,224,185,128,224,184,148,224,184,170,224,184,129,224,185,140,224,184,151,224,185,135,224,184,173,224,184,155,34,13,10,34,86,111,108,117,
+109,101,32,76,101,118,101,108,105,110,103,34,32,61,32,34,224,184,155,224,184,163,224,184,177,224,184,154,224,184,170,224,184,161,224,184,148,224,184,184,224,184,165,224,184,163,224,184,176,224,184,148,224,184,177,224,184,154,224,185,128,224,184,170,224,
+184,181,224,184,162,224,184,135,34,0,0 };
 
-const char* FxSound_th_txt = (const char*) temp_binary_data_84;
+const char* FxSound_th_txt = (const char*) temp_binary_data_91;
 
 //================== FxSound.tr.txt ==================
-static const unsigned char temp_binary_data_85[] =
+static const unsigned char temp_binary_data_92[] =
 "language: Turkish\r\n"
 "countries: tr\r\n"
 "\r\n"
@@ -8502,10 +8609,10 @@ static const unsigned char temp_binary_data_85[] =
 "\"Save\" = \"Kaydet\"\r\n"
 "\"Cancel\" = \"\xc4\xb0ptal\"\r\n"
 "\"Equalizer:\" = \"Ekolayz\xc4\xb1r:\"\r\n"
-"\"Master Gain:\" = \"Ana ses seviyesi:\"\r\n"
-"\"Normalization:\" = \"Normalizasyon:\"\r\n"
-"\"Filter Q:\" = \"Filtre Q:\"\r\n"
-"\"Balance:\" = \"Denge:\"\r\n"
+"\"Master Gain\" = \"Ana ses seviyesi\"\r\n"
+"\"Normalization\" = \"Normalizasyon\"\r\n"
+"\"Filter Q\" = \"Filtre Q\"\r\n"
+"\"Balance\" = \"Denge\"\r\n"
 "\"Left\" = \"Sol\"\r\n"
 "\"Right\" = \"Sa\xc4\x9f\"\r\n"
 "\" Bands\" = \" bant\"\r\n"
@@ -8521,12 +8628,12 @@ static const unsigned char temp_binary_data_85[] =
 "\"Prioritize new output devices\" = \"Yeni \xc3\xa7\xc4\xb1k\xc4\xb1\xc5\x9f ayg\xc4\xb1tlar\xc4\xb1na \xc3\xb6ncelik ver\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Ayg\xc4\xb1t \xc3\xb6nceli\xc4\x9fini de\xc4\x9fi\xc5\x9ftirmek i\xc3\xa7in Shift+Up veya Shift+Down kullan\xc4\xb1n\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"Ses i\xc5\x9fleme Uzak Masa\xc3\xbcst\xc3\xbc \xc3\xbczerinden kullan\xc4\xb1lamaz\"\r\n"
-"\"Volume Leveling:\" = \"Ses D\xc3\xbczeyi Dengeleme:\"";
+"\"Volume Leveling\" = \"Ses D\xc3\xbczeyi Dengeleme\"";
 
-const char* FxSound_tr_txt = (const char*) temp_binary_data_85;
+const char* FxSound_tr_txt = (const char*) temp_binary_data_92;
 
 //================== FxSound.txt ==================
-static const unsigned char temp_binary_data_86[] =
+static const unsigned char temp_binary_data_93[] =
 "language: [enter full name of the language here!]\r\n"
 "countries: [enter list of 2-character country codes here!]\r\n"
 "\r\n"
@@ -8661,10 +8768,10 @@ static const unsigned char temp_binary_data_86[] =
 "\"Save\" = \"Save\"\r\n"
 "\"Cancel\" = \"Cancel\"\r\n"
 "\"Equalizer:\" = \"Equalizer:\"\r\n"
-"\"Master Gain:\" = \"Master Gain:\"\r\n"
-"\"Normalization:\" = \"Normalization:\"\r\n"
-"\"Filter Q:\" = \"Filter Q:\"\r\n"
-"\"Balance:\" = \"Balance:\"\r\n"
+"\"Master Gain\" = \"Master Gain\"\r\n"
+"\"Normalization\" = \"Normalization\"\r\n"
+"\"Filter Q\" = \"Filter Q\"\r\n"
+"\"Balance\" = \"Balance\"\r\n"
 "\"Left\" = \"Left\"\r\n"
 "\"Right\" = \"Right\"\r\n"
 "\" Bands\" = \" Bands\"\r\n"
@@ -8680,12 +8787,12 @@ static const unsigned char temp_binary_data_86[] =
 "\"Prioritize new output devices\" = \"Prioritize new output devices\"\r\n"
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"Use Shift+Up or Shift+Down to change the device priority\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"Audio processing is not available over Remote Desktop\"\r\n"
-"\"Volume Leveling:\" = \"Volume Leveling:\"";
+"\"Volume Leveling\" = \"Volume Leveling\"";
 
-const char* FxSound_txt = (const char*) temp_binary_data_86;
+const char* FxSound_txt = (const char*) temp_binary_data_93;
 
 //================== FxSound.ua.txt ==================
-static const unsigned char temp_binary_data_87[] =
+static const unsigned char temp_binary_data_94[] =
 { 108,97,110,103,117,97,103,101,58,32,85,107,114,97,105,110,105,97,110,13,10,99,111,117,110,116,114,105,101,115,58,32,117,97,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,
 114,32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,
 104,114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,208,158,208,185,33,32,208,146,208,184,208,189,208,184,208,186,208,187,208,184,32,208,191,209,128,208,190,208,177,208,187,208,181,208,188,208,184,32,208,183,32,208,189,208,176,208,187,208,176,209,
@@ -8911,29 +9018,30 @@ static const unsigned char temp_binary_data_87[] =
 208,177,208,187,208,190,208,189,209,150,32,208,189,208,181,32,208,183,208,177,208,181,209,128,208,181,208,182,208,181,208,189,208,190,46,92,114,92,110,208,145,208,176,208,182,208,176,209,148,209,130,208,181,32,208,183,208,177,208,181,209,128,208,181,
 208,179,209,130,208,184,32,209,151,209,133,63,34,13,10,34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,208,151,208,177,208,181,209,128,208,181,208,179,209,130,208,184,32,209,136,208,176,208,177,208,187,208,190,208,189,34,13,10,34,83,97,118,
 101,34,32,61,32,34,208,151,208,177,208,181,209,128,208,181,208,179,209,130,208,184,34,13,10,34,67,97,110,99,101,108,34,32,61,32,34,208,161,208,186,208,176,209,129,209,131,208,178,208,176,209,130,208,184,34,13,10,34,69,113,117,97,108,105,122,101,114,58,
-34,32,61,32,34,208,149,208,186,208,178,208,176,208,187,208,176,208,185,208,183,208,181,209,128,58,34,13,10,34,77,97,115,116,101,114,32,71,97,105,110,58,34,32,61,32,34,208,158,209,129,208,189,208,190,208,178,208,189,208,176,32,208,179,209,131,209,135,
-208,189,209,150,209,129,209,130,209,140,58,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,110,58,34,32,61,32,34,208,157,208,190,209,128,208,188,208,176,208,187,209,150,208,183,208,176,209,134,209,150,209,143,58,34,13,10,34,70,105,108,116,101,
-114,32,81,58,34,32,61,32,34,81,32,209,132,209,150,208,187,209,140,209,130,209,128,208,176,58,34,13,10,34,66,97,108,97,110,99,101,58,34,32,61,32,34,208,145,208,176,208,187,208,176,208,189,209,129,58,34,13,10,34,76,101,102,116,34,32,61,32,34,208,155,209,
-150,208,178,208,190,34,13,10,34,82,105,103,104,116,34,32,61,32,34,208,159,209,128,208,176,208,178,208,190,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,209,129,208,188,209,131,208,179,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,
-116,115,34,32,61,32,34,208,146,209,150,208,180,208,189,208,190,208,178,208,184,209,130,208,184,32,209,130,208,184,208,191,208,190,208,178,209,150,32,208,189,208,176,208,187,208,176,209,136,209,130,209,131,208,178,208,176,208,189,208,189,209,143,34,13,
-10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,208,144,208,178,209,130,208,190,208,188,208,176,209,130,208,184,209,135,208,189,209,150,32,208,190,208,189,208,190,208,178,208,187,208,181,208,189,208,189,209,143,34,
-13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,208,151,208,176,208,178,208,182,208,180,208,184,32,208,183,208,178,208,181,209,128,209,133,209,131,34,13,10,34,84,104,101,109,101,34,32,61,32,34,208,162,208,181,208,188,208,176,34,
-13,10,34,68,97,114,107,34,32,61,32,34,208,162,208,181,208,188,208,189,208,176,34,13,10,34,76,105,103,104,116,34,32,61,32,34,208,161,208,178,209,150,209,130,208,187,208,176,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,
-101,114,101,110,99,101,34,32,61,32,34,208,157,208,176,208,187,208,176,209,136,209,130,209,131,208,178,208,176,208,189,208,189,209,143,32,208,191,209,128,208,184,209,129,209,130,209,128,208,190,209,142,32,208,178,208,184,208,178,208,190,208,180,209,131,
-34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,208,146,208,184,208,177,209,128,208,176,209,130,208,184,32,208,191,209,128,208,181,209,129,208,181,209,130,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,
-111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,208,157,208,176,208,180,208,176,208,178,208,176,209,130,208,184,32,208,191,209,128,209,150,208,190,209,128,208,184,209,130,208,181,209,130,32,208,189,208,190,208,178,208,184,208,188,
-32,208,191,209,128,208,184,209,129,209,130,209,128,208,190,209,143,208,188,32,208,178,208,184,208,178,208,190,208,180,209,131,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,
-97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,208,146,208,184,208,186,208,190,209,128,208,184,209,129,209,130,208,190,208,178,209,131,208,185,209,130,208,181,32,83,104,105,102,116,43,85,112,
-32,208,176,208,177,208,190,32,83,104,105,102,116,43,68,111,119,110,44,32,209,137,208,190,208,177,32,208,183,208,188,209,150,208,189,208,184,209,130,208,184,32,208,191,209,128,209,150,208,190,209,128,208,184,209,130,208,181,209,130,32,208,191,209,128,
-208,184,209,129,209,130,209,128,208,190,209,142,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,
-112,34,32,61,32,34,208,158,208,177,209,128,208,190,208,177,208,186,208,176,32,208,176,209,131,208,180,209,150,208,190,32,208,189,208,181,208,180,208,190,209,129,209,130,209,131,208,191,208,189,208,176,32,209,135,208,181,209,128,208,181,208,183,32,208,
-178,209,150,208,180,208,180,208,176,208,187,208,181,208,189,208,184,208,185,32,209,128,208,190,208,177,208,190,209,135,208,184,208,185,32,209,129,209,130,209,150,208,187,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,58,34,32,61,
-32,34,208,146,208,184,209,128,209,150,208,178,208,189,209,142,208,178,208,176,208,189,208,189,209,143,32,208,179,209,131,209,135,208,189,208,190,209,129,209,130,209,150,58,34,0,0 };
+34,32,61,32,34,208,149,208,186,208,178,208,176,208,187,208,176,208,185,208,183,208,181,209,128,58,34,13,10,34,77,97,115,116,101,114,32,71,97,105,110,34,32,61,32,34,208,158,209,129,208,189,208,190,208,178,208,189,208,176,32,208,179,209,131,209,135,208,
+189,209,150,209,129,209,130,209,140,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,110,34,32,61,32,34,208,157,208,190,209,128,208,188,208,176,208,187,209,150,208,183,208,176,209,134,209,150,209,143,34,13,10,34,70,105,108,116,101,114,32,81,34,
+32,61,32,34,81,32,209,132,209,150,208,187,209,140,209,130,209,128,208,176,34,13,10,34,66,97,108,97,110,99,101,34,32,61,32,34,208,145,208,176,208,187,208,176,208,189,209,129,34,13,10,34,76,101,102,116,34,32,61,32,34,208,155,209,150,208,178,208,190,34,
+13,10,34,82,105,103,104,116,34,32,61,32,34,208,159,209,128,208,176,208,178,208,190,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,209,129,208,188,209,131,208,179,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,
+34,208,146,209,150,208,180,208,189,208,190,208,178,208,184,209,130,208,184,32,209,130,208,184,208,191,208,190,208,178,209,150,32,208,189,208,176,208,187,208,176,209,136,209,130,209,131,208,178,208,176,208,189,208,189,209,143,34,13,10,34,65,117,116,111,
+109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,208,144,208,178,209,130,208,190,208,188,208,176,209,130,208,184,209,135,208,189,209,150,32,208,190,208,189,208,190,208,178,208,187,208,181,208,189,208,189,209,143,34,13,10,34,65,108,119,97,
+121,115,32,79,110,32,84,111,112,34,32,61,32,34,208,151,208,176,208,178,208,182,208,180,208,184,32,208,183,208,178,208,181,209,128,209,133,209,131,34,13,10,34,84,104,101,109,101,34,32,61,32,34,208,162,208,181,208,188,208,176,34,13,10,34,68,97,114,107,
+34,32,61,32,34,208,162,208,181,208,188,208,189,208,176,34,13,10,34,76,105,103,104,116,34,32,61,32,34,208,161,208,178,209,150,209,130,208,187,208,176,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,
+34,32,61,32,34,208,157,208,176,208,187,208,176,209,136,209,130,209,131,208,178,208,176,208,189,208,189,209,143,32,208,191,209,128,208,184,209,129,209,130,209,128,208,190,209,142,32,208,178,208,184,208,178,208,190,208,180,209,131,34,13,10,34,83,101,108,
+101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,208,146,208,184,208,177,209,128,208,176,209,130,208,184,32,208,191,209,128,208,181,209,129,208,181,209,130,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,208,149,208,186,208,178,208,176,
+208,187,208,176,208,185,208,183,208,181,209,128,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,208,157,208,176,208,180,208,176,208,178,208,176,209,130,208,184,
+32,208,191,209,128,209,150,208,190,209,128,208,184,209,130,208,181,209,130,32,208,189,208,190,208,178,208,184,208,188,32,208,191,209,128,208,184,209,129,209,130,209,128,208,190,209,143,208,188,32,208,178,208,184,208,178,208,190,208,180,209,131,34,13,
+10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,208,146,208,184,208,186,
+208,190,209,128,208,184,209,129,209,130,208,190,208,178,209,131,208,185,209,130,208,181,32,83,104,105,102,116,43,85,112,32,208,176,208,177,208,190,32,83,104,105,102,116,43,68,111,119,110,44,32,209,137,208,190,208,177,32,208,183,208,188,209,150,208,189,
+208,184,209,130,208,184,32,208,191,209,128,209,150,208,190,209,128,208,184,209,130,208,181,209,130,32,208,191,209,128,208,184,209,129,209,130,209,128,208,190,209,142,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,
+32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,208,158,208,177,209,128,208,190,208,177,208,186,208,176,32,208,176,209,131,208,180,209,150,208,190,32,208,189,
+208,181,208,180,208,190,209,129,209,130,209,131,208,191,208,189,208,176,32,209,135,208,181,209,128,208,181,208,183,32,208,178,209,150,208,180,208,180,208,176,208,187,208,181,208,189,208,184,208,185,32,209,128,208,190,208,177,208,190,209,135,208,184,208,
+185,32,209,129,209,130,209,150,208,187,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,34,32,61,32,34,208,146,208,184,209,128,209,150,208,178,208,189,209,142,208,178,208,176,208,189,208,189,209,143,32,208,179,209,131,209,135,208,
+189,208,190,209,129,209,130,209,150,34,0,0 };
 
-const char* FxSound_ua_txt = (const char*) temp_binary_data_87;
+const char* FxSound_ua_txt = (const char*) temp_binary_data_94;
 
 //================== FxSound.vi.txt ==================
-static const unsigned char temp_binary_data_88[] =
+static const unsigned char temp_binary_data_95[] =
 "language: Vietnamese\r\n"
 "countries: vn\r\n"
 "\r\n"
@@ -9095,10 +9203,10 @@ static const unsigned char temp_binary_data_88[] =
 "\"Save\" = \"L\xc6\xb0u\"\r\n"
 "\"Cancel\" = \"H\xe1\xbb\xa7y\"\r\n"
 "\"Equalizer:\" = \"Equalizer:\"\r\n"
-"\"Master Gain:\" = \"\xc3\x82m l\xc6\xb0\xe1\xbb\xa3ng ch\xc3\xadnh:\"\r\n"
-"\"Normalization:\" = \"Chu\xe1\xba\xa9n h\xc3\xb3""a:\"\r\n"
-"\"Filter Q:\" = \"Q c\xe1\xbb\xa7""a b\xe1\xbb\x99 l\xe1\xbb\x8d""c:\"\r\n"
-"\"Balance:\" = \"C\xc3\xa2n b\xe1\xba\xb1ng:\"\r\n"
+"\"Master Gain\" = \"\xc3\x82m l\xc6\xb0\xe1\xbb\xa3ng ch\xc3\xadnh\"\r\n"
+"\"Normalization\" = \"Chu\xe1\xba\xa9n h\xc3\xb3""a\"\r\n"
+"\"Filter Q\" = \"Q c\xe1\xbb\xa7""a b\xe1\xbb\x99 l\xe1\xbb\x8d""c\"\r\n"
+"\"Balance\" = \"C\xc3\xa2n b\xe1\xba\xb1ng\"\r\n"
 "\"Left\" = \"Tr\xc3\xa1i\"\r\n"
 "\"Right\" = \"Ph\xe1\xba\xa3i\"\r\n"
 "\" Bands\" = \" d\xe1\xba\xa3i\"\r\n"
@@ -9115,12 +9223,12 @@ static const unsigned char temp_binary_data_88[] =
 "\"Use Shift+Up or Shift+Down to change the device priority\" = \"S\xe1\xbb\xad d\xe1\xbb\xa5ng Shift+Up ho\xe1\xba\xb7""c Shift+Down \xc4\x91\xe1\xbb\x83 thay \xc4\x91\xe1\xbb\x95i m\xe1\xbb\xa9""c \xc6\xb0u ti\xc3\xaan thi\xe1\xba\xbft b\xe1\xbb\x8b"
 "\"\r\n"
 "\"Audio processing is not available over Remote Desktop\" = \"X\xe1\xbb\xad l\xc3\xbd \xc3\xa2m thanh kh\xc3\xb4ng kh\xe1\xba\xa3 d\xe1\xbb\xa5ng qua M\xc3\xa1y t\xc3\xadnh t\xe1\xbb\xab xa\"\r\n"
-"\"Volume Leveling:\" = \"C\xc3\xa2n b\xe1\xba\xb1ng \xc3\xa2m l\xc6\xb0\xe1\xbb\xa3ng:\"";
+"\"Volume Leveling\" = \"C\xc3\xa2n b\xe1\xba\xb1ng \xc3\xa2m l\xc6\xb0\xe1\xbb\xa3ng\"";
 
-const char* FxSound_vi_txt = (const char*) temp_binary_data_88;
+const char* FxSound_vi_txt = (const char*) temp_binary_data_95;
 
 //================== FxSound.zh-CN.txt ==================
-static const unsigned char temp_binary_data_89[] =
+static const unsigned char temp_binary_data_96[] =
 { 108,97,110,103,117,97,103,101,58,32,67,104,105,110,101,115,101,32,40,83,105,109,112,108,105,102,105,101,100,41,13,10,99,111,117,110,116,114,105,101,115,58,32,99,110,32,115,103,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,
 115,115,117,101,32,119,105,116,104,32,121,111,117,114,32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,
 100,44,32,112,108,101,97,115,101,32,103,111,32,116,104,114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,229,147,142,229,145,128,239,188,129,230,130,168,231,154,132,230,146,173,230,148,190,232,174,190,229,164,135,232,174,190,231,189,174,230,156,137,
@@ -9267,23 +9375,23 @@ static const unsigned char temp_binary_data_89[] =
 229,135,134,229,140,150,34,13,10,34,67,104,97,110,103,101,115,32,116,111,32,121,111,117,114,32,112,114,101,115,101,116,32,97,114,101,32,110,111,116,32,115,97,118,101,100,46,92,114,92,110,68,111,32,121,111,117,32,119,97,110,116,32,116,111,32,115,97,118,
 101,63,34,32,61,32,34,229,175,185,233,162,132,232,174,190,231,154,132,230,155,180,230,148,185,229,176,154,230,156,170,228,191,157,229,173,152,227,128,130,92,114,92,110,228,189,160,230,131,179,228,191,157,229,173,152,229,144,151,239,188,159,34,13,10,34,
 83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,228,191,157,229,173,152,233,162,132,232,174,190,34,13,10,34,83,97,118,101,34,32,61,32,34,228,191,157,229,173,152,34,13,10,34,67,97,110,99,101,108,34,32,61,32,34,229,143,150,230,182,136,34,13,10,34,
-69,113,117,97,108,105,122,101,114,58,34,32,61,32,34,229,157,135,232,161,161,229,153,168,58,34,13,10,34,77,97,115,116,101,114,32,71,97,105,110,58,34,32,61,32,34,228,184,187,233,159,179,233,135,143,58,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,
-111,110,58,34,32,61,32,34,230,160,135,229,135,134,229,140,150,58,34,13,10,34,70,105,108,116,101,114,32,81,58,34,32,61,32,34,230,187,164,230,179,162,229,153,168,81,58,34,13,10,34,66,97,108,97,110,99,101,58,34,32,61,32,34,229,163,176,233,129,147,229,185,
-179,232,161,161,58,34,13,10,34,76,101,102,116,34,32,61,32,34,229,183,166,34,13,10,34,82,105,103,104,116,34,32,61,32,34,229,143,179,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,230,179,162,230,174,181,34,13,10,34,82,101,115,116,111,114,101,32,68,
-101,102,97,117,108,116,115,34,32,61,32,34,230,129,162,229,164,141,233,187,152,232,174,164,232,174,190,231,189,174,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,232,135,170,229,138,168,230,155,180,230,150,176,
-34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,229,167,139,231,187,136,231,189,174,233,161,182,34,13,10,34,84,104,101,109,101,34,32,61,32,34,228,184,187,233,162,152,34,13,10,34,68,97,114,107,34,32,61,32,34,230,183,177,232,137,
-178,34,13,10,34,76,105,103,104,116,34,32,61,32,34,230,181,133,232,137,178,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,232,190,147,229,135,186,232,174,190,229,164,135,232,174,190,
-231,189,174,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,233,128,137,230,139,169,233,162,132,232,174,190,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,229,157,135,232,161,161,229,153,168,34,13,10,34,80,114,
-105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,228,188,152,229,133,136,228,189,191,231,148,168,230,150,176,231,154,132,232,190,147,229,135,186,232,174,190,229,164,135,34,13,10,34,
-85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,228,189,191,231,148,168,32,83,
-104,105,102,116,43,85,112,32,230,136,150,32,83,104,105,102,116,43,68,111,119,110,32,230,155,180,230,148,185,232,174,190,229,164,135,228,188,152,229,133,136,231,186,167,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,
-32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,232,191,156,231,168,139,230,161,140,233,157,162,228,184,141,230,148,175,230,140,129,233,159,179,233,162,145,229,
-164,132,231,144,134,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,58,34,32,61,32,34,233,159,179,233,135,143,229,157,135,232,161,161,58,34,0,0 };
+69,113,117,97,108,105,122,101,114,58,34,32,61,32,34,229,157,135,232,161,161,229,153,168,58,34,13,10,34,77,97,115,116,101,114,32,71,97,105,110,34,32,61,32,34,228,184,187,233,159,179,233,135,143,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,
+110,34,32,61,32,34,230,160,135,229,135,134,229,140,150,34,13,10,34,70,105,108,116,101,114,32,81,34,32,61,32,34,230,187,164,230,179,162,229,153,168,81,34,13,10,34,66,97,108,97,110,99,101,34,32,61,32,34,229,163,176,233,129,147,229,185,179,232,161,161,34,
+13,10,34,76,101,102,116,34,32,61,32,34,229,183,166,34,13,10,34,82,105,103,104,116,34,32,61,32,34,229,143,179,34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,230,179,162,230,174,181,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,
+115,34,32,61,32,34,230,129,162,229,164,141,233,187,152,232,174,164,232,174,190,231,189,174,34,13,10,34,65,117,116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,232,135,170,229,138,168,230,155,180,230,150,176,34,13,10,34,65,108,119,
+97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,229,167,139,231,187,136,231,189,174,233,161,182,34,13,10,34,84,104,101,109,101,34,32,61,32,34,228,184,187,233,162,152,34,13,10,34,68,97,114,107,34,32,61,32,34,230,183,177,232,137,178,34,13,10,34,76,105,
+103,104,116,34,32,61,32,34,230,181,133,232,137,178,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,232,190,147,229,135,186,232,174,190,229,164,135,232,174,190,231,189,174,34,13,10,34,
+83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,233,128,137,230,139,169,233,162,132,232,174,190,34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,229,157,135,232,161,161,229,153,168,34,13,10,34,80,114,105,111,114,105,116,105,
+122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,228,188,152,229,133,136,228,189,191,231,148,168,230,150,176,231,154,132,232,190,147,229,135,186,232,174,190,229,164,135,34,13,10,34,85,115,101,32,83,104,105,
+102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,228,189,191,231,148,168,32,83,104,105,102,116,43,85,112,
+32,230,136,150,32,83,104,105,102,116,43,68,111,119,110,32,230,155,180,230,148,185,232,174,190,229,164,135,228,188,152,229,133,136,231,186,167,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,
+97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,232,191,156,231,168,139,230,161,140,233,157,162,228,184,141,230,148,175,230,140,129,233,159,179,233,162,145,229,164,132,231,144,134,34,
+13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,34,32,61,32,34,233,159,179,233,135,143,229,157,135,232,161,161,34,0,0 };
 
-const char* FxSound_zhCN_txt = (const char*) temp_binary_data_89;
+const char* FxSound_zhCN_txt = (const char*) temp_binary_data_96;
 
 //================== FxSound.zh-TW.txt ==================
-static const unsigned char temp_binary_data_90[] =
+static const unsigned char temp_binary_data_97[] =
 { 108,97,110,103,117,97,103,101,58,32,67,104,105,110,101,115,101,32,40,84,114,97,100,105,116,105,111,110,97,108,41,13,10,99,111,117,110,116,114,105,101,115,58,32,84,97,105,119,97,110,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,
 32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,114,32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,
 116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,104,114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,229,147,142,229,145,128,239,188,129,230,130,168,231,154,132,230,146,173,230,148,190,232,163,157,231,189,174,232,168,173,229,174,154,230,
@@ -9433,20 +9541,20 @@ static const unsigned char temp_binary_data_90[] =
 32,115,97,118,101,100,46,92,114,92,110,68,111,32,121,111,117,32,119,97,110,116,32,116,111,32,115,97,118,101,63,34,32,61,32,34,229,176,141,233,160,144,232,168,173,231,154,132,232,174,138,230,155,180,229,176,154,230,156,170,229,132,178,229,173,152,227,
 128,130,92,114,92,110,230,130,168,230,152,175,229,144,166,232,166,129,229,132,178,229,173,152,239,188,159,34,13,10,34,83,97,118,101,32,80,114,101,115,101,116,34,32,61,32,34,229,132,178,229,173,152,233,160,144,232,168,173,34,13,10,34,83,97,118,101,34,
 32,61,32,34,229,132,178,229,173,152,34,13,10,34,67,97,110,99,101,108,34,32,61,32,34,229,143,150,230,182,136,34,13,10,34,69,113,117,97,108,105,122,101,114,58,34,32,61,32,34,231,173,137,229,140,150,229,153,168,58,34,13,10,34,77,97,115,116,101,114,32,71,
-97,105,110,58,34,32,61,32,34,228,184,187,233,159,179,233,135,143,58,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,110,58,34,32,61,32,34,230,173,163,232,166,143,229,140,150,58,34,13,10,34,70,105,108,116,101,114,32,81,58,34,32,61,32,34,230,191,
-190,230,179,162,229,153,168,81,58,34,13,10,34,66,97,108,97,110,99,101,58,34,32,61,32,34,232,129,178,233,129,147,229,185,179,232,161,161,58,34,13,10,34,76,101,102,116,34,32,61,32,34,229,183,166,34,13,10,34,82,105,103,104,116,34,32,61,32,34,229,143,179,
-34,13,10,34,32,66,97,110,100,115,34,32,61,32,34,32,233,160,187,230,174,181,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,230,129,162,229,190,169,233,160,144,232,168,173,232,168,173,229,174,154,34,13,10,34,65,117,
-116,111,109,97,116,105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,232,135,170,229,139,149,230,155,180,230,150,176,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,230,176,184,233,129,160,231,189,174,233,160,130,34,13,10,34,
-84,104,101,109,101,34,32,61,32,34,228,184,187,233,161,140,34,13,10,34,68,97,114,107,34,32,61,32,34,230,183,177,232,137,178,34,13,10,34,76,105,103,104,116,34,32,61,32,34,230,183,186,232,137,178,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,
-32,80,114,101,102,101,114,101,110,99,101,34,32,61,32,34,232,188,184,229,135,186,232,163,157,231,189,174,232,168,173,229,174,154,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,233,129,184,230,147,135,233,160,144,232,168,173,
-34,13,10,34,69,113,117,97,108,105,122,101,114,34,32,61,32,34,231,173,137,229,140,150,229,153,168,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,229,132,170,229,
-133,136,228,189,191,231,148,168,230,150,176,231,154,132,232,188,184,229,135,186,232,163,157,231,189,174,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,
-104,101,32,100,101,118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,228,189,191,231,148,168,32,83,104,105,102,116,43,85,112,32,230,136,150,32,83,104,105,102,116,43,68,111,119,110,32,232,174,138,230,155,180,232,163,157,231,189,174,229,
-132,170,229,133,136,233,160,134,229,186,143,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,
-34,32,61,32,34,233,129,160,231,171,175,230,161,140,233,157,162,228,184,141,230,148,175,230,143,180,233,159,179,232,168,138,232,153,149,231,144,134,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,58,34,32,61,32,34,233,159,179,233,
-135,143,229,157,135,232,161,161,58,34,0,0 };
+97,105,110,34,32,61,32,34,228,184,187,233,159,179,233,135,143,34,13,10,34,78,111,114,109,97,108,105,122,97,116,105,111,110,34,32,61,32,34,230,173,163,232,166,143,229,140,150,34,13,10,34,70,105,108,116,101,114,32,81,34,32,61,32,34,230,191,190,230,179,
+162,229,153,168,81,34,13,10,34,66,97,108,97,110,99,101,34,32,61,32,34,232,129,178,233,129,147,229,185,179,232,161,161,34,13,10,34,76,101,102,116,34,32,61,32,34,229,183,166,34,13,10,34,82,105,103,104,116,34,32,61,32,34,229,143,179,34,13,10,34,32,66,97,
+110,100,115,34,32,61,32,34,32,233,160,187,230,174,181,34,13,10,34,82,101,115,116,111,114,101,32,68,101,102,97,117,108,116,115,34,32,61,32,34,230,129,162,229,190,169,233,160,144,232,168,173,232,168,173,229,174,154,34,13,10,34,65,117,116,111,109,97,116,
+105,99,32,117,112,100,97,116,101,115,34,32,61,32,34,232,135,170,229,139,149,230,155,180,230,150,176,34,13,10,34,65,108,119,97,121,115,32,79,110,32,84,111,112,34,32,61,32,34,230,176,184,233,129,160,231,189,174,233,160,130,34,13,10,34,84,104,101,109,101,
+34,32,61,32,34,228,184,187,233,161,140,34,13,10,34,68,97,114,107,34,32,61,32,34,230,183,177,232,137,178,34,13,10,34,76,105,103,104,116,34,32,61,32,34,230,183,186,232,137,178,34,13,10,34,79,117,116,112,117,116,32,68,101,118,105,99,101,32,80,114,101,102,
+101,114,101,110,99,101,34,32,61,32,34,232,188,184,229,135,186,232,163,157,231,189,174,232,168,173,229,174,154,34,13,10,34,83,101,108,101,99,116,32,112,114,101,115,101,116,34,32,61,32,34,233,129,184,230,147,135,233,160,144,232,168,173,34,13,10,34,69,113,
+117,97,108,105,122,101,114,34,32,61,32,34,231,173,137,229,140,150,229,153,168,34,13,10,34,80,114,105,111,114,105,116,105,122,101,32,110,101,119,32,111,117,116,112,117,116,32,100,101,118,105,99,101,115,34,32,61,32,34,229,132,170,229,133,136,228,189,191,
+231,148,168,230,150,176,231,154,132,232,188,184,229,135,186,232,163,157,231,189,174,34,13,10,34,85,115,101,32,83,104,105,102,116,43,85,112,32,111,114,32,83,104,105,102,116,43,68,111,119,110,32,116,111,32,99,104,97,110,103,101,32,116,104,101,32,100,101,
+118,105,99,101,32,112,114,105,111,114,105,116,121,34,32,61,32,34,228,189,191,231,148,168,32,83,104,105,102,116,43,85,112,32,230,136,150,32,83,104,105,102,116,43,68,111,119,110,32,232,174,138,230,155,180,232,163,157,231,189,174,229,132,170,229,133,136,
+233,160,134,229,186,143,34,13,10,34,65,117,100,105,111,32,112,114,111,99,101,115,115,105,110,103,32,105,115,32,110,111,116,32,97,118,97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,233,
+129,160,231,171,175,230,161,140,233,157,162,228,184,141,230,148,175,230,143,180,233,159,179,232,168,138,232,153,149,231,144,134,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,34,32,61,32,34,233,159,179,233,135,143,229,157,135,232,
+161,161,34,0,0 };
 
-const char* FxSound_zhTW_txt = (const char*) temp_binary_data_90;
+const char* FxSound_zhTW_txt = (const char*) temp_binary_data_97;
 
 
 const char* getNamedResource (const char* resourceNameUTF8, int& numBytes);
@@ -9463,11 +9571,18 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
         case 0x7b153d3e:  numBytes = 83456; return GilroyBold_ttf;
         case 0x9fd3b571:  numBytes = 84300; return GilroyRegular_ttf;
         case 0xf4a365ac:  numBytes = 83948; return GilroySemibold_ttf;
+        case 0x702e1508:  numBytes = 582; return restore_defaults_svg;
+        case 0x2a0031c8:  numBytes = 594; return restore_defaults_black_svg;
+        case 0x86ab90db:  numBytes = 592; return restore_defaults_blue_svg;
+        case 0x77f848f2:  numBytes = 594; return restore_defaults_white_svg;
+        case 0x6e5cef92:  numBytes = 585; return flip_svg;
+        case 0xe03f7cd2:  numBytes = 597; return flip_black_svg;
+        case 0x2131bc91:  numBytes = 597; return flip_blue_svg;
+        case 0x2e3793fc:  numBytes = 597; return flip_white_svg;
         case 0x3a04e9bd:  numBytes = 259; return arrow_down_black_svg;
         case 0x87fd00e7:  numBytes = 259; return arrow_down_white_svg;
         case 0xefa9b5f6:  numBytes = 261; return arrow_up_black_svg;
         case 0x3da1cd20:  numBytes = 261; return arrow_up_white_svg;
-        case 0x2c347377:  numBytes = 901; return equalizer_svg;
         case 0xb04528bd:  numBytes = 259; return arrow_down_svg;
         case 0x5de58646:  numBytes = 259; return arrow_down_blue_svg;
         case 0x03a1d3b6:  numBytes = 261; return arrow_up_svg;
@@ -9522,35 +9637,35 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
         case 0x1fdee048:  numBytes = 1396; return settings_svg;
         case 0x9eeab69d:  numBytes = 4894; return Slider_Thumb_svg;
         case 0x36e2b8a1:  numBytes = 4109; return Slider_Thumb_bw_svg;
-        case 0xda29b4a4:  numBytes = 15231; return FxSound_ar_txt;
-        case 0xdaeefdb2:  numBytes = 11645; return FxSound_ba_txt;
-        case 0xde910cf4:  numBytes = 12858; return FxSound_de_txt;
-        case 0xe10b2ea1:  numBytes = 12364; return FxSound_es_txt;
-        case 0xe1c2602e:  numBytes = 15906; return FxSound_fa_txt;
-        case 0xe2331c36:  numBytes = 12112; return FxSound_fi_txt;
-        case 0xe2b1efbf:  numBytes = 12765; return FxSound_fr_txt;
-        case 0xe61ba0fd:  numBytes = 11494; return FxSound_hr_txt;
-        case 0x1833c740:  numBytes = 13070; return fxsound_hu_txt;
-        case 0xe70b308e:  numBytes = 11956; return FxSound_id_txt;
-        case 0xe7eca89e:  numBytes = 12253; return FxSound_it_txt;
-        case 0xe895c2aa:  numBytes = 13699; return FxSound_ja_txt;
-        case 0xeb0fe457:  numBytes = 12627; return FxSound_ko_txt;
-        case 0xf00427b1:  numBytes = 11902; return FxSound_nl_txt;
-        case 0xf02e6e34:  numBytes = 11971; return FxSound_no_txt;
-        case 0xf36dd8ef:  numBytes = 12668; return FxSound_pl_txt;
-        case 0x7b843fc7:  numBytes = 12408; return FxSound_ptbr_txt;
-        case 0xf3de94f7:  numBytes = 12300; return FxSound_pt_txt;
-        case 0xf701d0b0:  numBytes = 12437; return FxSound_ro_txt;
-        case 0xf7565db6:  numBytes = 16579; return FxSound_ru_txt;
-        case 0xf88c62cc:  numBytes = 11732; return FxSound_sl_txt;
-        case 0xf9194dd6:  numBytes = 12036; return FxSound_sv_txt;
-        case 0xfa08dd67:  numBytes = 19947; return FxSound_th_txt;
-        case 0xfa95c871:  numBytes = 12149; return FxSound_tr_txt;
-        case 0x4464a26e:  numBytes = 11247; return FxSound_txt;
-        case 0xfb5b117f:  numBytes = 16135; return FxSound_ua_txt;
-        case 0xfd80a626:  numBytes = 13312; return FxSound_vi_txt;
-        case 0xd8a3b00c:  numBytes = 10646; return FxSound_zhCN_txt;
-        case 0xf624e624:  numBytes = 10803; return FxSound_zhTW_txt;
+        case 0xda29b4a4:  numBytes = 15225; return FxSound_ar_txt;
+        case 0xdaeefdb2:  numBytes = 11635; return FxSound_ba_txt;
+        case 0xde910cf4:  numBytes = 12848; return FxSound_de_txt;
+        case 0xe10b2ea1:  numBytes = 12354; return FxSound_es_txt;
+        case 0xe1c2602e:  numBytes = 15896; return FxSound_fa_txt;
+        case 0xe2331c36:  numBytes = 12102; return FxSound_fi_txt;
+        case 0xe2b1efbf:  numBytes = 12750; return FxSound_fr_txt;
+        case 0xe61ba0fd:  numBytes = 11484; return FxSound_hr_txt;
+        case 0x1833c740:  numBytes = 13060; return fxsound_hu_txt;
+        case 0xe70b308e:  numBytes = 11946; return FxSound_id_txt;
+        case 0xe7eca89e:  numBytes = 12243; return FxSound_it_txt;
+        case 0xe895c2aa:  numBytes = 13689; return FxSound_ja_txt;
+        case 0xeb0fe457:  numBytes = 12617; return FxSound_ko_txt;
+        case 0xf00427b1:  numBytes = 11892; return FxSound_nl_txt;
+        case 0xf02e6e34:  numBytes = 11962; return FxSound_no_txt;
+        case 0xf36dd8ef:  numBytes = 12658; return FxSound_pl_txt;
+        case 0x7b843fc7:  numBytes = 12398; return FxSound_ptbr_txt;
+        case 0xf3de94f7:  numBytes = 12290; return FxSound_pt_txt;
+        case 0xf701d0b0:  numBytes = 12427; return FxSound_ro_txt;
+        case 0xf7565db6:  numBytes = 16569; return FxSound_ru_txt;
+        case 0xf88c62cc:  numBytes = 11723; return FxSound_sl_txt;
+        case 0xf9194dd6:  numBytes = 12026; return FxSound_sv_txt;
+        case 0xfa08dd67:  numBytes = 19937; return FxSound_th_txt;
+        case 0xfa95c871:  numBytes = 12139; return FxSound_tr_txt;
+        case 0x4464a26e:  numBytes = 11237; return FxSound_txt;
+        case 0xfb5b117f:  numBytes = 16163; return FxSound_ua_txt;
+        case 0xfd80a626:  numBytes = 13302; return FxSound_vi_txt;
+        case 0xd8a3b00c:  numBytes = 10636; return FxSound_zhCN_txt;
+        case 0xf624e624:  numBytes = 10793; return FxSound_zhTW_txt;
         default: break;
     }
 
@@ -9563,11 +9678,18 @@ const char* namedResourceList[] =
     "GilroyBold_ttf",
     "GilroyRegular_ttf",
     "GilroySemibold_ttf",
+    "restore_defaults_svg",
+    "restore_defaults_black_svg",
+    "restore_defaults_blue_svg",
+    "restore_defaults_white_svg",
+    "flip_svg",
+    "flip_black_svg",
+    "flip_blue_svg",
+    "flip_white_svg",
     "arrow_down_black_svg",
     "arrow_down_white_svg",
     "arrow_up_black_svg",
     "arrow_up_white_svg",
-    "equalizer_svg",
     "arrow_down_svg",
     "arrow_down_blue_svg",
     "arrow_up_svg",
@@ -9658,11 +9780,18 @@ const char* originalFilenames[] =
     "Gilroy-Bold.ttf",
     "Gilroy-Regular.ttf",
     "Gilroy-Semibold.ttf",
+    "restore_defaults.svg",
+    "restore_defaults_black.svg",
+    "restore_defaults_blue.svg",
+    "restore_defaults_white.svg",
+    "flip.svg",
+    "flip_black.svg",
+    "flip_blue.svg",
+    "flip_white.svg",
     "arrow_down_black.svg",
     "arrow_down_white.svg",
     "arrow_up_black.svg",
     "arrow_up_white.svg",
-    "equalizer.svg",
     "arrow_down.svg",
     "arrow_down_blue.svg",
     "arrow_up.svg",

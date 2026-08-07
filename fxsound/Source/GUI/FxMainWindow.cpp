@@ -341,6 +341,8 @@ void FxMainWindow::setLookAndFeel()
 	help_bubble_.setColour(BubbleComponent::ColourIds::backgroundColourId, Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f));
 	help_bubble_.setColour(BubbleComponent::ColourIds::outlineColourId, theme.findColour(TextEditor::textColourId));
 
+	pro_view_.setLookAndFeel();
+
 	setResizeImage();
 }
 

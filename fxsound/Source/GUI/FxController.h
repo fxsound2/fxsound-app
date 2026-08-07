@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <JuceHeader.h>
 #include "FxModel.h"
 #include "FxTheme.h"
-#include "FxEffects.h"
+#include "FxAudioControls.h"
 #include "../Source/Utils/Settings/Settings.h"
 #include "../Source/Utils/Settings/DeviceConfig.h"
 #include "AudioPassthru.h"
@@ -108,8 +108,6 @@ public:
 
 	int getNumEqBands();
 	void setNumEqBands(int num_bands);
-	float getNormalization();
-	void setNormalization(float gain_db);
 	float getVolumeLeveling();
 	void setVolumeLeveling(float gain_db);
 	void setBalance(float gain_db);
