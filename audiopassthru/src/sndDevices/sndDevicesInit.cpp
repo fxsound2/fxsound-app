@@ -85,7 +85,6 @@ int PT_DECLSPEC sndDevicesInit(PT_HANDLE *hp_sndDevices, CSlout *hp_slout, int i
 	cast_handle->captureBufAllocSize  = 0;
 	cast_handle->playbackBufAllocSize = 0;
 
-
 	cast_handle->initializationMode = i_initType;
 
 	SLOUT_FIRST_LINE(L"sndDevicesInit()::  Setting PT handles");
@@ -103,6 +102,8 @@ int PT_DECLSPEC sndDevicesInit(PT_HANDLE *hp_sndDevices, CSlout *hp_slout, int i
     cast_handle->pAudioClientPlaybackRender = NULL;
 	cast_handle->pEndptVolCapture = NULL;
 	cast_handle->pEndptVolPlayback  = NULL;
+	cast_handle->ignoreVolumeCallbacks = FALSE;
+	cast_handle->ignoreDeviceCallbacks = FALSE;
 
 	for(i=0; i<SND_DEVICES_MAX_NUM_DEVICES; i++)
 	{
@@ -222,6 +223,8 @@ int PT_DECLSPEC sndDevicesFree(PT_HANDLE *hp_sndDevices)
 	if (cast_handle == NULL)
 		return(OKAY);
 
+	sndDevices_ReleaseAllAudioObjects(hp_sndDevices);
+
 	// PTNOTE - trying to do a smart close of these in process recording files was causing problems.
 	// Close will be eliminated but the .tmp recording file will be cleaned up on next startup.
 	/*
@@ -258,12 +261,12 @@ int PT_DECLSPEC sndDevicesFree(PT_HANDLE *hp_sndDevices)
 }
 
 /*
- * FUNCTION: sndDevices_StopAndReleaseAllAudioObjects()
+ * FUNCTION: sndDevices_ReleaseAllAudioObjects()
  * DESCRIPTION: Stops and releases audio objects opened in Capture and Playback setup calls.
  */
-int PT_DECLSPEC sndDevices_StopAndReleaseAllAudioObjects(PT_HANDLE *hp_sndDevices)
+int PT_DECLSPEC sndDevices_ReleaseAllAudioObjects(PT_HANDLE *hp_sndDevices)
 {
-	struct sndDevicesHdlType *cast_handle;
+	struct sndDevicesHdlType* cast_handle;
 	HRESULT hr;
 
 	cast_handle = (struct sndDevicesHdlType *)hp_sndDevices;
@@ -272,36 +275,44 @@ int PT_DECLSPEC sndDevices_StopAndReleaseAllAudioObjects(PT_HANDLE *hp_sndDevice
 		return(NOT_OKAY);
 
 	// Turn off capture device volume control callback
-	if( cast_handle->pEndptVolCapture != NULL )  // Had a crash here on re-entry.
-		cast_handle->pEndptVolCapture->UnregisterControlChangeNotify( (IAudioEndpointVolumeCallback*)&(cast_handle->EPVolEventsCapture) );
-
-	if( cast_handle->pEndptVolCapture != NULL )
-		cast_handle->pEndptVolCapture->Release();
-
-	if( cast_handle->pAudioClientCapture != NULL )
+	if(cast_handle->EPVolEventsCapture.IsRegistered())
 	{
-		hr = cast_handle->pAudioClientCapture->Stop();  // Stop capturing, returns false for some reason.
-		//hr = cast_handle->pAudioClientCapture->Release();  // These releases were failing for some reason.
+		if (cast_handle->pEndptVolCapture != NULL)
+		{
+			cast_handle->pEndptVolCapture->UnregisterControlChangeNotify((IAudioEndpointVolumeCallback*)&(cast_handle->EPVolEventsCapture));
+		}
 	}
 
-	if( cast_handle->pCaptureDevice != NULL )
-		cast_handle->pCaptureDevice->Release();
+	if (cast_handle->pEndptVolCapture != NULL)
+	{
+		cast_handle->pEndptVolCapture->Release();
+		cast_handle->pEndptVolCapture = NULL;
+	}
 
 	// Turn off playback device volume control callback
-	if( cast_handle->pEndptVolPlayback != NULL )
-		cast_handle->pEndptVolPlayback->UnregisterControlChangeNotify( (IAudioEndpointVolumeCallback*)&(cast_handle->EPVolEventsPlayback) );
+	if (cast_handle->EPVolEventsPlayback.IsRegistered())
+	{
+		if (cast_handle->pEndptVolPlayback != NULL)
+		{
+			cast_handle->pEndptVolPlayback->UnregisterControlChangeNotify((IAudioEndpointVolumeCallback*)&(cast_handle->EPVolEventsPlayback));
+		}
+	}
 
-	if( cast_handle->pEndptVolPlayback != NULL )
+	if (cast_handle->pEndptVolPlayback != NULL)
+	{
 		cast_handle->pEndptVolPlayback->Release();
+		cast_handle->pEndptVolPlayback = NULL;
+	}
+
+	/*if (cast_handle->pAudioClientCapture != NULL)
+	{
+		hr = cast_handle->pAudioClientCapture->Release();
+	}
 
 	if( cast_handle->pAudioClientPlayback != NULL )
 	{
-		hr = cast_handle->pAudioClientPlayback->Stop();  // Stop playback.
-		// hr = cast_handle->pAudioClientPlayback->Release(); // These releases were failing for some reason.
-	}
-
-	if( cast_handle->pPlaybackDevice != NULL )
-		cast_handle->pPlaybackDevice->Release();
+		hr = cast_handle->pAudioClientPlayback->Release();
+	}*/
 
 	return(OKAY);
 }

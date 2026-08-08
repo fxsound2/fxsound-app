@@ -46,7 +46,7 @@ int PT_DECLSPEC sndDevices_GetAll( PT_HANDLE *, int *);
                              
 /* sndDevicesInit */
 int PT_DECLSPEC sndDevices_FreeReuseableObjects(PT_HANDLE *);
-int PT_DECLSPEC sndDevices_StopAndReleaseAllAudioObjects(PT_HANDLE *);
+int PT_DECLSPEC sndDevices_ReleaseAllAudioObjects(PT_HANDLE *);
 
 /* sndDevices_Utils.cpp */
 int PT_DECLSPEC sndDevices_UtilsGetIndexFromID(PT_HANDLE *, wchar_t *, int *);

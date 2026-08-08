@@ -66,7 +66,7 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 	cast_handle->function_status = SND_DEVICES_DEVICE_OPERATION_COMPLETED;	// Clear function error status code.
 
 	//cast_handle->ignoreDeviceCallbacks = TRUE;
-	cast_handle->ignoreVolumeCallbacks = TRUE;
+	//cast_handle->ignoreVolumeCallbacks = TRUE;
 
 	cast_handle->totalNumDevices = SND_DEVICES_DEVICE_NOT_PRESENT;
 	cast_handle->dfxDeviceNum = SND_DEVICES_DEVICE_NOT_PRESENT;
@@ -147,6 +147,8 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_RULES_NOT_POSSIBLE);
 			}
 
+            sndDevices_ReleaseAllAudioObjects(hp_sndDevices);
+
 			// Do the initial non-format dependent setup of capture and playback devices.
 			if (sndDevicesInitialSetupCaptureDevice(hp_sndDevices, &resultFlag) != OKAY)
 				return(NOT_OKAY);
@@ -166,6 +168,28 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 				*ipDfxDeviceEnabledFlag = IS_FALSE;
 				*ip_status = resultFlag;
 				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_RULES_NOT_POSSIBLE);
+			}
+
+			// Capture each device's mute state up front, before anything below (in particular the
+			// volume-level sync) gets a chance to touch it. Some virtual-device drivers (including
+			// the DFX "FxSound Audio Enhancer" device) clear their own mute flag as a side effect of
+			// a volume-level write, so reading mute AFTER SetMasterVolumeLevelScalar() below would
+			// see FALSE even if the user had genuinely muted it (e.g. via Windows sound settings)
+			// moments before reinit ran.
+			hr = cast_handle->pEndptVolCapture->GetMute(&captureMuteState);
+			if (hr != S_OK)
+			{
+				*ipDfxDeviceEnabledFlag = IS_FALSE;
+				*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
+				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MUTE_FAILED);
+			}
+
+			hr = cast_handle->pEndptVolPlayback->GetMute(&playbackMuteState);
+			if (hr != S_OK)
+			{
+				*ipDfxDeviceEnabledFlag = IS_FALSE;
+				*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
+				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MUTE_FAILED);
 			}
 
 			// NOTE - currently we're initializing DFX volume to playback device's volume, we may want to do the opposite.
@@ -189,46 +213,24 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MASTER_VOLUME_FAILED);
 			}
 
-			// Turn off mute on DFX device, but only if the user hasn't muted it themselves
-			// (e.g. via Windows sound settings on the "FxSound Audio Enhancer" device), otherwise
-			// reinit would silently undo that mute.
-			hr = cast_handle->pEndptVolCapture->GetMute(&captureMuteState);
-			if (hr != S_OK)
+			// Re-assert each device's mute state to what it was before the volume-level sync above,
+			// regardless of whether that sync actually disturbed it. This preserves a user-set mute
+			// (e.g. via Windows sound settings on the "FxSound Audio Enhancer" device) across reinit
+			// instead of only conditionally restoring it based on a possibly-already-clobbered read.
+			hr = cast_handle->pEndptVolCapture->SetMute(captureMuteState || playbackMuteState, &(cast_handle->guidThisApplication));
+			if ((hr != S_OK) && (hr != S_FALSE))	// Note, will return S_FALSE if the mute was already at that value, check for other errors.
 			{
 				*ipDfxDeviceEnabledFlag = IS_FALSE;
 				*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
 				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MUTE_FAILED);
 			}
 
-			if (!captureMuteState)
-			{
-				hr = cast_handle->pEndptVolCapture->SetMute(FALSE, &(cast_handle->guidThisApplication));
-				if ((hr != S_OK) && (hr != S_FALSE))	// Note, will return S_FALSE if the mute was already off, check for other errors.
-				{
-					*ipDfxDeviceEnabledFlag = IS_FALSE;
-					*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
-					SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MUTE_FAILED);
-				}
-			}
-
-			// Turn off mute on playback device, but only if the user hasn't muted it themselves.
-			hr = cast_handle->pEndptVolPlayback->GetMute(&playbackMuteState);
-			if (hr != S_OK)
+			hr = cast_handle->pEndptVolPlayback->SetMute(playbackMuteState || captureMuteState, &(cast_handle->guidThisApplication));
+			if ((hr != S_OK) && (hr != S_FALSE))	// Note, will return S_FALSE if the mute was already at that value, check for other errors.
 			{
 				*ipDfxDeviceEnabledFlag = IS_FALSE;
 				*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
 				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MUTE_FAILED);
-			}
-
-			if (!playbackMuteState)
-			{
-				hr = cast_handle->pEndptVolPlayback->SetMute(FALSE, &(cast_handle->guidThisApplication));
-				if ((hr != S_OK) && (hr != S_FALSE))	// Note, will return S_FALSE if the mute was already off, check for other errors.
-				{
-					*ipDfxDeviceEnabledFlag = IS_FALSE;
-					*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
-					SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MUTE_FAILED);
-				}
 			}
 
 			// Setup capture and playback buffers
