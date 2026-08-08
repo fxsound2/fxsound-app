@@ -2854,65 +2854,65 @@ const char* GilroySemibold_ttf = (const char*) temp_binary_data_2;
 
 //================== restore_defaults.svg ==================
 static const unsigned char temp_binary_data_3[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
-"    <title>restore_defaults</title>\n"
-"    <desc>Created with Sketch.</desc>\n"
-"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n"
-"        <g id=\"restore_defaults\" stroke=\"#E63462\" stroke-width=\"1\" fill=\"none\">\n"
-"            <path d=\"M4,7 L1,4 L4,1\" id=\"Arrowhead\"></path>\n"
-"            <path d=\"M1,4 L9,4 A5,5 0 1 1 9,14 L2,14\" id=\"Body\"></path>\n"
-"        </g>\n"
-"    </g>\n"
-"</svg>\n";
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+"<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
+"    <title>restore_defaults</title>\r\n"
+"    <desc>Created with Sketch.</desc>\r\n"
+"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\r\n"
+"        <g id=\"restore_defaults\" stroke=\"#E63462\" stroke-width=\"1\" fill=\"none\">\r\n"
+"            <path d=\"M4,7 L1,4 L4,1\" id=\"Arrowhead\"></path>\r\n"
+"            <path d=\"M1,4 L9,4 A5,5 0 1 1 9,14 L2,14\" id=\"Body\"></path>\r\n"
+"        </g>\r\n"
+"    </g>\r\n"
+"</svg>\r\n";
 
 const char* restore_defaults_svg = (const char*) temp_binary_data_3;
 
 //================== restore_defaults_black.svg ==================
 static const unsigned char temp_binary_data_4[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
-"    <title>restore_defaults_black</title>\n"
-"    <desc>Created with Sketch.</desc>\n"
-"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n"
-"        <g id=\"restore_defaults_black\" stroke=\"#000000\" stroke-width=\"1\" fill=\"none\">\n"
-"            <path d=\"M4,7 L1,4 L4,1\" id=\"Arrowhead\"></path>\n"
-"            <path d=\"M1,4 L9,4 A5,5 0 1 1 9,14 L2,14\" id=\"Body\"></path>\n"
-"        </g>\n"
-"    </g>\n"
-"</svg>\n";
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+"<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
+"    <title>restore_defaults_black</title>\r\n"
+"    <desc>Created with Sketch.</desc>\r\n"
+"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\r\n"
+"        <g id=\"restore_defaults_black\" stroke=\"#000000\" stroke-width=\"1\" fill=\"none\">\r\n"
+"            <path d=\"M4,7 L1,4 L4,1\" id=\"Arrowhead\"></path>\r\n"
+"            <path d=\"M1,4 L9,4 A5,5 0 1 1 9,14 L2,14\" id=\"Body\"></path>\r\n"
+"        </g>\r\n"
+"    </g>\r\n"
+"</svg>\r\n";
 
 const char* restore_defaults_black_svg = (const char*) temp_binary_data_4;
 
 //================== restore_defaults_blue.svg ==================
 static const unsigned char temp_binary_data_5[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
-"    <title>restore_defaults_blue</title>\n"
-"    <desc>Created with Sketch.</desc>\n"
-"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n"
-"        <g id=\"restore_defaults_blue\" stroke=\"#23B6EB\" stroke-width=\"1\" fill=\"none\">\n"
-"            <path d=\"M4,7 L1,4 L4,1\" id=\"Arrowhead\"></path>\n"
-"            <path d=\"M1,4 L9,4 A5,5 0 1 1 9,14 L2,14\" id=\"Body\"></path>\n"
-"        </g>\n"
-"    </g>\n"
-"</svg>\n";
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+"<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
+"    <title>restore_defaults_blue</title>\r\n"
+"    <desc>Created with Sketch.</desc>\r\n"
+"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\r\n"
+"        <g id=\"restore_defaults_blue\" stroke=\"#23B6EB\" stroke-width=\"1\" fill=\"none\">\r\n"
+"            <path d=\"M4,7 L1,4 L4,1\" id=\"Arrowhead\"></path>\r\n"
+"            <path d=\"M1,4 L9,4 A5,5 0 1 1 9,14 L2,14\" id=\"Body\"></path>\r\n"
+"        </g>\r\n"
+"    </g>\r\n"
+"</svg>\r\n";
 
 const char* restore_defaults_blue_svg = (const char*) temp_binary_data_5;
 
 //================== restore_defaults_white.svg ==================
 static const unsigned char temp_binary_data_6[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
-"    <title>restore_defaults_white</title>\n"
-"    <desc>Created with Sketch.</desc>\n"
-"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\n"
-"        <g id=\"restore_defaults_white\" stroke=\"#FFFFFF\" stroke-width=\"1\" fill=\"none\">\n"
-"            <path d=\"M4,7 L1,4 L4,1\" id=\"Arrowhead\"></path>\n"
-"            <path d=\"M1,4 L9,4 A5,5 0 1 1 9,14 L2,14\" id=\"Body\"></path>\n"
-"        </g>\n"
-"    </g>\n"
-"</svg>\n";
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+"<svg width=\"16px\" height=\"16px\" viewBox=\"0 0 16 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n"
+"    <title>restore_defaults_white</title>\r\n"
+"    <desc>Created with Sketch.</desc>\r\n"
+"    <g id=\"Design\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\">\r\n"
+"        <g id=\"restore_defaults_white\" stroke=\"#FFFFFF\" stroke-width=\"1\" fill=\"none\">\r\n"
+"            <path d=\"M4,7 L1,4 L4,1\" id=\"Arrowhead\"></path>\r\n"
+"            <path d=\"M1,4 L9,4 A5,5 0 1 1 9,14 L2,14\" id=\"Body\"></path>\r\n"
+"        </g>\r\n"
+"    </g>\r\n"
+"</svg>\r\n";
 
 const char* restore_defaults_white_svg = (const char*) temp_binary_data_6;
 
@@ -4641,8 +4641,176 @@ static const unsigned char temp_binary_data_70[] =
 
 const char* FxSound_ba_txt = (const char*) temp_binary_data_70;
 
-//================== FxSound.de.txt ==================
+//================== FxSound.cs.txt ==================
 static const unsigned char temp_binary_data_71[] =
+"language: \xc4\x8c""esky\r\n"
+"countries: cz\r\n"
+"\r\n"
+"\"Oops! There\\'s an issue with your playback device settings.\\r\\nBefore we can get started, please go through the \" = \"Oops! Vyskytl se probl\xc3\xa9m s nastaven\xc3\xadm va\xc5\xa1""eho p\xc5\x99""ehr\xc3\xa1vac\xc3\xadho za\xc5\x99\xc3\xadzen\xc3"
+"\xad.\\r\\nNe\xc5\xbe za\xc4\x8dneme, projd\xc4\x9bte si pros\xc3\xadm \"\r\n"
+"\"troubleshooting steps here.\" = \"kroky pro odstra\xc5\x88ov\xc3\xa1n\xc3\xad probl\xc3\xa9m\xc5\xaf zde.\"\r\n"
+"\" if you\\'re still having problems.\" = \" pokud m\xc3\xa1te st\xc3\xa1le pot\xc3\xad\xc5\xbe""e.\"\r\n"
+"\"Contact us\" = \"Kontaktujte n\xc3\xa1s\"\r\n"
+"\"Error in system audio configuration. Unable to run FxSound\" = \"Chyba v konfiguraci zvuku syst\xc3\xa9mu. Nelze spustit FxSound\"\r\n"
+"\"OK\" = \"OK\"\r\n"
+"\"Click here to see what\\'s new on this version!\" = \"Kliknut\xc3\xadm sem se dozv\xc3\xadte, co je v t\xc3\xa9to verzi nov\xc3\xa9ho!\"\r\n"
+"\"FxSound in system tray\\r\\nClick FxSound icon to reopen\" = \"FxSound v syst\xc3\xa9mov\xc3\xa9 li\xc5\xa1t\xc4\x9b\\r\\nKliknut\xc3\xadm na ikonu FxSound aplikaci znovu otev\xc5\x99""ete\"\r\n"
+"\"Thanks for using FxSound! Would you be\\r\\ninterested in helping us by taking a quick 4 minute\\r\\nsurvey so we can make FxSound better?\" = \"D\xc4\x9bkujeme, \xc5\xbe""e pou\xc5\xbe\xc3\xadv\xc3\xa1te FxSound! M\xc4\x9bli byste\\r\\nz\xc3\xa1je"
+"m n\xc3\xa1m pomoci vypln\xc4\x9bn\xc3\xadm kr\xc3\xa1tk\xc3\xa9ho 4minutov\xc3\xa9ho\\r\\ndotazn\xc3\xadku, abychom mohli FxSound vylep\xc5\xa1it?\"\r\n"
+"\"Take the survey.\" = \"Vyplnit dotazn\xc3\xadk.\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to exit?\" = \"Zm\xc4\x9bny ve va\xc5\xa1\xc3\xad p\xc5\x99""edvolb\xc4\x9b nejsou ulo\xc5\xbe""eny.\\r\\nChcete odej\xc3\xadt?\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to ignore the changes?\" = \"Zm\xc4\x9bny ve va\xc5\xa1\xc3\xad p\xc5\x99""edvolb\xc4\x9b nejsou ulo\xc5\xbe""eny.\\r\\nChcete zm\xc4\x9bny ignorovat?\"\r\n"
+"\"Output Disconnected\" = \"V\xc3\xbdstup odpojen\"\r\n"
+"\"Output: \" = \"V\xc3\xbdstup: \"\r\n"
+"\"Changes to preset %s are saved.\" = \"Zm\xc4\x9bny v p\xc5\x99""edvolb\xc4\x9b %s byly ulo\xc5\xbe""eny.\"\r\n"
+"\"New preset %s is saved.\" = \"Nov\xc3\xa1 p\xc5\x99""edvolba %s byla ulo\xc5\xbe""ena.\"\r\n"
+"\"Reached the limit on new presets.\" = \"Byl dosa\xc5\xbe""en limit pro nov\xc3\xa9 p\xc5\x99""edvolby.\"\r\n"
+"\"Preset %s is deleted.\" = \"P\xc5\x99""edvolba %s byla smaz\xc3\xa1na.\"\r\n"
+"\"Presets are restored to factory defaults\" = \"P\xc5\x99""edvolby byly obnoveny do tov\xc3\xa1rn\xc3\xadho nastaven\xc3\xad\"\r\n"
+"\"Preset file %s already exists in the export path, do you want to overwrite the preset file?\" = \"Soubor p\xc5\x99""edvolby %s ji\xc5\xbe v exportn\xc3\xad cest\xc4\x9b existuje, chcete soubor p\xc5\x99""edvolby p\xc5\x99""epsat?\"\r\n"
+"\"FxSound is %s.\" = \"FxSound je %s.\"\r\n"
+"\"on\" = \"zapnut\xc3\xbd\"\r\n"
+"\"off\" = \"vypnut\xc3\xbd\"\r\n"
+"\"Preset: \" = \"P\xc5\x99""edvolba: \"\r\n"
+"\"Clarity\" = \"\xc4\x8cistota zvuku\"\r\n"
+"\"Ambience\" = \"Proorov\xc3\xa9 echo\"\r\n"
+"\"Surround Sound\" = \"Prostorov\xc3\xbd zvuk\"\r\n"
+"\"Dynamic Boost\" = \"Dynamick\xc3\xa9 zes\xc3\xadlen\xc3\xad\"\r\n"
+"\"Bass Boost\" = \"Zes\xc3\xadlen\xc3\xad bas\xc5\xaf\"\r\n"
+"\"Enhances and elevates high end\\r\\nfidelity and presence\" = \"Vylep\xc5\xa1uje a zv\xc3\xbdraz\xc5\x88uje v\xc4\x9brnost\\r\\na p\xc5\x99\xc3\xadtomnost vysok\xc3\xbd""ch frekvenc\xc3\xad\"\r\n"
+"\"Thickens and smooths audio\\r\\nwith controlled reverberation\" = \"Zahu\xc5\xa1\xc5\xa5uje a vyhlazuje zvuk\\r\\npomoc\xc3\xad \xc5\x99\xc3\xadzen\xc3\xa9ho dozvuku\"\r\n"
+"\"Widens the left-right balance\\r\\nfor expansive, wide sound\" = \"Roz\xc5\xa1i\xc5\x99uje levou a pravou rovnov\xc3\xa1hu\\r\\npro expanzivn\xc3\xad, \xc5\xa1irok\xc3\xbd zvuk\"\r\n"
+"\"Increases overall volume and balance\\r\\nwith responsive processing\" = \"Zvy\xc5\xa1uje celkovou hlasitost a vyv\xc3\xa1\xc5\xbe""enost\\r\\npomoc\xc3\xad responzivn\xc3\xadho zpracov\xc3\xa1n\xc3\xad\"\r\n"
+"\"Boosts low end for full,\\r\\nimpactful response\" = \"Zesiluje n\xc3\xadzk\xc3\xa9 frekvence pro plnou\\r\\na \xc3\xba""dernou odezvu\"\r\n"
+"\"Hyper-low Bass - First band for very low frequencies down to 20 Hz.\" = \"Hyper-n\xc3\xadzk\xc3\xa9 basy - Prvn\xc3\xad p\xc3\xa1smo pro velmi n\xc3\xadzk\xc3\xa9 frekvence a\xc5\xbe do 20 Hz.\"\r\n"
+"\"Super-low Bass. Increase this for more rumble and \\\"thump\\\", decrease if there\\'s too much boominess.\" = \"Super-n\xc3\xadzk\xc3\xa9 basy. Zvy\xc5\xa1te pro v\xc4\x9bt\xc5\xa1\xc3\xad dun\xc4\x9bn\xc3\xad a \xe2\x80\x9e""b\xc5\x99ink\xe2\x80\x9c"
+", sni\xc5\xbete, pokud je zvuk p\xc5\x99\xc3\xadli\xc5\xa1 p\xc5\x99""ebasovan\xc3\xbd.\"\r\n"
+"\"Center of your Bass sound. Increase this for a fuller low end, decrease if the bass sounds overwhelming.\" = \"St\xc5\x99""ed va\xc5\xa1""eho basov\xc3\xa9ho zvuku. Zvy\xc5\xa1te pro pln\xc4\x9bj\xc5\xa1\xc3\xad n\xc3\xadzk\xc3\xa9 t\xc3\xb3ny, sni"
+"\xc5\xbete, pokud jsou basy p\xc5\x99\xc3\xadli\xc5\xa1 ohlu\xc5\xa1uj\xc3\xad""c\xc3\xad.\"\r\n"
+"\"The low end of your mid-range. Increase this to make vocals sound rich and warm, decrease it to help control instruments that sound loud and muffled.\" = \"Ni\xc5\xbe\xc5\xa1\xc3\xad t\xc3\xb3ny st\xc5\x99""edn\xc3\xadho p\xc3\xa1sma. Zvy\xc5\xa1te"
+", aby vok\xc3\xa1ly zn\xc4\x9bly syt\xc4\x9b a h\xc5\x99""ejiv\xc4\x9b, sni\xc5\xbete pro potla\xc4\x8d""en\xc3\xad n\xc3\xa1stroj\xc5\xaf, kter\xc3\xa9 zn\xc4\x9bj\xc3\xad hlasit\xc4\x9b a tlumen\xc4\x9b.\"\r\n"
+"\"A focal point of the low-mid-range. Increase this to bring out electric guitars and vocal volume, decrease it to reduce any \\\"boxy\\\" tones.\" = \"\xc3\x9ast\xc5\x99""edn\xc3\xad bod ni\xc5\xbe\xc5\xa1\xc3\xadho st\xc5\x99""edn\xc3\xadho p\xc3\xa1"
+"sma. Zvy\xc5\xa1te pro zv\xc3\xbdrazn\xc4\x9bn\xc3\xad elektrick\xc3\xbd""ch kytar a hlasitosti vok\xc3\xa1l\xc5\xaf, sni\xc5\xbete pro omezen\xc3\xad \xe2\x80\x9ekrabicov\xc3\xbd""ch\xe2\x80\x9c t\xc3\xb3n\xc5\xaf.\"\r\n"
+"\"The center mid-range band. Increase this to drastically boost rhythm instruments and snare hits, reduce it to cut out \\\"nasal\\\" tones.\" = \"St\xc5\x99""edn\xc3\xad p\xc3\xa1smo. Zvy\xc5\xa1te pro v\xc3\xbdrazn\xc3\xa9 pos\xc3\xadlen\xc3\xad ry"
+"tmick\xc3\xbd""ch n\xc3\xa1stroj\xc5\xaf a \xc3\xba""der\xc5\xaf na buben, sni\xc5\xbete pro odstran\xc4\x9bn\xc3\xad \xe2\x80\x9enosov\xc3\xbd""ch\xe2\x80\x9c t\xc3\xb3n\xc5\xaf.\"\r\n"
+"\"The high-mid-range. Increase this to get more instrumental harmonics, reduce it to improve drums that have too much \\\"clickiness\\\" or orchestral instruments that are piercing.\" = \"Vy\xc5\xa1\xc5\xa1\xc3\xad st\xc5\x99""edn\xc3\xad p\xc3\xa1sm"
+"o. Zvy\xc5\xa1te pro z\xc3\xadsk\xc3\xa1n\xc3\xad v\xc3\xad""ce harmonick\xc3\xbd""ch t\xc3\xb3n\xc5\xaf n\xc3\xa1stroj\xc5\xaf, sni\xc5\xbete pro \xc3\xbapravu bubn\xc5\xaf s p\xc5\x99\xc3\xadli\xc5\xa1n\xc3\xbdm \xe2\x80\x9e""cvak\xc3\xa1n\xc3\xadm"
+"\xe2\x80\x9c nebo u pronikav\xc3\xbd""ch orchestr\xc3\xa1ln\xc3\xad""ch n\xc3\xa1stroj\xc5\xaf.\"\r\n"
+"\"The lower end of the high-end range. Increase this for more vocal clarity and articulation, reduce it and move the frequency wheel up and down to find and cut out overly loud \\\"S\\\" and \\\"T\\\" sounds.\" = \"Ni\xc5\xbe\xc5\xa1\xc3\xad konec vy"
+"sok\xc3\xa9ho p\xc3\xa1sma. Zvy\xc5\xa1te pro lep\xc5\xa1\xc3\xad \xc4\x8distotu a artikulaci vok\xc3\xa1l\xc5\xaf. Sni\xc5\xbete a pohybujte kole\xc4\x8dkem frekvence nahoru a dol\xc5\xaf pro vyhled\xc3\xa1n\xc3\xad a od\xc5\x99\xc3\xadznut\xc3\xad "
+"p\xc5\x99\xc3\xadli\xc5\xa1 hlasit\xc3\xbd""ch sykavek \xe2\x80\x9eS\xe2\x80\x9c a \xe2\x80\x9eT\xe2\x80\x9c.\"\r\n"
+"\"The core high-end range. Increase this to make your audio sound more like it\\'s in an airy, large space, reduce it to help with room noises and unwanted echoing.\" = \"Hlavn\xc3\xad vysok\xc3\xa9 p\xc3\xa1smo. Zvy\xc5\xa1te, aby v\xc3\xa1\xc5\xa1 "
+"zvuk zn\xc4\x9bl vzdu\xc5\xa1n\xc4\x9bji a prostorov\xc4\x9bji, sni\xc5\xbete pro potla\xc4\x8d""en\xc3\xad hluku v m\xc3\xadstnosti a necht\xc4\x9bn\xc3\xa9 ozv\xc4\x9bny.\"\r\n"
+"\"The highest range of average human hearing. Increase this to give your sound more of a crisp tone, with lots of overtones. Reduce it to remove hiss or painfully high sounds.\" = \"Nejvy\xc5\xa1\xc5\xa1\xc3\xad rozsah pr\xc5\xafm\xc4\x9brn\xc3\xa9ho"
+" lidsk\xc3\xa9ho sluchu. Zvy\xc5\xa1te, abyste zvuku dodali jasn\xc4\x9bj\xc5\xa1\xc3\xad t\xc3\xb3n s mno\xc5\xbestv\xc3\xadm vy\xc5\xa1\xc5\xa1\xc3\xad""ch harmonick\xc3\xbd""ch frekvenc\xc3\xad. Sni\xc5\xbete pro odstran\xc4\x9bn\xc3\xad \xc5\xa1u"
+"mu nebo bolestiv\xc4\x9b vysok\xc3\xbd""ch zvuk\xc5\xaf.\"\r\n"
+"\"This wheel allows you to adjust which frequencies this EQ band is affecting\\r\\nup or down to target different frequencies/pitches. The EQ slider above\\r\\ncontrols the volume of this EQ band. Increase or decrease to boost or cut\\r\\na portion o"
+"f your audio\\'s frequencies, without modifying the rest of your sound.\" = \"Toto kole\xc4\x8dko v\xc3\xa1m umo\xc5\xbe\xc5\x88uje posouvat ovliv\xc5\x88ovan\xc3\xa9 frekvence tohoto p\xc3\xa1sma EQ\\r\\nnahoru nebo dol\xc5\xaf pro zac\xc3\xadlen\xc3"
+"\xad na r\xc5\xafzn\xc3\xa9 frekvence/v\xc3\xbd\xc5\xa1ky. Posuvn\xc3\xadk EQ v\xc3\xbd\xc5\xa1""e\\r\\novl\xc3\xa1""d\xc3\xa1 hlasitost tohoto p\xc3\xa1sma EQ. Zvy\xc5\xa1te nebo sni\xc5\xbete hodnotu pro pos\xc3\xadlen\xc3\xad nebo potla\xc4\x8d""e"
+"n\xc3\xad\\r\\n\xc4\x8d\xc3\xa1sti frekvenc\xc3\xad va\xc5\xa1""eho zvuku bez \xc3\xbapravy zbytku zvuku.\"\r\n"
+"\"SUBSCRIBE NOW\" = \"P\xc5\x98""EDPLATIT NYN\xc3\x8d\"\r\n"
+"\"Yes\" = \"Ano\"\r\n"
+"\"No\" = \"Ne\"\r\n"
+"\"Export Presets\" = \"Exportovat p\xc5\x99""edvolby\"\r\n"
+"\"Export\" = \"Exportovat\"\r\n"
+"\"Select the presets to export...\" = \"Vyberte p\xc5\x99""edvolby k exportu...\"\r\n"
+"\"Presets are exported successfully!\" = \"P\xc5\x99""edvolby byly \xc3\xbasp\xc4\x9b\xc5\xa1n\xc4\x9b exportov\xc3\xa1ny!\"\r\n"
+"\"Presets successfully imported\" = \"P\xc5\x99""edvolby byly \xc3\xbasp\xc4\x9b\xc5\xa1n\xc4\x9b importov\xc3\xa1ny\"\r\n"
+"\"Duplicate presets not imported\" = \"Duplicitn\xc3\xad p\xc5\x99""edvolby nebyly importov\xc3\xa1ny\"\r\n"
+"\"Import Presets\" = \"Importovat p\xc5\x99""edvolby\"\r\n"
+"\"Import\" = \"Importovat\"\r\n"
+"\"Select the folder which contains the presets...\" = \"Vyberte slo\xc5\xbeku, kter\xc3\xa1 obsahuje p\xc5\x99""edvolby...\"\r\n"
+"\"Folder:\" = \"Slo\xc5\xbeka:\"\r\n"
+"\"Preset files not found in the selected folder.\" = \"Ve vybran\xc3\xa9 slo\xc5\xbe""ce nebyly nalezeny \xc5\xbe\xc3\xa1""dn\xc3\xa9 soubory p\xc5\x99""edvoleb.\"\r\n"
+"\"Settings\" = \"Nastaven\xc3\xad\"\r\n"
+"\"Donate\" = \"P\xc5\x99isp\xc4\x9bt\"\r\n"
+"\"General\" = \"Obecn\xc3\xa9\"\r\n"
+"\"Help\" = \"N\xc3\xa1pov\xc4\x9b""da\"\r\n"
+"\"General Preferences\" = \"Obecn\xc3\xa9 p\xc5\x99""edvolby\"\r\n"
+"\"Launch on system startup\" = \"Spustit p\xc5\x99i startu syst\xc3\xa9mu\"\r\n"
+"\"Automatically switch to newly connected output device\" = \"Automaticky p\xc5\x99""epnout na nov\xc4\x9b p\xc5\x99ipojen\xc3\xa9 v\xc3\xbdstupn\xc3\xad za\xc5\x99\xc3\xadzen\xc3\xad\"\r\n"
+"\"Hide help tips for audio controls\" = \"Skr\xc3\xbdt tipy n\xc3\xa1pov\xc4\x9b""dy pro ovl\xc3\xa1""d\xc3\xa1n\xc3\xad zvuku\"\r\n"
+"\"Disable keyboard shortcuts\" = \"Zak\xc3\xa1zat kl\xc3\xa1vesov\xc3\xa9 zkratky\"\r\n"
+"\"Reset presets to factory defaults\" = \"Obnovit p\xc5\x99""edvolby do tov\xc3\xa1rn\xc3\xadho nastaven\xc3\xad\"\r\n"
+"\"Turn FxSound On/Off\" = \"Zapnout/Vypnout FxSound\"\r\n"
+"\"Open/Close FxSound\" = \"Otev\xc5\x99\xc3\xadt/Zav\xc5\x99\xc3\xadt FxSound\"\r\n"
+"\"Use Next Preset\" = \"Pou\xc5\xbe\xc3\xadt dal\xc5\xa1\xc3\xad p\xc5\x99""edvolbu\"\r\n"
+"\"Use Previous Preset\" = \"Pou\xc5\xbe\xc3\xadt p\xc5\x99""edchoz\xc3\xad p\xc5\x99""edvolbu\"\r\n"
+"\"Change Playback Device\" = \"Zm\xc4\x9bnit p\xc5\x99""ehr\xc3\xa1vac\xc3\xad za\xc5\x99\xc3\xadzen\xc3\xad\"\r\n"
+"\"Language\" = \"Jazyk\"\r\n"
+"\"Disable debug logging\" = \"Zak\xc3\xa1zat protokolov\xc3\xa1n\xc3\xad lad\xc4\x9bn\xc3\xad (debug)\"\r\n"
+"\"Version\" = \"Verze\"\r\n"
+"\"Support\" = \"Podpora\"\r\n"
+"\"Maintenance\" = \"\xc3\x9a""dr\xc5\xbe""ba\"\r\n"
+"\"Changelog\" = \"Seznam zm\xc4\x9bn\"\r\n"
+"\"Quick tour\" = \"Rychl\xc3\xa1 prohl\xc3\xad""dka\"\r\n"
+"\"Submit debug logs\" = \"Odeslat protokoly lad\xc4\x9bn\xc3\xad\"\r\n"
+"\"Help center\" = \"Centrum n\xc3\xa1pov\xc4\x9b""dy\"\r\n"
+"\"Feedback\" = \"Zp\xc4\x9btn\xc3\xa1 vazba\"\r\n"
+"\"Check for updates\" = \"Zkontrolovat aktualizace\"\r\n"
+"\"Open\" = \"Otev\xc5\x99\xc3\xadt\"\r\n"
+"\"Exit\" = \"Ukon\xc4\x8dit\"\r\n"
+"\"Turn Off\" = \"Vypnout\"\r\n"
+"\"Turn On\" = \"Zapnout\"\r\n"
+"\"Preset Select\" = \"V\xc3\xbd""b\xc4\x9br p\xc5\x99""edvolby\"\r\n"
+"\"Playback Device Select\" = \"V\xc3\xbd""b\xc4\x9br p\xc5\x99""ehr\xc3\xa1vac\xc3\xadho za\xc5\x99\xc3\xadzen\xc3\xad\"\r\n"
+"\"Enter your preset name\" = \"Zadejte n\xc3\xa1zev p\xc5\x99""edvolby\"\r\n"
+"\"Enter new preset name\" = \"Zadejte nov\xc3\xbd n\xc3\xa1zev p\xc5\x99""edvolby\"\r\n"
+"\"Overwrite Existing Preset\" = \"P\xc5\x99""epsat existuj\xc3\xad""c\xc3\xad p\xc5\x99""edvolbu\"\r\n"
+"\"Save New Preset\" = \"Ulo\xc5\xbeit novou p\xc5\x99""edvolbu\"\r\n"
+"\"Undo Preset Changes\" = \"Vr\xc3\xa1tit zm\xc4\x9bny p\xc5\x99""edvolby\"\r\n"
+"\"Rename Preset\" = \"P\xc5\x99""ejmenovat p\xc5\x99""edvolbu\"\r\n"
+"\"Delete Preset\" = \"Smazat p\xc5\x99""edvolbu\"\r\n"
+"\"Download Bonus Presets\" = \"St\xc3\xa1hnout bonusov\xc3\xa9 p\xc5\x99""edvolby\"\r\n"
+"\"FxSound is unable to play processed audio through the selected output device.\\r\\nAnother application could be using it in exclusive mode or the device could be\\r\\ndisconnected. To disable exclusive mode follow these \" = \"FxSound nem\xc5\xaf\xc5"
+"\xbe""e p\xc5\x99""ehr\xc3\xa1vat zpracovan\xc3\xbd zvuk p\xc5\x99""es vybran\xc3\xa9 v\xc3\xbdstupn\xc3\xad za\xc5\x99\xc3\xadzen\xc3\xad.\\r\\nJin\xc3\xa1 aplikace jej m\xc5\xaf\xc5\xbe""e pou\xc5\xbe\xc3\xadvat v exkluzivn\xc3\xadm re\xc5\xbeimu n"
+"ebo m\xc5\xaf\xc5\xbe""e b\xc3\xbdt za\xc5\x99\xc3\xadzen\xc3\xad\\r\\nodpojeno. Pro zak\xc3\xa1z\xc3\xa1n\xc3\xad exkluzivn\xc3\xadho re\xc5\xbeimu postupujte podle t\xc4\x9b""chto \"\r\n"
+"\"steps.\" = \"krok\xc5\xaf.\"\r\n"
+"\"Click here to save new presets, overwrite old ones, or reset your settings.\" = \"Kliknut\xc3\xadm sem ulo\xc5\xbe\xc3\xadte nov\xc3\xa9 p\xc5\x99""edvolby, p\xc5\x99""ep\xc3\xad\xc5\xa1""ete star\xc3\xa9 nebo resetujete nastaven\xc3\xad.\"\r\n"
+"\"Settings file not found!\" = \"Soubor s nastaven\xc3\xadm nebyl nalezen!\"\r\n"
+"\"FxSound is now open-source\" = \"FxSound je nyn\xc3\xad open-source\"\r\n"
+"\"Press Ctrl + Alt/Shift + 0-9/A-Z to change the hotkey\" = \"Stisknut\xc3\xadm Ctrl + Alt/Shift + 0-9/A-Z zm\xc4\x9bn\xc3\xadte kl\xc3\xa1vesovou zkratku\"\r\n"
+"\"FxSound does not support mono devices, so FxSound processing had been disabled for this device.\" = \"FxSound nepodporuje mono za\xc5\x99\xc3\xadzen\xc3\xad, proto bylo zpracov\xc3\xa1n\xc3\xad FxSound pro toto za\xc5\x99\xc3\xadzen\xc3\xad zak\xc3"
+"\xa1z\xc3\xa1no.\"\r\n"
+"\"Minimize Button\" = \"Tla\xc4\x8d\xc3\xadtko minimalizovat\"\r\n"
+"\"Output device\" = \"V\xc3\xbdstupn\xc3\xad za\xc5\x99\xc3\xadzen\xc3\xad\"\r\n"
+"\"Select preferred output\" = \"Vybrat preferovan\xc3\xbd v\xc3\xbdstup\"\r\n"
+"\"Preferred output:\" = \"Preferovan\xc3\xbd v\xc3\xbdstup:\"\r\n"
+"\"None\" = \"\xc5\xbd\xc3\xa1""dn\xc3\xbd\"\r\n"
+"\"Newly connected output device\" = \"Nov\xc4\x9b p\xc5\x99ipojen\xc3\xa9 v\xc3\xbdstupn\xc3\xad za\xc5\x99\xc3\xadzen\xc3\xad\"\r\n"
+"\"Hide notifications\" = \"Skr\xc3\xbdt ozn\xc3\xa1men\xc3\xad\"\r\n"
+"\"Audio\" = \"Zvuk\"\r\n"
+"\"Normalize Volume\" = \"Normalizovat hlasitost\"\r\n"
+"\"Changes to your preset are not saved.\\r\\nDo you want to save?\" = \"Zm\xc4\x9bny v p\xc5\x99""edvolb\xc4\x9b nejsou ulo\xc5\xbe""eny.\\r\\nChcete je ulo\xc5\xbeit?\"\r\n"
+"\"Save Preset\" = \"Ulo\xc5\xbeit p\xc5\x99""edvolbu\"\r\n"
+"\"Save\" = \"Ulo\xc5\xbeit\"\r\n"
+"\"Cancel\" = \"Zru\xc5\xa1it\"\r\n"
+"\"Equalizer:\" = \"Ekvaliz\xc3\xa9r:\"\r\n"
+"\"Master Gain\" = \"Hlavn\xc3\xad zes\xc3\xadlen\xc3\xad\"\r\n"
+"\"Normalization\" = \"Normalizace\"\r\n"
+"\"Filter Q\" = \"\xc4\x8cinitel jakosti filtru (Q)\"\r\n"
+"\"Balance\" = \"Vyv\xc3\xa1\xc5\xbe""en\xc3\xad\"\r\n"
+"\"Left\" = \"Lev\xc3\xbd\"\r\n"
+"\"Right\" = \"Prav\xc3\xbd\"\r\n"
+"\" Bands\" = \" P\xc3\xa1sma\"\r\n"
+"\"Restore Defaults\" = \"Obnovit v\xc3\xbd""choz\xc3\xad\"\r\n"
+"\"Automatic updates\" = \"Automatick\xc3\xa9 aktualizace\"\r\n"
+"\"Always On Top\" = \"V\xc5\xbe""dy navrchu\"\r\n"
+"\"Theme\" = \"Motiv\"\r\n"
+"\"Dark\" = \"Tmav\xc3\xbd\"\r\n"
+"\"Light\" = \"Sv\xc4\x9btl\xc3\xbd\"\r\n"
+"\"Output Device Preference\" = \"P\xc5\x99""edvolba v\xc3\xbdstupn\xc3\xadho za\xc5\x99\xc3\xadzen\xc3\xad\"\r\n"
+"\"Select preset\" = \"Vybrat p\xc5\x99""edvolbu\"\r\n"
+"\"Equalizer\" = \"Ekvaliz\xc3\xa9r\"\r\n"
+"\"Prioritize new output devices\" = \"Up\xc5\x99""ednost\xc5\x88ovat nov\xc3\xa1 v\xc3\xbdstupn\xc3\xad za\xc5\x99\xc3\xadzen\xc3\xad\"\r\n"
+"\"Use Shift+Up or Shift+Down to change the device priority\" = \"Pou\xc5\xbeijte Shift+Nahoru nebo Shift+Dol\xc5\xaf pro zm\xc4\x9bnu priority za\xc5\x99\xc3\xadzen\xc3\xad\"\r\n"
+"\"Audio processing is not available over Remote Desktop\" = \"Zpracov\xc3\xa1n\xc3\xad zvuku nen\xc3\xad p\xc5\x99""es Vzd\xc3\xa1lenou plochu k dispozici\"\r\n"
+"\"Volume Leveling\" = \"Vyrovn\xc3\xa1v\xc3\xa1n\xc3\xad hlasitosti\"";
+
+const char* FxSound_cs_txt = (const char*) temp_binary_data_71;
+
+//================== FxSound.de.txt ==================
+static const unsigned char temp_binary_data_72[] =
 "language: German\r\n"
 "countries: de at ch\r\n"
 "\r\n"
@@ -4804,10 +4972,10 @@ static const unsigned char temp_binary_data_71[] =
 "\"Audio processing is not available over Remote Desktop\" = \"Audioverarbeitung ist \xc3\xbc""ber Remotedesktop nicht verf\xc3\xbcgbar\"\r\n"
 "\"Volume Leveling\" = \"Lautst\xc3\xa4rkeausgleich\"";
 
-const char* FxSound_de_txt = (const char*) temp_binary_data_71;
+const char* FxSound_de_txt = (const char*) temp_binary_data_72;
 
 //================== FxSound.es.txt ==================
-static const unsigned char temp_binary_data_72[] =
+static const unsigned char temp_binary_data_73[] =
 "language: Spanish\r\n"
 "countries: ar co es mx\r\n"
 "\r\n"
@@ -4965,10 +5133,10 @@ static const unsigned char temp_binary_data_72[] =
 "\"Audio processing is not available over Remote Desktop\" = \"El procesamiento de audio no est\xc3\xa1 disponible a trav\xc3\xa9s de Escritorio remoto\"\r\n"
 "\"Volume Leveling\" = \"Nivelaci\xc3\xb3n de volumen\"";
 
-const char* FxSound_es_txt = (const char*) temp_binary_data_72;
+const char* FxSound_es_txt = (const char*) temp_binary_data_73;
 
 //================== FxSound.fa.txt ==================
-static const unsigned char temp_binary_data_73[] =
+static const unsigned char temp_binary_data_74[] =
 { 108,97,110,103,117,97,103,101,58,32,80,101,114,115,105,97,110,13,10,99,111,117,110,116,114,105,101,115,58,32,105,114,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,114,
 32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,104,
 114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,216,167,217,136,217,135,33,32,217,133,216,180,218,169,217,132,219,140,32,216,175,216,177,32,216,170,217,134,216,184,219,140,217,133,216,167,216,170,32,216,175,216,179,216,170,218,175,216,167,217,135,
@@ -5209,10 +5377,10 @@ static const unsigned char temp_binary_data_73[] =
 216,177,32,216,175,216,179,216,170,216,177,216,179,32,217,134,219,140,216,179,216,170,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,34,32,61,32,34,216,170,216,177,216,167,216,178,32,218,169,216,177,216,175,217,134,32,216,181,216,
 175,216,167,34,13,10,0,0 };
 
-const char* FxSound_fa_txt = (const char*) temp_binary_data_73;
+const char* FxSound_fa_txt = (const char*) temp_binary_data_74;
 
 //================== FxSound.fi.txt ==================
-static const unsigned char temp_binary_data_74[] =
+static const unsigned char temp_binary_data_75[] =
 "language: Finnish\r\n"
 "countries: fi\r\n"
 "\r\n"
@@ -5373,10 +5541,10 @@ static const unsigned char temp_binary_data_74[] =
 "\"Audio processing is not available over Remote Desktop\" = \"\xc3\x84\xc3\xa4nenk\xc3\xa4sittely ei ole k\xc3\xa4ytett\xc3\xa4viss\xc3\xa4 et\xc3\xa4ty\xc3\xb6p\xc3\xb6yd\xc3\xa4n kautta\"\r\n"
 "\"Volume Leveling\" = \"\xc3\x84\xc3\xa4nenvoimakkuuden tasoitus\"";
 
-const char* FxSound_fi_txt = (const char*) temp_binary_data_74;
+const char* FxSound_fi_txt = (const char*) temp_binary_data_75;
 
 //================== FxSound.fr.txt ==================
-static const unsigned char temp_binary_data_75[] =
+static const unsigned char temp_binary_data_76[] =
 "language: French\r\n"
 "countries: fr\r\n"
 "\r\n"
@@ -5539,10 +5707,10 @@ static const unsigned char temp_binary_data_75[] =
 "\"Audio processing is not available over Remote Desktop\" = \"Le traitement audio n\xe2\x80\x99""est pas disponible via le Bureau \xc3\xa0 distance\"\r\n"
 "\"Volume Leveling\" = \"Nivellement du volume\"";
 
-const char* FxSound_fr_txt = (const char*) temp_binary_data_75;
+const char* FxSound_fr_txt = (const char*) temp_binary_data_76;
 
 //================== FxSound.hr.txt ==================
-static const unsigned char temp_binary_data_76[] =
+static const unsigned char temp_binary_data_77[] =
 "language: Croatian\r\n"
 "countries: HR\r\n"
 "\r\n"
@@ -5699,10 +5867,10 @@ static const unsigned char temp_binary_data_76[] =
 "\"Audio processing is not available over Remote Desktop\" = \"Audio obrada nije dostupna putem udaljene radne povr\xc5\xa1ine\"\r\n"
 "\"Volume Leveling\" = \"Ujedna\xc4\x8d""avanje glasno\xc4\x87""e\"";
 
-const char* FxSound_hr_txt = (const char*) temp_binary_data_76;
+const char* FxSound_hr_txt = (const char*) temp_binary_data_77;
 
 //================== fxsound.hu.txt ==================
-static const unsigned char temp_binary_data_77[] =
+static const unsigned char temp_binary_data_78[] =
 "language: Hungarian\r\n"
 "countries: hu\r\n"
 "\r\n"
@@ -5869,10 +6037,10 @@ static const unsigned char temp_binary_data_77[] =
 "\"Audio processing is not available over Remote Desktop\" = \"A hangfeldolgoz\xc3\xa1s nem \xc3\xa9rhet\xc5\x91 el T\xc3\xa1voli asztalon kereszt\xc3\xbcl\"\r\n"
 "\"Volume Leveling\" = \"Hanger\xc5\x91-kiegyenl\xc3\xadt\xc3\xa9s\"";
 
-const char* fxsound_hu_txt = (const char*) temp_binary_data_77;
+const char* fxsound_hu_txt = (const char*) temp_binary_data_78;
 
 //================== FxSound.id.txt ==================
-static const unsigned char temp_binary_data_78[] =
+static const unsigned char temp_binary_data_79[] =
 "language: Indonesian\r\n"
 "countries: id\r\n"
 "\r\n"
@@ -6029,10 +6197,10 @@ static const unsigned char temp_binary_data_78[] =
 "\"Audio processing is not available over Remote Desktop\" = \"Pemrosesan audio tidak tersedia melalui Desktop Jauh\"\r\n"
 "\"Volume Leveling\" = \"Perataan Volume\"";
 
-const char* FxSound_id_txt = (const char*) temp_binary_data_78;
+const char* FxSound_id_txt = (const char*) temp_binary_data_79;
 
 //================== FxSound.it.txt ==================
-static const unsigned char temp_binary_data_79[] =
+static const unsigned char temp_binary_data_80[] =
 "language: Italiano\r\n"
 "countries: it\r\n"
 "\r\n"
@@ -6192,10 +6360,10 @@ static const unsigned char temp_binary_data_79[] =
 "\"Audio processing is not available over Remote Desktop\" = \"L'elaborazione audio non \xc3\xa8 disponibile tramite Desktop remoto\"\r\n"
 "\"Volume Leveling\" = \"Livellamento del volume\"";
 
-const char* FxSound_it_txt = (const char*) temp_binary_data_79;
+const char* FxSound_it_txt = (const char*) temp_binary_data_80;
 
 //================== FxSound.ja.txt ==================
-static const unsigned char temp_binary_data_80[] =
+static const unsigned char temp_binary_data_81[] =
 { 108,97,110,103,117,97,103,101,58,32,74,97,112,97,110,101,115,101,13,10,99,111,117,110,116,114,105,101,115,58,32,106,97,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,
 114,32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,
 104,114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,227,129,138,227,129,163,227,129,168,239,188,129,229,134,141,231,148,159,227,131,135,227,131,144,227,130,164,227,130,185,227,129,174,232,168,173,229,174,154,227,129,171,229,149,143,233,161,140,227,
@@ -6404,10 +6572,10 @@ static const unsigned char temp_binary_data_80[] =
 227,131,135,227,130,185,227,130,175,227,131,136,227,131,131,227,131,151,227,129,167,227,129,175,229,136,169,231,148,168,227,129,167,227,129,141,227,129,190,227,129,155,227,130,147,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,34,
 32,61,32,34,233,159,179,233,135,143,229,185,179,230,186,150,229,140,150,34,0,0 };
 
-const char* FxSound_ja_txt = (const char*) temp_binary_data_80;
+const char* FxSound_ja_txt = (const char*) temp_binary_data_81;
 
 //================== FxSound.ko.txt ==================
-static const unsigned char temp_binary_data_81[] =
+static const unsigned char temp_binary_data_82[] =
 { 108,97,110,103,117,97,103,101,58,32,75,111,114,101,97,110,13,10,99,111,117,110,116,114,105,101,115,58,32,107,114,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,114,32,
 112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,104,114,
 111,117,103,104,32,116,104,101,32,34,32,61,32,34,236,157,180,235,159,176,33,32,236,158,172,236,131,157,32,236,158,165,236,185,152,32,236,132,164,236,160,149,236,151,144,32,235,172,184,236,160,156,234,176,128,32,236,158,136,236,138,181,235,139,136,235,
@@ -6596,10 +6764,10 @@ static const unsigned char temp_binary_data_81[] =
 109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,236,152,164,235,148,148,236,152,164,32,236,178,152,235,166,172,235,138,148,32,236,155,144,234,178,169,32,235,141,176,236,138,164,237,129,172,237,134,177,236,151,144,236,132,156,32,236,130,172,
 236,154,169,237,149,160,32,236,136,152,32,236,151,134,236,138,181,235,139,136,235,139,164,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,34,32,61,32,34,235,179,188,235,165,168,32,237,143,137,236,164,128,237,153,148,34,13,10,0,0 };
 
-const char* FxSound_ko_txt = (const char*) temp_binary_data_81;
+const char* FxSound_ko_txt = (const char*) temp_binary_data_82;
 
 //================== FxSound.nl.txt ==================
-static const unsigned char temp_binary_data_82[] =
+static const unsigned char temp_binary_data_83[] =
 "\"Oops! There\\'s an issue with your playback device settings.\\r\\nBefore we can get started, please go through the \" = \"Oeps! Er is een probleem met de instellingen van uw afspeelapparaat.\\r\\nVoordat we kunnen beginnen, doorloopt u eerst de \"\r"
 "\n"
 "\"troubleshooting steps here.\" = \"probleemoplossingsstappen hier.\"\r\n"
@@ -6754,10 +6922,10 @@ static const unsigned char temp_binary_data_82[] =
 "\"Audio processing is not available over Remote Desktop\" = \"Audioverwerking is niet beschikbaar via extern bureaublad\"\r\n"
 "\"Volume Leveling\" = \"Volume-egalisatie\"";
 
-const char* FxSound_nl_txt = (const char*) temp_binary_data_82;
+const char* FxSound_nl_txt = (const char*) temp_binary_data_83;
 
 //================== FxSound.no.txt ==================
-static const unsigned char temp_binary_data_83[] =
+static const unsigned char temp_binary_data_84[] =
 "language: Norsk\r\n"
 "countries: no\r\n"
 "\r\n"
@@ -6914,10 +7082,10 @@ static const unsigned char temp_binary_data_83[] =
 "\"Audio processing is not available over Remote Desktop\" = \"Lydprosessering er ikke tilgjengelig over Eksternt skrivebord\"\r\n"
 "\"Volume Leveling\" = \"Volumutjevning\"";
 
-const char* FxSound_no_txt = (const char*) temp_binary_data_83;
+const char* FxSound_no_txt = (const char*) temp_binary_data_84;
 
 //================== FxSound.pl.txt ==================
-static const unsigned char temp_binary_data_84[] =
+static const unsigned char temp_binary_data_85[] =
 "language: Polish\r\n"
 "countries: pl\r\n"
 "\r\n"
@@ -7083,10 +7251,10 @@ static const unsigned char temp_binary_data_84[] =
 "\"Audio processing is not available over Remote Desktop\" = \"Przetwarzanie d\xc5\xbawi\xc4\x99ku nie jest dost\xc4\x99pne przez Pulpit zdalny\"\r\n"
 "\"Volume Leveling\" = \"Wyr\xc3\xb3wnywanie g\xc5\x82o\xc5\x9bno\xc5\x9b""ci\"";
 
-const char* FxSound_pl_txt = (const char*) temp_binary_data_84;
+const char* FxSound_pl_txt = (const char*) temp_binary_data_85;
 
 //================== FxSound.pt-br.txt ==================
-static const unsigned char temp_binary_data_85[] =
+static const unsigned char temp_binary_data_86[] =
 "language: Brazilian Portuguese \r\n"
 "countries: br\r\n"
 "\r\n"
@@ -7245,10 +7413,10 @@ static const unsigned char temp_binary_data_85[] =
 "\"Audio processing is not available over Remote Desktop\" = \"O processamento de \xc3\xa1udio n\xc3\xa3o est\xc3\xa1 dispon\xc3\xadvel atrav\xc3\xa9s da \xc3\x81rea de Trabalho Remota\"\r\n"
 "\"Volume Leveling\" = \"Nivelamento de volume\"";
 
-const char* FxSound_ptbr_txt = (const char*) temp_binary_data_85;
+const char* FxSound_ptbr_txt = (const char*) temp_binary_data_86;
 
 //================== FxSound.pt.txt ==================
-static const unsigned char temp_binary_data_86[] =
+static const unsigned char temp_binary_data_87[] =
 "language: Portuguese\r\n"
 "countries: pt\r\n"
 "\r\n"
@@ -7406,10 +7574,10 @@ static const unsigned char temp_binary_data_86[] =
 "\"Audio processing is not available over Remote Desktop\" = \"O processamento de \xc3\xa1udio n\xc3\xa3o est\xc3\xa1 dispon\xc3\xadvel atrav\xc3\xa9s do Ambiente de Trabalho Remoto\"\r\n"
 "\"Volume Leveling\" = \"Nivelamento de volume\"";
 
-const char* FxSound_pt_txt = (const char*) temp_binary_data_86;
+const char* FxSound_pt_txt = (const char*) temp_binary_data_87;
 
 //================== FxSound.ro.txt ==================
-static const unsigned char temp_binary_data_87[] =
+static const unsigned char temp_binary_data_88[] =
 "language: Romanian\r\n"
 "countries: ro\r\n"
 "\r\n"
@@ -7572,10 +7740,10 @@ static const unsigned char temp_binary_data_87[] =
 "\"Audio processing is not available over Remote Desktop\" = \"Procesarea audio nu este disponibil\xc4\x83 prin Desktop la distan\xc8\x9b\xc4\x83\"\r\n"
 "\"Volume Leveling\" = \"Nivelare volum\"";
 
-const char* FxSound_ro_txt = (const char*) temp_binary_data_87;
+const char* FxSound_ro_txt = (const char*) temp_binary_data_88;
 
 //================== FxSound.ru.txt ==================
-static const unsigned char temp_binary_data_88[] =
+static const unsigned char temp_binary_data_89[] =
 { 108,97,110,103,117,97,103,101,58,32,82,117,115,115,105,97,110,13,10,99,111,117,110,116,114,105,101,115,58,32,114,117,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,114,
 32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,104,
 114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,208,158,208,185,33,32,208,146,208,190,208,183,208,189,208,184,208,186,208,187,208,184,32,208,191,209,128,208,190,208,177,208,187,208,181,208,188,209,139,32,209,129,32,209,131,209,129,209,130,209,128,
@@ -7827,10 +7995,10 @@ static const unsigned char temp_binary_data_88[] =
 128,208,176,208,177,208,190,209,135,208,184,208,185,32,209,129,209,130,208,190,208,187,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,34,32,61,32,34,208,146,209,139,209,128,208,176,208,178,208,189,208,184,208,178,208,176,208,189,
 208,184,208,181,32,208,179,209,128,208,190,208,188,208,186,208,190,209,129,209,130,208,184,34,0,0 };
 
-const char* FxSound_ru_txt = (const char*) temp_binary_data_88;
+const char* FxSound_ru_txt = (const char*) temp_binary_data_89;
 
 //================== FxSound.sl.txt ==================
-static const unsigned char temp_binary_data_89[] =
+static const unsigned char temp_binary_data_90[] =
 "language: Slovenian\r\n"
 "countries: sl\r\n"
 "\r\n"
@@ -7988,10 +8156,10 @@ static const unsigned char temp_binary_data_89[] =
 "\"Audio processing is not available over Remote Desktop\" = \"Obdelava zvoka ni na voljo prek oddaljenega namizja\"\r\n"
 "\"Volume Leveling\" = \"Izena\xc4\x8d""evanje glasnosti\"";
 
-const char* FxSound_sl_txt = (const char*) temp_binary_data_89;
+const char* FxSound_sl_txt = (const char*) temp_binary_data_90;
 
 //================== FxSound.sv.txt ==================
-static const unsigned char temp_binary_data_90[] =
+static const unsigned char temp_binary_data_91[] =
 "language: Swedish\r\n"
 "countries: se\r\n"
 "\r\n"
@@ -8151,10 +8319,10 @@ static const unsigned char temp_binary_data_90[] =
 "\"Audio processing is not available over Remote Desktop\" = \"Ljudbearbetning \xc3\xa4r inte tillg\xc3\xa4nglig via Fj\xc3\xa4rrskrivbord\"\r\n"
 "\"Volume Leveling\" = \"Volymutj\xc3\xa4mning\"";
 
-const char* FxSound_sv_txt = (const char*) temp_binary_data_90;
+const char* FxSound_sv_txt = (const char*) temp_binary_data_91;
 
 //================== FxSound.th.txt ==================
-static const unsigned char temp_binary_data_91[] =
+static const unsigned char temp_binary_data_92[] =
 { 108,97,110,103,117,97,103,101,58,32,84,104,97,105,13,10,99,111,117,110,116,114,105,101,115,58,32,116,104,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,114,32,112,108,
 97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,104,114,111,117,
 103,104,32,116,104,101,32,34,32,61,32,34,224,184,173,224,185,138,224,184,176,33,32,224,184,161,224,184,181,224,184,155,224,184,177,224,184,141,224,184,171,224,184,178,224,185,128,224,184,129,224,184,181,224,185,136,224,184,162,224,184,167,224,184,129,
@@ -8462,10 +8630,10 @@ static const unsigned char temp_binary_data_91[] =
 109,101,32,76,101,118,101,108,105,110,103,34,32,61,32,34,224,184,155,224,184,163,224,184,177,224,184,154,224,184,170,224,184,161,224,184,148,224,184,184,224,184,165,224,184,163,224,184,176,224,184,148,224,184,177,224,184,154,224,185,128,224,184,170,224,
 184,181,224,184,162,224,184,135,34,0,0 };
 
-const char* FxSound_th_txt = (const char*) temp_binary_data_91;
+const char* FxSound_th_txt = (const char*) temp_binary_data_92;
 
 //================== FxSound.tr.txt ==================
-static const unsigned char temp_binary_data_92[] =
+static const unsigned char temp_binary_data_93[] =
 "language: Turkish\r\n"
 "countries: tr\r\n"
 "\r\n"
@@ -8630,10 +8798,10 @@ static const unsigned char temp_binary_data_92[] =
 "\"Audio processing is not available over Remote Desktop\" = \"Ses i\xc5\x9fleme Uzak Masa\xc3\xbcst\xc3\xbc \xc3\xbczerinden kullan\xc4\xb1lamaz\"\r\n"
 "\"Volume Leveling\" = \"Ses D\xc3\xbczeyi Dengeleme\"";
 
-const char* FxSound_tr_txt = (const char*) temp_binary_data_92;
+const char* FxSound_tr_txt = (const char*) temp_binary_data_93;
 
 //================== FxSound.txt ==================
-static const unsigned char temp_binary_data_93[] =
+static const unsigned char temp_binary_data_94[] =
 "language: [enter full name of the language here!]\r\n"
 "countries: [enter list of 2-character country codes here!]\r\n"
 "\r\n"
@@ -8789,10 +8957,10 @@ static const unsigned char temp_binary_data_93[] =
 "\"Audio processing is not available over Remote Desktop\" = \"Audio processing is not available over Remote Desktop\"\r\n"
 "\"Volume Leveling\" = \"Volume Leveling\"";
 
-const char* FxSound_txt = (const char*) temp_binary_data_93;
+const char* FxSound_txt = (const char*) temp_binary_data_94;
 
 //================== FxSound.ua.txt ==================
-static const unsigned char temp_binary_data_94[] =
+static const unsigned char temp_binary_data_95[] =
 { 108,97,110,103,117,97,103,101,58,32,85,107,114,97,105,110,105,97,110,13,10,99,111,117,110,116,114,105,101,115,58,32,117,97,13,10,13,10,34,79,111,112,115,33,32,84,104,101,114,101,39,115,32,97,110,32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,
 114,32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,
 104,114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,208,158,208,185,33,32,208,146,208,184,208,189,208,184,208,186,208,187,208,184,32,208,191,209,128,208,190,208,177,208,187,208,181,208,188,208,184,32,208,183,32,208,189,208,176,208,187,208,176,209,
@@ -9038,10 +9206,10 @@ static const unsigned char temp_binary_data_94[] =
 185,32,209,129,209,130,209,150,208,187,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,34,32,61,32,34,208,146,208,184,209,128,209,150,208,178,208,189,209,142,208,178,208,176,208,189,208,189,209,143,32,208,179,209,131,209,135,208,
 189,208,190,209,129,209,130,209,150,34,0,0 };
 
-const char* FxSound_ua_txt = (const char*) temp_binary_data_94;
+const char* FxSound_ua_txt = (const char*) temp_binary_data_95;
 
 //================== FxSound.vi.txt ==================
-static const unsigned char temp_binary_data_95[] =
+static const unsigned char temp_binary_data_96[] =
 "language: Vietnamese\r\n"
 "countries: vn\r\n"
 "\r\n"
@@ -9225,10 +9393,10 @@ static const unsigned char temp_binary_data_95[] =
 "\"Audio processing is not available over Remote Desktop\" = \"X\xe1\xbb\xad l\xc3\xbd \xc3\xa2m thanh kh\xc3\xb4ng kh\xe1\xba\xa3 d\xe1\xbb\xa5ng qua M\xc3\xa1y t\xc3\xadnh t\xe1\xbb\xab xa\"\r\n"
 "\"Volume Leveling\" = \"C\xc3\xa2n b\xe1\xba\xb1ng \xc3\xa2m l\xc6\xb0\xe1\xbb\xa3ng\"";
 
-const char* FxSound_vi_txt = (const char*) temp_binary_data_95;
+const char* FxSound_vi_txt = (const char*) temp_binary_data_96;
 
 //================== FxSound.zh-CN.txt ==================
-static const unsigned char temp_binary_data_96[] =
+static const unsigned char temp_binary_data_97[] =
 { 108,97,110,103,117,97,103,101,58,32,67,104,105,110,101,115,101,32,40,83,105,109,112,108,105,102,105,101,100,41,13,10,99,111,117,110,116,114,105,101,115,58,32,99,110,32,115,103,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,32,105,
 115,115,117,101,32,119,105,116,104,32,121,111,117,114,32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,116,101,
 100,44,32,112,108,101,97,115,101,32,103,111,32,116,104,114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,229,147,142,229,145,128,239,188,129,230,130,168,231,154,132,230,146,173,230,148,190,232,174,190,229,164,135,232,174,190,231,189,174,230,156,137,
@@ -9257,33 +9425,33 @@ static const unsigned char temp_binary_data_96[] =
 116,111,32,102,97,99,116,111,114,121,32,100,101,102,97,117,108,116,115,34,32,61,32,34,233,162,132,232,174,190,230,129,162,229,164,141,228,184,186,229,135,186,229,142,130,233,187,152,232,174,164,232,174,190,231,189,174,34,13,10,34,80,114,101,115,101,116,
 32,102,105,108,101,32,37,115,32,97,108,114,101,97,100,121,32,101,120,105,115,116,115,32,105,110,32,116,104,101,32,101,120,112,111,114,116,32,112,97,116,104,44,32,100,111,32,121,111,117,32,119,97,110,116,32,116,111,32,111,118,101,114,119,114,105,116,101,
 32,116,104,101,32,112,114,101,115,101,116,32,102,105,108,101,63,34,32,61,32,34,229,175,188,229,135,186,232,183,175,229,190,132,228,184,173,229,183,178,229,173,152,229,156,168,233,162,132,232,174,190,230,150,135,228,187,182,32,37,115,32,239,188,140,230,
-152,175,229,144,166,232,166,129,232,166,134,231,155,150,233,162,132,232,174,190,230,150,135,228,187,182,63,34,13,10,34,70,120,83,111,117,110,100,32,105,115,32,37,115,46,34,32,61,32,34,70,120,83,111,117,110,100,32,231,154,132,32,37,115,227,128,130,34,
-13,10,34,111,110,34,32,61,32,34,229,188,128,229,144,175,34,13,10,34,111,102,102,34,32,61,32,34,229,133,179,233,151,173,34,13,10,34,80,114,101,115,101,116,58,32,34,32,61,32,34,233,162,132,232,174,190,239,188,154,32,34,13,10,34,67,108,97,114,105,116,121,
-34,32,61,32,34,230,184,133,230,153,176,229,186,166,34,13,10,34,65,109,98,105,101,110,99,101,34,32,61,32,34,231,142,175,229,162,131,34,13,10,34,83,117,114,114,111,117,110,100,32,83,111,117,110,100,34,32,61,32,34,231,142,175,231,187,149,229,163,176,34,
-13,10,34,68,121,110,97,109,105,99,32,66,111,111,115,116,34,32,61,32,34,229,138,168,230,128,129,229,162,158,229,188,186,34,13,10,34,66,97,115,115,32,66,111,111,115,116,34,32,61,32,34,228,189,142,233,159,179,229,162,158,229,188,186,34,13,10,34,69,110,104,
-97,110,99,101,115,32,97,110,100,32,101,108,101,118,97,116,101,115,32,104,105,103,104,32,101,110,100,92,114,92,110,102,105,100,101,108,105,116,121,32,97,110,100,32,112,114,101,115,101,110,99,101,34,32,61,32,34,229,162,158,229,188,186,229,185,182,230,143,
-144,229,141,135,233,171,152,233,159,179,92,114,92,110,228,191,157,231,156,159,229,186,166,229,146,140,228,184,180,229,156,186,230,132,159,34,13,10,34,84,104,105,99,107,101,110,115,32,97,110,100,32,115,109,111,111,116,104,115,32,97,117,100,105,111,92,
-114,92,110,119,105,116,104,32,99,111,110,116,114,111,108,108,101,100,32,114,101,118,101,114,98,101,114,97,116,105,111,110,34,32,61,32,34,233,128,154,232,191,135,229,143,151,230,142,167,231,154,132,230,183,183,229,147,141,228,189,191,233,159,179,233,162,
-145,92,114,92,110,229,143,152,229,190,151,230,155,180,229,142,154,229,174,158,229,146,140,229,185,179,230,187,145,34,13,10,34,87,105,100,101,110,115,32,116,104,101,32,108,101,102,116,45,114,105,103,104,116,32,98,97,108,97,110,99,101,92,114,92,110,102,
-111,114,32,101,120,112,97,110,115,105,118,101,44,32,119,105,100,101,32,115,111,117,110,100,34,32,61,32,34,230,137,169,229,164,167,229,183,166,229,143,179,229,185,179,232,161,161,228,187,165,232,142,183,229,190,151,92,114,92,110,229,185,191,233,152,148,
-227,128,129,229,174,189,229,185,191,231,154,132,229,163,176,233,159,179,34,13,10,34,73,110,99,114,101,97,115,101,115,32,111,118,101,114,97,108,108,32,118,111,108,117,109,101,32,97,110,100,32,98,97,108,97,110,99,101,92,114,92,110,119,105,116,104,32,114,
-101,115,112,111,110,115,105,118,101,32,112,114,111,99,101,115,115,105,110,103,34,32,61,32,34,233,128,154,232,191,135,229,147,141,229,186,148,229,188,143,229,164,132,231,144,134,229,162,158,229,138,160,92,114,92,110,230,149,180,228,189,147,233,159,179,
-233,135,143,229,146,140,229,185,179,232,161,161,34,13,10,34,66,111,111,115,116,115,32,108,111,119,32,101,110,100,32,102,111,114,32,102,117,108,108,44,92,114,92,110,105,109,112,97,99,116,102,117,108,32,114,101,115,112,111,110,115,101,34,32,61,32,34,230,
-143,144,229,141,135,228,189,142,233,159,179,228,187,165,229,174,158,231,142,176,229,133,168,233,157,162,227,128,129,92,114,92,110,230,156,137,229,189,177,229,147,141,229,138,155,231,154,132,229,147,141,229,186,148,34,13,10,34,72,121,112,101,114,45,108,
-111,119,32,66,97,115,115,32,45,32,70,105,114,115,116,32,98,97,110,100,32,102,111,114,32,118,101,114,121,32,108,111,119,32,102,114,101,113,117,101,110,99,105,101,115,32,100,111,119,110,32,116,111,32,50,48,32,72,122,46,34,32,61,32,34,232,182,133,228,189,
-142,233,162,145,228,189,142,233,159,179,32,226,128,148,226,128,148,32,231,172,172,228,184,128,228,184,170,231,148,168,228,186,142,230,158,129,228,189,142,233,162,145,231,142,135,239,188,136,228,189,142,232,135,179,32,50,48,32,72,122,239,188,137,231,154,
-132,233,162,145,230,174,181,227,128,130,34,13,10,34,83,117,112,101,114,45,108,111,119,32,66,97,115,115,46,32,73,110,99,114,101,97,115,101,32,116,104,105,115,32,102,111,114,32,109,111,114,101,32,114,117,109,98,108,101,32,97,110,100,32,92,34,116,104,117,
-109,112,92,34,44,32,100,101,99,114,101,97,115,101,32,105,102,32,116,104,101,114,101,92,39,115,32,116,111,111,32,109,117,99,104,32,98,111,111,109,105,110,101,115,115,46,34,32,61,32,34,232,182,133,228,189,142,233,159,179,227,128,130,229,162,158,229,138,
-160,232,191,153,228,184,170,228,187,165,232,142,183,229,190,151,230,155,180,229,164,154,231,154,132,233,154,134,233,154,134,229,163,176,229,146,140,226,128,156,231,160,176,231,160,176,229,163,176,226,128,157,239,188,140,229,166,130,230,158,156,230,156,
-137,229,164,170,229,164,154,231,154,132,233,154,134,233,154,134,229,163,176,229,136,153,229,135,143,229,176,145,227,128,130,34,13,10,34,67,101,110,116,101,114,32,111,102,32,121,111,117,114,32,66,97,115,115,32,115,111,117,110,100,46,32,73,110,99,114,101,
-97,115,101,32,116,104,105,115,32,102,111,114,32,97,32,102,117,108,108,101,114,32,108,111,119,32,101,110,100,44,32,100,101,99,114,101,97,115,101,32,105,102,32,116,104,101,32,98,97,115,115,32,115,111,117,110,100,115,32,111,118,101,114,119,104,101,108,109,
-105,110,103,46,34,32,61,32,34,228,189,142,233,159,179,227,128,130,229,162,158,229,138,160,232,191,153,228,184,170,228,187,165,232,142,183,229,190,151,230,155,180,229,174,140,230,149,180,231,154,132,228,189,142,231,171,175,239,188,140,229,166,130,230,
-158,156,228,189,142,233,159,179,229,144,172,232,181,183,230,157,165,229,190,136,229,188,186,231,131,136,239,188,140,229,136,153,229,135,143,229,176,145,227,128,130,34,13,10,34,84,104,101,32,108,111,119,32,101,110,100,32,111,102,32,121,111,117,114,32,
-109,105,100,45,114,97,110,103,101,46,32,73,110,99,114,101,97,115,101,32,116,104,105,115,32,116,111,32,109,97,107,101,32,118,111,99,97,108,115,32,115,111,117,110,100,32,114,105,99,104,32,97,110,100,32,119,97,114,109,44,32,100,101,99,114,101,97,115,101,
-32,105,116,32,116,111,32,104,101,108,112,32,99,111,110,116,114,111,108,32,105,110,115,116,114,117,109,101,110,116,115,32,116,104,97,116,32,115,111,117,110,100,32,108,111,117,100,32,97,110,100,32,109,117,102,102,108,101,100,46,34,32,61,32,34,228,184,173,
-233,159,179,228,189,142,231,171,175,227,128,130,229,162,158,229,138,160,229,174,131,229,143,175,228,187,165,228,189,191,228,186,186,229,163,176,229,144,172,232,181,183,230,157,165,228,184,176,229,175,140,232,128,140,230,184,169,230,154,150,239,188,140,
-229,135,143,229,176,145,229,174,131,228,187,165,229,184,174,229,138,169,230,142,167,229,136,182,229,144,172,232,181,183,230,157,165,229,147,141,228,186,174,232,128,140,233,151,183,233,151,183,231,154,132,228,185,144,229,153,168,227,128,130,34,13,10,34,
-65,32,102,111,99,97,108,32,112,111,105,110,116,32,111,102,32,116,104,101,32,108,111,119,45,109,105,100,45,114,97,110,103,101,46,32,73,110,99,114,101,97,115,101,32,116,104,105,115,32,116,111,32,98,114,105,110,103,32,111,117,116,32,101,108,101,99,116,114,
+152,175,229,144,166,232,166,129,232,166,134,231,155,150,233,162,132,232,174,190,230,150,135,228,187,182,63,34,13,10,34,70,120,83,111,117,110,100,32,105,115,32,37,115,46,34,32,61,32,34,70,120,83,111,117,110,100,32,37,115,227,128,130,34,13,10,34,111,110,
+34,32,61,32,34,229,188,128,229,144,175,34,13,10,34,111,102,102,34,32,61,32,34,229,133,179,233,151,173,34,13,10,34,80,114,101,115,101,116,58,32,34,32,61,32,34,233,162,132,232,174,190,239,188,154,32,34,13,10,34,67,108,97,114,105,116,121,34,32,61,32,34,
+230,184,133,230,153,176,229,186,166,34,13,10,34,65,109,98,105,101,110,99,101,34,32,61,32,34,231,142,175,229,162,131,34,13,10,34,83,117,114,114,111,117,110,100,32,83,111,117,110,100,34,32,61,32,34,231,142,175,231,187,149,229,163,176,34,13,10,34,68,121,
+110,97,109,105,99,32,66,111,111,115,116,34,32,61,32,34,229,138,168,230,128,129,229,162,158,229,188,186,34,13,10,34,66,97,115,115,32,66,111,111,115,116,34,32,61,32,34,228,189,142,233,159,179,229,162,158,229,188,186,34,13,10,34,69,110,104,97,110,99,101,
+115,32,97,110,100,32,101,108,101,118,97,116,101,115,32,104,105,103,104,32,101,110,100,92,114,92,110,102,105,100,101,108,105,116,121,32,97,110,100,32,112,114,101,115,101,110,99,101,34,32,61,32,34,229,162,158,229,188,186,229,185,182,230,143,144,229,141,
+135,233,171,152,233,159,179,92,114,92,110,228,191,157,231,156,159,229,186,166,229,146,140,228,184,180,229,156,186,230,132,159,34,13,10,34,84,104,105,99,107,101,110,115,32,97,110,100,32,115,109,111,111,116,104,115,32,97,117,100,105,111,92,114,92,110,119,
+105,116,104,32,99,111,110,116,114,111,108,108,101,100,32,114,101,118,101,114,98,101,114,97,116,105,111,110,34,32,61,32,34,233,128,154,232,191,135,229,143,151,230,142,167,231,154,132,230,183,183,229,147,141,228,189,191,233,159,179,233,162,145,92,114,92,
+110,229,143,152,229,190,151,230,155,180,229,142,154,229,174,158,229,146,140,229,185,179,230,187,145,34,13,10,34,87,105,100,101,110,115,32,116,104,101,32,108,101,102,116,45,114,105,103,104,116,32,98,97,108,97,110,99,101,92,114,92,110,102,111,114,32,101,
+120,112,97,110,115,105,118,101,44,32,119,105,100,101,32,115,111,117,110,100,34,32,61,32,34,230,137,169,229,164,167,229,183,166,229,143,179,229,185,179,232,161,161,228,187,165,232,142,183,229,190,151,92,114,92,110,229,185,191,233,152,148,227,128,129,229,
+174,189,229,185,191,231,154,132,229,163,176,233,159,179,34,13,10,34,73,110,99,114,101,97,115,101,115,32,111,118,101,114,97,108,108,32,118,111,108,117,109,101,32,97,110,100,32,98,97,108,97,110,99,101,92,114,92,110,119,105,116,104,32,114,101,115,112,111,
+110,115,105,118,101,32,112,114,111,99,101,115,115,105,110,103,34,32,61,32,34,233,128,154,232,191,135,229,147,141,229,186,148,229,188,143,229,164,132,231,144,134,229,162,158,229,138,160,92,114,92,110,230,149,180,228,189,147,233,159,179,233,135,143,229,
+146,140,229,185,179,232,161,161,34,13,10,34,66,111,111,115,116,115,32,108,111,119,32,101,110,100,32,102,111,114,32,102,117,108,108,44,92,114,92,110,105,109,112,97,99,116,102,117,108,32,114,101,115,112,111,110,115,101,34,32,61,32,34,230,143,144,229,141,
+135,228,189,142,233,159,179,228,187,165,229,174,158,231,142,176,229,133,168,233,157,162,227,128,129,92,114,92,110,230,156,137,229,189,177,229,147,141,229,138,155,231,154,132,229,147,141,229,186,148,34,13,10,34,72,121,112,101,114,45,108,111,119,32,66,
+97,115,115,32,45,32,70,105,114,115,116,32,98,97,110,100,32,102,111,114,32,118,101,114,121,32,108,111,119,32,102,114,101,113,117,101,110,99,105,101,115,32,100,111,119,110,32,116,111,32,50,48,32,72,122,46,34,32,61,32,34,232,182,133,228,189,142,233,162,
+145,228,189,142,233,159,179,32,226,128,148,226,128,148,32,231,172,172,228,184,128,228,184,170,231,148,168,228,186,142,230,158,129,228,189,142,233,162,145,231,142,135,239,188,136,228,189,142,232,135,179,32,50,48,32,72,122,239,188,137,231,154,132,233,162,
+145,230,174,181,227,128,130,34,13,10,34,83,117,112,101,114,45,108,111,119,32,66,97,115,115,46,32,73,110,99,114,101,97,115,101,32,116,104,105,115,32,102,111,114,32,109,111,114,101,32,114,117,109,98,108,101,32,97,110,100,32,92,34,116,104,117,109,112,92,
+34,44,32,100,101,99,114,101,97,115,101,32,105,102,32,116,104,101,114,101,92,39,115,32,116,111,111,32,109,117,99,104,32,98,111,111,109,105,110,101,115,115,46,34,32,61,32,34,232,182,133,228,189,142,233,159,179,227,128,130,229,162,158,229,138,160,232,191,
+153,228,184,170,228,187,165,232,142,183,229,190,151,230,155,180,229,164,154,231,154,132,233,154,134,233,154,134,229,163,176,229,146,140,226,128,156,231,160,176,231,160,176,229,163,176,226,128,157,239,188,140,229,166,130,230,158,156,230,156,137,229,164,
+170,229,164,154,231,154,132,233,154,134,233,154,134,229,163,176,229,136,153,229,135,143,229,176,145,227,128,130,34,13,10,34,67,101,110,116,101,114,32,111,102,32,121,111,117,114,32,66,97,115,115,32,115,111,117,110,100,46,32,73,110,99,114,101,97,115,101,
+32,116,104,105,115,32,102,111,114,32,97,32,102,117,108,108,101,114,32,108,111,119,32,101,110,100,44,32,100,101,99,114,101,97,115,101,32,105,102,32,116,104,101,32,98,97,115,115,32,115,111,117,110,100,115,32,111,118,101,114,119,104,101,108,109,105,110,
+103,46,34,32,61,32,34,228,189,142,233,159,179,227,128,130,229,162,158,229,138,160,232,191,153,228,184,170,228,187,165,232,142,183,229,190,151,230,155,180,229,174,140,230,149,180,231,154,132,228,189,142,231,171,175,239,188,140,229,166,130,230,158,156,
+228,189,142,233,159,179,229,144,172,232,181,183,230,157,165,229,190,136,229,188,186,231,131,136,239,188,140,229,136,153,229,135,143,229,176,145,227,128,130,34,13,10,34,84,104,101,32,108,111,119,32,101,110,100,32,111,102,32,121,111,117,114,32,109,105,
+100,45,114,97,110,103,101,46,32,73,110,99,114,101,97,115,101,32,116,104,105,115,32,116,111,32,109,97,107,101,32,118,111,99,97,108,115,32,115,111,117,110,100,32,114,105,99,104,32,97,110,100,32,119,97,114,109,44,32,100,101,99,114,101,97,115,101,32,105,
+116,32,116,111,32,104,101,108,112,32,99,111,110,116,114,111,108,32,105,110,115,116,114,117,109,101,110,116,115,32,116,104,97,116,32,115,111,117,110,100,32,108,111,117,100,32,97,110,100,32,109,117,102,102,108,101,100,46,34,32,61,32,34,228,184,173,233,
+159,179,228,189,142,231,171,175,227,128,130,229,162,158,229,138,160,229,174,131,229,143,175,228,187,165,228,189,191,228,186,186,229,163,176,229,144,172,232,181,183,230,157,165,228,184,176,229,175,140,232,128,140,230,184,169,230,154,150,239,188,140,229,
+135,143,229,176,145,229,174,131,228,187,165,229,184,174,229,138,169,230,142,167,229,136,182,229,144,172,232,181,183,230,157,165,229,147,141,228,186,174,232,128,140,233,151,183,233,151,183,231,154,132,228,185,144,229,153,168,227,128,130,34,13,10,34,65,
+32,102,111,99,97,108,32,112,111,105,110,116,32,111,102,32,116,104,101,32,108,111,119,45,109,105,100,45,114,97,110,103,101,46,32,73,110,99,114,101,97,115,101,32,116,104,105,115,32,116,111,32,98,114,105,110,103,32,111,117,116,32,101,108,101,99,116,114,
 105,99,32,103,117,105,116,97,114,115,32,97,110,100,32,118,111,99,97,108,32,118,111,108,117,109,101,44,32,100,101,99,114,101,97,115,101,32,105,116,32,116,111,32,114,101,100,117,99,101,32,97,110,121,32,92,34,98,111,120,121,92,34,32,116,111,110,101,115,
 46,34,32,61,32,34,228,184,173,228,189,142,230,161,163,227,128,130,229,162,158,229,138,160,229,174,131,228,187,165,229,184,166,229,135,186,231,148,181,229,144,137,228,187,150,229,146,140,228,186,186,229,163,176,233,159,179,233,135,143,239,188,140,229,
 135,143,229,176,145,229,174,131,228,187,165,229,135,143,229,176,145,228,187,187,228,189,149,226,128,156,230,150,185,229,189,162,226,128,157,233,159,179,232,176,131,227,128,130,34,13,10,34,84,104,101,32,99,101,110,116,101,114,32,109,105,100,45,114,97,
@@ -9388,10 +9556,10 @@ static const unsigned char temp_binary_data_96[] =
 97,105,108,97,98,108,101,32,111,118,101,114,32,82,101,109,111,116,101,32,68,101,115,107,116,111,112,34,32,61,32,34,232,191,156,231,168,139,230,161,140,233,157,162,228,184,141,230,148,175,230,140,129,233,159,179,233,162,145,229,164,132,231,144,134,34,
 13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,34,32,61,32,34,233,159,179,233,135,143,229,157,135,232,161,161,34,0,0 };
 
-const char* FxSound_zhCN_txt = (const char*) temp_binary_data_96;
+const char* FxSound_zhCN_txt = (const char*) temp_binary_data_97;
 
 //================== FxSound.zh-TW.txt ==================
-static const unsigned char temp_binary_data_97[] =
+static const unsigned char temp_binary_data_98[] =
 { 108,97,110,103,117,97,103,101,58,32,67,104,105,110,101,115,101,32,40,84,114,97,100,105,116,105,111,110,97,108,41,13,10,99,111,117,110,116,114,105,101,115,58,32,84,97,105,119,97,110,13,10,34,79,111,112,115,33,32,84,104,101,114,101,92,39,115,32,97,110,
 32,105,115,115,117,101,32,119,105,116,104,32,121,111,117,114,32,112,108,97,121,98,97,99,107,32,100,101,118,105,99,101,32,115,101,116,116,105,110,103,115,46,92,114,92,110,66,101,102,111,114,101,32,119,101,32,99,97,110,32,103,101,116,32,115,116,97,114,
 116,101,100,44,32,112,108,101,97,115,101,32,103,111,32,116,104,114,111,117,103,104,32,116,104,101,32,34,32,61,32,34,229,147,142,229,145,128,239,188,129,230,130,168,231,154,132,230,146,173,230,148,190,232,163,157,231,189,174,232,168,173,229,174,154,230,
@@ -9554,7 +9722,7 @@ static const unsigned char temp_binary_data_97[] =
 129,160,231,171,175,230,161,140,233,157,162,228,184,141,230,148,175,230,143,180,233,159,179,232,168,138,232,153,149,231,144,134,34,13,10,34,86,111,108,117,109,101,32,76,101,118,101,108,105,110,103,34,32,61,32,34,233,159,179,233,135,143,229,157,135,232,
 161,161,34,0,0 };
 
-const char* FxSound_zhTW_txt = (const char*) temp_binary_data_97;
+const char* FxSound_zhTW_txt = (const char*) temp_binary_data_98;
 
 
 const char* getNamedResource (const char* resourceNameUTF8, int& numBytes);
@@ -9571,10 +9739,10 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
         case 0x7b153d3e:  numBytes = 83456; return GilroyBold_ttf;
         case 0x9fd3b571:  numBytes = 84300; return GilroyRegular_ttf;
         case 0xf4a365ac:  numBytes = 83948; return GilroySemibold_ttf;
-        case 0x702e1508:  numBytes = 582; return restore_defaults_svg;
-        case 0x2a0031c8:  numBytes = 594; return restore_defaults_black_svg;
-        case 0x86ab90db:  numBytes = 592; return restore_defaults_blue_svg;
-        case 0x77f848f2:  numBytes = 594; return restore_defaults_white_svg;
+        case 0x702e1508:  numBytes = 593; return restore_defaults_svg;
+        case 0x2a0031c8:  numBytes = 605; return restore_defaults_black_svg;
+        case 0x86ab90db:  numBytes = 603; return restore_defaults_blue_svg;
+        case 0x77f848f2:  numBytes = 605; return restore_defaults_white_svg;
         case 0x6e5cef92:  numBytes = 585; return flip_svg;
         case 0xe03f7cd2:  numBytes = 597; return flip_black_svg;
         case 0x2131bc91:  numBytes = 597; return flip_blue_svg;
@@ -9639,6 +9807,7 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
         case 0x36e2b8a1:  numBytes = 4109; return Slider_Thumb_bw_svg;
         case 0xda29b4a4:  numBytes = 15225; return FxSound_ar_txt;
         case 0xdaeefdb2:  numBytes = 11635; return FxSound_ba_txt;
+        case 0xdda17d63:  numBytes = 12091; return FxSound_cs_txt;
         case 0xde910cf4:  numBytes = 12848; return FxSound_de_txt;
         case 0xe10b2ea1:  numBytes = 12354; return FxSound_es_txt;
         case 0xe1c2602e:  numBytes = 15896; return FxSound_fa_txt;
@@ -9664,7 +9833,7 @@ const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
         case 0x4464a26e:  numBytes = 11237; return FxSound_txt;
         case 0xfb5b117f:  numBytes = 16163; return FxSound_ua_txt;
         case 0xfd80a626:  numBytes = 13302; return FxSound_vi_txt;
-        case 0xd8a3b00c:  numBytes = 10636; return FxSound_zhCN_txt;
+        case 0xd8a3b00c:  numBytes = 10632; return FxSound_zhCN_txt;
         case 0xf624e624:  numBytes = 10793; return FxSound_zhTW_txt;
         default: break;
     }
@@ -9746,6 +9915,7 @@ const char* namedResourceList[] =
     "Slider_Thumb_bw_svg",
     "FxSound_ar_txt",
     "FxSound_ba_txt",
+    "FxSound_cs_txt",
     "FxSound_de_txt",
     "FxSound_es_txt",
     "FxSound_fa_txt",
@@ -9848,6 +10018,7 @@ const char* originalFilenames[] =
     "Slider_Thumb_bw.svg",
     "FxSound.ar.txt",
     "FxSound.ba.txt",
+    "FxSound.cs.txt",
     "FxSound.de.txt",
     "FxSound.es.txt",
     "FxSound.fa.txt",

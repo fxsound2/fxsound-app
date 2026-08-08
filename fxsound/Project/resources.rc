@@ -16,7 +16,7 @@ BEGIN
     BLOCK "040904E4"
     BEGIN
       VALUE "CompanyName",  "FxSound LLC\0"
-      VALUE "LegalCopyright",  "2026 FxSound™\0"
+      VALUE "LegalCopyright",  "Copyright (C) 2026 FxSound LLC\0"
       VALUE "FileDescription",  "FxSound\0"
       VALUE "FileVersion",  "1.2.12.0\0"
       VALUE "ProductName",  "FxSound\0"

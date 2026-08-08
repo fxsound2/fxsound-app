@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.12.0"
               displaySplashScreen="1" jucerFormatVersion="1" companyName="FxSound LLC"
-              companyWebsite="https://www.fxsound.com" companyCopyright="2026 FxSound&#8482;"
+              companyWebsite="https://www.fxsound.com" companyCopyright="Copyright (C) 2026 FxSound LLC"
               defines="UNICODE" postExportShellCommandWin="type %%1%%\Project\status_icons.rc &gt;&gt; %%1%%\Project\resources.rc"
               cppLanguageStandard="17">
   <MAINGROUP id="fy4sG5" name="FxSound">
@@ -234,6 +234,7 @@
     <GROUP id="{AAFAFD7C-41A7-0774-9216-95AEBD0117C0}" name="Strings">
       <FILE id="XbT61V" name="FxSound.ar.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ar.txt"/>
       <FILE id="cAIn3x" name="FxSound.ba.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ba.txt"/>
+      <FILE id="zZMz5d" name="FxSound.cs.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.cs.txt"/>
       <FILE id="gVyPZi" name="FxSound.de.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.de.txt"/>
       <FILE id="CQH7Jy" name="FxSound.es.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.es.txt"/>
       <FILE id="E6VmdB" name="FxSound.fa.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.fa.txt"/>
