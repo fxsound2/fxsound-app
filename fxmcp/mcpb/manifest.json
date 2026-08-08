@@ -1,0 +1,30 @@
+{
+  "manifest_version": "0.3",
+  "name": "fxsound",
+  "version": "1.0.0",
+  "display_name": "FxSound",
+  "description": "Control and diagnose FxSound audio enhancement from an AI assistant.",
+  "long_description": "Exposes FxSound's diagnostics (fxdiag) and control surface (FxSound.exe's command-line options) as MCP resources, tools, and prompts, so Claude can inspect the current audio environment and drive presets, equalizer, effects, and output device selection.\n\nRequires FxSound (https://fxsound.com) to already be installed -- this extension connects to your existing installation at its default install location; it does not include or install FxSound itself.\n\nEverything runs locally: this extension makes no network calls of its own and sends no data anywhere. It only launches the already-installed FxSound.exe/fxdiag.exe and reads their local output.",
+  "author": {
+    "name": "FxSound LLC",
+    "url": "https://fxsound.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fxsound2/fxsound-app"
+  },
+  "homepage": "https://fxsound.com",
+  "license": "AGPL-3.0",
+  "icon": "icon.png",
+  "server": {
+    "type": "binary",
+    "entry_point": "C:\\Program Files\\FxSound LLC\\FxSound\\fxmcp.exe",
+    "mcp_config": {
+      "command": "C:\\Program Files\\FxSound LLC\\FxSound\\fxmcp.exe",
+      "args": []
+    }
+  },
+  "compatibility": {
+    "platforms": ["win32"]
+  }
+}
