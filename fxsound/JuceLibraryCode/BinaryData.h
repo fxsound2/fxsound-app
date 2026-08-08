@@ -18,16 +18,16 @@ namespace BinaryData
     const int            GilroySemibold_ttfSize = 83948;
 
     extern const char*   restore_defaults_svg;
-    const int            restore_defaults_svgSize = 582;
+    const int            restore_defaults_svgSize = 593;
 
     extern const char*   restore_defaults_black_svg;
-    const int            restore_defaults_black_svgSize = 594;
+    const int            restore_defaults_black_svgSize = 605;
 
     extern const char*   restore_defaults_blue_svg;
-    const int            restore_defaults_blue_svgSize = 592;
+    const int            restore_defaults_blue_svgSize = 603;
 
     extern const char*   restore_defaults_white_svg;
-    const int            restore_defaults_white_svgSize = 594;
+    const int            restore_defaults_white_svgSize = 605;
 
     extern const char*   flip_svg;
     const int            flip_svgSize = 585;
@@ -221,6 +221,9 @@ namespace BinaryData
     extern const char*   FxSound_ba_txt;
     const int            FxSound_ba_txtSize = 11635;
 
+    extern const char*   FxSound_cs_txt;
+    const int            FxSound_cs_txtSize = 12091;
+
     extern const char*   FxSound_de_txt;
     const int            FxSound_de_txtSize = 12848;
 
@@ -297,13 +300,13 @@ namespace BinaryData
     const int            FxSound_vi_txtSize = 13302;
 
     extern const char*   FxSound_zhCN_txt;
-    const int            FxSound_zhCN_txtSize = 10636;
+    const int            FxSound_zhCN_txtSize = 10632;
 
     extern const char*   FxSound_zhTW_txt;
     const int            FxSound_zhTW_txtSize = 10793;
 
     // Number of elements in the namedResourceList and originalFileNames arrays.
-    const int namedResourceListSize = 98;
+    const int namedResourceListSize = 99;
 
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];
