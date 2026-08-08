@@ -132,6 +132,7 @@ public:
 
 	juce::Array<DeviceConfig> getDeviceConfigs();
     void saveDeviceConfigs(const juce::Array<DeviceConfig>& device_configs);
+	void removeDeviceConfigs();
 	bool isOutputDeviceConnected(const String& output_device_name);
 	SoundDevice getPreferredOutput();
 	int compareOutputDevicePriority(const String& output_device_name1, const String& output_device_name2, const juce::Array<DeviceConfig>& device_configs);
@@ -284,6 +285,7 @@ private:
 
 	bool preset_dirty_;
 	int auto_save_counter_;
+	bool remove_device_configs_pending_;
 
 	bool minimize_tip_;
 	bool survey_tip_;
