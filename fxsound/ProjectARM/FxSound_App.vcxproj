@@ -61,7 +61,7 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE8\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_1660CA3=1;JUCE_APP_VERSION=1.2.11.0;JUCE_APP_VERSION_HEX=0x1020b00;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_1660CA3=1;JUCE_APP_VERSION=1.2.12.0;JUCE_APP_VERSION_HEX=0x1020c00;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -76,7 +76,7 @@
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE8\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_1660CA3=1;JUCE_APP_VERSION=1.2.11.0;JUCE_APP_VERSION_HEX=0x1020b00;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_1660CA3=1;JUCE_APP_VERSION=1.2.12.0;JUCE_APP_VERSION_HEX=0x1020c00;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <OutputFile>$(OutDir)\FxSound.exe</OutputFile>
@@ -108,7 +108,7 @@
       <Optimization>MaxSpeed</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE8\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_1660CA3=1;JUCE_APP_VERSION=1.2.11.0;JUCE_APP_VERSION_HEX=0x1020b00;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_1660CA3=1;JUCE_APP_VERSION=1.2.12.0;JUCE_APP_VERSION_HEX=0x1020c00;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -123,7 +123,7 @@
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE8\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_1660CA3=1;JUCE_APP_VERSION=1.2.11.0;JUCE_APP_VERSION_HEX=0x1020b00;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_1660CA3=1;JUCE_APP_VERSION=1.2.12.0;JUCE_APP_VERSION_HEX=0x1020c00;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <OutputFile>$(OutDir)\FxSound.exe</OutputFile>
@@ -152,6 +152,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\GUI\FxAudioControls.cpp" />
     <ClCompile Include="..\Source\GUI\FxOutputPreference.cpp" />
     <ClCompile Include="..\Source\GUI\FxAudioSlider.cpp" />
     <ClCompile Include="..\Source\GUI\FxBalanceSlider.cpp" />
@@ -160,7 +161,6 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\Source\GUI\FxLanguage.cpp" />
     <ClCompile Include="..\Source\GUI\FxVisualizer.cpp" />
     <ClCompile Include="..\Source\GUI\FxEqualizer.cpp" />
-    <ClCompile Include="..\Source\GUI\FxEffects.cpp" />
     <ClCompile Include="..\Source\GUI\FxNotification.cpp" />
     <ClCompile Include="..\Source\GUI\FxHyperlink.cpp" />
     <ClCompile Include="..\Source\GUI\FxComboBox.cpp" />
@@ -1945,6 +1945,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\JuceLibraryCode\include_juce_opengl.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\GUI\FxAudioControls.h" />
     <ClInclude Include="..\Source\GUI\FxOutputPreference.h" />
     <ClInclude Include="..\Source\GUI\FxAudioSlider.h" />
     <ClInclude Include="..\Source\GUI\FxBalanceSlider.h" />
@@ -1952,7 +1953,6 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\Source\GUI\FxHotkeyLabel.h" />
     <ClInclude Include="..\Source\GUI\FxLanguage.h" />
     <ClInclude Include="..\Source\GUI\FxVisualizer.h" />
-    <ClInclude Include="..\Source\GUI\FxEffects.h" />
     <ClInclude Include="..\Source\GUI\FxEqualizer.h" />
     <ClInclude Include="..\Source\GUI\FxNotification.h" />
     <ClInclude Include="..\Source\GUI\FxHyperlink.h" />
@@ -2841,6 +2841,14 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <None Include="..\Fonts\Gilroy-Bold.ttf" />
     <None Include="..\Fonts\Gilroy-Regular.ttf" />
     <None Include="..\Fonts\Gilroy-Semibold.ttf" />
+    <None Include="..\Images\flip.svg" />
+    <None Include="..\Images\flip_black.svg" />
+    <None Include="..\Images\flip_blue.svg" />
+    <None Include="..\Images\flip_white.svg" />
+    <None Include="..\Images\restore_defaults.svg" />
+    <None Include="..\Images\restore_defaults_black.svg" />
+    <None Include="..\Images\restore_defaults_blue.svg" />
+    <None Include="..\Images\restore_defaults_white.svg" />
     <None Include="..\Images\arrow_down_black.svg" />
     <None Include="..\Images\arrow_down_white.svg" />
     <None Include="..\Images\arrow_up_black.svg" />
@@ -2906,6 +2914,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <None Include="..\Images\Slider_Thumb_bw.svg" />
     <None Include="..\..\Resources\Strings\FxSound.ar.txt" />
     <None Include="..\..\Resources\Strings\FxSound.ba.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.cs.txt" />
     <None Include="..\..\Resources\Strings\FxSound.de.txt" />
     <None Include="..\..\Resources\Strings\FxSound.es.txt" />
     <None Include="..\..\Resources\Strings\FxSound.fa.txt" />

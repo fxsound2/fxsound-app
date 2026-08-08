@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.11.0"
+<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.12.0"
               displaySplashScreen="1" jucerFormatVersion="1" companyName="FxSound LLC"
-              companyWebsite="https://www.fxsound.com" companyCopyright="2026 FxSound&#8482;"
+              companyWebsite="https://www.fxsound.com" companyCopyright="Copyright (C) 2026 FxSound LLC"
               defines="UNICODE" postExportShellCommandWin="type %%1%%\ProjectARM\status_icons.rc &gt;&gt; %%1%%\ProjectARM\resources.rc"
               cppLanguageStandard="17">
   <MAINGROUP id="fy4sG5" name="FxSound">
@@ -14,6 +14,18 @@
             file="Fonts/Gilroy-Semibold.ttf"/>
     </GROUP>
     <GROUP id="{1003D6EA-45C1-E8E4-DFD9-451D205D2F09}" name="Images">
+      <FILE id="MYtqrx" name="flip.svg" compile="0" resource="1" file="Images/flip.svg"/>
+      <FILE id="Az6d9b" name="flip_black.svg" compile="0" resource="1" file="Images/flip_black.svg"/>
+      <FILE id="G5cKv4" name="flip_blue.svg" compile="0" resource="1" file="Images/flip_blue.svg"/>
+      <FILE id="fa4GNH" name="flip_white.svg" compile="0" resource="1" file="Images/flip_white.svg"/>
+      <FILE id="gkE8aV" name="restore_defaults.svg" compile="0" resource="1"
+            file="Images/restore_defaults.svg"/>
+      <FILE id="K5v6lK" name="restore_defaults_black.svg" compile="0" resource="1"
+            file="Images/restore_defaults_black.svg"/>
+      <FILE id="osFcho" name="restore_defaults_blue.svg" compile="0" resource="1"
+            file="Images/restore_defaults_blue.svg"/>
+      <FILE id="fGpSnn" name="restore_defaults_white.svg" compile="0" resource="1"
+            file="Images/restore_defaults_white.svg"/>
       <FILE id="Q5mIgS" name="arrow_down_black.svg" compile="0" resource="1"
             file="Images/arrow_down_black.svg"/>
       <FILE id="uNwSXC" name="arrow_down_white.svg" compile="0" resource="1"
@@ -22,7 +34,7 @@
             file="Images/arrow_up_black.svg"/>
       <FILE id="IfSChk" name="arrow_up_white.svg" compile="0" resource="1"
             file="Images/arrow_up_white.svg"/>
-      <FILE id="LLs9LM" name="equalizer.svg" compile="0" resource="1" file="Images/equalizer.svg"/>
+      <FILE id="LLs9LM" name="equalizer.svg" compile="0" resource="0" file="Images/equalizer.svg"/>
       <FILE id="JhrNeR" name="arrow_down.svg" compile="0" resource="1" file="Images/arrow_down.svg"/>
       <FILE id="oHJfgg" name="arrow_down_blue.svg" compile="0" resource="1"
             file="Images/arrow_down_blue.svg"/>
@@ -117,6 +129,10 @@
     <GROUP id="{D719274A-0BE1-FA67-529B-B012A702512B}" name="Source">
       <GROUP id="{7D838BF2-5642-7BE7-DF78-745226F70630}" name="GUI">
         <GROUP id="{59F271E4-F186-3EBD-DA7B-97C454130F71}" name="Components">
+          <FILE id="s2Aspj" name="FxAudioControls.cpp" compile="1" resource="0"
+                file="Source/GUI/FxAudioControls.cpp"/>
+          <FILE id="dX6M5i" name="FxAudioControls.h" compile="0" resource="0"
+                file="Source/GUI/FxAudioControls.h"/>
           <FILE id="Rgr4wj" name="FxOutputPreference.cpp" compile="1" resource="0"
                 file="Source/GUI/FxOutputPreference.cpp"/>
           <FILE id="tWVZ0P" name="FxOutputPreference.h" compile="0" resource="0"
@@ -141,8 +157,6 @@
                 file="Source/GUI/FxVisualizer.cpp"/>
           <FILE id="ZTvcaq" name="FxVisualizer.h" compile="0" resource="0" file="Source/GUI/FxVisualizer.h"/>
           <FILE id="PFkZyE" name="FxEqualizer.cpp" compile="1" resource="0" file="Source/GUI/FxEqualizer.cpp"/>
-          <FILE id="QkOMsp" name="FxEffects.cpp" compile="1" resource="0" file="Source/GUI/FxEffects.cpp"/>
-          <FILE id="LhvIcK" name="FxEffects.h" compile="0" resource="0" file="Source/GUI/FxEffects.h"/>
           <FILE id="tp9RTX" name="FxEqualizer.h" compile="0" resource="0" file="Source/GUI/FxEqualizer.h"/>
           <FILE id="WojPjZ" name="FxNotification.cpp" compile="1" resource="0"
                 file="Source/GUI/FxNotification.cpp"/>
@@ -226,6 +240,7 @@
     <GROUP id="{AAFAFD7C-41A7-0774-9216-95AEBD0117C0}" name="Strings">
       <FILE id="XbT61V" name="FxSound.ar.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ar.txt"/>
       <FILE id="cAIn3x" name="FxSound.ba.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.ba.txt"/>
+      <FILE id="sRsSww" name="FxSound.cs.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.cs.txt"/>
       <FILE id="gVyPZi" name="FxSound.de.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.de.txt"/>
       <FILE id="CQH7Jy" name="FxSound.es.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.es.txt"/>
       <FILE id="dw8pYo" name="FxSound.fa.txt" compile="0" resource="1" file="../Resources/Strings/FxSound.fa.txt"/>
