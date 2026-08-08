@@ -1,3 +1,8 @@
 /dist/
 *.exe
 *.test
+*.mcpb
+
+# Copied fresh from canonical sources by build-mcpb.ps1 -- see mcpb/README.md
+/mcpb/icon.png
+/mcpb/LICENSE
