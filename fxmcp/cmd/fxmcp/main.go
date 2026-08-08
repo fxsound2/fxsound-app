@@ -1,6 +1,15 @@
 // Command fxmcp is an MCP server that exposes FxSound's diagnostics
 // (fxdiag.exe) and control surface (FxSound.exe command-line options) as
 // MCP resources, tools, and prompts.
+//
+// resource_windows_{386,amd64,arm64}.syso in this directory embed the
+// Windows file properties (Copyright/FileDescription/ProductName/Version)
+// shown on fxmcp.exe's Details tab. They're checked in since a plain `go
+// build` needs them present to produce a binary with those properties --
+// regenerate after editing versioninfo.json with (one-time prerequisite:
+// go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo@latest):
+//
+//go:generate goversioninfo -platform-specific versioninfo.json
 package main
 
 import (

@@ -1,0 +1,41 @@
+{
+	"FixedFileInfo": {
+		"FileVersion": {
+			"Major": 0,
+			"Minor": 1,
+			"Patch": 0,
+			"Build": 0
+		},
+		"ProductVersion": {
+			"Major": 0,
+			"Minor": 1,
+			"Patch": 0,
+			"Build": 0
+		},
+		"FileFlagsMask": "3f",
+		"FileFlags ": "00",
+		"FileOS": "040004",
+		"FileType": "01",
+		"FileSubType": "00"
+	},
+	"StringFileInfo": {
+		"Comments": "",
+		"CompanyName": "FxSound LLC",
+		"FileDescription": "FxSound MCP Server",
+		"FileVersion": "0.1.0.0",
+		"InternalName": "fxmcp",
+		"LegalCopyright": "Copyright (C) 2026 FxSound LLC",
+		"LegalTrademarks": "",
+		"OriginalFilename": "fxmcp.exe",
+		"PrivateBuild": "",
+		"ProductName": "FxSound",
+		"ProductVersion": "0.1.0",
+		"SpecialBuild": ""
+	},
+	"VarFileInfo": {
+		"Translation": {
+			"LangID": "0409",
+			"CharsetID": "04B0"
+		}
+	}
+}

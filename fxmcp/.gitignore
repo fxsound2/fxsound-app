@@ -6,3 +6,8 @@
 # Copied fresh from canonical sources by build-mcpb.ps1 -- see mcpb/README.md
 /mcpb/icon.png
 /mcpb/LICENSE
+
+# goversioninfo's -platform-specific also emits a 32-bit ARM variant we
+# don't target (see cmd/fxmcp's go:generate directive) -- harmless but
+# not one of our three built architectures, so don't check it in.
+/cmd/fxmcp/resource_windows_arm.syso
