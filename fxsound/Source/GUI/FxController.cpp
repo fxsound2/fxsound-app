@@ -147,6 +147,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 
 	preset_dirty_ = false;
 	auto_save_counter_ = 0;
+	remove_device_configs_pending_ = false;
 
 	main_window_ = nullptr;
 	audio_passthru_ = nullptr;
@@ -1481,7 +1482,7 @@ void FxController::initOutputs(std::vector<SoundDevice>& sound_devices)
 		else
 		{
 			// Update device configs when relaunching the app
-			DeviceConfig::updateDeviceConfigs(settings_, sound_devices);
+			DeviceConfig::updateDeviceConfigs(settings_, sound_devices, remove_device_configs_pending_);
 		}
 	}
 
@@ -2106,6 +2107,8 @@ void FxController::timerCallback()
 			autoSavePreset(FxModel::getModel().getSelectedPreset());
 		}
 		auto_save_counter_ = 0;
+
+		removeDeviceConfigs();
 	}
 
 	auto current_time = Time::getCurrentTime();
@@ -2126,14 +2129,14 @@ void FxController::onSoundDeviceChange(bool processing)
 	{
 		if (processing)
 		{
-			DeviceConfig::updateDeviceConfigs(settings_, audio_passthru_->getSoundDevices(false));
+			DeviceConfig::updateDeviceConfigs(settings_, audio_passthru_->getSoundDevices(false), remove_device_configs_pending_);
 			auto sound_devices = audio_passthru_->getSoundDevices(true);
 			selectProcessingOutput(sound_devices);
 		}
 	}
 	else
 	{
-		DeviceConfig::updateDeviceConfigs(settings_, audio_passthru_->getSoundDevices(false));
+		DeviceConfig::updateDeviceConfigs(settings_, audio_passthru_->getSoundDevices(false), remove_device_configs_pending_);
 		auto sound_devices = audio_passthru_->getSoundDevices(true);
 		syncOutputWithSystemDefault(sound_devices);
 	}
@@ -2635,6 +2638,15 @@ juce::Array<DeviceConfig> FxController::getDeviceConfigs()
 void FxController::saveDeviceConfigs(const juce::Array<DeviceConfig>& device_configs)
 {
 	DeviceConfig::saveDeviceConfigs(settings_, "device_configs", device_configs);
+}
+
+void FxController::removeDeviceConfigs()
+{
+	if (remove_device_configs_pending_)
+	{
+		DeviceConfig::removeDevicesNotPresent(settings_, audio_passthru_->getSoundDevices(false));
+		remove_device_configs_pending_ = false;
+	}
 }
 
 bool FxController::isOutputDeviceConnected(const String& output_device_name)
