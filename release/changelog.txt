@@ -1,3 +1,12 @@
+version 1.2.12.0
+----------------
+1. MCP server included to let AI assistants like Claude to interact with FxSound
+2. Fix to prevent Bluetooth device disconnect from removing the device from device preference list
+3. Fix for mute getting applied when device is muted in Windows
+4. Audio controls for the equalizer are moved to main window from settings
+5. Normalization control removed since volume leveling provides a superset of the functions
+6. Czech language support added
+
 version 1.2.11.0
 ----------------
 1. Command line options added to set equalizer band frequency and gain, set effect levels, and print the running instance's status as JSON (--set_band_freq, --set_band_gain, --set_effect, --status)
