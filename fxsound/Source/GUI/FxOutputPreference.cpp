@@ -188,6 +188,8 @@ FxOutputPreferenceListModel::FxOutputPreferenceListModel()
 
     FxModel::getModel().addListener(this);
 
+    FxController::getInstance().removeDeviceConfigs();
+
     device_configs_ = FxController::getInstance().getDeviceConfigs();
 }
 

@@ -307,6 +307,11 @@ void FxMainWindow::showProView()
 	}	
 }
 
+void FxMainWindow::update()
+{
+	pro_view_.update();
+}
+
 void FxMainWindow::startVisualizer()
 {
     pro_view_.startVisualizer();
@@ -335,6 +340,8 @@ void FxMainWindow::setLookAndFeel()
 
 	help_bubble_.setColour(BubbleComponent::ColourIds::backgroundColourId, Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f));
 	help_bubble_.setColour(BubbleComponent::ColourIds::outlineColourId, theme.findColour(TextEditor::textColourId));
+
+	pro_view_.setLookAndFeel();
 
 	setResizeImage();
 }
@@ -392,6 +399,23 @@ void FxMainWindow::setIcon(bool power, bool processing)
 	if (curr_icon != NULL)
 	{
 		DestroyIcon(curr_icon);
+	}
+}
+
+void FxMainWindow::enablePowerButton(bool enable)
+{
+	if (power_button_.isEnabled() != enable)
+	{
+		power_button_.setEnabled(enable);
+
+		if (!enable)
+		{
+			power_button_.setTooltip(TRANS("Audio enhancements are not available over Remote Desktop"));
+		}
+		else
+		{
+			power_button_.setTooltip("");
+		}
 	}
 }
 

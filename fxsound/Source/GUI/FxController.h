@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <JuceHeader.h>
 #include "FxModel.h"
 #include "FxTheme.h"
-#include "FxEffects.h"
+#include "FxAudioControls.h"
 #include "../Source/Utils/Settings/Settings.h"
 #include "../Source/Utils/Settings/DeviceConfig.h"
 #include "AudioPassthru.h"
@@ -45,9 +45,12 @@ public:
     static constexpr int NUM_SPECTRUM_BANDS = 10;
 	static constexpr int DEFAULT_NUM_EQ_BANDS = 10;
 	static constexpr float DEFAULT_NORMALIZATION = 0.0f;
+	static constexpr float DEFAULT_VOLUME_LEVELING = 0.0f;
 	static constexpr float DEFAULT_BALANCE = 0.0f;
 	static constexpr float DEFAULT_FILTER_Q = 1.0f;
 	static constexpr float DEFAULT_MASTER_GAIN = 0.0f;
+	static constexpr float MIN_GAIN = -12.0f;
+	static constexpr float MAX_GAIN = 12.0f;
 	static constexpr char HK_CMD_ON_OFF[] = "cmd_on_off";
 	static constexpr char HK_CMD_OPEN_CLOSE[] = "cmd_open_close";
 	static constexpr char HK_CMD_NEXT_PRESET[] = "cmd_next_preset";
@@ -68,6 +71,8 @@ public:
 	void applyConfig(const String& commandline);
 	void init(FxMainWindow* main_window, FxSystemTrayView* system_tray_view, AudioPassthru* audio_passthru);
 	void initPresets();
+	void printStatus();
+	static File getStatusFile();
 
 	void showView();
 	void switchView();
@@ -103,8 +108,8 @@ public:
 
 	int getNumEqBands();
 	void setNumEqBands(int num_bands);
-	float getNormalization();
-	void setNormalization(float gain_db);	
+	float getVolumeLeveling();
+	void setVolumeLeveling(float gain_db);
 	void setBalance(float gain_db);
 	float getBalance();
 	void setMasterGain(float gain_db);
@@ -127,6 +132,7 @@ public:
 
 	juce::Array<DeviceConfig> getDeviceConfigs();
     void saveDeviceConfigs(const juce::Array<DeviceConfig>& device_configs);
+	void removeDeviceConfigs();
 	bool isOutputDeviceConnected(const String& output_device_name);
 	SoundDevice getPreferredOutput();
 	int compareOutputDevicePriority(const String& output_device_name1, const String& output_device_name2, const juce::Array<DeviceConfig>& device_configs);
@@ -243,9 +249,13 @@ private:
 
     String FormatString(const String& format, const String& arg);
 
+	typedef HPOWERNOTIFY(WINAPI* RegisterSuspendResumeNotificationFunc)(HANDLE, DWORD);
+	typedef BOOL(WINAPI* UnregisterSuspendResumeNotificationFunc)(HPOWERNOTIFY);
+
 	MessageWindow message_window_;
 	bool hotkeys_registered_;
 	HPOWERNOTIFY powerNotify_;
+	UnregisterSuspendResumeNotificationFunc unregister_suspend_resume_notification_;
 
 	FxMainWindow* main_window_;
 	FxSystemTrayView* system_tray_view_;
@@ -275,6 +285,7 @@ private:
 
 	bool preset_dirty_;
 	int auto_save_counter_;
+	bool remove_device_configs_pending_;
 
 	bool minimize_tip_;
 	bool survey_tip_;

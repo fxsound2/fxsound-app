@@ -111,8 +111,8 @@ void FxEqualizer::reinit(int num_bands)
 
     resized();
 
-    FxController::getInstance().undoPreset();
     update();
+    showValues(true);
 }
 
 void FxEqualizer::sliderValueChanged(Slider* slider)

@@ -134,3 +134,8 @@ bool SysInfo::canSupportHotkeys()
 {
     return true;
 }
+
+bool SysInfo::isRemoteSession()
+{
+	return GetSystemMetrics(SM_REMOTESESSION) != FALSE;
+}

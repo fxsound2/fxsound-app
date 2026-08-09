@@ -1,6 +1,6 @@
 /*
 FxSound
-Copyright (C) 2025  FxSound LLC
+Copyright (C) 2026  FxSound LLC
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -37,5 +37,7 @@ std::vector<AudioSession> EnumAudioSessions();
 void EnumDeviceSessions(IMMDevice* pDevice, std::vector<AudioSession>& audioSessions);
 void ReportAudioSessions(const std::vector<AudioSession>& audioSessions);
 void ReportSessionVolume(const AudioSession& audioSession);
+std::wstring ReportAudioSessionsJson(const std::vector<AudioSession>& audioSessions);
+std::wstring ToJson(const AudioSession& audioSession);
 
 std::wstring ColorFormat(int colorCode);

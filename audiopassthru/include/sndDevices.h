@@ -288,6 +288,8 @@ public:
 
 	 // Added to allow handle to be set during sndDevicesInit call
 	 void SetPtHandle(PT_HANDLE *sndDevices_hdl);
+
+	 bool IsRegistered();
 };
 
 class CsndDevicesAudioEndpointVolumeCallbackPlayback : public IAudioEndpointVolumeCallback
@@ -316,6 +318,8 @@ public:
 
 	 // Added to allow handle to be set during sndDevicesInit call
 	 void SetPtHandle(PT_HANDLE *sndDevices_hdl);
+
+	 bool IsRegistered();
 };
 
 

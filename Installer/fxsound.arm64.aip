@@ -25,11 +25,11 @@
     <ROW Property="MSIFASTINSTALL" MultiBuildValue="DefaultBuild:2"/>
     <ROW Property="Manufacturer" Value="FxSound LLC"/>
     <ROW Property="MsiLogging" MultiBuildValue="DefaultBuild:vp"/>
-    <ROW Property="ProductCode" Value="1033:{AFD6D03F-AE41-4BB2-9E4D-26E8A9E970B0} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{47848D2D-4143-4ACC-BB36-1DDDFF2398BF} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="FxSound"/>
     <ROW Property="ProductName_32" Value="[|ProductName]"/>
-    <ROW Property="ProductVersion" Value="1.2.10.0" Options="20"/>
+    <ROW Property="ProductVersion" Value="1.2.12.0" Options="20"/>
     <ROW Property="REBOOT" MultiBuildValue="DefaultBuild:Suppress"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
@@ -80,6 +80,8 @@
     <ROW Component="fac" ComponentId="{1403F2A1-B025-4820-94F2-A2784FDCB770}" Directory_="Factsoft_Dir" Attributes="0" KeyPath="fac"/>
     <ROW Component="fxdevcon64.exe" ComponentId="{4A7D834C-E6C4-47F2-B7F6-78F6DE97B420}" Directory_="arm64_Dir" Attributes="256" KeyPath="fxdevcon64.exe_1"/>
     <ROW Component="fxdiag.exe" ComponentId="{30863080-57FA-4839-B0D6-6C013A08C1ED}" Directory_="APPDIR" Attributes="256" KeyPath="fxdiag.exe"/>
+    <ROW Component="fxmcp.exe" ComponentId="{C18749E0-567D-48F4-A01F-5EE23897A07B}" Directory_="APPDIR" Attributes="256" KeyPath="fxmcp.exe"/>
+    <ROW Component="fxmcp.mcpb" ComponentId="{16BFDD23-7D8F-4EB4-8499-24F6E231AB24}" Directory_="APPDIR" Attributes="0" KeyPath="fxmcp.mcpb" Type="0"/>
     <ROW Component="fxsound.ico" ComponentId="{4D26BB00-46E1-4EC4-B72D-161C0D79D2AB}" Directory_="SystemFolder" Attributes="0" KeyPath="fxsound.ico"/>
     <ROW Component="fxvad" ComponentId="{3A882A11-8997-49D6-B2B3-3D2B30E6CBEF}" Directory_="arm64_Dir" Attributes="0" KeyPath="fxvad.inf_1"/>
     <ROW Component="updater.exe" ComponentId="{9F3A0D44-4797-4E80-B597-9E707F111CB4}" Directory_="APPDIR" Attributes="0" KeyPath="updater.exe"/>
@@ -135,6 +137,8 @@
     <ROW File="fxvad.sys_1" Component_="fxvad" FileName="fxvad.sys" Attributes="0" SourcePath="Drivers\Version14\win10\arm64\fxvad.sys" SelfReg="false"/>
     <ROW File="fxvadntarm64.cat" Component_="fxvad" FileName="FXVADN~1.CAT|fxvadntarm64.cat" Attributes="0" SourcePath="Drivers\Version14\win10\arm64\fxvadntarm64.cat" SelfReg="false"/>
     <ROW File="fxdiag.exe" Component_="fxdiag.exe" FileName="fxdiag.exe" Attributes="0" SourcePath="..\bin\arm64\fxdiag.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="fxmcp.exe" Component_="fxmcp.exe" FileName="fxmcp.exe" Attributes="0" SourcePath="..\bin\arm64\fxmcp.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="fxmcp.mcpb" Component_="fxmcp.mcpb" FileName="FXMCP~1.MCP|fxmcp.mcpb" Attributes="0" SourcePath="..\bin\fxmcp.mcpb" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BootstrOptComponent">
     <ROW BootstrOptKey="GlobalOptions" GeneralOptions="b" DownloadFolder="[AppDataFolder][|Manufacturer]\[|ProductName]\prerequisites" Options="2"/>
@@ -152,7 +156,7 @@
     <ROW Path="&lt;AI_DICTS&gt;ui_en.ail"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.DigCertStoreComponent">
-    <ROW TimeStampUrl="http://timestamp.digicert.com" SignerDescription="[|ProductName]" SignOptions="7" SignTool="0" SignDelay="500" UseSha256="1" Thumbprint="BAD6C079539572BC8A21DEEB62A50F3455C75DBC Subject: James Archer&#10;Issuer: DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1&#10;Valid from 06/23/2026 to 06/23/2027" Subject="CN=James Archer, O=James Archer, L=Mill Valley, S=California, C=US" Store="User\MY"/>
+    <ROW TimeStampUrl="http://timestamp.digicert.com" SignerDescription="[|ProductName]" SignOptions="7" SignTool="0" SignDelay="500" UseSha256="1" Thumbprint="C2F1C7C867D6E3CF7908CB017B74FD22A2059BFE Subject: FxSound, LLC&#10;Issuer: DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1&#10;Valid from 08/04/2026 to 08/04/2027" Subject="CN=&quot;FxSound, LLC&quot;, O=&quot;FxSound, LLC&quot;, L=Mill Valley, S=California, C=US, SERIALNUMBER=201721910237, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=California, OID.1.3.6.1.4.1.311.60.2.1.3=US" Store="User\MY"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.DynamicPropertyComponent">
     <ROW Property="ProductVersion" Type="2" SourcePath="FxSound.exe"/>
@@ -282,6 +286,8 @@
     <ROW Feature_="AI64BitFiles" Component_="fxvad"/>
     <ROW Feature_="AI64BitFiles" Component_="AI_IA_ENABLE"/>
     <ROW Feature_="AI64BitFiles" Component_="fxdiag.exe"/>
+    <ROW Feature_="AI64BitFiles" Component_="fxmcp.exe"/>
+    <ROW Feature_="AI64BitFiles" Component_="fxmcp.mcpb"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
     <ROW Name="fxsound.exe" SourcePath="Resources\fxsound.ico" Index="0"/>

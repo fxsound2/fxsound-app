@@ -1,6 +1,6 @@
 /*
 FxSound
-Copyright (C) 2025  FxSound LLC
+Copyright (C) 2026  FxSound LLC
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "fxdiag.h"
 #include "AudioSession.h"
+#include "JsonWriter.h"
 
 extern const wchar_t* RESET_COLOR_FORMAT;
 
@@ -234,4 +235,52 @@ void ReportSessionVolume(const AudioSession& audioSession)
 	}
 
 	std::wcout << L"[Volume: " << std::fixed << std::setprecision(0) << audioSession.volumeLevel_ << L"%]";
+}
+
+std::wstring AudioSessionStateToString(AudioSessionState sessionState)
+{
+	switch (sessionState)
+	{
+	case AudioSessionState::AudioSessionStateActive:
+		return L"Active";
+	case AudioSessionState::AudioSessionStateInactive:
+		return L"Inactive";
+	case AudioSessionState::AudioSessionStateExpired:
+		return L"Expired";
+	default:
+		return L"Unknown";
+	}
+}
+
+std::wstring ToJson(const AudioSession& audioSession)
+{
+	std::wstringstream json;
+
+	json << L"{"
+		<< JsonString(L"sessionName", audioSession.sessionName_) << L","
+		<< JsonString(L"state", AudioSessionStateToString(audioSession.sessionState_)) << L","
+		<< JsonBool(L"systemSession", audioSession.systemSession_) << L","
+		<< JsonNumber(L"volumeLevel", static_cast<double>(audioSession.volumeLevel_)) << L","
+		<< JsonBool(L"muted", audioSession.muted_)
+		<< L"}";
+
+	return json.str();
+}
+
+std::wstring ReportAudioSessionsJson(const std::vector<AudioSession>& audioSessions)
+{
+	std::wstringstream json;
+
+	json << L"[";
+	for (size_t i = 0; i < audioSessions.size(); i++)
+	{
+		if (i > 0)
+		{
+			json << L",";
+		}
+		json << ToJson(audioSessions[i]);
+	}
+	json << L"]";
+
+	return json.str();
 }

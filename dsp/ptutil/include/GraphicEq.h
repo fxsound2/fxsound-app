@@ -56,6 +56,7 @@ void PT_DECLSPEC GraphicEqSetFilterQ(PT_HANDLE* hp_GraphicEq, float q_multiplier
 int PT_DECLSPEC GraphicEqSetNumBands(PT_HANDLE* hp_GraphicEq, int num_Bands);
 void PT_DECLSPEC GraphicEqSetBalance(PT_HANDLE* hp_GraphicEq, float gain_db);
 void PT_DECLSPEC GraphicEqSetNormalization(PT_HANDLE* hp_GraphicEq, float gain_db);
+void PT_DECLSPEC GraphicEqSetVolumeLeveling(PT_HANDLE* hp_GraphicEq, float gain_db);
 
 /* GraphicEqSet.cpp */
 int PT_DECLSPEC GraphicEqSetBandBoostCut(PT_HANDLE *hp_GraphicEq, int i_band_num, realtype r_boost_cut);
@@ -70,6 +71,7 @@ int PT_DECLSPEC GraphicEqGetBandCenterFrequency(PT_HANDLE *hp_GraphicEq, int i_b
 int PT_DECLSPEC GraphicEqGetBandFrequencyRange(PT_HANDLE *hp_GraphicEq, int i_band_num, float *fp_min_freq, float* fp_max_freq);
 int PT_DECLSPEC GraphicEqGetMasterGain(PT_HANDLE* hp_GraphicEq, float* gain_db);
 int PT_DECLSPEC GraphicEqGetNormalization(PT_HANDLE* hp_GraphicEq, float* gain_db);
+int PT_DECLSPEC GraphicEqGetVolumeLeveling(PT_HANDLE* hp_GraphicEq, float* gain_db);
 int PT_DECLSPEC GraphicEqGetFilterQ(PT_HANDLE* hp_GraphicEq, float* q_multiplier);
 int PT_DECLSPEC GraphicEqGetBalance(PT_HANDLE* hp_GraphicEq, float* balance_db);
 

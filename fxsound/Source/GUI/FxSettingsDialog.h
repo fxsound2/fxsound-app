@@ -124,50 +124,6 @@ private:
 		juce::Rectangle<float> output_preference_bounds_;
 	};
 
-	class EqualizerSettingsPane : public SettingsPane
-	{
-	public:
-		EqualizerSettingsPane();
-		~EqualizerSettingsPane();
-
-		void resized() override;
-		void paint(Graphics& g) override;
-
-	private:
-		static constexpr int GROUP_MARGIN = 10;
-		static constexpr int LABEL_WIDTH = 220;
-		static constexpr int COMBOBOX_HEIGHT = 30;
-		static constexpr int SLIDER_HEIGHT = 18;
-		static constexpr int LABEL_HEIGHT = 14;
-		static constexpr int RESTORE_DEFAULTS_BUTTON_WIDTH = 220;
-		static constexpr int BUTTON_HEIGHT = 24;
-		static constexpr int MAX_BUTTON_WIDTH = 315;
-
-		std::vector<int> equalizer_bands_ = { 5, 10, 15, 20, 31 };
-
-		void setText();
-		void updateEqualizerBandsText();
-		void selectEqualizerBands();
-		void restoreDefaults();
-
-		Label equalizer_title_;
-		Label master_gain_title_;
-		Label normalizer_title_;
-		Label filter_q_title_;
-		Label balance_title_;
-		Label left_label_;
-		Label right_label_;
-
-		ComboBox equalizer_;
-		FxAudioSlider master_gain_slider_;
-		FxAudioSlider normalizer_slider_;
-		FxAudioSlider filter_q_slider_;
-		FxBalanceSlider balance_slider_;
-		TextButton restore_defaults_button_;
-
-		juce::Rectangle<float> equalizer_settings_bounds_;
-	};
-
 	class GeneralSettingsPane : public SettingsPane
 	{
 	public:
@@ -249,12 +205,10 @@ private:
 		static constexpr int SEPARATOR_X = 152;
 
 		std::unique_ptr<SettingsButton> audio_button_;
-        std::unique_ptr<SettingsButton> equalizer_button_;
 		std::unique_ptr<SettingsButton> general_button_;
 		std::unique_ptr<SettingsButton> help_button_;
 
 		AudioSettingsPane audio_settings_pane_;
-		EqualizerSettingsPane equalizer_settings_pane_;
 		GeneralSettingsPane general_settings_pane_;
 		HelpSettingsPane help_settings_pane_;
 	};

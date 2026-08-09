@@ -105,6 +105,8 @@ int PT_DECLSPEC sndDevicesInitialSetupCaptureDevice(PT_HANDLE *hp_sndDevices, in
 		hr = cast_handle->pEndptVolCapture->RegisterControlChangeNotify( (IAudioEndpointVolumeCallback*)&(cast_handle->EPVolEventsCapture) );
 		if (FAILED(hr))
 		{
+			cast_handle->pEndptVolCapture->Release();
+			cast_handle->pEndptVolCapture = NULL;
 			*ip_status = SND_DEVICES_REGISTER_FAILED;
 			SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_REGISTER_FAILED);
 		}
@@ -280,6 +282,8 @@ int PT_DECLSPEC sndDevicesInitialSetupPlaybackDevice(PT_HANDLE *hp_sndDevices, i
 		hr = cast_handle->pEndptVolPlayback->RegisterControlChangeNotify( (IAudioEndpointVolumeCallback*)&(cast_handle->EPVolEventsPlayback) );
 		if (FAILED(hr))
 		{
+			cast_handle->pEndptVolPlayback->Release();
+			cast_handle->pEndptVolPlayback = NULL;
 			*ip_status = SND_DEVICES_REGISTER_FAILED;
 			SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_REGISTER_FAILED);
 		}

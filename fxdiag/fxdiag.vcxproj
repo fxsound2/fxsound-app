@@ -135,6 +135,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -197,12 +198,14 @@
     <ClCompile Include="AudioDevice.cpp" />
     <ClCompile Include="AudioSession.cpp" />
     <ClCompile Include="fxdiag.cpp" />
+    <ClCompile Include="JsonWriter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioDevice.h" />
     <ClInclude Include="AudioSession.h" />
     <ClInclude Include="fxdiag.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="JsonWriter.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

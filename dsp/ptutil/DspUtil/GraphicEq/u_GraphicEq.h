@@ -53,7 +53,8 @@ struct GraphicEqHdlType
 	realtype Q_multiplier;
 
 	realtype master_gain;
-	realtype normalization_gain;	
+	realtype normalization_gain;
+	realtype volume_leveling_gain_db;
 	realtype balance;
 
 	/* Current sampling frequency */

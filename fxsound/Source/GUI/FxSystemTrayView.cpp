@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <JuceHeader.h>
 #include "FxSystemTrayView.h"
+#include "../Utils/SysInfo/SysInfo.h"
 
 // {A8E96325-5269-443C-A0D8-0D02562FE553}
 const GUID FxSystemTrayView::trayIconGuid_ =
@@ -299,6 +300,7 @@ void FxSystemTrayView::showContextMenu()
     power.text = FxModel::getModel().getPowerState() ? String(TRANS("Turn Off")) : String(TRANS("Turn On"));    
     power.setID(MENU_ID_POWER);
     power.setAction(powerClicked);
+    power.setEnabled(!SysInfo::isRemoteSession());
     settings.setID(MENU_ID_SETTINGS);
     settings.setAction(settingsClicked);
     donate.setID(MENU_ID_DONATE);
