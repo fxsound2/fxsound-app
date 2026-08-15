@@ -300,6 +300,7 @@ int PT_DECLSPEC regReadKey_Wide(int i_key_class, wchar_t *wcp_keyname,
 	if (RegQueryValueExW(hkey, L"", 0, NULL, (unsigned char *)wcp_data, 
 		                 &ul_buffer_size) != ERROR_SUCCESS)
 	{
+		RegCloseKey(hkey);
 		return(OKAY);
 	}
 

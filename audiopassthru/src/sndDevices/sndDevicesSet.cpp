@@ -510,9 +510,13 @@ int PT_DECLSPEC sndDevicesSetDfxDeviceSampleRateAndChannels(PT_HANDLE *hp_sndDev
 	if (FAILED(hr))
 	{
 		*ip_resultFlag = SND_DEVICES_DEVICE_SET_FORMAT_FAILED;
+		CoTaskMemFree(pwfx);
 		pPolicyConfigVista->Release();
 		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_DEVICE_SET_FORMAT_FAILED);
 	}
+
+	// pwfx was allocated by GetDeviceFormat() above; free it before returning.
+	CoTaskMemFree(pwfx);
 
 	pPolicyConfigVista->Release();
 

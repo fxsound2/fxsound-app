@@ -169,24 +169,21 @@ int PT_DECLSPEC sndDevices_FreeReuseableObjects(PT_HANDLE *hp_sndDevices)
 		return(NOT_OKAY);
 
 	// The SAFE_RELEASE macro checks to see if the var is NULL before making "release" call.
-	/*
-	SAFE_RELEASE(cast_handle->pCaptureDevice)
-	SAFE_RELEASE(cast_handle->pPlaybackDevice) // Currently crashing on 2nd re-init call here.
-	SAFE_RELEASE(cast_handle->pAudioCaptureLoopback)
-	SAFE_RELEASE(cast_handle->pAudioClientPlayback)
-   SAFE_RELEASE(cast_handle->pAudioClientPlaybackRender)
-	SAFE_RELEASE(cast_handle->pEndptVolCapture)
-	SAFE_RELEASE(cast_handle->pEndptVolPlayback)
-	*/
+	// These audio client / loopback objects are re-created on every re-init, so they must
+	// be released here to avoid leaking them on each sndDevicesReInit().  The processing
+	// thread has already been stopped before this function is called.
+	SAFE_RELEASE(cast_handle->pAudioCaptureLoopback);
+	SAFE_RELEASE(cast_handle->pAudioClientCapture);
+	SAFE_RELEASE(cast_handle->pAudioClientPlayback);
+	SAFE_RELEASE(cast_handle->pAudioClientPlaybackRender);
 	//cast_handle->pwfxCapture = NULL;
 	//cast_handle->pwfxPlayback = NULL;
 
-	SAFE_RELEASE(cast_handle->pAudioClientPlaybackRender);
-	cast_handle->pAudioClientPlaybackRender = NULL;
-
 	for(i=0; i<SND_DEVICES_MAX_NUM_DEVICES; i++)
 	{
-		//SAFE_RELEASE(cast_handle->pAllDevices[i]) // NOTE - crashing here on re-init
+		// pCaptureDevice/pPlaybackDevice are aliases into pAllDevices[] (no separate
+		// reference), so releasing pAllDevices here is what releases those objects too.
+		SAFE_RELEASE(cast_handle->pAllDevices[i]);
 		// The MS example code was calling CoTastMemFree on these pwszID strings, but I don't know if its safe
 		// to make this call on a string that may not have been allocated, don't do call for now.
 		//CoTaskMemFree(cast_handle->pwszID[i]);
@@ -198,6 +195,11 @@ int PT_DECLSPEC sndDevices_FreeReuseableObjects(PT_HANDLE *hp_sndDevices)
 		cast_handle->deviceDescriptionRealDevices[i] = NULL;
 		cast_handle->deviceState[i] = 0;
 	}
+
+	// pCaptureDevice/pPlaybackDevice alias pAllDevices[] entries that were released above,
+	// so just NULL the aliases - releasing them again would be a double-release.
+	cast_handle->pCaptureDevice = NULL;
+	cast_handle->pPlaybackDevice = NULL;
 
 	return(OKAY);
 }
