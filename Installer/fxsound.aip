@@ -25,11 +25,11 @@
     <ROW Property="MSIFASTINSTALL" MultiBuildValue="DefaultBuild:2"/>
     <ROW Property="Manufacturer" Value="FxSound LLC"/>
     <ROW Property="MsiLogging" MultiBuildValue="DefaultBuild:vp"/>
-    <ROW Property="ProductCode" Value="1033:{EE3F4F07-FD7F-42EB-BC0A-EF1BA79BA746} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{88B23212-049A-4656-B978-8D1C5469B2D9} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="FxSound"/>
     <ROW Property="ProductName_32" Value="[|ProductName]"/>
-    <ROW Property="ProductVersion" Value="1.2.12.0" Options="20"/>
+    <ROW Property="ProductVersion" Value="1.2.13.0" Options="20"/>
     <ROW Property="REBOOT" MultiBuildValue="DefaultBuild:Suppress"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
@@ -116,8 +116,8 @@
     <ROW File="FxSound.exe" Component_="FxSound.exe" FileName="FxSound.exe" Attributes="0" SourcePath="..\bin\x64\FxSound.exe" SelfReg="false" DigSign="true"/>
     <ROW File="FxSound.settings" Component_="FxSound.settings" FileName="FXSOUN~1.SET|FxSound.settings" Version="65535.65535.65535.65535" Attributes="0" SourcePath="Resources\FxSound.settings" SelfReg="false"/>
     <ROW File="FxSound.exe_2" Component_="FxSound.exe_2" FileName="FxSound.exe" Attributes="0" SourcePath="..\bin\x86\FxSound.exe" SelfReg="false" DigSign="true"/>
-    <ROW File="ptdevcon32.exe" Component_="ptdevcon32.exe" FileName="PTDEVC~1.EXE|ptdevcon32.exe" Attributes="0" SourcePath="Apps\Version13\ptdevcon32.exe" SelfReg="false" DigSign="true"/>
-    <ROW File="ptdevcon64.exe" Component_="ptdevcon64.exe" FileName="PTDEVC~2.EXE|ptdevcon64.exe" Attributes="0" SourcePath="Apps\Version13\ptdevcon64.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="ptdevcon32.exe" Component_="ptdevcon32.exe" FileName="PTDEVC~1.EXE|ptdevcon32.exe" Attributes="0" SourcePath="Apps\Version13\ptdevcon32.exe" SelfReg="false"/>
+    <ROW File="ptdevcon64.exe" Component_="ptdevcon64.exe" FileName="PTDEVC~2.EXE|ptdevcon64.exe" Attributes="0" SourcePath="Apps\Version13\ptdevcon64.exe" SelfReg="false"/>
     <ROW File="DfxSetupDrv.exe" Component_="DfxSetupDrv.exe" FileName="DFXSET~1.EXE|DfxSetupDrv.exe" Attributes="0" SourcePath="Apps\Version14\DfxSetupDrv.exe" SelfReg="false" DigSign="true"/>
     <ROW File="dfx.ico" Component_="dfx.ico" FileName="dfx11.ico" Attributes="0" SourcePath="Resources\dfx.ico" SelfReg="false"/>
     <ROW File="updater.exe" Component_="updater.exe" FileName="updater.exe" Version="65535.65535.65535.65535" Attributes="0" SourcePath="&lt;AI_STUBS&gt;updater.exe" SelfReg="false" DigSign="true"/>
