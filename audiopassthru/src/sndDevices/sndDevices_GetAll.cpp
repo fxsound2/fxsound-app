@@ -150,6 +150,8 @@ int PT_DECLSPEC sndDevices_GetAll(PT_HANDLE* hp_sndDevices, int* ip_num_devices)
 		hr = pProps->GetValue(PKEY_Device_FriendlyName, &FriendlyName);
 		if (FAILED(hr))
 		{
+			hr = cast_handle->pAllDevices[i]->GetState(&cast_handle->deviceState[i]);
+			cast_handle->deviceNumChannel[i] = 1;
 			PropVariantClear(&FriendlyName);
 			continue;
 		}
