@@ -32,7 +32,7 @@ enum FxColor : int { WindowBackground, WidgetBackground, MenuBackground, Outline
 enum FxImage : int { DefaultLogo, HighlightedLogo, IconLogo,
 					 PowerOnButton, PowerOffButton, DonateButton, DonateButtonHover, MenuButton, MenuButtonHover,
 					 MinimizeButton, MinimizeButtonHover, MaximizeButton, MaximizeButtonHover, MinimizeWindowButton, MinimizeWindowButtonHover,
-					 FlipButton, FlipButtonHover, RestoreDefaultsButton, RestoreDefaultsButtonHover,
+					 FlipButton, FlipButtonHover, RestoreDefaultsButton, RestoreDefaultsButtonHover, RemoveButton,
 					 ArrowNext, ArrowNextBW, ArrowPrev, ArrowPrevBW, ArrowUpSelected, ArrowUp, ArrowDownSelected, ArrowDown, DropDownArrow, DropDownArrowHover,
 	                 SliderThumb, SliderThumbBW, NumImages };
 
