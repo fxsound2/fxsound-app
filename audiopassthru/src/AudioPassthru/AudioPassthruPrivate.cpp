@@ -455,7 +455,7 @@ int AudioPassthruPrivate::processTimer()
 			// Use INVALID_HANDLE_VALUE as a sentinel to pause retries; onDeviceChange()
 			// clears playbackDeviceIsUnavailable when the device situation changes, which
 			// then allows a retry.
-			if (numRealDevices <= 0)
+			if ((numRealDevices <= 0) || (DfxDeviceEnabledFlag != IS_TRUE))
 				s_sndDevices_.playbackDeviceIsUnavailable = TRUE;
 			hProcessingThread_ = INVALID_HANDLE_VALUE;
 		}
