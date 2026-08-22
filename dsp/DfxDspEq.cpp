@@ -161,11 +161,17 @@ int DfxDspPrivate::getGraphicEqInfoFromVals(PT_HANDLE *hp_vals)
 		if (dfxpEqSetProcessingOn(dfxp_handle_, DFXP_STORAGE_TYPE_REGISTRY, i_eq_on) != OKAY)
 			return(NOT_OKAY);
 
+		PT_HANDLE* graphic_eq_handle;
+
+		dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
+
 		// ====================================================================================
 		//  CORRECTION for variable number of bands (Since version Theremino 2.0)
 		//  - Interpolation/selection of gain only if nBands not equal to graphic_eq_num_bands.
-		//  - Band frequencies are never touched here: every band count uses its own fixed
-		//    (ISO or generic log-spaced) frequency table, so a preset only ever contributes gain.
+		//  - Band frequencies from the preset are applied only when the band count matches;
+		//    interpolating frequency across differing band counts previously produced
+		//    incorrect/overlapping ranges, so a band-count mismatch keeps the live fixed
+		//    (ISO or generic log-spaced) frequency table and only interpolates gain.
 		// ====================================================================================
 		int nBands;
 		GraphicEqGetNumBands(hp_graphicEq, &nBands);
@@ -226,10 +232,16 @@ int DfxDspPrivate::getGraphicEqInfoFromVals(PT_HANDLE *hp_vals)
 			{
 				if (dfxpEqSetBandBoostCut(dfxp_handle_, DFXP_STORAGE_TYPE_ALL, i_band_num, r_boost_cut_original[i_band_num]) != OKAY)
 					return(NOT_OKAY);
+
+				if (GraphicEqGetBandCenterFrequency(hp_graphicEq, i_band_num, &r_freq) != OKAY)
+					return(NOT_OKAY);
+
+				if (GraphicEqSetBandFreq(graphic_eq_handle, i_band_num, r_freq) != OKAY)
+					return(NOT_OKAY);
 			}
 		}
 	}
-	
+
 	return(OKAY);
 
 }
