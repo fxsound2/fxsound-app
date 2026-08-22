@@ -612,18 +612,20 @@ void FxEqualizer::FxBandCenterFreqSlider::mouseDown(const juce::MouseEvent& even
         }
         else if (nBands == 10)
         {
+            // Matches the legacy (pre-ISO) 10 band frequency grid in
+            // GraphicEqReSetAllBandFreqs() that existing presets were authored against.
             static const float defaultFrequencies[] =
             {
-                31.25f,   // band 1
-                62.5f,    // band 2
-                125.0f,   // band 3
-                250.0f,   // band 4
-                500.0f,   // band 5
-                1000.0f,  // band 6
-                2000.0f,  // band 7
-                4000.0f,  // band 8
-                8000.0f,  // band 9
-                16000.0f  // band 10
+                62.5f,     // band 1
+                115.734f,  // band 2
+                214.311f,  // band 3
+                396.85f,   // band 4
+                734.867f,  // band 5
+                1360.79f,  // band 6
+                2519.84f,  // band 7
+                4666.12f,  // band 8
+                8640.48f,  // band 9
+                16000.0f   // band 10
             };
             if (band_ >= 0 && band_ <= 9)
             {

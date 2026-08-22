@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Default default minimum and maximum band frequencies in hz. */
 
 // The standard ISO frequencies place octaves at
-//  10 bands = 31.25, 62.5, 125, 250, 500, 1000, 2000, 4000, 8000, 16000
 //  15 bands = 25, 40, 63, 100, 160, 250, 400, 630, 1000, 1600, 2500, 4000, 6300, 10000, 16000
 //  31 Bands = 20, 25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 
 //             1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 16000, 20000
