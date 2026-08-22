@@ -133,7 +133,8 @@ int PT_DECLSPEC GraphicEqGetBandFrequencyRange(PT_HANDLE *hp_GraphicEq, int i_ba
 
         if (i_band_num == 1)
         {
-            *fp_min_freq = rp_freq_array[i_band_num - 1];
+            /* Pin to the fixed ISO spectrum edge, not the band's own (possibly preset-shifted) frequency */
+            *fp_min_freq = cast_handle->min_band_freq;
         }
         else
         {
@@ -150,7 +151,8 @@ int PT_DECLSPEC GraphicEqGetBandFrequencyRange(PT_HANDLE *hp_GraphicEq, int i_ba
 
         if (i_band_num == cast_handle->num_bands)
         {
-            *fp_max_freq = rp_freq_array[i_band_num - 1];
+            /* Pin to the fixed ISO spectrum edge, not the band's own (possibly preset-shifted) frequency */
+            *fp_max_freq = cast_handle->max_band_freq;
         }
         else
         {

@@ -51,12 +51,11 @@ namespace FxSound
         saveDeviceConfigs(settings, "device_configs", device_configs);
     }
 
-    void DeviceConfig::updateDeviceConfigs(Settings& settings, const std::vector<SoundDevice>& sound_devices, bool& remove_pending)
+    void DeviceConfig::updateDeviceConfigs(Settings& settings, const std::vector<SoundDevice>& sound_devices)
     {
         juce::Array<DeviceConfig> device_configs = loadDeviceConfigs(settings, "device_configs");
         auto prioritize_new_output = settings.getBool("prioritize_new_output");
 
-        remove_pending = false;
         bool save_config = false;
         for (auto sound_device : sound_devices)
         {
@@ -87,44 +86,28 @@ namespace FxSound
             }
         }
 
-        if (device_configs.removeIf([&](const DeviceConfig& device_config) {
-            if (device_config.device_form_factor == "HDMI")
-                return false;
-            return std::find_if(sound_devices.begin(), sound_devices.end(),
-                [&](const SoundDevice& sound_device) {
-                    return sound_device.isRealDevice && device_config.device_name == sound_device.deviceFriendlyName.c_str();
-                }) == sound_devices.end();
-        }) > 0)
-        {
-            remove_pending = true;
-        }
-
         if (save_config)
         {
             saveDeviceConfigs(settings, "device_configs", device_configs);
             if (onDeviceConfigsUpdate)
                 onDeviceConfigsUpdate();
+            return;
         }
-    }
 
-    void DeviceConfig::removeDevicesNotPresent(Settings& settings, std::vector<SoundDevice>& sound_devices)
-    {
-        juce::Array<DeviceConfig> device_configs = loadDeviceConfigs(settings, "device_configs");
-
-        if (device_configs.removeIf([&](const DeviceConfig& device_config) {
-            if (device_config.device_form_factor == "HDMI")
-                return false;
-            return std::find_if(sound_devices.begin(), sound_devices.end(),
-                [&](const SoundDevice& sound_device) {
-                    return sound_device.isRealDevice && device_config.device_name == sound_device.deviceFriendlyName.c_str();
-                }) == sound_devices.end();
-            }) > 0)
+        for (const auto& device_config : device_configs)
         {
-            saveDeviceConfigs(settings, "device_configs", device_configs);
+            if (std::find_if(sound_devices.begin(), sound_devices.end(),
+                [&](const SoundDevice& sound_device) {
+                    return device_config.device_name == sound_device.deviceFriendlyName.c_str();
+                }) == sound_devices.end())
+            {
+                if (onDeviceConfigsUpdate)
+                    onDeviceConfigsUpdate();
+            }
         }
     }
 
-    DeviceConfig DeviceConfig::getDeviceConfig(Settings& settings, juce::String device_name)
+    DeviceConfig DeviceConfig::getDeviceConfig(Settings& settings, const juce::String& device_name)
     {
         juce::Array<DeviceConfig> device_configs = loadDeviceConfigs(settings, "device_configs");
 

@@ -27,7 +27,6 @@ FxSettingsDialog::FxSettingsDialog() : FxWindow("Settings"), tooltip_window_(thi
 	centreWithSize(getWidth(), getHeight());
 	addToDesktop(0);
 	toFront(true);
-	setAlwaysOnTop(true);
 }
 
 void FxSettingsDialog::closeButtonPressed()

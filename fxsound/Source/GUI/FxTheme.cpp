@@ -32,14 +32,14 @@ const char* FxTheme::theme_images_[FxThemeMode::NumModes][FxImage::NumImages] =
 { { BinaryData::logowhite_svg, BinaryData::logored_svg, BinaryData::FxSound_White_Bars_svg,
 	BinaryData::power_on_svg, BinaryData::power_off_svg, BinaryData::donate_svg, BinaryData::donate_hover_svg, BinaryData::menu_svg, BinaryData::menu_hover_svg,
 	BinaryData::minimize_svg, BinaryData::minimize_hover_svg, BinaryData::maximize_svg, BinaryData::maximize_hover_svg, BinaryData::min_window_svg, BinaryData::min_window_hover_svg,
-    BinaryData::flip_white_svg, BinaryData::flip_svg, BinaryData::restore_defaults_white_svg, BinaryData::restore_defaults_svg,
+    BinaryData::flip_white_svg, BinaryData::flip_svg, BinaryData::restore_defaults_white_svg, BinaryData::restore_defaults_svg, BinaryData::remove_svg,
 	BinaryData::arrow_next_svg, BinaryData::arrow_next_bw_svg, BinaryData::arrow_prev_svg, BinaryData::arrow_prev_bw_svg, BinaryData::arrow_up_svg, BinaryData::arrow_up_white_svg, BinaryData::arrow_down_svg,  BinaryData::arrow_down_white_svg, BinaryData::dropdown_arrow_bw_svg, BinaryData::dropdown_arrow_hover_svg,
 	BinaryData::Slider_Thumb_svg, BinaryData::Slider_Thumb_bw_svg },
 
   { BinaryData::logoblack_svg, BinaryData::logoblue_svg, BinaryData::FxSound_Black_Bars_svg,
 	BinaryData::power_on_blue_svg, BinaryData::power_off_black_svg, BinaryData::donate_blue_svg, BinaryData::donate_hover_blue_svg, BinaryData::menu_black_svg, BinaryData::menu_hover_blue_svg,
 	BinaryData::minimize_black_svg, BinaryData::minimize_hover_blue_svg, BinaryData::maximize_black_svg, BinaryData::maximize_hover_blue_svg, BinaryData::min_window_black_svg, BinaryData::min_window_hover_blue_svg,
-    BinaryData::flip_black_svg, BinaryData::flip_blue_svg, BinaryData::restore_defaults_black_svg, BinaryData::restore_defaults_blue_svg,
+    BinaryData::flip_black_svg, BinaryData::flip_blue_svg, BinaryData::restore_defaults_black_svg, BinaryData::restore_defaults_blue_svg, BinaryData::remove_svg,
 	BinaryData::arrow_next_blue_svg, BinaryData::arrow_next_bw_svg, BinaryData::arrow_prev_blue_svg, BinaryData::arrow_prev_bw_svg, BinaryData::arrow_up_blue_svg, BinaryData::arrow_up_black_svg, BinaryData::arrow_down_blue_svg, BinaryData::arrow_down_black_svg, BinaryData::dropdown_arrow_bw_svg, BinaryData::dropdown_arrow_hover_blue_svg,
 	BinaryData::Slider_Thumb_blue_svg, BinaryData::Slider_Thumb_bw_svg } };
 
@@ -47,14 +47,14 @@ const int FxTheme::theme_image_sizes_[FxThemeMode::NumModes][FxImage::NumImages]
 { {BinaryData::logowhite_svgSize, BinaryData::logored_svgSize, BinaryData::FxSound_White_Bars_svgSize,
    BinaryData::power_on_svgSize, BinaryData::power_off_svgSize, BinaryData::donate_svgSize, BinaryData::donate_hover_svgSize, BinaryData::menu_svgSize, BinaryData::menu_hover_svgSize,
    BinaryData::minimize_svgSize, BinaryData::minimize_hover_svgSize, BinaryData::maximize_svgSize, BinaryData::maximize_hover_svgSize, BinaryData::min_window_svgSize, BinaryData::min_window_hover_svgSize,
-   BinaryData::flip_white_svgSize, BinaryData::flip_svgSize, BinaryData::restore_defaults_white_svgSize, BinaryData::restore_defaults_svgSize,
+   BinaryData::flip_white_svgSize, BinaryData::flip_svgSize, BinaryData::restore_defaults_white_svgSize, BinaryData::restore_defaults_svgSize, BinaryData::remove_svgSize,
    BinaryData::arrow_next_svgSize, BinaryData::arrow_next_bw_svgSize, BinaryData::arrow_prev_svgSize, BinaryData::arrow_prev_bw_svgSize, BinaryData::arrow_up_svgSize, BinaryData::arrow_up_white_svgSize, BinaryData::arrow_down_svgSize,  BinaryData::arrow_down_white_svgSize, BinaryData::dropdown_arrow_bw_svgSize, BinaryData::dropdown_arrow_hover_svgSize,
    BinaryData::Slider_Thumb_svgSize, BinaryData::Slider_Thumb_bw_svgSize },
 
   { BinaryData::logoblack_svgSize, BinaryData::logoblue_svgSize, BinaryData::FxSound_Black_Bars_svgSize,
 	BinaryData::power_on_blue_svgSize, BinaryData::power_off_black_svgSize, BinaryData::donate_blue_svgSize, BinaryData::donate_hover_blue_svgSize, BinaryData::menu_black_svgSize, BinaryData::menu_hover_blue_svgSize,
 	BinaryData::minimize_black_svgSize, BinaryData::minimize_hover_blue_svgSize, BinaryData::maximize_black_svgSize, BinaryData::maximize_hover_blue_svgSize, BinaryData::min_window_black_svgSize, BinaryData::min_window_hover_blue_svgSize,
-    BinaryData::flip_black_svgSize, BinaryData::flip_blue_svgSize, BinaryData::restore_defaults_black_svgSize, BinaryData::restore_defaults_blue_svgSize,
+    BinaryData::flip_black_svgSize, BinaryData::flip_blue_svgSize, BinaryData::restore_defaults_black_svgSize, BinaryData::restore_defaults_blue_svgSize, BinaryData::remove_svgSize,
 	BinaryData::arrow_next_blue_svgSize, BinaryData::arrow_next_bw_svgSize, BinaryData::arrow_prev_blue_svgSize, BinaryData::arrow_prev_bw_svgSize, BinaryData::arrow_up_blue_svgSize, BinaryData::arrow_up_black_svgSize, BinaryData::arrow_down_blue_svgSize, BinaryData::arrow_down_black_svgSize, BinaryData::dropdown_arrow_bw_svgSize, BinaryData::dropdown_arrow_hover_blue_svgSize,
 	BinaryData::Slider_Thumb_blue_svgSize, BinaryData::Slider_Thumb_bw_svgSize } };
 

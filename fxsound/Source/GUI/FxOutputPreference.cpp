@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxController.h"
 #include "FxOutputPreference.h"
 
-FxOutputDeviceRow::FxOutputDeviceRow(FxOutputPreferenceListModel& model) : up_button_("up", DrawableButton::ImageFitted), down_button_("down", DrawableButton::ImageFitted), output_preference_list_model_(model)
+FxOutputDeviceRow::FxOutputDeviceRow(FxOutputPreferenceListModel& model) : up_button_("up", DrawableButton::ImageFitted), down_button_("down", DrawableButton::ImageFitted), remove_button_("remove", DrawableButton::ImageFitted), output_preference_list_model_(model)
 {
     setInterceptsMouseClicks(false, true);
 
@@ -27,6 +27,7 @@ FxOutputDeviceRow::FxOutputDeviceRow(FxOutputPreferenceListModel& model) : up_bu
     down_image_ = Drawable::createFromImageData(FXIMAGE(ArrowDown), FXIMAGESIZE(ArrowDown));
     up_selected_image_ = Drawable::createFromImageData(FXIMAGE(ArrowUpSelected), FXIMAGESIZE(ArrowUpSelected));
     down_selected_image_ = Drawable::createFromImageData(FXIMAGE(ArrowDownSelected), FXIMAGESIZE(ArrowDownSelected));
+    remove_image_ = Drawable::createFromImageData(FXIMAGE(RemoveButton), FXIMAGESIZE(RemoveButton));
 
     up_button_.setMouseCursor(MouseCursor::PointingHandCursor);
     up_button_.setSize(BUTTON_WIDTH, BUTTON_WIDTH);
@@ -42,6 +43,14 @@ FxOutputDeviceRow::FxOutputDeviceRow(FxOutputPreferenceListModel& model) : up_bu
     down_button_.setWantsKeyboardFocus(true);
     down_button_.onClick = [this]() {
         output_preference_list_model_.moveRowDown(row_index_);
+        };
+
+    remove_button_.setMouseCursor(MouseCursor::PointingHandCursor);
+    remove_button_.setSize(BUTTON_WIDTH, BUTTON_WIDTH);
+    remove_button_.setImages(remove_image_.get(), remove_image_.get());
+    remove_button_.setWantsKeyboardFocus(true);
+    remove_button_.onClick = [this]() {
+        output_preference_list_model_.deleteRow(row_index_);
         };
 
     preset_list_.setColour(ComboBox::ColourIds::backgroundColourId, Colour(FXCOLOR(WidgetBackground)).withAlpha(1.0f));
@@ -73,7 +82,8 @@ FxOutputDeviceRow::FxOutputDeviceRow(FxOutputPreferenceListModel& model) : up_bu
     addAndMakeVisible(up_button_);
     addAndMakeVisible(down_button_);
     addAndMakeVisible(device_name_);
-    addAndMakeVisible(preset_list_);    
+    addAndMakeVisible(preset_list_);
+    addChildComponent(remove_button_);
 
     row_index_ = -1;
     is_row_selected_ = false;
@@ -116,10 +126,15 @@ void FxOutputDeviceRow::update(int index, bool is_row_selected, const DeviceConf
     }
     down_button_.setBounds(x, y, BUTTON_WIDTH, BUTTON_WIDTH);
 
-    preset_list_.setBounds((bounds.getWidth() - PRESET_LIST_WIDTH - MARGIN), bounds.getY(), PRESET_LIST_WIDTH, bounds.getHeight());
-    
+    remove_button_.setBounds((bounds.getWidth() - BUTTON_WIDTH - MARGIN), y, BUTTON_WIDTH, BUTTON_WIDTH);
+    remove_button_.setVisible(!FxController::getInstance().isOutputDevicePresent(device_config.device_name));
+
+    x = remove_button_.getX() - PRESET_LIST_WIDTH - MARGIN;
+
+    preset_list_.setBounds(x, bounds.getY(), PRESET_LIST_WIDTH, bounds.getHeight());
+
     x = MARGIN * 2 + BUTTON_WIDTH * 2;
-    int width = bounds.getWidth() - x - PRESET_LIST_WIDTH - MARGIN * 2;
+    int width = preset_list_.getX() - x - MARGIN;
     device_name_.setBounds(x, bounds.getY(), width, bounds.getHeight());
 
     device_name_.setText(String::formatted("%d. ", row_index_ + 1) +  device_config.device_name, NotificationType::dontSendNotification);
@@ -188,8 +203,6 @@ FxOutputPreferenceListModel::FxOutputPreferenceListModel()
 
     FxModel::getModel().addListener(this);
 
-    FxController::getInstance().removeDeviceConfigs();
-
     device_configs_ = FxController::getInstance().getDeviceConfigs();
 }
 
@@ -243,6 +256,18 @@ void FxOutputPreferenceListModel::moveRowDown(int index)
 
     if (onRowMoved)
         onRowMoved(index + 1);
+}
+
+void FxOutputPreferenceListModel::deleteRow(int index)
+{
+    if (index < 0 || index >= device_configs_.size())
+        return;
+
+    device_configs_.remove(index);
+    persist();
+
+    if (onModelChanged)
+        onModelChanged();
 }
 
 void FxOutputPreferenceListModel::modelChanged(FxModel::Event event)

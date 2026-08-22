@@ -83,6 +83,8 @@ AudioPassthruPrivate::~AudioPassthruPrivate()
 	/* Free the data allocated inside the sndDevices_hdl (NOTE: Does not free up structure) */
 	if (sndDevicesFree(hp_sndDevices_) != OKAY)
 		return;
+
+	hp_sndDevices_ = NULL;
 }
 
 int AudioPassthruPrivate::init()

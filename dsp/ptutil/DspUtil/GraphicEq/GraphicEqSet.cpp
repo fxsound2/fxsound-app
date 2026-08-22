@@ -168,7 +168,7 @@ int PT_DECLSPEC GraphicEqSetNumBands(PT_HANDLE* hp_GraphicEq, int num_bands)
 		switch (num_bands)
 		{
 		case 10:
-			min_freq = 31.25f;
+			min_freq = 62.5f;
 			max_freq = 16000.0f;
 			break;
 		case 15:
@@ -402,8 +402,8 @@ int PT_DECLSPEC GraphicEqReSetAllBandFreqs(PT_HANDLE *hp_GraphicEq, realtype r_m
 		//cast_handle->max_band_freq = 16000;
 		//cast_handle->min_band_freq = 31.25;
 		//cast_handle->num_bands = 10;
-		// ---------------------------------------------- ISO 10 Bands (Q = 1.41421354)
-		// 31.25, 62.5, 125, 250, 500, 1000, 2000, 4000, 8000, 16000
+		// ---------------------------------------------- 10 Bands
+		// 62.5, 115.734, 214.311, 396.85, 734.867, 1360.79, 2519.84, 4666.12, 8640.48, 16000.0
 		//cast_handle->max_band_freq = 16000;
 		//cast_handle->min_band_freq = 31.25;
 		//cast_handle->num_bands = 10;
@@ -440,9 +440,13 @@ int PT_DECLSPEC GraphicEqReSetAllBandFreqs(PT_HANDLE *hp_GraphicEq, realtype r_m
 		}
 		else if (cast_handle->num_bands == 10)
 		{
+			// ---------------------------------------------- Legacy (pre-ISO) 10 band frequencies.
+			// Matches the frequency grid the factory/community presets were authored against
+			// (geometric spacing, 62.5Hz to 16000Hz), not the ISO 266 preferred numbers, so that
+			// existing presets' band frequencies line up with the rotary slider's band positions.
 			cast_handle->max_band_freq = 16000;
-			cast_handle->min_band_freq = 31.25;
-			realtype fCenter[] = { 31.25f, 62.5f, 125.0f, 250.0f, 500.0f, 1000.0f, 2000.0f, 4000.0f, 8000.0f, 16000.0f };
+			cast_handle->min_band_freq = 62.5;
+			realtype fCenter[] = { 62.5f, 115.734f, 214.311f, 396.85f, 734.867f, 1360.79f, 2519.84f, 4666.12f, 8640.48f, 16000.0f };
 			for (int i = 0; i < cast_handle->num_bands; i++)
 			{
 				if (GraphicEqSetBandFreq(hp_GraphicEq, (i + 1), fCenter[i]) != OKAY)
