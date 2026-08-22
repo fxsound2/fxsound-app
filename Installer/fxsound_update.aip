@@ -13,7 +13,7 @@
     <ROW Section="Update" Key="SHA256" Value="Output\fxsound_setup.exe" ValueLocId="-"/>
     <ROW Section="Update" Key="MD5" Value="Output\fxsound_setup.exe" ValueLocId="-"/>
     <ROW Section="Update" Key="ServerFileName" Value="fxsound_setup.exe" ValueLocId="-"/>
-    <ROW Section="Update" Key="Flags" Value="SilentInstall|Sys64|OsX86" ValueLocId="-"/>
+    <ROW Section="Update" Key="Flags" Value="SilentInstall|Sys64" ValueLocId="-"/>
     <ROW Section="Update" Key="RegistryKey" Value="HKUD\Software\FxSound LLC\FxSound\Version" ValueLocId="-"/>
     <ROW Section="Update" Key="Version" Value="1.2.14.0" ValueLocId="-"/>
     <ROW Section="Update" Key="AutoCloseApplication" Value="[APPDIR]FxSound.exe" ValueLocId="-"/>
