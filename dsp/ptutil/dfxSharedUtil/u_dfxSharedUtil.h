@@ -15,15 +15,21 @@
 #ifndef _U_DFX_SHARED_UTIL_H_
 #define _U_DFX_SHARED_UTIL_H_
 
+#ifdef _WIN32
 #include <windows.h>
+#endif //_WIN32
 #include <stdio.h>
 
-#include "codedefs.h"  
+#include "codedefs.h"
 #include "slout.h"
 #include "dfxSharedUtil.h"
 #include "pt_defs.h"
 
 #include "dfxSharedGlobals.h"
+
+#ifndef _WIN32
+typedef void *HINSTANCE;
+#endif //_WIN32
 
 /* dfxSharedUtil Handle definition */
 struct dfxSharedUtilHdlType {

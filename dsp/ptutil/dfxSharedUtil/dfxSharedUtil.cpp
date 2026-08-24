@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "slout.h"
 #include "mry.h"
 #include "file.h"
-#include "reg.h"
+#include "DfxKeyValueStore.h"
 
 #include "u_dfxSharedUtil.h"
 #include "dfxSharedUtil.h"
@@ -104,8 +104,10 @@ int PT_DECLSPEC dfxSharedUtilFreeUp(PT_HANDLE **hpp_dfxSharedUtil)
 		return(NOT_OKAY);
 
 	/* Free shared memory library */
+#ifdef _WIN32
 	if (cast_handle->shared_memory_hinst != NULL)
 		FreeLibrary(cast_handle->shared_memory_hinst);
+#endif //_WIN32
 
 	free(cast_handle);
 
@@ -143,7 +145,7 @@ int dfxSharedUtil_RegistryGetTopSharedFolderPath(PT_HANDLE *hp_dfxSharedUtil, wc
 				  DFXP_REGISTRY_SHARED_WIDE,
 		        DFXP_REGISTRY_TOP_SHARED_FOLDER_WIDE);
 
-	if (regReadKey_Wide(REG_LOCAL_MACHINE, wcp_full_key_path, &key_exists, wcp_top_shared_folder_path,
+	if (dfxKvReadString_Wide(REG_LOCAL_MACHINE, wcp_full_key_path, &key_exists, wcp_top_shared_folder_path,
 				(unsigned long)DFXP_REGISTRY_BUFFER_LENGTH) != OKAY)
 	         return(NOT_OKAY);
 
@@ -151,7 +153,7 @@ int dfxSharedUtil_RegistryGetTopSharedFolderPath(PT_HANDLE *hp_dfxSharedUtil, wc
 }
 
 /*
- * FUNCTION: dfxSharedUtilSetSpectrumValues() 
+ * FUNCTION: dfxSharedUtilSetSpectrumValues()
  * DESCRIPTION:
  *
  *  Stores the current spectrum values in the shared memory.

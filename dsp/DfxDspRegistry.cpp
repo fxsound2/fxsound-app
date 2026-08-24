@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "u_DfxDsp.h"
-#include "reg.h"
+#include "DfxKeyValueStore.h"
 
 #define PT_MAX_PATH_STRLEN             1024
 #define DFXG_REGISTRY_BUFFER_LENGTH             PT_MAX_PATH_STRLEN
@@ -44,7 +44,7 @@ int DfxDspPrivate::writeRegistrySessionLongValue(long l_value, wchar_t *wcp_key_
 
 		swprintf(wcp_key_value, DFXG_REGISTRY_BUFFER_LENGTH, L"%ld", l_value);
 
-		if (regCreateKey_Wide(REG_CURRENT_USER, wcp_full_key_path, wcp_key_value) != OKAY)
+		if (dfxKvWriteString_Wide(REG_CURRENT_USER, wcp_full_key_path, wcp_key_value) != OKAY)
 			return(NOT_OKAY);
 	}
 

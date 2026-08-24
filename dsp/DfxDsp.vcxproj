@@ -247,6 +247,7 @@
     <ClInclude Include="ptutil\include\c_wid.h" />
     <ClInclude Include="ptutil\include\daw.h" />
     <ClInclude Include="ptutil\include\dfxp.h" />
+    <ClInclude Include="ptutil\include\DfxKeyValueStore.h" />
     <ClInclude Include="ptutil\include\dfxpDefs.h" />
     <ClInclude Include="ptutil\include\DfxSdk.h" />
     <ClInclude Include="ptutil\include\dfxSharedGlobals.h" />
@@ -328,6 +329,7 @@
     <ClCompile Include="ptutil\dfxp\dfxpProcessInt.cpp" />
     <ClCompile Include="ptutil\dfxp\dfxpProcessReal.cpp" />
     <ClCompile Include="ptutil\dfxp\dfxpQnt.cpp" />
+    <ClCompile Include="ptutil\dfxKeyValueStore\DfxKeyValueStore.cpp" />
     <ClCompile Include="ptutil\dfxp\dfxpQuit.cpp" />
     <ClCompile Include="ptutil\dfxp\dfxpRegistryStandard.cpp" />
     <ClCompile Include="ptutil\dfxp\dfxpSession.cpp" />

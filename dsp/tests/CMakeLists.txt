@@ -1,0 +1,3 @@
+add_executable(DfxKeyValueStoreTest DfxKeyValueStoreTest.cpp)
+target_link_libraries(DfxKeyValueStoreTest PRIVATE DfxKeyValueStore)
+add_test(NAME DfxKeyValueStoreTest COMMAND DfxKeyValueStoreTest)

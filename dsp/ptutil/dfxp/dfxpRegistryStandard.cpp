@@ -20,17 +20,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "codedefs.h"
 
+#ifdef _WIN32
 #include <windows.h>
+#include <shlobj.h>
+#endif //_WIN32
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-#include <shlobj.h>
-
-#include "u_dfxp.h" 
+#include "u_dfxp.h"
 
 #include "dfxp.h"
-#include "reg.h"
+#include "DfxKeyValueStore.h"
 #include "mth.h"
 #include "DfxSdk.h"
 #include "mth.h"
@@ -85,7 +86,7 @@ int dfxpGetInstallationDate_NoHandle(wchar_t *wcp_product_name, int i_vendor_cod
 									i_vendor_code,
 		                     DFXP_REGISTRY_DATE_INSTALLED_WIDE);
 
-	if (regReadKey_Wide(REG_LOCAL_MACHINE, wcp_full_key_path, ip_date_exists, wcp_date,
+	if (dfxKvReadString_Wide(REG_LOCAL_MACHINE, wcp_full_key_path, ip_date_exists, wcp_date,
 	   (unsigned long)DFXP_REGISTRY_BUFFER_LENGTH) != OKAY)
 	      return(NOT_OKAY);
 
@@ -135,7 +136,7 @@ int dfxpGetLastUsedDate(PT_HANDLE *hp_dfxp, long *lp_date, int *ip_date_exists)
 									cast_handle->vendor_code,
 		                     DFXP_REGISTRY_DATE_LASTUSED_WIDE);
 
-	if (regReadKey_Wide(REG_CURRENT_USER, wcp_full_key_path, ip_date_exists, wcp_date,
+	if (dfxKvReadString_Wide(REG_CURRENT_USER, wcp_full_key_path, ip_date_exists, wcp_date,
 	               (unsigned long)DFXP_REGISTRY_BUFFER_LENGTH) != OKAY)
 	      return(NOT_OKAY);
 
@@ -189,7 +190,7 @@ int dfxp_RecordLastUsedDate(PT_HANDLE *hp_dfxp)
 		                     DFXP_REGISTRY_DATE_LASTUSED_WIDE);
 	
 	/* NOTE: THIS CAN FAIL IF WE ARE IN A PROCESS SUCH AS INTERNET EXPLORER. */
-	if (regCreateKey_Wide(REG_CURRENT_USER, wcp_full_key_path, wcp_time) != OKAY)
+	if (dfxKvWriteString_Wide(REG_CURRENT_USER, wcp_full_key_path, wcp_time) != OKAY)
 		return(OKAY);
 
 	return(OKAY);
@@ -226,7 +227,7 @@ int dfxp_RegistryGetTopSharedFolderPath(PT_HANDLE *hp_dfxp,
 				  DFXP_REGISTRY_SHARED_WIDE,
 		        DFXP_REGISTRY_TOP_SHARED_FOLDER_WIDE);
 
-	if (regReadKey_Wide(REG_LOCAL_MACHINE, wcp_full_key_path, &key_exists, wcp_top_shared_folder_path,
+	if (dfxKvReadString_Wide(REG_LOCAL_MACHINE, wcp_full_key_path, &key_exists, wcp_top_shared_folder_path,
 				(unsigned long)DFXP_REGISTRY_BUFFER_LENGTH) != OKAY)
 	         return(NOT_OKAY);
 
@@ -263,7 +264,7 @@ int dfxp_RegistryGetTopVendorSpecificFolderPath(PT_HANDLE *hp_dfxp,
 				  cast_handle->vendor_code,
 		        DFXP_REGISTRY_TOP_FOLDER_WIDE);
 
-	if (regReadKey_Wide(REG_LOCAL_MACHINE, wcp_full_key_path, &key_exists, wcp_top_vendor_specific_folder_path,
+	if (dfxKvReadString_Wide(REG_LOCAL_MACHINE, wcp_full_key_path, &key_exists, wcp_top_vendor_specific_folder_path,
 				(unsigned long)DFXP_REGISTRY_BUFFER_LENGTH) != OKAY)
 	         return(NOT_OKAY);
 
@@ -298,7 +299,7 @@ int dfxp_RegistryGetDfxUniversalUiFullpath(PT_HANDLE *hp_dfxp, wchar_t *wcp_dfx_
 				  cast_handle->vendor_code,
 		        DFXP_REGISTRY_DFX_UNIVERSAL_UI_PATH_WIDE);
 
-	if (regReadKey_Wide(REG_LOCAL_MACHINE, wcp_full_key_path, &key_exists, wcp_dfx_ui_path,
+	if (dfxKvReadString_Wide(REG_LOCAL_MACHINE, wcp_full_key_path, &key_exists, wcp_dfx_ui_path,
 				(unsigned long)DFXP_REGISTRY_BUFFER_LENGTH) != OKAY)
 	         return(NOT_OKAY);
 
