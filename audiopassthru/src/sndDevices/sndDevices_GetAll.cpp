@@ -67,6 +67,23 @@ int PT_DECLSPEC sndDevices_GetAll(PT_HANDLE* hp_sndDevices, int* ip_num_devices)
 	if (cast_handle == NULL)
 		return(NOT_OKAY);
 
+	// Release any IMMDevice handles left over from a previous enumeration before they are
+	// overwritten below. sndDevices_GetAll can be called repeatedly (the reinit loop calls
+	// it up to 20 times per sndDevicesReInit, and the GUI calls it on device changes), so
+	// every stale handle would otherwise be leaked. pCaptureDevice/pPlaybackDevice alias
+	// pAllDevices[] entries (no separate reference) and are only used during setup on the
+	// GUI thread - never by the audio processing thread - so NULL them here too.
+	for (i = 0; i < SND_DEVICES_MAX_NUM_DEVICES; i++)
+	{
+		if (cast_handle->pAllDevices[i] != NULL)
+		{
+			cast_handle->pAllDevices[i]->Release();
+			cast_handle->pAllDevices[i] = NULL;
+		}
+	}
+	cast_handle->pCaptureDevice = NULL;
+	cast_handle->pPlaybackDevice = NULL;
+
 	// Copy current devices to previous devices to allow new device detection
 	if ((cast_handle->numRealDevices > 0) && (cast_handle->numRealDevices != cast_handle->numPreviousRealDevices))
 	{

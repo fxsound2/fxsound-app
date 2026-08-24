@@ -305,6 +305,7 @@ int AudioPassthruPrivate::killProcessingThread(int *ip_timed_out)
 			if (d_ExitCode != STILL_ACTIVE)
 			{
 				i_thread_has_died = IS_TRUE;
+				CloseHandle(hProcessingThread_);
 				hProcessingThread_ = NULL;
 			}
 			else
@@ -386,6 +387,7 @@ int AudioPassthruPrivate::processTimer()
 		if (d_ExitCode != STILL_ACTIVE)
 		{
 			b_need_to_start_thread = TRUE;
+			CloseHandle(hProcessingThread_);
 			hProcessingThread_ = NULL;
 		}
 	}
@@ -440,11 +442,21 @@ int AudioPassthruPrivate::processTimer()
 		{
 			hProcessingThread_ = CreateThread(NULL, 0, processingThread, (LPVOID)this, 0L, &ProcessingThreadID_);
 		}
-		else if (s_sndDevices_.playbackDeviceIsUnavailable)
+		else
 		{
-			// Device is unavailable (e.g. AUDCLNT_E_UNSUPPORTED_FORMAT or AUDCLNT_E_DEVICE_IN_USE).
-			// Use INVALID_HANDLE_VALUE as a sentinel to stop retrying every 100ms.
-			// onDeviceChange() will clear playbackDeviceIsUnavailable when the device situation changes.
+			// No usable playback path right now:
+			//  - No real (physical) playback device is present (numRealDevices == 0), or
+			//  - The DFX virtual device is not enabled/found, or
+			//  - The playback device is unavailable (e.g. AUDCLNT_E_UNSUPPORTED_FORMAT /
+			//    AUDCLNT_E_DEVICE_IN_USE, signaled by playbackDeviceIsUnavailable).
+			// In every case there is nothing to be gained from re-running sndDevicesReInit
+			// every 100ms, which would both burn CPU and leak COM objects on every retry
+			// (each reinit re-enumerates all devices and re-activates the audio clients).
+			// Use INVALID_HANDLE_VALUE as a sentinel to pause retries; onDeviceChange()
+			// clears playbackDeviceIsUnavailable when the device situation changes, which
+			// then allows a retry.
+			if ((numRealDevices <= 0) || (DfxDeviceEnabledFlag != IS_TRUE))
+				s_sndDevices_.playbackDeviceIsUnavailable = TRUE;
 			hProcessingThread_ = INVALID_HANDLE_VALUE;
 		}
 

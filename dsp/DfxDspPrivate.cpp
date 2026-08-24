@@ -52,6 +52,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 DfxDspPrivate::DfxDspPrivate()
 {
+	dfxp_handle_ = NULL;
+	slout1_ = NULL;
 	midi_to_rval_qnt_handle_ = NULL;
 	rval_to_midi_qnt_handle_ = NULL;
 
