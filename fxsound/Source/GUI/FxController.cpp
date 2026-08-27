@@ -1400,7 +1400,7 @@ bool FxController::exportPresets(const Array< FxModel::Preset>& presets)
 		auto preset_file = File(path_name + preset.name + ".fac");
 		if (preset_file.exists())
 		{
-			if (!FxConfirmationMessage::showMessage(String::formatted(TRANS("Preset file %s already exists in the export path, do you want to overwrite the preset file?"), preset.name.toWideCharPointer())))
+			if (!FxConfirmationMessage::showMessage(FormatString(TRANS("Preset file %s already exists in the export path, do you want to overwrite the preset file?"), preset.name)))
 			{
 				skip = true;
 			}
