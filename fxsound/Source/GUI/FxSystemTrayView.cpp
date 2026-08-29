@@ -391,12 +391,6 @@ void FxSystemTrayView::showNotification()
     {
         if (custom_notification_ || link.first.isNotEmpty())
         {
-            QUERY_USER_NOTIFICATION_STATE quns;
-            if (FAILED(SHQueryUserNotificationState(&quns)) || quns != QUNS_ACCEPTS_NOTIFICATIONS)
-            {
-                return;
-            }
-
             notification_.setMessage(message, link);
             Point<int> pos = getSystemTrayWindowPosition(notification_.getWidth(), notification_.getHeight());
             notification_.setBounds(pos.x, pos.y, notification_.getWidth(), notification_.getHeight());
