@@ -105,6 +105,13 @@ int PT_DECLSPEC sndDevicesInit(PT_HANDLE *hp_sndDevices, CSlout *hp_slout, int i
 	cast_handle->ignoreVolumeCallbacks = FALSE;
 	cast_handle->ignoreDeviceCallbacks = FALSE;
 
+	// No playback device has been used yet, so there are no settings of one to hold onto.
+	// Note these must survive a re-init, they are only reset here in the one time init call.
+	wcscpy(cast_handle->savedPlaybackDeviceID, L"");
+	cast_handle->savedPlaybackVolume = 0.25f;
+	cast_handle->savedPlaybackMute = FALSE;
+	cast_handle->playbackSettingsAreSaved = FALSE;
+
 	for(i=0; i<SND_DEVICES_MAX_NUM_DEVICES; i++)
 	{
 		cast_handle->pAllDevices[i] = NULL;
