@@ -146,7 +146,8 @@ private:
 
         ToggleButton launch_toggle_;
         ToggleButton hide_help_tips_toggle_;
-		ToggleButton hide_notifications_toggle_;
+		Label notification_rules_label_;
+		TextButton notification_rules_button_;
 		ToggleButton hotkeys_toggle_;
 		OwnedArray<FxHotkeyLabel> hotkey_labels_;
 		FxLanguage language_switch_;

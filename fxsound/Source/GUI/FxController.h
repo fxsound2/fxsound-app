@@ -39,6 +39,8 @@ class FxSystemTrayView;
 
 enum ViewType { Lite = 1, Pro = 2 };
 
+enum NotificationMode { FollowSystem = 0, AlwaysShow = 1, CustomRules = 2, HideAll = 3 };
+
 class FxController : public Timer, public DeletedAtShutdown, private AudioPassthruCallback
 {
 public:
@@ -156,6 +158,17 @@ public:
 
 	bool isNotificationsHidden();
 	void setNotificationsHidden(bool status);
+
+	NotificationMode getNotificationMode();
+	void setNotificationMode(NotificationMode mode);
+
+	bool getNotificationDefault();
+	void setNotificationDefault(bool hide_in_fullscreen);
+
+	StringArray getNotificationExceptions();
+	void setNotificationExceptions(const StringArray& exceptions);
+
+	bool shouldShowNotification();
 
     String getLanguage() const;
     void setLanguage(String language_code);
@@ -277,6 +290,9 @@ private:
     bool hide_help_tooltips_;
 	bool hide_notifications_;
 	bool auto_updates_;
+	NotificationMode notification_mode_;
+	bool notification_default_;
+	StringArray notification_exceptions_;
 
 	unsigned long audio_process_time_;
 	int audio_process_on_counter_;
@@ -292,6 +308,8 @@ private:
 	int max_user_presets_;
 
 	DWORD session_id_;
+
+	String getForegroundProcessName();
 
 	CriticalSection lock_;
 	CriticalSection save_lock_;
