@@ -63,7 +63,7 @@ FxSystemTrayView::~FxSystemTrayView()
 
 void FxSystemTrayView::modelChanged(FxModel::Event model_event)
 {
-    if (!FxController::getInstance().isNotificationsHidden() && model_event == FxModel::Event::Notification)
+    if (FxController::getInstance().shouldShowNotification() && model_event == FxModel::Event::Notification)
     {
         showNotification();
     }

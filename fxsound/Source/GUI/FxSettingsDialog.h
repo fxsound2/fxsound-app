@@ -124,7 +124,7 @@ private:
 		juce::Rectangle<float> output_preference_bounds_;
 	};
 
-	class GeneralSettingsPane : public SettingsPane
+	class GeneralSettingsPane : public SettingsPane, public ListBoxModel
 	{
 	public:
 		GeneralSettingsPane();
@@ -132,6 +132,9 @@ private:
 
 		void resized() override;
 		void paint(Graphics& g) override;
+
+		int getNumRows() override;
+		void paintListBoxItem(int rowNumber, Graphics& g, int width, int height, bool rowIsSelected) override;
 
 	private:
 		static constexpr int LANGUAGE_SWITCH_Y = 50;
@@ -143,10 +146,20 @@ private:
 		static constexpr int LANGUAGE_LIST_HEIGHT = 30;
 
         void setText();
+		void updateNotificationControlsVisibility();
 
         ToggleButton launch_toggle_;
         ToggleButton hide_help_tips_toggle_;
-		ToggleButton hide_notifications_toggle_;
+		Label notification_mode_label_;
+		ComboBox notification_mode_box_;
+		Label notification_default_label_;
+		ComboBox notification_default_box_;
+		Label notification_exceptions_label_;
+		ListBox notification_exceptions_list_;
+		ComboBox notification_process_selector_;
+		TextButton notification_add_button_;
+		TextButton notification_remove_button_;
+		StringArray notification_exceptions_;
 		ToggleButton hotkeys_toggle_;
 		OwnedArray<FxHotkeyLabel> hotkey_labels_;
 		FxLanguage language_switch_;

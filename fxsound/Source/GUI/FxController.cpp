@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Utils/SysInfo/SysInfo.h"
 #include <iostream>
 #include <cstdio>
+#include <Psapi.h>
 
 class FxDeviceErrorMessage : public FxWindow
 {
@@ -191,6 +192,27 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 	hide_help_tooltips_ = settings_.getBool("hide_help_tooltips");
 	hide_notifications_ = settings_.getBool("hide_notifications");
 	auto_updates_ = settings_.getBool("automatic_updates", true);
+
+	// Load notification mode with backward compatibility
+	if (settings_.getInt("notification_mode") == 0 && settings_.getBool("hide_notifications"))
+	{
+		notification_mode_ = CustomRules;
+		notification_default_ = true;
+		notification_exceptions_ = StringArray();
+	}
+	else
+	{
+		notification_mode_ = static_cast<NotificationMode>(settings_.getInt("notification_mode"));
+		notification_default_ = settings_.getBool("notification_default");
+		String exceptions_json = settings_.getString("notification_exceptions");
+		juce::var parsed = JSON::parse(exceptions_json);
+		if (parsed.isArray())
+		{
+			for (auto& item : *parsed.getArray())
+				notification_exceptions_.add(item.toString());
+		}
+	}
+
 	max_user_presets_ = settings_.getInt("max_user_presets");
 	if (max_user_presets_ < 10 || max_user_presets_ > 120)
 	{
@@ -2320,6 +2342,111 @@ void FxController::setNotificationsHidden(bool status)
 {
 	hide_notifications_ = status;
 	settings_.setBool("hide_notifications", status);
+}
+
+NotificationMode FxController::getNotificationMode()
+{
+	return notification_mode_;
+}
+
+void FxController::setNotificationMode(NotificationMode mode)
+{
+	notification_mode_ = mode;
+	settings_.setInt("notification_mode", static_cast<int>(mode));
+}
+
+bool FxController::getNotificationDefault()
+{
+	return notification_default_;
+}
+
+void FxController::setNotificationDefault(bool hide_in_fullscreen)
+{
+	notification_default_ = hide_in_fullscreen;
+	settings_.setBool("notification_default", hide_in_fullscreen);
+}
+
+StringArray FxController::getNotificationExceptions()
+{
+	return notification_exceptions_;
+}
+
+void FxController::setNotificationExceptions(const StringArray& exceptions)
+{
+	notification_exceptions_ = exceptions;
+	juce::Array<juce::var> arr;
+	for (auto& ex : exceptions)
+		arr.add(ex);
+	settings_.setString("notification_exceptions", JSON::toString(arr));
+}
+
+String FxController::getForegroundProcessName()
+{
+	HWND hwnd = GetForegroundWindow();
+	if (!hwnd)
+		return {};
+
+	DWORD processId = 0;
+	GetWindowThreadProcessId(hwnd, &processId);
+	if (processId == 0)
+		return {};
+
+	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processId);
+	if (!hProcess)
+		return {};
+
+	WCHAR path[MAX_PATH] = L"";
+	String processName;
+	if (GetModuleFileNameExW(hProcess, NULL, path, MAX_PATH))
+	{
+		processName = File(path).getFileName();
+	}
+	CloseHandle(hProcess);
+	return processName;
+}
+
+bool FxController::shouldShowNotification()
+{
+	if (notification_mode_ == FollowSystem)
+	{
+		QUERY_USER_NOTIFICATION_STATE quns;
+		if (FAILED(SHQueryUserNotificationState(&quns)) || quns != QUNS_ACCEPTS_NOTIFICATIONS)
+			return false;
+		return true;
+	}
+
+	if (notification_mode_ == AlwaysShow)
+		return true;
+
+	// CustomRules
+	String process = getForegroundProcessName();
+	bool inExceptions = notification_exceptions_.contains(process, true);
+
+	// Check if foreground window is fullscreen
+	HWND hwnd = GetForegroundWindow();
+	bool isFullscreen = false;
+	if (hwnd)
+	{
+		RECT windowRect;
+		GetWindowRect(hwnd, &windowRect);
+		HMONITOR hMon = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+		MONITORINFO mi = { sizeof(mi) };
+		GetMonitorInfo(hMon, &mi);
+		isFullscreen = (windowRect.left == mi.rcMonitor.left &&
+						windowRect.top == mi.rcMonitor.top &&
+						windowRect.right == mi.rcMonitor.right &&
+						windowRect.bottom == mi.rcMonitor.bottom);
+	}
+
+	if (!isFullscreen)
+		return true;
+
+	// notification_default_ = true means "hide in fullscreen by default"
+	// exceptions invert the default
+	if (notification_default_)
+		return inExceptions;
+	else
+		return !inExceptions;
 }
 
 String FxController::getLanguage() const

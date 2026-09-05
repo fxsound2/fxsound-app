@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <JuceHeader.h>
 #include "FxSettingsDialog.h"
 #include "../Utils/SysInfo/SysInfo.h"
+#include <Psapi.h>
 
 //==============================================================================
 FxSettingsDialog::FxSettingsDialog() : FxWindow("Settings"), tooltip_window_(this)
@@ -336,7 +337,11 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	SettingsPane("General Preferences"),
 	launch_toggle_(TRANS("Launch on system startup")),
 	hide_help_tips_toggle_(TRANS("Hide help tips for audio controls")),
-	hide_notifications_toggle_(TRANS("Hide notifications")),
+	notification_mode_label_(TRANS("Notifications"), ""),
+	notification_default_label_(TRANS("When in fullscreen"), ""),
+	notification_exceptions_label_(TRANS("App exceptions"), ""),
+	notification_add_button_(TRANS("+ Add"), ""),
+	notification_remove_button_(TRANS("Remove"), ""),
 	hotkeys_toggle_(TRANS("Disable keyboard shortcuts"))
 {
 	StringArray hotKeySettingsKeys = { FxController::HK_CMD_ON_OFF, FxController::HK_CMD_OPEN_CLOSE, FxController::HK_CMD_NEXT_PRESET, FxController::HK_CMD_PREVIOUS_PRESET, FxController::HK_CMD_NEXT_OUTPUT };
@@ -354,14 +359,84 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
     hide_help_tips_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
     hide_help_tips_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	hide_help_tips_toggle_.setWantsKeyboardFocus(true);
-	hide_notifications_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
-	hide_notifications_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-	hide_notifications_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-	hide_notifications_toggle_.setWantsKeyboardFocus(true);
-	hotkeys_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
-	hotkeys_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-	hotkeys_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-	hotkeys_toggle_.setWantsKeyboardFocus(true);
+
+	notification_mode_label_.setColour(Label::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	notification_mode_box_.addItemList({ TRANS("Follow system settings"), TRANS("Always show"), TRANS("Custom rules") }, 1);
+	notification_mode_box_.onChange = [this]() {
+		FxController::getInstance().setNotificationMode(static_cast<NotificationMode>(notification_mode_box_.getSelectedId() - 1));
+		updateNotificationControlsVisibility();
+	};
+
+	notification_default_label_.setColour(Label::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	notification_default_box_.addItemList({ TRANS("Show notifications"), TRANS("Hide notifications") }, 1);
+	notification_default_box_.onChange = [this]() {
+		FxController::getInstance().setNotificationDefault(notification_default_box_.getSelectedId() == 2);
+	};
+
+	notification_exceptions_label_.setColour(Label::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+
+	notification_exceptions_ = FxController::getInstance().getNotificationExceptions();
+	notification_exceptions_list_.setModel(this);
+	notification_exceptions_list_.setColour(ListBox::backgroundColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+	notification_exceptions_list_.setColour(ListBox::outlineColourId, getLookAndFeel().findColour(TextButton::textColourOffId).withAlpha(0.3f));
+
+	// Populate process selector with running processes
+	DWORD processIds[1024];
+	DWORD cbNeeded;
+	if (EnumProcesses(processIds, sizeof(processIds), &cbNeeded))
+	{
+		int numProcesses = cbNeeded / sizeof(DWORD);
+		for (int i = 0; i < numProcesses; i++)
+		{
+			HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processIds[i]);
+			if (hProcess)
+			{
+				WCHAR path[MAX_PATH] = L"";
+				if (GetModuleFileNameExW(hProcess, NULL, path, MAX_PATH))
+				{
+					String processName = File(path).getFileName();
+					bool alreadyAdded = false;
+					for (int j = 1; j <= notification_process_selector_.getNumItems(); j++)
+					{
+						if (notification_process_selector_.getItemText(j) == processName)
+						{
+							alreadyAdded = true;
+							break;
+						}
+					}
+					if (processName.isNotEmpty() && !alreadyAdded)
+						notification_process_selector_.addItem(processName, notification_process_selector_.getNumItems() + 1);
+				}
+				CloseHandle(hProcess);
+			}
+		}
+	}
+	notification_process_selector_.setTextWhenNoChoicesAvailable(TRANS("No processes"));
+
+	notification_add_button_.onClick = [this]() {
+		String selected = notification_process_selector_.getText();
+		if (selected.isNotEmpty() && notification_exceptions_.indexOf(selected, true) < 0)
+		{
+			notification_exceptions_.add(selected);
+			FxController::getInstance().setNotificationExceptions(notification_exceptions_);
+			notification_exceptions_list_.updateContent();
+		}
+	};
+
+	notification_remove_button_.onClick = [this]() {
+		int row = notification_exceptions_list_.getSelectedRow();
+		if (row >= 0 && row < notification_exceptions_.size())
+		{
+			notification_exceptions_.remove(row);
+			FxController::getInstance().setNotificationExceptions(notification_exceptions_);
+			notification_exceptions_list_.updateContent();
+		}
+	};
+
+	// Load current settings
+	NotificationMode mode = FxController::getInstance().getNotificationMode();
+	notification_mode_box_.setSelectedId(static_cast<int>(mode) + 1, NotificationType::dontSendNotification);
+	notification_default_box_.setSelectedId(FxController::getInstance().getNotificationDefault() ? 2 : 1, NotificationType::dontSendNotification);
 
 	bool hotkey_enabled = FxModel::getModel().getHotkeySupport();
 	for (int i=0; i<hotkey_names.size(); i++)
@@ -395,9 +470,6 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 
     hide_help_tips_toggle_.setToggleState(FxController::getInstance().isHelpTooltipsHidden(), NotificationType::dontSendNotification);
     hide_help_tips_toggle_.onClick = [this]() { FxController::getInstance().setHelpTooltipsHidden(hide_help_tips_toggle_.getToggleState()); };
-	
-	hide_notifications_toggle_.setToggleState(FxController::getInstance().isNotificationsHidden(), NotificationType::dontSendNotification);
-	hide_notifications_toggle_.onClick = [this]() { FxController::getInstance().setNotificationsHidden(hide_notifications_toggle_.getToggleState()); };
 
 	auto os = SystemStats::getOperatingSystemType();
 	if (os == SystemStats::OperatingSystemType::Windows7)
@@ -406,10 +478,19 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	}
 	
 	addAndMakeVisible(&hide_help_tips_toggle_);
-	addAndMakeVisible(&hide_notifications_toggle_);
+	addAndMakeVisible(&notification_mode_label_);
+	addAndMakeVisible(&notification_mode_box_);
+	addAndMakeVisible(&notification_default_label_);
+	addAndMakeVisible(&notification_default_box_);
+	addAndMakeVisible(&notification_exceptions_label_);
+	addAndMakeVisible(&notification_exceptions_list_);
+	addAndMakeVisible(&notification_add_button_);
+	addAndMakeVisible(&notification_remove_button_);
+	addAndMakeVisible(&notification_process_selector_);
 	addAndMakeVisible(&hotkeys_toggle_);
 	addAndMakeVisible(&language_switch_);
 
+	updateNotificationControlsVisibility();
 	setText();
 }
 
@@ -432,11 +513,39 @@ void FxSettingsDialog::GeneralSettingsPane::resized()
 	}
 
     hide_help_tips_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
+	y = hide_help_tips_toggle_.getBottom() + 15;
 
-	y = hide_help_tips_toggle_.getBottom() + 10;
-	hide_notifications_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
+	notification_mode_label_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, 20);
+	y += 20;
+	notification_mode_box_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
+	y = notification_mode_box_.getBottom() + 10;
 
-    y = hide_notifications_toggle_.getBottom() + 10;
+	if (notification_mode_box_.getSelectedId() == 3) // CustomRules
+	{
+		notification_default_label_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, 20);
+		y += 20;
+		notification_default_box_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
+		y = notification_default_box_.getBottom() + 10;
+
+		notification_exceptions_label_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, 20);
+		y += 20;
+
+		int listHeight = 80;
+		notification_exceptions_list_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN * 2 - 100, listHeight);
+
+		int buttonX = notification_exceptions_list_.getRight() + 5;
+		notification_remove_button_.setBounds(buttonX, y, 95, 24);
+		y += listHeight + 5;
+
+		notification_process_selector_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN - 100, TOGGLE_BUTTON_HEIGHT);
+		notification_add_button_.setBounds(notification_process_selector_.getRight() + 5, y, 95, TOGGLE_BUTTON_HEIGHT);
+		y = notification_add_button_.getBottom() + 10;
+	}
+	else
+	{
+		y = notification_mode_box_.getBottom() + 5;
+	}
+
 	hotkeys_toggle_.setBounds(X_MARGIN, y, getWidth()-X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 
 	y = hotkeys_toggle_.getBottom() + 5;
@@ -463,9 +572,43 @@ void FxSettingsDialog::GeneralSettingsPane::setText()
     int height = FxSettingsDialog::SettingsComponent::HEIGHT;
     launch_toggle_.setButtonText(TRANS("Launch on system startup"));
     hide_help_tips_toggle_.setButtonText(TRANS("Hide help tips for audio controls"));
-	hide_notifications_toggle_.setButtonText(TRANS("Hide notifications"));
+
+	notification_mode_label_.setText(TRANS("Notifications"), NotificationType::dontSendNotification);
+	notification_default_label_.setText(TRANS("When in fullscreen"), NotificationType::dontSendNotification);
+	notification_exceptions_label_.setText(TRANS("App exceptions"), NotificationType::dontSendNotification);
+	notification_add_button_.setButtonText(TRANS("+ Add"));
+	notification_remove_button_.setButtonText(TRANS("Remove"));
 
     hotkeys_toggle_.setButtonText(TRANS("Disable keyboard shortcuts"));
+}
+
+void FxSettingsDialog::GeneralSettingsPane::updateNotificationControlsVisibility()
+{
+	bool isCustomRules = (notification_mode_box_.getSelectedId() == 3);
+	notification_default_label_.setVisible(isCustomRules);
+	notification_default_box_.setVisible(isCustomRules);
+	notification_exceptions_label_.setVisible(isCustomRules);
+	notification_exceptions_list_.setVisible(isCustomRules);
+	notification_add_button_.setVisible(isCustomRules);
+	notification_remove_button_.setVisible(isCustomRules);
+	notification_process_selector_.setVisible(isCustomRules);
+	resized();
+}
+
+int FxSettingsDialog::GeneralSettingsPane::getNumRows()
+{
+	return notification_exceptions_.size();
+}
+
+void FxSettingsDialog::GeneralSettingsPane::paintListBoxItem(int rowNumber, Graphics& g, int width, int height, bool rowIsSelected)
+{
+	if (rowNumber < 0 || rowNumber >= notification_exceptions_.size())
+		return;
+
+	g.fillAll(rowIsSelected ? findColour(TextEditor::highlightColourId) : findColour(ListBox::backgroundColourId));
+	g.setColour(findColour(ListBox::textColourId));
+	g.setFont(height * 0.7f);
+	g.drawText(notification_exceptions_[rowNumber], 10, 0, width - 20, height, Justification::centredLeft, true);
 }
 
 FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), auto_updates_toggle_(TRANS("Automatic updates"))
