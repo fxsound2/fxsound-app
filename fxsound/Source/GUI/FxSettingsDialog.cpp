@@ -333,15 +333,242 @@ void FxSettingsDialog::AudioSettingsPane::mouseExit(const MouseEvent& mouse_even
 	Component::mouseEnter(mouse_event);
 }
 
+namespace
+{
+void addRunningProcesses(ComboBox& process_selector)
+{
+	process_selector.clear(NotificationType::dontSendNotification);
+
+	DWORD process_ids[1024];
+	DWORD bytes_needed = 0;
+	if (!EnumProcesses(process_ids, sizeof(process_ids), &bytes_needed))
+		return;
+
+	const int process_count = static_cast<int>(bytes_needed / sizeof(DWORD));
+	for (int i = 0; i < process_count; ++i)
+	{
+		HANDLE process = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, process_ids[i]);
+		if (process == nullptr)
+			continue;
+
+		WCHAR path[MAX_PATH] = L"";
+		if (GetModuleFileNameExW(process, nullptr, path, MAX_PATH) != 0)
+		{
+			String process_name = File(path).getFileName();
+			bool already_added = false;
+			for (int item = 1; item <= process_selector.getNumItems(); ++item)
+			{
+				if (process_selector.getItemText(item).equalsIgnoreCase(process_name))
+				{
+					already_added = true;
+					break;
+				}
+			}
+
+			if (process_name.isNotEmpty() && !already_added)
+				process_selector.addItem(process_name, process_selector.getNumItems() + 1);
+		}
+
+		CloseHandle(process);
+	}
+}
+
+class NotificationRulesEditor : public Component, public ListBoxModel
+{
+public:
+	NotificationRulesEditor()
+		: mode_label_(TRANS("Notification behavior"), ""),
+		  default_label_(TRANS("Fullscreen default"), ""),
+		  exceptions_label_(TRANS("Application exceptions"), ""),
+		  process_selector_("Process"),
+		  add_button_(TRANS("Add"), ""),
+		  remove_button_(TRANS("Remove"), ""),
+		  done_button_(TRANS("OK"), "")
+	{
+		setSize(WIDTH, HEIGHT);
+
+		StringArray modes = { TRANS("Follow system settings"), TRANS("Always show"), TRANS("Custom rules"), TRANS("Hide all notifications") };
+		mode_box_.addItemList(modes, 1);
+		mode_box_.setSelectedId(static_cast<int>(FxController::getInstance().getNotificationMode()) + 1,
+			NotificationType::dontSendNotification);
+		mode_box_.onChange = [this]()
+		{
+			FxController::getInstance().setNotificationMode(static_cast<NotificationMode>(mode_box_.getSelectedId() - 1));
+			updateVisibility();
+		};
+
+		StringArray defaults = { TRANS("Show notifications"), TRANS("Hide notifications") };
+		default_box_.addItemList(defaults, 1);
+		default_box_.setSelectedId(FxController::getInstance().getNotificationDefault() ? 2 : 1,
+			NotificationType::dontSendNotification);
+		default_box_.onChange = [this]()
+		{
+			FxController::getInstance().setNotificationDefault(default_box_.getSelectedId() == 2);
+		};
+
+		exceptions_ = FxController::getInstance().getNotificationExceptions();
+		exceptions_list_.setModel(this);
+		exceptions_list_.setRowHeight(26);
+		exceptions_list_.setColour(ListBox::backgroundColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+		exceptions_list_.setColour(ListBox::outlineColourId, getLookAndFeel().findColour(TextButton::textColourOffId).withAlpha(0.3f));
+
+		process_selector_.setEditableText(true);
+		process_selector_.setTextWhenNoChoicesAvailable(TRANS("No running processes"));
+		process_selector_.setTextWhenNothingSelected(TRANS("Process name or select a running process"));
+		addRunningProcesses(process_selector_);
+
+		add_button_.onClick = [this]()
+		{
+			String process_name = process_selector_.getText().trim();
+			if (process_name.isEmpty() || exceptions_.indexOf(process_name, true) >= 0)
+				return;
+
+			exceptions_.add(process_name);
+			FxController::getInstance().setNotificationExceptions(exceptions_);
+			exceptions_list_.updateContent();
+			process_selector_.setText({}, NotificationType::dontSendNotification);
+		};
+
+		remove_button_.onClick = [this]()
+		{
+			const int row = exceptions_list_.getSelectedRow();
+			if (row < 0 || row >= exceptions_.size())
+				return;
+
+			exceptions_.remove(row);
+			FxController::getInstance().setNotificationExceptions(exceptions_);
+			exceptions_list_.updateContent();
+		};
+
+		done_button_.onClick = [this]()
+		{
+			if (onDone != nullptr)
+				onDone();
+		};
+
+		addAndMakeVisible(mode_label_);
+		addAndMakeVisible(mode_box_);
+		addAndMakeVisible(default_label_);
+		addAndMakeVisible(default_box_);
+		addAndMakeVisible(exceptions_label_);
+		addAndMakeVisible(exceptions_list_);
+		addAndMakeVisible(process_selector_);
+		addAndMakeVisible(add_button_);
+		addAndMakeVisible(remove_button_);
+		addAndMakeVisible(done_button_);
+
+		updateVisibility();
+	}
+
+	std::function<void()> onDone;
+
+	int getNumRows() override
+	{
+		return exceptions_.size();
+	}
+
+	void paintListBoxItem(int row_number, Graphics& graphics, int width, int height, bool row_is_selected) override
+	{
+		if (row_number < 0 || row_number >= exceptions_.size())
+			return;
+
+		graphics.fillAll(row_is_selected ? findColour(TextEditor::highlightColourId) : findColour(ListBox::backgroundColourId));
+		graphics.setColour(findColour(ListBox::textColourId));
+		graphics.drawText(exceptions_[row_number], 10, 0, width - 20, height, Justification::centredLeft, true);
+	}
+
+	void resized() override
+	{
+		const int margin = 20;
+		const int content_width = getWidth() - margin * 2;
+		int y = 15;
+
+		mode_label_.setBounds(margin, y, content_width, 20);
+		y += 22;
+		mode_box_.setBounds(margin, y, content_width, 30);
+		y += 40;
+
+		if (mode_box_.getSelectedId() == static_cast<int>(CustomRules) + 1)
+		{
+			default_label_.setBounds(margin, y, content_width, 20);
+			y += 22;
+			default_box_.setBounds(margin, y, content_width, 30);
+			y += 40;
+
+			exceptions_label_.setBounds(margin, y, content_width, 20);
+			y += 22;
+
+			const int list_width = content_width - 95;
+			exceptions_list_.setBounds(margin, y, list_width, 105);
+			remove_button_.setBounds(margin + list_width + 10, y, 85, 30);
+			y += 115;
+
+			process_selector_.setBounds(margin, y, content_width - 95, 30);
+			add_button_.setBounds(margin + content_width - 85, y, 85, 30);
+		}
+
+		done_button_.setBounds(getWidth() - margin - 85, getHeight() - margin - 30, 85, 30);
+	}
+
+private:
+	static constexpr int WIDTH = 470;
+	static constexpr int HEIGHT = 365;
+
+	void updateVisibility()
+	{
+		const bool custom_rules = mode_box_.getSelectedId() == static_cast<int>(CustomRules) + 1;
+		default_label_.setVisible(custom_rules);
+		default_box_.setVisible(custom_rules);
+		exceptions_label_.setVisible(custom_rules);
+		exceptions_list_.setVisible(custom_rules);
+		process_selector_.setVisible(custom_rules);
+		add_button_.setVisible(custom_rules);
+		remove_button_.setVisible(custom_rules);
+		resized();
+	}
+
+	Label mode_label_;
+	ComboBox mode_box_;
+	Label default_label_;
+	ComboBox default_box_;
+	Label exceptions_label_;
+	ListBox exceptions_list_;
+	ComboBox process_selector_;
+	TextButton add_button_;
+	TextButton remove_button_;
+	TextButton done_button_;
+	StringArray exceptions_;
+};
+
+class NotificationRulesDialog : public FxWindow
+{
+public:
+	NotificationRulesDialog() : FxWindow("Notification rules")
+	{
+		editor_.onDone = [this]() { closeButtonPressed(); };
+		setContent(&editor_);
+		centreWithSize(getWidth(), getHeight());
+		addToDesktop(0);
+		toFront(true);
+	}
+
+	void closeButtonPressed() override
+	{
+		exitModalState(0);
+		removeFromDesktop();
+	}
+
+private:
+	NotificationRulesEditor editor_;
+};
+}
+
 FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	SettingsPane("General Preferences"),
 	launch_toggle_(TRANS("Launch on system startup")),
 	hide_help_tips_toggle_(TRANS("Hide help tips for audio controls")),
-	notification_mode_label_(TRANS("Notifications"), ""),
-	notification_default_label_(TRANS("When in fullscreen"), ""),
-	notification_exceptions_label_(TRANS("App exceptions"), ""),
-	notification_add_button_(TRANS("+ Add"), ""),
-	notification_remove_button_(TRANS("Remove"), ""),
+	notification_rules_label_(TRANS("Notification rules"), ""),
+	notification_rules_button_("Edit"),
 	hotkeys_toggle_(TRANS("Disable keyboard shortcuts"))
 {
 	StringArray hotKeySettingsKeys = { FxController::HK_CMD_ON_OFF, FxController::HK_CMD_OPEN_CLOSE, FxController::HK_CMD_NEXT_PRESET, FxController::HK_CMD_PREVIOUS_PRESET, FxController::HK_CMD_NEXT_OUTPUT };
@@ -360,83 +587,13 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
     hide_help_tips_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	hide_help_tips_toggle_.setWantsKeyboardFocus(true);
 
-	notification_mode_label_.setColour(Label::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-	notification_mode_box_.addItemList({ TRANS("Follow system settings"), TRANS("Always show"), TRANS("Custom rules") }, 1);
-	notification_mode_box_.onChange = [this]() {
-		FxController::getInstance().setNotificationMode(static_cast<NotificationMode>(notification_mode_box_.getSelectedId() - 1));
-		updateNotificationControlsVisibility();
-	};
-
-	notification_default_label_.setColour(Label::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-	notification_default_box_.addItemList({ TRANS("Show notifications"), TRANS("Hide notifications") }, 1);
-	notification_default_box_.onChange = [this]() {
-		FxController::getInstance().setNotificationDefault(notification_default_box_.getSelectedId() == 2);
-	};
-
-	notification_exceptions_label_.setColour(Label::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-
-	notification_exceptions_ = FxController::getInstance().getNotificationExceptions();
-	notification_exceptions_list_.setModel(this);
-	notification_exceptions_list_.setColour(ListBox::backgroundColourId, getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-	notification_exceptions_list_.setColour(ListBox::outlineColourId, getLookAndFeel().findColour(TextButton::textColourOffId).withAlpha(0.3f));
-
-	// Populate process selector with running processes
-	DWORD processIds[1024];
-	DWORD cbNeeded;
-	if (EnumProcesses(processIds, sizeof(processIds), &cbNeeded))
+	notification_rules_label_.setColour(Label::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	notification_rules_button_.setMouseCursor(MouseCursor::PointingHandCursor);
+	notification_rules_button_.onClick = [this]()
 	{
-		int numProcesses = cbNeeded / sizeof(DWORD);
-		for (int i = 0; i < numProcesses; i++)
-		{
-			HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processIds[i]);
-			if (hProcess)
-			{
-				WCHAR path[MAX_PATH] = L"";
-				if (GetModuleFileNameExW(hProcess, NULL, path, MAX_PATH))
-				{
-					String processName = File(path).getFileName();
-					bool alreadyAdded = false;
-					for (int j = 1; j <= notification_process_selector_.getNumItems(); j++)
-					{
-						if (notification_process_selector_.getItemText(j) == processName)
-						{
-							alreadyAdded = true;
-							break;
-						}
-					}
-					if (processName.isNotEmpty() && !alreadyAdded)
-						notification_process_selector_.addItem(processName, notification_process_selector_.getNumItems() + 1);
-				}
-				CloseHandle(hProcess);
-			}
-		}
-	}
-	notification_process_selector_.setTextWhenNoChoicesAvailable(TRANS("No processes"));
-
-	notification_add_button_.onClick = [this]() {
-		String selected = notification_process_selector_.getText();
-		if (selected.isNotEmpty() && notification_exceptions_.indexOf(selected, true) < 0)
-		{
-			notification_exceptions_.add(selected);
-			FxController::getInstance().setNotificationExceptions(notification_exceptions_);
-			notification_exceptions_list_.updateContent();
-		}
+		NotificationRulesDialog dialog;
+		dialog.runModalLoop();
 	};
-
-	notification_remove_button_.onClick = [this]() {
-		int row = notification_exceptions_list_.getSelectedRow();
-		if (row >= 0 && row < notification_exceptions_.size())
-		{
-			notification_exceptions_.remove(row);
-			FxController::getInstance().setNotificationExceptions(notification_exceptions_);
-			notification_exceptions_list_.updateContent();
-		}
-	};
-
-	// Load current settings
-	NotificationMode mode = FxController::getInstance().getNotificationMode();
-	notification_mode_box_.setSelectedId(static_cast<int>(mode) + 1, NotificationType::dontSendNotification);
-	notification_default_box_.setSelectedId(FxController::getInstance().getNotificationDefault() ? 2 : 1, NotificationType::dontSendNotification);
 
 	bool hotkey_enabled = FxModel::getModel().getHotkeySupport();
 	for (int i=0; i<hotkey_names.size(); i++)
@@ -478,19 +635,11 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	}
 	
 	addAndMakeVisible(&hide_help_tips_toggle_);
-	addAndMakeVisible(&notification_mode_label_);
-	addAndMakeVisible(&notification_mode_box_);
-	addAndMakeVisible(&notification_default_label_);
-	addAndMakeVisible(&notification_default_box_);
-	addAndMakeVisible(&notification_exceptions_label_);
-	addAndMakeVisible(&notification_exceptions_list_);
-	addAndMakeVisible(&notification_add_button_);
-	addAndMakeVisible(&notification_remove_button_);
-	addAndMakeVisible(&notification_process_selector_);
+	addAndMakeVisible(&notification_rules_label_);
+	addAndMakeVisible(&notification_rules_button_);
 	addAndMakeVisible(&hotkeys_toggle_);
 	addAndMakeVisible(&language_switch_);
 
-	updateNotificationControlsVisibility();
 	setText();
 }
 
@@ -515,36 +664,9 @@ void FxSettingsDialog::GeneralSettingsPane::resized()
     hide_help_tips_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 	y = hide_help_tips_toggle_.getBottom() + 15;
 
-	notification_mode_label_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, 20);
-	y += 20;
-	notification_mode_box_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
-	y = notification_mode_box_.getBottom() + 10;
-
-	if (notification_mode_box_.getSelectedId() == 3) // CustomRules
-	{
-		notification_default_label_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, 20);
-		y += 20;
-		notification_default_box_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
-		y = notification_default_box_.getBottom() + 10;
-
-		notification_exceptions_label_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, 20);
-		y += 20;
-
-		int listHeight = 80;
-		notification_exceptions_list_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN * 2 - 100, listHeight);
-
-		int buttonX = notification_exceptions_list_.getRight() + 5;
-		notification_remove_button_.setBounds(buttonX, y, 95, 24);
-		y += listHeight + 5;
-
-		notification_process_selector_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN - 100, TOGGLE_BUTTON_HEIGHT);
-		notification_add_button_.setBounds(notification_process_selector_.getRight() + 5, y, 95, TOGGLE_BUTTON_HEIGHT);
-		y = notification_add_button_.getBottom() + 10;
-	}
-	else
-	{
-		y = notification_mode_box_.getBottom() + 5;
-	}
+	notification_rules_label_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN - 105, TOGGLE_BUTTON_HEIGHT);
+	notification_rules_button_.setBounds(getWidth() - X_MARGIN - 95, y, 95, TOGGLE_BUTTON_HEIGHT);
+	y = notification_rules_button_.getBottom() + 10;
 
 	hotkeys_toggle_.setBounds(X_MARGIN, y, getWidth()-X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 
@@ -569,46 +691,12 @@ void FxSettingsDialog::GeneralSettingsPane::setText()
 {
     auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
 
-    int height = FxSettingsDialog::SettingsComponent::HEIGHT;
     launch_toggle_.setButtonText(TRANS("Launch on system startup"));
     hide_help_tips_toggle_.setButtonText(TRANS("Hide help tips for audio controls"));
-
-	notification_mode_label_.setText(TRANS("Notifications"), NotificationType::dontSendNotification);
-	notification_default_label_.setText(TRANS("When in fullscreen"), NotificationType::dontSendNotification);
-	notification_exceptions_label_.setText(TRANS("App exceptions"), NotificationType::dontSendNotification);
-	notification_add_button_.setButtonText(TRANS("+ Add"));
-	notification_remove_button_.setButtonText(TRANS("Remove"));
+	notification_rules_label_.setText(TRANS("Notification rules"), NotificationType::dontSendNotification);
+	notification_rules_button_.setButtonText(TRANS("Edit"));
 
     hotkeys_toggle_.setButtonText(TRANS("Disable keyboard shortcuts"));
-}
-
-void FxSettingsDialog::GeneralSettingsPane::updateNotificationControlsVisibility()
-{
-	bool isCustomRules = (notification_mode_box_.getSelectedId() == 3);
-	notification_default_label_.setVisible(isCustomRules);
-	notification_default_box_.setVisible(isCustomRules);
-	notification_exceptions_label_.setVisible(isCustomRules);
-	notification_exceptions_list_.setVisible(isCustomRules);
-	notification_add_button_.setVisible(isCustomRules);
-	notification_remove_button_.setVisible(isCustomRules);
-	notification_process_selector_.setVisible(isCustomRules);
-	resized();
-}
-
-int FxSettingsDialog::GeneralSettingsPane::getNumRows()
-{
-	return notification_exceptions_.size();
-}
-
-void FxSettingsDialog::GeneralSettingsPane::paintListBoxItem(int rowNumber, Graphics& g, int width, int height, bool rowIsSelected)
-{
-	if (rowNumber < 0 || rowNumber >= notification_exceptions_.size())
-		return;
-
-	g.fillAll(rowIsSelected ? findColour(TextEditor::highlightColourId) : findColour(ListBox::backgroundColourId));
-	g.setColour(findColour(ListBox::textColourId));
-	g.setFont(height * 0.7f);
-	g.drawText(notification_exceptions_[rowNumber], 10, 0, width - 20, height, Justification::centredLeft, true);
 }
 
 FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), auto_updates_toggle_(TRANS("Automatic updates"))

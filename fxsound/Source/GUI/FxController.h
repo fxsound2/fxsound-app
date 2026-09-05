@@ -39,7 +39,7 @@ class FxSystemTrayView;
 
 enum ViewType { Lite = 1, Pro = 2 };
 
-enum NotificationMode { FollowSystem = 0, AlwaysShow = 1, CustomRules = 2 };
+enum NotificationMode { FollowSystem = 0, AlwaysShow = 1, CustomRules = 2, HideAll = 3 };
 
 class FxController : public Timer, public DeletedAtShutdown, private AudioPassthruCallback
 {
