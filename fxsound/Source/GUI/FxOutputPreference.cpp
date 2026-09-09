@@ -175,8 +175,9 @@ void FxOutputDeviceRow::update(int index, bool is_row_selected, const DeviceConf
             break;
         }
     }
-    if (selected_id != 0)
-        preset_list_.setSelectedId(selected_id, NotificationType::dontSendNotification);
+    // Always set (even id 0, which clears the selection) since this Component may be
+    // a recycled row whose ComboBox still shows a previous row's selected preset.
+    preset_list_.setSelectedId(selected_id, NotificationType::dontSendNotification);
 }
 
 void FxOutputDeviceRow::paint(Graphics& g)

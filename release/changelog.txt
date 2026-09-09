@@ -1,3 +1,11 @@
+version 1.2.15.0
+----------------
+1. Fixed installer launching FxSound with admin privileges after installation (#589)
+2. Fixed volume muting unexpectedly when cycling through output devices with hotkeys, and volume jumping to full when switching back from a device that changed its own volume level (#606, #607)
+3. Fixed preset not following the correct row when a row is moved or a new row is added in the output device preference list
+4. Fixed garbled text shown in the duplicate preset export prompt
+5. Fixed memory leak caused by repeated reinitialization when no playback device is available
+
 version 1.2.14.0
 ----------------
 1. Fix for the issue on equalizer not showing the correct frequency values from the presets

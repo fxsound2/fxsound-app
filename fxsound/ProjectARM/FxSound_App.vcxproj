@@ -61,7 +61,7 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE8\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_1660CA3=1;JUCE_APP_VERSION=1.2.14.0;JUCE_APP_VERSION_HEX=0x1020e00;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_1660CA3=1;JUCE_APP_VERSION=1.2.15.0;JUCE_APP_VERSION_HEX=0x1020f00;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -76,7 +76,7 @@
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE8\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_1660CA3=1;JUCE_APP_VERSION=1.2.14.0;JUCE_APP_VERSION_HEX=0x1020e00;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_1660CA3=1;JUCE_APP_VERSION=1.2.15.0;JUCE_APP_VERSION_HEX=0x1020f00;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <OutputFile>$(OutDir)\FxSound.exe</OutputFile>
@@ -108,7 +108,7 @@
       <Optimization>MaxSpeed</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE8\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_1660CA3=1;JUCE_APP_VERSION=1.2.14.0;JUCE_APP_VERSION_HEX=0x1020e00;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_1660CA3=1;JUCE_APP_VERSION=1.2.15.0;JUCE_APP_VERSION_HEX=0x1020f00;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -123,7 +123,7 @@
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\JuceLibraryCode;C:\JUCE8\modules;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_1660CA3=1;JUCE_APP_VERSION=1.2.14.0;JUCE_APP_VERSION_HEX=0x1020e00;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;UNICODE;JUCE_MODAL_LOOPS_PERMITTED;JUCER_VS2022_1660CA3=1;JUCE_APP_VERSION=1.2.15.0;JUCE_APP_VERSION_HEX=0x1020f00;JucePlugin_Build_VST=0;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;JucePlugin_Build_Unity=0;JucePlugin_Build_LV2=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <OutputFile>$(OutDir)\FxSound.exe</OutputFile>
@@ -977,6 +977,9 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\geometry\juce_Rectangle_test.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\geometry\juce_RectangleList_test.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\image_formats\jpglib\jaricom.c">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -1247,6 +1250,9 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\LevelRun.c">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\Object.c">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\PairingLookup.c">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -1257,6 +1263,9 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\SBBase.c">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\SBCodepoint.c">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\SBCodepointSequence.c">
@@ -1997,6 +2006,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_core\containers\juce_SparseSet.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_core\containers\juce_Variant.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_core\detail\juce_CallbackListenerList.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_core\detail\juce_IncrementRef.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_core\detail\juce_LruCache.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_core\detail\juce_NativeFileHandle.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_core\files\juce_AndroidDocument.h" />
@@ -2193,6 +2203,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\contexts\juce_GraphicsContext.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\contexts\juce_LowLevelGraphicsContext.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\contexts\juce_LowLevelGraphicsSoftwareRenderer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\detail\juce_FontRendering.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\detail\juce_JustifiedText.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\detail\juce_Ranges.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\detail\juce_ShapedText.h" />
@@ -2534,20 +2545,21 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\native\juce_RenderingHelpers.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\placement\juce_Justification.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\placement\juce_RectanglePlacement.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SBAlgorithm.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SBBase.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SBBidiType.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SBCodepoint.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SBCodepointSequence.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SBConfig.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SBGeneralCategory.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SBLine.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SBMirrorLocator.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SBParagraph.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SBRun.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SBScript.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SBScriptLocator.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SheenBidi.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SheenBidi\SBAlgorithm.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SheenBidi\SBBase.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SheenBidi\SBBidiType.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SheenBidi\SBCodepoint.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SheenBidi\SBCodepointSequence.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SheenBidi\SBConfig.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SheenBidi\SBGeneralCategory.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SheenBidi\SBLine.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SheenBidi\SBMirrorLocator.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SheenBidi\SBParagraph.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SheenBidi\SBRun.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SheenBidi\SBScript.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SheenBidi\SBScriptLocator.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SheenBidi\SBVersion.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Headers\SheenBidi\SheenBidi.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\BidiChain.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\BidiTypeLookup.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\BracketQueue.h" />
@@ -2555,6 +2567,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\GeneralCategoryLookup.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\IsolatingRun.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\LevelRun.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\Object.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\PairingLookup.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\RunExtrema.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\RunKind.h" />
@@ -2562,6 +2575,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\SBAlgorithm.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\SBAssert.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\SBBase.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\SBCodepoint.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\SBCodepointSequence.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\SBLine.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\JUCE8\modules\juce_graphics\unicode\sheenbidi\Source\SBLog.h" />

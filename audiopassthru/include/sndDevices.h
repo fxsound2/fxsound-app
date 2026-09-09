@@ -424,6 +424,16 @@ struct sndDevicesHdlType {
 	int playbackIsActive;		// Will be either SND_DEVICES_PLAYBACK_IS_STOPPED or SND_DEVICES_PLAYBACK_IS_ACTIVE.
 	int playbackStreamIsTemporarilyPaused;	// Used to turn off playback stream when no capture or playback is occuring.
 
+	// The volume level and mute setting that belong to the real playback device FxSound is currently
+	// rendering to, ie the settings the device had before FxSound imposed its own on it, plus any the
+	// user has since made on the device itself. They are put back on that device when FxSound switches
+	// to a different playback device, so a device we stop using is not left carrying FxSound's volume
+	// level or, in particular, left muted when the user never muted that device.
+	wchar_t savedPlaybackDeviceID[PT_MAX_GENERIC_STRLEN];	// ID of the device these settings belong to.
+	float savedPlaybackVolume;		// Its master volume level, normalized range 0.0 to 1.0.
+	BOOL savedPlaybackMute;			// Its mute setting.
+	BOOL playbackSettingsAreSaved;	// TRUE when the three values above hold valid settings.
+
 	int noBufferCount;			// This is a count of how many times no buffers were available in a DoRecording call.
 	int WindowsSilentBufferCount;				// This is a buffer specified by the Windows flag to be all zeros.
 	int MeasuredVirtualSilentBufferCount;	// This is buffer of measured all very low values, essentially silence.

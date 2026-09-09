@@ -25,11 +25,11 @@
     <ROW Property="MSIFASTINSTALL" MultiBuildValue="DefaultBuild:2"/>
     <ROW Property="Manufacturer" Value="FxSound LLC"/>
     <ROW Property="MsiLogging" MultiBuildValue="DefaultBuild:vp"/>
-    <ROW Property="ProductCode" Value="1033:{DEA719D5-DBDA-48AE-8B57-67C623C79FE0} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{C0D804B2-E459-469C-A6B0-6D5C2CCF3775} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="FxSound"/>
     <ROW Property="ProductName_32" Value="[|ProductName]"/>
-    <ROW Property="ProductVersion" Value="1.2.14.0" Options="20"/>
+    <ROW Property="ProductVersion" Value="1.2.15.0" Options="20"/>
     <ROW Property="REBOOT" MultiBuildValue="DefaultBuild:Suppress"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
@@ -256,7 +256,7 @@
     <ROW Action="AI_STORE_LOCATION" Type="51" Source="ARPINSTALLLOCATION" Target="[APPDIR]"/>
     <ROW Action="AI_UPDATER_UNINSTALL" Type="82" Source="updater.exe" Target="/clean silent"/>
     <ROW Action="InstallFxSoundDriver" Type="81" Source="DfxInstall.dll" Target="InstallDFXDriver" AdditionalSeq="AI_DATA_SETTER_1"/>
-    <ROW Action="LaunchFxSound" Type="226" Source="APPDIR" Target="&quot;[APPDIR]\FxSound.exe&quot; [FXSOUND_CONFIG]"/>
+    <ROW Action="LaunchFxSound" Type="226" Source="APPDIR" Target="&quot;[WindowsFolder]explorer.exe&quot; &quot;[APPDIR]FxSound.exe&quot;"/>
     <ROW Action="OpenUrl" Type="66" Source="viewer.exe" Target="https://www.fxsound.com/blog/fxsound-is-now-completely-free" Options="1"/>
     <ROW Action="SET_APPDIR" Type="307" Source="APPDIR" Target="[ProgramFilesFolder][Manufacturer]\[ProductName]" MultiBuildTarget="DefaultBuild:[ProgramFiles64Folder][Manufacturer]\[ProductName]"/>
     <ROW Action="SET_SHORTCUTDIR" Type="307" Source="SHORTCUTDIR" Target="[ProgramMenuFolder][ProductName]"/>
