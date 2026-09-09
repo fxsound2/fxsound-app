@@ -256,7 +256,7 @@
     <ROW Action="AI_STORE_LOCATION" Type="51" Source="ARPINSTALLLOCATION" Target="[APPDIR]"/>
     <ROW Action="AI_UPDATER_UNINSTALL" Type="82" Source="updater.exe" Target="/clean silent"/>
     <ROW Action="InstallFxSoundDriver" Type="81" Source="DfxInstall.dll" Target="InstallDFXDriver" AdditionalSeq="AI_DATA_SETTER_1"/>
-    <ROW Action="LaunchFxSound" Type="226" Source="APPDIR" Target="&quot;[APPDIR]\FxSound.exe&quot; [FXSOUND_CONFIG]"/>
+    <ROW Action="LaunchFxSound" Type="226" Source="APPDIR" Target="&quot;[WindowsFolder]explorer.exe&quot; &quot;[APPDIR]FxSound.exe&quot;"/>
     <ROW Action="OpenUrl" Type="66" Source="viewer.exe" Target="https://www.fxsound.com/blog/fxsound-is-now-completely-free" Options="1"/>
     <ROW Action="SET_APPDIR" Type="307" Source="APPDIR" Target="[ProgramFilesFolder][Manufacturer]\[ProductName]" MultiBuildTarget="DefaultBuild:[ProgramFiles64Folder][Manufacturer]\[ProductName]"/>
     <ROW Action="SET_SHORTCUTDIR" Type="307" Source="SHORTCUTDIR" Target="[ProgramMenuFolder][ProductName]"/>
