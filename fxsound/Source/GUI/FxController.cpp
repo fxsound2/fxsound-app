@@ -938,7 +938,7 @@ void FxController::showMainWindow()
 
 		if (survey_tip_)
 		{
-			uint32_t survey_timer = settings_.getInt("survey_timer");
+			uint64_t survey_timer = settings_.getInt("survey_timer");
 			if (survey_timer == 0)
 			{
 				survey_timer = std::time(nullptr) + (7 * (24 * 60 * 60));
@@ -946,7 +946,7 @@ void FxController::showMainWindow()
 			}
 			else
 			{
-				uint32_t current_time = std::time(nullptr);
+				uint64_t current_time = std::time(nullptr);
 				if (current_time > survey_timer)
 				{
 					survey_tip_ = false;
@@ -2899,7 +2899,7 @@ void FxController::getSpectrumBandValues(Array<float>& band_values)
 		}
 		else
 		{
-			band_values.set(i, 0.01);
+			band_values.set(i, 0.01f);
 		}
 	}
 }

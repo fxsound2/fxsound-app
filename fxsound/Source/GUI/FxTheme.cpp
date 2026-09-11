@@ -120,9 +120,9 @@ Label* FxTheme::createComboBoxTextBox(ComboBox& box)
 Font FxTheme::getComboBoxFont(ComboBox& box)
 {
 	if (box.getHeight() <= 30)
-		return Font(font_600_).withHeight(14.0f);
+		return Font(FontOptions(font_600_).withHeight(14.0f));
     else
-		return Font(font_600_).withHeight(17.0f);
+		return Font(FontOptions(font_600_).withHeight(17.0f));
 }
 
 void FxTheme::positionComboBoxText(ComboBox& box, Label& label)
@@ -366,7 +366,7 @@ void FxTheme::drawPopupMenuItem(Graphics& g, const juce::Rectangle<int>& area, b
 
 Font FxTheme::getPopupMenuFont()
 {
-	return Font(font_600_).withHeight(17.0f);
+	return Font(FontOptions(font_600_).withHeight(17.0f));
 }
 
 void FxTheme::preparePopupMenuWindow(Component& new_window)
@@ -460,22 +460,22 @@ void FxTheme::loadFont(String language)
 
 Font FxTheme::getTextButtonFont(TextButton&, int button_height)
 {
-	return Font(font_600_.get()).withHeight(jmin(17.0f, (float)button_height));
+	return Font(FontOptions(font_600_).withHeight(jmin(17.0f, (float)button_height)));
 }
 
 Font FxTheme::getNormalFont()
 {
-	return Font(font_600_).withHeight(17.0f);
+	return Font(FontOptions(font_600_).withHeight(17.0f));
 }
 
 Font FxTheme::getSmallFont()
 {
-	return Font(font_400_).withHeight(14.0f);
+	return Font(FontOptions(font_400_).withHeight(14.0f));
 }
 
 Font FxTheme::getTitleFont()
 {
-	return Font(font_700_).withHeight(17.0f);
+	return Font(FontOptions(font_700_).withHeight(17.0f));
 }
 
 Typeface::Ptr FxTheme::getDefaultTypeface()
@@ -552,10 +552,10 @@ void FxTheme::drawDocumentWindowTitleBar(DocumentWindow& window, Graphics& g,
 	g.setColour(getCurrentColourScheme().getUIColour(ColourScheme::widgetBackground));
 	g.fillAll();
 
-	Font font(12.0f, Font::plain);
+	Font font(FontOptions{}.withHeight(12.0f).withStyle("plain"));
 	g.setFont(font);
 
-	auto textW = font.getStringWidth(window.getName());
+	auto textW = static_cast<int>(GlyphArrangement::getStringWidth(font, window.getName()));
 	auto iconW = 0;
 	auto iconH = 0;
 
