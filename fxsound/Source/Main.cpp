@@ -102,20 +102,24 @@ public:
             audio_passthru_.reset();
 
             // UIA holds COM references to AccessibilityNativeHandle objects for
-            // desktop-resident components. Call UiaDisconnectAllProviders to
-            // synchronously release those references before the components are
-            // destroyed, so their COM refcounts reach zero in the destructor
-            // chain rather than after static destructors have already run.
-            if (HMODULE hUia = GetModuleHandleW(L"UIAutomationCore.dll"))
-            {
-                typedef HRESULT (WINAPI* UiaDisconnectAllProvidersFunc)();
-                if (auto fn = (UiaDisconnectAllProvidersFunc)GetProcAddress(hUia, "UiaDisconnectAllProviders"))
-                    fn();
-            }
+            // desktop-resident components. Release those references before the
+            // components are destroyed, so their COM refcounts reach zero in the
+            // destructor chain rather than after static destructors have already run.
+            disconnectUiaProviders("before window teardown");
 
             system_tray_view_.reset();
 
             main_window_.reset(); // (deletes our window)
+
+            // Destroying a window makes Windows send it a final WM_GETOBJECT, and
+            // JUCE answers that by creating an accessibility handler on demand. A
+            // provider handed out that way is created after the call above, so
+            // nothing releases it and the leak detector reports one surviving
+            // AccessibilityNativeHandle. Disconnect once more now that every window
+            // is gone - still before CoUninitialize(), or the disconnect cannot run.
+            disconnectUiaProviders("after window teardown");
+
+            logRemainingDesktopComponents();
         }
 
         LocalisedStrings::setCurrentMappings(nullptr);
@@ -303,6 +307,49 @@ private:
         SymCleanup(process);
 
         controller.logMessage(stacktrace_info);
+    }
+
+    // Releases the COM references UIA holds on JUCE's accessibility providers.
+    // Resolved dynamically so this adds no link-time dependency on UIAutomationCore.
+    static void disconnectUiaProviders(const String& when)
+    {
+        auto& controller = FxController::getInstance();
+
+        HMODULE h_uia = GetModuleHandleW(L"UIAutomationCore.dll");
+        if (h_uia == nullptr)
+        {
+            controller.logMessage("UiaDisconnectAllProviders (" + when + "): UIAutomationCore.dll not loaded");
+            return;
+        }
+
+        typedef HRESULT (WINAPI* UiaDisconnectAllProvidersFunc)();
+        auto disconnect_all_providers = (UiaDisconnectAllProvidersFunc)GetProcAddress(h_uia, "UiaDisconnectAllProviders");
+        if (disconnect_all_providers == nullptr)
+        {
+            controller.logMessage("UiaDisconnectAllProviders (" + when + "): entry point not found");
+            return;
+        }
+
+        auto result = disconnect_all_providers();
+        controller.logMessage("UiaDisconnectAllProviders (" + when + "): 0x" + String::toHexString((int)result));
+    }
+
+    // Logs nothing when the teardown is clean. Anything listed here outlives
+    // shutdown() and is destroyed only in DeletedAtShutdown::deleteAll(), by which
+    // point COM is uninitialised and its accessibility provider cannot be released.
+    static void logRemainingDesktopComponents()
+    {
+        auto& desktop = Desktop::getInstance();
+
+        for (int i = 0; i < desktop.getNumComponents(); i++)
+        {
+            if (auto* component = desktop.getComponent(i))
+            {
+                auto name = component->getName();
+                FxController::getInstance().logMessage("Component still on desktop at shutdown: "
+                                                       + (name.isEmpty() ? String("<unnamed>") : name));
+            }
+        }
     }
 
     void setWorkingDirectory()
