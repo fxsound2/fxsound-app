@@ -163,16 +163,16 @@ int PT_DECLSPEC pwavSetupReadFromInput(PT_HANDLE *hp_pwav, int i_num_channels_in
     * the recording operations to generate the callbacks
     */
    return_val = waveInOpen((LPHWAVEIN)&(cast_handle->hWaveIn), i_wave_in_dev,
-                   (cast_handle->pFormatIn), 
-                   (DWORD)cast_handle->master_hwnd, 
-                   NULL, (DWORD)CALLBACK_WINDOW);
+                   (cast_handle->pFormatIn),
+                   (DWORD_PTR)cast_handle->master_hwnd, 
+                   NULL, (DWORD_PTR)CALLBACK_WINDOW);
 
 	if (return_val != MMSYSERR_NOERROR)
    {
       sprintf(cast_handle->msg1, "Soundcard incompatibility.");
-      (cast_handle->slout_hdl)->Message(FIRST_LINE, cast_handle->msg1);    
+      (cast_handle->slout_hdl)->Message(FIRST_LINE, cast_handle->msg1);
       sprintf(cast_handle->msg1, "Check Sampling Frequency.");
-      (cast_handle->slout_hdl)->Message(NEXT_LINE, cast_handle->msg1);    
+      (cast_handle->slout_hdl)->Message(NEXT_LINE, cast_handle->msg1);
       LocalUnlock(hFormatIn);
       LocalFree(hFormatIn);
       LocalUnlock(hFormatOut);
@@ -183,8 +183,8 @@ int PT_DECLSPEC pwavSetupReadFromInput(PT_HANDLE *hp_pwav, int i_num_channels_in
    /* Open the waveform output device, no callbacks for output */
    return_val = waveOutOpen((LPHWAVEOUT)&(cast_handle->hWaveOut), i_wave_out_dev,
                    (cast_handle->pFormatOut), 
-                   (DWORD)cast_handle->master_hwnd, 
-                   NULL, (DWORD)CALLBACK_NULL);
+                   (DWORD_PTR)cast_handle->master_hwnd,
+                   NULL, (DWORD_PTR)CALLBACK_NULL);
 
 	if (return_val != MMSYSERR_NOERROR)
    {

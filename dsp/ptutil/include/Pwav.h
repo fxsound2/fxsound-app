@@ -21,7 +21,7 @@
 #define PWAV_MAX_BUFFER_SIZE 10666
 
 /* pwav.cpp */
-int PT_DECLSPEC pwavNew(PT_HANDLE **, CSlout *, long, DWORD, int); 
+int PT_DECLSPEC pwavNew(PT_HANDLE **, CSlout *, long, DWORD_PTR, int);
 int PT_DECLSPEC pwavResetBufferSize(PT_HANDLE *, long, int);
 int PT_DECLSPEC pwavReadHeader(PT_HANDLE *, wchar_t *, wchar_t *, int, int, int *, long *, long *, int *);
 int PT_DECLSPEC pwavReadNextBuffer(PT_HANDLE *, int, long **, long *, long *, int, int);  

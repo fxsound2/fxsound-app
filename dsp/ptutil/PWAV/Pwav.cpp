@@ -37,17 +37,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * DESCRIPTION:
  *  Allocates and initializes the passed pwav handle to have the passed number of points
  *
- *  !!!!!!!!!!!!! WARNING - SUPER HACK !!!!!!!!!!!!!!!
- *  The master_hwnd is passed as a WORD even though it is an HWND. The reason
- *  is because the linker can't handle passing the HWND.
- *
- *  For the 32-bit port try to use HWND.  If that does not work, use a DWORD.  (32-bits)
- *
- *  I called Microsoft and they told me to do this.     
- *
+ *  master_hwnd is the window that receives the waveform callbacks. It is passed as a
+ *  DWORD_PTR rather than an HWND for historical reasons - this was a WORD in the 16-bit
+ *  version. DWORD_PTR is pointer sized, so the handle survives intact on 64-bit; do not
+ *  narrow it back to DWORD.
  */
 int PT_DECLSPEC pwavNew(PT_HANDLE **hpp_pwav, CSlout *hp_slout, 
-            long l_buffer_length_samples, DWORD master_hwnd,
+            long l_buffer_length_samples, DWORD_PTR master_hwnd,
             int i_num_buffers)
 {
    struct pwavHdlType *cast_handle;  
@@ -533,8 +529,8 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
 	{
       if (waveOutOpen((LPHWAVEOUT)&(cast_handle->hWaveOut), i_waveout_dev,
                       (cast_handle->pFormatOut), 
-                      (DWORD)cast_handle->master_hwnd, 
-                      0L, (DWORD)CALLBACK_WINDOW))
+                      (DWORD_PTR)cast_handle->master_hwnd,
+                      0L, (DWORD_PTR)CALLBACK_WINDOW))
 		{
          swprintf(cast_handle->wcp_msg1, L"Failed to open soundcard.");
          (cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);    

@@ -223,7 +223,7 @@ int PT_DECLSPEC GraphicEqSetNumBands(PT_HANDLE* hp_GraphicEq, int num_bands)
 			else
 			{
 				// Same or more bands: linear interpolation between old bands
-				realtype source_index = 1.0 + (realtype)(i - 1) * (old_num_bands - 1.0) / (num_bands - 1.0);
+				realtype source_index = 1.0f + (realtype)(i - 1) * (old_num_bands - 1.0f) / (num_bands - 1.0f);
 				int lower_index = (int)source_index;
 				int upper_index = lower_index + 1;
 				realtype fraction = source_index - lower_index;
@@ -515,7 +515,7 @@ int PT_DECLSPEC GraphicEqReSetAllBandFreqs(PT_HANDLE *hp_GraphicEq, realtype r_m
 		d_min_freq = (double)cast_handle->min_band_freq;
 		d_ratio = (double)cast_handle->max_band_freq / d_min_freq;
 		double r = pow(d_ratio, 1.0 / (cast_handle->num_bands - 1));
-		cast_handle->Q = sqrt(r) / (r - 1.0);
+		cast_handle->Q = (realtype)(sqrt(r) / (r - 1.0));
 
 		// ------------------------------------------------- Q_MULTIPLIER
 		cast_handle->Q *= cast_handle->Q_multiplier;
