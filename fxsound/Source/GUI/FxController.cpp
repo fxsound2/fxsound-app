@@ -26,6 +26,72 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Utils/SysInfo/SysInfo.h"
 #include <iostream>
 #include <cstdio>
+#include <Psapi.h>
+
+namespace
+{
+void addNotificationTranslations(const String& language)
+{
+	auto* mappings = LocalisedStrings::getCurrentMappings();
+	if (mappings == nullptr)
+		return;
+
+	String translations = "language: " + mappings->getLanguageName() + "\r\n";
+	translations += "countries: " + mappings->getCountryCodes().joinIntoString(" ") + "\r\n";
+	auto append = [&translations](const char* key, const wchar_t* value)
+	{
+		translations += "\"";
+		translations += key;
+		translations += "\" = \"";
+		translations += String(value);
+		translations += "\"\r\n";
+	};
+
+	if (language.startsWithIgnoreCase("zh-CN"))
+	{
+		append("Notification rules", L"\u901A\u77E5\u89C4\u5219");
+		append("Edit", L"\u7F16\u8F91");
+		append("Notification behavior", L"\u901A\u77E5\u884C\u4E3A");
+		append("Fullscreen default", L"\u5168\u5C4F\u65F6\u9ED8\u8BA4\u884C\u4E3A");
+		append("Application exceptions", L"\u5E94\u7528\u4F8B\u5916");
+		append("Follow system settings", L"\u9075\u5FAA\u7CFB\u7EDF\u8BBE\u7F6E");
+		append("Always show", L"\u59CB\u7EC8\u663E\u793A");
+		append("Custom rules", L"\u81EA\u5B9A\u4E49\u89C4\u5219");
+		append("Hide all notifications", L"\u9690\u85CF\u6240\u6709\u901A\u77E5");
+		append("Show notifications", L"\u663E\u793A\u901A\u77E5");
+		append("No running processes", L"\u6CA1\u6709\u6B63\u5728\u8FD0\u884C\u7684\u8FDB\u7A0B");
+		append("Process name or select a running process", L"\u8F93\u5165\u8FDB\u7A0B\u540D\u6216\u9009\u62E9\u6B63\u5728\u8FD0\u884C\u7684\u8FDB\u7A0B");
+		append("Add", L"\u6DFB\u52A0");
+		append("Remove", L"\u5220\u9664");
+		append("OK", L"\u786E\u5B9A");
+	}
+	else if (language.startsWithIgnoreCase("zh-TW"))
+	{
+		append("Notification rules", L"\u901A\u77E5\u898F\u5247");
+		append("Edit", L"\u7DE8\u8F2F");
+		append("Notification behavior", L"\u901A\u77E5\u884C\u70BA");
+		append("Fullscreen default", L"\u5168\u87A2\u5E55\u9810\u8A2D\u884C\u70BA");
+		append("Application exceptions", L"\u61C9\u7528\u7A0B\u5F0F\u4F8B\u5916");
+		append("Follow system settings", L"\u9075\u5FAA\u7CFB\u7D71\u8A2D\u5B9A");
+		append("Always show", L"\u4E00\u5F8B\u986F\u793A");
+		append("Custom rules", L"\u81EA\u8A02\u898F\u5247");
+		append("Hide all notifications", L"\u96B1\u85CF\u6240\u6709\u901A\u77E5");
+		append("Show notifications", L"\u986F\u793A\u901A\u77E5");
+		append("No running processes", L"\u6C92\u6709\u57F7\u884C\u4E2D\u7684\u8655\u7406\u7A0B\u5E8F");
+		append("Process name or select a running process", L"\u8F38\u5165\u8655\u7406\u7A0B\u5E8F\u540D\u7A31\u6216\u9078\u64C7\u57F7\u884C\u4E2D\u7684\u8655\u7406\u7A0B\u5E8F");
+		append("Add", L"\u65B0\u589E");
+		append("Remove", L"\u79FB\u9664");
+		append("OK", L"\u78BA\u5B9A");
+	}
+	else
+	{
+		return;
+	}
+
+	LocalisedStrings additions(translations, false);
+	mappings->addStrings(additions);
+}
+}
 
 class FxDeviceErrorMessage : public FxWindow
 {
@@ -191,6 +257,29 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 	hide_help_tooltips_ = settings_.getBool("hide_help_tooltips");
 	hide_notifications_ = settings_.getBool("hide_notifications");
 	auto_updates_ = settings_.getBool("automatic_updates", true);
+
+	// Load notification mode with backward compatibility.
+	const String notification_mode_value = settings_.getString("notification_mode");
+	if (notification_mode_value.isEmpty())
+	{
+		notification_mode_ = hide_notifications_ ? HideAll : FollowSystem;
+		notification_default_ = true;
+		notification_exceptions_ = StringArray();
+	}
+	else
+	{
+		const int mode = jlimit(static_cast<int>(FollowSystem), static_cast<int>(HideAll), settings_.getInt("notification_mode"));
+		notification_mode_ = static_cast<NotificationMode>(mode);
+		notification_default_ = settings_.getBool("notification_default");
+		String exceptions_json = settings_.getString("notification_exceptions");
+		juce::var parsed = JSON::parse(exceptions_json);
+		if (parsed.isArray())
+		{
+			for (auto& item : *parsed.getArray())
+				notification_exceptions_.add(item.toString());
+		}
+	}
+
 	max_user_presets_ = settings_.getInt("max_user_presets");
 	if (max_user_presets_ < 10 || max_user_presets_ > 120)
 	{
@@ -2320,6 +2409,118 @@ void FxController::setNotificationsHidden(bool status)
 {
 	hide_notifications_ = status;
 	settings_.setBool("hide_notifications", status);
+	notification_mode_ = status ? HideAll : FollowSystem;
+	settings_.setInt("notification_mode", static_cast<int>(notification_mode_));
+}
+
+NotificationMode FxController::getNotificationMode()
+{
+	return notification_mode_;
+}
+
+void FxController::setNotificationMode(NotificationMode mode)
+{
+	notification_mode_ = static_cast<NotificationMode>(jlimit(static_cast<int>(FollowSystem), static_cast<int>(HideAll), static_cast<int>(mode)));
+	hide_notifications_ = notification_mode_ == HideAll;
+	settings_.setBool("hide_notifications", hide_notifications_);
+	settings_.setInt("notification_mode", static_cast<int>(notification_mode_));
+}
+
+bool FxController::getNotificationDefault()
+{
+	return notification_default_;
+}
+
+void FxController::setNotificationDefault(bool hide_in_fullscreen)
+{
+	notification_default_ = hide_in_fullscreen;
+	settings_.setBool("notification_default", hide_in_fullscreen);
+}
+
+StringArray FxController::getNotificationExceptions()
+{
+	return notification_exceptions_;
+}
+
+void FxController::setNotificationExceptions(const StringArray& exceptions)
+{
+	notification_exceptions_ = exceptions;
+	juce::Array<juce::var> arr;
+	for (auto& ex : exceptions)
+		arr.add(ex);
+	settings_.setString("notification_exceptions", JSON::toString(arr));
+}
+
+String FxController::getForegroundProcessName()
+{
+	HWND hwnd = GetForegroundWindow();
+	if (!hwnd)
+		return {};
+
+	DWORD processId = 0;
+	GetWindowThreadProcessId(hwnd, &processId);
+	if (processId == 0)
+		return {};
+
+	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processId);
+	if (!hProcess)
+		return {};
+
+	WCHAR path[MAX_PATH] = L"";
+	String processName;
+	if (GetModuleFileNameExW(hProcess, NULL, path, MAX_PATH))
+	{
+		processName = File(path).getFileName();
+	}
+	CloseHandle(hProcess);
+	return processName;
+}
+
+bool FxController::shouldShowNotification()
+{
+	if (notification_mode_ == HideAll)
+		return false;
+
+	if (notification_mode_ == FollowSystem)
+	{
+		QUERY_USER_NOTIFICATION_STATE quns;
+		if (FAILED(SHQueryUserNotificationState(&quns)) || quns != QUNS_ACCEPTS_NOTIFICATIONS)
+			return false;
+		return true;
+	}
+
+	if (notification_mode_ == AlwaysShow)
+		return true;
+
+	// CustomRules
+	String process = getForegroundProcessName();
+	bool inExceptions = notification_exceptions_.contains(process, true);
+
+	// Check if foreground window is fullscreen
+	HWND hwnd = GetForegroundWindow();
+	bool isFullscreen = false;
+	if (hwnd)
+	{
+		RECT windowRect;
+		GetWindowRect(hwnd, &windowRect);
+		HMONITOR hMon = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+		MONITORINFO mi = { sizeof(mi) };
+		GetMonitorInfo(hMon, &mi);
+		isFullscreen = (windowRect.left == mi.rcMonitor.left &&
+						windowRect.top == mi.rcMonitor.top &&
+						windowRect.right == mi.rcMonitor.right &&
+						windowRect.bottom == mi.rcMonitor.bottom);
+	}
+
+	if (!isFullscreen)
+		return true;
+
+	// notification_default_ = true means "hide in fullscreen by default"
+	// exceptions invert the default
+	if (notification_default_)
+		return inExceptions;
+	else
+		return !inExceptions;
 }
 
 String FxController::getLanguage() const
@@ -2455,6 +2656,8 @@ void FxController::setLanguage(String language_code)
 	{
 		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_cs_txt, BinaryData::FxSound_cs_txtSize), false));
 	}
+
+	addNotificationTranslations(language_);
 
 	auto* theme = dynamic_cast<FxTheme*>(&LookAndFeel::getDefaultLookAndFeel());
 	if (theme != nullptr)
