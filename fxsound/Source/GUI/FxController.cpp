@@ -759,6 +759,12 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 			path.createDirectory();
 		}
 
+		setLowCutSlope(settings_.getInt("low_cut_slope_db", DfxDsp::LOW_CUT_DEFAULT_SLOPE_DB));
+		double low_cut_q = settings_.getDouble("low_cut_q");
+		setLowCutQ(low_cut_q > 0.0 ? static_cast<float>(low_cut_q) : DfxDsp::LOW_CUT_DEFAULT_Q);
+		setLowCutCutoff(settings_.getInt("low_cut_cutoff_hz", DfxDsp::LOW_CUT_DEFAULT_CUTOFF_HZ));
+		setLowCutOn(settings_.getBool("low_cut_on"));
+
 		setPowerState(settings_.getBool("power"));
 
 		initPresets();
@@ -905,6 +911,8 @@ void FxController::showView()
 
 void FxController::switchView()
 {
+	stopLowCutPreview();
+
 	if (view_ == ViewType::Pro)
 	{
 		view_ = ViewType::Lite;
@@ -926,6 +934,8 @@ ViewType FxController::getCurrentView()
 
 void FxController::hideMainWindow()
 {
+	stopLowCutPreview();
+
 	if (main_window_->isOnDesktop())
 	{
 		main_window_->removeFromDesktop();
@@ -1881,6 +1891,7 @@ void FxController::powerOn(bool on)
 	else
 	{
 		dfx_dsp_.powerOn(false);
+		stopLowCutPreview();
 
 		{
 			ScopedLock auto_lock(lock_);
@@ -2855,6 +2866,76 @@ void FxController::setAlwaysOnTop(bool always_on_top)
 	always_on_top_ = always_on_top;
 	settings_.setBool("always_on_top", always_on_top);
 	main_window_->setAlwaysOnTop(always_on_top);
+}
+
+bool FxController::isLowCutOn()
+{
+	return dfx_dsp_.isLowCutOn();
+}
+
+void FxController::setLowCutOn(bool on)
+{
+	dfx_dsp_.lowCutOn(on);
+	settings_.setBool("low_cut_on", on);
+
+	if (!on)
+	{
+		stopLowCutPreview();
+	}
+}
+
+int FxController::getLowCutSlope()
+{
+	return dfx_dsp_.getLowCutSlope();
+}
+
+void FxController::setLowCutSlope(int slope_db)
+{
+	dfx_dsp_.setLowCutSlope(slope_db);
+	settings_.setInt("low_cut_slope_db", dfx_dsp_.getLowCutSlope());
+}
+
+float FxController::getLowCutQ()
+{
+	return dfx_dsp_.getLowCutQ();
+}
+
+void FxController::setLowCutQ(float q)
+{
+	dfx_dsp_.setLowCutQ(q);
+	settings_.setDouble("low_cut_q", static_cast<double>(dfx_dsp_.getLowCutQ()));
+}
+
+bool FxController::isLowCutPreviewOn()
+{
+	return dfx_dsp_.isLowCutPreviewOn();
+}
+
+void FxController::setLowCutPreviewOn(bool on)
+{
+	dfx_dsp_.lowCutPreviewOn(on);
+}
+
+void FxController::stopLowCutPreview()
+{
+	bool was_on = dfx_dsp_.isLowCutPreviewOn();
+
+	dfx_dsp_.lowCutPreviewOn(false);
+	if (was_on)
+	{
+		FxModel::getModel().notifyListeners();
+	}
+}
+
+int FxController::getLowCutCutoff()
+{
+	return static_cast<int>(dfx_dsp_.getLowCutCutoff() + 0.5f);
+}
+
+void FxController::setLowCutCutoff(int cutoff_hz)
+{
+	dfx_dsp_.setLowCutCutoff(static_cast<float>(cutoff_hz));
+	settings_.setInt("low_cut_cutoff_hz", getLowCutCutoff());
 }
 
 bool FxController::isLaunchOnStartup()

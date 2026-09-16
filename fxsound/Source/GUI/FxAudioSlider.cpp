@@ -71,6 +71,38 @@ bool FxAudioSlider::keyPressed(const KeyPress& key)
 	return false;
 }
 
+void FxAudioSlider::setWheelStepsByInterval(bool steps_by_interval)
+{
+	wheel_steps_by_interval_ = steps_by_interval;
+}
+
+bool FxAudioSlider::stepByWheel(Slider& slider, const MouseWheelDetails& wheel)
+{
+	if (wheel.isSmooth || !slider.isEnabled() || !slider.isScrollWheelEnabled())
+	{
+		return false;
+	}
+
+	float delta = (std::abs(wheel.deltaX) > std::abs(wheel.deltaY)) ? -wheel.deltaX : wheel.deltaY;
+	if (wheel.isReversed)
+	{
+		delta = -delta;
+	}
+	if (delta != 0.0f)
+	{
+		slider.setValue(slider.getValue() + ((delta > 0.0f) ? slider.getInterval() : -slider.getInterval()), NotificationType::sendNotificationSync);
+	}
+	return true;
+}
+
+void FxAudioSlider::mouseWheelMove(const MouseEvent& event, const MouseWheelDetails& wheel)
+{
+	if (!wheel_steps_by_interval_ || !stepByWheel(*this, wheel))
+	{
+		Slider::mouseWheelMove(event, wheel);
+	}
+}
+
 void FxAudioSlider::mouseDown(const juce::MouseEvent& event)
 {
 	// Check if right mouse button is pressed, or this is a double-click
@@ -91,12 +123,21 @@ void FxAudioSlider::mouseDown(const juce::MouseEvent& event)
 	}
 }
 
+void FxAudioSlider::setZeroValueText(const String& text)
+{
+	if (zero_value_text_ != text)
+	{
+		zero_value_text_ = text;
+		updateLabel();
+	}
+}
+
 void FxAudioSlider::updateLabel()
 {
 	auto value = getValue();
 
 	// Update label text
-	auto text = String::formatted(label_format_, value);
+	auto text = (zero_value_text_.isNotEmpty() && value == 0.0) ? zero_value_text_ : String::formatted(label_format_, value);
 	value_label_.setText(text, NotificationType::dontSendNotification);
 
 	// Position label based on slider thumb position

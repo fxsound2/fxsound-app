@@ -48,6 +48,7 @@ private:
 	static constexpr int LIST_Y = 32;
 	static constexpr int AUDIO_X = 40;
 	static constexpr int AUDIO_Y = 88;
+	static constexpr int EQUALIZER_RIGHT = 1000;
 	static constexpr int LIST_WIDTH = 470;
 	static constexpr int LIST_HEIGHT = 40;
 

@@ -150,6 +150,17 @@ public:
 	bool isAlwaysOnTop();
 	void setAlwaysOnTop(bool always_on_top);
 
+	bool isLowCutOn();
+	void setLowCutOn(bool on);
+	int getLowCutSlope();
+	void setLowCutSlope(int slope_db);
+	float getLowCutQ();
+	void setLowCutQ(float q);
+	bool isLowCutPreviewOn();
+	void setLowCutPreviewOn(bool on);
+	int getLowCutCutoff();
+	void setLowCutCutoff(int cutoff_hz);
+
 	bool isLaunchOnStartup();
 	void setLaunchOnStartup(bool launch_on_startup);
 
@@ -256,6 +267,7 @@ private:
 	void sortByDeviceConfigPriority(std::vector<SoundDevice>& devices);
 
 	void powerOn(bool on);
+	void stopLowCutPreview();
 
 	String getAutoSavePath() const;
     String getAutoSavePresetPath(const String& preset_name) const;

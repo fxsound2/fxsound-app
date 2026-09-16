@@ -36,6 +36,15 @@ class DfxDsp
 {
 public:
 	enum Effect { Fidelity = 0, Ambience = 1, Surround = 2, DynamicBoost = 3, Bass = 4, NumEffects = 5 };
+	static constexpr int LOW_CUT_SLOPES_DB[] = { 6, 12, 18, 24, 36, 48 };
+	static constexpr int LOW_CUT_NUM_SLOPES = static_cast<int>(sizeof(LOW_CUT_SLOPES_DB) / sizeof(LOW_CUT_SLOPES_DB[0]));
+	static constexpr int LOW_CUT_DEFAULT_SLOPE_DB = 24;
+	static constexpr float LOW_CUT_MIN_Q = 0.5f;
+	static constexpr float LOW_CUT_MAX_Q = 2.0f;
+	static constexpr float LOW_CUT_DEFAULT_Q = 0.71f;
+	static constexpr int LOW_CUT_MIN_CUTOFF_HZ = 0;
+	static constexpr int LOW_CUT_MAX_CUTOFF_HZ = 200;
+	static constexpr int LOW_CUT_DEFAULT_CUTOFF_HZ = 20;
 
 	DfxDsp();
 	~DfxDsp();
@@ -47,6 +56,16 @@ public:
 	int exportPreset(std::wstring preset_source_file_full_path, std::wstring preset_name, std::wstring preset_export_path);
 	void eqOn(bool on);
 	int getNumEqBands();
+	void lowCutOn(bool on);
+	bool isLowCutOn();
+	void setLowCutSlope(int db_per_octave);
+	int getLowCutSlope();
+	void setLowCutQ(float q);
+	float getLowCutQ();
+	void lowCutPreviewOn(bool on);
+	bool isLowCutPreviewOn();
+	void setLowCutCutoff(float cutoff_hz);
+	float getLowCutCutoff();
 	float getBalance();
 	void setBalance(float gain_db);
 	float getNormalization();

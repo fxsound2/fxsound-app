@@ -210,6 +210,9 @@
     <ClInclude Include="ptutil\include\filt.h">
       <Filter>Header Files\ptutil</Filter>
     </ClInclude>
+    <ClInclude Include="ptutil\include\FiltLowCut.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
     <ClInclude Include="ptutil\include\GraphicEq.h">
       <Filter>Header Files\ptutil</Filter>
     </ClInclude>
@@ -345,6 +348,9 @@
       <Filter>Source Files\ptutil\Qnt</Filter>
     </ClCompile>
     <ClCompile Include="ptutil\Filt\Fil12But.cpp">
+      <Filter>Source Files\ptutil\Filt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Filt\FiltLowCut.cpp">
       <Filter>Source Files\ptutil\Filt</Filter>
     </ClCompile>
     <ClCompile Include="ptutil\Filt\FiltbiqdSos.cpp">

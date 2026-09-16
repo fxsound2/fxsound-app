@@ -163,7 +163,7 @@ void FxTheme::drawComboBox(Graphics& g, int width, int height, bool,
 	}
 	
 	int margin = 32;
-	if (width <= 150)
+	if (width <= 160)
         margin = 24;
 
 	g.setColour(box.findColour(ComboBox::arrowColourId).withAlpha((box.isEnabled() ? 1.0f : 0.2f)));

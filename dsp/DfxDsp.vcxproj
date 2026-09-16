@@ -255,6 +255,7 @@
     <ClInclude Include="ptutil\include\dspfxp_studioverb.h" />
     <ClInclude Include="ptutil\include\dynamic_build_defines.h" />
     <ClInclude Include="ptutil\include\filt.h" />
+    <ClInclude Include="ptutil\include\FiltLowCut.h" />
     <ClInclude Include="ptutil\include\GraphicEq.h" />
     <ClInclude Include="ptutil\include\midi.h" />
     <ClInclude Include="ptutil\include\platform.h" />
@@ -354,6 +355,7 @@
     <ClCompile Include="ptutil\DspUtil\SurroundSyn\SurroundSynInit.cpp" />
     <ClCompile Include="ptutil\DspUtil\SurroundSyn\SurroundSynProcess.cpp" />
     <ClCompile Include="ptutil\Filt\Fil12But.cpp" />
+    <ClCompile Include="ptutil\Filt\FiltLowCut.cpp" />
     <ClCompile Include="ptutil\Filt\FiltbiqdSos.cpp" />
     <ClCompile Include="ptutil\Filt\FiltCalcBiqd.cpp" />
     <ClCompile Include="ptutil\Filt\FiltCalcFilterResponse.cpp" />

@@ -77,6 +77,56 @@ int DfxDsp::getNumEqBands()
 	return data_->getNumEqBands();
 }
 
+void DfxDsp::lowCutOn(bool on)
+{
+	data_->lowCutOn(on);
+}
+
+bool DfxDsp::isLowCutOn()
+{
+	return data_->isLowCutOn();
+}
+
+void DfxDsp::setLowCutSlope(int db_per_octave)
+{
+	data_->setLowCutSlope(db_per_octave);
+}
+
+int DfxDsp::getLowCutSlope()
+{
+	return data_->getLowCutSlope();
+}
+
+void DfxDsp::setLowCutQ(float q)
+{
+	data_->setLowCutQ(q);
+}
+
+float DfxDsp::getLowCutQ()
+{
+	return data_->getLowCutQ();
+}
+
+void DfxDsp::lowCutPreviewOn(bool on)
+{
+	data_->lowCutPreviewOn(on);
+}
+
+bool DfxDsp::isLowCutPreviewOn()
+{
+	return data_->isLowCutPreviewOn();
+}
+
+void DfxDsp::setLowCutCutoff(float cutoff_hz)
+{
+	data_->setLowCutCutoff(cutoff_hz);
+}
+
+float DfxDsp::getLowCutCutoff()
+{
+	return data_->getLowCutCutoff();
+}
+
 DfxPreset DfxDsp::getPresetInfo(std::wstring preset_file_full_path)
 {
 	return data_->getPresetInfo(preset_file_full_path);
