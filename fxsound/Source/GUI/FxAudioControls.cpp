@@ -265,6 +265,23 @@ bool FxEffects::FxEffectSlider::keyPressed(const KeyPress& key)
 	return false;
 }
 
+void FxEffects::FxEffectSlider::mouseDown(const juce::MouseEvent& event)
+{
+	// Reset on double-click. Handled here (rather than in mouseDoubleClick) and
+	// returning without calling the base class so the base Slider never starts
+	// its own drag-tracking - otherwise the drag started by this same mouseDown
+	// gets finalized on mouseUp using the pre-reset value, silently undoing the
+	// reset performed in between by mouseDoubleClick.
+	if (event.getNumberOfClicks() >= 2)
+	{
+		setValue(0.0, NotificationType::sendNotification);
+	}
+	else
+	{
+		Slider::mouseDown(event);
+	}
+}
+
 FxEqualizerControl::FxEqualizerControl() :
 	master_gain_slider_("%0.0f dB", 0.0f),
 	volume_leveling_slider_("%.1f dB", 0.0f),

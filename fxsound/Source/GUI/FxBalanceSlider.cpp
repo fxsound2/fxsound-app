@@ -125,10 +125,15 @@ bool FxBalanceSlider::keyPressed(const KeyPress& key)
 
 void FxBalanceSlider::mouseDown(const juce::MouseEvent& event)
 {
-	// Check if right mouse button is pressed
-	if (event.mods.isRightButtonDown())
+	// Check if right mouse button is pressed, or this is a double-click
+	if (event.mods.isRightButtonDown() || event.getNumberOfClicks() >= 2)
 	{
-		// Reset the slider to 0
+		// Reset the slider to its default value. Handled here (rather than in
+		// mouseDoubleClick) and returning without calling the base class so the
+		// base Slider never starts its own drag-tracking - otherwise the drag
+		// started by this same mouseDown gets finalized on mouseUp using the
+		// pre-reset value, silently undoing the reset performed in between by
+		// mouseDoubleClick.
 		setValue(default_value_, NotificationType::sendNotification);
 	}
 	else

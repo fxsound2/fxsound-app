@@ -440,13 +440,15 @@ int PT_DECLSPEC GraphicEqReSetAllBandFreqs(PT_HANDLE *hp_GraphicEq, realtype r_m
 		}
 		else if (cast_handle->num_bands == 10)
 		{
-			// ---------------------------------------------- Legacy (pre-ISO) 10 band frequencies.
-			// Matches the frequency grid the factory/community presets were authored against
-			// (geometric spacing, 62.5Hz to 16000Hz), not the ISO 266 preferred numbers, so that
-			// existing presets' band frequencies line up with the rotary slider's band positions.
+			// ---------------------------------------------- ISO octave-spaced 10 band frequencies.
+			// 31.25Hz to 16000Hz, doubling each band (31, 62, 125, 250, 500, 1k, 2k, 4k, 8k, 16k),
+			// matching the standard ISO octave-band graphic EQ layout shown in the UI labels.
+			// min_band_freq only ever moves down relative to the previous (pre-ISO) 62.5Hz floor,
+			// so per-band editable ranges only widen - existing presets authored against the old
+			// grid remain within range.
 			cast_handle->max_band_freq = 16000;
-			cast_handle->min_band_freq = 62.5;
-			realtype fCenter[] = { 62.5f, 115.734f, 214.311f, 396.85f, 734.867f, 1360.79f, 2519.84f, 4666.12f, 8640.48f, 16000.0f };
+			cast_handle->min_band_freq = 31.25;
+			realtype fCenter[] = { 31.25f, 62.5f, 125.0f, 250.0f, 500.0f, 1000.0f, 2000.0f, 4000.0f, 8000.0f, 16000.0f };
 			for (int i = 0; i < cast_handle->num_bands; i++)
 			{
 				if (GraphicEqSetBandFreq(hp_GraphicEq, (i + 1), fCenter[i]) != OKAY)

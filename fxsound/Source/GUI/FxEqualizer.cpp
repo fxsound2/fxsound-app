@@ -23,10 +23,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxController.h"
 #include "FxTheme.h"
 
-FxEqualizer::FxEqualizer()
+FxEqualizer::FxEqualizer() : restore_defaults_button_("eqRestoreDefaultsButton", DrawableButton::ButtonStyle::ImageFitted)
 {
     auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
     auto& controller = FxController::getInstance();
+
+    restore_defaults_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButton), FXIMAGESIZE(RestoreDefaultsButton));
+    restore_defaults_hover_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButtonHover), FXIMAGESIZE(RestoreDefaultsButtonHover));
+    restore_defaults_button_.setImages(restore_defaults_image_.get(), restore_defaults_hover_image_.get());
+    restore_defaults_button_.setMouseCursor(MouseCursor::PointingHandCursor);
+    restore_defaults_button_.setWantsKeyboardFocus(true);
+    restore_defaults_button_.setTooltip(TRANS("Restore Defaults"));
+    restore_defaults_button_.onClick = [this]() { restoreDefaults(); };
+    addAndMakeVisible(restore_defaults_button_);
 
     int num_bands = controller.getNumEqBands();
     labels_.resize(num_bands);
@@ -52,7 +61,10 @@ FxEqualizer::FxEqualizer()
        
         center_frequencies_[i]->setRotaryParameters(3.66519f, 8.90118f, true);
         FxController::getInstance().getEqBandFrequencyRange(i, &min_freq, &max_freq);
-        center_frequencies_[i]->setRange(min_freq, max_freq, (max_freq-min_freq)/100);
+        // 1 Hz steps: a coarser interval (e.g. the previous span/100) quantizes to a
+        // grid anchored at this band's own min_freq, which doesn't line up with round
+        // reset frequencies (e.g. 1000 Hz was snapping to ~997 Hz).
+        center_frequencies_[i]->setRange(min_freq, max_freq, 1.0);
         center_frequencies_[i]->setFrequency(controller.getEqBandFrequency(i));
         addAndMakeVisible(center_frequencies_[i].get());
 
@@ -69,6 +81,8 @@ void FxEqualizer::reinit(int num_bands)
     auto& controller = FxController::getInstance();
 
     removeAllChildren();
+
+    addAndMakeVisible(restore_defaults_button_);
 
     // ------------------------------------------------------------ clear and reinitialize arrays
     labels_.clear();
@@ -102,7 +116,8 @@ void FxEqualizer::reinit(int num_bands)
 
         center_frequencies_[i]->setRotaryParameters(3.66519f, 8.90118f, true);
         controller.getEqBandFrequencyRange(i, &min_freq, &max_freq);
-        center_frequencies_[i]->setRange(min_freq, max_freq, (max_freq - min_freq) / 100);
+        // 1 Hz steps: see comment in the constructor above.
+        center_frequencies_[i]->setRange(min_freq, max_freq, 1.0);
         center_frequencies_[i]->setFrequency(controller.getEqBandFrequency(i));
         addAndMakeVisible(center_frequencies_[i].get());
 
@@ -226,6 +241,27 @@ void FxEqualizer::update()
     }
 }
 
+void FxEqualizer::restoreDefaults()
+{
+    auto& controller = FxController::getInstance();
+    int num_bands = controller.getNumEqBands();
+
+    for (auto i = 0; i < band_boosts_.size(); i++)
+    {
+        band_boosts_[i]->setValue(0.0, NotificationType::sendNotification);
+    }
+
+    // Center frequencies are only user-adjustable (and visible) below 15 bands,
+    // matching the same threshold used for per-knob right/double-click reset.
+    if (num_bands < 15)
+    {
+        for (auto i = 0; i < center_frequencies_.size(); i++)
+        {
+            center_frequencies_[i]->resetToDefaultFrequency();
+        }
+    }
+}
+
 void FxEqualizer::showValues(bool show)
 {
     for (int i = 0; i < band_boosts_.size(); i++)
@@ -239,6 +275,8 @@ void FxEqualizer::resized()
     auto& controller = FxController::getInstance();
 
     int num_bands = controller.getNumEqBands();
+
+    restore_defaults_button_.setBounds(getWidth() - BUTTON_WIDTH - X_MARGIN, Y_MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     if (num_bands != labels_.size())
     {
@@ -480,10 +518,14 @@ bool FxEqualizer::FxEqSlider::keyPressed(const KeyPress& key)
 // -------------------------------------------------------------------------- SLIDERS GAIN - centered with right mouseDown
 void FxEqualizer::FxEqSlider::mouseDown(const juce::MouseEvent& event)
 {
-    // Check if right mouse button is pressed
-    if (event.mods.isRightButtonDown())
+    // Check if right mouse button is pressed, or this is a double-click
+    if (event.mods.isRightButtonDown() || event.getNumberOfClicks() >= 2)
     {
-        // Reset the slider to 0
+        // Reset the slider to 0. Handled here (rather than in mouseDoubleClick) and
+        // returning without calling the base class so the base Slider never starts
+        // its own drag-tracking - otherwise the drag started by this same mouseDown
+        // gets finalized on mouseUp using the pre-reset value, silently undoing the
+        // reset performed in between by mouseDoubleClick.
         setValue(0.0, juce::NotificationType::sendNotification);
     }
     else
@@ -592,57 +634,70 @@ void FxEqualizer::FxBandCenterFreqSlider::mouseDown(const juce::MouseEvent& even
     int nBands = FxController::getInstance().getNumEqBands();
     if (nBands >= 15) return;
 
-    // ------------------------------------------------------- Check if right mouse button is pressed
-    if (event.mods.isRightButtonDown())
+    // ------------------------------------------------------- Check if right mouse button is pressed, or this is a double-click
+    if (event.mods.isRightButtonDown() || event.getNumberOfClicks() >= 2)
     {
-        if (nBands == 5)
-        {
-            static const float defaultFrequencies[] =
-            {
-                62.5f,    // band 1
-                250.0f,   // band 2
-                1000.0f,  // band 3
-                4000.0f,  // band 4
-                16000.0f  // band 5
-            };
-            if (band_ >= 0 && band_ <= 4)
-            {
-                setValue(defaultFrequencies[band_], juce::NotificationType::sendNotification);
-            }
-        }
-        else if (nBands == 10)
-        {
-            // Matches the legacy (pre-ISO) 10 band frequency grid in
-            // GraphicEqReSetAllBandFreqs() that existing presets were authored against.
-            static const float defaultFrequencies[] =
-            {
-                62.5f,     // band 1
-                115.734f,  // band 2
-                214.311f,  // band 3
-                396.85f,   // band 4
-                734.867f,  // band 5
-                1360.79f,  // band 6
-                2519.84f,  // band 7
-                4666.12f,  // band 8
-                8640.48f,  // band 9
-                16000.0f   // band 10
-            };
-            if (band_ >= 0 && band_ <= 9)
-            {
-                setValue(defaultFrequencies[band_], juce::NotificationType::sendNotification);
-            }
-        }
-        else
-        {
-            float min_freq = 20;
-            float max_freq = 20000;
-            int f = min_freq * pow((max_freq / min_freq), ((float)band_ / (nBands - 1)));
-            setValue(f, juce::NotificationType::sendNotification);
-        }
+        // Handled here (rather than in mouseDoubleClick) and returning without
+        // calling the base class so the base Slider never starts its own rotary
+        // drag-tracking - otherwise the drag started by this same mouseDown gets
+        // finalized on mouseUp using the pre-reset value, silently undoing the
+        // reset performed in between by mouseDoubleClick.
+        resetToDefaultFrequency();
     }
     else
     {
         // Default behavior
         juce::Slider::mouseDown(event);
+    }
+}
+
+void FxEqualizer::FxBandCenterFreqSlider::resetToDefaultFrequency()
+{
+    int nBands = FxController::getInstance().getNumEqBands();
+
+    if (nBands == 5)
+    {
+        static const float defaultFrequencies[] =
+        {
+            62.5f,    // band 1
+            250.0f,   // band 2
+            1000.0f,  // band 3
+            4000.0f,  // band 4
+            16000.0f  // band 5
+        };
+        if (band_ >= 0 && band_ <= 4)
+        {
+            setValue(defaultFrequencies[band_], juce::NotificationType::sendNotification);
+        }
+    }
+    else if (nBands == 10)
+    {
+        // ISO octave-spaced grid, matching GraphicEqReSetAllBandFreqs()'s 10-band
+        // center frequencies exactly so the reset value is always inside the
+        // band's DSP-enforced editable range (no clamping).
+        static const float defaultFrequencies[] =
+        {
+            31.25f,    // band 1
+            62.5f,     // band 2
+            125.0f,    // band 3
+            250.0f,    // band 4
+            500.0f,    // band 5
+            1000.0f,   // band 6
+            2000.0f,   // band 7
+            4000.0f,   // band 8
+            8000.0f,   // band 9
+            16000.0f   // band 10
+        };
+        if (band_ >= 0 && band_ <= 9)
+        {
+            setValue(defaultFrequencies[band_], juce::NotificationType::sendNotification);
+        }
+    }
+    else
+    {
+        float min_freq = 20;
+        float max_freq = 20000;
+        int f = min_freq * pow((max_freq / min_freq), ((float)band_ / (nBands - 1)));
+        setValue(f, juce::NotificationType::sendNotification);
     }
 }
