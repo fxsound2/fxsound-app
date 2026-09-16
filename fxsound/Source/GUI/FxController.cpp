@@ -2431,6 +2431,10 @@ void FxController::setLanguage(String language_code)
 	{
 		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ba_txt, BinaryData::FxSound_ba_txtSize), false));
 	}
+	else if (language_.startsWithIgnoreCase("bg"))
+	{
+		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_bg_txt, BinaryData::FxSound_bg_txtSize), false));
+	}
 	else if (language_.startsWithIgnoreCase("fa"))
 	{
 		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_fa_txt, BinaryData::FxSound_fa_txtSize), false));
@@ -2564,6 +2568,10 @@ String FxController::getLanguageName(String language_code) const
 	else if (language_code.startsWithIgnoreCase("ba"))
 	{
 		return L"bosanski";
+	}
+	else if (language_code.startsWithIgnoreCase("bg"))
+	{
+		return L"\u0431\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u0438";
 	}
 	else if (language_code.startsWithIgnoreCase("fa"))
 	{
