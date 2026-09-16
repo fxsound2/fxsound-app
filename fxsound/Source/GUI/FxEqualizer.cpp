@@ -521,11 +521,8 @@ void FxEqualizer::FxEqSlider::mouseDown(const juce::MouseEvent& event)
     // Check if right mouse button is pressed, or this is a double-click
     if (event.mods.isRightButtonDown() || event.getNumberOfClicks() >= 2)
     {
-        // Reset the slider to 0. Handled here (rather than in mouseDoubleClick) and
-        // returning without calling the base class so the base Slider never starts
-        // its own drag-tracking - otherwise the drag started by this same mouseDown
-        // gets finalized on mouseUp using the pre-reset value, silently undoing the
-        // reset performed in between by mouseDoubleClick.
+        // Reset the slider to 0. See FxAudioSlider::mouseDown for why this is
+        // handled here rather than in mouseDoubleClick.
         setValue(0.0, juce::NotificationType::sendNotification);
     }
     else
@@ -637,11 +634,8 @@ void FxEqualizer::FxBandCenterFreqSlider::mouseDown(const juce::MouseEvent& even
     // ------------------------------------------------------- Check if right mouse button is pressed, or this is a double-click
     if (event.mods.isRightButtonDown() || event.getNumberOfClicks() >= 2)
     {
-        // Handled here (rather than in mouseDoubleClick) and returning without
-        // calling the base class so the base Slider never starts its own rotary
-        // drag-tracking - otherwise the drag started by this same mouseDown gets
-        // finalized on mouseUp using the pre-reset value, silently undoing the
-        // reset performed in between by mouseDoubleClick.
+        // See FxAudioSlider::mouseDown for why this is handled here rather than
+        // in mouseDoubleClick.
         resetToDefaultFrequency();
     }
     else
@@ -693,8 +687,10 @@ void FxEqualizer::FxBandCenterFreqSlider::resetToDefaultFrequency()
             setValue(defaultFrequencies[band_], juce::NotificationType::sendNotification);
         }
     }
-    else
+    else if (nBands > 1)
     {
+        // nBands - 1 guarded above: with a single band there's no spacing to
+        // compute, so just fall through and leave the value unchanged.
         float min_freq = 20;
         float max_freq = 20000;
         int f = min_freq * pow((max_freq / min_freq), ((float)band_ / (nBands - 1)));

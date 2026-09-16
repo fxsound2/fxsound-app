@@ -267,12 +267,10 @@ bool FxEffects::FxEffectSlider::keyPressed(const KeyPress& key)
 
 void FxEffects::FxEffectSlider::mouseDown(const juce::MouseEvent& event)
 {
-	// Reset on double-click. Handled here (rather than in mouseDoubleClick) and
-	// returning without calling the base class so the base Slider never starts
-	// its own drag-tracking - otherwise the drag started by this same mouseDown
-	// gets finalized on mouseUp using the pre-reset value, silently undoing the
-	// reset performed in between by mouseDoubleClick.
-	if (event.getNumberOfClicks() >= 2)
+	// Reset on right-click or double-click, matching the other EQ/audio sliders.
+	// See FxAudioSlider::mouseDown for why the reset is handled here rather than
+	// in mouseDoubleClick.
+	if (event.mods.isRightButtonDown() || event.getNumberOfClicks() >= 2)
 	{
 		setValue(0.0, NotificationType::sendNotification);
 	}
