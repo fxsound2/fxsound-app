@@ -20,11 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma once
 #include <string>
+#include <atomic>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 #include "AudioPassthru.h"
 #include "codedefs.h"
 #include "DfxDsp.h"
 #include "pt_defs.h"
 #include "slout.h"
+#include "FiltLowCut.h"
 
 struct dfxg_section_type {
 	realtype value;
@@ -75,6 +80,69 @@ public:
 	PT_HANDLE *hp_dfxg;
 };
 
+struct LowCutPreviewLevelCoeffs {
+	float rms;
+	float rise;
+	float fall;
+};
+
+struct LowCutIirParams {
+	FiltLowCutSection hp_sections[FILT_LOW_CUT_MAX_SECTIONS];
+	FiltLowCutSection lp_sections[FILT_LOW_CUT_MAX_SECTIONS];
+	int num_hp_sections;
+	int num_lp_sections;
+	int sample_rate;
+	unsigned int reset_serial;
+};
+
+#define LOW_CUT_IIR_NUM_SLOTS   3
+#define LOW_CUT_IIR_SLOT_DIRTY  0x4
+#define LOW_CUT_IIR_SLOT_MASK   0x3
+
+struct LowCutIirExchange {
+	LowCutIirParams slots[LOW_CUT_IIR_NUM_SLOTS];
+	int front_slot;
+	int back_slot;
+	std::atomic<int> middle_slot;
+};
+
+#define LOW_CUT_SOURCE_DRY  0
+#define LOW_CUT_SOURCE_IIR  1
+#define LOW_CUT_NUM_SOURCES 2
+
+#define LOW_CUT_CROSSFADE_MS  20.0
+#define LOW_CUT_FADE_MS       10.0
+
+struct LowCutAudioState {
+	int ramp_rate;
+	int crossfade_frames;
+	int fade_frames;
+
+	int source;
+	int crossfade_from;
+	int crossfade_pos;
+	int gain_pos;
+	int gain_dir;
+
+	int preview_pos;
+	bool preview_was_on;
+	float preview_mean_square;
+	float preview_gain;
+	LowCutPreviewLevelCoeffs preview_level_coeffs;
+
+	LowCutIirParams iir_params[2];
+	FiltLowCutChannelState iir_states[2][FILT_LOW_CUT_MAX_CHANNELS];
+	int iir_cur;
+	bool iir_crossfading;
+	int iir_crossfade_pos;
+	bool iir_running;
+	int iir_channels;
+	unsigned int format_serial;
+	bool iir_keep_blocked;
+	LowCutIirParams iir_taken;
+	bool iir_taken_pending;
+};
+
 class DfxDspPrivate
 {
 public:
@@ -88,6 +156,16 @@ public:
 	int resetEQ();
 	void eqOn(bool on);
 	int getNumEqBands();
+	void lowCutOn(bool on);
+	bool isLowCutOn();
+	void setLowCutSlope(int db_per_octave);
+	int getLowCutSlope();
+	void setLowCutQ(float q);
+	float getLowCutQ();
+	void lowCutPreviewOn(bool on);
+	bool isLowCutPreviewOn();
+	void setLowCutCutoff(float cutoff_hz);
+	float getLowCutCutoff();
 	float getBalance();
 	void setBalance(float gain_db);
 	float getNormalization();
@@ -114,7 +192,7 @@ public:
 	void resetTotalAudioProcessedTime();
     void getSpectrumBandValues(float* rp_band_values, int i_array_size);
 
-	bool being_destroyed_ = false;
+	std::atomic<bool> being_destroyed_{ false };
 private:
 	void processTimer();
 	int eqUpdateFromRegistry(int *ip_eq_changed);
@@ -131,6 +209,11 @@ private:
 	// DfxDspEq.cpp
 	int eqSetProcessingOn(int i_storage_type, int i_on);
 	int eqGetProcessingOn(int i_storage_type, int *ip_on);
+
+	void applyLowCut(float *audio_buffer, int num_sample_sets);
+	void requestLowCutDesign(bool wake_designer);
+	void lowCutDesignerThreadMain();
+	int lowCutDesiredSource(bool filter_on, unsigned int reset_serial);
 
 	// Handles
 	int *dfxp_handle_;
@@ -155,5 +238,27 @@ private:
 	struct dfxg_product_specific_info_type product_specific_;
 
 	int eq_processing_on_;
+
+	std::atomic<bool> low_cut_on_{ false };
+	std::atomic<bool> low_cut_preview_on_{ false };
+	std::atomic<bool> low_cut_power_on_{ true };
+	std::atomic<int> low_cut_iir_slope_db_{ DfxDsp::LOW_CUT_DEFAULT_SLOPE_DB };
+	std::atomic<float> low_cut_iir_q_{ DfxDsp::LOW_CUT_DEFAULT_Q };
+	std::atomic<float> low_cut_cutoff_hz_{ (float)DfxDsp::LOW_CUT_DEFAULT_CUTOFF_HZ };
+	int low_cut_cached_sample_rate_ = 44100;
+	int low_cut_cached_num_channels_ = 2;
+	int low_cut_cached_bps_ = 32;
+	unsigned int low_cut_format_serial_ = 0;
+
+	LowCutIirExchange low_cut_iir_exchange_;
+	LowCutAudioState low_cut_audio_;
+
+	std::atomic<int> low_cut_request_sample_rate_{ 44100 };
+	std::atomic<unsigned int> low_cut_request_generation_{ 1 };
+	std::atomic<unsigned int> low_cut_reset_serial_{ 0 };
+	std::atomic<bool> low_cut_designer_stop_{ false };
+	std::mutex low_cut_designer_mutex_;
+	std::condition_variable low_cut_designer_wake_;
+	std::thread low_cut_designer_thread_;
 };
 

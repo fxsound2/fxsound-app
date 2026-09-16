@@ -30,6 +30,11 @@ public:
 	FxAudioSlider(String label_format, float default_value);
 	~FxAudioSlider() = default;
 
+	void setZeroValueText(const String& text);
+	void setWheelStepsByInterval(bool steps_by_interval);
+
+	static bool stepByWheel(Slider& slider, const MouseWheelDetails& wheel);
+
 private:
 	static constexpr int LABEL_HEIGHT = 14;
 	static constexpr int LABEL_WIDTH = 40;
@@ -38,10 +43,13 @@ private:
 	void valueChanged() override;
 	bool keyPressed(const KeyPress& key) override;
 	void mouseDown(const MouseEvent& event) override;
+	void mouseWheelMove(const MouseEvent& event, const MouseWheelDetails& wheel) override;
 
 	void updateLabel();
 
 	Label value_label_;
 	String label_format_;
+	String zero_value_text_;
+	bool wheel_steps_by_interval_ = false;
 	const float default_value_;
 };
