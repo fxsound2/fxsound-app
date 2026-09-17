@@ -111,6 +111,11 @@ int PT_DECLSPEC comSetDemoMode(PT_HANDLE *, int);
 int PT_DECLSPEC comEepromUnsignedLongRead(PT_HANDLE *, short unsigned, unsigned long *);
 int PT_DECLSPEC comEepromUnsignedLongWrite(PT_HANDLE *, short unsigned, unsigned long);
 
+/* Resampler capacity, the frame count matches DAW_MAX_BUFFER_SIZE in u_dfxp.h */
+#define COM_RESAMPLE_MAX_CHANNELS 2
+#define COM_RESAMPLE_MAX_FACTOR 4
+#define COM_RESAMPLE_MAX_FRAMES 16384L
+
 /* comWave.cpp */
 int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *, long *, realtype *, long, int, int, int, int);
 int PT_DECLSPEC comProcessBuffer(PT_HANDLE *hp_com, long *lp_data, long l_length, 

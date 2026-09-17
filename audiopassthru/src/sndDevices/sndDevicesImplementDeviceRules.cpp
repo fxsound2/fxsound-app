@@ -60,6 +60,7 @@ int PT_DECLSPEC sndDevicesImplementDeviceRules(PT_HANDLE *hp_sndDevices, int *ip
 	int playbackSamplingFrequency;
 	int captureSamplingFrequency;
 	int numCaptureChannels;
+	int fallbackRate;
 	int deviceIndex;
 	int resultFlag;
 	int i, j;
@@ -416,16 +417,19 @@ PlaybackDeviceIsSelected:  // Label to jump to when the playback device num has 
 	if( numCaptureChannels > SND_DEVICES_MAX_NUM_CHANS )
 		numCaptureChannels = SND_DEVICES_MAX_NUM_CHANS;
 
-	if( (playbackSamplingFrequency % 48000) == 0 )
+	// Run the DFX device at the playback rate, or at its 44.1k/48k family rate if the driver refuses.
+	fallbackRate = ((playbackSamplingFrequency % 48000) == 0) ? 48000 : 44100;
+	captureSamplingFrequency = playbackSamplingFrequency;
+	if( (captureSamplingFrequency < SND_DEVICES_MIN_SAMP_FREQ) || (captureSamplingFrequency > SND_DEVICES_MAX_SAMP_FREQ) )
+		captureSamplingFrequency = fallbackRate;
+
+	if( sndDevicesSetDfxDeviceSampleRateAndChannels(hp_sndDevices, captureSamplingFrequency, numCaptureChannels, &resultFlag) != OKAY )
+		return(NOT_OKAY);
+
+	if( (resultFlag == SND_DEVICES_DEVICE_SET_FORMAT_FAILED) && (captureSamplingFrequency != fallbackRate) )
 	{
-		captureSamplingFrequency = 48000;
-		if( sndDevicesSetDfxDeviceSampleRateAndChannels(hp_sndDevices, SND_DEVICES_DFX_SAMP_FREQ_48, numCaptureChannels, &resultFlag) != OKAY )
-			return(NOT_OKAY);
-	}
-	else
-	{
-		captureSamplingFrequency = 44100;
-		if( sndDevicesSetDfxDeviceSampleRateAndChannels(hp_sndDevices, SND_DEVICES_DFX_SAMP_FREQ_44_1, numCaptureChannels, &resultFlag) != OKAY )
+		captureSamplingFrequency = fallbackRate;
+		if( sndDevicesSetDfxDeviceSampleRateAndChannels(hp_sndDevices, captureSamplingFrequency, numCaptureChannels, &resultFlag) != OKAY )
 			return(NOT_OKAY);
 	}
 

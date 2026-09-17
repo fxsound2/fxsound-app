@@ -444,10 +444,10 @@ int PT_DECLSPEC sndDevicesSetDeviceEnabledStatusFromGuid(PT_HANDLE *hp_sndDevice
 
 /*
  * FUNCTION: sndDevicesSetDfxDeviceSampleRateAndChannels()
- * DESCRIPTION: Sets the sample rate of the DFX device to either SND_DEVICES_DFX_SAMP_FREQ_44_1
- * or SND_DEVICES_DFX_SAMP_FREQ_48 and sets the num channels to specified setting.
+ * DESCRIPTION: Sets the sample rate of the DFX device to i_sampRate in Hz and sets the num channels to
+ * specified setting. Reports SND_DEVICES_DEVICE_SET_FORMAT_FAILED when the driver does not offer the rate.
  */
-int PT_DECLSPEC sndDevicesSetDfxDeviceSampleRateAndChannels(PT_HANDLE *hp_sndDevices, int i_sampRateFlag, int iNumChannels, int *ip_resultFlag)
+int PT_DECLSPEC sndDevicesSetDfxDeviceSampleRateAndChannels(PT_HANDLE *hp_sndDevices, int i_sampRate, int iNumChannels, int *ip_resultFlag)
 {
 	struct sndDevicesHdlType *cast_handle;
 	IPolicyConfigVista *pPolicyConfigVista;
@@ -470,6 +470,9 @@ int PT_DECLSPEC sndDevicesSetDfxDeviceSampleRateAndChannels(PT_HANDLE *hp_sndDev
 	if( (iNumChannels < SND_DEVICES_MIN_NUM_CHANS) || (iNumChannels > SND_DEVICES_MAX_NUM_CHANS) )
 		return(NOT_OKAY);
 
+	if( (i_sampRate < SND_DEVICES_MIN_SAMP_FREQ) || (i_sampRate > SND_DEVICES_MAX_SAMP_FREQ) )
+		return(NOT_OKAY);
+
 	/* Uses Vista version of IPolicyConfig, works on Vista and Win7 */
 	hr = CoCreateInstance(__uuidof(CPolicyConfigVistaClient), 
 		NULL, CLSCTX_ALL, __uuidof(IPolicyConfigVista), (LPVOID *)&pPolicyConfigVista);
@@ -487,10 +490,7 @@ int PT_DECLSPEC sndDevicesSetDfxDeviceSampleRateAndChannels(PT_HANDLE *hp_sndDev
 		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_DEVICE_GET_FORMAT_FAILED);
 	}
 
-	if( i_sampRateFlag == SND_DEVICES_DFX_SAMP_FREQ_44_1 )
-		pwfx->Format.nSamplesPerSec = 44100;
-	else
-		pwfx->Format.nSamplesPerSec = 48000;
+	pwfx->Format.nSamplesPerSec = i_sampRate;
 
 	pwfx->Format.nChannels = iNumChannels;
 
@@ -507,17 +507,36 @@ int PT_DECLSPEC sndDevicesSetDfxDeviceSampleRateAndChannels(PT_HANDLE *hp_sndDev
 		pwfx->dwChannelMask = 1599;	// As in 5.1 case, channel mask has to be different than you would expect.
 
 	hr = pPolicyConfigVista->SetDeviceFormat(cast_handle->pwszID[cast_handle->dfxDeviceNum], pwfx, NULL);
+	CoTaskMemFree(pwfx);
+
+	// Older drivers reject higher rates, that is expected and not traced as an error.
+	if (hr == AUDCLNT_E_UNSUPPORTED_FORMAT)
+	{
+		*ip_resultFlag = SND_DEVICES_DEVICE_SET_FORMAT_FAILED;
+		pPolicyConfigVista->Release();
+		return(OKAY);
+	}
+
 	if (FAILED(hr))
 	{
 		*ip_resultFlag = SND_DEVICES_DEVICE_SET_FORMAT_FAILED;
-		CoTaskMemFree(pwfx);
 		pPolicyConfigVista->Release();
 		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_DEVICE_SET_FORMAT_FAILED);
 	}
 
-	// pwfx was allocated by GetDeviceFormat() above; free it before returning.
-	CoTaskMemFree(pwfx);
+	// Read the format back, the policy call can succeed without the rate changing.
+	hr = pPolicyConfigVista->GetDeviceFormat(cast_handle->pwszID[cast_handle->dfxDeviceNum], FALSE, &pwfx);
+	if (FAILED(hr))
+	{
+		*ip_resultFlag = SND_DEVICES_DEVICE_GET_FORMAT_FAILED;
+		pPolicyConfigVista->Release();
+		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_DEVICE_GET_FORMAT_FAILED);
+	}
 
+	if (pwfx->Format.nSamplesPerSec != (DWORD)i_sampRate)
+		*ip_resultFlag = SND_DEVICES_DEVICE_SET_FORMAT_FAILED;
+
+	CoTaskMemFree(pwfx);
 	pPolicyConfigVista->Release();
 
 	return(OKAY);

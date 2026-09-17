@@ -31,6 +31,51 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "reg.h"
 #include "u_sndDevices.h"
 #include "sndDevices.h"
+#include <new>
+#include "Resampler.h"
+
+/*
+ * FUNCTION: sndDevices_SetupPlaybackResampler()
+ * DESCRIPTION: Prepares the interpolator used when the DFX device runs below the playback rate.
+ */
+static int sndDevices_SetupPlaybackResampler(PT_HANDLE *hp_sndDevices)
+{
+	struct sndDevicesHdlType *cast_handle;
+	int numChannels;
+	int upsampleFactor;
+	int maxFrames;
+
+	cast_handle = (struct sndDevicesHdlType *)hp_sndDevices;
+
+	numChannels = cast_handle->wfxPlayback.nChannels;
+
+	if ((cast_handle->upsampleRatio <= 1) || (numChannels < 1))
+		return(OKAY);
+	upsampleFactor = (int)cast_handle->upsampleRatio;
+	maxFrames = cast_handle->playbackBufAllocSize / (numChannels * upsampleFactor);
+
+	if ((cast_handle->playbackResampler != NULL) &&
+		((cast_handle->playbackResampler->getMaxChannels() < numChannels) ||
+		 (cast_handle->playbackResampler->getMaxFactor() < upsampleFactor) ||
+		 (cast_handle->playbackResampler->getMaxFrames() < maxFrames)))
+	{
+		delete cast_handle->playbackResampler;
+		cast_handle->playbackResampler = NULL;
+	}
+
+	if (cast_handle->playbackResampler == NULL)
+		cast_handle->playbackResampler = new (std::nothrow) Resampler(numChannels, upsampleFactor, maxFrames);
+
+	if (cast_handle->playbackResampler == NULL)
+		return(NOT_OKAY);
+
+	if (!cast_handle->playbackResampler->configure(upsampleFactor, numChannels))
+		return(NOT_OKAY);
+
+	cast_handle->playbackResampler->reset();
+
+	return(OKAY);
+}
 
 /*
  * FUNCTION: sndDevicesReInit()
@@ -308,6 +353,9 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 			cast_handle->playbackBufAllocSize = playbackAllocSize;
 
 			if ((cast_handle->fCaptureBuf == NULL) || (cast_handle->fPlaybackBuf == NULL) || (cast_handle->fFilePlaybackBuf == NULL))
+				return(NOT_OKAY);
+
+			if (sndDevices_SetupPlaybackResampler(hp_sndDevices) != OKAY)
 				return(NOT_OKAY);
 
 			// Do the final format dependent setup of capture and playback devices.
