@@ -35,7 +35,6 @@ FxEqualizer::FxEqualizer() : restore_defaults_button_("eqRestoreDefaultsButton",
     restore_defaults_button_.setWantsKeyboardFocus(true);
     restore_defaults_button_.setTooltip(TRANS("Restore Defaults"));
     restore_defaults_button_.onClick = [this]() { restoreDefaults(); };
-    addAndMakeVisible(restore_defaults_button_);
 
     int num_bands = controller.getNumEqBands();
     labels_.resize(num_bands);
@@ -70,7 +69,9 @@ FxEqualizer::FxEqualizer() : restore_defaults_button_("eqRestoreDefaultsButton",
 
         band_gain_values_[i] = 0;
     }
-    
+
+    addAndMakeVisible(restore_defaults_button_);
+
     highlight_mode_ = false;
 
     setSize(WIDTH, HEIGHT);
@@ -81,8 +82,6 @@ void FxEqualizer::reinit(int num_bands)
     auto& controller = FxController::getInstance();
 
     removeAllChildren();
-
-    addAndMakeVisible(restore_defaults_button_);
 
     // ------------------------------------------------------------ clear and reinitialize arrays
     labels_.clear();
@@ -123,6 +122,8 @@ void FxEqualizer::reinit(int num_bands)
 
         band_gain_values_[i] = 0;
     }
+
+    addAndMakeVisible(restore_defaults_button_);
 
     resized();
 
@@ -276,7 +277,7 @@ void FxEqualizer::resized()
 
     int num_bands = controller.getNumEqBands();
 
-    restore_defaults_button_.setBounds(getWidth() - BUTTON_WIDTH - X_MARGIN, Y_MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT);
+    restore_defaults_button_.setBounds(getWidth() - BUTTON_WIDTH - BUTTON_MARGIN, BUTTON_MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     if (num_bands != labels_.size())
     {
@@ -649,43 +650,10 @@ void FxEqualizer::FxBandCenterFreqSlider::resetToDefaultFrequency()
 {
     int nBands = FxController::getInstance().getNumEqBands();
 
-    if (nBands == 5)
+    float default_freq;
+    if (FxController::getInstance().getDefaultEqBandFrequency(band_, &default_freq))
     {
-        static const float defaultFrequencies[] =
-        {
-            62.5f,    // band 1
-            250.0f,   // band 2
-            1000.0f,  // band 3
-            4000.0f,  // band 4
-            16000.0f  // band 5
-        };
-        if (band_ >= 0 && band_ <= 4)
-        {
-            setValue(defaultFrequencies[band_], juce::NotificationType::sendNotification);
-        }
-    }
-    else if (nBands == 10)
-    {
-        // ISO octave-spaced grid, matching GraphicEqReSetAllBandFreqs()'s 10-band
-        // center frequencies exactly so the reset value is always inside the
-        // band's DSP-enforced editable range (no clamping).
-        static const float defaultFrequencies[] =
-        {
-            31.25f,    // band 1
-            62.5f,     // band 2
-            125.0f,    // band 3
-            250.0f,    // band 4
-            500.0f,    // band 5
-            1000.0f,   // band 6
-            2000.0f,   // band 7
-            4000.0f,   // band 8
-            8000.0f,   // band 9
-            16000.0f   // band 10
-        };
-        if (band_ >= 0 && band_ <= 9)
-        {
-            setValue(defaultFrequencies[band_], juce::NotificationType::sendNotification);
-        }
+        setValue(default_freq, juce::NotificationType::sendNotification);
     }
     else if (nBands > 1)
     {

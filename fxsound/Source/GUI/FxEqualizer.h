@@ -105,6 +105,7 @@ private:
 	static constexpr int Y_MARGIN = 8;
     static constexpr int BUTTON_WIDTH = 18;
     static constexpr int BUTTON_HEIGHT = 18;
+    static constexpr int BUTTON_MARGIN = 4;
 
 	static constexpr float MAX_GAIN = 12.0f;
 
