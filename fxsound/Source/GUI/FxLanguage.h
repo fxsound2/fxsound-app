@@ -19,6 +19,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include <JuceHeader.h>
+#include <vector>
+
+//==============================================================================
+/*
+    A single supported language: its code, display name, and translation
+    data (nullptr for English, which uses the built-in strings).
+*/
+struct FxLanguageInfo
+{
+    const char* code;
+    const wchar_t* display_name;
+    const char* translation_data;
+    int translation_data_size;
+};
 
 //==============================================================================
 /*
@@ -31,6 +45,17 @@ public:
 
     FxLanguage();
     ~FxLanguage() = default;
+
+    // Single source of truth for the set of languages FxSound supports.
+    // Anything that needs to know "what languages exist" or "how do I
+    // load/name language X" should go through these rather than keeping
+    // its own copy of the list.
+    static const std::vector<FxLanguageInfo>& getAll();
+
+    // Finds the entry whose code is the longest prefix match of language_code
+    // (e.g. "pt-br" resolves to the "pt-br" entry rather than "pt"), or
+    // nullptr if no entry matches.
+    static const FxLanguageInfo* find(const String& language_code);
 
 private:
     static constexpr int BUTTON_WIDTH = 14;
