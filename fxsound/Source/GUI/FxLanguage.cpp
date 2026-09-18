@@ -63,7 +63,7 @@ const std::vector<FxLanguageInfo>& FxLanguage::getAll()
     return kLanguages;
 }
 
-const FxLanguageInfo* FxLanguage::find(const String& language_code)
+const FxLanguageInfo& FxLanguage::find(const String& language_code)
 {
     const FxLanguageInfo* best = nullptr;
 
@@ -76,7 +76,9 @@ const FxLanguageInfo* FxLanguage::find(const String& language_code)
         }
     }
 
-    return best;
+    // kLanguages.front() is "en", which doubles as the default entry:
+    // no translation override, no font override, display name "English".
+    return best != nullptr ? *best : kLanguages.front();
 }
 
 FxLanguage::FxLanguage() : next_button_("next", DrawableButton::ButtonStyle::ImageFitted), prev_button_("prev", DrawableButton::ButtonStyle::ImageFitted)
@@ -120,12 +122,7 @@ FxLanguage::FxLanguage() : next_button_("next", DrawableButton::ButtonStyle::Ima
     String language_code = FxController::getInstance().getLanguage();
     language_.setText(FxController::getInstance().getLanguageName(language_code), NotificationType::dontSendNotification);
 
-    language_index_ = -1;
-    auto* matched = FxLanguage::find(language_code);
-    if (matched != nullptr)
-    {
-        language_index_ = languages_.indexOf(matched->code);
-    }
+    language_index_ = languages_.indexOf(FxLanguage::find(language_code).code);
 }
 
 void FxLanguage::paint(Graphics& g)

@@ -60,9 +60,10 @@ public:
     static const std::vector<FxLanguageInfo>& getAll();
 
     // Finds the entry whose code is the longest prefix match of language_code
-    // (e.g. "pt-br" resolves to the "pt-br" entry rather than "pt"), or
-    // nullptr if no entry matches.
-    static const FxLanguageInfo* find(const String& language_code);
+    // (e.g. "pt-br" resolves to the "pt-br" entry rather than "pt"). Never
+    // returns null: falls back to the "en" entry when nothing matches, so
+    // callers don't need to null-check the result themselves.
+    static const FxLanguageInfo& find(const String& language_code);
 
 private:
     static constexpr int BUTTON_WIDTH = 14;

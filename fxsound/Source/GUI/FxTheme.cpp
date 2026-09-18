@@ -382,18 +382,18 @@ void FxTheme::preparePopupMenuWindow(Component& new_window)
 
 void FxTheme::loadFont(String language)
 {
-    auto* language_info = FxLanguage::find(language);
+    auto& language_info = FxLanguage::find(language);
 
-    font_400_ = (language_info != nullptr && language_info->font_400_file != nullptr)
-        ? loadTypeface(language_info->font_400_file)
+    font_400_ = language_info.font_400_file != nullptr
+        ? loadTypeface(language_info.font_400_file)
         : Typeface::createSystemTypefaceFor(BinaryData::GilroyRegular_ttf, BinaryData::GilroyRegular_ttfSize);
 
-    font_600_ = (language_info != nullptr && language_info->font_600_file != nullptr)
-        ? loadTypeface(language_info->font_600_file)
+    font_600_ = language_info.font_600_file != nullptr
+        ? loadTypeface(language_info.font_600_file)
         : Typeface::createSystemTypefaceFor(BinaryData::GilroySemibold_ttf, BinaryData::GilroySemibold_ttfSize);
 
-    font_700_ = (language_info != nullptr && language_info->font_700_file != nullptr)
-        ? loadTypeface(language_info->font_700_file)
+    font_700_ = language_info.font_700_file != nullptr
+        ? loadTypeface(language_info.font_700_file)
         : Typeface::createSystemTypefaceFor(BinaryData::GilroyBold_ttf, BinaryData::GilroyBold_ttfSize);
 
     if (font_400_ == nullptr)

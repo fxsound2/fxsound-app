@@ -2340,10 +2340,10 @@ void FxController::setLanguage(String language_code)
 
 	LocalisedStrings::setCurrentMappings(nullptr);
 
-	auto* language_info = FxLanguage::find(language_);
-	if (language_info != nullptr && language_info->translation_data != nullptr)
+	auto& language_info = FxLanguage::find(language_);
+	if (language_info.translation_data != nullptr)
 	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(language_info->translation_data, language_info->translation_data_size), false));
+		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(language_info.translation_data, language_info.translation_data_size), false));
 	}
 
 	auto* theme = dynamic_cast<FxTheme*>(&LookAndFeel::getDefaultLookAndFeel());
@@ -2360,8 +2360,7 @@ void FxController::setLanguage(String language_code)
 
 String FxController::getLanguageName(String language_code) const
 {
-	auto* language_info = FxLanguage::find(language_code);
-	return language_info != nullptr ? String(language_info->display_name) : String("English");
+	return String(FxLanguage::find(language_code).display_name);
 }
 
 int FxController::getMaxUserPresets() const
