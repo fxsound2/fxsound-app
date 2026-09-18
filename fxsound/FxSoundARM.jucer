@@ -197,6 +197,22 @@
                 file="Source/GUI/FxSettingsDialog.cpp"/>
           <FILE id="vERb0s" name="FxSettingsDialog.h" compile="0" resource="0"
                 file="Source/GUI/FxSettingsDialog.h"/>
+          <FILE id="SPn1Cp" name="FxSettingsPane.cpp" compile="1" resource="0"
+                file="Source/GUI/FxSettingsPane.cpp"/>
+          <FILE id="SPn1Hd" name="FxSettingsPane.h" compile="0" resource="0"
+                file="Source/GUI/FxSettingsPane.h"/>
+          <FILE id="ASPn1C" name="FxAudioSettingsPane.cpp" compile="1" resource="0"
+                file="Source/GUI/FxAudioSettingsPane.cpp"/>
+          <FILE id="ASPn1H" name="FxAudioSettingsPane.h" compile="0" resource="0"
+                file="Source/GUI/FxAudioSettingsPane.h"/>
+          <FILE id="GSPn1C" name="FxGeneralSettingsPane.cpp" compile="1" resource="0"
+                file="Source/GUI/FxGeneralSettingsPane.cpp"/>
+          <FILE id="GSPn1H" name="FxGeneralSettingsPane.h" compile="0" resource="0"
+                file="Source/GUI/FxGeneralSettingsPane.h"/>
+          <FILE id="HSPn1C" name="FxHelpSettingsPane.cpp" compile="1" resource="0"
+                file="Source/GUI/FxHelpSettingsPane.cpp"/>
+          <FILE id="HSPn1H" name="FxHelpSettingsPane.h" compile="0" resource="0"
+                file="Source/GUI/FxHelpSettingsPane.h"/>
         </GROUP>
         <GROUP id="{16207F4A-0AB0-2942-D69D-4F03B1DF7E0E}" name="Theme">
           <FILE id="aHBzEn" name="FxTheme.cpp" compile="1" resource="0" file="Source/GUI/FxTheme.cpp"/>
