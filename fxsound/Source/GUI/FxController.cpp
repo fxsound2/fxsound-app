@@ -2352,19 +2352,18 @@ void FxController::setLanguage(String language_code)
 		theme->loadFont(language_);
 	}
 
-	if (main_window_ != nullptr)
-	{
-		main_window_->sendLookAndFeelChange();
-	}
-
 	// Other top-level windows (e.g. the Settings dialog) aren't children of
-	// main_window_, so they don't hear about the change from the call above.
+	// main_window_, so they don't hear about a language change unless we
+	// tell them directly. Scoped to FxWindow-derived windows (dialogs) only,
+	// so transient overlays like notifications and the tray icon view -
+	// which don't show translated/language-dependent text - aren't
+	// needlessly repainted on every language switch.
 	auto& desktop = Desktop::getInstance();
 	for (int i = 0; i < desktop.getNumComponents(); i++)
 	{
-		if (auto* component = desktop.getComponent(i))
+		if (auto* window = dynamic_cast<FxWindow*>(desktop.getComponent(i)))
 		{
-			component->sendLookAndFeelChange();
+			window->sendLookAndFeelChange();
 		}
 	}
 }

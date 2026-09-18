@@ -662,7 +662,10 @@ Typeface::Ptr FxTheme::loadTypeface(String fileName)
         }
     }
 
-    loaded_typeface_keys_.add(fileName);
-    loaded_typefaces_.add(typeface);
+    if (typeface != nullptr)
+    {
+        loaded_typeface_keys_.add(fileName);
+        loaded_typefaces_.add(typeface);
+    }
     return typeface;
 }
