@@ -159,7 +159,6 @@ public:
 
     String getLanguage() const;
     void setLanguage(String language_code);
-    String getLanguageName(String language_code) const;
 	int getMaxUserPresets() const;
 
 	bool getAutoUpdates();

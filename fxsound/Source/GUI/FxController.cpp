@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxMainWindow.h"
 #include "FxSystemTrayView.h"
 #include "FxMessage.h"
+#include "FxLanguage.h"
 #include "../Utils/SysInfo/SysInfo.h"
 #include <iostream>
 #include <cstdio>
@@ -2339,125 +2340,10 @@ void FxController::setLanguage(String language_code)
 
 	LocalisedStrings::setCurrentMappings(nullptr);
 
-	if (language_.startsWithIgnoreCase("ko"))
+	auto& language_info = FxLanguage::find(language_);
+	if (language_info.translation_data != nullptr)
 	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ko_txt, BinaryData::FxSound_ko_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("vi"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_vi_txt, BinaryData::FxSound_vi_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("id"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_id_txt, BinaryData::FxSound_id_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("pt-br"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ptbr_txt, BinaryData::FxSound_ptbr_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("pt"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_pt_txt, BinaryData::FxSound_pt_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("es"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_es_txt, BinaryData::FxSound_es_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("zh-CN"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_zhCN_txt, BinaryData::FxSound_zhCN_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("zh-TW"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_zhTW_txt, BinaryData::FxSound_zhTW_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("fr"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_fr_txt, BinaryData::FxSound_fr_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("sv"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_sv_txt, BinaryData::FxSound_sv_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("it"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_it_txt, BinaryData::FxSound_it_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ru"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ru_txt, BinaryData::FxSound_ru_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ro"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ro_txt, BinaryData::FxSound_ro_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("tr"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_tr_txt, BinaryData::FxSound_tr_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("pl"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_pl_txt, BinaryData::FxSound_pl_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("de"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_de_txt, BinaryData::FxSound_de_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("hu"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::fxsound_hu_txt, BinaryData::fxsound_hu_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("th"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_th_txt, BinaryData::FxSound_th_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("nl"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_nl_txt, BinaryData::FxSound_nl_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ja"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ja_txt, BinaryData::FxSound_ja_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ar"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ar_txt, BinaryData::FxSound_ar_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("hr"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_hr_txt, BinaryData::FxSound_hr_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ba"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ba_txt, BinaryData::FxSound_ba_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("bg"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_bg_txt, BinaryData::FxSound_bg_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("fa"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_fa_txt, BinaryData::FxSound_fa_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ua"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ua_txt, BinaryData::FxSound_ua_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("no"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_no_txt, BinaryData::FxSound_no_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("sl"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_sl_txt, BinaryData::FxSound_sl_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("fi"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_fi_txt, BinaryData::FxSound_fi_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("cs"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_cs_txt, BinaryData::FxSound_cs_txtSize), false));
+		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(language_info.translation_data, language_info.translation_data_size), false));
 	}
 
 	auto* theme = dynamic_cast<FxTheme*>(&LookAndFeel::getDefaultLookAndFeel());
@@ -2466,139 +2352,20 @@ void FxController::setLanguage(String language_code)
 		theme->loadFont(language_);
 	}
 
-	if (main_window_ != nullptr)
+	// Other top-level windows (e.g. the Settings dialog) aren't children of
+	// main_window_, so they don't hear about a language change unless we
+	// tell them directly. Scoped to FxWindow-derived windows (dialogs) only,
+	// so transient overlays like notifications and the tray icon view -
+	// which don't show translated/language-dependent text - aren't
+	// needlessly repainted on every language switch.
+	auto& desktop = Desktop::getInstance();
+	for (int i = 0; i < desktop.getNumComponents(); i++)
 	{
-		main_window_->sendLookAndFeelChange();
+		if (auto* window = dynamic_cast<FxWindow*>(desktop.getComponent(i)))
+		{
+			window->sendLookAndFeelChange();
+		}
 	}
-}
-
-String FxController::getLanguageName(String language_code) const
-{
-	if (language_code.startsWithIgnoreCase("en"))
-	{
-		return "English";
-	}
-	else if (language_code.startsWithIgnoreCase("ko"))
-	{
-		return L"\ud55c\uad6d\uc5b4";
-	}
-	else if (language_code.startsWithIgnoreCase("vi"))
-	{
-		return L"Ti\u1ebfng Vi\u1ec7t";
-	}
-	else if (language_code.startsWithIgnoreCase("id"))
-	{
-		return L"bahasa Indonesia";
-	}
-	else if (language_code.startsWithIgnoreCase("pt-br"))
-	{
-		return L"portugu\u00eas brasileiro";
-	}
-	else if (language_code.startsWithIgnoreCase("pt"))
-	{
-		return L"Portugu\u00eas";
-	}
-	else if (language_code.startsWithIgnoreCase("es"))
-	{
-		return L"Espa\u00f1ol";
-	}
-	else if (language_code.startsWithIgnoreCase("zh-CN"))
-	{
-		return L"\u7b80\u4f53\u4e2d\u6587";
-	}
-	else if (language_code.startsWithIgnoreCase("zh-TW"))
-	{
-		return L"\u7e41\u9ad4\u4e2d\u6587";
-	}
-	else if (language_code.startsWithIgnoreCase("sv"))
-	{
-		return L"svenska";
-	}
-	else if (language_code.startsWithIgnoreCase("fr"))
-	{
-		return L"fran\u00e7ais";
-	}
-	else if (language_code.startsWithIgnoreCase("it"))
-	{
-		return L"Italiano";
-	}
-	else if (language_code.startsWithIgnoreCase("ru"))
-	{
-		return L"\u0440\u0443\u0441\u0441\u043a\u0438\u0439";
-	}
-	else if (language_code.startsWithIgnoreCase("ro"))
-	{
-		return L"Rom\u00e2n\u0103";
-	}
-	else if (language_code.startsWithIgnoreCase("tr")) {
-		return L"T\u00fcrk";
-	}
-	else if (language_code.startsWithIgnoreCase("pl"))
-	{
-		return L"Polski";
-	}
-	else if (language_code.startsWithIgnoreCase("de"))
-	{
-		return L"Deutsch";
-	}
-	else if (language_code.startsWithIgnoreCase("hu"))
-	{
-		return L"Magyar";
-	}
-	else if (language_code.startsWithIgnoreCase("th"))
-	{
-		return L"\u0e41\u0e1a\u0e1a\u0e44\u0e17\u0e22";
-	}
-	else if (language_code.startsWithIgnoreCase("nl"))
-	{
-		return L"Nederlands";
-	}
-	else if (language_code.startsWithIgnoreCase("ja"))
-	{
-		return L"\u65e5\u672c\u8a9e";
-	}
-	else if (language_code.startsWithIgnoreCase("ar"))
-	{
-		return L"\u0627\u0644\u0639\u0631\u0628\u064a\u0629";
-	}
-	else if (language_code.startsWithIgnoreCase("hr"))
-	{
-		return L"hrvatski";
-	}
-	else if (language_code.startsWithIgnoreCase("ba"))
-	{
-		return L"bosanski";
-	}
-	else if (language_code.startsWithIgnoreCase("bg"))
-	{
-		return L"\u0431\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u0438";
-	}
-	else if (language_code.startsWithIgnoreCase("fa"))
-	{
-		return L"\u0641\u0627\u0631\u0633\u06cc";
-	}
-	else if (language_code.startsWithIgnoreCase("ua"))
-	{
-		return L"\u0443\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430";
-	}
-	else if (language_code.startsWithIgnoreCase("no"))
-	{
-		return L"Norsk";
-	}
-	else if (language_code.startsWithIgnoreCase("sl"))
-	{
-		return L"Sloven\u0161\u010dina";
-	}
-	else if (language_code.startsWithIgnoreCase("fi"))
-	{
-		return L"Suomi";
-	}
-	else if (language_code.startsWithIgnoreCase("cs"))
-	{
-		return L"\u010cesky";
-    }
-
-	return "English";
 }
 
 int FxController::getMaxUserPresets() const

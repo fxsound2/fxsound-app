@@ -399,6 +399,9 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	hide_notifications_toggle_.setToggleState(FxController::getInstance().isNotificationsHidden(), NotificationType::dontSendNotification);
 	hide_notifications_toggle_.onClick = [this]() { FxController::getInstance().setNotificationsHidden(hide_notifications_toggle_.getToggleState()); };
 
+	language_switch_.setSelectedLanguage(FxController::getInstance().getLanguage());
+	language_switch_.onLanguageChanged = [](String language_code) { FxController::getInstance().setLanguage(language_code); };
+
 	auto os = SystemStats::getOperatingSystemType();
 	if (os == SystemStats::OperatingSystemType::Windows7)
 	{
