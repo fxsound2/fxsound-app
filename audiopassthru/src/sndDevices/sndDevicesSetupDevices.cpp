@@ -353,9 +353,6 @@ int PT_DECLSPEC sndDevicesInitialSetupPlaybackDevice(PT_HANDLE *hp_sndDevices, i
 				cast_handle->playbackSettingsAreSaved = FALSE;
 			}
 
-			// Only take a fresh copy when we don't already hold this devices settings. On a re-init that
-			// stays on the same device the saved values are still the devices own settings, while the
-			// device itself is carrying the settings this app imposed on it.
 			if( !cast_handle->playbackSettingsAreSaved )
 			{
 				if( SUCCEEDED(cast_handle->pEndptVolPlayback->GetMasterVolumeLevelScalar(&playbackVolSetting)) &&
