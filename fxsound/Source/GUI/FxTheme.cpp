@@ -644,6 +644,13 @@ TextLayout FxTheme::layoutTooltipText(const String& text, Colour colour) noexcep
 
 Typeface::Ptr FxTheme::loadTypeface(String fileName)
 {
+    int cached_index = loaded_typeface_keys_.indexOf(fileName);
+    if (cached_index >= 0)
+    {
+        return loaded_typefaces_[cached_index];
+    }
+
+    Typeface::Ptr typeface;
     MemoryBlock fontBuffer;
     String filePath = File::addTrailingSeparator(File::getCurrentWorkingDirectory().getFullPathName());
     File fontFile = File(filePath+fileName);
@@ -651,9 +658,11 @@ Typeface::Ptr FxTheme::loadTypeface(String fileName)
     {
         if (fontFile.loadFileAsData(fontBuffer))
         {
-            return Typeface::createSystemTypefaceFor(fontBuffer.getData(), fontBuffer.getSize());
+            typeface = Typeface::createSystemTypefaceFor(fontBuffer.getData(), fontBuffer.getSize());
         }
     }
-        
-    return nullptr;
+
+    loaded_typeface_keys_.add(fileName);
+    loaded_typefaces_.add(typeface);
+    return typeface;
 }

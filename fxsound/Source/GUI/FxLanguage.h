@@ -58,20 +58,19 @@ public:
     // callers don't need to null-check the result themselves.
     static const FxLanguageInfo& find(const String& language_code);
 
+    // Selects the dropdown entry matching language_code, without triggering
+    // onLanguageChanged.
+    void setSelectedLanguage(const String& language_code);
+
+    // Called with a language code whenever the user picks a different
+    // language from the dropdown.
+    std::function<void(String)> onLanguageChanged;
+
 private:
-    static constexpr int BUTTON_WIDTH = 14;
-    static constexpr int BUTTON_HEIGHT = 22;
-    static constexpr int LABEL_HEIGHT = 22;
+    void resized() override;
+    void lookAndFeelChanged() override;
 
-    void paint(Graphics& g) override;
+    void onLanguageSelected();
 
-    void onNextLanguage();
-    void onPrevLanguage();
-    
-    Label language_;
-    DrawableButton next_button_;
-    DrawableButton prev_button_;
-
-    StringArray languages_;
-    int language_index_;
+    ComboBox language_box_;
 };

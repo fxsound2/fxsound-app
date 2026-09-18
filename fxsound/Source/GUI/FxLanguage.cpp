@@ -17,12 +17,68 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "FxLanguage.h"
-#include "FxController.h"
 #include "FxTheme.h"
 #include <cstring>
 
 namespace
 {
+    class FxLanguageMenuItem : public PopupMenu::CustomComponent
+    {
+    public:
+        FxLanguageMenuItem(String text, Font font)
+            : PopupMenu::CustomComponent(true), text_(std::move(text)), font_(std::move(font))
+        {
+        }
+
+        void getIdealSize(int& idealWidth, int& idealHeight) override
+        {
+            idealWidth = FxLanguage::WIDTH;
+            idealHeight = FxLanguage::HEIGHT;
+        }
+
+        void paint(Graphics& g) override
+        {
+            auto& lf = getLookAndFeel();
+            g.fillAll(lf.findColour(isItemHighlighted() ? PopupMenu::highlightedBackgroundColourId
+                                                          : PopupMenu::backgroundColourId));
+            g.setColour(lf.findColour(PopupMenu::textColourId));
+            g.setFont(font_);
+            g.drawText(text_, getLocalBounds().reduced(10, 0), Justification::centredLeft, true);
+        }
+
+    private:
+        String text_;
+        Font font_;
+    };
+
+    Typeface::Ptr getTypefaceForLanguage(const String& language_code, FxTheme& theme)
+    {
+        static StringArray cached_keys;
+        static Array<Typeface::Ptr> cached_typefaces;
+
+        auto& language_info = FxLanguage::find(language_code);
+        String key = language_info.font_600_file != nullptr ? String(language_info.font_600_file) : String();
+
+        int cached_index = cached_keys.indexOf(key);
+        if (cached_index >= 0)
+        {
+            return cached_typefaces[cached_index];
+        }
+
+        Typeface::Ptr typeface = language_info.font_600_file != nullptr
+            ? theme.loadTypeface(language_info.font_600_file)
+            : nullptr;
+
+        if (typeface == nullptr)
+        {
+            typeface = Typeface::createSystemTypefaceFor(BinaryData::GilroySemibold_ttf, BinaryData::GilroySemibold_ttfSize);
+        }
+
+        cached_keys.add(key);
+        cached_typefaces.add(typeface);
+        return typeface;
+    }
+
     const std::vector<FxLanguageInfo> kLanguages = {
         { "en", L"English", nullptr, 0, nullptr, nullptr, nullptr },
         { "ar", L"\u0627\u0644\u0639\u0631\u0628\u064a\u0629", BinaryData::FxSound_ar_txt, BinaryData::FxSound_ar_txtSize, "IBMPlexSansArabic-Regular.ttf", "IBMPlexSansArabic-Medium.ttf", "IBMPlexSansArabic-Bold.ttf" },
@@ -77,91 +133,81 @@ const FxLanguageInfo& FxLanguage::find(const String& language_code)
         }
     }
 
-    // "en" is the default entry: no translation override, no font
-    // override, display name "English".
     jassert(default_entry != nullptr);
     return best != nullptr ? *best : *default_entry;
 }
 
-FxLanguage::FxLanguage() : next_button_("next", DrawableButton::ButtonStyle::ImageFitted), prev_button_("prev", DrawableButton::ButtonStyle::ImageFitted)
+FxLanguage::FxLanguage()
 {
-    for (auto& entry : kLanguages)
-    {
-        languages_.add(entry.code);
-    }
-
-    language_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-    language_.setJustificationType(Justification::centred);
-
-    auto next_normal = Drawable::createFromImageData(FXIMAGE(ArrowNext), FXIMAGESIZE(ArrowNext));
-    auto next_disabled = Drawable::createFromImageData(FXIMAGE(ArrowNextBW), FXIMAGESIZE(ArrowNextBW));
-    next_button_.setImages(next_normal.get(), nullptr, next_disabled.get());
-    next_button_.setMouseCursor(MouseCursor::PointingHandCursor);
-
-    auto prev_normal = Drawable::createFromImageData(FXIMAGE(ArrowPrev), FXIMAGESIZE(ArrowPrev));
-    auto prev_disabled = Drawable::createFromImageData(FXIMAGE(ArrowPrevBW), FXIMAGESIZE(ArrowPrevBW));
-    prev_button_.setImages(prev_normal.get(), nullptr, prev_disabled.get());
-    prev_button_.setMouseCursor(MouseCursor::PointingHandCursor);
+    language_box_.setJustificationType(Justification::centredLeft);
+    language_box_.setMouseCursor(MouseCursor::PointingHandCursor);
 
     setSize(WIDTH, HEIGHT);
-
-    prev_button_.setBounds(10, (HEIGHT - BUTTON_HEIGHT) / 2, BUTTON_WIDTH, BUTTON_HEIGHT);
-    next_button_.setBounds(WIDTH - BUTTON_WIDTH - 10, (HEIGHT - BUTTON_HEIGHT) / 2, BUTTON_WIDTH, BUTTON_HEIGHT);
-    language_.setBounds(prev_button_.getRight(), (HEIGHT - LABEL_HEIGHT)/2, next_button_.getX() - prev_button_.getRight(), LABEL_HEIGHT);
-
-    addAndMakeVisible(&prev_button_);
-    addAndMakeVisible(&language_);
-    addAndMakeVisible(&next_button_);
-
-    prev_button_.onClick = [this]() {
-        this->onPrevLanguage();
-    };
-
-    next_button_.onClick = [this]() {
-        this->onNextLanguage();
-    };
-
-    String language_code = FxController::getInstance().getLanguage();
-    language_.setText(FxController::getInstance().getLanguageName(language_code), NotificationType::dontSendNotification);
-
-    language_index_ = languages_.indexOf(FxLanguage::find(language_code).code);
-}
-
-void FxLanguage::paint(Graphics& g)
-{
-    g.setFillType(FillType(Colour(FXCOLOR(ControlBackground)).withAlpha(1.0f)));
-    g.fillRoundedRectangle(getLocalBounds().toFloat(), 5.0f);
-}
-
-void FxLanguage::onNextLanguage()
-{
-    if (++language_index_ >= languages_.size())
-    {
-        language_index_ = 0;
-    }
-
-    String language_code = languages_[language_index_];
-    FxController::getInstance().setLanguage(language_code);
+    language_box_.setSize(WIDTH, HEIGHT);
 
     auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
-    language_.setFont(theme.getNormalFont());
+    float item_font_height = theme.getComboBoxFont(language_box_).getHeight();
 
-    language_.setText(FxController::getInstance().getLanguageName(language_code), NotificationType::dontSendNotification);
-
-}
-
-void FxLanguage::onPrevLanguage()
-{
-    if (--language_index_ < 0)
+    int id = 1;
+    for (auto& entry : kLanguages)
     {
-        language_index_ = languages_.size() - 1;
+        language_box_.addItem(String(entry.display_name), id++);
     }
 
-    String language_code = languages_[language_index_];
-    FxController::getInstance().setLanguage(language_code);
+    addAndMakeVisible(&language_box_);
 
-    auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
-    language_.setFont(theme.getNormalFont());
+    for (PopupMenu::MenuItemIterator iter(*language_box_.getRootMenu(), true); iter.next();)
+    {
+        auto& item = iter.getItem();
+        int index = item.itemID - 1;
+        if (index < 0 || index >= (int) kLanguages.size())
+        {
+            continue;
+        }
 
-    language_.setText(FxController::getInstance().getLanguageName(language_code), NotificationType::dontSendNotification);
+        auto& entry = kLanguages[(size_t) index];
+        Font font = Font(getTypefaceForLanguage(entry.code, theme)).withHeight(item_font_height);
+        item.customComponent = new FxLanguageMenuItem(String(entry.display_name), font);
+    }
+
+    language_box_.onChange = [this]() {
+        this->onLanguageSelected();
+    };
+}
+
+void FxLanguage::resized()
+{
+    language_box_.setBounds(getLocalBounds());
+}
+
+void FxLanguage::lookAndFeelChanged()
+{
+    Component::SafePointer<ComboBox> combo_box(&language_box_);
+    MessageManager::callAsync([combo_box]() {
+        if (combo_box != nullptr)
+        {
+            combo_box->resized();
+        }
+    });
+}
+
+void FxLanguage::setSelectedLanguage(const String& language_code)
+{
+    auto& entry = FxLanguage::find(language_code);
+    int index = (int) (&entry - kLanguages.data());
+    language_box_.setSelectedId(index + 1, NotificationType::dontSendNotification);
+}
+
+void FxLanguage::onLanguageSelected()
+{
+    int selected_index = language_box_.getSelectedId() - 1;
+    if (selected_index < 0 || selected_index >= (int) kLanguages.size())
+    {
+        return;
+    }
+
+    if (onLanguageChanged)
+    {
+        onLanguageChanged(kLanguages[(size_t) selected_index].code);
+    }
 }

@@ -2356,11 +2356,17 @@ void FxController::setLanguage(String language_code)
 	{
 		main_window_->sendLookAndFeelChange();
 	}
-}
 
-String FxController::getLanguageName(String language_code) const
-{
-	return String(FxLanguage::find(language_code).display_name);
+	// Other top-level windows (e.g. the Settings dialog) aren't children of
+	// main_window_, so they don't hear about the change from the call above.
+	auto& desktop = Desktop::getInstance();
+	for (int i = 0; i < desktop.getNumComponents(); i++)
+	{
+		if (auto* component = desktop.getComponent(i))
+		{
+			component->sendLookAndFeelChange();
+		}
+	}
 }
 
 int FxController::getMaxUserPresets() const
