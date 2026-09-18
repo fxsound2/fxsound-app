@@ -58,17 +58,18 @@ namespace
     };
 }
 
-const std::vector<FxLanguageInfo>& FxLanguage::getAll()
-{
-    return kLanguages;
-}
-
 const FxLanguageInfo& FxLanguage::find(const String& language_code)
 {
     const FxLanguageInfo* best = nullptr;
+    const FxLanguageInfo* default_entry = nullptr;
 
     for (auto& entry : kLanguages)
     {
+        if (String(entry.code) == "en")
+        {
+            default_entry = &entry;
+        }
+
         if (language_code.startsWithIgnoreCase(entry.code)
             && (best == nullptr || std::strlen(entry.code) > std::strlen(best->code)))
         {
@@ -76,9 +77,10 @@ const FxLanguageInfo& FxLanguage::find(const String& language_code)
         }
     }
 
-    // kLanguages.front() is "en", which doubles as the default entry:
-    // no translation override, no font override, display name "English".
-    return best != nullptr ? *best : kLanguages.front();
+    // "en" is the default entry: no translation override, no font
+    // override, display name "English".
+    jassert(default_entry != nullptr);
+    return best != nullptr ? *best : *default_entry;
 }
 
 FxLanguage::FxLanguage() : next_button_("next", DrawableButton::ButtonStyle::ImageFitted), prev_button_("prev", DrawableButton::ButtonStyle::ImageFitted)

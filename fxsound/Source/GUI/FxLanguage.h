@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include <JuceHeader.h>
-#include <vector>
 
 //==============================================================================
 /*
@@ -52,12 +51,6 @@ public:
 
     FxLanguage();
     ~FxLanguage() = default;
-
-    // Single source of truth for the set of languages FxSound supports.
-    // Anything that needs to know "what languages exist" or "how do I
-    // load/name language X" should go through these rather than keeping
-    // its own copy of the list.
-    static const std::vector<FxLanguageInfo>& getAll();
 
     // Finds the entry whose code is the longest prefix match of language_code
     // (e.g. "pt-br" resolves to the "pt-br" entry rather than "pt"). Never
