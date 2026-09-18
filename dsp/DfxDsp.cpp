@@ -185,6 +185,11 @@ void DfxDsp::getEqBandFrequencyRange(int band_num, float* min_freq, float* max_f
     data_->getEqBandFrequencyRange(band_num, min_freq, max_freq);
 }
 
+bool DfxDsp::getDefaultEqBandFrequency(int band_num, float* freq)
+{
+    return data_->getDefaultEqBandFrequency(band_num, freq);
+}
+
 float DfxDsp::getEqBandBoostCut(int band_num)
 {
 	return data_->getEqBandBoostCut(band_num);
