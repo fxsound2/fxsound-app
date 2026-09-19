@@ -288,6 +288,45 @@ int PT_DECLSPEC sndDevicesImplementDeviceRules(PT_HANDLE *hp_sndDevices, int *ip
 	}
 
 PlaybackDeviceIsSelected:  // Label to jump to when the playback device num has been determined.
+
+	// Make sure the selected playback device is currently active. A disconnected Bluetooth
+	// headset (or any endpoint that is away) can still be enumerated with DEVICE_STATE_UNPLUGGED
+	// and would otherwise be selected here. A playback client can then be created successfully,
+	// but the processing thread fails as soon as it tries to play, so processTimer() would
+	// restart it on every timer tick for as long as the device is away. Prefer another active
+	// real playback device, and if there is none, mark playback unavailable so processTimer()
+	// pauses retries until the next device change.
+	if ((cast_handle->playbackDeviceNum < 0) ||
+		(cast_handle->playbackDeviceNum >= SND_DEVICES_MAX_NUM_DEVICES) ||
+		(cast_handle->deviceState[cast_handle->playbackDeviceNum] != DEVICE_STATE_ACTIVE))
+	{
+		int activePlaybackNum = SND_DEVICES_DEVICE_NOT_PRESENT;
+
+		for (i = 0; i < cast_handle->numRealDevices; i++)
+		{
+			if (sndDevices_UtilsGetIndexFromID(hp_sndDevices, cast_handle->pwszIDRealDevices[i], &deviceIndex) != OKAY)
+				return(NOT_OKAY);
+
+			if ((deviceIndex != SND_DEVICES_DEVICE_NOT_PRESENT) &&
+				(cast_handle->deviceState[deviceIndex] == DEVICE_STATE_ACTIVE))
+			{
+				activePlaybackNum = deviceIndex;
+				break;
+			}
+		}
+
+		if (activePlaybackNum == SND_DEVICES_DEVICE_NOT_PRESENT)
+		{
+			SLOUT_FIRST_LINE(L"sndDevicesImplementDeviceRules() :: selected playback device is not active and no active real device is available");
+			cast_handle->playbackDeviceNum = SND_DEVICES_DEVICE_NOT_PRESENT;
+			cast_handle->playbackDeviceIsUnavailable = TRUE;
+			*ip_resultFlag = SND_DEVICES_RULES_NOT_POSSIBLE;
+			return(OKAY);
+		}
+
+		cast_handle->playbackDeviceNum = activePlaybackNum;
+	}
+
 	if (SND_DEVICES_MONO_BUG_SKIP_MONO_DEVICES)
 	{
 		// Check if selected playback device is a mono device. If so, try to revert back to the most recent
