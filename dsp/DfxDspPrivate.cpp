@@ -182,8 +182,25 @@ int DfxDspPrivate::processAudio(short int *si_input_samples, short int *si_outpu
 {
 	processTimer();
 	// Apply DFX processing here using data and format vars above. Format will always be 32 bit floating point.
+	const auto handle = (struct dfxpHdlType *)dfxp_handle_;
+	float left = 0.0f, right = 0.0f;
+	// Clear stale meters before processing, including buffers skipped by the DSP.
+	const bool meter_available = handle != nullptr
+		&& comTakeLimiterActivity(handle->com_hdl_front, &left, &right) == OKAY;
 	if (dfxpUniversalModifySamples(dfxp_handle_, si_input_samples, si_output_samples, i_num_sample_sets, i_check_for_duplicate_buffers) != OKAY)
 		return(NOT_OKAY);
+	if (meter_available && comTakeLimiterActivity(handle->com_hdl_front, &left, &right) == OKAY)
+	{
+		if (handle->num_channels_out == 1 || handle->num_channels_out == 2)
+			limiter_activity_.publish(left, right);
+	}
+	else if (!limiter_meter_error_reported_)
+	{
+		// This class has no initialized CSlout sink. Keep the one-shot diagnostic
+		// available in release builds without dereferencing that null sink.
+		OutputDebugStringW(L"FxSound: limiter activity meter unavailable\n");
+		limiter_meter_error_reported_ = true;
+	}
 
 	return OKAY;
 }
@@ -554,4 +571,3 @@ void DfxDspPrivate::getSpectrumBandValues(float* rp_band_values, int i_array_siz
 {
     dfxpSpectrumGetBandValues(dfxp_handle_, rp_band_values, i_array_size);
 }
-

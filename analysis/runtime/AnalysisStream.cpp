@@ -15,6 +15,8 @@ AnalysisStream::~AnalysisStream()
 }
 void AnalysisStream::setEnabled(bool value) noexcept
 {
+    clipDetector_.reset();
+    monitoringEnabled_.store(value, std::memory_order_release);
     enabled_.store(value && !failed_.load(std::memory_order_acquire), std::memory_order_release);
     invalidate();
 }
@@ -22,15 +24,17 @@ void AnalysisStream::invalidate() noexcept { revision_.fetch_add(1, std::memory_
 
 bool AnalysisStream::push(const float* pcm, int frames, int channels, int rate, std::uint64_t first) noexcept
 {
-    if (!enabled()) return true;
+    if (!monitoringEnabled_.load(std::memory_order_acquire)) return true;
     if (frames < 0 || rate < 8000 || rate > 384000
         || static_cast<std::uint64_t>(frames) > std::numeric_limits<std::uint64_t>::max() - first
-        || (channels != 1 && channels != 2) || (frames > 0 && !pcm))
+        || !clipDetector_.processBlock(pcm, frames, channels))
     {
         result_.store(AnalysisResult::invalidBlock);
         invalidate();
         return false;
     }
+    // Peaks are latched from the raw block before a full queue can drop FFT input.
+    if (!enabled()) return true;
     const auto revision = revision_.load(std::memory_order_acquire);
     for (int offset = 0; offset < frames;)
     {

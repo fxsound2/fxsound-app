@@ -51,9 +51,23 @@ attack/sustain envelope produce the final heights. Two accumulators retain peaks
 across worker deliveries and coalesced UI updates. Raw FFT data and reference
 band measurements remain available independently of these display operations.
 
-Tuning is localized in `AudioAnalyzer.h` (`BandSettings`, `AnalyzerConfig`),
-`FrequencyScale.h` and `BarDynamics.h`. These parameters affect visualization
-only. The standalone WAV laboratory is not required to build or use this feature.
+Display tuning is grouped into `static constexpr` constants:
+
+| Group / file | Controls |
+| --- | --- |
+| `BarSettings` / `BarDynamics.h` | Display dynamic range (dB floor, frequency-dependent floor adjustment and gain), decay, peak retention, attack/sustain balance and stereo contrast |
+| `BandSettings` / `AudioAnalyzer.h` | Frequency-weighting widths and local spectral contrast |
+| `FrequencySettings` / `FrequencyScale.h` | Frequency limits, shifted logarithmic mapping and treble compression |
+
+These are compile-time parameters; changing them currently requires rebuilding.
+They are not exposed as runtime user settings. Selected controls can be moved to
+Advanced Settings, with appropriate defaults and ranges, if the maintainer
+prefers. That runtime configuration change is open for discussion and is not
+implemented in this submission. FFT format and hop are supplied separately
+through `AnalyzerConfig`.
+
+These parameters affect visualization only. The standalone WAV laboratory is
+not required to build or use this feature.
 
 ## Build and review
 
@@ -62,5 +76,7 @@ sources. Existing toolsets, dependency locations and build conventions are
 retained. No VS2026 migration or personal filesystem paths are introduced.
 
 For automated and manual checks, see [Testing](TESTING.md).
+The companion [output indicators](METERS.md) report sample peaks and existing
+limiter activity independently of the visual FFT and envelopes.
 Review the PCM callback first, then the pure analyzer, the worker adapter and the
 controller/view. Audio processing and buffering policies are outside this feature.

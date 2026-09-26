@@ -567,4 +567,7 @@
       <Filter>Source Files\ptechDsp\Dsp\Wide</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\LimiterActivity.h" />
+  </ItemGroup>
 </Project>

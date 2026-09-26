@@ -14,6 +14,8 @@
       <FILE id="82f6c1" name="BarPeakAccumulator.h" compile="0" resource="0" file="../analysis/BarPeakAccumulator.h"/>
       <FILE id="a45d0d" name="AnalysisStream.cpp" compile="1" resource="0" file="../analysis/runtime/AnalysisStream.cpp"/>
       <FILE id="4f0a6d" name="AnalysisStream.h" compile="0" resource="0" file="../analysis/runtime/AnalysisStream.h"/>
+      <FILE id="47d068" name="ClipDetector.h" compile="0" resource="0" file="../analysis/ClipDetector.h"/>
+      <FILE id="MtrUI1" name="FxClipIndicator.h" compile="0" resource="0" file="Source/GUI/FxClipIndicator.h"/>
     </GROUP>
     <GROUP id="{9737D476-EEC4-7E5E-0B04-48E2783CC448}" name="Fonts">
       <FILE id="Z6Zv1m" name="Gilroy-Bold.ttf" compile="0" resource="1" file="Fonts/Gilroy-Bold.ttf"/>

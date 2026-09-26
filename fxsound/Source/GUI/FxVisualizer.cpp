@@ -124,6 +124,10 @@ void FxVisualizer::reset()
     displayed_bars_ = {};
     analysis_generation_ = 0;
     FxController::getInstance().discardAnalyzedSpectrumPeaks();
+    left_clip_.reset();
+    right_clip_.reset();
+    FxController::getInstance().consumeOutputClipEvents();
+    FxController::getInstance().consumeLimiterActivity();
     for (int i = 0; i < FxController::NUM_SPECTRUM_BANDS * NUM_BARS; i++)
     {
         band_graph_.set(i, 0);
@@ -147,6 +151,18 @@ void FxVisualizer::update()
 
     if (analysis_button_.getToggleState())
     {
+        const auto clips = FxController::getInstance().consumeOutputClipEvents();
+        const auto limiting = FxController::getInstance().consumeLimiterActivity();
+        const auto now = FxClipIndicator::Clock::now();
+        left_clip_.update(clips.left, now);
+        right_clip_.update(clips.right, now);
+        left_clip_.updateLimiter(limiting.leftDb, now);
+        right_clip_.updateLimiter(limiting.rightDb, now);
+        analysis_button_.setTooltip(TRANS("Limiter gain reduction: L") + " " + String(left_clip_.reductionDb(now), 1)
+            + " dB / " + TRANS("R") + " " + String(right_clip_.reductionDb(now), 1)
+            + " dB. " + TRANS("Amber from 0.5 dB, red at 6 dB. Held for 500 ms.")
+            + " " + (left_clip_.isClipped(now) || right_clip_.isClipped(now)
+                ? TRANS("Output sample peak near full scale detected.") : TRANS("No output sample peak near full scale.")));
         fxanalysis::BarSnapshot bars;
         if (FxController::getInstance().getAnalyzedSpectrumBands(bars))
         {
@@ -228,6 +244,24 @@ void FxVisualizer::paint(Graphics& g)
         g.setFont(11.0f);
         g.drawText(TRANS("L"), 5, bounds.getHeight() / 2 - 23, 18, 16, Justification::centred);
         g.drawText(TRANS("R"), 5, bounds.getHeight() / 2 + 7, 18, 16, Justification::centred);
+        const auto now = FxClipIndicator::Clock::now();
+        const Colour clipOn(0xffff3045), clipOff(0xff482530);
+        const Colour limiterOn(0xffffb020);
+        const auto indicatorColour = [&](const FxClipIndicator& indicator)
+        {
+            if (indicator.isClipped(now)) return clipOn;
+            const float reduction = indicator.reductionDb(now);
+            if (reduction < FxClipIndicator::activityThresholdDb) return clipOff;
+            const float severity = jlimit(0.0f, 1.0f,
+                (reduction - FxClipIndicator::activityThresholdDb)
+                / (FxClipIndicator::strongReductionDb - FxClipIndicator::activityThresholdDb));
+            return limiterOn.interpolatedWith(clipOn, severity);
+        };
+        const float centre = bounds.getHeight() * 0.5f;
+        g.setColour(indicatorColour(left_clip_));
+        g.fillEllipse(10.0f, centre - 6.0f, 8.0f, 8.0f);
+        g.setColour(indicatorColour(right_clip_));
+        g.fillEllipse(10.0f, centre + 24.0f, 8.0f, 8.0f);
     }
 }
 
