@@ -479,6 +479,7 @@ int AudioPassthruPrivate::processTimer()
 */
 DWORD AudioPassthruPrivate::threadWorker(void)
 {
+	std::uint64_t analysis_sample_position = 0;
 	float *fp_buffer;
 	int numSampleSets;
 	WAVEFORMATEX *pwfx;
@@ -550,6 +551,11 @@ DWORD AudioPassthruPrivate::threadWorker(void)
 				//	return(NOT_OKAY);
 				p_dfx_dsp_->processAudio((short int *)fp_buffer, (short int *)fp_buffer, numSampleSets, i_check_for_duplicate_buffers);
 			}
+
+            if (s_callback_ != nullptr)
+                s_callback_->onAudioBlock(fp_buffer, numSampleSets, pwfx->nChannels,
+                                         pwfx->nSamplesPerSec, analysis_sample_position);
+            analysis_sample_position += static_cast<std::uint64_t>(numSampleSets);
 
 			/* Check if thread has been signaled to end */
 			if (i_kill_processing_thread_)

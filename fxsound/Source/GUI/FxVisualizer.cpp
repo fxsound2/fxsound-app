@@ -27,6 +27,22 @@ FxVisualizer::FxVisualizer()
 {
     band_values_.resize(FxController::NUM_SPECTRUM_BANDS);
     band_graph_.resize(FxController::NUM_SPECTRUM_BANDS * NUM_BARS);
+    analysis_button_.setClickingTogglesState(true);
+    analysis_button_.setTooltip(TRANS("HighRes: left above, right below. Switch off for the original spectrum."));
+    analysis_button_.setColour(TextButton::buttonColourId, Colour(0xff303540));
+    analysis_button_.setColour(TextButton::buttonOnColourId, Colour(0xffbc254b));
+    analysis_button_.setColour(TextButton::textColourOffId, Colour(0xffb8bcc4));
+    analysis_button_.setColour(TextButton::textColourOnId, Colours::white);
+    analysis_button_.onClick = [this]
+    {
+        FxController::getInstance().setAnalysisEnabled(analysis_button_.getToggleState());
+        reset();
+        repaint();
+    };
+    analysis_button_.setToggleState(true, NotificationType::dontSendNotification);
+    FxController::getInstance().setAnalysisEnabled(analysis_button_.getToggleState());
+    addAndMakeVisible(analysis_button_);
+    analysis_button_.setBounds(WIDTH - 94, 3, 86, 20);
 
 #if JUCE_MAJOR_VERSION >= 8
     start();
@@ -41,7 +57,8 @@ FxVisualizer::FxVisualizer()
 }
 
 void FxVisualizer::start()
-{    
+{
+    was_showing_ = false;
     calcGradient();
 
 #if JUCE_MAJOR_VERSION >= 8
@@ -52,7 +69,11 @@ void FxVisualizer::start()
             [this](double timestamp)
             {
                 if (!isShowing())
+                {
+                    was_showing_ = false;
+                    pending_bars_.reset();
                     return;
+                }
 
                 static double last_frame_time = 0.0;
                 constexpr double fps_interval = 1.0 / 30.0;
@@ -81,6 +102,7 @@ void FxVisualizer::start()
 
 void FxVisualizer::pause()
 {
+    was_showing_ = false;
     calcGradient();
 
 #if JUCE_MAJOR_VERSION >= 8
@@ -98,6 +120,10 @@ void FxVisualizer::pause()
 
 void FxVisualizer::reset()
 {
+    pending_bars_.reset();
+    displayed_bars_ = {};
+    analysis_generation_ = 0;
+    FxController::getInstance().discardAnalyzedSpectrumPeaks();
     for (int i = 0; i < FxController::NUM_SPECTRUM_BANDS * NUM_BARS; i++)
     {
         band_graph_.set(i, 0);
@@ -106,8 +132,35 @@ void FxVisualizer::reset()
 
 void FxVisualizer::update()
 {
-    if (!isEnabled())
+    if (!isEnabled() || !isShowing())
+    {
+        was_showing_ = false;
+        pending_bars_.reset();
         return;
+    }
+    if (!was_showing_)
+    {
+        pending_bars_.reset();
+        FxController::getInstance().discardAnalyzedSpectrumPeaks();
+        was_showing_ = true;
+    }
+
+    if (analysis_button_.getToggleState())
+    {
+        fxanalysis::BarSnapshot bars;
+        if (FxController::getInstance().getAnalyzedSpectrumBands(bars))
+        {
+            if (analysis_generation_ != bars.generation) pending_bars_.reset();
+            analysis_generation_ = bars.generation;
+            pending_bars_.add(bars.levels.left, bars.levels.right);
+        }
+        else
+        {
+            pending_bars_.reset();
+            displayed_bars_ = {};
+        }
+        return;
+    }
 
     FxController::getInstance().getSpectrumBandValues(band_values_);
 
@@ -137,6 +190,12 @@ void FxVisualizer::paint(Graphics& g)
 
     g.setGradientFill(gradient_);
 
+    // Keep maxima through coalesced UI updates. An exposure repaint without
+    // new data reuses the last drawn values and never consumes the audio stream.
+    if (analysis_button_.getToggleState() && pending_bars_.hasPending()
+        && g.getClipBounds().contains(juce::Rectangle<int>(27, 10, 910, 100)))
+        displayed_bars_ = pending_bars_.consume();
+
     // ------------------------------------------------------ SPECTRUM AREA - LEFT AND SIZE 
     Path barsPath;
 
@@ -145,6 +204,16 @@ void FxVisualizer::paint(Graphics& g)
 
     for (auto i = 0; i < FxController::NUM_SPECTRUM_BANDS * NUM_BARS; i++)
     {
+        if (analysis_button_.getToggleState())
+        {
+            const float centre = bounds.getHeight() * 0.5f;
+            const float leftHeight = displayed_bars_.left[i] * 50.0f;
+            const float rightHeight = displayed_bars_.right[i] * 50.0f;
+            if (leftHeight > 0.0f) barsPath.addRectangle(x, centre - leftHeight, 4.0f, leftHeight);
+            if (rightHeight > 0.0f) barsPath.addRectangle(x, centre, 4.0f, rightHeight);
+            x += dx;
+            continue;
+        }
         float band_value = band_graph_[i] == 0.0 ? 0.01 : band_graph_[i];
         float height = band_value * 100.0f;
 
@@ -153,6 +222,13 @@ void FxVisualizer::paint(Graphics& g)
     }
 
     g.fillPath(barsPath);
+    if (analysis_button_.getToggleState())
+    {
+        g.setColour(Colour(0xffb8bcc4));
+        g.setFont(11.0f);
+        g.drawText(TRANS("L"), 5, bounds.getHeight() / 2 - 23, 18, 16, Justification::centred);
+        g.drawText(TRANS("R"), 5, bounds.getHeight() / 2 + 7, 18, 16, Justification::centred);
+    }
 }
 
 void FxVisualizer::enablementChanged()
