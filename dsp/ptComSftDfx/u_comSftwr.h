@@ -51,6 +51,7 @@ struct comSftwrHdlType {
 	int comSftwrReCuePending;
 	int comSftwrBitWidth;
 	struct hardwareMeterValType ComSftwrMeterData;
+	float limiter_peak_ratio[2]; /* Audio-thread accumulation; zero-initialized by calloc. */
 	int (*comSftDspInitPtr[DSPS_MAX_NUM_PROC_FUNCTIONS]) (float *, float *, long, float *, int, float);
 	void (*comSftDspProcessPtr[DSPS_MAX_NUM_PROC_FUNCTIONS]) (long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 	long sample_count;

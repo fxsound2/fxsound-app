@@ -2983,6 +2983,8 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\..\analysis\BarPeakAccumulator.h" />
     <ClCompile Include="..\..\analysis\runtime\AnalysisStream.cpp" />
     <ClInclude Include="..\..\analysis\runtime\AnalysisStream.h" />
+    <ClInclude Include="..\..\analysis\ClipDetector.h" />
+    <ClInclude Include="..\Source\GUI\FxClipIndicator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

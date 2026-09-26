@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "../AudioAnalyzer.h"
 #include "../runtime/AnalysisStream.h"
+#include "../../fxsound/Source/GUI/FxClipIndicator.h"
+#include "../../dsp/include/LimiterActivity.h"
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -37,6 +39,186 @@ int main()
         std::cout << "{\"name\":\"" << name << "\",\"passed\":" << (passed ? "true" : "false") << '}';
         if (!passed) ++failures;
     };
+    {
+        ClipDetector detector;
+        auto events = detector.consume();
+        check("clip_initially_clear", !events.left && !events.right);
+        const float below = std::nextafter(ClipDetector::threshold, 0.0f);
+        const float quiet[] = {below, -below, 0.0f, 0.0f};
+        check("clip_below_threshold_accepted", detector.processBlock(quiet, 2, 2));
+        events = detector.consume();
+        check("clip_below_threshold_stays_clear", !events.left && !events.right);
+        const float positive[] = {ClipDetector::threshold, 0.0f};
+        detector.processBlock(positive, 1, 2);
+        events = detector.consume();
+        check("clip_positive_threshold_left_only", events.left && !events.right);
+        const float negative[] = {0.0f, -ClipDetector::threshold};
+        detector.processBlock(negative, 1, 2);
+        events = detector.consume();
+        check("clip_negative_threshold_right_only", !events.left && events.right);
+        events = detector.consume();
+        check("clip_consume_clears_once", !events.left && !events.right);
+        std::vector<float> pulse(8192, 0.0f);
+        pulse[4094] = 1.4f;
+        const auto originalPulse = pulse;
+        detector.processBlock(pulse.data(), 4096, 2);
+        for (int i = 0; i < 100; ++i) detector.processBlock(quiet, 2, 2);
+        events = detector.consume();
+        check("clip_single_sample_survives_later_quiet_blocks", events.left && !events.right);
+        check("clip_input_unchanged", pulse == originalPulse);
+        detector.processBlock(positive, 1, 2);
+        detector.processBlock(negative, 1, 2);
+        events = detector.consume();
+        check("clip_accumulates_channels_across_blocks", events.left && events.right);
+        const float mono[] = {0.0f, -1.2f, 0.0f};
+        detector.processBlock(mono, 3, 1);
+        events = detector.consume();
+        check("clip_mono_mirrored", events.left && events.right);
+        detector.processBlock(positive, 1, 2);
+        check("clip_invalid_block_status", !detector.processBlock(nullptr, 1, 2)
+            && !detector.processBlock(quiet, -1, 2) && !detector.processBlock(quiet, 1, 3)
+            && detector.processBlock(nullptr, 0, 2));
+        events = detector.consume();
+        check("clip_empty_and_invalid_blocks_preserve_pending", events.left && !events.right);
+        const float invalidSamples[] = {std::numeric_limits<float>::quiet_NaN(), std::numeric_limits<float>::infinity()};
+        detector.processBlock(invalidSamples, 1, 2);
+        events = detector.consume();
+        check("clip_nan_not_a_peak_infinity_over_threshold", !events.left && events.right);
+        detector.processBlock(positive, 1, 2);
+        detector.reset();
+        events = detector.consume();
+        check("clip_explicit_reset", !events.left && !events.right);
+
+        // Producer and consumer race on publication/consume. Each acknowledged
+        // one-sample event must arrive exactly once, on the correct channel.
+        constexpr int eventCount = 5000;
+        std::atomic<int> received{0};
+        std::atomic<bool> stop{false};
+        std::thread producer([&]
+        {
+            for (int event = 0; event < eventCount && !stop.load(); ++event)
+            {
+                detector.processBlock(event % 2 == 0 ? positive : negative, 1, 2);
+                while (received.load() <= event && !stop.load()) std::this_thread::yield();
+            }
+        });
+        bool channelsMatch = true;
+        const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(3);
+        while (received.load() < eventCount && std::chrono::steady_clock::now() < deadline)
+        {
+            events = detector.consume();
+            if (events.left || events.right)
+            {
+                const bool expectLeft = received.load() % 2 == 0;
+                channelsMatch = channelsMatch && events.left == expectLeft && events.right != expectLeft;
+                received.fetch_add(1);
+            }
+            else std::this_thread::yield();
+        }
+        stop.store(true);
+        producer.join();
+        check("clip_concurrent_consume_loses_no_single_sample_events", received.load() == eventCount && channelsMatch);
+    }
+    {
+        FxClipIndicator left, right;
+        const auto start = FxClipIndicator::Clock::time_point{} + std::chrono::seconds(1);
+        check("clip_ui_initially_off", !left.isLit(start) && !right.isLit(start));
+        left.update(true, start);
+        right.update(false, start);
+        check("clip_ui_independent_channels", left.isLit(start) && !right.isLit(start));
+        left.update(false, start + std::chrono::milliseconds(400));
+        check("clip_ui_holds_through_quiet_updates", left.isLit(start + std::chrono::milliseconds(499)));
+        check("clip_ui_expires_at_500ms", !left.isLit(start + std::chrono::milliseconds(500)));
+        left.update(true, start);
+        right.update(true, start + std::chrono::milliseconds(250));
+        left.update(true, start + std::chrono::milliseconds(400));
+        check("clip_ui_each_event_renews_own_hold", left.isLit(start + std::chrono::milliseconds(899))
+            && !left.isLit(start + std::chrono::milliseconds(900))
+            && right.isLit(start + std::chrono::milliseconds(749))
+            && !right.isLit(start + std::chrono::milliseconds(750)));
+        left.reset();
+        right.reset();
+        check("clip_ui_reset", !left.isLit(start + std::chrono::milliseconds(450))
+            && !right.isLit(start + std::chrono::milliseconds(450)));
+    }
+    {
+        fxdsp::LimiterActivity meter;
+        auto levels = meter.consume();
+        check("limiter_latch_initially_clear", levels.leftDb == 0.0f && levels.rightDb == 0.0f);
+        meter.publish(2.0f, 1.0f);
+        for (int i = 0; i < 100; ++i) meter.publish(0.0f, 0.0f);
+        levels = meter.consume();
+        check("limiter_latch_survives_quiet_blocks", std::abs(levels.leftDb - 6.0206f) < 0.0001f && levels.rightDb == 0.0f);
+        levels = meter.consume();
+        check("limiter_latch_consumed_once", levels.leftDb == 0.0f && levels.rightDb == 0.0f);
+        meter.publish(4.0f, 2.0f);
+        meter.publish(2.0f, 4.0f);
+        levels = meter.consume();
+        check("limiter_latch_retains_maximum_per_channel", std::abs(levels.leftDb - 12.0412f) < 0.0001f
+            && levels.leftDb == levels.rightDb);
+        meter.publish(-1.0f, std::numeric_limits<float>::quiet_NaN());
+        meter.publish(1.0f, std::numeric_limits<float>::infinity());
+        levels = meter.consume();
+        check("limiter_latch_invalid_ratios_ignored", levels.leftDb == 0.0f && levels.rightDb == 0.0f);
+
+        std::atomic<int> acknowledged{0};
+        constexpr int events = 5000;
+        const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(3);
+        std::thread producer([&]
+        {
+            for (int i = 0; i < events; ++i)
+            {
+                while (acknowledged.load() != i && std::chrono::steady_clock::now() < deadline)
+                    std::this_thread::yield();
+                if (std::chrono::steady_clock::now() >= deadline) return;
+                meter.publish(2.0f, 0.0f);
+            }
+        });
+        bool valid = true;
+        while (acknowledged.load() < events && std::chrono::steady_clock::now() < deadline)
+        {
+            levels = meter.consume();
+            if (levels.leftDb > 0.0f)
+            {
+                valid &= std::abs(levels.leftDb - 6.0206f) < 0.0001f && levels.rightDb == 0.0f;
+                acknowledged.fetch_add(1);
+            }
+            std::this_thread::yield();
+        }
+        producer.join();
+        check("limiter_latch_concurrent_handoff", valid && acknowledged.load() == events);
+    }
+    {
+        FxClipIndicator left, right;
+        const auto start = FxClipIndicator::Clock::time_point{} + std::chrono::seconds(1);
+        const auto ms = [](int value) { return std::chrono::milliseconds(value); };
+        left.updateLimiter(0.49f, start);
+        check("limiter_ui_below_threshold_dark", !left.isLit(start));
+        left.updateLimiter(0.5f, start);
+        check("limiter_ui_threshold_visible", left.isLit(start) && !left.isClipped(start)
+            && left.reductionDb(start) == 0.5f);
+        check("limiter_ui_independent_channels", !right.isLit(start));
+        left.updateLimiter(0.0f, start + ms(400));
+        check("limiter_ui_holds_single_event", left.isLit(start + ms(499)));
+        check("limiter_ui_expires_500ms", !left.isLit(start + ms(500)));
+        left.updateLimiter(8.0f, start + ms(500));
+        left.updateLimiter(2.0f, start + ms(900));
+        check("limiter_ui_weaker_event_preserves_peak", left.reductionDb(start + ms(999)) == 8.0f);
+        check("limiter_ui_weaker_event_does_not_extend_peak", left.reductionDb(start + ms(1000)) == 2.0f);
+        check("limiter_ui_weaker_event_has_own_hold", left.reductionDb(start + ms(1399)) == 2.0f
+            && !left.isLit(start + ms(1400)));
+        left.updateLimiter(2.0f, start + ms(1000));
+        check("limiter_ui_recovers_to_lower_activity", left.reductionDb(start + ms(1000)) == 2.0f);
+        left.updateLimiter(6.0f, start + ms(1100));
+        check("limiter_ui_stronger_event_renews_hold", left.reductionDb(start + ms(1599)) == 6.0f);
+        left.update(true, start + ms(1400));
+        check("limiter_ui_clip_separate_from_reduction", left.isClipped(start + ms(1800))
+            && left.reductionDb(start + ms(1800)) == 0.0f);
+        left.updateLimiter(std::numeric_limits<float>::infinity(), start + ms(1800));
+        check("limiter_ui_nonfinite_ignored", left.reductionDb(start + ms(1800)) == 0.0f);
+        left.reset();
+        check("limiter_ui_reset_clears_both_holds", !left.isLit(start + ms(1800)));
+    }
     AudioAnalyzer analyzer;
     Frames output;
     check("unprepared_status", analyzer.processBlock(nullptr, 0, 0, output) == AnalysisResult::notPrepared);
@@ -552,13 +734,41 @@ int main()
         stream.invalidate();
         check("invalidate_hides_old_frames", !stream.latest(frame));
         block.back() = -1.2f; // The last sample is dropped whenever push cannot accept the full block.
+        bool droppedPeakDetected = false;
         for (int i = 0; i < 256; ++i)
         {
-            stream.push(block.data(), 8192, 2, 48000, static_cast<std::uint64_t>(i) * 8192);
+            const bool accepted = stream.push(block.data(), 8192, 2, 48000, static_cast<std::uint64_t>(i) * 8192);
+            const auto clips = stream.consumeClipEvents();
+            if (!accepted && clips.right && !clips.left) droppedPeakDetected = true;
         }
         check("overflow_is_bounded_and_counted", stream.droppedFrames() > 0);
+        check("clip_detected_even_when_its_fft_input_is_dropped", droppedPeakDetected);
         stream.setEnabled(false);
         check("disable_hides_frames", !stream.latest(frame));
+    }
+    {
+        AnalysisStream stream;
+        const float pulse[] = {1.1f, 0.0f};
+        SpectrumFrame frame;
+        stream.push(pulse, 1, 2, 48000, 0);
+        auto clips = stream.consumeClipEvents();
+        check("clip_monitor_disabled_initially", !clips.left && !clips.right);
+        stream.setEnabled(true);
+        const bool accepted = stream.push(pulse, 1, 2, 48000, 0);
+        clips = stream.consumeClipEvents();
+        check("clip_available_before_first_fft_window", accepted && clips.left && !clips.right && !stream.latest(frame));
+        stream.push(pulse, 1, 2, 48000, 1);
+        stream.invalidate();
+        clips = stream.consumeClipEvents();
+        check("clip_pending_independent_of_spectrum_invalidation", clips.left && !clips.right);
+        stream.push(pulse, 1, 2, 48000, 2);
+        stream.setEnabled(false);
+        stream.push(pulse, 1, 2, 48000, 3);
+        clips = stream.consumeClipEvents();
+        check("clip_disable_clears_and_stops_monitor", !clips.left && !clips.right);
+        stream.setEnabled(true);
+        clips = stream.consumeClipEvents();
+        check("clip_reenable_starts_clear", !clips.left && !clips.right);
     }
     {
         AnalysisStream stream;

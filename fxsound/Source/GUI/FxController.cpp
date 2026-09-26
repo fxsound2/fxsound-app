@@ -2912,6 +2912,16 @@ void FxController::onAudioBlock(const float* pcm, int frames, int channels, int 
     analysis_stream_.push(pcm, frames, channels, sample_rate, first_sample);
 }
 
+fxanalysis::ClipEvents FxController::consumeOutputClipEvents() noexcept
+{
+    return analysis_stream_.consumeClipEvents();
+}
+
+fxdsp::LimiterLevels FxController::consumeLimiterActivity() noexcept
+{
+    return dfx_dsp_.consumeLimiterActivity();
+}
+
 void FxController::setAnalysisEnabled(bool enabled)
 {
     analysis_stream_.setEnabled(enabled);

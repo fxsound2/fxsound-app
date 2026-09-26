@@ -200,3 +200,7 @@ void DfxDsp::getSpectrumBandValues(float* rp_band_values, int i_array_size)
     data_->getSpectrumBandValues(rp_band_values, i_array_size);
 }
 
+fxdsp::LimiterLevels DfxDsp::consumeLimiterActivity() noexcept
+{
+    return data_->limiter_activity_.consume();
+}

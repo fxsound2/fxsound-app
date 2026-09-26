@@ -112,6 +112,8 @@ int PT_DECLSPEC comEepromUnsignedLongRead(PT_HANDLE *, short unsigned, unsigned 
 int PT_DECLSPEC comEepromUnsignedLongWrite(PT_HANDLE *, short unsigned, unsigned long);
 
 /* comWave.cpp */
+/* Audio thread only; returns zero ratios when no limiting was observed. */
+int PT_DECLSPEC comTakeLimiterActivity(PT_HANDLE *, float *, float *);
 int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *, long *, realtype *, long, int, int, int, int);
 int PT_DECLSPEC comProcessBuffer(PT_HANDLE *hp_com, long *lp_data, long l_length, 
                          int i_stereo_in_mode, int i_stereo_out_mode,

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #pragma once
 #include "../BarPeakAccumulator.h"
+#include "../ClipDetector.h"
 #include <atomic>
 #include <chrono>
 #include <memory>
@@ -34,6 +35,7 @@ public:
     bool latest(SpectrumFrame& frame); // Non-destructive, instantaneous scientific data.
     bool consumeBars(BarSnapshot& bars); // One display consumer; peaks since its last read.
     void discardBarPeaks(); // Non-audio thread, when a display hides/resumes.
+    ClipEvents consumeClipEvents() noexcept { return clipDetector_.consume(); }
     std::uint64_t droppedFrames() const noexcept { return dropped_.load(); }
     AnalysisResult lastResult() const noexcept { return result_.load(); }
     std::string failureMessage(); // Non-audio thread only; empty unless the worker stopped.
@@ -53,6 +55,9 @@ private:
     std::unique_ptr<Block[]> queue_;
     std::atomic<unsigned> read_{0}, write_{0};
     std::atomic<bool> enabled_{false}, stopping_{false};
+    // Raw peak monitoring follows the requested mode even if the FFT worker fails.
+    std::atomic<bool> monitoringEnabled_{false};
+    ClipDetector clipDetector_;
     std::atomic<bool> failed_{false};
     std::array<char, 256> failure_{};
     std::atomic<std::uint64_t> revision_{1}, dropped_{0};

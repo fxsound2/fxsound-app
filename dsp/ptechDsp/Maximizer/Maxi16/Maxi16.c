@@ -602,6 +602,13 @@ DSP_FUNC_DEF void DSPS_MAXI_PROCESS(long *lp_data, int l_length,
 	 */
 	write_meter_average();
 
+	/* Observe the existing peak envelopes; never feed telemetry back into audio. */
+	sp_meters->aux_vals[DFX_LIMITER_RATIO_LEFT] =
+		(s->max_output > 0.0f && peak_in1 > s->max_output) ? peak_in1 / s->max_output : 0.0f;
+	sp_meters->aux_vals[DFX_LIMITER_RATIO_RIGHT] = s->stereo_in_flag
+		? ((s->max_output > 0.0f && peak_in2 > s->max_output) ? peak_in2 / s->max_output : 0.0f)
+		: sp_meters->aux_vals[DFX_LIMITER_RATIO_LEFT];
+
 #if defined(DSPSOFT_TARGET) & (PT_DSP_BUILD == PT_DSP_DSPFX)
 	/* Write extra graphic data. Take gain boost off of maximum input peak */
 	sp_meters->aux_vals[0] = (realtype)20.0 * log10(peak_in1/(s->gain_boost * s->max_output));

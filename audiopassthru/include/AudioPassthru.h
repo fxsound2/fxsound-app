@@ -58,7 +58,7 @@ class AudioPassthruCallback
 public:
 	virtual void onSoundDeviceChange(bool processing) = 0;
     // Borrowed post-effects PCM; valid only for this call on the audio thread.
-    // Implementations may only perform a bounded, non-blocking copy.
+    // Implementations may only perform bounded, non-blocking observation/copy.
     virtual void onAudioBlock(const float*, int, int, int, std::uint64_t) noexcept {}
 };
 

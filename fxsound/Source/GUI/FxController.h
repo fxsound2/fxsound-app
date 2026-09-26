@@ -128,6 +128,8 @@ public:
     void setAnalysisEnabled(bool enabled);
     bool getAnalyzedSpectrumBands(fxanalysis::BarSnapshot& bars);
     void discardAnalyzedSpectrumPeaks();
+    fxanalysis::ClipEvents consumeOutputClipEvents() noexcept;
+    fxdsp::LimiterLevels consumeLimiterActivity() noexcept;
 
 	void enableHotkeys(bool enable);
 	bool getHotkey(String cmdKey, int& mod, int& vk);

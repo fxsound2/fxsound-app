@@ -112,6 +112,7 @@ public:
 	unsigned long getTotalAudioProcessedTime();
 	void resetTotalAudioProcessedTime();
     void getSpectrumBandValues(float* rp_band_values, int i_array_size);
+    fxdsp::LimiterActivity limiter_activity_;
 
 	bool being_destroyed_ = false;
 private:
@@ -147,6 +148,7 @@ private:
 	struct dfxg_section_type bass_boost_;
 
 	bool update_from_registry_ = true;
+	bool limiter_meter_error_reported_ = false;
 	int headphone_on_;
 	int music_mode_;     /* DFXP_MUSIC_MODE_MUSIC1, DFXP_MUSIC_MODE_MUSIC2, DFXP_MUSIC_MODE_SPEECH */
 

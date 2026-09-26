@@ -431,6 +431,9 @@ DSP_FUNC_DEF void DSPS_PLAY_PROCESS(long *lp_data, int l_length,
 	float *COMM_MEM_OFFSET = fp_params;
 	struct dspPlayStructType *s = (struct dspPlayStructType *)fp_params;
 
+	sp_meters->aux_vals[DFX_LIMITER_RATIO_LEFT] = 0.0f;
+	sp_meters->aux_vals[DFX_LIMITER_RATIO_RIGHT] = 0.0f;
+
 	#ifdef DSP_READ_VALS
 	/* PTHACK for prototyping */
 	ReadProtoVals(8, &ReadVals);
@@ -873,6 +876,8 @@ DSP_FUNC_DEF void DSPS_PLAY_PROCESS(long *lp_data, int l_length,
 		#else
 		dspsMaximizerProcess(lp_data, l_length, params, memory, state, &dummy_meters, DSP_data_type);
 		#endif
+		sp_meters->aux_vals[DFX_LIMITER_RATIO_LEFT] = dummy_meters.aux_vals[DFX_LIMITER_RATIO_LEFT];
+		sp_meters->aux_vals[DFX_LIMITER_RATIO_RIGHT] = dummy_meters.aux_vals[DFX_LIMITER_RATIO_RIGHT];
 		/* */
 	}
 }

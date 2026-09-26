@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include <JuceHeader.h>
+#include "FxClipIndicator.h"
 #include "../../../analysis/BarPeakAccumulator.h"
 
 //==============================================================================
@@ -65,6 +66,7 @@ private:
     bool was_showing_ = false;
     ColourGradient gradient_;
     TextButton analysis_button_{ "HighRes" };
+    FxClipIndicator left_clip_, right_clip_;
 
 #if JUCE_MAJOR_VERSION >=8
     std::unique_ptr<juce::VBlankAttachment> vblank_listener_;
