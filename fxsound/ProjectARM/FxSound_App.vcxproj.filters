@@ -5284,4 +5284,15 @@
       <Filter>JUCE Library Code</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\analysis\AudioAnalyzer.cpp" />
+    <ClInclude Include="..\..\analysis\AudioAnalyzer.h" />
+    <ClInclude Include="..\..\analysis\BarDynamics.h" />
+    <ClInclude Include="..\..\analysis\FrequencyScale.h" />
+    <ClInclude Include="..\..\analysis\BarPeakAccumulator.h" />
+    <ClCompile Include="..\..\analysis\runtime\AnalysisStream.cpp" />
+    <ClInclude Include="..\..\analysis\runtime\AnalysisStream.h" />
+    <ClInclude Include="..\..\analysis\ClipDetector.h" />
+    <ClInclude Include="..\Source\GUI\FxClipIndicator.h" />
+  </ItemGroup>
 </Project>

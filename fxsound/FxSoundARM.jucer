@@ -6,6 +6,17 @@
               defines="UNICODE" postExportShellCommandWin="type %%1%%\ProjectARM\status_icons.rc &gt;&gt; %%1%%\ProjectARM\resources.rc"
               cppLanguageStandard="17">
   <MAINGROUP id="fy4sG5" name="FxSound">
+    <GROUP id="AnaGrp" name="Audio analysis">
+      <FILE id="69c82a" name="AudioAnalyzer.cpp" compile="1" resource="0" file="../analysis/AudioAnalyzer.cpp"/>
+      <FILE id="2342ee" name="AudioAnalyzer.h" compile="0" resource="0" file="../analysis/AudioAnalyzer.h"/>
+      <FILE id="f16003" name="BarDynamics.h" compile="0" resource="0" file="../analysis/BarDynamics.h"/>
+      <FILE id="2cfcf8" name="FrequencyScale.h" compile="0" resource="0" file="../analysis/FrequencyScale.h"/>
+      <FILE id="82f6c1" name="BarPeakAccumulator.h" compile="0" resource="0" file="../analysis/BarPeakAccumulator.h"/>
+      <FILE id="a45d0d" name="AnalysisStream.cpp" compile="1" resource="0" file="../analysis/runtime/AnalysisStream.cpp"/>
+      <FILE id="4f0a6d" name="AnalysisStream.h" compile="0" resource="0" file="../analysis/runtime/AnalysisStream.h"/>
+      <FILE id="47d068" name="ClipDetector.h" compile="0" resource="0" file="../analysis/ClipDetector.h"/>
+      <FILE id="MtrUI1" name="FxClipIndicator.h" compile="0" resource="0" file="Source/GUI/FxClipIndicator.h"/>
+    </GROUP>
     <GROUP id="{9737D476-EEC4-7E5E-0B04-48E2783CC448}" name="Fonts">
       <FILE id="Z6Zv1m" name="Gilroy-Bold.ttf" compile="0" resource="1" file="Fonts/Gilroy-Bold.ttf"/>
       <FILE id="pxR00h" name="Gilroy-Regular.ttf" compile="0" resource="1"

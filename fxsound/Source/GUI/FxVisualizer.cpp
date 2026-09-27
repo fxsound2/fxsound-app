@@ -27,6 +27,22 @@ FxVisualizer::FxVisualizer()
 {
     band_values_.resize(FxController::NUM_SPECTRUM_BANDS);
     band_graph_.resize(FxController::NUM_SPECTRUM_BANDS * NUM_BARS);
+    analysis_button_.setClickingTogglesState(true);
+    analysis_button_.setTooltip(TRANS("HighRes: left above, right below. Switch off for the original spectrum."));
+    analysis_button_.setColour(TextButton::buttonColourId, Colour(0xff303540));
+    analysis_button_.setColour(TextButton::buttonOnColourId, Colour(0xffbc254b));
+    analysis_button_.setColour(TextButton::textColourOffId, Colour(0xffb8bcc4));
+    analysis_button_.setColour(TextButton::textColourOnId, Colours::white);
+    analysis_button_.onClick = [this]
+    {
+        FxController::getInstance().setAnalysisEnabled(analysis_button_.getToggleState());
+        reset();
+        repaint();
+    };
+    analysis_button_.setToggleState(true, NotificationType::dontSendNotification);
+    FxController::getInstance().setAnalysisEnabled(analysis_button_.getToggleState());
+    addAndMakeVisible(analysis_button_);
+    analysis_button_.setBounds(WIDTH - 94, 3, 86, 20);
 
 #if JUCE_MAJOR_VERSION >= 8
     start();
@@ -41,7 +57,8 @@ FxVisualizer::FxVisualizer()
 }
 
 void FxVisualizer::start()
-{    
+{
+    was_showing_ = false;
     calcGradient();
 
 #if JUCE_MAJOR_VERSION >= 8
@@ -52,7 +69,11 @@ void FxVisualizer::start()
             [this](double timestamp)
             {
                 if (!isShowing())
+                {
+                    was_showing_ = false;
+                    pending_bars_.reset();
                     return;
+                }
 
                 static double last_frame_time = 0.0;
                 constexpr double fps_interval = 1.0 / 30.0;
@@ -81,6 +102,7 @@ void FxVisualizer::start()
 
 void FxVisualizer::pause()
 {
+    was_showing_ = false;
     calcGradient();
 
 #if JUCE_MAJOR_VERSION >= 8
@@ -98,6 +120,14 @@ void FxVisualizer::pause()
 
 void FxVisualizer::reset()
 {
+    pending_bars_.reset();
+    displayed_bars_ = {};
+    analysis_generation_ = 0;
+    FxController::getInstance().discardAnalyzedSpectrumPeaks();
+    left_clip_.reset();
+    right_clip_.reset();
+    FxController::getInstance().consumeOutputClipEvents();
+    FxController::getInstance().consumeLimiterActivity();
     for (int i = 0; i < FxController::NUM_SPECTRUM_BANDS * NUM_BARS; i++)
     {
         band_graph_.set(i, 0);
@@ -106,8 +136,47 @@ void FxVisualizer::reset()
 
 void FxVisualizer::update()
 {
-    if (!isEnabled())
+    if (!isEnabled() || !isShowing())
+    {
+        was_showing_ = false;
+        pending_bars_.reset();
         return;
+    }
+    if (!was_showing_)
+    {
+        pending_bars_.reset();
+        FxController::getInstance().discardAnalyzedSpectrumPeaks();
+        was_showing_ = true;
+    }
+
+    if (analysis_button_.getToggleState())
+    {
+        const auto clips = FxController::getInstance().consumeOutputClipEvents();
+        const auto limiting = FxController::getInstance().consumeLimiterActivity();
+        const auto now = FxClipIndicator::Clock::now();
+        left_clip_.update(clips.left, now);
+        right_clip_.update(clips.right, now);
+        left_clip_.updateLimiter(limiting.leftDb, now);
+        right_clip_.updateLimiter(limiting.rightDb, now);
+        analysis_button_.setTooltip(TRANS("Limiter gain reduction: L") + " " + String(left_clip_.reductionDb(now), 1)
+            + " dB / " + TRANS("R") + " " + String(right_clip_.reductionDb(now), 1)
+            + " dB. " + TRANS("Amber from 0.5 dB, red at 6 dB. Held for 500 ms.")
+            + " " + (left_clip_.isClipped(now) || right_clip_.isClipped(now)
+                ? TRANS("Output sample peak near full scale detected.") : TRANS("No output sample peak near full scale.")));
+        fxanalysis::BarSnapshot bars;
+        if (FxController::getInstance().getAnalyzedSpectrumBands(bars))
+        {
+            if (analysis_generation_ != bars.generation) pending_bars_.reset();
+            analysis_generation_ = bars.generation;
+            pending_bars_.add(bars.levels.left, bars.levels.right);
+        }
+        else
+        {
+            pending_bars_.reset();
+            displayed_bars_ = {};
+        }
+        return;
+    }
 
     FxController::getInstance().getSpectrumBandValues(band_values_);
 
@@ -137,6 +206,12 @@ void FxVisualizer::paint(Graphics& g)
 
     g.setGradientFill(gradient_);
 
+    // Keep maxima through coalesced UI updates. An exposure repaint without
+    // new data reuses the last drawn values and never consumes the audio stream.
+    if (analysis_button_.getToggleState() && pending_bars_.hasPending()
+        && g.getClipBounds().contains(juce::Rectangle<int>(27, 10, 910, 100)))
+        displayed_bars_ = pending_bars_.consume();
+
     // ------------------------------------------------------ SPECTRUM AREA - LEFT AND SIZE 
     Path barsPath;
 
@@ -145,6 +220,16 @@ void FxVisualizer::paint(Graphics& g)
 
     for (auto i = 0; i < FxController::NUM_SPECTRUM_BANDS * NUM_BARS; i++)
     {
+        if (analysis_button_.getToggleState())
+        {
+            const float centre = bounds.getHeight() * 0.5f;
+            const float leftHeight = displayed_bars_.left[i] * 50.0f;
+            const float rightHeight = displayed_bars_.right[i] * 50.0f;
+            if (leftHeight > 0.0f) barsPath.addRectangle(x, centre - leftHeight, 4.0f, leftHeight);
+            if (rightHeight > 0.0f) barsPath.addRectangle(x, centre, 4.0f, rightHeight);
+            x += dx;
+            continue;
+        }
         float band_value = band_graph_[i] == 0.0 ? 0.01 : band_graph_[i];
         float height = band_value * 100.0f;
 
@@ -153,6 +238,31 @@ void FxVisualizer::paint(Graphics& g)
     }
 
     g.fillPath(barsPath);
+    if (analysis_button_.getToggleState())
+    {
+        g.setColour(Colour(0xffb8bcc4));
+        g.setFont(11.0f);
+        g.drawText(TRANS("L"), 5, bounds.getHeight() / 2 - 23, 18, 16, Justification::centred);
+        g.drawText(TRANS("R"), 5, bounds.getHeight() / 2 + 7, 18, 16, Justification::centred);
+        const auto now = FxClipIndicator::Clock::now();
+        const Colour clipOn(0xffff3045), clipOff(0xff482530);
+        const Colour limiterOn(0xffffb020);
+        const auto indicatorColour = [&](const FxClipIndicator& indicator)
+        {
+            if (indicator.isClipped(now)) return clipOn;
+            const float reduction = indicator.reductionDb(now);
+            if (reduction < FxClipIndicator::activityThresholdDb) return clipOff;
+            const float severity = jlimit(0.0f, 1.0f,
+                (reduction - FxClipIndicator::activityThresholdDb)
+                / (FxClipIndicator::strongReductionDb - FxClipIndicator::activityThresholdDb));
+            return limiterOn.interpolatedWith(clipOn, severity);
+        };
+        const float centre = bounds.getHeight() * 0.5f;
+        g.setColour(indicatorColour(left_clip_));
+        g.fillEllipse(10.0f, centre - 6.0f, 8.0f, 8.0f);
+        g.setColour(indicatorColour(right_clip_));
+        g.fillEllipse(10.0f, centre + 24.0f, 8.0f, 8.0f);
+    }
 }
 
 void FxVisualizer::enablementChanged()

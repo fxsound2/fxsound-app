@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _DFX_DSP_H_
 
 #include <string>
+#include "LimiterActivity.h"
 
 struct DfxPreset {
 	std::wstring full_path;
@@ -71,6 +72,7 @@ public:
 	unsigned long getTotalAudioProcessedTime();
 	void resetTotalAudioProcessedTime();
     void getSpectrumBandValues(float* rp_band_values, int i_array_size);
+    fxdsp::LimiterLevels consumeLimiterActivity() noexcept;
 
 private:
 	DfxDspPrivate *data_;

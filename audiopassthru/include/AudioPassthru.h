@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif //WIN32
 #include <Mmdeviceapi.h>
 #include <vector> 
+#include <cstdint>
 #include "DfxDsp.h"
 
 struct SoundDevice {
@@ -56,6 +57,9 @@ class AudioPassthruCallback
 {
 public:
 	virtual void onSoundDeviceChange(bool processing) = 0;
+    // Borrowed post-effects PCM; valid only for this call on the audio thread.
+    // Implementations may only perform bounded, non-blocking observation/copy.
+    virtual void onAudioBlock(const float*, int, int, int, std::uint64_t) noexcept {}
 };
 
 class AudioPassthruPrivate;

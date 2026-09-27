@@ -2118,6 +2118,7 @@ void FxController::timerCallback()
 
 void FxController::onSoundDeviceChange(bool processing)
 {
+    if (!processing) analysis_stream_.invalidate();
 	if (session_id_ != WTSGetActiveConsoleSessionId())
 		return; // Ignore device changes on another user session
 
@@ -2902,6 +2903,46 @@ void FxController::getSpectrumBandValues(Array<float>& band_values)
 			band_values.set(i, 0.01);
 		}
 	}
+}
+
+void FxController::onAudioBlock(const float* pcm, int frames, int channels, int sample_rate,
+                               std::uint64_t first_sample) noexcept
+{
+    // AudioPassthru supplies post-DSP PCM. Raw output peaks are detected before the FFT queue.
+    analysis_stream_.push(pcm, frames, channels, sample_rate, first_sample);
+}
+
+fxanalysis::ClipEvents FxController::consumeOutputClipEvents() noexcept
+{
+    return analysis_stream_.consumeClipEvents();
+}
+
+fxdsp::LimiterLevels FxController::consumeLimiterActivity() noexcept
+{
+    return dfx_dsp_.consumeLimiterActivity();
+}
+
+void FxController::setAnalysisEnabled(bool enabled)
+{
+    analysis_stream_.setEnabled(enabled);
+}
+
+void FxController::discardAnalyzedSpectrumPeaks()
+{
+    analysis_stream_.discardBarPeaks();
+}
+
+bool FxController::getAnalyzedSpectrumBands(fxanalysis::BarSnapshot& bars)
+{
+    const auto result = analysis_stream_.lastResult();
+    if (result != analysis_reported_result_)
+    {
+        analysis_reported_result_ = result;
+        if (result != fxanalysis::AnalysisResult::ok)
+            logMessage(String("Audio analysis: ") + fxanalysis::describe(result) + " "
+                       + String(analysis_stream_.failureMessage()));
+    }
+    return analysis_stream_.consumeBars(bars) && audio_process_on_;
 }
 
 String FxController::FormatString(const String& format, const String& arg)

@@ -39,6 +39,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TWO_PI 6.283185307
 
 
+/* DFX Play/Maximizer telemetry: peak envelope / ceiling; zero means no limiting.
+ * Uses spare auxiliary slots without changing the meter structure layout. */
+#define DFX_LIMITER_RATIO_LEFT 4
+#define DFX_LIMITER_RATIO_RIGHT 5
+
 /* Definition of meter info structure */
 struct hardwareMeterValType
 {

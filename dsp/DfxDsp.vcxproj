@@ -227,6 +227,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\DfxDsp.h" />
+    <ClInclude Include="include\LimiterActivity.h" />
     <ClInclude Include="ptComSftDfx\u_comSftwr.h" />
     <ClInclude Include="ptutil\COM\u_com.h" />
     <ClInclude Include="ptutil\dfxp\u_dfxp.h" />

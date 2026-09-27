@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include <JuceHeader.h>
+#include "FxClipIndicator.h"
+#include "../../../analysis/BarPeakAccumulator.h"
 
 //==============================================================================
 /*
@@ -58,7 +60,13 @@ private:
 
     Array<float> band_values_;
     Array<float> band_graph_;
+    fxanalysis::BarPeakAccumulator pending_bars_;
+    fxanalysis::StereoBarLevels displayed_bars_;
+    std::uint64_t analysis_generation_ = 0;
+    bool was_showing_ = false;
     ColourGradient gradient_;
+    TextButton analysis_button_{ "HighRes" };
+    FxClipIndicator left_clip_, right_clip_;
 
 #if JUCE_MAJOR_VERSION >=8
     std::unique_ptr<juce::VBlankAttachment> vblank_listener_;
