@@ -732,6 +732,7 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 			FxDeviceErrorMessage error_message;
 			error_message.runModalLoop();
 			JUCEApplication::getInstance()->systemRequestedQuit();
+					FxController::getInstance().refreshOutputList();
 			return;
 		}
 
