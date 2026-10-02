@@ -264,11 +264,11 @@ void FxSystemTrayView::showContextMenu()
         FxController::getInstance().refreshOutputList();
     };
 
-    auto darkModeClicked = [this]() {
+    auto darkModeClicked = []() {
         FxController::getInstance().setThemeMode(FxThemeMode::Dark);
         };
 
-    auto lightModeClicked = [this]() {
+    auto lightModeClicked = []() {
         FxController::getInstance().setThemeMode(FxThemeMode::Light);
         };
 
@@ -326,7 +326,13 @@ void FxSystemTrayView::showContextMenu()
     SetFocus(hWnd);
     SetForegroundWindow(hWnd);
 
-    context_menu.show();
+    // Shown asynchronously rather than with show(), which would run a nested modal
+    // loop inside this window proc. The item actions - Exit in particular, which
+    // quits the app - then run after the menu window has been dismissed and
+    // destroyed, instead of while it is still up.
+    context_menu.showMenuAsync(PopupMenu::Options()
+                                   .withMousePosition()
+                                   .withDeletionCheck(*this));
 }
 
 void FxSystemTrayView::addOutputDeviceMenu(PopupMenu* context_menu)
