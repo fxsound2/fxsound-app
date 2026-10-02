@@ -126,3 +126,11 @@ void FxPresetNameEditor::lookAndFeelChanged()
 {
 	repaint();
 }
+
+void FxPresetNameEditor::visibilityChanged()
+{
+    if (isVisible())
+    {
+        preset_editor_.grabKeyboardFocus();
+    }
+}

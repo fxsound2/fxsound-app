@@ -125,8 +125,6 @@ private:
 
 		g.setColour(outline_colour);
 		g.drawRect(bounds.toFloat().reduced(0.5f, 0.5f), 2.0f);
-
-		preset_editor_.grabKeyboardFocus();
 	}
 
 	void textEditorTextChanged(TextEditor& textEditor) override
@@ -449,9 +447,11 @@ void FxMainWindow::showMenu()
 {
 	auto settingsClicked = [this]() {
 
-		FxSettingsDialog settings_dialog;
-		settings_dialog.runModalLoop();
-		FxController::getInstance().refreshOutputList();
+		auto* settings_dialog = new FxSettingsDialog();
+		settings_dialog->enterModalState(true, ModalCallbackFunction::create([](int)
+		{
+			FxController::getInstance().refreshOutputList();
+		}), true);
 	};
 
 	auto overwriteClicked = [this]() {
@@ -467,13 +467,13 @@ void FxMainWindow::showMenu()
 	};
 
 	auto exportClicked = [this]() {
-		FxPresetExportDialog preset_export_dialog;
-		preset_export_dialog.runModalLoop();
+		auto*  preset_export_dialog = new FxPresetExportDialog();
+		preset_export_dialog->enterModalState(true, nullptr, true);
 	};
 
 	auto importClicked = [this]() {
-		FxPresetImportDialog preset_import_dialog;
-		preset_import_dialog.runModalLoop();
+		auto* preset_import_dialog = new FxPresetImportDialog();
+		preset_import_dialog->enterModalState(true, nullptr, true);
 	};
 
 	auto downloadClicked = []() {
@@ -551,7 +551,7 @@ void FxMainWindow::showMenu()
 	popup_menu.addSeparator();
 	popup_menu.addItem(TRANS("Donate"), donateClicked);
 
-	popup_menu.showAt(&menu_button_);
+	popup_menu.showMenuAsync (PopupMenu::Options().withTargetComponent (&menu_button_));
 }
 
 void FxMainWindow::buttonClicked(Button* button)

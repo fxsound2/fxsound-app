@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include <JuceHeader.h>
+#include <functional>
 #include "FxModel.h"
 #include "FxTheme.h"
 #include "FxAudioControls.h"
@@ -100,7 +101,7 @@ public:
 	void deletePreset();
 	void undoPreset();
 	void resetPresets();
-    bool exportPresets(const Array< FxModel::Preset>& presets);
+    void exportPresets(const Array< FxModel::Preset>& presets, std::function<void (bool)> onComplete);
     bool importPresets(const Array<File>& preset_files, StringArray& imported_presets, StringArray& skipped_presets);
 
 	float getEffectValue(FxEffects::EffectType effect);

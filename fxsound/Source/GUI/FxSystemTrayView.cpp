@@ -42,6 +42,8 @@ FxSystemTrayView::FxSystemTrayView()
     taskbar_created_message_ = RegisterWindowMessage(TEXT("TaskbarCreated"));
 
     addIcon();
+
+    setAccessible(false);
 }
 
 FxSystemTrayView::~FxSystemTrayView()
@@ -259,9 +261,11 @@ void FxSystemTrayView::showContextMenu()
     };
 
     auto settingsClicked = []() {
-        FxSettingsDialog settings_dialog;
-        settings_dialog.runModalLoop();
-        FxController::getInstance().refreshOutputList();
+        auto* settings_dialog = new FxSettingsDialog();
+        settings_dialog->enterModalState(true, ModalCallbackFunction::create([](int)
+            {
+                FxController::getInstance().refreshOutputList();
+            }), true);
     };
 
     auto darkModeClicked = []() {
@@ -326,13 +330,10 @@ void FxSystemTrayView::showContextMenu()
     SetFocus(hWnd);
     SetForegroundWindow(hWnd);
 
-    // Shown asynchronously rather than with show(), which would run a nested modal
-    // loop inside this window proc. The item actions - Exit in particular, which
-    // quits the app - then run after the menu window has been dismissed and
-    // destroyed, instead of while it is still up.
     context_menu.showMenuAsync(PopupMenu::Options()
-                                   .withMousePosition()
-                                   .withDeletionCheck(*this));
+        .withTargetComponent(this)
+        .withMousePosition()
+        .withDeletionCheck(*this));
 }
 
 void FxSystemTrayView::addOutputDeviceMenu(PopupMenu* context_menu)

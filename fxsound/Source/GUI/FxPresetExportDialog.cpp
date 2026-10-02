@@ -171,10 +171,30 @@ void FxPresetExportDialog::PresetExportComponent::buttonClicked(Button* button)
 {
     if (button == &export_button_)
     {
-        bool show_explorer = false;
         export_button_.setEnabled(false);
 
         auto selected_presets = preset_list_.getSelectedRows();
+
+        auto finish = [this] (bool show_explorer)
+        {
+            auto* parent = Component::getParentComponent();
+            auto closeDialog = [parent] (bool)
+            {
+                parent->exitModalState(0);
+                parent->removeFromDesktop();
+            };
+
+            if (show_explorer)
+            {
+                FxConfirmationMessage::showMessage(TRANS("Presets are exported successfully!"), FxConfirmationMessage::Style::OK, closeDialog);
+                File(File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory).getFullPathName()) + L"FxSound\\Presets\\Export\\").revealToUser();
+            }
+            else
+            {
+                closeDialog(false);
+            }
+        };
+
         if (selected_presets.size() > 0)
         {
             preset_export_progress_.setVisible(true);
@@ -187,16 +207,11 @@ void FxPresetExportDialog::PresetExportComponent::buttonClicked(Button* button)
                 presets.add(FxModel::getModel().getPreset(selected_presets[i]));
             }
 
-            show_explorer = FxController::getInstance().exportPresets(presets);
+            FxController::getInstance().exportPresets(presets, finish);
         }
-        
-        if (show_explorer)
+        else
         {
-            FxConfirmationMessage::showMessage(TRANS("Presets are exported successfully!"), FxConfirmationMessage::Style::OK);
-            File(File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory).getFullPathName()) + L"FxSound\\Presets\\Export\\").revealToUser();
+            finish(false);
         }
-
-        Component::getParentComponent()->exitModalState(0);
-        Component::getParentComponent()->removeFromDesktop();
     }
 }

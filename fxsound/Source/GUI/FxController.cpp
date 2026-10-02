@@ -704,9 +704,12 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		if (audio_passthru_->init() != 0)
 		{
 			String message(TRANS("Error in system audio configuration. Unable to run FxSound"));
-			AlertWindow::showMessageBox(AlertWindow::AlertIconType::WarningIcon, JUCEApplication::getInstance()->getApplicationName(), message, TRANS("OK"));
+			AlertWindow::showMessageBoxAsync(AlertWindow::AlertIconType::WarningIcon, JUCEApplication::getInstance()->getApplicationName(), message, TRANS("OK"), nullptr,
+				ModalCallbackFunction::create([] (int)
+				{
+					JUCEApplication::getInstance()->systemRequestedQuit();
+				}));
 
-			JUCEApplication::getInstance()->systemRequestedQuit();
 			return;
 		}
 
@@ -729,10 +732,11 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		if (!dfx_enabled_ && !SysInfo::isRemoteSession())
 		{
 			main_window_->removeFromDesktop();
-			FxDeviceErrorMessage error_message;
-			error_message.runModalLoop();
-			JUCEApplication::getInstance()->systemRequestedQuit();
-					FxController::getInstance().refreshOutputList();
+			auto* error_message = new FxDeviceErrorMessage();
+			error_message->enterModalState(true, ModalCallbackFunction::create([](int)
+			{
+				JUCEApplication::getInstance()->systemRequestedQuit();
+			}), true);
 			return;
 		}
 
@@ -1382,7 +1386,7 @@ void FxController::resetPresets()
 	FxModel::getModel().pushMessage(TRANS("Presets are restored to factory defaults"));
 }
 
-bool FxController::exportPresets(const Array< FxModel::Preset>& presets)
+void FxController::exportPresets(const Array< FxModel::Preset>& presets, std::function<void (bool)> onComplete)
 {
 	auto path_name = File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory).getFullPathName()) + L"FxSound\\Presets\\Export\\";
 
@@ -1392,29 +1396,57 @@ bool FxController::exportPresets(const Array< FxModel::Preset>& presets)
 		path.createDirectory();
 	}
 
-	bool exported = false;
+	auto export_path = path.getFullPathName();
 
-	for (auto preset : presets)
+	// Walk the presets one at a time instead of a blocking for-loop: FxConfirmationMessage::showMessage()
+	// is asynchronous now, so each preset only moves on to the next once the user has answered (or once
+	// it is exported outright, when no overwrite confirmation is needed).
+	auto presets_to_process = std::make_shared<Array<FxModel::Preset>>(presets);
+	auto index = std::make_shared<int>(0);
+	auto exported = std::make_shared<bool>(false);
+
+	auto processNext = std::make_shared<std::function<void()>>();
+	*processNext = [this, presets_to_process, index, exported, path_name, export_path, processNext, onComplete]()
 	{
-		bool skip = false;
+		if (*index >= presets_to_process->size())
+		{
+			onComplete(*exported);
+			return;
+		}
 
+		auto preset = (*presets_to_process)[(*index)++];
 		auto preset_file = File(path_name + preset.name + ".fac");
+
+		auto doExport = [this, preset, export_path, exported, processNext]()
+		{
+			dfx_dsp_.exportPreset(preset.path.toWideCharPointer(), preset.name.toWideCharPointer(), export_path.toWideCharPointer());
+			*exported = true;
+			(*processNext)();
+		};
+
 		if (preset_file.exists())
 		{
-			if (!FxConfirmationMessage::showMessage(FormatString(TRANS("Preset file %s already exists in the export path, do you want to overwrite the preset file?"), preset.name)))
-			{
-				skip = true;
-			}
+			FxConfirmationMessage::showMessage(FormatString(TRANS("Preset file %s already exists in the export path, do you want to overwrite the preset file?"), preset.name),
+				FxConfirmationMessage::Style::YesNo,
+				[doExport, processNext](bool overwrite)
+				{
+					if (overwrite)
+					{
+						doExport();
+					}
+					else
+					{
+						(*processNext)();
+					}
+				});
 		}
-
-		if (!skip)
+		else
 		{
-			dfx_dsp_.exportPreset(preset.path.toWideCharPointer(), preset.name.toWideCharPointer(), path.getFullPathName().toWideCharPointer());
-			exported = true;
+			doExport();
 		}
-	}
+	};
 
-	return exported;
+	(*processNext)();
 }
 
 bool FxController::importPresets(const Array<File>& preset_files, StringArray& imported_presets, StringArray& skipped_presets)
@@ -1634,9 +1666,11 @@ void FxController::selectProcessingOutput(std::vector<SoundDevice>& sound_device
 			if (!SysInfo::isRemoteSession())
 			{
 				main_window_->removeFromDesktop();
-				FxDeviceErrorMessage error_message;
-				error_message.runModalLoop();
-				JUCEApplication::getInstance()->systemRequestedQuit();
+                auto* error_message = new FxDeviceErrorMessage();
+                error_message->enterModalState(true, ModalCallbackFunction::create([](int)
+                {
+                    JUCEApplication::getInstance()->systemRequestedQuit();
+                }), true);
 				return;
 			}
 		}
