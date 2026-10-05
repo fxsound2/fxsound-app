@@ -311,6 +311,13 @@ void FxMainWindow::showProView()
 
 void FxMainWindow::update()
 {
+#if JUCE_MAC
+	const auto power_state = FxModel::getModel().getPowerState();
+	if (power_button_.getPowerState() != power_state)
+	{
+		power_button_.setPowerState(power_state);
+	}
+#endif
 	pro_view_.update();
 }
 

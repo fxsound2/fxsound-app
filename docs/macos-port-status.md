@@ -1,9 +1,11 @@
 # FxSound macOS port status
 
 The macOS target reuses the original Windows JUCE views/resources and FxSound DSP.
-Version 0.1.2 supports a personal arm64 app build with a fixed stereo Float32/48 kHz
+Version 0.1.3 supports a personal arm64 app build with a fixed stereo Float32/48 kHz
 HAL transport. Generated installers are local build artifacts, not public downloads.
 Windows numerical parity and a supported OS/hardware release matrix are outstanding.
+The 0.1.3 power-button refresh passes focused component/build regression and read-only
+package inspection. Historical 0.1.2 results remain labelled separately.
 
 ## Toolchain and source inputs
 
@@ -54,6 +56,7 @@ sh macos/tests/driver-build.sh "$PWD/build/driver/FxSound.driver"
 build/macos/gui/fxsound-gui-state-test_artefacts/Release/fxsound-gui-state-test
 python3 macos/tests/preset-dropdown-build.py "$PWD/build/macos/gui" \
   "$PWD/build/macos/gui/FxSound_artefacts/Release/FxSound.app"
+python3 macos/tests/power-button-build.py "$PWD/build/macos/gui"
 build/macos/gui/FxSound_artefacts/Release/FxSound.app/Contents/MacOS/FxSound --smoke-test
 ```
 
@@ -100,6 +103,12 @@ Passing checks observed during development include:
   Native permission mapping uses AVFoundation; event-state units do not simulate a
   real OS grant or certify native denied/restricted-user behavior.
 - Native GUI smoke/render and 27 state-schema checks.
+- The [power-button fixture](../macos/tests/power-button-test.cpp), built by the
+  [focused helper](../macos/tests/power-button-build.py), links the actual app objects
+  and original SVG resources. Across Pro/Lite, 18 cache/pixel checks pass after
+  macOS update synchronization; the identical fixture linked to the baseline fails
+  eight checks. It does not start helpers, request consent or operate audio, and
+  validates component rendering rather than native compositor/hover behavior.
 
 ## Narrow live capture acceptance
 
@@ -139,10 +148,20 @@ requirements, script/payload ownership and matching source. All 3,816 archived s
 members matched the manifest and source bytes. Inspection did not run the installer.
 Generated package timestamps/signatures mean later builds need not share these hashes.
 
-| Locally validated 0.1.2 artifact | SHA-256 |
+| Historically validated 0.1.2 artifact | SHA-256 |
 |---|---|
 | DMG | `39932aa81c907d3269212f6f0956b69388ef43248b86d0811f8b74e36218fa31` |
 | PKG | `cdb8c323e70dab9999cc5580adb2b3b92ab487297524365b42ccff7160dc3b3e` |
+
+Read-only 0.1.3 inspection confirms version metadata, capture entitlements, strict
+signatures, all executable minimum 14.0, 13 factory presets and unchanged engine/
+supervisor helper code. All3,818 archived source files match the current selected
+source, including the focused power-button regression. The installer was not run.
+
+| Locally validated 0.1.3 artifact | SHA-256 |
+|---|---|
+| DMG | `62cca2101ec005f3c101d78b7f6e4d88386173dae363f695dbe0416cb7bede04` |
+| PKG | `04e6e3174c54c1dd1d0b4e3eedd876f0c67910b54fd97e339c63e04bb49cbbc7` |
 
 ## Outstanding qualification
 

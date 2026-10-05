@@ -1,5 +1,18 @@
 # Project changelog
 
+## 0.1.3 — power-button refresh
+
+- Corrected a power-button cache gap after asynchronous engine-state updates:
+  the macOS main-window update now copies acknowledged model power to the original
+  button and repaints only when it changes. The same real-component fixture fails
+  eight checks on the baseline and passes all 18 cache/original-SVG checks across
+  Pro/Lite after the fix, without requiring mouse events or message pumping.
+- The native app build, 27 state-schema checks and existing preset/controller/
+  permission regressions pass. Read-only package inspection confirms version 0.1.3,
+  signatures, audio-input entitlements, minimum macOS 14 and all 3,818 source bytes.
+  Programmatic component rendering does not establish native compositor behavior;
+  persistent hover/VBlank behavior has not been reproduced conclusively.
+
 ## 0.1.2 — macOS capture authorization
 
 - Added the hardened-runtime audio-input entitlement to the app, engine and
