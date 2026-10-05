@@ -1,5 +1,19 @@
 # Project changelog
 
+## 0.1.5 — preset processing fix
+
+- Applied the original Windows caller's post-load sequence: replay all five
+  effects and every current EQ frequency/gain into actual DSP processing state.
+  Switching from edited A to B previously loaded values but left processing state
+  behind. All 39 baseline failures now pass in optimized and sanitizer tests,
+  including preservation after a missing-preset rejection.
+- Fresh native build, affected DSP/render/signal/storage/concurrency/allocation,
+  engine and GUI/controller/schema suites pass. Settled same-input Gaming and
+  VolumeBoost output matches the original caller sequence with zero RMS/max
+  difference; this is not Windows-versus-macOS numerical parity.
+- Final read-only package inspection confirms version, usage descriptions, audio-input
+  entitlements, strict signatures, minimum macOS 14 and all 3,820 matching source files.
+
 ## 0.1.4 — Pro control refresh
 
 - Corrected the native Pro issue left after 0.1.3: effects/EQ could remain disabled

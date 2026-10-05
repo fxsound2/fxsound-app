@@ -15,7 +15,19 @@ bool Float32Engine::prepare(int rate, int channels) {
     return true;
 }
 bool Float32Engine::loadPreset(const std::string &path) {
-    try { return dsp_->loadPreset(dspWide(path)) == 0; }
+    try {
+        if (dsp_->loadPreset(dspWide(path)) != 0) return false;
+        // The Windows controller replays loaded values to update the live DSP.
+        for (int index = 0; index < 5; ++index) {
+            auto effect = static_cast<DfxDsp::Effect>(index);
+            dsp_->setEffectValue(effect, dsp_->getEffectValue(effect) * 10);
+        }
+        for (int band = 0; band < dsp_->getNumEqBands(); ++band) {
+            dsp_->setEqBandFrequency(band, dsp_->getEqBandFrequency(band));
+            dsp_->setEqBandBoostCut(band, dsp_->getEqBandBoostCut(band));
+        }
+        return true;
+    }
     catch (const std::range_error &) { return false; }
 }
 bool Float32Engine::process(const float *input, float *output, std::size_t frames) noexcept {

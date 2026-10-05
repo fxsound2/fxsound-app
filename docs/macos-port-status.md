@@ -1,7 +1,7 @@
 # FxSound macOS port status
 
 The macOS target reuses the original Windows JUCE views/resources and FxSound DSP.
-Version 0.1.4 supports a personal arm64 app build with a fixed stereo Float32/48 kHz
+Version 0.1.5 supports a personal arm64 app build with a fixed stereo Float32/48 kHz
 HAL transport. Generated installers are local build artifacts, not public downloads.
 Windows numerical parity and a supported OS/hardware release matrix are outstanding.
 The 0.1.3 power-button refresh passes focused component/build regression and read-only
@@ -10,6 +10,9 @@ The 0.1.3 button fix did not resolve the separate Pro effects/EQ enablement/repa
 issue. The 0.1.4 candidate applies state before refreshing values and repaints Pro
 on power transitions; focused tests and three actual native ON transitions without
 control hover and final 0.1.4 package inspection pass.
+The 0.1.5 loader now replays original postload effect/EQ setters; 39 baseline failures
+pass optimized/SAN real-state tests. Affected suites/build pass; same-input settled
+output matches the original caller sequence; final package inspection passes.
 
 ## Toolchain and source inputs
 
@@ -83,6 +86,8 @@ sh macos/tests/dsp-build.sh "$PWD/build/dsp-opt/libfxsound-dsp.a" \
 FXSOUND_TEST_DEVICE_READ=1 sh macos/tests/engine-dsp-build.sh \
   "$PWD/build/dsp-opt/libfxsound-dsp.a"
 sh macos/tests/dsp-preset-storage-build.sh "$PWD/build/dsp-asan/libfxsound-dsp.a"
+sh macos/tests/dsp-preset-switch-build.sh "$PWD/build/dsp-opt/libfxsound-dsp.a"
+FXSOUND_TEST_FLAGS="-fsanitize=address,undefined" sh macos/tests/dsp-preset-switch-build.sh "$PWD/build/dsp-asan/libfxsound-dsp.a"
 sh macos/tests/dsp-audible-signal-build.sh "$PWD/build/dsp-asan/libfxsound-dsp.a"
 sh macos/tests/dsp-concurrency-build.sh "$PWD/build/dsp-tsan/libfxsound-dsp.a"
 sh macos/tests/dsp-edit-gate-build.sh "$PWD/build/dsp-tsan/libfxsound-dsp.a"
@@ -174,14 +179,14 @@ signatures, all executable minimum 14.0, 13 factory presets and unchanged engine
 supervisor helper code. All3,818 archived source files match the current selected
 source, including the focused power-button regression. The installer was not run.
 
-Read-only 0.1.4 inspection confirms version, audio-input entitlements, strict signatures,
-minimum 14.0, 13 factory presets and all 3,818 source files, including final update/
-repaint logic. No new installation was performed for these checks.
+Read-only 0.1.5 inspection confirms version, both capture usage keys, audio-input
+entitlements, strict signatures, 6 Mach-O minimum14.0,13 presets and all 3,820 current
+source members. Native unsigned code matches; historical results stay qualified.
 
-| Locally validated 0.1.4 artifact | SHA-256 |
+| Locally validated 0.1.5 artifact | SHA-256 |
 |---|---|
-| DMG | `de91f01349e8353930f9eda24d070546a937d19331637fa9e66b28b8f555dd86` |
-| PKG | `1625131f51923a35e41e8e4b7771b2db865e875e487c9685b964c24f5fb17eb9` |
+| DMG | `8b2ccf44a1a60b972e644ab1b4c0c894311af6b8ef229aaeadf947e634ddf218` |
+| PKG | `fd11444a366fed5d65d1eed64e9913cf056c239b6e0317c02e565c0234bf29e2` |
 
 ## Outstanding qualification
 
