@@ -18,7 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <JuceHeader.h>
 #include "FxSettingsDialog.h"
+#if JUCE_WINDOWS
 #include "../Utils/SysInfo/SysInfo.h"
+#endif
 
 //==============================================================================
 FxSettingsDialog::FxSettingsDialog() : FxWindow("Settings"), tooltip_window_(this)
@@ -204,7 +206,10 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 	reset_presets_button_.setSize(RESET_PRESETS_BUTTON_WIDTH, BUTTON_HEIGHT);
 	reset_presets_button_.setMouseCursor(MouseCursor::PointingHandCursor);
 
-	prioritize_new_output_toggle_.setToggleState(FxController::getInstance().isNewOutputPrioritized(), NotificationType::dontSendNotification);
+	#if JUCE_MAC
+    prioritize_new_output_toggle_.setEnabled(false);
+#endif
+    prioritize_new_output_toggle_.setToggleState(FxController::getInstance().isNewOutputPrioritized(), NotificationType::dontSendNotification);
 	prioritize_new_output_toggle_.onClick = [this]() { FxController::getInstance().setNewOutputPrioritized(prioritize_new_output_toggle_.getToggleState()); };
 
 	auto preset_modified = false;
@@ -305,7 +310,7 @@ void FxSettingsDialog::AudioSettingsPane::resizeResetButton(int x, int y)
 		}
 	} while (lineCount <= 3); // Resize the button height for upto 3 lines of text
 
-	int buttonWidth = min(reset_presets_button_.getBestWidthForHeight(BUTTON_HEIGHT * lineCount), MAX_BUTTON_WIDTH);
+	int buttonWidth = jmin(reset_presets_button_.getBestWidthForHeight(BUTTON_HEIGHT * lineCount), MAX_BUTTON_WIDTH);
 	if (buttonWidth < RESET_PRESETS_BUTTON_WIDTH)
 	{
 		buttonWidth = RESET_PRESETS_BUTTON_WIDTH;
@@ -372,7 +377,11 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 		addAndMakeVisible(label);
 	}
 
+    #if JUCE_WINDOWS
     if (SysInfo::canSupportHotkeys())
+#else
+    if (false)
+#endif
     {
         hotkeys_toggle_.setToggleState(!FxModel::getModel().getHotkeySupport(), NotificationType::dontSendNotification);
     }
@@ -390,7 +399,10 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 											}
 										};
 
-	launch_toggle_.setToggleState(FxController::getInstance().isLaunchOnStartup(), NotificationType::dontSendNotification);
+	#if JUCE_MAC
+    launch_toggle_.setEnabled(false);
+#endif
+    launch_toggle_.setToggleState(FxController::getInstance().isLaunchOnStartup(), NotificationType::dontSendNotification);
 	launch_toggle_.onClick = [this]() { FxController::getInstance().setLaunchOnStartup(launch_toggle_.getToggleState()); };
 
     hide_help_tips_toggle_.setToggleState(FxController::getInstance().isHelpTooltipsHidden(), NotificationType::dontSendNotification);
@@ -488,7 +500,10 @@ FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), a
 	feedback_link_.setJustificationType(Justification::topLeft);
 
 	auto_updates_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
-	auto_updates_toggle_.setToggleState(FxController::getInstance().getAutoUpdates(), NotificationType::dontSendNotification);
+	#if JUCE_MAC
+    auto_updates_toggle_.setEnabled(false);
+#endif
+    auto_updates_toggle_.setToggleState(FxController::getInstance().getAutoUpdates(), NotificationType::dontSendNotification);
 	auto_updates_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	auto_updates_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 

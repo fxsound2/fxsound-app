@@ -20,7 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "codedefs.h"
 
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 

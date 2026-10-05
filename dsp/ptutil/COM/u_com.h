@@ -1,3 +1,4 @@
+#include "dsp-word.h"
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
@@ -24,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "slout.h"
 
 /* Local Functions */
-int com_ReadSerialNum(PT_HANDLE *, int, unsigned long *);
+int com_ReadSerialNum(PT_HANDLE *, int, DSP_UWORD *);
 
 /* com handle definition */
 struct comHdlType {
@@ -37,9 +38,9 @@ struct comHdlType {
 	int dongle_exists; /* Flag saying that a dongle is present */
 	int cracked_flag;  /* Flag saying if we have been cracked */
 	int aes_exists;    /* Flag saying if aes expansion is on card */
-	unsigned long serial_num; /* Serial number of card */
-	long main_num_samples;    /* Number of samples of memory on main card */
-	long expanded_num_samples; /* Number of samples of memory on expansion */
+	DSP_UWORD serial_num; /* Serial number of card */
+	DSP_WORD main_num_samples;    /* Number of samples of memory on main card */
+	DSP_WORD expanded_num_samples; /* Number of samples of memory on expansion */
 	
 	int program_loaded; /* Flag saying if a program has been loaded */
 	int program_running; /* Flag saying if a program is running */
@@ -52,14 +53,14 @@ struct comHdlType {
 						  * on if the user has chosen a non-default physical
 						  * address.
 						  */
-	long base_address;
+	DSP_WORD base_address;
 	char *executable;
 	char *arguments; 
 	int io_type;      /* PCFG_ANALOG, PCFG_AES, or PCFG_SPDIF */
 	int fx_link_flag; /* Flag saying if it is using the fx link */
 	int turned_off;   /* Flag saying if com is turned off for development */
    int debug_mode;   /* Flag saying if write values should be printed */ 
-	long buffer_size; /* Size of buffers for WAV and DAW processing */
+	DSP_WORD buffer_size; /* Size of buffers for WAV and DAW processing */
 	int softdsp_mode; /* 1 -> software DSP, 0 -> hardware DSP */
 	PT_HANDLE *comSftwr_hdl;
 };

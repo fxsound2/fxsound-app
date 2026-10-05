@@ -20,7 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "codedefs.h"
 
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #include <stdio.h>
 #include <math.h>
 
@@ -34,9 +36,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "midi.h"
 #include "filt.h"
 
-#include "C_Play.h"
-#include "C_aural.h"
-#include "C_dsps.h"
+#include "c_play.h"
+#include "c_aural.h"
+#include "c_dsps.h"
 #include "c_lex.h"
 #include "c_max.h"
 #include "c_aural.h"
@@ -463,7 +465,7 @@ int dfxp_CommunicateBypassSettings(PT_HANDLE *hp_dfxp)
 		return(NOT_OKAY);
 	if (comLongIntWrite(cast_handle->com_hdl_center, DSP_PLAY_BASS_BOOST_ON, 0) != OKAY)
 		return(NOT_OKAY);
-	if (comLongIntWrite(cast_handle->com_hdl_subwoofer, DSP_PLAY_BASS_BOOST_ON, (!(bypass_bass_boost) & surround_sound_flag)) != OKAY)
+	if (comLongIntWrite(cast_handle->com_hdl_subwoofer, DSP_PLAY_BASS_BOOST_ON, ((!bypass_bass_boost) & surround_sound_flag)) != OKAY)
 		return(NOT_OKAY);
 
 	// Vocal reduction only in in front channels

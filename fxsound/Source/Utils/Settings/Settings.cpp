@@ -20,8 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "Settings.h"
+#if JUCE_WINDOWS
 #include <Windows.h>
 #include <wincrypt.h>
+#endif
 
 FxSound::Settings::Settings()
 {
@@ -39,6 +41,7 @@ FxSound::Settings::Settings()
 		</PROPERTIES>
     )";
 
+	options.osxLibrarySubFolder = "Application Support";
 	options.applicationName = FxSound::APPLICATION_NAME;
 	options.folderName = FxSound::SETTINGS_FOLDER;
 	options.filenameSuffix = FxSound::SECURE_EXTN;
@@ -99,9 +102,9 @@ juce::var FxSound::Settings::getJson(juce::StringRef key) noexcept
 	return json.isNotEmpty() ? juce::JSON::parse(json) : juce::var{};
 }
 
-void FxSound::Settings::setString(StringRef key, String value, bool default) noexcept
+void FxSound::Settings::setString(StringRef key, String value, bool useDefault) noexcept
 {
-    if (default)
+    if (useDefault)
     {
         default_settings_.setValue(key, value);
     }
@@ -111,9 +114,9 @@ void FxSound::Settings::setString(StringRef key, String value, bool default) noe
     }	
 }
 
-void FxSound::Settings::setInt(StringRef key, int value, bool default) noexcept
+void FxSound::Settings::setInt(StringRef key, int value, bool useDefault) noexcept
 {
-    if (default)
+    if (useDefault)
     {
         default_settings_.setValue(key, value);
     }
@@ -123,9 +126,9 @@ void FxSound::Settings::setInt(StringRef key, int value, bool default) noexcept
     }
 }
 
-void FxSound::Settings::setDouble(StringRef key, double value, bool default) noexcept
+void FxSound::Settings::setDouble(StringRef key, double value, bool useDefault) noexcept
 {
-    if (default)
+    if (useDefault)
     {
         default_settings_.setValue(key, value);
     }
@@ -135,9 +138,9 @@ void FxSound::Settings::setDouble(StringRef key, double value, bool default) noe
     }
 }
 
-void FxSound::Settings::setBool(StringRef key, bool value, bool default) noexcept
+void FxSound::Settings::setBool(StringRef key, bool value, bool useDefault) noexcept
 {
-    if (default)
+    if (useDefault)
     {
         default_settings_.setValue(key, value);
     }

@@ -28,13 +28,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Standard includes */
 #ifdef WIN32
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #include <winuser.h>
 #endif
 
 #include <time.h>
 #include <stdlib.h>
+#ifndef PT_PORTABLE_DSP
 #include <malloc.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 
@@ -66,7 +70,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * Note that the hrdwrWriteParameterIfNotBusy uses a hard wait loop to
  * complete the second write operation (the actual value).
  */
-int COMSFTWR_DECL comSftwrWriteParam(PT_HANDLE *hp_comSftwr, long l_offset, long l_val)
+int COMSFTWR_DECL comSftwrWriteParam(PT_HANDLE *hp_comSftwr, DSP_WORD l_offset, DSP_WORD l_val)
 {
 	float *flt_ptr;
 	struct comSftwrHdlType *cast_handle;
@@ -76,7 +80,8 @@ int COMSFTWR_DECL comSftwrWriteParam(PT_HANDLE *hp_comSftwr, long l_offset, long
 	if (cast_handle == NULL) 
 		return(NOT_OKAY);
 
-	flt_ptr = (float *)&l_val;
+	float parameter_value = dspBitsFloat(l_val);
+	flt_ptr = &parameter_value;
 
 #ifdef COMSFTWR_MESSAGE_BOXES
 
@@ -106,7 +111,7 @@ int COMSFTWR_DECL comSftwrWriteParam(PT_HANDLE *hp_comSftwr, long l_offset, long
  *  Currently only processes stereo to stereo or mono to mono signals.
  *
  */
-int COMSFTWR_DECL comSftwrProcessWaveBuffer(PT_HANDLE *hp_comSftwr, long *lp_data, long l_length, 
+int COMSFTWR_DECL comSftwrProcessWaveBuffer(PT_HANDLE *hp_comSftwr, DSP_WORD *lp_data, DSP_WORD l_length,
                          int i_stereo_in_mode, int i_stereo_out_mode, 
 								 int i_buffer_type)
 {
@@ -187,7 +192,7 @@ int COMSFTWR_DECL comSftwrProcessWaveBuffer(PT_HANDLE *hp_comSftwr, long *lp_dat
 			/* On off toggling for demo */
 			static int count = 0;
 			static int on = 0;
-			long int tmp_buf[16384];
+			DSP_WORD tmp_buf[16384];
 
 			count += l_length;
 			if( count > 44100 * COMSFTWR_AUTO_DEMO_SECS )
@@ -244,16 +249,16 @@ int COMSFTWR_DECL comSftwrProcessWaveBuffer(PT_HANDLE *hp_comSftwr, long *lp_dat
 		float factor = (float)PC_24BIT_FLOAT_PLUS_CLIP/(float)l_length;
 
 		cast_handle->ComSftwrMeterData.left_in = 
-			(long)( *(float *)&(ComSftwrMeterData[i_processor_index].left_in) * factor); 
+			(DSP_WORD)( *(float *)&(ComSftwrMeterData[i_processor_index].left_in) * factor);
    
 		cast_handle->ComSftwrMeterData.right_in = 
-			(long)( *(float *)&(ComSftwrMeterData.right_in) * factor); 
+			(DSP_WORD)( *(float *)&(ComSftwrMeterData.right_in) * factor);
 
 		cast_handle->ComSftwrMeterData[i_processor_index].left_out = 
-			(long)( *(float *)&(ComSftwrMeterData.left_out) * factor); 
+			(DSP_WORD)( *(float *)&(ComSftwrMeterData.left_out) * factor);
 
 		cast_handle->ComSftwrMeterData.right_out = 
-			(long)( *(float *)&(ComSftwrMeterData.right_out) * factor); 
+			(DSP_WORD)( *(float *)&(ComSftwrMeterData.right_out) * factor);
 	}
 #endif
 
@@ -275,7 +280,7 @@ int COMSFTWR_DECL comSftwrProcessWaveBuffer(PT_HANDLE *hp_comSftwr, long *lp_dat
  *  Process the passed Active Movie buffer, and send it back (no A/D or D/A).
  *
  */
-int COMSFTWR_DECL comSftwrProcessActiveBuffer(PT_HANDLE *hp_comSftwr, short *sp_data, long l_length, 
+int COMSFTWR_DECL comSftwrProcessActiveBuffer(PT_HANDLE *hp_comSftwr, short *sp_data, DSP_WORD l_length,
                          int i_stereo_in_mode, int i_stereo_out_mode,
 								 int i_buffer_type)
 {
@@ -289,7 +294,7 @@ int COMSFTWR_DECL comSftwrProcessActiveBuffer(PT_HANDLE *hp_comSftwr, short *sp_
    /* l_length comes in with the buffer size in samples */
 
    /* For now, call original saw style processing */
-   if( comSftwrProcessWaveBuffer(hp_comSftwr, (long *)sp_data, l_length, 
+   if( comSftwrProcessWaveBuffer(hp_comSftwr, (DSP_WORD *)sp_data, l_length,
                          i_stereo_in_mode, i_stereo_out_mode, i_buffer_type) != OKAY)
 		return(NOT_OKAY);
 
@@ -311,7 +316,7 @@ int COMSFTWR_DECL comSftwrInitDspAlgorithm(PT_HANDLE *hp_comSftwr, realtype r_sa
 #else
 	long long perf_count;
 #endif
-	long sample_count_init;
+	DSP_WORD sample_count_init;
 	struct comSftwrHdlType *cast_handle;
 
 	cast_handle = (struct comSftwrHdlType *)hp_comSftwr;
@@ -330,9 +335,9 @@ int COMSFTWR_DECL comSftwrInitDspAlgorithm(PT_HANDLE *hp_comSftwr, realtype r_sa
 #endif
 
 #ifdef WIN32
-	sample_count_init = (long)(perf_count % (__int64)COMSFTWR_DEMO_SAMPLES_ALLOWED);
+	sample_count_init = (DSP_WORD)(perf_count % (__int64)COMSFTWR_DEMO_SAMPLES_ALLOWED);
 #else
-	sample_count_init = (long)(perf_count % (long long)COMSFTWR_DEMO_SAMPLES_ALLOWED);
+	sample_count_init = (DSP_WORD)(perf_count % (long long)COMSFTWR_DEMO_SAMPLES_ALLOWED);
 #endif
 	cast_handle->sample_count = sample_count_init;
 
@@ -445,7 +450,7 @@ int COMSFTWR_DECL comSftwrSetFunctionIndex(PT_HANDLE *hp_comSftwr, char *cp_dspn
 										  short s_bit_width, int i_use_old_bit_width)
 {
 	int index = 0;
-	long memsize = 0;
+	DSP_WORD memsize = 0;
 	int offset = 0;
 	struct comSftwrHdlType *cast_handle;
 
@@ -826,8 +831,8 @@ int COMSFTWR_DECL comSftwrSetFunctionIndex(PT_HANDLE *hp_comSftwr, char *cp_dspn
  */
 int COMSFTWR_DECL comSftwrAllocDspMem(PT_HANDLE *hp_comSftwr)
 {
-	long memsize_required;
-	long current_memsize;
+	DSP_WORD memsize_required;
+	DSP_WORD current_memsize;
 	float *mem_ptr;
 	struct comSftwrHdlType *cast_handle;
 

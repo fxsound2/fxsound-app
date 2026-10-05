@@ -1,3 +1,4 @@
+#include "dsp-word.h"
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
@@ -57,30 +58,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MAXIMIZE_LEVEL_FILT_CUTOFF 0.1
 
 /* Special structure used for parameters and state of algorithm */
-struct dspMaxiStructType
-{
+struct DSP_ALIAS dspMaxiStructType {
 	/* Parameters common to all dsp functions */
 	/* Note- must occupy same 32 word locations as defines in Boardrv1.h */
-	long pc_to_dsp_flags;
-	long dsp_to_pc_flags;
-	long dsp_number_of_elements;
+	DSP_WORD pc_to_dsp_flags;
+	DSP_WORD dsp_to_pc_flags;
+	DSP_WORD dsp_number_of_elements;
 	realtype dsp_sampling_freq;
-	long stereo_in_flag;
-	long dsp_mute_in_flag;
-	long unassigned6;
-	long unassigned7;
-	long unassigned8;
-	long unassigned9;
+	DSP_WORD stereo_in_flag;
+	DSP_WORD dsp_mute_in_flag;
+	DSP_WORD unassigned6;
+	DSP_WORD unassigned7;
+	DSP_WORD unassigned8;
+	DSP_WORD unassigned9;
 	realtype dry_gain;
 	realtype wet_gain;
 	realtype master_gain;
-	long dsp_dma_in_transfer;
-	long unassigned14;
-	long unassigned15;
-	long unassigned16;
-	long unassigned17;
-	long unassigned18;
-	long unassigned19;
+	DSP_WORD dsp_dma_in_transfer;
+	DSP_WORD unassigned14;
+	DSP_WORD unassigned15;
+	DSP_WORD unassigned16;
+	DSP_WORD unassigned17;
+	DSP_WORD unassigned18;
+	DSP_WORD unassigned19;
 
 	/* Note- algorithm specific parameters must occupy same 32 word locations
 	 * as defines below.
@@ -90,8 +90,8 @@ struct dspMaxiStructType
 	realtype gain_boost;
 	realtype max_output;
 	realtype release_time_beta; /* To be replaced by quant funct that sends delay instead */
-	long num_quant_bits;
-	long dither_type;
+	DSP_WORD num_quant_bits;
+	DSP_WORD dither_type;
 	int max_delay;
 	int quantize_on_flag;
 	/* Added for auto mode, the max desired boosted output level */

@@ -1,3 +1,4 @@
+#include "dsp-word.h"
 /* (C) COPYRIGHT 1994-1997 Power Technology. All Rights Reserved.
  * This document and file contain highly confidential information
  * which is not to be disclosed or in any other way retransmitted
@@ -46,7 +47,7 @@
 
 /* Algorithm specific parameters */
 
-/* Flag to turn on SHELFS, a long */
+/* Flag to turn on SHELFS, a DSP_WORD */
 #define DSP_PEQ_SHELFS_ON 			19L + COMM_MEM_OFFSET
 /* First the input parameter locations */
 #define DSP_PEQ_LEFT_GAIN 			20L + COMM_MEM_OFFSET

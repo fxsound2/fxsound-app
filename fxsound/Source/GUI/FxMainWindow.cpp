@@ -250,6 +250,7 @@ void FxMainWindow::show()
 	addToDesktop(ComponentPeer::windowAppearsOnTaskbar);
 	toFront(true);
 
+#if JUCE_WINDOWS
 	// Bring window to the top
 	auto* peer = getPeer();
 	if (peer)
@@ -261,6 +262,7 @@ void FxMainWindow::show()
 		SetForegroundWindow(hwnd); // Bring to front
 		SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 	}
+#endif
 }
 
 void FxMainWindow::showLiteView()
@@ -366,6 +368,7 @@ void FxMainWindow::setResizeImage()
 
 void FxMainWindow::setIcon(bool power, bool processing)
 {
+#if JUCE_WINDOWS
 	HINSTANCE hInst = GetModuleHandle(NULL);
 	HWND hWnd = (HWND)getWindowHandle();
 
@@ -400,6 +403,9 @@ void FxMainWindow::setIcon(bool power, bool processing)
 	{
 		DestroyIcon(curr_icon);
 	}
+#else
+    if (processing && power) startLogoAnimation(); else stopLogoAnimation();
+#endif
 }
 
 void FxMainWindow::enablePowerButton(bool enable)
@@ -433,6 +439,7 @@ bool FxMainWindow::keyPressed(const KeyPress& key)
 
 void FxMainWindow::visibilityChanged()
 {
+#if JUCE_WINDOWS
 	auto* peer = getPeer();
 	if (peer)
 	{
@@ -443,6 +450,7 @@ void FxMainWindow::visibilityChanged()
 			SetWindowLong(hwnd, GWL_STYLE, style | WS_MINIMIZEBOX);
 		}
 	}
+#endif
 }
 
 void FxMainWindow::showMenu()
@@ -483,7 +491,11 @@ void FxMainWindow::showMenu()
 
 	auto checkForUpdatesClicked = []() {
 		ChildProcess child_process;
-		child_process.start("updater.exe /checknow");
+		#if JUCE_WINDOWS
+        child_process.start("updater.exe /checknow");
+#else
+        FxController::getInstance().checkUpdates();
+#endif
 	};
 
 	auto donateClicked = []() {
@@ -580,7 +592,11 @@ void FxMainWindow::buttonClicked(Button* button)
 	{
 		if (isOnDesktop())
 		{
-			ShowWindow((HWND)getWindowHandle(), SW_MINIMIZE);
+			#if JUCE_WINDOWS
+            ShowWindow((HWND)getWindowHandle(), SW_MINIMIZE);
+#else
+            if (auto* peer=getPeer()) peer->setMinimised(true);
+#endif
 		}
 	}
 }

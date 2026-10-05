@@ -1,3 +1,4 @@
+#include "dsp-word.h"
 /* (C) COPYRIGHT 1994-1997 Power Technology. All Rights Reserved.
  * This document and file contain highly confidential information
  * which is not to be disclosed or in any other way retransmitted
@@ -64,7 +65,7 @@
 	float dl_in, dl_out;\
 	float *tmp_ptr;\
 	realtype y1, y2;\
-	long idly = (long)delay_real;\
+	DSP_WORD idly = (DSP_WORD)delay_real;\
 	float del = delay_real - idly;\
 	tmp_ptr = ptr - idly;\
 	if( tmp_ptr < mem_start )\

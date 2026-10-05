@@ -20,11 +20,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "codedefs.h"
 
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #include <stdio.h>
 
 /* For SHGetSpecialFolderPath */
+#ifndef PT_PORTABLE_DSP
 #include <shlobj.h>
+#endif
 
 #include "u_dfxp.h" 
 
@@ -36,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "SurroundSyn.h"
 #include "BinauralSyn.h"
 #include "mth.h"
-#include "dfxpdefs.h"
+#include "dfxpDefs.h"
 #include "dfxSharedUtil.h"
 
 

@@ -46,5 +46,5 @@ int FxHyperlink::getTextWidth()
 	auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
 	auto font = theme.getNormalFont();
 	font.setUnderline(true);
-	return font.getStringWidth(getButtonText());
+	return fxTextWidth(font,getButtonText());
 }

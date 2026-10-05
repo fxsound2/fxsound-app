@@ -22,12 +22,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <stdio.h> 
 #include <stdlib.h>
-#include <malloc.h> 
+#ifndef PT_PORTABLE_DSP
+#include <malloc.h>
+#endif
 
 #ifndef __ANDROID__
+#ifndef PT_PORTABLE_DSP
 #include <conio.h>
+#endif
 #include <time.h>
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #else
 #ifndef DWORD
 #define DWORD unsigned int
@@ -47,7 +53,7 @@ extern "C"
 #include "comSftwr.h"
 }
 
-#include "pwav.h"
+#include "Pwav.h"
 #include "com.h"
 #include "u_com.h"
 
@@ -57,7 +63,7 @@ extern "C"
  *  Process the passed buffer.
  *
  */
-int PT_DECLSPEC comProcessBuffer(PT_HANDLE *hp_com, long *lp_data, long l_length, 
+int PT_DECLSPEC comProcessBuffer(PT_HANDLE *hp_com, DSP_WORD *lp_data, DSP_WORD l_length,
                          int i_stereo_in_mode, int i_stereo_out_mode,
 								 int i_buffer_type)
 {
@@ -86,13 +92,13 @@ int PT_DECLSPEC comProcessBuffer(PT_HANDLE *hp_com, long *lp_data, long l_length
  *  before processing and then upsample it after processing.
  *
  */
-int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, long *lp_data, float *rp_float, long l_length, 
+int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, DSP_WORD *lp_data, float *rp_float, DSP_WORD l_length,
                          int i_stereo_in_mode, int i_stereo_out_mode, int i_down_sample_ratio,
 								 int i_format_flag)
 {
    /* l_length comes in with the buffer size in sample sets */
    struct comHdlType *cast_handle;
-	long *l_ptr;
+	DSP_WORD *l_ptr;
 	float *f_ptr;
 	int leftover_samples;
 	int num_down_sample_sets;
@@ -111,7 +117,7 @@ int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, long *lp_data, float *rp
 		if (pwav24BitToFloat((char *)lp_data, rp_float, l_length, i_stereo_in_mode) != OKAY)
 			return(NOT_OKAY);
 
-		l_ptr = (long *)rp_float;
+		l_ptr = (DSP_WORD *)rp_float;
 	}
 	else
 		l_ptr = lp_data;
@@ -120,6 +126,11 @@ int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, long *lp_data, float *rp
    // since /sdl option is turned on in DfxDsp (it is turned off in original code base so this was treated as warning instead of error).
 	f_ptr = (float *)l_ptr;
    
+	// No decimated frame exists for a short block; process its frames directly.
+	// This advances internal DSP state per frame instead of reading before the buffer.
+	if (l_length < i_down_sample_ratio)
+		i_down_sample_ratio = 1;
+
 	// Downsample the data if needed for higher data sampling frequencies
 	if(i_down_sample_ratio > 1)
 	{

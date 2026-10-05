@@ -17,7 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <stdlib.h>
 #include <stdio.h>
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 
 #include "codedefs.h"
 #include "u_spectrum.h"

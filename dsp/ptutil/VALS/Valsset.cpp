@@ -18,8 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "codedefs.h"
 
 /* Standard includes */
+#ifndef PT_PORTABLE_DSP
 #include <dos.h>
+#endif
+#ifndef PT_PORTABLE_DSP
 #include <conio.h>
+#endif
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -29,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "slout.h"
 #include "mry.h"
 #include "vals.h"
-#include "u_vals.h"  
+#include "U_vals.h"
 #include "GraphicEq.h"
  
 /*

@@ -18,8 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "codedefs.h"
 
 /* Standard includes */
+#ifndef PT_PORTABLE_DSP
 #include <dos.h>
+#endif
+#ifndef PT_PORTABLE_DSP
 #include <conio.h>
+#endif
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -27,11 +31,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <time.h>
 
 #include "slout.h"
-#include "file.h"
+#include "File.h"
 #include "mry.h"
 #include "vals.h"
 #include "pstr.h"
-#include "u_vals.h"
+#include "U_vals.h"
 
 #define LINE_LENGTH 128
 
@@ -64,7 +68,7 @@ int PT_DECLSPEC valsCfgRead(PT_HANDLE **hpp_vals_cfg, wchar_t *wcp_file_path,
 	cast_handle->slout_hdl = hp_slout;
 
 	/* Open the file for reading */
-	stream = fileOpen_Wide(wcp_file_path, L"r", hp_slout);
+	stream = fileOpen_Wide(wcp_file_path, L"r", nullptr);
 	if (stream == NULL)
 		return(NOT_OKAY);
 
@@ -79,8 +83,7 @@ int PT_DECLSPEC valsCfgRead(PT_HANDLE **hpp_vals_cfg, wchar_t *wcp_file_path,
 	swscanf(wcp_str, L"%g\n", &(version));
 
     /* Get the title (strip off the '\n') */
-	fgetws(wcp_str, LINE_LENGTH, stream);
-    if (wcp_str == NULL)
+	if (!fgetws(wcp_str, LINE_LENGTH, stream))
        return(NOT_OKAY);
     title_length = (int)wcslen(wcp_str);
     if (title_length < 1)
@@ -203,7 +206,12 @@ int PT_DECLSPEC valsCfgCheckFileType(wchar_t *wcp_file_path, int *ip_proper_type
 		return(NOT_OKAY);
 
 	/* Open the file for reading */
+	#ifdef PT_PORTABLE_DSP
+	stream = fileOpen_Wide(wcp_file_path, L"r", nullptr);
+	if (!stream)
+#else
 	if (_wfopen_s(&stream, wcp_file_path, L"r") != 0)
+#endif
 		return(OKAY);
 
 	/* Get the Effect Type */

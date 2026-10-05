@@ -116,7 +116,11 @@ void FxProView::paint(Graphics& g)
 
     auto enable_controls = FxModel::getModel().getPowerState();
 
+#if JUCE_MAC
+    preset_list_.setEnabled(FxModel::getModel().getPresetCount() > 0);
+#else
     preset_list_.setEnabled(enable_controls);
+#endif
     audio_controls_.setEnabled(enable_controls);
     equalizer_.setEnabled(enable_controls);
 	visualizer_.setEnabled(enable_controls);

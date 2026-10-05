@@ -55,5 +55,9 @@ void FxLiteView::paint(Graphics& g)
 	g.fillRoundedRectangle(20, 22, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, 10);
 
     auto power_state = FxModel::getModel().getPowerState();
+#if JUCE_MAC
+    preset_list_.setEnabled(FxModel::getModel().getPresetCount() > 0);
+#else
     preset_list_.setEnabled(power_state);
+#endif
 }
