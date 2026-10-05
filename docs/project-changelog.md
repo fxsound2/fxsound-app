@@ -1,5 +1,16 @@
 # Project changelog
 
+## 0.1.6 — app icon bundle
+
+- Configured JUCE ICON_BIG using the 256×256 PNG losslessly extracted from the
+  original Windows icon. Native build now produces AppIcon.icns with a populated
+  CFBundleIconFile; its ic08 PNG bytes exactly match the original artwork.
+- Native strict signatures, 27-schema, 18 power/18 control-label and 13-preset/
+  controller/permission regressions pass. Read-only package inspection confirms
+  the exact icon, strict signatures, minimum macOS 14 and all 3,821 source files.
+  Finder/Dock cache refresh is not established;
+  no cache reset or host installation was performed by these checks.
+
 ## 0.1.5 — preset processing fix
 
 - Applied the original Windows caller's post-load sequence: replay all five

@@ -1,18 +1,17 @@
 # FxSound macOS port status
 
 The macOS target reuses the original Windows JUCE views/resources and FxSound DSP.
-Version 0.1.5 supports a personal arm64 app build with a fixed stereo Float32/48 kHz
+Version 0.1.6 supports a personal arm64 app build with a fixed stereo Float32/48 kHz
 HAL transport. Generated installers are local build artifacts, not public downloads.
 Windows numerical parity and a supported OS/hardware release matrix are outstanding.
-The 0.1.3 power-button refresh passes focused component/build regression and read-only
-package inspection. Historical 0.1.2 results remain labelled separately.
-The 0.1.3 button fix did not resolve the separate Pro effects/EQ enablement/repaint
-issue. The 0.1.4 candidate applies state before refreshing values and repaints Pro
-on power transitions; focused tests and three actual native ON transitions without
-control hover and final 0.1.4 package inspection pass.
+Historical 0.1.2 capture and 0.1.3 button fixes remain separately qualified; the button
+fix did not resolve Pro enablement/repaint. The 0.1.4 update/repaint fix passes focused
+tests, three native no-hover ON transitions and package inspection.
 The 0.1.5 loader now replays original postload effect/EQ setters; 39 baseline failures
 pass optimized/SAN real-state tests. Affected suites/build pass; same-input settled
 output matches the original caller sequence; final package inspection passes.
+The 0.1.6 ICON_BIG configuration builds valid AppIcon.icns whose ic08 PNG exactly
+matches original Windows artwork. Affected GUI tests and final package inspection pass.
 
 ## Toolchain and source inputs
 
@@ -183,10 +182,10 @@ Read-only 0.1.5 inspection confirms version, both capture usage keys, audio-inpu
 entitlements, strict signatures, 6 Mach-O minimum14.0,13 presets and all 3,820 current
 source members. Native unsigned code matches; historical results stay qualified.
 
-| Locally validated 0.1.5 artifact | SHA-256 |
+| Locally validated 0.1.6 artifact | SHA-256 |
 |---|---|
-| DMG | `8b2ccf44a1a60b972e644ab1b4c0c894311af6b8ef229aaeadf947e634ddf218` |
-| PKG | `fd11444a366fed5d65d1eed64e9913cf056c239b6e0317c02e565c0234bf29e2` |
+| DMG | `dcd55fa8ef148b0b82384cfb186012068f53153c5d25887359f99ea2e6b77bcb` |
+| PKG | `9946fc39e61b60d8976212cf6971330782e7ca1ffd2233fdedf59d14f21c0dfd` |
 
 ## Outstanding qualification
 

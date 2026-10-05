@@ -16,6 +16,7 @@ instructions](macos-port-status.md) for the reproducible checks and their limits
 | Power-button refresh (0.1.3) | Button cache regression/build/package pass | Native Pro controls still require the separate 0.1.4 fix |
 | Pro control refresh (0.1.4) | Update/repaint fixed; component/build, three native no-hover ON transitions and package inspection pass | Broader host/hardware coverage remains unverified |
 | Preset processing (0.1.5) | Original postload replay applied; 39 actual processing-state cases, affected suites/build and package inspection pass | Platform numerical parity and broader live qualification pending |
+| App icon (0.1.6) | Native/packaged original icon exact; build/signatures, GUI regressions and package inspection pass | Finder/Dock cache behavior on existing installs remains unverified |
 | Personal PKG/DMG | Ad-hoc signatures, payload metadata and corresponding source verified | Clean install/upgrade/uninstall matrix |
 | Public distribution | Not qualified | Developer ID/notarization, Windows parity and OS/hardware matrix |
 
