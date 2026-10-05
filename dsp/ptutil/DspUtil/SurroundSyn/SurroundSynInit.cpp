@@ -16,7 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef __ANDROID__
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #endif //WIN32
 
 #include <stdlib.h>

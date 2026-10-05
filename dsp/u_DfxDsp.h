@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma once
 #include <string>
-#include "AudioPassthru.h"
 #include "codedefs.h"
 #include "DfxDsp.h"
 #include "pt_defs.h"
@@ -133,7 +132,7 @@ private:
 
 	// Handles
 	int *dfxp_handle_;
-	int *preset_list_handle_;
+	int *preset_list_handle_ = nullptr;
 	int *midi_to_rval_qnt_handle_; // Midi to Real Value
 	int *rval_to_midi_qnt_handle_; // and visa versa QNT handles
 
@@ -146,7 +145,11 @@ private:
 	struct dfxg_section_type dynamic_boost_;
 	struct dfxg_section_type bass_boost_;
 
+	#ifdef PT_PORTABLE_DSP
+	bool update_from_registry_ = false;
+#else
 	bool update_from_registry_ = true;
+#endif
 	int headphone_on_;
 	int music_mode_;     /* DFXP_MUSIC_MODE_MUSIC1, DFXP_MUSIC_MODE_MUSIC2, DFXP_MUSIC_MODE_SPEECH */
 

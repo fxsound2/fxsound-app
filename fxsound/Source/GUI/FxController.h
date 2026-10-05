@@ -22,6 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include <JuceHeader.h>
+#if JUCE_MAC
+#include "mac-controller.h"
+#else
 #include "FxModel.h"
 #include "FxTheme.h"
 #include "FxAudioControls.h"
@@ -296,3 +299,5 @@ private:
 	CriticalSection lock_;
 	CriticalSection save_lock_;
 };
+
+#endif

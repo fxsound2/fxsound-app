@@ -1,3 +1,4 @@
+#include "dsp-word.h"
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
@@ -210,58 +211,57 @@ void play32_no_filt(realtype *xv, realtype *yv, realtype in, realtype *in_bs);
 #define DSP_PLAY_VOCAL_REDUCTION_MODE 59L + COMM_MEM_OFFSET
 
 /* Special structure used for parameters and state of algorithm */
-struct dspPlayStructType
-{
+struct DSP_ALIAS dspPlayStructType {
 	/* Parameters common to all dsp functions */
 	/* Note- must occupy same 32 word locations as defines in Boardrv1.h */
-	long pc_to_dsp_flags;
-	long dsp_to_pc_flags;
-	long dsp_number_of_elements;
+	DSP_WORD pc_to_dsp_flags;
+	DSP_WORD dsp_to_pc_flags;
+	DSP_WORD dsp_number_of_elements;
 	realtype dsp_sampling_freq;
-	long stereo_in_flag;
-	long dsp_mute_in_flag;
-	long unassigned6;
-	long unassigned7;
-	long unassigned8;
-	long unassigned9;
+	DSP_WORD stereo_in_flag;
+	DSP_WORD dsp_mute_in_flag;
+	DSP_WORD unassigned6;
+	DSP_WORD unassigned7;
+	DSP_WORD unassigned8;
+	DSP_WORD unassigned9;
 	realtype dry_gain;
 	realtype wet_gain;
 	realtype master_gain;
-	long dsp_dma_in_transfer;
-	long unassigned14;
-	long unassigned15;
-	long unassigned16;
-	long unassigned17;
-	long unassigned18;
-	long unassigned19;
-	long unassigned20; 
-	long unassigned21;
-	long unassigned22;
-	long unassigned23;
-	long unassigned24;
-	long unassigned25;
-	long unassigned26;
-	long unassigned27;
-	long unassigned28;
-	long unassigned29;
-	long unassigned30;
-	long unassigned31;
-	long unassigned32;
-	long unassigned33; /* End of currently assigned Aural Activator parameters/states */
-	long unassigned34; /* Room for 2 more if needed */
-	long unassigned35;
+	DSP_WORD dsp_dma_in_transfer;
+	DSP_WORD unassigned14;
+	DSP_WORD unassigned15;
+	DSP_WORD unassigned16;
+	DSP_WORD unassigned17;
+	DSP_WORD unassigned18;
+	DSP_WORD unassigned19;
+	DSP_WORD unassigned20;
+	DSP_WORD unassigned21;
+	DSP_WORD unassigned22;
+	DSP_WORD unassigned23;
+	DSP_WORD unassigned24;
+	DSP_WORD unassigned25;
+	DSP_WORD unassigned26;
+	DSP_WORD unassigned27;
+	DSP_WORD unassigned28;
+	DSP_WORD unassigned29;
+	DSP_WORD unassigned30;
+	DSP_WORD unassigned31;
+	DSP_WORD unassigned32;
+	DSP_WORD unassigned33; /* End of currently assigned Aural Activator parameters/states */
+	DSP_WORD unassigned34; /* Room for 2 more if needed */
+	DSP_WORD unassigned35;
 
 	/* Start play specific parameters, above activator parameters */
 	/* Note- algorithm specific parameters must occupy same 32 word locations
 	 * as defines below.
 	 */
-	long bypass_on;
-	long activator_on;
-	long ambience_on;
-	long widener_on;
-	long bassboost_on;
-	long headphone_on;
-	long reset_demo_count;
+	DSP_WORD bypass_on;
+	DSP_WORD activator_on;
+	DSP_WORD ambience_on;
+	DSP_WORD widener_on;
+	DSP_WORD bassboost_on;
+	DSP_WORD headphone_on;
+	DSP_WORD reset_demo_count;
 
 	/* Bass boost coeffs */
 	realtype b0;
@@ -290,17 +290,17 @@ struct dspPlayStructType
 	realtype a2_hp;
     */
 
-	unsigned long vocal_elim_val;
-	long vocal_elim_on;
-	long vocal_mode;
+	DSP_UWORD vocal_elim_val;
+	DSP_WORD vocal_elim_on;
+	DSP_WORD vocal_mode;
 
 	/* Play internal state parameters */
-	long bypass_mode;
-	unsigned long sample_count;
-	unsigned long max_sample_count_process;
-	unsigned long max_sample_count_demo;
-	unsigned long last_vocal_val;
-	long last_mode;
+	DSP_WORD bypass_mode;
+	DSP_UWORD sample_count;
+	DSP_UWORD max_sample_count_process;
+	DSP_UWORD max_sample_count_demo;
+	DSP_UWORD last_vocal_val;
+	DSP_WORD last_mode;
 
 	/* Play algorithm state variables */
 	/* The filter coeffs will be set during initialization, not from parameter changes */
@@ -341,8 +341,8 @@ struct dspPlayStructType
 	 * Note that the delay_lines param must be the last parameter since
 	 * there will be an array of data written at that address space.
 	 */
-	unsigned long head_delay;
-	unsigned long delay_line_index;
+	DSP_UWORD head_delay;
+	DSP_UWORD delay_line_index;
 	realtype delay_lines;
 };
 

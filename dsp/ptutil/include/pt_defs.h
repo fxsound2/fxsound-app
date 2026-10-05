@@ -1,3 +1,4 @@
+#include "dsp-word.h"
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
@@ -21,7 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _PT_DEFS_H_
 
 #ifndef __ANDROID__
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #endif //WIN32
 
 /* Maximum number of DSP/FX processors */
@@ -43,11 +46,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 struct hardwareMeterValType
 {
 	int  values_are_new;
-	long left_in;
-	long right_in;
-	long left_out;
-	long right_out;
-	long dsp_status;
+	DSP_WORD left_in;
+	DSP_WORD right_in;
+	DSP_WORD left_out;
+	DSP_WORD right_out;
+	DSP_WORD dsp_status;
 	float aux_vals[8]; /* For addition info transfer */
 };
 

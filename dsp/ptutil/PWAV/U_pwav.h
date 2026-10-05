@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <mmsystem.h> 
 #endif //WIN32
 
-#include "pwav.h"
+#include "Pwav.h"
 #include "slout.h" 
 
 /* Largest possible size of wave buffers, used for allocation.

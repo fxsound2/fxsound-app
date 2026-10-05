@@ -1,3 +1,4 @@
+#include "dsp-word.h"
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
@@ -84,324 +85,324 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DSPS_SOFT_MEM_COMP_LENGTH 0
 
 /* 25 ms * 48000 kHz * 3 delay lines */
-#define DSPS_SOFT_MEM_WIDE_LENGTH  (long)((25.1/1000.0) * 3.0 * DSPS_SOFT_MAX_SAMP_FREQ)
+#define DSPS_SOFT_MEM_WIDE_LENGTH  (DSP_WORD)((25.1/1000.0) * 3.0 * DSPS_SOFT_MAX_SAMP_FREQ)
 
 /* Note length includes room for oscillator tables */
 /* Currently roomsize scales up by 1.5 factor. Nominal memory is 759.805 ms */
 /* Note extra repeated endpoint for oscillator */
-#define DSPS_SOFT_MEM_LEX_LENGTH (long)(2 * (8192+1) + 1.5 * (860 * 0.001 * DSPS_SOFT_MAX_SAMP_FREQ) )
+#define DSPS_SOFT_MEM_LEX_LENGTH (DSP_WORD)(2 * (8192+1) + 1.5 * (860 * 0.001 * DSPS_SOFT_MAX_SAMP_FREQ) )
 
 /* Use smaller memory space for DMX version */
 #ifndef PT_DMX_BUILD
-#define DSPS_SOFT_MEM_PLAY_LENGTH (long)(DSPS_SOFT_MEM_AURAL_ENHANCER_LENGTH + DSPS_SOFT_MEM_MAXIMIZER_LENGTH + DSPS_SOFT_MEM_LEX_LENGTH + DSPS_SOFT_MEM_WIDE_LENGTH + DSPS_SOFT_MEM_DELAY_LENGTH)
+#define DSPS_SOFT_MEM_PLAY_LENGTH (DSP_WORD)(DSPS_SOFT_MEM_AURAL_ENHANCER_LENGTH + DSPS_SOFT_MEM_MAXIMIZER_LENGTH + DSPS_SOFT_MEM_LEX_LENGTH + DSPS_SOFT_MEM_WIDE_LENGTH + DSPS_SOFT_MEM_DELAY_LENGTH)
 #else
-#define DSPS_SOFT_MEM_PLAY_LENGTH (long)(DSPS_SOFT_MEM_AURAL_ENHANCER_LENGTH + DSPS_SOFT_MEM_MAXIMIZER_LENGTH)
+#define DSPS_SOFT_MEM_PLAY_LENGTH (DSP_WORD)(DSPS_SOFT_MEM_AURAL_ENHANCER_LENGTH + DSPS_SOFT_MEM_MAXIMIZER_LENGTH)
 #endif
 
 #define DSP_WID_MAX_DELAY_LEN
 
 /* For prototype lexicon reverb, currently pseudo-stereo */
-#define DSPS_SOFT_MEM_PROTO1_LENGTH (long)((756 + 100 + 1) * 2.0 * 0.001 * DSPS_SOFT_MAX_SAMP_FREQ)
+#define DSPS_SOFT_MEM_PROTO1_LENGTH (DSP_WORD)((756 + 100 + 1) * 2.0 * 0.001 * DSPS_SOFT_MAX_SAMP_FREQ)
 
 /* DSP processing function declarations */
 
 /* Special function with zero output (no init needed) */
-DSP_FUNC_DEF void dspsZeroOutput(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsZeroOutput(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 
 /* DlyX.c */
-DSP_FUNC_DEF int dspsDly1Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsDly1Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsDly1Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsDly1Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsDly1Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsDly1Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 
-DSP_FUNC_DEF int dspsDly2Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsDly2Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsDly2Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsDly2Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsDly2Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsDly2Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsDly3Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsDly3Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsDly3Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsDly3Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsDly3Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsDly3Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsDly4Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsDly4Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsDly4Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsDly4Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsDly4Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsDly4Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsDly5Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsDly5Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsDly5Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsDly5Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsDly5Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsDly5Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsDly6Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsDly6Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsDly6Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsDly6Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsDly6Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsDly6Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsDly7Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsDly7Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsDly7Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsDly7Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsDly7Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsDly7Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsDly8Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsDly8Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsDly8Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsDly8Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsDly8Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsDly8Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
 /* flangX.c */
-DSP_FUNC_DEF int dspsFlang1Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsFlang1Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsFlang1Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsFlang1Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsFlang1Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsFlang1Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsFlang2Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsFlang2Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsFlang2Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsFlang2Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsFlang2Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsFlang2Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
 /* chorX.c */
-DSP_FUNC_DEF int dspsChor1Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsChor1Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsChor1Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsChor1Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsChor1Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsChor1Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsChor2Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsChor2Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsChor2Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsChor2Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsChor2Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsChor2Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsChor3Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsChor3Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsChor3Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsChor3Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsChor3Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsChor3Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsChor4Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsChor4Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsChor4Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsChor4Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsChor4Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsChor4Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
 /* pitchX.c */
-DSP_FUNC_DEF int dspsPitch1Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsPitch1Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsPitch1Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsPitch1Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsPitch1Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsPitch1Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsPitch2Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsPitch2Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsPitch2Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsPitch2Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsPitch2Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsPitch2Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
 /* peqX.c */
-DSP_FUNC_DEF int dspsPeq1Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsPeq1Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsPeq1Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsPeq1Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsPeq1Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsPeq1Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsPeq2Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsPeq2Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsPeq2Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsPeq2Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsPeq2Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsPeq2Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsPeq3Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsPeq3Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsPeq3Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsPeq3Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsPeq3Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsPeq3Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsPeq4Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsPeq4Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsPeq4Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsPeq4Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsPeq4Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsPeq4Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsPeq5Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsPeq5Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsPeq5Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsPeq5Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsPeq5Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsPeq5Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsPeq6Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsPeq6Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsPeq6Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsPeq6Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsPeq6Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsPeq6Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsPeq7Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsPeq7Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsPeq7Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsPeq7Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsPeq7Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsPeq7Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsPeq8Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsPeq8Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsPeq8Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsPeq8Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsPeq8Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsPeq8Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
 /* trmX.c */
-DSP_FUNC_DEF int dspsTrm1Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsTrm1Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsTrm1Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsTrm1Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsTrm1Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsTrm1Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsTrm2Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsTrm2Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsTrm2Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsTrm2Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsTrm2Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsTrm2Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
 /* panX.c */
-DSP_FUNC_DEF int dspsPan1Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsPan1Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsPan1Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsPan1Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsPan1Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsPan1Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsPan2Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsPan2Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsPan2Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsPan2Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsPan2Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsPan2Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
 /* aural.c */
-DSP_FUNC_DEF int dspsAuralInit(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsAuralProcess(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsAuralProcess32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsAuralInit(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsAuralProcess(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsAuralProcess32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 
 /* max.c */
-DSP_FUNC_DEF int dspsMaximizerInit(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsMaximizerProcess(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsMaximizerProcess32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsMaximizerInit(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsMaximizerProcess(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsMaximizerProcess32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 
 /* lex.c */
-DSP_FUNC_DEF int dspsLexReverbInit(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsLexReverbProcess(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsLexReverbProcess32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsLexReverbInit(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsLexReverbProcess(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsLexReverbProcess32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 
 /* apit.c */
-DSP_FUNC_DEF int dspsApitInit(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsApitProcess(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsApitProcess32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsApitInit(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsApitProcess(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsApitProcess32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 
 /* Play.c */
-DSP_FUNC_DEF int dspsPlayInit(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsPlayProcess(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsPlayProcess32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsPlayInit(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsPlayProcess(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsPlayProcess32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 
 /* Comp.c */
-DSP_FUNC_DEF int dspsCompInit(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsCompProcess(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsCompProcess32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsCompInit(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsCompProcess(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsCompProcess32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 
 /* Wide.c */
-DSP_FUNC_DEF int dspsWideInit(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsWideProcess(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsWideProcess32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsWideInit(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsWideProcess(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsWideProcess32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 
 /* proto1.c */
-DSP_FUNC_DEF int dspsProto1Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsProto1Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsProto1Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsProto1Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsProto1Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsProto1Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 
 /* reverb10X.c */
-DSP_FUNC_DEF int dspsR1S44R20Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R20Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R20Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R20Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R20Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R20Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S44R25Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R25Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R25Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R25Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R25Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R25Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S44R30Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R30Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R30Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R30Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R30Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R30Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S44R35Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R35Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R35Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R35Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R35Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R35Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S44R40Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R40Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R40Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R40Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R40Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R40Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S44R45Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R45Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R45Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R45Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R45Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R45Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S44R50Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R50Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R50Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R50Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R50Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R50Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S44R55Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R55Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R55Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R55Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R55Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R55Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S44R60Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R60Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R60Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R60Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R60Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R60Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S44R65Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R65Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R65Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R65Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R65Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R65Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S44R70Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R70Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R70Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R70Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R70Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R70Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S44R75Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R75Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R75Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R75Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R75Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R75Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S44R80Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R80Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R80Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R80Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R80Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R80Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S44R85Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R85Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R85Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R85Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R85Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R85Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S44R90Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R90Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R90Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R90Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R90Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R90Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S44R95Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R95Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R95Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R95Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R95Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R95Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S44R00Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S44R00Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S44R00Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S44R00Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S44R00Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S44R00Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R20Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R20Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R20Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R20Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R20Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R20Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R25Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R25Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R25Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R25Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R25Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R25Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R30Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R30Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R30Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R30Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R30Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R30Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R35Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R35Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R35Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R35Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R35Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R35Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R40Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R40Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R40Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R40Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R40Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R40Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R45Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R45Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R45Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R45Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R45Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R45Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R50Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R50Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R50Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R50Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R50Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R50Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R55Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R55Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R55Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R55Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R55Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R55Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R60Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R60Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R60Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R60Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R60Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R60Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R65Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R65Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R65Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R65Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R65Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R65Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R70Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R70Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R70Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R70Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R70Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R70Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R75Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R75Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R75Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R75Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R75Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R75Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R80Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R80Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R80Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R80Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R80Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R80Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R85Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R85Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R85Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R85Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R85Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R85Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R90Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R90Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R90Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R90Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R90Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R90Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R95Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R95Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R95Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R95Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R95Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R95Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
-DSP_FUNC_DEF int dspsR1S48R00Init(float *, float *, long, float *, int, float);
-DSP_FUNC_DEF void dspsR1S48R00Process(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-DSP_FUNC_DEF void dspsR1S48R00Process32(long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF int dspsR1S48R00Init(float *, float *, DSP_WORD, float *, int, float);
+DSP_FUNC_DEF void dspsR1S48R00Process(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+DSP_FUNC_DEF void dspsR1S48R00Process32(DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
 								   
 #endif /* _C_DSPS_H */

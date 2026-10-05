@@ -147,6 +147,10 @@ int PT_DECLSPEC GraphicEqSetNumBands(PT_HANDLE* hp_GraphicEq, int num_bands)
 		}
 	}
 
+#ifdef PT_PORTABLE_DSP
+	if (dspResizeEqSections(cast_handle, num_bands) != OKAY) return NOT_OKAY;
+#endif
+
 	// Update the number of bands in the structure
 	cast_handle->num_bands = num_bands;
 
@@ -195,11 +199,8 @@ int PT_DECLSPEC GraphicEqSetNumBands(PT_HANDLE* hp_GraphicEq, int num_bands)
 		return(NOT_OKAY);
 
 	// Reinitialize sections (this will call GraphicEq_InitSections internally)
-	if (GraphicEq_InitSections != NULL)
-	{
-		if (GraphicEq_InitSections(hp_GraphicEq) != OKAY)
-			return(NOT_OKAY);
-	}
+	if (GraphicEq_InitSections(hp_GraphicEq) != OKAY)
+		return(NOT_OKAY);
 
 	// Remap the previous gains onto the new band layout by relative
 	// position (first band -> first band, last band -> last band) instead

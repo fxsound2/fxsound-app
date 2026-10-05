@@ -66,9 +66,11 @@ int PT_DECLSPEC spectrumProcess(PT_HANDLE *, realtype *,	int, int, realtype, int
 int PT_DECLSPEC spectrumGetBandValues(PT_HANDLE *, realtype *,	int);
 
 /* spectrumMessageValues.cpp */
+#ifndef PT_PORTABLE_DSP
 int PT_DECLSPEC spectrumGetMessageValuesFromBandValues_NoHandle(realtype *, int, WPARAM *, LPARAM *);
 int PT_DECLSPEC spectrumGetBandValuesFromMessageValues_NoHandle(WPARAM, LPARAM, realtype *, int, int *);
 int PT_DECLSPEC spectrumSetBandValuesFromMessageValues_NoHandle(WPARAM, LPARAM, realtype *, int, int *);
+#endif
 
 /* spectrumSet.cpp */
 int PT_DECLSPEC spectrumSetTimeConstant(PT_HANDLE *, realtype);

@@ -23,7 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "codedefs.h"
 
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #include <stdio.h>
 
 #include "u_dfxp.h" /* Must go before codedefs.h due to mmgr */
@@ -297,7 +299,7 @@ int dfxpEqGetBandBoostCut_FromProcessing(PT_HANDLE *hp_dfxp, int i_band_num, rea
 		return(OKAY);
 
 	*rp_boost_cut = (realtype)0.0;
-	swprintf(wcp_boost_cut, L"%.2f", *rp_boost_cut);
+	swprintf(wcp_boost_cut, PT_MAX_GENERIC_STRLEN, L"%.2f", *rp_boost_cut);
 
 	if (cast_handle->eq.graphicEq_hdl == NULL)
 		return(NOT_OKAY);
@@ -308,7 +310,7 @@ int dfxpEqGetBandBoostCut_FromProcessing(PT_HANDLE *hp_dfxp, int i_band_num, rea
    if (GraphicEqGetBandBoostCut(cast_handle->eq.graphicEq_hdl, i_band_num, rp_boost_cut) != OKAY)
 		return(NOT_OKAY);
 
-	swprintf(wcp_boost_cut, L"%.2f", *rp_boost_cut);
+	swprintf(wcp_boost_cut, PT_MAX_GENERIC_STRLEN, L"%.2f", *rp_boost_cut);
 
 	return(OKAY);
 }
@@ -335,7 +337,7 @@ int dfxpEqGetBandBoostCut_FromRegistry(PT_HANDLE *hp_dfxp, int i_band_num, realt
 	int key_exists;
 
 	*rp_boost_cut = (realtype)0.0;
-	swprintf(wcp_boost_cut, L"%.2f", *rp_boost_cut);
+	swprintf(wcp_boost_cut, PT_MAX_GENERIC_STRLEN, L"%.2f", *rp_boost_cut);
 
 	if (cast_handle->eq.graphicEq_hdl == NULL)
 		return(NOT_OKAY);
