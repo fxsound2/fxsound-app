@@ -13,7 +13,8 @@ instructions](macos-port-status.md) for the reproducible checks and their limits
 | Original JUCE interface | Original views/resources reused; native component/schema tests pass | Accessibility and display-off CPU measurements |
 | Preset selection (0.1.1) | Available at power off; deferred/acknowledged choices tested | Broader interactive/device testing |
 | Capture authorization (0.1.2) | Native consent and audible processing confirmed on macOS 27 Apple Silicon with EarPods | Native denial/restriction trials and other devices/OS versions |
-| Power-button refresh (0.1.3) | Baseline failure confirmed; 18 component cache/SVG checks, native build/schema and package acceptance pass | Native compositor/hover qualification remains unverified |
+| Power-button refresh (0.1.3) | Button cache regression/build/package pass | Native Pro controls still require the separate 0.1.4 fix |
+| Pro control refresh (0.1.4) | Update/repaint fixed; component/build, three native no-hover ON transitions and package inspection pass | Broader host/hardware coverage remains unverified |
 | Personal PKG/DMG | Ad-hoc signatures, payload metadata and corresponding source verified | Clean install/upgrade/uninstall matrix |
 | Public distribution | Not qualified | Developer ID/notarization, Windows parity and OS/hardware matrix |
 

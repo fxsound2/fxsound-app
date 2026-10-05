@@ -55,6 +55,18 @@ void FxProView::pauseVisualizer()
 
 void FxProView::update()
 {
+#if JUCE_MAC
+	const auto enable_controls = FxModel::getModel().getPowerState();
+	const auto controls_changed = audio_controls_.isEnabled() != enable_controls
+		|| equalizer_.isEnabled() != enable_controls
+		|| visualizer_.isEnabled() != enable_controls;
+	preset_list_.setEnabled(FxModel::getModel().getPresetCount() > 0);
+	audio_controls_.setEnabled(enable_controls);
+	equalizer_.setEnabled(enable_controls);
+	visualizer_.setEnabled(enable_controls);
+	// Custom slider enablement callbacks change cursors without repainting.
+	if (controls_changed) repaint();
+#endif
 	audio_controls_.update();
 	equalizer_.update();
 
@@ -114,16 +126,13 @@ void FxProView::paint(Graphics& g)
 	g.setFillType(FillType(Colour(FXCOLOR(PanelBackground)).withAlpha(0.2f)));
 	g.fillRoundedRectangle(20, 16, 1000, 347+visualizer_offset, 8);
 
+#if !JUCE_MAC
     auto enable_controls = FxModel::getModel().getPowerState();
-
-#if JUCE_MAC
-    preset_list_.setEnabled(FxModel::getModel().getPresetCount() > 0);
-#else
     preset_list_.setEnabled(enable_controls);
-#endif
     audio_controls_.setEnabled(enable_controls);
     equalizer_.setEnabled(enable_controls);
 	visualizer_.setEnabled(enable_controls);
+#endif
 }
 
 void FxProView::comboBoxChanged(ComboBox* combobox)
@@ -135,7 +144,12 @@ void FxProView::modelChanged(FxModel::Event model_event)
 {
 	FxView::modelChanged(model_event);
 
-	if (model_event == FxModel::Event::PresetSelected)
+	if (model_event == FxModel::Event::PresetSelected
+#if JUCE_MAC
+		|| model_event == FxModel::Event::Other
+		|| model_event == FxModel::Event::PresetListUpdated
+#endif
+	)
 	{
 		update();
 	}

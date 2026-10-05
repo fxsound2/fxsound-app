@@ -3,7 +3,7 @@ if(NOT TARGET juce::juce_gui_basics)
     add_subdirectory("${FXSOUND_JUCE_SOURCE}" "${CMAKE_BINARY_DIR}/juce" EXCLUDE_FROM_ALL)
 endif()
 juce_add_gui_app(FxSound PRODUCT_NAME "FxSound" COMPANY_NAME "FxSound"
-    BUNDLE_ID "org.fxsound.personal" VERSION 0.1.3 MICROPHONE_PERMISSION_ENABLED TRUE
+    BUNDLE_ID "org.fxsound.personal" VERSION 0.1.4 MICROPHONE_PERMISSION_ENABLED TRUE
     MICROPHONE_PERMISSION_TEXT "FxSound reads its virtual audio input to enhance sound from your apps. It does not record your physical microphone."
     PLIST_TO_MERGE "<plist><dict><key>NSAudioCaptureUsageDescription</key><string>FxSound processes audio from your apps and sends it to your selected speakers or headphones.</string></dict></plist>")
 file(GLOB FXSOUND_IMAGES "../../fxsound/Images/*.svg" "../../fxsound/Images/*.png")

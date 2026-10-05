@@ -38,6 +38,9 @@ int main() {
     controller.view_=view;
     if(view==ViewType::Pro)window.showProView();else window.showLiteView();
     std::cout<<(view==ViewType::Pro?"Pro":"Lite")<<" original toolbar regression"<<std::endl;
+    model.setPowerState(false);
+    Image offPanel(Image::ARGB,window.pro_view_.getWidth(),window.pro_view_.getHeight(),true);
+    Graphics offGraphics(offPanel);window.pro_view_.paint(offGraphics);
     model.setPowerState(false);window.update();
     auto& button=window.power_button_;
     FxPowerButton reference("power reference");
@@ -48,6 +51,30 @@ int main() {
     reference.setPowerState(true);auto on=render(reference);
     if(equal(off,on)){std::cerr<<"Original ON/OFF assets are indistinguishable\n";++failures;}
     auto check=[&](bool expected,const char* phase){
+     auto& pro=window.pro_view_;
+     bool controls=pro.audio_controls_.isEnabled()==expected
+       && pro.equalizer_.isEnabled()==expected && pro.visualizer_.isEnabled()==expected;
+     bool values=true;
+     for(auto& effect:pro.audio_controls_.effects_.effects_) {
+      controls=controls && effect->isEnabled()==expected;
+      values=values && effect->value_label_.isVisible()==expected;
+     }
+     for(auto& band:pro.equalizer_.band_boosts_) {
+      controls=controls && band->isEnabled()==expected;
+      values=values && band->gain_label_.isVisible()==expected;
+     }
+     for(auto& frequency:pro.equalizer_.center_frequencies_)
+      controls=controls && frequency->isEnabled()==expected;
+     auto& globals=pro.audio_controls_.equalizer_control_;
+     for(Component* child:{static_cast<Component*>(&globals.master_gain_slider_),
+          static_cast<Component*>(&globals.volume_leveling_slider_),
+          static_cast<Component*>(&globals.filter_q_slider_),
+          static_cast<Component*>(&globals.balance_slider_),
+          static_cast<Component*>(&globals.equalizer_)})
+      controls=controls && child->isEnabled()==expected;
+     std::cout<<phase<<": controls before parent paint="<<controls
+              <<" value labels match="<<values<<std::endl;
+     if(!controls || !values)++failures;
      auto image=render(button);bool pixels=equal(image,expected?on:off);
      bool cache=button.getPowerState()==expected;
      std::cout<<phase<<": model="<<model.getPowerState()<<" cache="<<button.getPowerState()<<" original pixels match="<<pixels<<std::endl;
