@@ -344,7 +344,7 @@ void FxSystemTrayView::addOutputDeviceMenu(PopupMenu* context_menu)
     PopupMenu* menu;
 
     auto output_devices = FxModel::getModel().getOutputDevices();
-    int num_outputs = output_devices.size();
+    auto num_outputs = output_devices.size();
     if (num_outputs > 5)
     {
         menu = &output_menu;

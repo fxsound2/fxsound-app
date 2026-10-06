@@ -125,7 +125,7 @@ void FxEffects::update()
 		auto value = controller.getEffectValue(static_cast<EffectType>(i));
 		if (value >= 0.0 && value <= 1.0)
 		{
-			effects_[i]->setEffectValue(value*10.0);
+			effects_[i]->setEffectValue(value*10.0f);
 		}
 	}
 }
@@ -151,7 +151,7 @@ void FxEffects::resized()
 	}
 }
 
-void FxEffects::paint(Graphics& g)
+void FxEffects::paint([[maybe_unused]] Graphics& g)
 {
     StringArray texts = { TRANS("Clarity"), TRANS("Ambience"), TRANS("Surround Sound"), TRANS("Dynamic Boost"), TRANS("Bass Boost") };
     StringArray tool_tips = { TRANS("Enhances and elevates high end\r\nfidelity and presence"),
@@ -201,7 +201,7 @@ void FxEffects::FxEffectSlider::setEffectValue(float value)
 	value_label_.setText(text, NotificationType::dontSendNotification);
 
 	auto pos = getPositionOfValue(value);
-	auto x = pos + FxTheme::SLIDER_THUMB_RADIUS + 1;
+	auto x = static_cast<int>(pos) + FxTheme::SLIDER_THUMB_RADIUS + 1;
 	value_label_.setBounds(value_label_.getBounds().withX(x));
 }
 
@@ -231,7 +231,7 @@ void FxEffects::FxEffectSlider::resized()
 
 void FxEffects::FxEffectSlider::valueChanged()
 {
-	auto value = getValue();
+	auto value = static_cast<float>(getValue());
 
 	if (value != FxController::getInstance().getEffectValue(effect_)*10.0)
 	{
@@ -241,7 +241,7 @@ void FxEffects::FxEffectSlider::valueChanged()
 		value_label_.setText(text, NotificationType::dontSendNotification);
 
 		auto pos = getPositionOfValue(value);
-		auto x = pos + FxTheme::SLIDER_THUMB_RADIUS + 1;
+		auto x = static_cast<int>(pos) + FxTheme::SLIDER_THUMB_RADIUS + 1;
 		value_label_.setBounds(value_label_.getBounds().withX(x));
 	}
 }
@@ -419,7 +419,7 @@ void FxEqualizerControl::update()
 	balance_slider_.setValue(controller.getBalance(), NotificationType::dontSendNotification);
 }
 
-void FxEqualizerControl::setLookAndFeel(FxTheme& theme)
+void FxEqualizerControl::setLookAndFeel([[maybe_unused]]FxTheme& theme)
 {
 	restore_defaults_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButton), FXIMAGESIZE(RestoreDefaultsButton));
 	restore_defaults_hover_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButtonHover), FXIMAGESIZE(RestoreDefaultsButtonHover));
@@ -459,7 +459,7 @@ void FxEqualizerControl::resized()
 	restore_defaults_button_.setBounds(X_MARGIN, y, BUTTON_WIDTH, BUTTON_HEIGHT);
 }
 
-void FxEqualizerControl::paint(Graphics& g)
+void FxEqualizerControl::paint([[maybe_unused]]Graphics& g)
 {
 	setText();
 	updateEqualizerBandsText();

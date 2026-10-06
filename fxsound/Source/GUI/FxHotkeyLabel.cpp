@@ -172,12 +172,12 @@ bool FxHotkeyEditor::keyPressed(const KeyPress& key)
 	}
 }
 
-void FxHotkeyEditor::focusGained(FocusChangeType cause)
+void FxHotkeyEditor::focusGained(FocusChangeType)
 {
 	repaint();
 }
 
-void FxHotkeyEditor::focusLost(FocusChangeType cause)
+void FxHotkeyEditor::focusLost(FocusChangeType)
 {
 	repaint();
 }
@@ -188,7 +188,7 @@ void FxHotkeyEditor::paint(juce::Graphics& g)
 
 	juce::Rectangle<int> bounds = getLocalBounds();
 
-	float borderThickness;
+	int borderThickness;
 	Colour textColour;
 	if (hasKeyboardFocus(false))
 	{
@@ -218,7 +218,7 @@ void FxHotkeyEditor::paint(juce::Graphics& g)
 	}
 
 	g.setColour(getLookAndFeel().findColour(TextEditor::textColourId));
-	g.drawRoundedRectangle(bounds.reduced(borderThickness, borderThickness).toFloat(), 5.0f, borderThickness);
+	g.drawRoundedRectangle(bounds.reduced(borderThickness, borderThickness).toFloat(), 5.0f, static_cast<float>(borderThickness));
 }
 
 void FxHotkeyEditor::setKeyText()

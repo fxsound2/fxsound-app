@@ -305,7 +305,7 @@ void FxController::initConfig(const String& commandline)
 	float vl = 0;
 	if (volume_leveling.isEmpty())
 	{
-		vl = settings_.getDouble("volume_leveling");
+		vl = static_cast<float>(settings_.getDouble("volume_leveling"));
 	}
 	else
 	{
@@ -317,7 +317,7 @@ void FxController::initConfig(const String& commandline)
 	float bl = 0;
 	if (balance == "")
 	{
-		bl = settings_.getDouble("balance");
+		bl = static_cast<float>(settings_.getDouble("balance"));
 	}
 	else
 	{
@@ -329,7 +329,7 @@ void FxController::initConfig(const String& commandline)
 	float fq = 0;
 	if (filterq == "")
 	{
-		fq = settings_.getDouble("filter_q");
+		fq = static_cast<float>(settings_.getDouble("filter_q"));
 	}
 	else
 	{
@@ -341,7 +341,7 @@ void FxController::initConfig(const String& commandline)
 	float mg = 0;
 	if (mastergain == "")
 	{
-		mg = settings_.getDouble("master_gain");
+		mg = static_cast<float>(settings_.getDouble("master_gain"));
 	}
 	else
 	{
@@ -953,16 +953,16 @@ void FxController::showMainWindow()
 
 		if (survey_tip_)
 		{
-			uint64_t survey_timer = settings_.getInt("survey_timer");
+			int survey_timer = settings_.getInt("survey_timer");
 			if (survey_timer == 0)
 			{
-				survey_timer = std::time(nullptr) + (7 * (24 * 60 * 60));
+				survey_timer = static_cast<int>(std::time(nullptr) + (7 * (24 * 60 * 60)));
 				settings_.setInt("survey_timer", survey_timer);
 			}
 			else
 			{
 				uint64_t current_time = std::time(nullptr);
-				if (current_time > survey_timer)
+				if ((int)current_time > survey_timer)
 				{
 					survey_tip_ = false;
 					settings_.setBool("survey_displayed", true);

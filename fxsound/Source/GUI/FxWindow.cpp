@@ -190,7 +190,6 @@ FxWindow::TitleBar::TitleBar(String name)
 		animation_icon_->setAlpha(0.0f);
 	}
 
-	setFocusContainer(true);
 	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
 
 	close_button_.setMouseCursor(MouseCursor::PointingHandCursor);
@@ -249,7 +248,7 @@ void FxWindow::TitleBar::paint(Graphics& g)
     title_.setText(TRANS(name_), NotificationType::dontSendNotification);
     auto font = theme.getNormalFont();
     title_.setFont(font);
-    title_.setSize(GlyphArrangement::getStringWidth(font, TRANS(name_)) * 2, (int)font.getHeight());
+    title_.setSize(static_cast<int>(GlyphArrangement::getStringWidth(font, TRANS(name_)) * 2), static_cast<int>(font.getHeight()));
 
 	for (auto& item : toolbar_buttons_)
 	{
@@ -390,7 +389,7 @@ void FxWindow::TitleBar::updateLogo()
 		title_.setColour(Label::ColourIds::textColourId, theme.getCurrentColourScheme().getUIColour(LookAndFeel_V4::ColourScheme::highlightedText));
 		title_.setFont(font);
 		title_.setJustificationType(Justification::centredLeft);
-		title_.setSize(GlyphArrangement::getStringWidth(font, name_) * 2, (int)font.getHeight());
+		title_.setSize(static_cast<int>(GlyphArrangement::getStringWidth(font, name_) * 2), static_cast<int>(font.getHeight()));
 		title_.setVisible(true);
 	}
 

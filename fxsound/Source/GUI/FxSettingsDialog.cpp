@@ -187,7 +187,7 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 	prioritize_new_output_toggle_(TRANS("Prioritize new output devices")),
 	reset_presets_button_(TRANS("Reset presets to factory defaults"))
 {
-	setFocusContainer(true);
+	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
 
 	output_preference_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	output_preference_title_.setJustificationType(Justification::centredLeft);
@@ -251,10 +251,10 @@ void FxSettingsDialog::AudioSettingsPane::resized()
     y = output_preference_.getBottom() + 10;
     prioritize_new_output_toggle_.setBounds(X_MARGIN, y, width, TOGGLE_BUTTON_HEIGHT);
 
-	auto group_x = output_preference_title_.getX() - GROUP_MARGIN;
-	auto group_y = output_preference_title_.getY() - GROUP_MARGIN;
-	auto group_width = output_preference_.getRight() - group_x + GROUP_MARGIN;
-	auto group_height = prioritize_new_output_toggle_.getBottom() - group_y + GROUP_MARGIN;
+	auto group_x = static_cast<float>(output_preference_title_.getX() - GROUP_MARGIN);
+	auto group_y = static_cast<float>(output_preference_title_.getY() - GROUP_MARGIN);
+	auto group_width = static_cast<float>(output_preference_.getRight() - group_x + GROUP_MARGIN);
+	auto group_height = static_cast<float>(prioritize_new_output_toggle_.getBottom() - group_y + GROUP_MARGIN);
 	output_preference_bounds_ = juce::Rectangle<float>(group_x, group_y, group_width, group_height);
 
 	y = prioritize_new_output_toggle_.getBottom() + 30;
@@ -343,7 +343,7 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	StringArray hotkey_names = { "Turn FxSound On/Off", "Open/Close FxSound",
 								   "Use Next Preset", "Use Previous Preset", "Change Playback Device"};
 
-	setFocusContainer(true);
+	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
 
 	launch_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
 	launch_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
@@ -458,9 +458,6 @@ void FxSettingsDialog::GeneralSettingsPane::paint(Graphics& g)
 
 void FxSettingsDialog::GeneralSettingsPane::setText()
 {
-    auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
-
-    int height = FxSettingsDialog::SettingsComponent::HEIGHT;
     launch_toggle_.setButtonText(TRANS("Launch on system startup"));
     hide_help_tips_toggle_.setButtonText(TRANS("Hide help tips for audio controls"));
 	hide_notifications_toggle_.setButtonText(TRANS("Hide notifications"));

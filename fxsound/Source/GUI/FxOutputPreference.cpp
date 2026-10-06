@@ -185,12 +185,14 @@ void FxOutputDeviceRow::paint(Graphics& g)
     if (is_row_selected_)
     {
         g.setColour(Colour(FXCOLOR(SelectedRowOutline)).withAlpha(1.0f));
-        g.drawLine(device_name_.getX(), device_name_.getBottom() - 0.5f, device_name_.getRight(), device_name_.getBottom() - 1.0f, 1.0);
+        g.drawLine(static_cast<float>(device_name_.getX()), static_cast<float>(device_name_.getBottom()) - 0.5f,
+                   static_cast<float>(device_name_.getRight()), static_cast<float>(device_name_.getBottom()) - 0.5f, 1.0f);
     }
     else
     {
         g.setColour(Colour(FXCOLOR(RowOutline)).withAlpha(1.0f));
-        g.drawLine(device_name_.getX(), device_name_.getBottom() - 0.5f, device_name_.getRight(), device_name_.getBottom() - 0.5f, 0.5);
+        g.drawLine(static_cast<float>(device_name_.getX()), static_cast<float>(device_name_.getBottom()) - 0.5f,
+                   static_cast<float>(device_name_.getRight()), static_cast<float>(device_name_.getBottom()) - 0.5f, 0.5f);
     }    
 }
 
@@ -219,7 +221,7 @@ int FxOutputPreferenceListModel::getNumRows()
     return device_configs_.size();
 }
 
-void FxOutputPreferenceListModel::paintListBoxItem(int rowNumber, juce::Graphics& g, int width, int height, bool rowIsSelected)
+void FxOutputPreferenceListModel::paintListBoxItem(int, juce::Graphics&, int, int, bool)
 {
 }
 
