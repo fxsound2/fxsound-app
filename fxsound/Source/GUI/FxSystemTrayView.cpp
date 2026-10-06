@@ -33,6 +33,8 @@ FxSystemTrayView::FxSystemTrayView()
 
     addToDesktop(0);
 
+    FxController::getInstance().setRenderingEngine(*this);
+
     HWND hWnd = (HWND)getWindowHandle();
 
     SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));

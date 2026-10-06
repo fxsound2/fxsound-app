@@ -170,6 +170,8 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 		logMessage(String("ARM64"));
 	}
 
+    gpu_render_ = false;
+
 	auto view = settings_.getInt("view");
 	if (view <= 0 || view > 2)
 	{
@@ -232,6 +234,14 @@ void FxController::initConfig(const String& commandline)
 	auto filterq = arg_list.getValueForOption("--filter_q");
 	auto mastergain = arg_list.getValueForOption("--master_gain");
 	auto volume_leveling = arg_list.getValueForOption("--volume_leveling");
+
+    if (arg_list.containsOption("--gpu"))
+    {
+		if (juce::SystemStats::getOperatingSystemType() > juce::SystemStats::Windows7)
+		{
+            gpu_render_ = true;
+		}
+    }
 
 	if (arg_list.containsOption("--run_minimized"))
 	{
@@ -2671,6 +2681,15 @@ void FxController::getWindowPosition(int& x, int& y)
 {
 	x = settings_.getInt("window_x", 0);
 	y = settings_.getInt("window_y", 0);
+}
+
+void FxController::setRenderingEngine(juce::Component& component)
+{
+	if (auto* peer = component.getPeer())
+	{
+		// Engine index 0 is GDI (software), 1 is Direct2D.
+		peer->setCurrentRenderingEngine(gpu_render_ ? 1 : 0);
+	}
 }
 
 juce::Array<DeviceConfig> FxController::getDeviceConfigs()

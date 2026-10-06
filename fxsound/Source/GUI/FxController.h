@@ -170,6 +170,8 @@ public:
 	void saveWindowPosition(int x, int y);
 	void getWindowPosition(int& x, int& y);
 
+    void setRenderingEngine(juce::Component& component);
+
 	void logMessage(const String& message)
 	{
 		file_logger_->logMessage(message);
@@ -278,6 +280,7 @@ private:
     bool hide_help_tooltips_;
 	bool hide_notifications_;
 	bool auto_updates_;
+    bool gpu_render_;
 
 	unsigned long audio_process_time_;
 	int audio_process_on_counter_;

@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <JuceHeader.h>
 #include "FxWindow.h"
+#include "FxController.h"
 
 //==============================================================================
 FxWindow::FxWindow(String name) : title_bar_(name), content_(nullptr)
@@ -36,6 +37,14 @@ FxWindow::FxWindow(String name) : title_bar_(name), content_(nullptr)
 FxWindow::~FxWindow()
 {
 	setLookAndFeel(nullptr);
+}
+
+void FxWindow::addToDesktop(int window_style_flags, void* native_window_to_attach_to)
+{
+	Component::addToDesktop(window_style_flags, native_window_to_attach_to);
+
+	// The peer only exists once the window is on the desktop
+	FxController::getInstance().setRenderingEngine(*this);
 }
 
 void FxWindow::setContent(Component* content)

@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "FxNotification.h"
+#include "FxController.h"
 
 FxNotification::FxNotification()
 {
@@ -179,6 +180,7 @@ void FxNotification::showMessage(bool autohide)
     if (autohide)
     {
         addToDesktop(0);
+        FxController::getInstance().setRenderingEngine(*this);
         toFront(true);
         Desktop::getInstance().getAnimator().fadeIn(this, 200);
 

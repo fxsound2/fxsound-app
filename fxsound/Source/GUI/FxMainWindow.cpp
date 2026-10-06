@@ -221,6 +221,7 @@ FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"men
 	minimize_button_.addListener(this);
 
 	help_bubble_.addToDesktop(0);
+	FxController::getInstance().setRenderingEngine(help_bubble_);
 	help_bubble_.setAlwaysOnTop(true);
 
 	setLookAndFeel();
