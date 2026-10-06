@@ -49,7 +49,7 @@ int PT_DECLSPEC pstrUrlEncode(wchar_t *wcp_original, wchar_t *wcp_encoded, int i
 	if (wcp_original == NULL)
 		return(NOT_OKAY);
 
-	i_strlen_original = wcslen(wcp_original);
+	i_strlen_original = static_cast<int>(wcslen(wcp_original));
 
 	done = IS_FALSE;
 	i_orig_pos = 0;
@@ -304,7 +304,7 @@ int PT_DECLSPEC pstrUrlConvertLocalPathToHttpProtocol(wchar_t *wcp_original, wch
 	if (wcp_original == NULL)
 		return(NOT_OKAY);
 
-	i_strlen_original = wcslen(wcp_original);
+	i_strlen_original = static_cast<int>(wcslen(wcp_original));
 
 	done = IS_FALSE;
 	i_orig_pos = 0;
@@ -312,7 +312,7 @@ int PT_DECLSPEC pstrUrlConvertLocalPathToHttpProtocol(wchar_t *wcp_original, wch
 
 	/* Put the http protocol prefix ( file:// ) at the beginning of the converted string */
 	swprintf(wcp_converted, PSTR_URL_HTTP_PROTOCOL_LOCAL_PATH_PREFIX);
-	i_converted_pos = wcslen(PSTR_URL_HTTP_PROTOCOL_LOCAL_PATH_PREFIX);
+	i_converted_pos = static_cast<int>(wcslen(PSTR_URL_HTTP_PROTOCOL_LOCAL_PATH_PREFIX));
 
 	for (i_orig_pos = 0; i_orig_pos <= i_strlen_original; i_orig_pos++)
 	{
