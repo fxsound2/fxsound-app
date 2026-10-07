@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 int com_ReadSerialNum(PT_HANDLE *, int, unsigned long *);
 
 /* com handle definition */
+class Resampler;
+
 struct comHdlType {
 	CSlout *slout_hdl;
 	CSlout *debug_slout_hdl;
@@ -62,6 +64,7 @@ struct comHdlType {
 	long buffer_size; /* Size of buffers for WAV and DAW processing */
 	int softdsp_mode; /* 1 -> software DSP, 0 -> hardware DSP */
 	PT_HANDLE *comSftwr_hdl;
+	Resampler *resampler_hdl; /* Carries signals above the DSP rate down for processing and back up */
 };
 
 /* 
