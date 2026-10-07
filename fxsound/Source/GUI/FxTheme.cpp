@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <JuceHeader.h>
 #include "FxTheme.h"
+#include "FxLanguage.h"
 
 const uint32 FxTheme::theme_colors_[FxThemeMode::NumModes][FxColor::NumColors] =
 { { 0x181818, 0x181818, 0x383838, 0x2b2b2b, 0xb1b1b1, 0x000000, 0xffffff, 0x0c0c0c, 0xffffff,
@@ -381,67 +382,20 @@ void FxTheme::preparePopupMenuWindow(Component& new_window)
 
 void FxTheme::loadFont(String language)
 {
-    if (language.startsWithIgnoreCase("en"))
-    {
-        font_400_ = Typeface::createSystemTypefaceFor(BinaryData::GilroyRegular_ttf, BinaryData::GilroyRegular_ttfSize);
-        font_600_ = Typeface::createSystemTypefaceFor(BinaryData::GilroySemibold_ttf, BinaryData::GilroySemibold_ttfSize);
-        font_700_ = Typeface::createSystemTypefaceFor(BinaryData::GilroyBold_ttf, BinaryData::GilroyBold_ttfSize);
-    }
-    else if (language.startsWithIgnoreCase("ko"))
-    {
-        font_400_ = loadTypeface("NotoSansKR-Regular.otf");
-        font_600_ = loadTypeface("NotoSansKR-Medium.otf");
-        font_700_ = loadTypeface("NotoSansKR-Medium.otf");
-    }
-	else if (language.startsWithIgnoreCase("zh-CN"))
-	{
-		font_400_ = loadTypeface("NotoSansSC-Regular.otf");
-		font_600_ = loadTypeface("NotoSansSC-Medium.otf");
-		font_700_ = loadTypeface("NotoSansSC-Medium.otf");
-	}
-    else if (language.startsWithIgnoreCase("zh-TW"))
-    {
-        font_400_ = loadTypeface("NotoSansTC-Regular.ttf");
-        font_600_ = loadTypeface("NotoSansTC-Medium.ttf");
-        font_700_ = loadTypeface("NotoSansTC-Medium.ttf");
-    }
-	else if (language.startsWithIgnoreCase("th"))
-	{
-		font_400_ = loadTypeface("NotoSansThai-Regular.ttf");
-		font_600_ = loadTypeface("NotoSansThai-Medium.ttf");
-		font_700_ = loadTypeface("NotoSansThai-Medium.ttf");
-	}
-    else if (language.startsWithIgnoreCase("vi"))
-    {
-        font_400_ = loadTypeface("MontserratAlternates-Regular.ttf");
-        font_600_ = loadTypeface("MontserratAlternates-Medium.ttf");
-        font_700_ = loadTypeface("MontserratAlternates-Bold.ttf");
-    }
-	else if (language.startsWithIgnoreCase("ja"))
-	{
-		font_400_ = loadTypeface("NotoSansJP-Regular.ttf");
-		font_600_ = loadTypeface("NotoSansJP-Medium.ttf");
-		font_700_ = loadTypeface("NotoSansJP-Bold.ttf");
-	}
-	else if (language.startsWithIgnoreCase("ar"))
-	{
-		font_400_ = loadTypeface("IBMPlexSansArabic-Regular.ttf");
-		font_600_ = loadTypeface("IBMPlexSansArabic-Medium.ttf");
-		font_700_ = loadTypeface("IBMPlexSansArabic-Bold.ttf");
-	}
-	else if (language.startsWithIgnoreCase("fa"))
-	{
-		font_400_ = loadTypeface("IBMPlexSansArabic-Regular.ttf");
-		font_600_ = loadTypeface("IBMPlexSansArabic-Medium.ttf");
-		font_700_ = loadTypeface("IBMPlexSansArabic-Bold.ttf");
-	}
-    else
-    {
-        font_400_ = Typeface::createSystemTypefaceFor(BinaryData::GilroyRegular_ttf, BinaryData::GilroyRegular_ttfSize);
-        font_600_ = Typeface::createSystemTypefaceFor(BinaryData::GilroySemibold_ttf, BinaryData::GilroySemibold_ttfSize);
-        font_700_ = Typeface::createSystemTypefaceFor(BinaryData::GilroyBold_ttf, BinaryData::GilroyBold_ttfSize);
-    }
-	
+    auto& language_info = FxLanguage::find(language);
+
+    font_400_ = language_info.font_400_file != nullptr
+        ? loadTypeface(language_info.font_400_file)
+        : Typeface::createSystemTypefaceFor(BinaryData::GilroyRegular_ttf, BinaryData::GilroyRegular_ttfSize);
+
+    font_600_ = language_info.font_600_file != nullptr
+        ? loadTypeface(language_info.font_600_file)
+        : Typeface::createSystemTypefaceFor(BinaryData::GilroySemibold_ttf, BinaryData::GilroySemibold_ttfSize);
+
+    font_700_ = language_info.font_700_file != nullptr
+        ? loadTypeface(language_info.font_700_file)
+        : Typeface::createSystemTypefaceFor(BinaryData::GilroyBold_ttf, BinaryData::GilroyBold_ttfSize);
+
     if (font_400_ == nullptr)
     {
         font_400_ = Typeface::createSystemTypefaceFor(BinaryData::GilroyRegular_ttf, BinaryData::GilroyRegular_ttfSize);
@@ -690,6 +644,13 @@ TextLayout FxTheme::layoutTooltipText(const String& text, Colour colour) noexcep
 
 Typeface::Ptr FxTheme::loadTypeface(String fileName)
 {
+    int cached_index = loaded_typeface_keys_.indexOf(fileName);
+    if (cached_index >= 0)
+    {
+        return loaded_typefaces_[cached_index];
+    }
+
+    Typeface::Ptr typeface;
     MemoryBlock fontBuffer;
     String filePath = File::addTrailingSeparator(File::getCurrentWorkingDirectory().getFullPathName());
     File fontFile = File(filePath+fileName);
@@ -697,9 +658,14 @@ Typeface::Ptr FxTheme::loadTypeface(String fileName)
     {
         if (fontFile.loadFileAsData(fontBuffer))
         {
-            return Typeface::createSystemTypefaceFor(fontBuffer.getData(), fontBuffer.getSize());
+            typeface = Typeface::createSystemTypefaceFor(fontBuffer.getData(), fontBuffer.getSize());
         }
     }
-        
-    return nullptr;
+
+    if (typeface != nullptr)
+    {
+        loaded_typeface_keys_.add(fileName);
+        loaded_typefaces_.add(typeface);
+    }
+    return typeface;
 }
