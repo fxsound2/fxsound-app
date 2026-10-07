@@ -1881,6 +1881,16 @@ void FxController::getEqBandFrequencyRange(int band_num, float* min_freq, float*
 	}
 }
 
+bool FxController::getDefaultEqBandFrequency(int band_num, float* freq)
+{
+	if (band_num < getNumEqBands())
+	{
+		return dfx_dsp_.getDefaultEqBandFrequency(band_num, freq);
+	}
+
+	return false;
+}
+
 float FxController::getEqBandBoostCut(int band_num)
 {
 	if (band_num < getNumEqBands())

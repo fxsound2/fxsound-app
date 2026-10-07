@@ -265,6 +265,21 @@ bool FxEffects::FxEffectSlider::keyPressed(const KeyPress& key)
 	return false;
 }
 
+void FxEffects::FxEffectSlider::mouseDown(const juce::MouseEvent& event)
+{
+	// Reset on right-click or double-click, matching the other EQ/audio sliders.
+	// See FxAudioSlider::mouseDown for why the reset is handled here rather than
+	// in mouseDoubleClick.
+	if (event.mods.isRightButtonDown() || event.getNumberOfClicks() >= 2)
+	{
+		setValue(0.0, NotificationType::sendNotification);
+	}
+	else
+	{
+		Slider::mouseDown(event);
+	}
+}
+
 FxEqualizerControl::FxEqualizerControl() :
 	master_gain_slider_("%0.0f dB", 0.0f),
 	volume_leveling_slider_("%.1f dB", 0.0f),
