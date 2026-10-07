@@ -389,14 +389,17 @@ void FxSystemTrayView::showNotification()
 
     if (message.isNotEmpty())
     {
-        if (custom_notification_ || link.first.isNotEmpty())
-        {
-            QUERY_USER_NOTIFICATION_STATE quns;
-            if (FAILED(SHQueryUserNotificationState(&quns)) || quns != QUNS_ACCEPTS_NOTIFICATIONS)
-            {
-                return;
-            }
+        // Prefer the custom notification, but only while Windows is accepting
+        // notifications. Otherwise (Focus Assist / Do Not Disturb, presentation
+        // mode, full-screen app, ...) fall back to the native notification
+        // balloon instead of silently dropping the message: the balloon carries
+        // NIIF_RESPECT_QUIET_TIME, so Windows applies the user's notification
+        // settings itself and decides whether to display it.
+        QUERY_USER_NOTIFICATION_STATE quns = QUNS_ACCEPTS_NOTIFICATIONS;
+        const bool notifications_accepted = SUCCEEDED(SHQueryUserNotificationState(&quns)) && quns == QUNS_ACCEPTS_NOTIFICATIONS;
 
+        if (custom_notification_ && notifications_accepted)
+        {
             notification_.setMessage(message, link);
             Point<int> pos = getSystemTrayWindowPosition(notification_.getWidth(), notification_.getHeight());
             notification_.setBounds(pos.x, pos.y, notification_.getWidth(), notification_.getHeight());
@@ -412,7 +415,8 @@ void FxSystemTrayView::showNotification()
 
             String title = L"FxSound";
             title.copyToUTF16(nid.szInfoTitle, sizeof(nid.szInfoTitle) - 1);
-            message.copyToUTF16(nid.szInfo, sizeof(nid.szInfo) - 1);
+            String balloon_message = message.trim().isEmpty() ? link.first : message;
+            balloon_message.copyToUTF16(nid.szInfo, sizeof(nid.szInfo) - 1);
 
             Shell_NotifyIcon(NIM_MODIFY, &nid);
         }
