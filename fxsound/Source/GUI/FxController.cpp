@@ -2341,7 +2341,7 @@ void FxController::setLanguage(String language_code)
 	LocalisedStrings::setCurrentMappings(nullptr);
 
 	auto& language_info = FxLanguage::find(language_);
-	if (language_info.translation_data != nullptr)
+	if (language_info.translation_data != nullptr && language_info.translation_data_size != 0)
 	{
 		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(language_info.translation_data, language_info.translation_data_size), false));
 	}
