@@ -275,7 +275,8 @@
         <CONFIGURATION isDebug="1" name="Debug" targetName="FxSound" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
                        winArchitecture="ARM64,Win32,x64" useRuntimeLibDLL="0"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="FxSound" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
-                       winArchitecture="ARM64,Win32,x64" optimisation="4" useRuntimeLibDLL="0"/>
+                       winArchitecture="ARM64,Win32,x64" optimisation="4" useRuntimeLibDLL="0"
+                       postbuildCommand="copy $(TargetPath) ..\..\bin\$(PlatformTarget)\ /y&#10;copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="C:\JUCE8\modules"/>

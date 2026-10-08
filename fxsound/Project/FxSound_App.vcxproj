@@ -308,6 +308,11 @@
     <Lib>
       <AdditionalDependencies>crypt32.lib;Wtsapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
+    <PostBuildEvent>
+      <Command>copy $(TargetPath) ..\..\bin\$(PlatformTarget)\ /y
+copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -359,6 +364,11 @@
     <Lib>
       <AdditionalDependencies>crypt32.lib;Wtsapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
+    <PostBuildEvent>
+      <Command>copy $(TargetPath) ..\..\bin\$(PlatformTarget)\ /y
+copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
@@ -409,6 +419,11 @@
     <Lib>
       <AdditionalDependencies>crypt32.lib;Wtsapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
+    <PostBuildEvent>
+      <Command>copy $(TargetPath) ..\..\bin\$(PlatformTarget)\ /y
+copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\GUI\FxAudioControls.cpp" />
