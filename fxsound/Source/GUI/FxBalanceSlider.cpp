@@ -38,7 +38,7 @@ FxBalanceSlider::FxBalanceSlider(float default_value) : default_value_(default_v
 	setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	setWantsKeyboardFocus(true);
 
-	value_label_.setFont(theme.getNormalFont().withHeight(12.0f));
+	value_label_.setFont(theme.getSmallFont().withHeight(11.0f));
 	value_label_.setJustificationType(Justification::centredLeft);
 
 	addAndMakeVisible(value_label_);

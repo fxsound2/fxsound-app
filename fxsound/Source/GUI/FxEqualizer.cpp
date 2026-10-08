@@ -397,7 +397,7 @@ FxEqualizer::FxEqSlider::FxEqSlider(int band, float)
 
     auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
 
-    gain_label_.setFont(theme.getNormalFont().withHeight(LABEL_HEIGHT));
+    gain_label_.setFont(theme.getSmallFont().withHeight(LABEL_HEIGHT));
     gain_label_.setJustificationType(Justification::centred);
     gain_label_.setInterceptsMouseClicks(false, false);
     addChildComponent(gain_label_);

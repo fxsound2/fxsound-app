@@ -81,7 +81,7 @@ void FxNotification::setMessage(const String& message, const std::pair<String, S
 	message_link_.setButtonText(link.first);
 	message_link_.setURL(URL(link.second));
 
-    auto font = theme.getSmallFont().withHeight(17.0f);
+    auto font = theme.getSmallFont().withHeight(15.0f);
 
 	for (int i=0; i<3; i++)
 	{
@@ -167,7 +167,7 @@ void FxNotification::showMessage(bool autohide)
 		if (last_line == link_line_)
 		{
             auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
-			auto font = theme.getSmallFont().withHeight(17.0f);
+			auto font = theme.getSmallFont().withHeight(15.0f);
 			x += static_cast<int>(GlyphArrangement::getStringWidth(font, message_lines_[last_line].getText()));
 		}
         message_link_.setBounds(x, link_line_ * 20 + 30, width, 20);

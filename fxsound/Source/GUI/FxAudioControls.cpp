@@ -101,7 +101,7 @@ FxEffects::FxEffects()
 	for (int i = EffectType::Fidelity; i < EffectType::NumEffects; i++)
 	{
 		labels_[i].reset(new Label(texts[i], texts[i]));
-		labels_[i]->setFont(theme.getNormalFont().withHeight(14));
+		labels_[i]->setFont(theme.getNormalFont().withHeight(12.0f));
 		labels_[i]->setJustificationType(Justification::topLeft);
 		auto border = labels_[i]->getBorderSize();
 		border.setLeft(0);
@@ -164,7 +164,7 @@ void FxEffects::paint([[maybe_unused]] Graphics& g)
 
     for (int i = EffectType::Fidelity; i < EffectType::NumEffects; i++)
     {
-        labels_[i]->setFont(theme.getNormalFont().withHeight(14));
+        labels_[i]->setFont(theme.getNormalFont().withHeight(12.0f));
         labels_[i]->setText(texts[i], NotificationType::dontSendNotification);
         if (!FxController::getInstance().isHelpTooltipsHidden())
         {
@@ -185,7 +185,7 @@ FxEffects::FxEffectSlider::FxEffectSlider(EffectType effect)
 
 	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
 
-	value_label_.setFont(theme.getNormalFont().withHeight(12.0f));
+	value_label_.setFont(theme.getSmallFont().withHeight(11.0f));
 	value_label_.setJustificationType(Justification::centredLeft);
 	value_label_.setInterceptsMouseClicks(false, false);
 	addChildComponent(value_label_);
@@ -302,7 +302,7 @@ FxEqualizerControl::FxEqualizerControl() :
 	}
 	selectEqualizerBands();
 
-	master_gain_title_.setFont(theme.getNormalFont().withHeight(14));
+	master_gain_title_.setFont(theme.getNormalFont().withHeight(12.0f));
 	master_gain_title_.setJustificationType(Justification::topLeft);
 	auto border = master_gain_title_.getBorderSize();
 	border.setLeft(0);
@@ -320,7 +320,7 @@ FxEqualizerControl::FxEqualizerControl() :
 			controller.setMasterGain((float)value);
 		};
 
-	volume_leveling_title_.setFont(theme.getNormalFont().withHeight(14));
+	volume_leveling_title_.setFont(theme.getNormalFont().withHeight(12.0f));
 	volume_leveling_title_.setJustificationType(Justification::topLeft);
 	border = volume_leveling_title_.getBorderSize();
 	border.setLeft(0);
@@ -338,7 +338,7 @@ FxEqualizerControl::FxEqualizerControl() :
 			controller.setVolumeLeveling((float)value);
 		};
 
-	filter_q_title_.setFont(theme.getNormalFont().withHeight(14));
+	filter_q_title_.setFont(theme.getNormalFont().withHeight(12.0f));
 	filter_q_title_.setJustificationType(Justification::topLeft);
 	border = filter_q_title_.getBorderSize();
 	border.setLeft(0);
@@ -356,20 +356,20 @@ FxEqualizerControl::FxEqualizerControl() :
 			controller.setFilterQ((float)value);
 		};
 
-	balance_title_.setFont(theme.getNormalFont().withHeight(14));
+	balance_title_.setFont(theme.getNormalFont().withHeight(12.0f));
 	balance_title_.setJustificationType(Justification::topLeft);
 	border = balance_title_.getBorderSize();
 	border.setLeft(0);
 	balance_title_.setBorderSize(border);
 
-	left_label_.setFont(theme.getNormalFont().withHeight(12.0f));
+	left_label_.setFont(theme.getSmallFont().withHeight(11.0f));
 	left_label_.setJustificationType(Justification::centredLeft);
 	border = left_label_.getBorderSize();
 	border.setLeft(0);
 	border.setTop(0);
 	left_label_.setBorderSize(border);
 
-	right_label_.setFont(theme.getNormalFont().withHeight(12.0f));
+	right_label_.setFont(theme.getSmallFont().withHeight(11.0f));
 	right_label_.setJustificationType(Justification::centredRight);
     border = right_label_.getBorderSize();
     border.setRight(0);
@@ -468,7 +468,7 @@ void FxEqualizerControl::paint([[maybe_unused]]Graphics& g)
 void FxEqualizerControl::setText()
 {
 	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
-	auto font = theme.getNormalFont().withHeight(14);
+	auto font = theme.getNormalFont().withHeight(12.0f);
 
 	master_gain_title_.setFont(font);
 	master_gain_title_.setText(TRANS("Master Gain"), NotificationType::dontSendNotification);
@@ -482,10 +482,10 @@ void FxEqualizerControl::setText()
 	balance_title_.setFont(font);
 	balance_title_.setText(TRANS("Balance"), NotificationType::dontSendNotification);
 
-	left_label_.setFont(theme.getNormalFont().withHeight(12.0f));
+	left_label_.setFont(theme.getSmallFont().withHeight(11.0f));
 	left_label_.setText(TRANS("Left"), NotificationType::dontSendNotification);
 
-	right_label_.setFont(theme.getNormalFont().withHeight(12.0f));
+	right_label_.setFont(theme.getSmallFont().withHeight(11.0f));
 	right_label_.setText(TRANS("Right"), NotificationType::dontSendNotification);
 
 	restore_defaults_button_.setTooltip(TRANS("Restore Defaults"));

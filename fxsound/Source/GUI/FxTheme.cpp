@@ -120,9 +120,9 @@ Label* FxTheme::createComboBoxTextBox(ComboBox& box)
 Font FxTheme::getComboBoxFont(ComboBox& box)
 {
 	if (box.getHeight() <= 30)
-		return Font(FontOptions(font_600_).withHeight(14.0f));
+		return Font(FontOptions(font_600_).withHeight(12.5f));
     else
-		return Font(FontOptions(font_600_).withHeight(17.0f));
+		return Font(FontOptions(font_600_).withHeight(15.0f));
 }
 
 void FxTheme::positionComboBoxText(ComboBox& box, Label& label)
@@ -366,7 +366,7 @@ void FxTheme::drawPopupMenuItem(Graphics& g, const juce::Rectangle<int>& area, b
 
 Font FxTheme::getPopupMenuFont()
 {
-	return Font(FontOptions(font_600_).withHeight(17.0f));
+	return Font(FontOptions(font_600_).withHeight(15.0f));
 }
 
 void FxTheme::preparePopupMenuWindow(Component& new_window)
@@ -460,12 +460,12 @@ void FxTheme::loadFont(String language)
 
 Font FxTheme::getTextButtonFont(TextButton&, int button_height)
 {
-	return Font(FontOptions(font_600_).withHeight(jmin(17.0f, (float)button_height)));
+	return Font(FontOptions(font_600_).withHeight(jmin(14.0f, (float)button_height)));
 }
 
 Font FxTheme::getNormalFont()
 {
-	return Font(FontOptions(font_600_).withHeight(17.0f));
+	return Font(FontOptions(font_600_).withHeight(15.0f));
 }
 
 Font FxTheme::getSmallFont()
@@ -675,13 +675,13 @@ Button* FxTheme::createDocumentWindowButton(int buttonType)
 
 TextLayout FxTheme::layoutTooltipText(const String& text, Colour colour) noexcept
 {
-    const float tooltipFontSize = 14.0f;
+    const float tooltipFontSize = 12.0f;
     const int maxToolTipWidth = 400;
 
     AttributedString s;
     s.setWordWrap(AttributedString::WordWrap::byWord);
     s.setJustification(Justification::centredLeft);
-    s.append(text, getNormalFont().withHeight(tooltipFontSize), colour);
+    s.append(text, getSmallFont().withHeight(tooltipFontSize), colour);
 
     TextLayout tl;
     tl.createLayout(s, (float)maxToolTipWidth);

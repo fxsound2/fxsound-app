@@ -32,7 +32,7 @@ FxAudioSlider::FxAudioSlider(String label_format, float default_value) : default
 
 	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
 
-	value_label_.setFont(theme.getNormalFont().withHeight(12.0f));
+	value_label_.setFont(theme.getSmallFont().withHeight(11.0f));
 	value_label_.setJustificationType(Justification::centredLeft);
 	addAndMakeVisible(value_label_);
 

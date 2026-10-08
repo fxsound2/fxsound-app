@@ -76,7 +76,7 @@ FxOutputDeviceRow::FxOutputDeviceRow(FxOutputPreferenceListModel& model) : up_bu
 
     auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
     device_name_.setInterceptsMouseClicks(false, false);
-    device_name_.setFont(theme.getNormalFont());
+    device_name_.setFont(theme.getNormalFont().withHeight(14.0f));
     device_name_.setMinimumHorizontalScale(1.0f);
 
     addAndMakeVisible(up_button_);

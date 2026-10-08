@@ -63,7 +63,7 @@ FxHotkeyEditor::FxHotkeyEditor(const String& command)
 	setMouseClickGrabsKeyboardFocus(true);
 
 	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
-	setFont(theme.getSmallFont());
+	setFont(theme.getSmallFont().withHeight(12.5f));
 	setJustificationType(Justification::centred);
 	setKeyText();
 

@@ -71,7 +71,7 @@ void FxSettingsDialog::SettingsButton::paint(Graphics& g)
 	auto w = bounds.getWidth() - bounds.getHeight() + 5;
 
 	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
-	g.setFont(theme.getNormalFont());
+	g.setFont(theme.getNormalFont().withHeight(15.0f));
 	g.drawText(TRANS(getName()), juce::Rectangle<int>(bounds.getHeight()+5, 0, w, bounds.getHeight()), Justification::centredLeft);
 }
 
@@ -277,7 +277,7 @@ void FxSettingsDialog::AudioSettingsPane::setText()
 {
 	auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
 
-	output_preference_title_.setFont(theme.getNormalFont());
+	output_preference_title_.setFont(theme.getNormalFont().withHeight(15.0f));
 	output_preference_title_.setText(TRANS("Output Device Preference"), NotificationType::dontSendNotification);
 
 	prioritize_new_output_toggle_.setButtonText(TRANS("Prioritize new output devices"));
