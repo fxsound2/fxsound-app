@@ -675,7 +675,7 @@ Button* FxTheme::createDocumentWindowButton(int buttonType)
 
 TextLayout FxTheme::layoutTooltipText(const String& text, Colour colour) noexcept
 {
-    const float tooltipFontSize = 12.0f;
+    const float tooltipFontSize = 14.0f;
     const int maxToolTipWidth = 400;
 
     AttributedString s;
