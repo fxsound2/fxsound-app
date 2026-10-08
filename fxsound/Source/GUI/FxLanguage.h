@@ -22,6 +22,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 /*
+    A single supported language: its code, display name, translation data
+    (nullptr for English, which uses the built-in strings), and any fonts
+    it needs in place of the default Gilroy fonts.
+*/
+struct FxLanguageInfo
+{
+    const char* code;
+    const wchar_t* display_name;
+    const char* translation_data;
+    int translation_data_size;
+
+    // Font files (relative to the working directory) this language needs
+    // instead of the built-in Gilroy fonts, or nullptr to use the default.
+    const char* font_400_file;
+    const char* font_600_file;
+    const char* font_700_file;
+};
+
+//==============================================================================
+/*
 */
 class FxLanguage : public Component
 {
@@ -32,20 +52,25 @@ public:
     FxLanguage();
     ~FxLanguage() = default;
 
+    // Finds the entry whose code is the longest prefix match of language_code
+    // (e.g. "pt-br" resolves to the "pt-br" entry rather than "pt"). Never
+    // returns null: falls back to the "en" entry when nothing matches, so
+    // callers don't need to null-check the result themselves.
+    static const FxLanguageInfo& find(const String& language_code);
+
+    // Selects the dropdown entry matching language_code, without triggering
+    // onLanguageChanged.
+    void setSelectedLanguage(const String& language_code);
+
+    // Called with a language code whenever the user picks a different
+    // language from the dropdown.
+    std::function<void(String)> onLanguageChanged;
+
 private:
-    static constexpr int BUTTON_WIDTH = 14;
-    static constexpr int BUTTON_HEIGHT = 22;
-    static constexpr int LABEL_HEIGHT = 22;
+    void resized() override;
+    void lookAndFeelChanged() override;
 
-    void paint(Graphics& g) override;
+    void onLanguageSelected();
 
-    void onNextLanguage();
-    void onPrevLanguage();
-    
-    Label language_;
-    DrawableButton next_button_;
-    DrawableButton prev_button_;
-
-    StringArray languages_;
-    int language_index_;
+    ComboBox language_box_;
 };

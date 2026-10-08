@@ -3199,6 +3199,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <None Include="..\Images\Slider_Thumb_bw.svg" />
     <None Include="..\..\Resources\Strings\FxSound.ar.txt" />
     <None Include="..\..\Resources\Strings\FxSound.ba.txt" />
+    <None Include="..\..\Resources\Strings\FxSound.bg.txt" />
     <None Include="..\..\Resources\Strings\FxSound.cs.txt" />
     <None Include="..\..\Resources\Strings\FxSound.de.txt" />
     <None Include="..\..\Resources\Strings\FxSound.es.txt" />

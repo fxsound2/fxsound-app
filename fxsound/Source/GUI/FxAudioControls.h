@@ -55,6 +55,7 @@ private:
 		void resized() override;
 		void valueChanged() override;
 		bool keyPressed(const KeyPress& key) override;
+		void mouseDown(const juce::MouseEvent& event) override;
 
 		Label value_label_;
 

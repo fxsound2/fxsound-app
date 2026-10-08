@@ -122,6 +122,7 @@ public:
 	float getEqBandFrequency(int band_num);
     void setEqBandFrequency(int band_num, float freq);
     void getEqBandFrequencyRange(int band_num, float* min_freq, float* max_freq);
+    bool getDefaultEqBandFrequency(int band_num, float* freq);
 	float getEqBandBoostCut(int band_num);
 	void setEqBandBoostCut(int band_num, float boost);
     void getSpectrumBandValues(Array<float>& band_values);
@@ -160,7 +161,6 @@ public:
 
     String getLanguage() const;
     void setLanguage(String language_code);
-    String getLanguageName(String language_code) const;
 	int getMaxUserPresets() const;
 
 	bool getAutoUpdates();
