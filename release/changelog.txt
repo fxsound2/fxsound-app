@@ -1,3 +1,8 @@
+version 1.2.16.0
+----------------
+1. When output device changes, playback device volume is set to capture device (#615)
+2. Bulgarian language support added
+
 version 1.2.15.0
 ----------------
 1. Fixed installer launching FxSound with admin privileges after installation (#589)
