@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.16.0"
+<JUCERPROJECT id="F3FTdD" name="FxSound" projectType="guiapp" version="1.2.17.0"
               displaySplashScreen="1" jucerFormatVersion="1" companyName="FxSound LLC"
               companyWebsite="https://www.fxsound.com" companyCopyright="Copyright (C) 2026 FxSound LLC"
               defines="UNICODE" postExportShellCommandWin="type %%1%%\Project\status_icons.rc &gt;&gt; %%1%%\Project\resources.rc"
-              cppLanguageStandard="17">
+              cppLanguageStandard="latest">
   <MAINGROUP id="fy4sG5" name="FxSound">
     <GROUP id="{9737D476-EEC4-7E5E-0B04-48E2783CC448}" name="Fonts">
       <FILE id="Z6Zv1m" name="Gilroy-Bold.ttf" compile="0" resource="1" file="Fonts/Gilroy-Bold.ttf"/>
@@ -286,28 +286,26 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2022 targetFolder="Project" extraDefs="JUCE_MODAL_LOOPS_PERMITTED"
-            extraCompilerFlags="/bigobj /Qpar" externalLibraries="crypt32.lib;Wtsapi32.lib"
-            bigIcon="EFMcqw" windowsTargetPlatformVersion="Latest">
+    <VS2026 targetFolder="Project" extraCompilerFlags="/bigobj /Qpar" externalLibraries="crypt32.lib;Wtsapi32.lib"
+            smallIcon="EFMcqw" bigIcon="EFMcqw">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
-                       useRuntimeLibDLL="0" winArchitecture="x64" targetName="FxSound"/>
-        <CONFIGURATION isDebug="0" name="Release" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
-                       useRuntimeLibDLL="0" alwaysGenerateDebugSymbols="1" postbuildCommand="copy $(TargetPath) ..\..\bin\$(PlatformTarget)\ /y&#10;copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y"
-                       optimisation="4" debugInformationFormat="ProgramDatabase" winArchitecture="x64"
-                       targetName="FxSound"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="FxSound" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
+                       winArchitecture="ARM64,Win32,x64" useRuntimeLibDLL="0"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="FxSound" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
+                       winArchitecture="ARM64,Win32,x64" optimisation="4" useRuntimeLibDLL="0"
+                       postbuildCommand="copy $(TargetPath) ..\..\bin\$(PlatformTarget)\ /y&#10;copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_core" path="C:\JUCE\modules"/>
-        <MODULEPATH id="juce_cryptography" path="C:\JUCE\modules"/>
-        <MODULEPATH id="juce_data_structures" path="C:\JUCE\modules"/>
-        <MODULEPATH id="juce_events" path="C:\JUCE\modules"/>
-        <MODULEPATH id="juce_graphics" path="C:\JUCE\modules"/>
-        <MODULEPATH id="juce_gui_basics" path="C:\JUCE\modules"/>
-        <MODULEPATH id="juce_gui_extra" path="C:\JUCE\modules"/>
-        <MODULEPATH id="juce_opengl" path="C:\JUCE\modules"/>
+        <MODULEPATH id="juce_core" path="C:\JUCE8\modules"/>
+        <MODULEPATH id="juce_cryptography" path="C:\JUCE8\modules"/>
+        <MODULEPATH id="juce_data_structures" path="C:\JUCE8\modules"/>
+        <MODULEPATH id="juce_events" path="C:\JUCE8\modules"/>
+        <MODULEPATH id="juce_graphics" path="C:\JUCE8\modules"/>
+        <MODULEPATH id="juce_gui_basics" path="C:\JUCE8\modules"/>
+        <MODULEPATH id="juce_gui_extra" path="C:\JUCE8\modules"/>
+        <MODULEPATH id="juce_opengl" path="C:\JUCE8\modules"/>
       </MODULEPATHS>
-    </VS2022>
+    </VS2026>
   </EXPORTFORMATS>
   <MODULES>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>

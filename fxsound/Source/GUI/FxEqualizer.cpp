@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 FxEqualizer::FxEqualizer() : restore_defaults_button_("eqRestoreDefaultsButton", DrawableButton::ButtonStyle::ImageFitted)
 {
-    auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
     auto& controller = FxController::getInstance();
 
     restore_defaults_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButton), FXIMAGESIZE(RestoreDefaultsButton));
@@ -95,7 +94,6 @@ void FxEqualizer::reinit(int num_bands)
     band_gain_values_.resize(num_bands);
 
     // ------------------------------------------------------------ recreate all controls
-    auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
     float min_freq, max_freq;
 
     for (int i = 0; i < num_bands; i++)
@@ -131,7 +129,7 @@ void FxEqualizer::reinit(int num_bands)
     showValues(true);
 }
 
-void FxEqualizer::sliderValueChanged(Slider* slider)
+void FxEqualizer::sliderValueChanged(Slider*)
 {
 
 }
@@ -288,7 +286,7 @@ void FxEqualizer::resized()
     auto bounds = getLocalBounds();
 
     int x = X_MARGIN;
-    int width = (bounds.getWidth() - X_MARGIN*2) / labels_.size();
+    int width = (bounds.getWidth() - X_MARGIN*2) / static_cast<int>(labels_.size());
     int rotary_width = jmin(ROTARY_SLIDER_HEIGHT, width);
 
     bool show_center_frequencies = true;
@@ -363,9 +361,6 @@ void FxEqualizer::paint(Graphics& g)
     }
     else
     {
-        auto& controller = FxController::getInstance();
-
-        int num_bands = controller.getNumEqBands();
         for (int i = 0; i < num_bands; i++)
         {
             if (!controller.isHelpTooltipsHidden())
@@ -388,13 +383,13 @@ void FxEqualizer::paint(Graphics& g)
 
     for (auto i = 0; i < band_boosts_.size() - 1; i++) 
     {
-        auto y0 = band_boosts_[i]->getPositionOfValue(band_boosts_[i]->getValue()) + Y_MARGIN;
-        auto y1 = band_boosts_[i + 1]->getPositionOfValue(band_boosts_[i + 1]->getValue()) + Y_MARGIN;
+        auto y0 = static_cast<float>(band_boosts_[i]->getPositionOfValue(band_boosts_[i]->getValue()) + Y_MARGIN);
+        auto y1 = static_cast<float>(band_boosts_[i + 1]->getPositionOfValue(band_boosts_[i + 1]->getValue()) + Y_MARGIN);
 
-        auto x0 = band_boosts_[i]->getX() + band_boosts_[i]->getWidth() / 2;
-        auto x1 = band_boosts_[i + 1]->getX() + band_boosts_[i + 1]->getWidth() / 2;
+        auto x0 = static_cast<float>(band_boosts_[i]->getX() + band_boosts_[i]->getWidth() / 2);
+        auto x1 = static_cast<float>(band_boosts_[i + 1]->getX() + band_boosts_[i + 1]->getWidth() / 2);
 
-        path.addLineSegment(Line<float>(x0, y0, x1, y1), 1.0);
+        path.addLineSegment(Line<float>(x0, y0, x1, y1), 1.0f);
 
         if (band_boosts_[i]->isEnabled() || band_boosts_[i + 1]->isEnabled())
         {
@@ -410,29 +405,30 @@ void FxEqualizer::paint(Graphics& g)
 
     for (auto i = 0; i < band_boosts_.size(); i++) 
     {
-        auto x = band_boosts_[i]->getX() + band_boosts_[i]->getWidth() / 2;
-        auto y = band_boosts_[i]->getPositionOfValue(band_boosts_[i]->getValue()) + Y_MARGIN;
+        auto x = static_cast<float>(band_boosts_[i]->getX() + band_boosts_[i]->getWidth() / 2);
+        auto y = static_cast<float>(band_boosts_[i]->getPositionOfValue(band_boosts_[i]->getValue()) + Y_MARGIN);
 
         if (i == 0)                                           
         {
-            path.startNewSubPath(Point<float>(x, band_boosts_[i]->getBottom() - FxTheme::SLIDER_THUMB_RADIUS));
+            path.startNewSubPath(Point<float>(x, static_cast<float>(band_boosts_[i]->getBottom() - FxTheme::SLIDER_THUMB_RADIUS)));
         }
 
         path.lineTo(x, y);
 
         if (i == band_boosts_.size() - 1)
         {
-            path.lineTo(x, band_boosts_[i]->getBottom() - FxTheme::SLIDER_THUMB_RADIUS);
+            path.lineTo(x, static_cast<float>(band_boosts_[i]->getBottom() - FxTheme::SLIDER_THUMB_RADIUS));
         }
     }
     path.closeSubPath();
 
-    auto gradient = ColourGradient(gradient_colour_1, 0, band_boosts_[1]->getY(), gradient_colour_2, 0, band_boosts_[1]->getBottom(), false);
+    auto gradient = ColourGradient(gradient_colour_1, 0, static_cast<float>(band_boosts_[1]->getY()),
+                                   gradient_colour_2, 0, static_cast<float>(band_boosts_[1]->getBottom()), false);
     g.setFillType(FillType(gradient));
     g.fillPath(path);
 }
 
-FxEqualizer::FxEqSlider::FxEqSlider(int band, float max_gain)
+FxEqualizer::FxEqSlider::FxEqSlider(int band, float)
 {
     band_ = band;
 
@@ -440,7 +436,7 @@ FxEqualizer::FxEqSlider::FxEqSlider(int band, float max_gain)
 
     auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
 
-    gain_label_.setFont(theme.getNormalFont().withHeight(LABEL_HEIGHT));
+    gain_label_.setFont(theme.getSmallFont().withHeight(LABEL_HEIGHT));
     gain_label_.setJustificationType(Justification::centred);
     gain_label_.setInterceptsMouseClicks(false, false);
     addChildComponent(gain_label_);
@@ -456,7 +452,7 @@ void FxEqualizer::FxEqSlider::setGainValue(float value)
     gain_label_.setText(text, NotificationType::dontSendNotification);
 
     auto y = getPositionOfValue(value) - (FxTheme::SLIDER_THUMB_RADIUS *3);
-    gain_label_.setBounds(gain_label_.getBounds().withY(y));
+    gain_label_.setBounds(gain_label_.getBounds().withY(static_cast<int>(y)));
 }
 
 void FxEqualizer::FxEqSlider::showValue(bool show)
@@ -487,13 +483,13 @@ void FxEqualizer::FxEqSlider::valueChanged()
     auto value = getValue();
     if (value != FxController::getInstance().getEqBandBoostCut(band_))
     {
-        FxController::getInstance().setEqBandBoostCut(band_, value);
+        FxController::getInstance().setEqBandBoostCut(band_, static_cast<float>(value));
 
         auto text = String::formatted(value == 0.0 ? "%.0f" : "%+.0f", value);
         gain_label_.setText(text, NotificationType::dontSendNotification);
 
         auto y = getPositionOfValue(value) - (FxTheme::SLIDER_THUMB_RADIUS*3);
-        gain_label_.setBounds(gain_label_.getBounds().withY(y));
+        gain_label_.setBounds(gain_label_.getBounds().withY(static_cast<int>(y)));
     }
 }
 
@@ -597,7 +593,7 @@ void FxEqualizer::FxBandCenterFreqSlider::enablementChanged()
 
 void FxEqualizer::FxBandCenterFreqSlider::valueChanged()
 {
-    auto freq = getValue();
+    auto freq = static_cast<float>(getValue());
 
     if (freq != FxController::getInstance().getEqBandFrequency(band_))
     {

@@ -99,9 +99,9 @@ juce::var FxSound::Settings::getJson(juce::StringRef key) noexcept
 	return json.isNotEmpty() ? juce::JSON::parse(json) : juce::var{};
 }
 
-void FxSound::Settings::setString(StringRef key, String value, bool default) noexcept
+void FxSound::Settings::setString(StringRef key, String value, bool default_value) noexcept
 {
-    if (default)
+    if (default_value)
     {
         default_settings_.setValue(key, value);
     }
@@ -111,9 +111,9 @@ void FxSound::Settings::setString(StringRef key, String value, bool default) noe
     }	
 }
 
-void FxSound::Settings::setInt(StringRef key, int value, bool default) noexcept
+void FxSound::Settings::setInt(StringRef key, int value, bool default_value) noexcept
 {
-    if (default)
+    if (default_value)
     {
         default_settings_.setValue(key, value);
     }
@@ -123,9 +123,9 @@ void FxSound::Settings::setInt(StringRef key, int value, bool default) noexcept
     }
 }
 
-void FxSound::Settings::setDouble(StringRef key, double value, bool default) noexcept
+void FxSound::Settings::setDouble(StringRef key, double value, bool default_value) noexcept
 {
-    if (default)
+    if (default_value)
     {
         default_settings_.setValue(key, value);
     }
@@ -135,9 +135,9 @@ void FxSound::Settings::setDouble(StringRef key, double value, bool default) noe
     }
 }
 
-void FxSound::Settings::setBool(StringRef key, bool value, bool default) noexcept
+void FxSound::Settings::setBool(StringRef key, bool value, bool default_value) noexcept
 {
-    if (default)
+    if (default_value)
     {
         default_settings_.setValue(key, value);
     }

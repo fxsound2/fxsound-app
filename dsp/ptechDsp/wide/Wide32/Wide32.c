@@ -201,7 +201,7 @@ DSP_FUNC_DEF void DSPS_WIDE_PROCESS(long* lp_data, int l_length,
 
 	float out1, out2;
 	float in1, in2;
-	float mono_signal, l_minus_mono, r_minus_mono, side_signal;
+	float mono_signal, l_minus_mono, r_minus_mono;
 	float gainFactorSide, gainFactorCompensation;
 
 	load_parameter(); /* If its been sent, loads a parameter into memory */
@@ -211,8 +211,8 @@ DSP_FUNC_DEF void DSPS_WIDE_PROCESS(long* lp_data, int l_length,
 	// =======================================================================
 	//  SURROUND CONTROL PARAMETERS
 	// =======================================================================
-	gainFactorSide = 1 + 3.0 * s->intensity;  // (3 to 5) This is the surround intensity
-	gainFactorCompensation = 1 - 0.3 * s->intensity;  // (0.3)    This decreases also the mono signal so live it to 0.3
+	gainFactorSide = 1.0f + 3.0f * s->intensity;  // (3 to 5) This is the surround intensity
+	gainFactorCompensation = 1.0f - 0.3f * s->intensity;  // (0.3)    This decreases also the mono signal so live it to 0.3
 
 	for (int i = 0; i < l_length; i++)
 	{

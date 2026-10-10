@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <JuceHeader.h>
 #include "FxWindow.h"
+#include "FxController.h"
 
 //==============================================================================
 FxWindow::FxWindow(String name) : title_bar_(name), content_(nullptr)
@@ -36,6 +37,14 @@ FxWindow::FxWindow(String name) : title_bar_(name), content_(nullptr)
 FxWindow::~FxWindow()
 {
 	setLookAndFeel(nullptr);
+}
+
+void FxWindow::addToDesktop(int window_style_flags, void* native_window_to_attach_to)
+{
+	Component::addToDesktop(window_style_flags, native_window_to_attach_to);
+
+	// The peer only exists once the window is on the desktop
+	FxController::getInstance().setRenderingEngine(*this);
 }
 
 void FxWindow::setContent(Component* content)
@@ -157,7 +166,7 @@ void FxWindow::CloseButton::paintButton(Graphics& g, bool, bool)
 	g.fillAll(theme.getCurrentColourScheme().getUIColour(LookAndFeel_V4::ColourScheme::windowBackground));
 
 	auto rect = Justification(Justification::centred)
-		.appliedToRectangle(Rectangle<int>(getHeight(), getHeight()), getLocalBounds())
+		.appliedToRectangle(juce::Rectangle<int>(getHeight(), getHeight()), getLocalBounds())
 		.toFloat();
 
 	Path shape;
@@ -181,7 +190,6 @@ FxWindow::TitleBar::TitleBar(String name)
 		animation_icon_->setAlpha(0.0f);
 	}
 
-	setFocusContainer(true);
 	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
 
 	close_button_.setMouseCursor(MouseCursor::PointingHandCursor);
@@ -216,8 +224,7 @@ void FxWindow::TitleBar::addToolbarButton(Button* toolbarButton, bool right_alig
 		// On repaint, the translated button text is updated
 		if (TextButton* text_button = dynamic_cast<TextButton*>(toolbarButton))
 		{
-			auto& text = text_button->getName();
-			if (text.isNotEmpty())
+			if (const auto& text = text_button->getName() ; text.isNotEmpty())
 			{
 				text_button->setButtonText(TRANS(text));
 			}
@@ -241,7 +248,7 @@ void FxWindow::TitleBar::paint(Graphics& g)
     title_.setText(TRANS(name_), NotificationType::dontSendNotification);
     auto font = theme.getNormalFont();
     title_.setFont(font);
-    title_.setSize(font.getStringWidth(TRANS(name_)) * 2, (int)font.getHeight());
+    title_.setSize(static_cast<int>(GlyphArrangement::getStringWidth(font, TRANS(name_)) * 2), static_cast<int>(font.getHeight()));
 
 	for (auto& item : toolbar_buttons_)
 	{
@@ -249,8 +256,7 @@ void FxWindow::TitleBar::paint(Graphics& g)
 
 		if (TextButton* text_button = dynamic_cast<TextButton*>(button))
 		{
-			auto& text = text_button->getName();
-			if (text.isNotEmpty())
+			if (const auto& text = text_button->getName() ; text.isNotEmpty())
 			{
 				text_button->setButtonText(TRANS(text));
 			}
@@ -383,7 +389,7 @@ void FxWindow::TitleBar::updateLogo()
 		title_.setColour(Label::ColourIds::textColourId, theme.getCurrentColourScheme().getUIColour(LookAndFeel_V4::ColourScheme::highlightedText));
 		title_.setFont(font);
 		title_.setJustificationType(Justification::centredLeft);
-		title_.setSize(font.getStringWidth(name_) * 2, (int)font.getHeight());
+		title_.setSize(static_cast<int>(GlyphArrangement::getStringWidth(font, name_) * 2), static_cast<int>(font.getHeight()));
 		title_.setVisible(true);
 	}
 

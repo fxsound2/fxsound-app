@@ -28,7 +28,7 @@ FxAudioSettingsPane::FxAudioSettingsPane() :
 	prioritize_new_output_toggle_(TRANS("Prioritize new output devices")),
 	reset_presets_button_(TRANS("Reset presets to factory defaults"))
 {
-	setFocusContainer(true);
+	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
 
 	output_preference_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	output_preference_title_.setJustificationType(Justification::centredLeft);
@@ -92,10 +92,10 @@ void FxAudioSettingsPane::resized()
     y = output_preference_.getBottom() + 10;
     prioritize_new_output_toggle_.setBounds(X_MARGIN, y, width, TOGGLE_BUTTON_HEIGHT);
 
-	auto group_x = output_preference_title_.getX() - GROUP_MARGIN;
-	auto group_y = output_preference_title_.getY() - GROUP_MARGIN;
-	auto group_width = output_preference_.getRight() - group_x + GROUP_MARGIN;
-	auto group_height = prioritize_new_output_toggle_.getBottom() - group_y + GROUP_MARGIN;
+	auto group_x = static_cast<float>(output_preference_title_.getX() - GROUP_MARGIN);
+	auto group_y = static_cast<float>(output_preference_title_.getY() - GROUP_MARGIN);
+	auto group_width = static_cast<float>(output_preference_.getRight() - group_x + GROUP_MARGIN);
+	auto group_height = static_cast<float>(prioritize_new_output_toggle_.getBottom() - group_y + GROUP_MARGIN);
 	output_preference_bounds_ = juce::Rectangle<float>(group_x, group_y, group_width, group_height);
 
 	y = prioritize_new_output_toggle_.getBottom() + 30;
@@ -118,7 +118,7 @@ void FxAudioSettingsPane::setText()
 {
 	auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
 
-	output_preference_title_.setFont(theme.getNormalFont());
+	output_preference_title_.setFont(theme.getNormalFont().withHeight(15.0f));
 	output_preference_title_.setText(TRANS("Output Device Preference"), NotificationType::dontSendNotification);
 
 	prioritize_new_output_toggle_.setButtonText(TRANS("Prioritize new output devices"));

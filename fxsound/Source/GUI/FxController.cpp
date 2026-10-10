@@ -171,6 +171,8 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 		logMessage(String("ARM64"));
 	}
 
+    gpu_render_ = false;
+
 	auto view = settings_.getInt("view");
 	if (view <= 0 || view > 2)
 	{
@@ -234,6 +236,14 @@ void FxController::initConfig(const String& commandline)
 	auto mastergain = arg_list.getValueForOption("--master_gain");
 	auto volume_leveling = arg_list.getValueForOption("--volume_leveling");
 
+    if (arg_list.containsOption("--gpu"))
+    {
+		if (juce::SystemStats::getOperatingSystemType() > juce::SystemStats::Windows7)
+		{
+            gpu_render_ = true;
+		}
+    }
+
 	if (arg_list.containsOption("--run_minimized"))
 	{
 		settings_.setBool("run_minimized", true);
@@ -296,7 +306,7 @@ void FxController::initConfig(const String& commandline)
 	float vl = 0;
 	if (volume_leveling.isEmpty())
 	{
-		vl = settings_.getDouble("volume_leveling");
+		vl = static_cast<float>(settings_.getDouble("volume_leveling"));
 	}
 	else
 	{
@@ -308,7 +318,7 @@ void FxController::initConfig(const String& commandline)
 	float bl = 0;
 	if (balance == "")
 	{
-		bl = settings_.getDouble("balance");
+		bl = static_cast<float>(settings_.getDouble("balance"));
 	}
 	else
 	{
@@ -320,7 +330,7 @@ void FxController::initConfig(const String& commandline)
 	float fq = 0;
 	if (filterq == "")
 	{
-		fq = settings_.getDouble("filter_q");
+		fq = static_cast<float>(settings_.getDouble("filter_q"));
 	}
 	else
 	{
@@ -332,7 +342,7 @@ void FxController::initConfig(const String& commandline)
 	float mg = 0;
 	if (mastergain == "")
 	{
-		mg = settings_.getDouble("master_gain");
+		mg = static_cast<float>(settings_.getDouble("master_gain"));
 	}
 	else
 	{
@@ -705,9 +715,12 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		if (audio_passthru_->init() != 0)
 		{
 			String message(TRANS("Error in system audio configuration. Unable to run FxSound"));
-			AlertWindow::showMessageBox(AlertWindow::AlertIconType::WarningIcon, JUCEApplication::getInstance()->getApplicationName(), message, TRANS("OK"));
+			AlertWindow::showMessageBoxAsync(AlertWindow::AlertIconType::WarningIcon, JUCEApplication::getInstance()->getApplicationName(), message, TRANS("OK"), nullptr,
+				ModalCallbackFunction::create([] (int)
+				{
+					JUCEApplication::getInstance()->systemRequestedQuit();
+				}));
 
-			JUCEApplication::getInstance()->systemRequestedQuit();
 			return;
 		}
 
@@ -730,9 +743,11 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		if (!dfx_enabled_ && !SysInfo::isRemoteSession())
 		{
 			main_window_->removeFromDesktop();
-			FxDeviceErrorMessage error_message;
-			error_message.runModalLoop();
-			JUCEApplication::getInstance()->systemRequestedQuit();
+			auto* error_message = new FxDeviceErrorMessage();
+			error_message->enterModalState(true, ModalCallbackFunction::create([](int)
+			{
+				JUCEApplication::getInstance()->systemRequestedQuit();
+			}), true);
 			return;
 		}
 
@@ -939,16 +954,16 @@ void FxController::showMainWindow()
 
 		if (survey_tip_)
 		{
-			uint32_t survey_timer = settings_.getInt("survey_timer");
+			int survey_timer = settings_.getInt("survey_timer");
 			if (survey_timer == 0)
 			{
-				survey_timer = std::time(nullptr) + (7 * (24 * 60 * 60));
+				survey_timer = static_cast<int>(std::time(nullptr) + (7 * (24 * 60 * 60)));
 				settings_.setInt("survey_timer", survey_timer);
 			}
 			else
 			{
-				uint32_t current_time = std::time(nullptr);
-				if (current_time > survey_timer)
+				uint64_t current_time = std::time(nullptr);
+				if ((int)current_time > survey_timer)
 				{
 					survey_tip_ = false;
 					settings_.setBool("survey_displayed", true);
@@ -1382,7 +1397,7 @@ void FxController::resetPresets()
 	FxModel::getModel().pushMessage(TRANS("Presets are restored to factory defaults"));
 }
 
-bool FxController::exportPresets(const Array< FxModel::Preset>& presets)
+void FxController::exportPresets(const Array< FxModel::Preset>& presets, std::function<void (bool)> onComplete)
 {
 	auto path_name = File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory).getFullPathName()) + L"FxSound\\Presets\\Export\\";
 
@@ -1392,29 +1407,58 @@ bool FxController::exportPresets(const Array< FxModel::Preset>& presets)
 		path.createDirectory();
 	}
 
-	bool exported = false;
+	auto export_path = path.getFullPathName();
 
-	for (auto preset : presets)
+	// Walk the presets one at a time instead of a blocking for-loop: FxConfirmationMessage::showMessage()
+	// is asynchronous now, so each preset only moves on to the next once the user has answered (or once
+	// it is exported outright, when no overwrite confirmation is needed).
+	auto presets_to_process = std::make_shared<Array<FxModel::Preset>>(presets);
+	auto index = std::make_shared<int>(0);
+	auto exported = std::make_shared<bool>(false);
+
+	auto processNext = std::make_shared<std::function<void()>>();
+	*processNext = [this, presets_to_process, index, exported, path_name, export_path, processNext, onComplete]()
 	{
-		bool skip = false;
+		if (*index >= presets_to_process->size())
+		{
+			onComplete(*exported);
+			*processNext = nullptr;
+			return;
+		}
 
+		auto preset = (*presets_to_process)[(*index)++];
 		auto preset_file = File(path_name + preset.name + ".fac");
+
+		auto doExport = [this, preset, export_path, exported, processNext]()
+		{
+			dfx_dsp_.exportPreset(preset.path.toWideCharPointer(), preset.name.toWideCharPointer(), export_path.toWideCharPointer());
+			*exported = true;
+			(*processNext)();
+		};
+
 		if (preset_file.exists())
 		{
-			if (!FxConfirmationMessage::showMessage(FormatString(TRANS("Preset file %s already exists in the export path, do you want to overwrite the preset file?"), preset.name)))
-			{
-				skip = true;
-			}
+			FxConfirmationMessage::showMessage(FormatString(TRANS("Preset file %s already exists in the export path, do you want to overwrite the preset file?"), preset.name),
+				FxConfirmationMessage::Style::YesNo,
+				[doExport, processNext](bool overwrite)
+				{
+					if (overwrite)
+					{
+						doExport();
+					}
+					else
+					{
+						(*processNext)();
+					}
+				});
 		}
-
-		if (!skip)
+		else
 		{
-			dfx_dsp_.exportPreset(preset.path.toWideCharPointer(), preset.name.toWideCharPointer(), path.getFullPathName().toWideCharPointer());
-			exported = true;
+			doExport();
 		}
-	}
+	};
 
-	return exported;
+	(*processNext)();
 }
 
 bool FxController::importPresets(const Array<File>& preset_files, StringArray& imported_presets, StringArray& skipped_presets)
@@ -1634,9 +1678,11 @@ void FxController::selectProcessingOutput(std::vector<SoundDevice>& sound_device
 			if (!SysInfo::isRemoteSession())
 			{
 				main_window_->removeFromDesktop();
-				FxDeviceErrorMessage error_message;
-				error_message.runModalLoop();
-				JUCEApplication::getInstance()->systemRequestedQuit();
+                auto* error_message = new FxDeviceErrorMessage();
+                error_message->enterModalState(true, ModalCallbackFunction::create([](int)
+                {
+                    JUCEApplication::getInstance()->systemRequestedQuit();
+                }), true);
 				return;
 			}
 		}
@@ -2423,6 +2469,15 @@ void FxController::getWindowPosition(int& x, int& y)
 	y = settings_.getInt("window_y", 0);
 }
 
+void FxController::setRenderingEngine(juce::Component& component)
+{
+	if (auto* peer = component.getPeer())
+	{
+		// Engine index 0 is GDI (software), 1 is Direct2D.
+		peer->setCurrentRenderingEngine(gpu_render_ ? 1 : 0);
+	}
+}
+
 juce::Array<DeviceConfig> FxController::getDeviceConfigs()
 {
 	return DeviceConfig::loadDeviceConfigs(settings_, "device_configs");
@@ -2684,7 +2739,7 @@ void FxController::getSpectrumBandValues(Array<float>& band_values)
 		}
 		else
 		{
-			band_values.set(i, 0.01);
+			band_values.set(i, 0.01f);
 		}
 	}
 }

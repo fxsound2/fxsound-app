@@ -74,7 +74,7 @@ void FxSettingsDialog::SettingsButton::paint(Graphics& g)
 	auto w = bounds.getWidth() - bounds.getHeight() + 5;
 
 	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
-	g.setFont(theme.getNormalFont());
+	g.setFont(theme.getNormalFont().withHeight(15.0f));
 	g.drawText(TRANS(getName()), juce::Rectangle<int>(bounds.getHeight()+5, 0, w, bounds.getHeight()), Justification::centredLeft);
 }
 

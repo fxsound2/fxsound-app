@@ -17,7 +17,7 @@ PresetNameInputFilter::PresetNameInputFilter()
 	reservedChars.add('*');
 }
 
-juce::String PresetNameInputFilter::filterNewText(juce::TextEditor& textEditor, const juce::String& newText)
+juce::String PresetNameInputFilter::filterNewText(juce::TextEditor&, const juce::String& newText)
 {
 	// Iterate through the new text and remove any reserved characters
 	juce::String filteredText;
@@ -125,4 +125,12 @@ void FxPresetNameEditor::textEditorTextChanged(TextEditor& textEditor)
 void FxPresetNameEditor::lookAndFeelChanged()
 {
 	repaint();
+}
+
+void FxPresetNameEditor::visibilityChanged()
+{
+    if (isVisible())
+    {
+        preset_editor_.grabKeyboardFocus();
+    }
 }

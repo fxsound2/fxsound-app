@@ -34,7 +34,7 @@ FxGeneralSettingsPane::FxGeneralSettingsPane() :
 	StringArray hotkey_names = { "Turn FxSound On/Off", "Open/Close FxSound",
 								   "Use Next Preset", "Use Previous Preset", "Change Playback Device"};
 
-	setFocusContainer(true);
+	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
 
 	launch_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
 	launch_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
