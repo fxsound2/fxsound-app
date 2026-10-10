@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include <JuceHeader.h>
+#include "FxController.h"
 
 class FxOutputPreferenceListModel;
 

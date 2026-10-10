@@ -172,6 +172,10 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\Source\GUI\FxPresetImportDialog.cpp" />
     <ClCompile Include="..\Source\GUI\FxPresetExportDialog.cpp" />
     <ClCompile Include="..\Source\GUI\FxSettingsDialog.cpp" />
+    <ClCompile Include="..\Source\GUI\FxSettingsPane.cpp" />
+    <ClCompile Include="..\Source\GUI\FxAudioSettingsPane.cpp" />
+    <ClCompile Include="..\Source\GUI\FxGeneralSettingsPane.cpp" />
+    <ClCompile Include="..\Source\GUI\FxHelpSettingsPane.cpp" />
     <ClCompile Include="..\Source\GUI\FxTheme.cpp" />
     <ClCompile Include="..\Source\GUI\FxMessage.cpp" />
     <ClCompile Include="..\Source\GUI\FxMainWindow.cpp" />
@@ -1974,6 +1978,10 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClInclude Include="..\Source\GUI\FxPresetImportDialog.h" />
     <ClInclude Include="..\Source\GUI\FxPresetExportDialog.h" />
     <ClInclude Include="..\Source\GUI\FxSettingsDialog.h" />
+    <ClInclude Include="..\Source\GUI\FxSettingsPane.h" />
+    <ClInclude Include="..\Source\GUI\FxAudioSettingsPane.h" />
+    <ClInclude Include="..\Source\GUI\FxGeneralSettingsPane.h" />
+    <ClInclude Include="..\Source\GUI\FxHelpSettingsPane.h" />
     <ClInclude Include="..\Source\GUI\FxTheme.h" />
     <ClInclude Include="..\Source\GUI\FxMessage.h" />
     <ClInclude Include="..\Source\GUI\FxMainWindow.h" />

@@ -435,6 +435,18 @@
     <ClCompile Include="..\Source\GUI\FxSettingsDialog.cpp">
       <Filter>FxSound\Source\GUI\Dialogs</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\GUI\FxSettingsPane.cpp">
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\GUI\FxAudioSettingsPane.cpp">
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\GUI\FxGeneralSettingsPane.cpp">
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\GUI\FxHelpSettingsPane.cpp">
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\GUI\FxTheme.cpp">
       <Filter>FxSound\Source\GUI\Theme</Filter>
     </ClCompile>
@@ -2313,6 +2325,18 @@
       <Filter>FxSound\Source\GUI\Dialogs</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxSettingsDialog.h">
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\GUI\FxSettingsPane.h">
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\GUI\FxAudioSettingsPane.h">
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\GUI\FxGeneralSettingsPane.h">
+      <Filter>FxSound\Source\GUI\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\GUI\FxHelpSettingsPane.h">
       <Filter>FxSound\Source\GUI\Dialogs</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\GUI\FxTheme.h">

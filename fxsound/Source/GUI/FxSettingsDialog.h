@@ -18,17 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#include <vector>
 #include <JuceHeader.h>
 #include "FxWindow.h"
-#include "FxHyperlink.h"
-#include "FxController.h"
-#include "FxModel.h"
-#include "FxTheme.h"
-#include "FxHotkeyLabel.h"
-#include "FxLanguage.h"
-#include "FxAudioSlider.h"
-#include "FxBalanceSlider.h"
-#include "FxOutputPreference.h"
+#include "FxSettingsPane.h"
 
 //==============================================================================
 /*
@@ -70,120 +63,6 @@ private:
 		std::unique_ptr<Drawable> image_;
 	};
 
-	class SettingsPane : public Component
-	{
-	public:    
-		SettingsPane(String name);
-		~SettingsPane() = default;
-
-	protected:
-        void paint(Graphics& g) override;
-
-		static constexpr int X_MARGIN = 20;
-		static constexpr int Y_MARGIN = 5;
-		static constexpr int TITLE_HEIGHT = 24;
-
-        Label title_;
-
-		String name_;
-	};
-
-	class AudioSettingsPane : public SettingsPane
-	{
-	public:
-		AudioSettingsPane();
-		~AudioSettingsPane();
-
-		void resized() override;
-		void paint(Graphics& g) override;
-
-	private:
-		static constexpr int GROUP_MARGIN = 10;
-		static constexpr int ENDPOINT_Y = 50;
-		static constexpr int LABEL_WIDTH = 220;
-		static constexpr int OUTPUT_PREFERENCE_HEIGHT = 260;
-		static constexpr int LABEL_HEIGHT = 14;
-		static constexpr int TOGGLE_BUTTON_HEIGHT = 30;
-		static constexpr int RESET_PRESETS_BUTTON_WIDTH = 220;
-		static constexpr int BUTTON_HEIGHT = 24;
-		static constexpr int MAX_BUTTON_WIDTH = 315;
-
-		void setText();
-		void resizeResetButton(int x, int y);
-
-		void visibilityChanged() override;
-		void mouseEnter(const MouseEvent& mouse_event) override;
-		void mouseExit(const MouseEvent& mouse_event) override;
-
-		Label output_preference_title_;
-		FxOutputPreference output_preference_;
-		ToggleButton prioritize_new_output_toggle_;
-
-		TextButton reset_presets_button_;
-
-		juce::Rectangle<float> output_preference_bounds_;
-	};
-
-	class GeneralSettingsPane : public SettingsPane
-	{
-	public:
-		GeneralSettingsPane();
-		~GeneralSettingsPane();
-
-		void resized() override;
-		void paint(Graphics& g) override;
-
-	private:
-		static constexpr int LANGUAGE_SWITCH_Y = 50;
-		static constexpr int TOGGLE_BUTTON_HEIGHT = 30;
-		static constexpr int HOTKEY_LABEL_X = X_MARGIN + 25;
-		static constexpr int HOTKEY_LABEL_HEIGHT = 20;
-		static constexpr int LANGUAGE_LABEL_HEIGHT = 24;
-		static constexpr int LANGUAGE_LIST_WIDTH = 120;
-		static constexpr int LANGUAGE_LIST_HEIGHT = 30;
-
-        void setText();
-
-        ToggleButton launch_toggle_;
-        ToggleButton hide_help_tips_toggle_;
-		ToggleButton hide_notifications_toggle_;
-		ToggleButton hotkeys_toggle_;
-		OwnedArray<FxHotkeyLabel> hotkey_labels_;
-		FxLanguage language_switch_;
-	};
-
-	class HelpSettingsPane : public SettingsPane
-	{
-	public:
-		HelpSettingsPane();
-		~HelpSettingsPane() = default;
-
-		void resized() override;
-		void paint(Graphics& g) override;
-
-	private:
-		static constexpr int TEXT_Y = 50;
-		static constexpr int TITLE_HEIGHT = 24;
-		static constexpr int TEXT_HEIGHT = 20;
-		static constexpr int HYPERLINK_HEIGHT = 24;
-		static constexpr int TOGGLE_BUTTON_HEIGHT = 24;
-		static constexpr int BUTTON_WIDTH = 220;
-
-        void setText();
-        
-		Label version_title_;
-		Label support_title_;
-		Label maintenance_title_;
-		Label version_text_;
-		FxHyperlink changelog_link_;
-		FxHyperlink quicktour_link_;
-		FxHyperlink submitlogs_link_;
-		FxHyperlink helpcenter_link_;
-		FxHyperlink feedback_link_;
-		ToggleButton auto_updates_toggle_;
-		ToggleButton debug_log_toggle_;
-	};
-
 	class SettingsComponent : public Component, public Button::Listener
 	{
 	public:
@@ -204,13 +83,15 @@ private:
 		static constexpr int BUTTON_HEIGHT = 40;
 		static constexpr int SEPARATOR_X = 152;
 
-		std::unique_ptr<SettingsButton> audio_button_;
-		std::unique_ptr<SettingsButton> general_button_;
-		std::unique_ptr<SettingsButton> help_button_;
+		struct PaneEntry
+		{
+			std::unique_ptr<SettingsButton> button;
+			std::unique_ptr<FxSettingsPane> pane;
+		};
 
-		AudioSettingsPane audio_settings_pane_;
-		GeneralSettingsPane general_settings_pane_;
-		HelpSettingsPane help_settings_pane_;
+		void addPane(const String& name, const void* icon_data, int icon_data_size, std::unique_ptr<FxSettingsPane> pane);
+
+		std::vector<PaneEntry> panes_;
 	};
 
 	SettingsComponent settings_content_;
