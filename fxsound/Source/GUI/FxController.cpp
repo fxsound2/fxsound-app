@@ -1421,6 +1421,7 @@ void FxController::exportPresets(const Array< FxModel::Preset>& presets, std::fu
 		if (*index >= presets_to_process->size())
 		{
 			onComplete(*exported);
+			*processNext = nullptr;
 			return;
 		}
 

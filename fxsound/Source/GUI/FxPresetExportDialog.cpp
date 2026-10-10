@@ -174,10 +174,10 @@ void FxPresetExportDialog::PresetExportComponent::buttonClicked(Button* button)
         export_button_.setEnabled(false);
 
         auto selected_presets = preset_list_.getSelectedRows();
+        auto* parent = Component::getParentComponent();
 
-        auto finish = [this] (bool show_explorer)
+        auto finish = [this, parent] (bool show_explorer)
         {
-            auto* parent = Component::getParentComponent();
             auto closeDialog = [parent] (bool)
             {
                 parent->exitModalState(0);
