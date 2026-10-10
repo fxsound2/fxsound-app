@@ -276,7 +276,6 @@ int PT_DECLSPEC sndDevicesFree(PT_HANDLE *hp_sndDevices)
 int PT_DECLSPEC sndDevices_ReleaseAllAudioObjects(PT_HANDLE *hp_sndDevices)
 {
 	struct sndDevicesHdlType* cast_handle;
-	HRESULT hr;
 
 	cast_handle = (struct sndDevicesHdlType *)hp_sndDevices;
 

@@ -17,9 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "FxNotification.h"
+#include "FxController.h"
 
 FxNotification::FxNotification()
 {
+	line_count_ = 0;
+    link_line_ = 0;
+
     setSize(WIDTH, HEIGHT);
 
 	setVisible(false);
@@ -77,7 +81,7 @@ void FxNotification::setMessage(const String& message, const std::pair<String, S
 	message_link_.setButtonText(link.first);
 	message_link_.setURL(URL(link.second));
 
-    auto font = theme.getSmallFont().withHeight(17.0f);
+    auto font = theme.getSmallFont().withHeight(15.0f);
 
 	for (int i=0; i<3; i++)
 	{
@@ -123,7 +127,7 @@ void FxNotification::setMessage(const String& message, const std::pair<String, S
 		}
 
         auto margin = autohide ? 80 : 40;
-		line_width = font.getStringWidth(lines[i]) + link_width;
+		line_width = static_cast<int>(GlyphArrangement::getStringWidth(font, lines[i])) + link_width;
 		if (line_width > WIDTH-margin)
 		{
 			if (line_width > MAX_WIDTH-margin)
@@ -163,8 +167,8 @@ void FxNotification::showMessage(bool autohide)
 		if (last_line == link_line_)
 		{
             auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
-			auto font = theme.getSmallFont().withHeight(17.0f);
-			x += font.getStringWidth(message_lines_[last_line].getText());
+			auto font = theme.getSmallFont().withHeight(15.0f);
+			x += static_cast<int>(GlyphArrangement::getStringWidth(font, message_lines_[last_line].getText()));
 		}
         message_link_.setBounds(x, link_line_ * 20 + 30, width, 20);
 		message_link_.setVisible(true);
@@ -179,6 +183,7 @@ void FxNotification::showMessage(bool autohide)
     if (autohide)
     {
         addToDesktop(0);
+        FxController::getInstance().setRenderingEngine(*this);
         toFront(true);
         Desktop::getInstance().getAnimator().fadeIn(this, 200);
 
@@ -209,7 +214,7 @@ void FxNotification::paint(Graphics& g)
 
     g.setFillType(FillType(Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f)));
         
-    g.fillRoundedRectangle(0, 0, (float)getWidth(), (float)getHeight(), 16);    
+    g.fillRoundedRectangle(0, 0, (float)getWidth(), (float)getHeight(), 16);
 }
 
 void FxNotification::timerCallback()

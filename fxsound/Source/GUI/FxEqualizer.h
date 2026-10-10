@@ -40,7 +40,7 @@ public:
 
     void reinit(int num_bands);
 
-    void sliderValueChanged(Slider*slider) override;
+    void sliderValueChanged(Slider*) override;
     void sliderDragStarted(Slider* slider) override;
     void sliderDragEnded(Slider* slider) override;
 
@@ -62,7 +62,7 @@ private:
         void showValue(bool show);
 
     private:
-        static constexpr int LABEL_HEIGHT = 12;
+        static constexpr int LABEL_HEIGHT = 11;
 
         void resized() override;
         void valueChanged() override;
@@ -98,7 +98,7 @@ private:
 	static constexpr int WIDTH = 776;
 	static constexpr int HEIGHT = 257;
 	static constexpr int SLIDER_HEIGHT = 180;
-	static constexpr int LABEL_HEIGHT = 12;
+	static constexpr int LABEL_HEIGHT = 11;
 	static constexpr int SMALL_FONT = 10;
     static constexpr int ROTARY_SLIDER_HEIGHT = 36;
 	static constexpr int X_MARGIN = 16;

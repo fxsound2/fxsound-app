@@ -32,7 +32,7 @@ FxAudioSlider::FxAudioSlider(String label_format, float default_value) : default
 
 	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
 
-	value_label_.setFont(theme.getNormalFont().withHeight(12.0f));
+	value_label_.setFont(theme.getSmallFont().withHeight(11.0f));
 	value_label_.setJustificationType(Justification::centredLeft);
 	addAndMakeVisible(value_label_);
 
@@ -101,6 +101,6 @@ void FxAudioSlider::updateLabel()
 
 	// Position label based on slider thumb position
 	auto pos = getPositionOfValue(value);
-	auto x = pos + FxTheme::SLIDER_THUMB_RADIUS / 2 + 1;
+	auto x = static_cast<int>(pos) + FxTheme::SLIDER_THUMB_RADIUS / 2 + 1;
 	value_label_.setBounds(x, (getHeight() - LABEL_HEIGHT) / 2, LABEL_WIDTH, LABEL_HEIGHT);
 }

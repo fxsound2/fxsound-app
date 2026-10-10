@@ -83,9 +83,6 @@ int dfxp_SetKnobValue_MIDI(PT_HANDLE *hp_dfxp, int i_knob_type, int i_midi_value
 	if (cast_handle == NULL)
 		return(OKAY);
 
-	realtype r_eq_setting_normalized;
-	realtype r_eq_setting_db;
-
    if (!(cast_handle->fully_initialized))
 		return(NOT_OKAY);
 

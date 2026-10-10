@@ -38,7 +38,7 @@ FxBalanceSlider::FxBalanceSlider(float default_value) : default_value_(default_v
 	setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	setWantsKeyboardFocus(true);
 
-	value_label_.setFont(theme.getNormalFont().withHeight(12.0f));
+	value_label_.setFont(theme.getSmallFont().withHeight(11.0f));
 	value_label_.setJustificationType(Justification::centredLeft);
 
 	addAndMakeVisible(value_label_);
@@ -68,14 +68,14 @@ void FxBalanceSlider::paint(Graphics& g)
 	auto layout = theme.getSliderLayout(*this);
 
 	auto radius = FxTheme::SLIDER_THUMB_RADIUS;
-	auto bounds = layout.sliderBounds;
+	auto bounds = layout.sliderBounds.toFloat();
 	auto x = bounds.getX();
 	auto y = bounds.getY();
 	auto width = bounds.getWidth();
 	auto height = bounds.getHeight();
 	auto pos = getPositionOfValue(getValue());
 
-	auto value = getValue();
+	auto value = static_cast<float>(getValue());
 	float scaled_value = (value - (-20.0f)) / (20.0f - (-20.0f));
 
 	Colour left_colour = Colour(FXCOLOR(SliderTrack)).withAlpha(1.0f - scaled_value);
@@ -89,12 +89,12 @@ void FxBalanceSlider::paint(Graphics& g)
 	ColourGradient gradient = ColourGradient::horizontal(left_colour, x, right_colour, width);
 
 	g.setGradientFill(gradient);
-	g.fillRoundedRectangle(x, y + (height - 3) / 2, width, 3, 5.6f);
+	g.fillRoundedRectangle(x, y + (height - 3.0f) / 2.0f, width, 3.0f, 5.6f);
 
 	if (isEnabled())
-		slider_thumb_->drawWithin(g, juce::Rectangle<float>(pos - radius, y + height / 2 - radius, radius * 2, radius * 2), { RectanglePlacement::centred }, 1.0f);
+		slider_thumb_->drawWithin(g, juce::Rectangle<float>(pos - radius, y + height / 2.0f - radius, radius * 2.0f, radius * 2.0f), { RectanglePlacement::centred }, 1.0f);
 	else
-		slider_thumb_grey_->drawWithin(g, juce::Rectangle<float>(pos - radius, y + height / 2 - radius, radius * 2, radius * 2), { RectanglePlacement::centred }, 1.0f);
+		slider_thumb_grey_->drawWithin(g, juce::Rectangle<float>(pos - radius, y + height / 2.0f - radius, radius * 2.0f, radius * 2.0f), { RectanglePlacement::centred }, 1.0f);
 
 	if (hasKeyboardFocus(true))
 	{
@@ -150,7 +150,7 @@ void FxBalanceSlider::updateValueLabel()
 	// Position label based on slider thumb position
 	auto pos = getPositionOfValue(value);
 	auto x = pos + FxTheme::SLIDER_THUMB_RADIUS / 2 + 1;
-	value_label_.setBounds(x, (getHeight() - LABEL_HEIGHT) / 2, LABEL_WIDTH, LABEL_HEIGHT);
+	value_label_.setBounds(static_cast<int>(x), (getHeight() - LABEL_HEIGHT) / 2, LABEL_WIDTH, LABEL_HEIGHT);
 
 	slider_thumb_ = Drawable::createFromImageData(FXIMAGE(SliderThumb), FXIMAGESIZE(SliderThumb));
 	slider_thumb_grey_ = Drawable::createFromImageData(FXIMAGE(SliderThumbBW), FXIMAGESIZE(SliderThumbBW));

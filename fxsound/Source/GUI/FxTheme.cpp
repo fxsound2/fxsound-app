@@ -121,9 +121,9 @@ Label* FxTheme::createComboBoxTextBox(ComboBox& box)
 Font FxTheme::getComboBoxFont(ComboBox& box)
 {
 	if (box.getHeight() <= 30)
-		return Font(font_600_).withHeight(14.0f);
+		return Font(FontOptions(font_600_).withHeight(12.5f));
     else
-		return Font(font_600_).withHeight(17.0f);
+		return Font(FontOptions(font_600_).withHeight(15.0f));
 }
 
 void FxTheme::positionComboBoxText(ComboBox& box, Label& label)
@@ -159,9 +159,9 @@ void FxTheme::drawComboBox(Graphics& g, int width, int height, bool,
 
 	g.setColour(box.findColour(ComboBox::arrowColourId).withAlpha((box.isEnabled() ? 1.0f : 0.2f)));
     if (box.isEnabled())
-	    drop_down_arrow_->drawWithin(g, Rectangle<float>(width - margin, 0, 12, height), { RectanglePlacement::centred }, 1.0f);
+	    drop_down_arrow_->drawWithin(g, Rectangle<float>(static_cast<float>(width - margin), 0.0f, 12.0f, static_cast<float>(height)), { RectanglePlacement::centred }, 1.0f);
     else
-        drop_down_arrow_grey_->drawWithin(g, Rectangle<float>(width - margin, 0, 12, height), { RectanglePlacement::centred }, 1.0f);
+        drop_down_arrow_grey_->drawWithin(g, Rectangle<float>(static_cast<float>(width - margin), 0.0f, 12.0f, static_cast<float>(height)), { RectanglePlacement::centred }, 1.0f);
 }
 
 void FxTheme::drawComboBoxTextWhenNothingSelected(Graphics& g, ComboBox& box, Label& label)
@@ -187,7 +187,7 @@ void FxTheme::drawLinearSlider(Graphics& g, int x, int y, int width, int height,
 	{
 		float dash_lengths[] = { 5, 2 };
 
-		auto radius = getSliderThumbRadius(slider);
+		auto radius = static_cast<float>(getSliderThumbRadius(slider));
 
         Colour colour1;
         colour1 = Colour(FXCOLOR(SliderTrack)).withAlpha(0.4f);
@@ -201,23 +201,23 @@ void FxTheme::drawLinearSlider(Graphics& g, int x, int y, int width, int height,
         }
 
 		g.setGradientFill(ColourGradient(colour1, { 0, 0 }, colour2, { 0, (float)height }, false));
-		g.drawDashedLine(Line<float>(x+width/2, y, x+width/2, y+height), dash_lengths, _countof(dash_lengths), 1.0f);
+		g.drawDashedLine(Line<float>(static_cast<float>(x+width/2), static_cast<float>(y), static_cast<float>(x+width/2), static_cast<float>(y+height)), dash_lengths, _countof(dash_lengths), 1.0f);
 
         if (slider.isEnabled())
-		    slider_thumb_->drawWithin(g, Rectangle<float>(x+width/2-radius, sliderPos-radius, radius*2, radius*2), { RectanglePlacement::centred }, 1.0f);
+		    slider_thumb_->drawWithin(g, Rectangle<float>(static_cast<float>(x + width / 2) - radius, sliderPos - radius, radius * 2, radius * 2), {RectanglePlacement::centred}, 1.0f);
         else
-            slider_thumb_grey_->drawWithin(g, Rectangle<float>(x + width / 2 - radius, sliderPos - radius, radius * 2, radius * 2), { RectanglePlacement::centred }, 1.0f);
+            slider_thumb_grey_->drawWithin(g, Rectangle<float>(static_cast<float>(x + width / 2) - radius, sliderPos - radius, radius * 2, radius * 2), { RectanglePlacement::centred }, 1.0f);
 
         if (slider.getThumbBeingDragged() >= 0 || slider.hasKeyboardFocus(true))
         {
             Colour colour = Colour(FXCOLOR(SliderHighlight)).withAlpha(0.1f);
             g.setFillType(colour);
-            g.fillRoundedRectangle(juce::Rectangle<float>(x + (width - SLIDER_THUMB_RADIUS*4) / 2, y, SLIDER_THUMB_RADIUS * 4, height).expanded(0, SLIDER_THUMB_RADIUS), 20);
+            g.fillRoundedRectangle(juce::Rectangle<float>(static_cast<float>(x + (width - SLIDER_THUMB_RADIUS*4) / 2), static_cast<float>(y), static_cast<float>(SLIDER_THUMB_RADIUS * 4), static_cast<float>(height)).expanded(0, SLIDER_THUMB_RADIUS), 20);
         }
 	}
 	else if (style == Slider::LinearHorizontal)
 	{
-		auto radius = getSliderThumbRadius(slider);
+		auto radius = static_cast<float>(getSliderThumbRadius(slider));
 
         Colour colour = Colour(FXCOLOR(SliderTrack)).withAlpha(0.2f);
         if (!slider.isEnabled())
@@ -226,7 +226,7 @@ void FxTheme::drawLinearSlider(Graphics& g, int x, int y, int width, int height,
         }
 
 		g.setFillType(colour);
-		g.fillRoundedRectangle(x, y+(height-3)/2, width, 3, 5.6f);
+		g.fillRoundedRectangle(static_cast<float>(x), static_cast<float>(y+(height-3)/2), static_cast<float>(width), 3.0f, 5.6f);
 
         colour = Colour(FXCOLOR(SliderTrack)).withAlpha(1.0f);
         if (!slider.isEnabled())
@@ -235,18 +235,18 @@ void FxTheme::drawLinearSlider(Graphics& g, int x, int y, int width, int height,
         }
 
 		g.setFillType(colour);
-		g.fillRoundedRectangle(x, y+(height-3)/2, sliderPos, 3, 5.6f);
+		g.fillRoundedRectangle(static_cast<float>(x), static_cast<float>(y+(height-3)/2), sliderPos, 3.0f, 5.6f);
 
         if (slider.isEnabled())
-		    slider_thumb_->drawWithin(g, Rectangle<float>(sliderPos-radius, y+height/2-radius, radius*2, radius*2), { RectanglePlacement::centred }, 1.0f);
+		    slider_thumb_->drawWithin(g, Rectangle<float>(sliderPos - radius, static_cast<float>(y + height / 2) - radius, radius * 2.0f, radius * 2.0f), { RectanglePlacement::centred }, 1.0f);
         else
-            slider_thumb_grey_->drawWithin(g, Rectangle<float>(sliderPos - radius, y + height / 2 - radius, radius * 2, radius * 2), { RectanglePlacement::centred }, 1.0f);
+            slider_thumb_grey_->drawWithin(g, Rectangle<float>(sliderPos - radius, static_cast<float>(y + height / 2) - radius, radius * 2.0f, radius * 2.0f), { RectanglePlacement::centred }, 1.0f);
 	
 		if (slider.hasKeyboardFocus(true))
 		{
-			Colour colour = Colour(FXCOLOR(SliderHighlight)).withAlpha(0.1f);
-			g.setFillType(colour);
-			g.fillRoundedRectangle(juce::Rectangle<float>(x, y, width, height).expanded(SLIDER_THUMB_RADIUS/2, SLIDER_THUMB_RADIUS/2), height+SLIDER_THUMB_RADIUS);
+			Colour fill_colour = Colour(FXCOLOR(SliderHighlight)).withAlpha(0.1f);
+			g.setFillType(fill_colour);
+			g.fillRoundedRectangle(juce::Rectangle<int>(x, y, width, height).expanded(SLIDER_THUMB_RADIUS/2, SLIDER_THUMB_RADIUS/2).toFloat(), static_cast<float>(height + SLIDER_THUMB_RADIUS));
 		}
 	}
 	else
@@ -313,9 +313,9 @@ void FxTheme::drawRotarySlider(Graphics& g, int x, int y, int width, int height,
     auto thumbY = thumbPoint.getY() - thumbRadius;
 
     if (slider.isEnabled())
-        slider_thumb_->drawWithin(g, Rectangle<float>(thumbX, thumbY, thumbRadius*2, thumbRadius*2), { RectanglePlacement::centred }, 1.0f);
+        slider_thumb_->drawWithin(g, Rectangle<float>(thumbX, thumbY, static_cast<float>(thumbRadius * 2), static_cast<float>(thumbRadius * 2)), { RectanglePlacement::centred }, 1.0f);
     else
-        slider_thumb_grey_->drawWithin(g, Rectangle<float>(thumbX, thumbY, thumbRadius * 2, thumbRadius * 2), { RectanglePlacement::centred }, 1.0f);
+        slider_thumb_grey_->drawWithin(g, Rectangle<float>(thumbX, thumbY, static_cast<float>(thumbRadius * 2), static_cast<float>(thumbRadius * 2)), { RectanglePlacement::centred }, 1.0f);
 }
 
 int FxTheme::getSliderThumbRadius(Slider& slider)
@@ -367,7 +367,7 @@ void FxTheme::drawPopupMenuItem(Graphics& g, const juce::Rectangle<int>& area, b
 
 Font FxTheme::getPopupMenuFont()
 {
-	return Font(font_600_).withHeight(17.0f);
+	return Font(FontOptions(font_600_).withHeight(15.0f));
 }
 
 void FxTheme::preparePopupMenuWindow(Component& new_window)
@@ -414,22 +414,22 @@ void FxTheme::loadFont(String language)
 
 Font FxTheme::getTextButtonFont(TextButton&, int button_height)
 {
-	return Font(font_600_.get()).withHeight(jmin(17.0f, (float)button_height));
+	return Font(FontOptions(font_600_).withHeight(jmin(14.0f, (float)button_height)));
 }
 
 Font FxTheme::getNormalFont()
 {
-	return Font(font_600_).withHeight(17.0f);
+	return Font(FontOptions(font_600_).withHeight(15.0f));
 }
 
 Font FxTheme::getSmallFont()
 {
-	return Font(font_400_).withHeight(14.0f);
+	return Font(FontOptions(font_400_).withHeight(14.0f));
 }
 
 Font FxTheme::getTitleFont()
 {
-	return Font(font_700_).withHeight(17.0f);
+	return Font(FontOptions(font_700_).withHeight(17.0f));
 }
 
 Typeface::Ptr FxTheme::getDefaultTypeface()
@@ -506,10 +506,10 @@ void FxTheme::drawDocumentWindowTitleBar(DocumentWindow& window, Graphics& g,
 	g.setColour(getCurrentColourScheme().getUIColour(ColourScheme::widgetBackground));
 	g.fillAll();
 
-	Font font(12.0f, Font::plain);
+	Font font(FontOptions{}.withHeight(12.0f).withStyle("plain"));
 	g.setFont(font);
 
-	auto textW = font.getStringWidth(window.getName());
+	auto textW = static_cast<int>(GlyphArrangement::getStringWidth(font, window.getName()));
 	auto iconW = 0;
 	auto iconH = 0;
 
@@ -635,7 +635,7 @@ TextLayout FxTheme::layoutTooltipText(const String& text, Colour colour) noexcep
     AttributedString s;
     s.setWordWrap(AttributedString::WordWrap::byWord);
     s.setJustification(Justification::centredLeft);
-    s.append(text, getNormalFont().withHeight(tooltipFontSize), colour);
+    s.append(text, getSmallFont().withHeight(tooltipFontSize), colour);
 
     TextLayout tl;
     tl.createLayout(s, (float)maxToolTipWidth);
