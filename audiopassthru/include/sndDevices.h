@@ -169,10 +169,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SND_DEVICES_REGISTRY_DFX_GUID								L"dfx_guid"
 #define SND_DEVICES_REGISTRY_DEFAULT_BUFFER_SIZE				L"default_buffer_size"
 
-/* Dfx Device sample freq flags */
-#define SND_DEVICES_DFX_SAMP_FREQ_44_1			0
-#define SND_DEVICES_DFX_SAMP_FREQ_48			1
-
 /* Controls the period in MS where following device callbacks are ignored */
 #define SND_DEVICES_CALLBACK_TIME_WINDOW		0
 /* Controls the time in MS that the callbacks wait before setting reset flag */
@@ -186,6 +182,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Time to wait in millisecs for the encoding thread termination to complete */
 #define SND_DEVICES_MAX_WAIT_FOR_ENCODING_THREAD_TERMINATION 1000
 
+#define SND_DEVICES_MIN_SAMP_FREQ 44100
 #define SND_DEVICES_MAX_SAMP_FREQ 192000
 #define SND_DEVICES_MIN_NUM_CHANS 2
 #define SND_DEVICES_MAX_NUM_CHANS 8
@@ -323,6 +320,8 @@ public:
 };
 
 
+class Resampler;
+
 struct sndDevicesHdlType {
    
 	/* Message info */
@@ -399,6 +398,7 @@ struct sndDevicesHdlType {
     UINT32 numPlaybackFramesAvailableToFill;	// The number of open frames available to fill in the system playback buffer.
 
 	UINT32 upsampleRatio;
+	Resampler *playbackResampler; // Upsamples processed frames to the playback rate.
 	float sigPower;
 	int bufferSizeMilliSecs;		// This is the average delay, actual internal buffers are twice this length.
 	//int playback_has_started;

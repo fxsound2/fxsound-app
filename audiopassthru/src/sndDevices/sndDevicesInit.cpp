@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mry.h"
 #include "u_sndDevices.h"
 #include "sndDevices.h"
+#include "Resampler.h"
 
 /*
  * FUNCTION: sndDevicesInit()
@@ -84,6 +85,7 @@ int PT_DECLSPEC sndDevicesInit(PT_HANDLE *hp_sndDevices, CSlout *hp_slout, int i
 	cast_handle->fFilePlaybackBuf = NULL;
 	cast_handle->captureBufAllocSize  = 0;
 	cast_handle->playbackBufAllocSize = 0;
+	cast_handle->playbackResampler = NULL;
 
 	cast_handle->initializationMode = i_initType;
 
@@ -260,6 +262,9 @@ int PT_DECLSPEC sndDevicesFree(PT_HANDLE *hp_sndDevices)
 
 		if( cast_handle->fFilePlaybackBuf != NULL )
 			free( cast_handle->fFilePlaybackBuf );
+
+		delete cast_handle->playbackResampler;
+		cast_handle->playbackResampler = NULL;
 	}
 	
 	hr = CoCreateInstance(cast_handle->CLSID_MMDeviceEnumerator, NULL, CLSCTX_ALL, cast_handle->IID_IMMDeviceEnumerator, (void**)&pEnumerator);

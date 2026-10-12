@@ -50,6 +50,7 @@ extern "C"
 #include "pwav.h"
 #include "com.h"
 #include "u_com.h"
+#include "Resampler.h"
 
 /* FUNCTION: comProcessBuffer()
  * DESCRIPTION:
@@ -94,10 +95,10 @@ int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, long *lp_data, float *rp
    struct comHdlType *cast_handle;
 	long *l_ptr;
 	float *f_ptr;
-	int leftover_samples;
-	int num_down_sample_sets;
 	int num_sample_sets_to_process;
-	int i,j;
+	int num_channels;
+	int num_resample_frames;
+	int i, j;
 
    cast_handle = (struct comHdlType *)hp_com;
 
@@ -120,29 +121,22 @@ int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, long *lp_data, float *rp
    // since /sdl option is turned on in DfxDsp (it is turned off in original code base so this was treated as warning instead of error).
 	f_ptr = (float *)l_ptr;
    
-	// Downsample the data if needed for higher data sampling frequencies
+	num_channels = i_stereo_in_mode ? 2 : 1;
+	num_resample_frames = l_length;
+
+	// Filter signals above the DSP rate down for processing and back up afterwards.
 	if(i_down_sample_ratio > 1)
 	{
-		f_ptr = (float *)l_ptr;
-		leftover_samples = l_length % i_down_sample_ratio;
-		num_down_sample_sets = l_length/i_down_sample_ratio;
-		num_sample_sets_to_process = num_down_sample_sets;
+		if( (cast_handle->resampler_hdl == NULL) || (l_length > cast_handle->resampler_hdl->getMaxFrames()) ||
+			!cast_handle->resampler_hdl->configure(i_down_sample_ratio, num_channels) )
+			return(NOT_OKAY);
 
-		if(i_stereo_in_mode)
-		{
-			for(i=0; i<num_down_sample_sets; i++)
-			{
-				f_ptr[i * 2]     = f_ptr[i * 2 * i_down_sample_ratio];
-				f_ptr[i * 2 + 1] = f_ptr[i * 2 * i_down_sample_ratio + 1];
-			}
-		}
-		else // Mono case
-		{
-			for(i=0; i< num_down_sample_sets; i++)
-			{
-				f_ptr[i] = f_ptr[i * i_down_sample_ratio];
-			}
-		}
+		num_resample_frames = l_length - (l_length % i_down_sample_ratio);
+		if(num_resample_frames == 0)
+			return(OKAY);
+
+		cast_handle->resampler_hdl->decimate(f_ptr, num_resample_frames, f_ptr);
+		num_sample_sets_to_process = num_resample_frames / i_down_sample_ratio;
 	}
 
 	if (cast_handle->softdsp_mode)
@@ -162,45 +156,14 @@ int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, long *lp_data, float *rp
 		return(NOT_OKAY);
    }
 
-	// Upsample the data if needed for higher data sampling frequencies
 	if(i_down_sample_ratio > 1)
 	{
-		if(i_stereo_out_mode)
-		{
-			for(i=(num_down_sample_sets - 1); i >= 0; i--)
-			{
-				// To be replace with sample averaging operation
-				for(j=0; j<i_down_sample_ratio; j++)
-				{
-					f_ptr[i * 2 * i_down_sample_ratio + j * 2] = f_ptr[i * 2];
-					f_ptr[i * 2 * i_down_sample_ratio + 1 + j * 2] = f_ptr[i * 2 + 1];
-				}
-			}
-			if( leftover_samples > 0 ) // Fill in leftover samples with last processed value
-				for(i=0; i<leftover_samples; i++)
-				{
-					f_ptr[ (num_down_sample_sets * i_down_sample_ratio + i) * 2 ] = 
-							f_ptr[ (num_down_sample_sets * i_down_sample_ratio - 1) * 2 ];
+		cast_handle->resampler_hdl->interpolate(f_ptr, num_sample_sets_to_process, f_ptr);
 
-					f_ptr[ (num_down_sample_sets * i_down_sample_ratio + i) * 2 + 1 ] = 
-							f_ptr[ (num_down_sample_sets * i_down_sample_ratio - 1) * 2 + 1 ];
-				}
-		}
-		else // Mono case
-		{
-			for(i=(num_down_sample_sets - 1); i >= 0; i--)
-			{
-				for(j=0; j<i_down_sample_ratio; j++)
-					f_ptr[i * i_down_sample_ratio + j] = f_ptr[i];
-			}
-
-			if( leftover_samples > 0 ) // Fill in leftover samples with last processed value
-				for(i=0; i<leftover_samples; i++)
-				{
-					f_ptr[ num_down_sample_sets * i_down_sample_ratio + i] = 
-							f_ptr[ num_down_sample_sets * i_down_sample_ratio - 1];
-				}
-		}
+		// Leftover frames past the last whole block repeat the final resampled frame.
+		for(i = num_resample_frames; i < l_length; i++)
+			for(j = 0; j < num_channels; j++)
+				f_ptr[i * num_channels + j] = f_ptr[(num_resample_frames - 1) * num_channels + j];
 	}
 
 	if ( i_format_flag == COM_24_BIT_SAMPLES )
