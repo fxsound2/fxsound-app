@@ -1,3 +1,12 @@
+version 1.2.17.0
+----------------
+1. Double-click on an equalizer gain dot, frequency knob, effect slider, or the master gain, volume leveling, filter Q and balance sliders resets it to the default value
+2. Restore Defaults button added to the equalizer to reset all its settings
+3. Language selection changed from previous/next buttons to a dropdown, with each language shown in its own typeface
+4. FxSound upgraded to JUCE 9. Fonts are adjusted for the improved text rendering
+5. Fixed Arabic text rendering issue of text being shown with disconnected letters in the wrong order
+6. CPU rendering is used by default. GPU rendering can be enabled with the --gpu command line option
+
 version 1.2.16.0
 ----------------
 1. When output device changes, playback device volume is set to capture device (#615)
