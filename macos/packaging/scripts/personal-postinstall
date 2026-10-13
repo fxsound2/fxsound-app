@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+if /usr/bin/pgrep -x coreaudiod >/dev/null; then
+    /usr/bin/killall coreaudiod
+fi
+printf '%s\n' 'FxSound installed in /Applications. Open FxSound after the audio service restarts.'

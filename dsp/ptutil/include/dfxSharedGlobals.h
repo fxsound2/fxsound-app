@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _DFX_SHARED_GLOBALS_H_
 
 #include "codedefs.h"
-#include "dfxpdefs.h"
+#include "dfxpDefs.h"
 #include "pt_defs.h"
 
 struct dfxSharedGlobalsType

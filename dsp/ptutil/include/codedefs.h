@@ -28,13 +28,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Add memory leak detection to debug versions (Requires Pre-Processor Define of _CRTDBG_MAP_ALLOC*/
 #include <stdlib.h>
+#include "dsp-word.h"
+#ifdef PT_PORTABLE_DSP
+#include "portable-runtime.h"
+#endif
 
 /* 5/20/13 - To allow Android/Linux builds, moved this windows specific include file down inside WIN32 block below
-#include <crtdbg.h> */
+#ifndef PT_PORTABLE_DSP
+#include <crtdbg.h>
+#endif */
 
 #ifndef __ANDROID__
+#ifndef PT_PORTABLE_DSP
 #include <crtdbg.h>
+#endif
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #endif //WIN32
 
 /* 
@@ -95,7 +105,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define OKAY 0
 #define NOT_OKAY_NO_BREAK 1 // Use this instead of NOT_OKAY when passed as parameter or assigned to a variable.
 
-#if defined( _DEBUG ) && !defined( __ANDROID__ )
+#if defined(PT_PORTABLE_DSP)
+#define NOT_OKAY 1
+#elif defined( _DEBUG ) && !defined( __ANDROID__ )
 	#ifdef UNICODE
 		static int ptDebugNotOkay(wchar_t *wcp_file, wchar_t *wcp_line)
 		{

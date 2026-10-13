@@ -15,7 +15,9 @@
 #define _FILE_H_
 
 #include <stdio.h>
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 
 #include "slout.h" 
 
@@ -117,12 +119,14 @@ int fileCreateListOfSubfolders_Wide(wchar_t *, wchar_t ***, int *, int, CSlout *
 int fileCreateListOfSubfiles_Wide(wchar_t *, wchar_t ***, int *, int, CSlout *);
 
 /* FileWin32Handle.cpp */
+#ifndef PT_PORTABLE_DSP
 HANDLE fileWin32CreateFile(LPCTSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode,
 									LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition,
 									DWORD dwFlagsAndAttributes, HANDLE hTemplateFile, CSlout *hp_slout);
 HANDLE fileWin32CreateFile_Wide(LPCWSTR lpwFileName, DWORD dwDesiredAccess, DWORD dwShareMode,
 												  LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition,
 												  DWORD dwFlagsAndAttributes, HANDLE hTemplateFile, CSlout *hp_slout);
+#endif
 
 /* fileSmartStringSearch.cpp */
 int PT_DECLSPEC fileSmartStringSearchLineBased(wchar_t *, wchar_t *, wchar_t *, char *, wchar_t *,	bool, bool *, bool *);

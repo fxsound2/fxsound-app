@@ -18,7 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* dfxpQuit.cpp */
 
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #include <stdio.h>
 
 #include "u_dfxp.h" /* Must go before codedefs.h due to mmgr */

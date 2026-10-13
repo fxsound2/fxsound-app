@@ -357,3 +357,5 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
+# Local macOS distribution artifacts
+/dist/

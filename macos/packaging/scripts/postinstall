@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+printf '%s\n' 'Driver-only development spike installed. No engine, GUI or user agent was installed.'
+printf '%s\n' 'Audio service was not restarted. Perform controlled activation in the target-system validation session.'

@@ -22,13 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "codedefs.h"
 #include "DfxSdk.h"
 #include "dfxp.h"
-#include "prelst.h"
-#include "file.h"
+#include "Prelst.h"
+#include "File.h"
 #include "qnt.h"
 #include <string>
 
 #include "BinauralSyn.h"
-#include "ptutil\dfxp\u_dfxp.h"
+#include "ptutil/dfxp/u_dfxp.h"
 #include "com.h"
 #include "dfxSharedUtil.h"
 #include "GraphicEq.h"
@@ -111,7 +111,22 @@ DfxDspPrivate::DfxDspPrivate()
 	{
 	}
 
-	//return(OKAY);
+	struct InitialEffect { dfxg_section_type *section; int knob; int button; };
+	const InitialEffect effects[] = {
+		{&fidelity_, DFX_UI_KNOB_FIDELITY, DFX_UI_BUTTON_FIDELITY},
+		{&ambience_, DFX_UI_KNOB_AMBIENCE, DFX_UI_BUTTON_AMBIENCE},
+		{&surround_, DFX_UI_KNOB_SURROUND, DFX_UI_BUTTON_SURROUND},
+		{&dynamic_boost_, DFX_UI_KNOB_DYNAMIC_BOOST, DFX_UI_BUTTON_DYNAMIC_BOOST},
+		{&bass_boost_, DFX_UI_KNOB_BASS_BOOST, DFX_UI_BUTTON_BASS_BOOST}
+	};
+	for (const auto &effect : effects)
+	{
+		*effect.section = {};
+		int enabled = IS_FALSE;
+		dfxpGetKnobValue(dfxp_handle_, effect.knob, &effect.section->value);
+		dfxpGetButtonValue(dfxp_handle_, effect.button, &enabled);
+		effect.section->bypass = !enabled;
+	}
 }
 
 
@@ -120,6 +135,7 @@ DfxDspPrivate::~DfxDspPrivate()
 	// So the thread/timer will not attempt to use this object while it's being destroyed.
 	being_destroyed_ = true;
 	
+#ifndef PT_PORTABLE_DSP
 	// Free the prelst
 	if (preset_list_handle_ != NULL)
 	{
@@ -127,6 +143,8 @@ DfxDspPrivate::~DfxDspPrivate()
 		{
 		}
 	}
+#endif
+
 	// Free the midi to rval and visa versa qnt handles
 	if (midi_to_rval_qnt_handle_ != NULL)
 	{
@@ -180,7 +198,9 @@ void DfxDspPrivate::processTimer()
 
 int DfxDspPrivate::processAudio(short int *si_input_samples, short int *si_output_samples, int i_num_sample_sets, int i_check_for_duplicate_buffers)
 {
+	#ifndef PT_PORTABLE_DSP
 	processTimer();
+	#endif
 	// Apply DFX processing here using data and format vars above. Format will always be 32 bit floating point.
 	if (dfxpUniversalModifySamples(dfxp_handle_, si_input_samples, si_output_samples, i_num_sample_sets, i_check_for_duplicate_buffers) != OKAY)
 		return(NOT_OKAY);
@@ -246,6 +266,8 @@ float DfxDspPrivate::getEffectValue(DfxDsp::Effect effect)
 
 	case DfxDsp::Effect::Bass:
 		return bass_boost_.value;
+	default:
+		return -1.0f;
 	}
 
 	return -1.0f;

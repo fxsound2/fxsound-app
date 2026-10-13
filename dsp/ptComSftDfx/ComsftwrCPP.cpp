@@ -30,14 +30,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Standard includes */
 #ifdef WIN32
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #include <winuser.h>
 #endif /* WIN32 */
 
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#ifndef PT_PORTABLE_DSP
 #include <malloc.h>
+#endif
 #include <string.h>
 
 #include "pt_defs.h"
@@ -128,7 +132,7 @@ int COMSFTWR_DECL comSftwrInitDspAlgorithmCPP(PT_HANDLE *hp_comSftwr, realtype r
 #else
 	long long perf_count;
 #endif
-	long sample_count_init;
+	DSP_WORD sample_count_init;
 	struct comSftwrHdlType *cast_handle;
 
 	cast_handle = (struct comSftwrHdlType *)hp_comSftwr;
@@ -153,9 +157,9 @@ int COMSFTWR_DECL comSftwrInitDspAlgorithmCPP(PT_HANDLE *hp_comSftwr, realtype r
 #endif
 
 #ifdef WIN32
-	sample_count_init = (long)(perf_count % (__int64)COMSFTWR_DEMO_SAMPLES_ALLOWED);
+	sample_count_init = (DSP_WORD)(perf_count % (__int64)COMSFTWR_DEMO_SAMPLES_ALLOWED);
 #else
-	sample_count_init = (long)(perf_count % (long long)COMSFTWR_DEMO_SAMPLES_ALLOWED);
+	sample_count_init = (DSP_WORD)(perf_count % (long long)COMSFTWR_DEMO_SAMPLES_ALLOWED);
 #endif
 	cast_handle->sample_count = sample_count_init;
 
@@ -266,8 +270,8 @@ int COMSFTWR_DECL comSftwrZeroDspMemoryCPP(PT_HANDLE *hp_comSftwr)
  */
 int COMSFTWR_DECL comSftwrAllocDspMemCPP(PT_HANDLE *hp_comSftwr)
 {
-	long memsize_required;
-	long current_memsize;
+	DSP_WORD memsize_required;
+	DSP_WORD current_memsize;
 	float *mem_ptr;
 	struct comSftwrHdlType *cast_handle;
 

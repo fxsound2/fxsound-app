@@ -18,7 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _MIDI_H_
 #define _MIDI_H_  
 
-/* #include <windows.h> */
+/* #ifndef PT_PORTABLE_DSP
+#include <windows.h>
+#endif */
       
 #include "slout.h"
 

@@ -15,7 +15,9 @@
 #ifndef _U_DFX_SHARED_UTIL_H_
 #define _U_DFX_SHARED_UTIL_H_
 
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #include <stdio.h>
 
 #include "codedefs.h"  

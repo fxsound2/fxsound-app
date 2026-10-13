@@ -1,3 +1,4 @@
+#include "dsp-word.h"
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
@@ -99,30 +100,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define D4_LEFT_TAP3_DELAY    (106.3/1000.0)
 
 /* Special structure used for parameters and state of algorithm */
-struct dspLexStructType
-{
+struct DSP_ALIAS dspLexStructType {
 	/* Parameters common to all dsp functions */
 	/* Note- must occupy same 32 word locations as defines in Boardrv1.h */
-	long pc_to_dsp_flags;
-	long dsp_to_pc_flags;
-	long dsp_number_of_elements;
+	DSP_WORD pc_to_dsp_flags;
+	DSP_WORD dsp_to_pc_flags;
+	DSP_WORD dsp_number_of_elements;
 	realtype dsp_sampling_freq;
-	long stereo_in_flag;
+	DSP_WORD stereo_in_flag;
 	float dsp_mute_in_flag;
-	long unassigned6;
-	long unassigned7;
-	long unassigned8;
-	long unassigned9;
+	DSP_WORD unassigned6;
+	DSP_WORD unassigned7;
+	DSP_WORD unassigned8;
+	DSP_WORD unassigned9;
 	realtype dry_gain;
 	realtype wet_gain;
 	realtype master_gain;
-	long dsp_dma_in_transfer;
-	long unassigned14;
-	long unassigned15;
-	long unassigned16;
-	long unassigned17;
-	long unassigned18;
-	long unassigned19;
+	DSP_WORD dsp_dma_in_transfer;
+	DSP_WORD unassigned14;
+	DSP_WORD unassigned15;
+	DSP_WORD unassigned16;
+	DSP_WORD unassigned17;
+	DSP_WORD unassigned18;
+	DSP_WORD unassigned19;
 
 	/* Note- algorithm specific parameters must occupy same 32 word locations
 	 * as defines below.
@@ -138,7 +138,7 @@ struct dspLexStructType
 	float one_minus_bandwidth;
 	float damping;
 	float one_minus_damping;
-	unsigned long pre_delay;
+	DSP_UWORD pre_delay;
 	float modulation_depth;
 	float modulation_freq;
 
@@ -149,53 +149,53 @@ struct dspLexStructType
 	float f_num_pts;
 
 	float *ptr;
-	unsigned long MasterLen;
+	DSP_UWORD MasterLen;
 	float *MasterStart;
 	float *MasterEnd;
 
-	unsigned long pre_dly_len_l;
+	DSP_UWORD pre_dly_len_l;
 
-	unsigned long lat1_dly_len_l;
+	DSP_UWORD lat1_dly_len_l;
 
-	unsigned long lat2_dly_len_l;
+	DSP_UWORD lat2_dly_len_l;
 
-	unsigned long lat3_dly_len_l;
+	DSP_UWORD lat3_dly_len_l;
 
-	unsigned long lat4_dly_len_l;
+	DSP_UWORD lat4_dly_len_l;
 
 	float lat5_dly_len_l;
-	unsigned long lat5_dly_maxlen_l;
+	DSP_UWORD lat5_dly_maxlen_l;
 
-	unsigned long D1_tap1;
-	unsigned long D1_tap2;
-	unsigned long D1_tap3;
-	unsigned long D1_tap4;
+	DSP_UWORD D1_tap1;
+	DSP_UWORD D1_tap2;
+	DSP_UWORD D1_tap3;
+	DSP_UWORD D1_tap4;
 
-	unsigned long lat6_tap1;
-	unsigned long lat6_tap2;
-	unsigned long lat6_dly_len_l;
+	DSP_UWORD lat6_tap1;
+	DSP_UWORD lat6_tap2;
+	DSP_UWORD lat6_dly_len_l;
 	float lat6_out_old_l;
 
-	unsigned long D2_tap1;
-	unsigned long D2_tap2;
-	unsigned long D2_tap3;
+	DSP_UWORD D2_tap1;
+	DSP_UWORD D2_tap2;
+	DSP_UWORD D2_tap3;
 
 	float lat7_dly_len_l;
-	unsigned long lat7_dly_maxlen_l;
+	DSP_UWORD lat7_dly_maxlen_l;
 
-	unsigned long D3_tap1;
-	unsigned long D3_tap2;
-	unsigned long D3_tap3;
-	unsigned long D3_tap4;
+	DSP_UWORD D3_tap1;
+	DSP_UWORD D3_tap2;
+	DSP_UWORD D3_tap3;
+	DSP_UWORD D3_tap4;
 
-	unsigned long lat8_tap1;
-	unsigned long lat8_tap2;
-	unsigned long lat8_dly_len_l;
+	DSP_UWORD lat8_tap1;
+	DSP_UWORD lat8_tap2;
+	DSP_UWORD lat8_dly_len_l;
 	float lat8_out_old_l;
 
-	unsigned long D4_tap1;
-	unsigned long D4_tap2;
-	unsigned long D4_tap3;
+	DSP_UWORD D4_tap1;
+	DSP_UWORD D4_tap2;
+	DSP_UWORD D4_tap3;
 	float D4_out;
 
 	float old_damp_val1_l;

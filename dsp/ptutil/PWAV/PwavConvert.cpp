@@ -21,7 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 
 #ifndef __ANDROID__
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #else
 #ifndef DWORD
 #define DWORD unsigned int
@@ -29,12 +31,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif //WIN32
 
 #include "codedefs.h"
-#include "pwav.h"
+#include "Pwav.h"
 
 // Handle and functions declared in u_pwav.h are only used in WIN32 builds.
 // The function pwave24BitToFloat should be moved out of the pwav module to eliminate these problems.
 #ifndef __ANDROID__
-#include "u_pwav.h"
+#ifndef PT_PORTABLE_DSP
+#include "U_pwav.h"
+#endif
 #endif //WIN32
 
 /*

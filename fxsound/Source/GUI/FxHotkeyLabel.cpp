@@ -18,6 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxHotkeyLabel.h"
 #include "FxController.h"
 #include "FxTheme.h"
+#if JUCE_MAC
+static constexpr int MOD_CONTROL=2,MOD_ALT=1,MOD_SHIFT=4;
+#endif
 
 FxHotkeyLabel::FxHotkeyLabel(const String& name, const String& command) : name_(name), hotkey_editor_(command)
 {
@@ -249,7 +252,7 @@ void FxHotkeyEditor::setKeyText()
 	{
 		if ((vk_ >= 0x30 && vk_ <= 0x39) || (vk_ >= 'A' && vk_ <= 'Z'))
 		{
-			key_text_ += static_cast<WCHAR>(vk_);
+			key_text_ += static_cast<juce_wchar>(vk_);
 		}
 	}
 

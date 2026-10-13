@@ -20,6 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define FXTHEME_H
 
 #include <JuceHeader.h>
+inline int fxTextWidth(const juce::Font& font,juce::StringRef text) {
+#if JUCE_MAJOR_VERSION >= 8
+    return juce::GlyphArrangement::getStringWidthInt(font,text);
+#else
+    return font.getStringWidth(text);
+#endif
+}
 
 //==============================================================================
 /*

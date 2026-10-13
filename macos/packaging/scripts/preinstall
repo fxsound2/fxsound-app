@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+if [ "${3:-/}" != / ]; then
+    echo 'FxSound spike supports only installation on the currently booted root volume.' >&2
+    exit 1
+fi
+for process in fxsound-engine fxsound-supervisor; do
+    if pgrep -f "(^|/)$process([[:space:]]|$)" >/dev/null; then
+        echo 'Coordinate routing restoration and stop every user engine/supervisor before installation.' >&2
+        exit 1
+    fi
+done
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+"$script_dir/audio-install-guard"

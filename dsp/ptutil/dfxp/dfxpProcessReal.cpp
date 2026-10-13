@@ -20,7 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* dfxpProcessReal.cpp */
 
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #include <stdio.h>
 #include <time.h>
 
@@ -363,7 +365,7 @@ int dfxpModifyRealtypeSamples(PT_HANDLE *hp_dfxp, realtype *rp_samples, int i_nu
 				(cast_handle->slout1)->Message_Wide(FIRST_LINE, L"dfxpModifyRealtypeSamples(): Calling comProcessWaveBuffer() : Case 1 or 2");
 			
 			
-			if (comProcessWaveBuffer(cast_handle->com_hdl_front, (long *)rp_buf, &tmp_float, (long)i_num_sample_sets, 
+			if (comProcessWaveBuffer(cast_handle->com_hdl_front, (DSP_WORD *)rp_buf, &tmp_float, (long)i_num_sample_sets,
                                stereo_in_mode, stereo_out_mode, cast_handle->internal_rate_ratio,(int)COM_32_BIT_FLOAT_SAMPLES) != OKAY)
 				return(NOT_OKAY);
 			
@@ -375,14 +377,14 @@ int dfxpModifyRealtypeSamples(PT_HANDLE *hp_dfxp, realtype *rp_samples, int i_nu
 			if ((cast_handle->trace.mode) && (!cast_handle->trace.i_process_real_samples_done))
 				(cast_handle->slout1)->Message_Wide(FIRST_LINE, L"dfxpModifyRealtypeSamples(): Calling comProcessWaveBuffer() : Case 4");
 
-			if (comProcessWaveBuffer(cast_handle->com_hdl_front, (long *)rp_channels, &tmp_float, (long)i_num_sample_sets, 
+			if (comProcessWaveBuffer(cast_handle->com_hdl_front, (DSP_WORD *)rp_channels, &tmp_float, (long)i_num_sample_sets,
                                IS_TRUE, IS_TRUE, cast_handle->internal_rate_ratio, (int)COM_32_BIT_FLOAT_SAMPLES) != OKAY)
 				return(NOT_OKAY);
 
 			rp_channels += 2 * i_num_sample_sets;
 			if( rear_nonzero )
 			{
-				if (comProcessWaveBuffer(cast_handle->com_hdl_rear, (long *)rp_channels, &tmp_float, (long)i_num_sample_sets, 
+				if (comProcessWaveBuffer(cast_handle->com_hdl_rear, (DSP_WORD *)rp_channels, &tmp_float, (long)i_num_sample_sets,
 											 IS_TRUE, IS_TRUE, cast_handle->internal_rate_ratio, (int)COM_32_BIT_FLOAT_SAMPLES) != OKAY)
 					return(NOT_OKAY);
 			}
@@ -394,14 +396,14 @@ int dfxpModifyRealtypeSamples(PT_HANDLE *hp_dfxp, realtype *rp_samples, int i_nu
 			if ((cast_handle->trace.mode) && (!cast_handle->trace.i_process_real_samples_done))
 				(cast_handle->slout1)->Message_Wide(FIRST_LINE, L"dfxpModifyRealtypeSamples(): Calling comProcessWaveBuffer() : Case 6");
 
-			if (comProcessWaveBuffer(cast_handle->com_hdl_front, (long *)rp_channels, &tmp_float, (long)i_num_sample_sets, 
+			if (comProcessWaveBuffer(cast_handle->com_hdl_front, (DSP_WORD *)rp_channels, &tmp_float, (long)i_num_sample_sets,
                                IS_TRUE, IS_TRUE, cast_handle->internal_rate_ratio, (int)COM_32_BIT_FLOAT_SAMPLES) != OKAY)
 				return(NOT_OKAY);
 
 			rp_channels += 2 * i_num_sample_sets;
 			if( center_nonzero )
 			{
-				if (comProcessWaveBuffer(cast_handle->com_hdl_center, (long *)rp_channels, &tmp_float, (long)i_num_sample_sets, 
+				if (comProcessWaveBuffer(cast_handle->com_hdl_center, (DSP_WORD *)rp_channels, &tmp_float, (long)i_num_sample_sets,
 											 IS_FALSE, IS_FALSE, cast_handle->internal_rate_ratio, (int)COM_32_BIT_FLOAT_SAMPLES) != OKAY)
 					return(NOT_OKAY);
 			}
@@ -409,7 +411,7 @@ int dfxpModifyRealtypeSamples(PT_HANDLE *hp_dfxp, realtype *rp_samples, int i_nu
 			rp_channels += i_num_sample_sets;
 			if( sub_nonzero )
 			{
-				if (comProcessWaveBuffer(cast_handle->com_hdl_subwoofer, (long *)rp_channels, &tmp_float, (long)i_num_sample_sets, 
+				if (comProcessWaveBuffer(cast_handle->com_hdl_subwoofer, (DSP_WORD *)rp_channels, &tmp_float, (long)i_num_sample_sets,
 											 IS_FALSE, IS_FALSE, cast_handle->internal_rate_ratio, (int)COM_32_BIT_FLOAT_SAMPLES) != OKAY)
 					return(NOT_OKAY);
 			}
@@ -417,7 +419,7 @@ int dfxpModifyRealtypeSamples(PT_HANDLE *hp_dfxp, realtype *rp_samples, int i_nu
 			rp_channels += i_num_sample_sets;
 			if( rear_nonzero )
 			{
-				if (comProcessWaveBuffer(cast_handle->com_hdl_rear, (long *)rp_channels, &tmp_float, (long)i_num_sample_sets, 
+				if (comProcessWaveBuffer(cast_handle->com_hdl_rear, (DSP_WORD *)rp_channels, &tmp_float, (long)i_num_sample_sets,
 											 IS_TRUE, IS_TRUE, cast_handle->internal_rate_ratio, (int)COM_32_BIT_FLOAT_SAMPLES) != OKAY)
 					return(NOT_OKAY);
 			}
@@ -430,14 +432,14 @@ int dfxpModifyRealtypeSamples(PT_HANDLE *hp_dfxp, realtype *rp_samples, int i_nu
 			if ((cast_handle->trace.mode) && (!cast_handle->trace.i_process_real_samples_done))
 				(cast_handle->slout1)->Message_Wide(FIRST_LINE, L"dfxpModifyRealtypeSamples(): Calling comProcessWaveBuffer() : Case 8");
 
-			if (comProcessWaveBuffer(cast_handle->com_hdl_front, (long *)rp_channels, &tmp_float, (long)i_num_sample_sets, 
+			if (comProcessWaveBuffer(cast_handle->com_hdl_front, (DSP_WORD *)rp_channels, &tmp_float, (long)i_num_sample_sets,
                                IS_TRUE, IS_TRUE, cast_handle->internal_rate_ratio, (int)COM_32_BIT_FLOAT_SAMPLES) != OKAY)
 				return(NOT_OKAY);
 
 			rp_channels += 2 * i_num_sample_sets;
 			if( center_nonzero )
 			{
-				if (comProcessWaveBuffer(cast_handle->com_hdl_center, (long *)rp_channels, &tmp_float, (long)i_num_sample_sets, 
+				if (comProcessWaveBuffer(cast_handle->com_hdl_center, (DSP_WORD *)rp_channels, &tmp_float, (long)i_num_sample_sets,
 											 IS_FALSE, IS_FALSE, cast_handle->internal_rate_ratio, (int)COM_32_BIT_FLOAT_SAMPLES) != OKAY)
 					return(NOT_OKAY);
 			}
@@ -445,7 +447,7 @@ int dfxpModifyRealtypeSamples(PT_HANDLE *hp_dfxp, realtype *rp_samples, int i_nu
 			rp_channels += i_num_sample_sets;
 			if( sub_nonzero )
 			{
-				if (comProcessWaveBuffer(cast_handle->com_hdl_subwoofer, (long *)rp_channels, &tmp_float, (long)i_num_sample_sets, 
+				if (comProcessWaveBuffer(cast_handle->com_hdl_subwoofer, (DSP_WORD *)rp_channels, &tmp_float, (long)i_num_sample_sets,
 											 IS_FALSE, IS_FALSE, cast_handle->internal_rate_ratio, (int)COM_32_BIT_FLOAT_SAMPLES) != OKAY)
 					return(NOT_OKAY);
 			}
@@ -453,7 +455,7 @@ int dfxpModifyRealtypeSamples(PT_HANDLE *hp_dfxp, realtype *rp_samples, int i_nu
 			rp_channels += i_num_sample_sets;
 			if( rear_nonzero )
 			{
-				if (comProcessWaveBuffer(cast_handle->com_hdl_rear, (long *)rp_channels, &tmp_float, (long)i_num_sample_sets, 
+				if (comProcessWaveBuffer(cast_handle->com_hdl_rear, (DSP_WORD *)rp_channels, &tmp_float, (long)i_num_sample_sets,
 											 IS_TRUE, IS_TRUE, cast_handle->internal_rate_ratio, (int)COM_32_BIT_FLOAT_SAMPLES) != OKAY)
 					return(NOT_OKAY);
 			}
@@ -461,7 +463,7 @@ int dfxpModifyRealtypeSamples(PT_HANDLE *hp_dfxp, realtype *rp_samples, int i_nu
 			rp_channels += 2 * i_num_sample_sets;
 			if( side_nonzero )
 			{
-				if (comProcessWaveBuffer(cast_handle->com_hdl_side, (long *)rp_channels, &tmp_float, (long)i_num_sample_sets, 
+				if (comProcessWaveBuffer(cast_handle->com_hdl_side, (DSP_WORD *)rp_channels, &tmp_float, (long)i_num_sample_sets,
 											 IS_TRUE, IS_TRUE, cast_handle->internal_rate_ratio, (int)COM_32_BIT_FLOAT_SAMPLES) != OKAY)
 					return(NOT_OKAY);
 			}

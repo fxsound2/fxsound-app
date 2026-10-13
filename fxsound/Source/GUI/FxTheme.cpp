@@ -200,7 +200,7 @@ void FxTheme::drawLinearSlider(Graphics& g, int x, int y, int width, int height,
         }
 
 		g.setGradientFill(ColourGradient(colour1, { 0, 0 }, colour2, { 0, (float)height }, false));
-		g.drawDashedLine(Line<float>(x+width/2, y, x+width/2, y+height), dash_lengths, _countof(dash_lengths), 1.0f);
+		g.drawDashedLine(Line<float>(x+width/2, y, x+width/2, y+height), dash_lengths, int(sizeof(dash_lengths)/sizeof(dash_lengths[0])), 1.0f);
 
         if (slider.isEnabled())
 		    slider_thumb_->drawWithin(g, Rectangle<float>(x+width/2-radius, sliderPos-radius, radius*2, radius*2), { RectanglePlacement::centred }, 1.0f);
@@ -555,7 +555,7 @@ void FxTheme::drawDocumentWindowTitleBar(DocumentWindow& window, Graphics& g,
 	Font font(12.0f, Font::plain);
 	g.setFont(font);
 
-	auto textW = font.getStringWidth(window.getName());
+	auto textW = fxTextWidth(font,window.getName());
 	auto iconW = 0;
 	auto iconH = 0;
 
@@ -691,7 +691,12 @@ TextLayout FxTheme::layoutTooltipText(const String& text, Colour colour) noexcep
 Typeface::Ptr FxTheme::loadTypeface(String fileName)
 {
     MemoryBlock fontBuffer;
+    #if JUCE_MAC
+    auto folder=File::getSpecialLocation(File::currentExecutableFile).getParentDirectory().getParentDirectory().getChildFile("Resources/Fonts");
+    String filePath=File::addTrailingSeparator(folder.getFullPathName());
+#else
     String filePath = File::addTrailingSeparator(File::getCurrentWorkingDirectory().getFullPathName());
+#endif
     File fontFile = File(filePath+fileName);
     if (fontFile.exists())
     {

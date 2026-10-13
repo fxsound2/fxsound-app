@@ -1,3 +1,4 @@
+#include "dsp-word.h"
 /* (C) COPYRIGHT 1994-1997 Power Technology. All Rights Reserved.
  * This document and file contain highly confidential information
  * which is not to be disclosed or in any other way retransmitted
@@ -32,7 +33,7 @@
  * not need to be shared, and is unique to
  * each instance of the dll.
  */
-/* extern long MEMBANK0_START[]; MOVED INTO .C FILES */
+/* extern DSP_WORD MEMBANK0_START[]; MOVED INTO .C FILES */
 
 #define MEMBANK0_LEN 0
 #define MEMBANK0_BIG_LEN DSPSOFT_MEM_LENGTH

@@ -20,9 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "codedefs.h"
 
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #include <stdio.h>
+#ifndef PT_PORTABLE_DSP
 #include <share.h>
+#endif
 
 #include "u_dfxp.h" 
 
@@ -30,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "spectrum.h"
 #include "DfxSdk.h"
 #include "reg.h"
-#include "file.h"
+#include "File.h"
 #include "dfxSharedUtil.h"
 
 /*
@@ -113,6 +117,10 @@ int dfxpSpectrumGetBandValues(PT_HANDLE* hp_dfxp, realtype* rp_band_values, int 
 
     if (cast_handle->spectrum.spectrum_hdl == NULL)
         return(OKAY);
+
+    #ifdef PT_PORTABLE_DSP
+    return dfxSharedUtilGetSpectrumValues(cast_handle->hp_sharedUtil, rp_band_values, i_array_size);
+    #endif
 
     if (spectrumGetBandValues(cast_handle->spectrum.spectrum_hdl, rp_band_values, i_array_size) != OKAY)
         return(NOT_OKAY);

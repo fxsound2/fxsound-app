@@ -18,7 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _U_VALS_H_
 #define _U_VALS_H_
 
+#ifndef PT_PORTABLE_DSP
 #include <Windows.h>
+#endif
 #include "codedefs.h"  
 #include "slout.h"
 #include "pt_defs.h"

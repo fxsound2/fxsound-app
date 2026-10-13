@@ -1,3 +1,4 @@
+#include "dsp-word.h"
 /* (C) COPYRIGHT 1994-1997 Power Technology. All Rights Reserved.
  * This document and file contain highly confidential information
  * which is not to be disclosed or in any other way retransmitted
@@ -24,7 +25,7 @@
 #define kerParamFiltExp(ip_delay_in, r_old_delay, alpha, i_delay_out) \
 { \
 	float r_tmp_MACRO; \
-	r_tmp_MACRO = alpha * *(volatile long *)ip_delay_in \
+	r_tmp_MACRO = alpha * dspReadWord((const float *)ip_delay_in, 0) \
 	           + ((float)1.0 - alpha) * r_old_delay; \
     r_old_delay = r_tmp_MACRO; \
 	i_delay_out = r_tmp_MACRO; \
@@ -34,9 +35,9 @@
  * Last line as shown to compile. Didn't sound so hot with delay */
 #define kerParamFiltLinear(ip_delay_in, r_old_delay, i_delay_out) \
 { \
-	long itmp_MACRO;\
+	DSP_WORD itmp_MACRO;\
 	i_delay_out = r_old_delay;\
-	itmp_MACRO = *(volatile long *)(ip_delay_in);\
+	itmp_MACRO = dspReadWord((const float *)ip_delay_in, 0);\
 	if( i_delay_out < itmp_MACRO ) i_delay_out += 1;\
 	else if( i_delay_out > itmp_MACRO ) i_delay_out -= 1; r_old_delay = i_delay_out; }
 

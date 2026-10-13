@@ -20,12 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "codedefs.h"
 
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
+#ifndef PT_PORTABLE_DSP
 #include <shlobj.h>
+#endif
 
 #include "u_dfxp.h" 
 
@@ -34,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mth.h"
 #include "DfxSdk.h"
 #include "mth.h"
-#include "file.h"
+#include "File.h"
 #include "pstr.h"
 
 /*
@@ -219,7 +223,7 @@ int dfxp_RegistryGetTopSharedFolderPath(PT_HANDLE *hp_dfxp,
 	if (wcp_top_shared_folder_path == NULL)
 		return(NOT_OKAY);
 
-	swprintf(wcp_top_shared_folder_path, L"");
+	wcp_top_shared_folder_path[0] = 0;
 
 	swprintf(wcp_full_key_path, L"%s\\%s\\%s\\%s", DFXP_REGISTRY_TOP_WIDE, 
 			     cast_handle->wcp_product_name, 
@@ -256,7 +260,7 @@ int dfxp_RegistryGetTopVendorSpecificFolderPath(PT_HANDLE *hp_dfxp,
 	if (wcp_top_vendor_specific_folder_path == NULL)
 		return(NOT_OKAY);
 
-	swprintf(wcp_top_vendor_specific_folder_path, L"");
+	wcp_top_vendor_specific_folder_path[0] = 0;
 
 	swprintf(wcp_full_key_path, L"%s\\%s\\%d\\%s", DFXP_REGISTRY_TOP_WIDE, 
 			     cast_handle->wcp_product_name, 
@@ -291,7 +295,7 @@ int dfxp_RegistryGetDfxUniversalUiFullpath(PT_HANDLE *hp_dfxp, wchar_t *wcp_dfx_
 	if (wcp_dfx_ui_path == NULL)
 		return(NOT_OKAY);
 
-	swprintf(wcp_dfx_ui_path, L"");
+	wcp_dfx_ui_path[0] = 0;
 
 	swprintf(wcp_full_key_path, L"%s\\%s\\%d\\%s", DFXP_REGISTRY_TOP_WIDE, 
 			     cast_handle->wcp_product_name, 

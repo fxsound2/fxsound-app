@@ -20,10 +20,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "codedefs.h"
 
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #include <stdio.h>
 #include <time.h>
+#ifndef PT_PORTABLE_DSP
 #include <share.h>
+#endif
 
 #include "u_dfxp.h" /* Must go before codedefs.h due to mmgr */
 
@@ -33,7 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "spectrum.h"
 #include "com.h"
 #include "DfxSdk.h"
-#include "file.h"
+#include "File.h"
 
 extern "C" {
 #include "comSftwr.h"

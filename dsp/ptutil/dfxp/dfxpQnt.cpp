@@ -18,7 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* dfxpQnt.cpp */
 
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #include <stdio.h>
 
 #include "u_dfxp.h" /* Must go before codedefs.h due to mmgr */
@@ -28,13 +30,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "qnt.h"
 #include "filt.h"
 #include "c_aural.h"
-#include "c_Play.h"
+#include "c_play.h"
 #include "c_lex.h"
 #include "c_max.h"
 #include "c_aural.h"
 #include "c_wid.h"
 #include "c_dly1.h"
-#include "Pt_defs.h"
+#include "pt_defs.h"
 #include "DfxSdk.h"
 #include "midi.h"
 

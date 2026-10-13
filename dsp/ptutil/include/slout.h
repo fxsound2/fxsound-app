@@ -50,7 +50,7 @@ public:
 
    virtual int Display_Wide(int, wchar_t *);
 
-#if defined( WIN32 ) // Wide char functions only supported in WIN32 builds.
+#if defined( WIN32 ) || defined(PT_PORTABLE_DSP) // Wide char functions only supported in WIN32 builds.
    virtual int Message_Wide(int, wchar_t *);
    virtual int Error_Wide(int, wchar_t *);
    virtual int Warning_Wide(int, wchar_t *);

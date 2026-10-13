@@ -23,12 +23,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "codedefs.h"
 
+#ifndef PT_PORTABLE_DSP
 #include <windows.h>
+#endif
 #include <stdio.h>
 
 #include "u_dfxp.h" 
 
 #include "dfxp.h"
+#ifdef PT_PORTABLE_DSP
+#include "dfxSharedUtil.h"
+#endif
 #include "DfxSdk.h"
 #include "qnt.h"
 //#include "dfxForWmpDefs.h"
@@ -457,6 +462,9 @@ int dfxpSetTotalAudioProcessedTime(PT_HANDLE *hp_dfxp, unsigned long ul_msec_aud
 		return(NOT_OKAY);
 
 	cast_handle->ul_total_msecs_audio_processed_time = ul_msec_audio_processed_time;
+#ifdef PT_PORTABLE_DSP
+	return dfxSharedUtilSetTotalProcessedTime(cast_handle->hp_sharedUtil, ul_msec_audio_processed_time);
+#endif
 
 	return(OKAY);
 }

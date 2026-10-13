@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleDevelopmentRegion</key><string>English</string>
+<key>CFBundleExecutable</key><string>FxSound</string>
+<key>CFBundleIdentifier</key><string>org.fxsound.virtual-audio</string>
+<key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+<key>CFBundleName</key><string>FxSound</string>
+<key>CFBundlePackageType</key><string>BNDL</string>
+<key>CFBundleShortVersionString</key><string>0.1.0</string>
+<key>CFBundleVersion</key><string>1</string>
+<key>CFPlugInDynamicRegistration</key><false/>
+<key>CFPlugInFactories</key><dict>
+<key>B06BD03A-CCBD-4DF8-B963-78D6528F9D12</key><string>FxSound_Create</string>
+</dict>
+<key>CFPlugInTypes</key><dict>
+<key>443ABAB8-E7B3-491A-B985-BEB9187030DB</key><array>
+<string>B06BD03A-CCBD-4DF8-B963-78D6528F9D12</string>
+</array></dict>
+</dict></plist>

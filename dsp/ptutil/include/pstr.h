@@ -35,7 +35,9 @@
 #define PSTR_COMPARE_FIRST_STRING_LOWER	    -1
 #define PSTR_COMPARE_FIRST_STRING_HIGHER	1
 
+#ifndef PT_PORTABLE_DSP
 #include <Windows.h>
+#endif
 
 /* pstr.cpp */
 int PT_DECLSPEC pstrCalcLocationOfCharInStr(char *, char, int *, int *);

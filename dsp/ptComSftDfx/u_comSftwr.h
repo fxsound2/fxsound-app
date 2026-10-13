@@ -1,3 +1,4 @@
+#include "dsp-word.h"
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
@@ -41,8 +42,8 @@ struct comSftwrHdlType {
 	/* Note that since player shares state and param space with all the dsp functs these still have to be big */
 	float dsp_state[DSPFX_MAX_NUM_PROCS * DSPS_NUM_STATE_VARS];
 	float dsp_params[DSPFX_MAX_NUM_PROCS * 2 * DSPS_MAX_NUM_PARAMS];
-	long dsp_memory_size_required;
-	long dsp_memory_size;
+	DSP_WORD dsp_memory_size_required;
+	DSP_WORD dsp_memory_size;
 	float *dsp_memory;
 
 	/* ---> Globals formerly in comSftwr.c <--- */
@@ -51,10 +52,10 @@ struct comSftwrHdlType {
 	int comSftwrReCuePending;
 	int comSftwrBitWidth;
 	struct hardwareMeterValType ComSftwrMeterData;
-	int (*comSftDspInitPtr[DSPS_MAX_NUM_PROC_FUNCTIONS]) (float *, float *, long, float *, int, float);
-	void (*comSftDspProcessPtr[DSPS_MAX_NUM_PROC_FUNCTIONS]) (long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-	long sample_count;
-	long silence_count;
+	int (*comSftDspInitPtr[DSPS_MAX_NUM_PROC_FUNCTIONS]) (float *, float *, DSP_WORD, float *, int, float);
+	void (*comSftDspProcessPtr[DSPS_MAX_NUM_PROC_FUNCTIONS]) (DSP_WORD *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+	DSP_WORD sample_count;
+	DSP_WORD silence_count;
 };
 
 #endif //_U_COMSFTWR_H

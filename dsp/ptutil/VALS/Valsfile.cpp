@@ -18,8 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "codedefs.h"
 
 /* Standard includes */
+#ifndef PT_PORTABLE_DSP
 #include <dos.h>
+#endif
+#ifndef PT_PORTABLE_DSP
 #include <conio.h>
+#endif
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -27,12 +31,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <time.h>
 
 #include "slout.h"
-#include "file.h"
+#include "File.h"
 #include "mry.h"
 #include "vals.h"
 #include "pstr.h"
 #include "pt_defs.h"
-#include "u_vals.h"
+#include "U_vals.h"
 #include "GraphicEq.h"
 
 #define LINE_LENGTH 128
@@ -222,7 +226,7 @@ int PT_DECLSPEC valsCalcDateStrings(wchar_t *wcp_filename, wchar_t *wcp_formatte
 				 (long)(tm_struct_ptr->tm_min * 60L) +
 				 (long)(tm_struct_ptr->tm_sec);
 
-	if (wcsftime(wcp_date_str, 16, L"%m%d%y", tm_struct_ptr) == 0)
+	if (wcsftime(wcp_date_str, 8, L"%m%d%y", tm_struct_ptr) == 0)
 		return(NOT_OKAY);
 
 	/*
@@ -253,7 +257,7 @@ int PT_DECLSPEC valsCalcDateStrings(wchar_t *wcp_filename, wchar_t *wcp_formatte
 	else if (length == 0)
 		swprintf(wcp_sec_str, L"00.000");
 
-	swprintf(wcp_filename, L"%s%s", wcp_date_str, wcp_sec_str);
+	swprintf(wcp_filename, 13, L"%s%s", wcp_date_str, wcp_sec_str);
 
 	return(OKAY);
 }
@@ -265,6 +269,7 @@ int PT_DECLSPEC valsCalcDateStrings(wchar_t *wcp_filename, wchar_t *wcp_formatte
  */
 int PT_DECLSPEC valsRead(wchar_t *wcp_file_path, int i_trace_mode, CSlout *hp_slout, PT_HANDLE **hpp_vals)
 {
+
 	FILE *stream;
 	char cp_str_utf8[PT_MAX_GENERIC_STRLEN];
 	wchar_t wcp_str[PT_MAX_GENERIC_STRLEN];
@@ -304,9 +309,16 @@ int PT_DECLSPEC valsRead(wchar_t *wcp_file_path, int i_trace_mode, CSlout *hp_sl
 	}
 
 	/* Open the file for reading */
+#ifdef PT_PORTABLE_DSP
+	stream = dspOpenValidatedPreset(wcp_file_path);
+#else
 	stream = fileOpen_Wide(wcp_file_path, L"r", hp_slout);
+#endif
 	if (stream == NULL)
+	{
+		free(cast_handle);
 		return(NOT_OKAY);
+	}
 
 	/* Get the Effect Type */
 	fgetws(wcp_str, LINE_LENGTH, stream);

@@ -1,3 +1,4 @@
+#include "dsp-word.h"
 /* (C) COPYRIGHT 1994-1997 Power Technology. All Rights Reserved.
  * This document and file contain highly confidential information
  * which is not to be disclosed or in any other way retransmitted
@@ -14,16 +15,16 @@
 #if (defined(DUIO_B) | defined(DUIO_BA) | defined(DUIO_BD))
 /* Global to code - LOOK OUT- CODE SEEMS VERY SENSITIVE TO LOCATION OF THESE */
 #define DMA_GLOBAL_DECLARATIONS \
-volatile unsigned long *comd_stat = (unsigned long *)(0x82FFF0);\
-volatile unsigned long *xfer_reg = (unsigned long *)(0x82fff3);\
-long *in_data_buf0;\
-long *in_data_buf1;\
-long *out_data_buf0;\
-long *out_data_buf1;\
-long *read_in_buf;\
-long *read_out_buf;\
-static long parm_address_MACRO;\
-static long address_valid_flag_MACRO = 0;
+volatile DSP_UWORD *comd_stat = (DSP_UWORD *)(0x82FFF0);\
+volatile DSP_UWORD *xfer_reg = (DSP_UWORD *)(0x82fff3);\
+DSP_WORD *in_data_buf0;\
+DSP_WORD *in_data_buf1;\
+DSP_WORD *out_data_buf0;\
+DSP_WORD *out_data_buf1;\
+DSP_WORD *read_in_buf;\
+DSP_WORD *read_out_buf;\
+static DSP_WORD parm_address_MACRO;\
+static DSP_WORD address_valid_flag_MACRO = 0;
 
 /* Local to code (just above main run loop) LOOK OUT- CODE SEEMS VERY SENSITIVE TO LOCATION OF THESE
  * buf_num, data_index, dma_mode_flag are set to start off, will use buf0 first.
@@ -40,10 +41,10 @@ unsigned buf_num  = 1;\
 unsigned data_index;\
 unsigned first_time_output = 1;\
 unsigned first_time_input = 1; \
-static long in_meter1_dma = 0; \
-static long in_meter2_dma = 0;
-static long out_meter1_dma = 0; \
-static long out_meter2_dma = 0;
+static DSP_WORD in_meter1_dma = 0; \
+static DSP_WORD in_meter2_dma = 0;
+static DSP_WORD out_meter1_dma = 0; \
+static DSP_WORD out_meter2_dma = 0;
 
 /* Macro version. For some reason, subroutine version causes pops
  * when used in program. See subroutine version for comments.
@@ -70,7 +71,7 @@ static long out_meter2_dma = 0;
     asm("	LSH  16,AR2");\
 	asm("	OR   AR2,IE");\
 	asm("	POP  AR2");\
-	*(volatile long *)(DSP_DMA_IN_TRANSFER) = 0L;
+	*(volatile DSP_WORD *)(DSP_DMA_IN_TRANSFER) = 0L;
 
 #endif
 /* DUIO_B */

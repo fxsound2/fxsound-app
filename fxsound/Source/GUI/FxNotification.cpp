@@ -123,7 +123,7 @@ void FxNotification::setMessage(const String& message, const std::pair<String, S
 		}
 
         auto margin = autohide ? 80 : 40;
-		line_width = font.getStringWidth(lines[i]) + link_width;
+		line_width = fxTextWidth(font,lines[i]) + link_width;
 		if (line_width > WIDTH-margin)
 		{
 			if (line_width > MAX_WIDTH-margin)
@@ -164,7 +164,7 @@ void FxNotification::showMessage(bool autohide)
 		{
             auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
 			auto font = theme.getSmallFont().withHeight(17.0f);
-			x += font.getStringWidth(message_lines_[last_line].getText());
+			x += fxTextWidth(font,message_lines_[last_line].getText());
 		}
         message_link_.setBounds(x, link_line_ * 20 + 30, width, 20);
 		message_link_.setVisible(true);

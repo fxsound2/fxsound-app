@@ -1,3 +1,4 @@
+#include "dsp-word.h"
 /* (C) COPYRIGHT 1994-1997 Power Technology. All Rights Reserved.
  * This document and file contain highly confidential information
  * which is not to be disclosed or in any other way retransmitted
@@ -11,10 +12,10 @@
  * This version had mods to run AES transmitter from receiver clock
  */
 
-static long main_mem_size = 0;	/* Sizes of primary, secondary mem banks */
-static long exp_mem_size = 0L;
-static long dma_buf_size = 16000L;	/* Length of dma_buffers in longs */
-static long dma_read_size = 16000L;	/* Length of dma_buffers in longs */
+static DSP_WORD main_mem_size = 0;	/* Sizes of primary, secondary mem banks */
+static DSP_WORD exp_mem_size = 0L;
+static DSP_WORD dma_buf_size = 16000L;	/* Length of dma_buffers in longs */
+static DSP_WORD dma_read_size = 16000L;	/* Length of dma_buffers in longs */
 
 /* Defines, Macros and globals for DSPFX1 Board */
 #if (defined(DSPFX1) & defined(DSP_TARGET)) 
@@ -85,11 +86,11 @@ unsigned aes_x_ctl2_shadow;             /* shadow register for AES xmitter ctl2 
 unsigned rev_c_board;                   /* For specifying board rev */
 
 /* For counting number of entries into AES interrupt routine */
-long aes_int_count = 0;
+DSP_WORD aes_int_count = 0;
 										/* Shadows are for examining values later */
 void T3x_hinit(void);
 void delay_us(unsigned t);              /* delay in us  */
-void putchr(long d);                    /* long getchr(void); */
+void putchr(DSP_WORD d);                    /* DSP_WORD getchr(void); */
 
 unsigned codec_control(unsigned cdin)
 {
@@ -195,10 +196,10 @@ void c_int03()		/* interrupt routine; name is c_intxx (xx = 01..99)*/
 	  	aes_adr->x_ctl2 = aes_x_ctl2_shadow = 0xA7;	/* 384x, V, release transmitter set RST, MUTE */
     	while(1)
     	{
-			long status = AES_READ_ERROR;
-			long transfer_state = STATUS_STATE;
+			DSP_WORD status = AES_READ_ERROR;
+			DSP_WORD transfer_state = STATUS_STATE;
 	  		load_parameter(); /* If its been sent, loads a parameter into memory */
-	  		if( *(volatile long *)(PC_TO_DSP_FLAGS) & PC_GOT_AES_READ_ERROR )
+			if( *(volatile DSP_WORD *)(PC_TO_DSP_FLAGS) & PC_GOT_AES_READ_ERROR )
 	  		{
 				while(1);                                    
 			}
@@ -211,7 +212,7 @@ void c_int03()		/* interrupt routine; name is c_intxx (xx = 01..99)*/
 
 #ifdef NILS_NEW_METHOD
 /* Nil's version that allows running with serial card */
-void putchr(long d)
+void putchr(DSP_WORD d)
 {
 	do {
 	    asm("	STI	IF,@_iflg"); \
@@ -225,7 +226,7 @@ void putchr(long d)
 }
 #else
 /* Original version that checked status bit */
-void putchr(long d)
+void putchr(DSP_WORD d)
 {
 	while (io_adr->comd_stat & 0x80)
 		;
@@ -264,7 +265,7 @@ static void dutilInitMem()
 {
 #ifdef DSP_TARGET
 
-	long i, len;
+	DSP_WORD i, len;
 	float *tmp_ptr;
 	tmp_ptr = (float *)(MEMBANK0_START);
 
@@ -294,21 +295,21 @@ static void dutilInitAIO()
 #ifdef DSP_TARGET
 	register unsigned i, j, k;
 	int c,d;
-	long cdin;
-	long dummy;
-	long samp_freq_status, fx_link_flag, io_type, serial_num;
+	DSP_WORD cdin;
+	DSP_WORD dummy;
+	DSP_WORD samp_freq_status, fx_link_flag, io_type, serial_num;
 #endif
 	
 #if (defined(DUIO_B) | defined(DUIO_BA) | defined(DUIO_BD))
 	/* Need access to these DMA global vars */
-	extern long *in_data_buf0;
-	extern long *in_data_buf1;
-	extern long *out_data_buf0;
-	extern long *out_data_buf1;
-	extern long *read_in_buf;
-	extern long *read_out_buf;
-	extern long parm_address_MACRO;
-	extern long address_valid_flag_MACRO;
+	extern DSP_WORD *in_data_buf0;
+	extern DSP_WORD *in_data_buf1;
+	extern DSP_WORD *out_data_buf0;
+	extern DSP_WORD *out_data_buf1;
+	extern DSP_WORD *read_in_buf;
+	extern DSP_WORD *read_out_buf;
+	extern DSP_WORD parm_address_MACRO;
+	extern DSP_WORD address_valid_flag_MACRO;
 #endif	
 
 	/* Initialize common DSP parameter memory values */

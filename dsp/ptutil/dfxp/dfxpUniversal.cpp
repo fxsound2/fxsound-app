@@ -23,7 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "codedefs.h"
 
+#ifndef PT_PORTABLE_DSP
 #include <Windows.h>
+#endif
 #include <math.h>
 #include <stdio.h>
 
@@ -368,7 +370,11 @@ int dfxp_UniversalUpdateTotalTimeProcessed(PT_HANDLE *hp_dfxp, int i_num_sample_
 	 * Calculate the new total processed time 
 	 * NOTE: It is okay if this wraps around because all the comparison values will also wrap around.
 	 */
+	#ifdef PT_PORTABLE_DSP
+	ul_new_total_processed_time_msecs = cast_handle->ul_total_msecs_audio_processed_time;
+	#else
 	ul_new_total_processed_time_msecs = ul_previous_total_processed_time_msecs + ul_msecs_processed_by_buffer;
+	#endif
 
 	/* Store the new total processed time in shared memory */
 	if (dfxSharedUtilSetTotalProcessedTime(cast_handle->hp_sharedUtil, ul_new_total_processed_time_msecs) != OKAY)
