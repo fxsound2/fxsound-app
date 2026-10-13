@@ -120,7 +120,7 @@ Label* FxTheme::createComboBoxTextBox(ComboBox& box)
 
 Font FxTheme::getComboBoxFont(ComboBox& box)
 {
-	if (box.getHeight() <= 30)
+	if (box.getHeight() < 30)
 		return Font(FontOptions(font_600_).withHeight(12.5f));
     else
 		return Font(FontOptions(font_600_).withHeight(15.0f));
