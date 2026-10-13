@@ -97,7 +97,7 @@ private:
 	static constexpr int LABEL_WIDTH = 52;
 	static constexpr int CONTROL_GAP = 4;
 	static constexpr int CONTROL_WIDTH = 100;
-	static constexpr int COMBOBOX_HEIGHT = 20;
+	static constexpr int COMBOBOX_HEIGHT = 25;
 	static constexpr int SLIDER_WIDTH = 160;
 	static constexpr int SLIDER_HEIGHT = 18;
 	static constexpr int LABEL_HEIGHT = 14;

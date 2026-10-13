@@ -68,6 +68,10 @@ public:
 	void drawPopupMenuItem(Graphics& g, const juce::Rectangle<int>& area, bool is_separator, bool is_active,
 						   bool is_highlighted, bool is_ticked, bool has_submenu, const String& text,
 						   const String& shortcut_key_text, const Drawable* icon, const Colour* text_colour) override;
+	void drawPopupMenuItemWithOptions(Graphics& g, const juce::Rectangle<int>& area, bool is_highlighted,
+									  const PopupMenu::Item& item, const PopupMenu::Options& options) override;
+	void getIdealPopupMenuItemSizeWithOptions(const String& text, bool is_separator, int standard_height,
+											  int& ideal_width, int& ideal_height, const PopupMenu::Options& options) override;
 	Font getPopupMenuFont() override;
 	void preparePopupMenuWindow(Component& new_window) override;
 
@@ -101,6 +105,9 @@ private:
 	void init();
 
     TextLayout layoutTooltipText(const String& text, Colour colour) noexcept;
+	Font getPopupMenuOptionsFont(const PopupMenu::Options& options);
+
+	std::optional<Font> popup_font_override_;
 
 	std::unique_ptr<Drawable> drop_down_arrow_;
 	std::unique_ptr<Drawable> slider_thumb_;

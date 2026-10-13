@@ -365,9 +365,28 @@ void FxTheme::drawPopupMenuItem(Graphics& g, const juce::Rectangle<int>& area, b
 	}
 }
 
+void FxTheme::drawPopupMenuItemWithOptions(Graphics& g, const juce::Rectangle<int>& area, bool is_highlighted,
+	const PopupMenu::Item& item, const PopupMenu::Options& options)
+{
+	popup_font_override_ = getPopupMenuOptionsFont(options);
+	LookAndFeel_V4::drawPopupMenuItemWithOptions(g, area, is_highlighted, item, options);
+	popup_font_override_.reset();
+}
+
+void FxTheme::getIdealPopupMenuItemSizeWithOptions(const String& text, bool is_separator, int standard_height,
+	int& ideal_width, int& ideal_height,
+	const PopupMenu::Options& options)
+{
+	popup_font_override_ = getPopupMenuOptionsFont(options);
+	LookAndFeel_V4::getIdealPopupMenuItemSizeWithOptions(text, is_separator, standard_height,
+		ideal_width, ideal_height, options);
+	popup_font_override_.reset();
+}
+
+
 Font FxTheme::getPopupMenuFont()
 {
-	return Font(FontOptions(font_600_).withHeight(15.0f));
+	return popup_font_override_.value_or(Font(FontOptions(font_600_).withHeight(15.0f)));
 }
 
 void FxTheme::preparePopupMenuWindow(Component& new_window)
@@ -640,6 +659,14 @@ TextLayout FxTheme::layoutTooltipText(const String& text, Colour colour) noexcep
     TextLayout tl;
     tl.createLayout(s, (float)maxToolTipWidth);
     return tl;
+}
+
+Font FxTheme::getPopupMenuOptionsFont(const PopupMenu::Options& options)
+{
+	if (auto* box = dynamic_cast<ComboBox*>(options.getTargetComponent()))
+		return getComboBoxFont(*box);
+
+	return Font(FontOptions(font_600_).withHeight(15.0f));
 }
 
 Typeface::Ptr FxTheme::loadTypeface(String fileName)

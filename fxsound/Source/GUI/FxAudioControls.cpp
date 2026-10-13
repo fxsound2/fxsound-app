@@ -470,7 +470,7 @@ void FxEqualizerControl::resized()
 	left_label_.setBounds(X_MARGIN, y, SLIDER_WIDTH / 2, LABEL_HEIGHT);
 	right_label_.setBounds(left_label_.getRight(), y, SLIDER_WIDTH / 2 - (FxTheme::SLIDER_THUMB_RADIUS * 4), LABEL_HEIGHT);
 
-	y = left_label_.getBottom() + ROW_GAP;
+	y = left_label_.getBottom() + ROW_GAP - 2;
 	restore_defaults_button_.setBounds(X_MARGIN, y, BUTTON_WIDTH, BUTTON_HEIGHT);
 }
 
