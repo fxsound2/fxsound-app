@@ -84,8 +84,34 @@ protected:
 		void updateLogo();
 
 		String name_;
-		std::unique_ptr<Drawable> icon_;
-		std::unique_ptr<Drawable> animation_icon_;
+		// Drawable is not a Component in newer JUCE versions, so wrap it to keep
+		// the bounds/alpha/animator behaviour the title bar relies on.
+		class LogoIcon : public Component
+		{
+		public:
+			explicit LogoIcon(std::unique_ptr<Drawable> drawable) : drawable_(std::move(drawable))
+			{
+				setInterceptsMouseClicks(false, false);
+			}
+
+			int getIntrinsicWidth() const { return drawable_ ? juce::roundToInt(drawable_->getDrawableBounds().getWidth()) : 0; }
+			int getIntrinsicHeight() const { return drawable_ ? juce::roundToInt(drawable_->getDrawableBounds().getHeight()) : 0; }
+
+			void paint(Graphics& g) override
+			{
+				if (drawable_ != nullptr)
+				{
+					drawable_->drawWithin(g, getLocalBounds().toFloat(),
+						RectanglePlacement::xLeft | RectanglePlacement::yMid, 1.0f);
+				}
+			}
+
+		private:
+			std::unique_ptr<Drawable> drawable_;
+		};
+
+		std::unique_ptr<LogoIcon> icon_;
+		std::unique_ptr<LogoIcon> animation_icon_;
 		Label title_;
 		std::vector<std::pair<Button*, bool>> toolbar_buttons_;
 		CloseButton close_button_;

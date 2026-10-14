@@ -266,19 +266,18 @@ void FxWindow::TitleBar::resized()
 	
 	if (!title_.isVisible())
 	{
-		auto bounds = juce::Rectangle<int>(0, 0, ICON_WIDTH, ICON_HEIGHT);
-		RectanglePlacement icon_placement = { RectanglePlacement::xLeft | RectanglePlacement::yTop | RectanglePlacement::doNotResize };
+		auto bounds = juce::Rectangle<int>(0, (getHeight() - ICON_HEIGHT) / 2, ICON_WIDTH, ICON_HEIGHT);
 
-		icon_->setBounds(icon_placement.appliedTo(bounds, getLocalBounds()));
+		icon_->setBounds(bounds);
 		if (animation_icon_.get() != nullptr)
 		{
-			animation_icon_->setBounds(icon_placement.appliedTo(bounds, getLocalBounds()));
+			animation_icon_->setBounds(bounds);
 		}
 	}
 	else
 	{
-		auto width = (ICON_HEIGHT - 1)*icon_->getWidth() / icon_->getHeight();
-		auto bounds = juce::Rectangle<int>(0, 0, width, ICON_HEIGHT - 1);
+		auto width = (ICON_HEIGHT - 1) * icon_->getIntrinsicWidth() / juce::jmax(1, icon_->getIntrinsicHeight());
+		auto bounds = juce::Rectangle<int>(0, (getHeight() - (ICON_HEIGHT - 1)) / 2, width, ICON_HEIGHT - 1);
 		icon_->setBounds(bounds);
 		title_.setBounds(left_placement.appliedTo(title_.getLocalBounds(), getLocalBounds()).withX(width + 2));
 	}
@@ -361,20 +360,12 @@ void FxWindow::TitleBar::updateLogo()
 {
 	if (name_.isEmpty())
 	{
-		icon_ = Drawable::createFromImageData(FXIMAGE(DefaultLogo), FXIMAGESIZE(DefaultLogo));
-		icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT) / 2, (float)ICON_WIDTH, (float)ICON_HEIGHT),
-			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
-
-		animation_icon_ = Drawable::createFromImageData(FXIMAGE(HighlightedLogo), FXIMAGESIZE(HighlightedLogo));
-		animation_icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT) / 2, (float)ICON_WIDTH, (float)ICON_HEIGHT),
-			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
+		icon_ = std::make_unique<LogoIcon>(Drawable::createFromImageData(FXIMAGE(DefaultLogo), FXIMAGESIZE(DefaultLogo)));
+		animation_icon_ = std::make_unique<LogoIcon>(Drawable::createFromImageData(FXIMAGE(HighlightedLogo), FXIMAGESIZE(HighlightedLogo)));
 	}
 	else
 	{
-		icon_ = Drawable::createFromImageData(FXIMAGE(IconLogo), FXIMAGESIZE(IconLogo));
-		auto width = (ICON_HEIGHT - 1) * icon_->getWidth() / icon_->getHeight();
-		icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT - 1) / 2, (float)width, (float)ICON_HEIGHT - 1),
-			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
+		icon_ = std::make_unique<LogoIcon>(Drawable::createFromImageData(FXIMAGE(IconLogo), FXIMAGESIZE(IconLogo)));
 
 		auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
 		auto font = theme.getNormalFont();
@@ -392,4 +383,7 @@ void FxWindow::TitleBar::updateLogo()
 	{
 		addAndMakeVisible(animation_icon_.get());
 	}
+
+	// The icons are plain components now, so give them bounds straight away.
+	resized();
 }
