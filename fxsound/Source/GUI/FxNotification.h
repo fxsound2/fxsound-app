@@ -51,6 +51,7 @@ private:
 	void timerCallback() override;
 
 	std::unique_ptr<Drawable> icon_;
+	bool icon_visible_ = false;
 	Label message_lines_[3];
 	FxHyperlink message_link_;
 

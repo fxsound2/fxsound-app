@@ -46,9 +46,7 @@ void FxNotification::setMessage(const String& message, const std::pair<String, S
 	setLookAndFeel(&LookAndFeel::getDefaultLookAndFeel());
 
 	icon_ = Drawable::createFromImageData(FXIMAGE(DefaultLogo), FXIMAGESIZE(DefaultLogo));
-	icon_->setTransformToFit(juce::Rectangle<float>(15.0f, 10.0f, (float)ICON_WIDTH, (float)ICON_HEIGHT),
-		{ RectanglePlacement::xMid | RectanglePlacement::yMid });
-	addAndMakeVisible(icon_.get());
+	icon_visible_ = true;
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -193,7 +191,7 @@ void FxNotification::showMessage(bool autohide)
     }
     else
     {
-        icon_->setVisible(false);
+        icon_visible_ = false;
         Desktop::getInstance().getAnimator().fadeIn(this, 200);
         setVisible(true);
     }
@@ -201,6 +199,7 @@ void FxNotification::showMessage(bool autohide)
 
 void FxNotification::paint(Graphics& g)
 {
+	// Drawable is not a Component in newer JUCE versions, so the icon is painted directly.
 	DropShadow shadow;
 	Path path;
 	path.addRoundedRectangle(0, 0, (float)getWidth(), (float)getHeight(), 16);
@@ -209,7 +208,13 @@ void FxNotification::paint(Graphics& g)
 
     g.setFillType(FillType(Colour(FXCOLOR(DefaultFill)).withAlpha(1.0f)));
         
-    g.fillRoundedRectangle(0, 0, (float)getWidth(), (float)getHeight(), 16);    
+    g.fillRoundedRectangle(0, 0, (float)getWidth(), (float)getHeight(), 16);
+
+	if (icon_visible_ && icon_ != nullptr)
+	{
+		icon_->drawWithin(g, juce::Rectangle<float>(15.0f, 10.0f, (float)ICON_WIDTH, (float)ICON_HEIGHT),
+			RectanglePlacement::centred, 1.0f);
+	}
 }
 
 void FxNotification::timerCallback()
