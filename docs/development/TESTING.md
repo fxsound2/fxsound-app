@@ -24,8 +24,22 @@ test binary by hand, set `XDG_CONFIG_HOME` too, or it writes `~/.config/fxsound/
 | `reg_malformed` | unit | truncated UTF-8 in `registry.ini` (D5), `_GLIBCXX_ASSERTIONS` |
 | `reg_rmdir` | unit | recursive delete folder boundary (D10) |
 | `process_selftest` | unit | RT block with the real DSP, float path: zero allocations (steady state, 8192 frames, rate change) (D1), output finite and within ±1, silence, mute, no-DSP copy |
+| `dsp_settings_selftest` | unit | each control has its own registry key; effects do not flip power; power off/on; effect values; user preset save/load incl. name, eq and a non-ASCII name (D15–D18) |
 | `routing_follows_default_sink` | pw-live | processor feeds the user's default sink (D3) |
+| `app_exit_restores_default_sink` | pw-live | SIGTERM (logout/shutdown) hands the default sink back (D19) |
+| `app_hotplug_updates_output_menu` | pw-live | with power on, added/removed sinks reach the tray output menu (D20) |
 | `passthru_selftest` | (manual) | brings the nodes up in the live graph |
+
+## End-to-end harness (manual, desktop session)
+`linux/tests/fxtest.py <label> <launch command>` drives a running app through
+the tray's dbusmenu (power, presets, output device, exit), records the
+processor outputs and checks the PipeWire graph: startup, routing, processing
+level, bypass, presets, stereo order, device selection and hot-plug, preset
+persistence, default-sink restore (SIGTERM and Exit), 10 restarts, 60 s
+playback CPU/xruns, a second instance, no PipeWire server. It mutes real sinks
+while running and restores the default sink, mutes and test sinks on exit.
+Stop any running FxSound first. Last run (2026-10-17, Release build of
+`bugfix/linux-port-hardening`): 36 PASS, 0 FAIL. Original PR head: 20 PASS, 5 FAIL.
 
 ## Matrix and status
 PASS = executed and passed · FAIL = executed and failed · BLOCKED = prerequisite missing · NOT RUN = not executed yet.
@@ -43,9 +57,13 @@ PASS = executed and passed · FAIL = executed and failed · BLOCKED = prerequisi
 | Concurrency | GUI setters vs processing under TSan | FAIL (69 races, DEC-4) |
 | Backend | node lifecycle, links, default restore | PASS |
 | Backend | default sink routing | PASS (was FAIL) |
-| Backend | device hot-plug / removal, PipeWire restart, no server | NOT RUN |
+| Backend | device hot-plug / removal, no server | PASS (hot-plug was FAIL) |
+| Backend | PipeWire restart while running | NOT RUN |
 | E2E | tone through processor (bypass and DSP) | PASS (manual script, not in ctest) |
-| E2E | GUI controls → DSP, presets, persistence across restart | NOT RUN |
-| Reliability | repeated start/stop, sustained playback, CPU, latency | NOT RUN |
-| Hotkeys / tray | X11 hotkeys, SNI menu | NOT RUN |
-| Windows | shared-code changes (`u_DfxDsp.h`) build on MSVC | BLOCKED (no Windows toolchain) |
+| E2E | tray controls → DSP (power, presets, output), persistence across restart | PASS (`fxtest.py`) |
+| E2E | main-window controls (EQ sliders, effect knobs) | NOT RUN (no window automation) |
+| Reliability | 10x start/stop, 60 s playback (≈3 % CPU, 0 xruns) | PASS |
+| Reliability | latency, hours-long playback | NOT RUN |
+| Tray | SNI dbusmenu items | PASS |
+| Hotkeys | X11 hotkeys | NOT RUN |
+| Windows | shared-code changes build on MSVC (`u_DfxDsp.h`, `%s`→`%ls` and swprintf sizes in dsp/ and pstr/, `PT_PATH_JOIN_FMT`; all intended to be no-ops on MSVC) | BLOCKED (no Windows toolchain) |
