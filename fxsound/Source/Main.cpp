@@ -73,6 +73,7 @@ public:
             }
 #else
             installCrashHandler();
+            installQuitSignalHandler();
 #endif
 
             LookAndFeel::setDefaultLookAndFeel(&theme_);
@@ -362,6 +363,41 @@ private:
         sigemptyset(&sa.sa_mask);
         for (int sig : { SIGSEGV, SIGABRT, SIGFPE, SIGILL, SIGBUS })
             sigaction(sig, &sa, nullptr);
+    }
+
+    // Logout and shutdown send SIGTERM. Without a handler the process ends
+    // before shutdown() runs, so AudioPassthru never hands the user's default
+    // sink back. The handler only sets a flag; a message-thread timer turns it
+    // into a normal quit.
+    static inline volatile sig_atomic_t quit_signal_received_ = 0;
+
+    static void quitSignalHandler(int)
+    {
+        quit_signal_received_ = 1;
+    }
+
+    struct QuitSignalWatcher : public Timer
+    {
+        void timerCallback() override
+        {
+            if (quit_signal_received_)
+            {
+                stopTimer();
+                JUCEApplication::getInstance()->systemRequestedQuit();
+            }
+        }
+    };
+    QuitSignalWatcher quit_signal_watcher_;
+
+    void installQuitSignalHandler()
+    {
+        struct sigaction sa;
+        memset(&sa, 0, sizeof(sa));
+        sa.sa_handler = quitSignalHandler;
+        sigemptyset(&sa.sa_mask);
+        for (int sig : { SIGTERM, SIGINT, SIGHUP })
+            sigaction(sig, &sa, nullptr);
+        quit_signal_watcher_.startTimer(200);
     }
 #endif // _WIN32
 

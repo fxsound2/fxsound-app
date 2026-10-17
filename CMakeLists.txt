@@ -171,3 +171,9 @@ if(EXISTS ${FX_ROOT}/bin/BonusPresets)
     install(DIRECTORY ${FX_ROOT}/bin/BonusPresets
             DESTINATION ${CMAKE_INSTALL_DATADIR}/fxsound)
 endif()
+
+# Live: quitting via SIGTERM (logout/shutdown) hands the default sink back.
+add_test(NAME app_exit_restores_default_sink
+    COMMAND bash ${FX_ROOT}/audiopassthru/src/linux/test_app_exit_live.sh $<TARGET_FILE:FxSound> TERM)
+set_tests_properties(app_exit_restores_default_sink PROPERTIES
+    LABELS pw-live SKIP_RETURN_CODE 77 RUN_SERIAL TRUE TIMEOUT 60)
