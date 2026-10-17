@@ -143,6 +143,11 @@ foreach(scenario roundtrip persisted malformed rmdir)
 endforeach()
 set_tests_properties(dsp_selftest PROPERTIES LABELS unit
     ENVIRONMENT "XDG_CONFIG_HOME=${CMAKE_CURRENT_BINARY_DIR}/test-config/dsp")
+# Same run with glibc filling fresh allocations with a non-zero byte, so members
+# that are read before being initialized fail deterministically.
+add_test(NAME dsp_selftest_perturb COMMAND dsp_selftest)
+set_tests_properties(dsp_selftest_perturb PROPERTIES LABELS unit
+    ENVIRONMENT "XDG_CONFIG_HOME=${CMAKE_CURRENT_BINARY_DIR}/test-config/dsp_perturb;MALLOC_PERTURB_=165")
 
 target_compile_definitions(DfxDsp PRIVATE
     PT_LINUX=1
