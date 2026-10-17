@@ -442,6 +442,10 @@ juce::File FxController::getFactoryPresetDir()
 	// 3) Standard system prefixes.
 	for (auto* p : { "/usr/share/fxsound/Factsoft", "/usr/local/share/fxsound/Factsoft" })
 		if (File(p).isDirectory()) return File(p);
+#ifdef FXSOUND_SOURCE_PRESET_DIR
+	// 4) Uninstalled build run from anywhere: the source tree's presets.
+	if (File(FXSOUND_SOURCE_PRESET_DIR).isDirectory()) return File(FXSOUND_SOURCE_PRESET_DIR);
+#endif
 
 	return cwd; // fall back (may be empty)
 }

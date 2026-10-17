@@ -120,6 +120,8 @@ target_compile_definitions(FxSound PRIVATE
     JUCE_USE_CURL=0
     JUCE_STANDALONE_APPLICATION=1
     JUCE_MODAL_LOOPS_PERMITTED=1
+    # Last-resort factory preset location for builds run without installing.
+    FXSOUND_SOURCE_PRESET_DIR="${FX_ROOT}/Installer/Resources/Factsoft"
     $<$<CONFIG:Debug>:DEBUG=1 _DEBUG=1>
     $<$<CONFIG:Release>:NDEBUG=1>)
 
