@@ -16,3 +16,9 @@ target_link_libraries(AudioPassthru PUBLIC DfxDsp PRIVATE ${PIPEWIRE_LIBRARIES})
 # PipeWire passthrough test: brings the node up in the live graph.
 add_executable(passthru_selftest ${AP_DIR}/src/linux/test_passthru.cpp)
 target_link_libraries(passthru_selftest PRIVATE AudioPassthru ${PIPEWIRE_LIBRARIES})
+
+# Live-graph tests need a running PipeWire session; they skip (77) without one.
+add_test(NAME routing_follows_default_sink
+    COMMAND bash ${AP_DIR}/src/linux/test_routing_live.sh $<TARGET_FILE:passthru_selftest>)
+set_tests_properties(routing_follows_default_sink PROPERTIES
+    LABELS pw-live SKIP_RETURN_CODE 77 RUN_SERIAL TRUE)

@@ -85,6 +85,7 @@ struct AudioPassthruPrivate
     std::map<uint32_t, PortInfo> ports;
     std::vector<pw_proxy*> links;        // links we created (FxSound -> device)
     std::string default_sink_name;       // from the default-metadata
+    bool        have_configured_sink = false;  // default.configured.audio.sink seen
     std::string selected_sink_name;      // user choice; empty => default
 
     std::vector<float> ileave_in;     // interleaved L/R, 32-bit float
@@ -283,11 +284,46 @@ void setDefaultSinkToFxSound(AudioPassthruPrivate* d)
     d->default_set = true;
 }
 
+// Extract "name" from a default-sink metadata value: { "name": "<node.name>" }.
+std::string sinkNameFromJson(const char* value)
+{
+    struct spa_json it[2];
+    char key[64], name[512];
+    spa_json_init(&it[0], value, strlen(value));
+    if (spa_json_enter_object(&it[0], &it[1]) <= 0) return "";
+    while (spa_json_get_string(&it[1], key, sizeof(key)) > 0) {
+        if (spa_streq(key, "name"))
+            return spa_json_get_string(&it[1], name, sizeof(name)) > 0 ? name : "";
+        const char* skip;
+        if (spa_json_next(&it[1], &skip) <= 0) break;
+    }
+    return "";
+}
+
 int metadata_property(void* data, uint32_t subject, const char* key,
                       const char* /*type*/, const char* value)
 {
     auto* d = static_cast<AudioPassthruPrivate*>(data);
     if (subject != 0 || !key) return 0;
+    // Track the user's real default device (never ourselves) so that with no
+    // explicit selection the processor feeds it rather than the lowest-id sink.
+    // The configured value is the user's choice; the effective default.audio.sink
+    // briefly reports another sink while WirePlumber switches to FxSound, so it
+    // is only used when nothing has been configured.
+    bool configured = spa_streq(key, "default.configured.audio.sink");
+    if (value && (configured || (spa_streq(key, "default.audio.sink") && !d->have_configured_sink)))
+    {
+        std::string name = sinkNameFromJson(value);
+        if (!name.empty() && name != "FxSound")
+        {
+            if (configured) d->have_configured_sink = true;
+            if (name != d->default_sink_name)
+            {
+                d->default_sink_name = name;
+                if (d->selected_sink_name.empty()) reroute(d);
+            }
+        }
+    }
     // Capture the existing default sink once (before we override it) so we can
     // restore it on exit. Ignore our own value.
     if (spa_streq(key, "default.configured.audio.sink") && value && !d->captured_default)
