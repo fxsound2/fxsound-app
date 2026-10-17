@@ -13,20 +13,32 @@ the plain-copy / silence paths. Exit code 0 = pass.
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <vector>
 
 // ---- allocation counter -------------------------------------------------
-extern "C" void* __libc_malloc(size_t);
+// Replaced malloc forwards to glibc. Sanitizers own malloc, so under ASan the
+// counter is compiled out and the allocation checks are reported as skipped.
 static thread_local bool g_counting = false;
 static thread_local int  g_allocs = 0;
+#if defined(__SANITIZE_ADDRESS__)
+static constexpr bool kCountAllocs = false;
+#else
+static constexpr bool kCountAllocs = true;
+extern "C" void* __libc_malloc(size_t);
 extern "C" void* malloc(size_t n)
 {
     if (g_counting) ++g_allocs;
     return __libc_malloc(n);
 }
+#endif
 
 static bool check(bool cond, const char* what)
 {
+    if (!kCountAllocs && std::strstr(what, "allocate")) {
+        std::printf("skip: %s (allocation counter disabled under sanitizer)\n", what);
+        return true;
+    }
     std::printf("%s: %s\n", cond ? "ok  " : "FAIL", what);
     return cond;
 }

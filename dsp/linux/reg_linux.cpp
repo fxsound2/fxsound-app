@@ -14,6 +14,7 @@ write).
 #include <map>
 #include <mutex>
 #include <string>
+#include <string_view>
 #include <cwchar>
 #include <fstream>
 #include <filesystem>
@@ -84,9 +85,12 @@ static std::filesystem::path getRegPath()
 
 // --- Persistent store --------------------------------------------------------
 
-std::map<std::wstring, std::wstring>& store()
+// std::less<> allows lookups by wstring_view: the DSP reads keys from the
+// realtime thread every block, so reads must not allocate.
+using Store = std::map<std::wstring, std::wstring, std::less<>>;
+Store& store()
 {
-    static std::map<std::wstring, std::wstring> s;
+    static Store s;
     return s;
 }
 std::mutex& lock() { static std::mutex m; return m; }
@@ -111,15 +115,35 @@ static void ensureLoaded()
     if (!storeLoaded()) loadStore();
 }
 
-static void saveStore()
+// Called with the store lock held by a writer. Snapshots the store, then
+// releases the lock before touching the disk so the realtime thread never
+// waits on file I/O. The generation check keeps a slower writer from replacing
+// a newer file with an older snapshot.
+static void saveStore(std::unique_lock<std::mutex>& g)
 {
+    static std::mutex file_lock;
+    static uint64_t generation = 0, written = 0;
+    Store snapshot = store();
+    uint64_t gen = ++generation;
+    g.unlock();
+
+    std::lock_guard<std::mutex> f_guard(file_lock);
+    if (gen < written) return;
+    written = gen;
     auto path = getRegPath();
     std::error_code ec;
     std::filesystem::create_directories(path.parent_path(), ec);
-    std::ofstream f(path, std::ios::trunc);
-    if (!f) return;
-    for (auto& [k, v] : store())
-        f << wstrToUtf8(k) << '=' << wstrToUtf8(v) << '\n';
+    // Write a temp file and rename it so a crash never leaves a truncated file.
+    auto tmp = path;
+    tmp += ".tmp";
+    {
+        std::ofstream f(tmp, std::ios::trunc);
+        if (!f) return;
+        for (auto& [k, v] : snapshot)
+            f << wstrToUtf8(k) << '=' << wstrToUtf8(v) << '\n';
+        if (!f) return;
+    }
+    std::filesystem::rename(tmp, path, ec);
 }
 
 std::wstring joinKey(const wchar_t* path, const wchar_t* keyname)
@@ -141,10 +165,10 @@ void copyOut(const std::wstring& v, wchar_t* buf, uint32_t buflen)
 
 int regCreateKey_Wide(int, wchar_t* path, wchar_t* value)
 {
-    std::lock_guard<std::mutex> g(lock());
+    std::unique_lock<std::mutex> g(lock());
     ensureLoaded();
     store()[path ? path : L""] = value ? value : L"";
-    saveStore();
+    saveStore(g);
     return OKAY;
 }
 
@@ -152,7 +176,7 @@ int regReadKey_Wide(int, wchar_t* path, int* key_exists, wchar_t* value, uint32_
 {
     std::lock_guard<std::mutex> g(lock());
     ensureLoaded();
-    auto it = store().find(path ? path : L"");
+    auto it = store().find(std::wstring_view(path ? path : L""));
     if (it == store().end()) { if (key_exists) *key_exists = IS_FALSE; return OKAY; }
     if (key_exists) *key_exists = IS_TRUE;
     copyOut(it->second, value, buflen);
@@ -168,28 +192,28 @@ int regCreateKeyTest_Wide(int, wchar_t* path, wchar_t* value, int* created)
 
 int regRemoveKey_Wide(int, wchar_t* path)
 {
-    std::lock_guard<std::mutex> g(lock());
+    std::unique_lock<std::mutex> g(lock());
     ensureLoaded();
     store().erase(path ? path : L"");
-    saveStore();
+    saveStore(g);
     return OKAY;
 }
 
 int regCreateKeyWithKeyname_Dword_Wide(int, wchar_t* path, wchar_t* keyname, uint32_t value)
 {
-    std::lock_guard<std::mutex> g(lock());
+    std::unique_lock<std::mutex> g(lock());
     ensureLoaded();
     store()[joinKey(path, keyname)] = std::to_wstring(value);
-    saveStore();
+    saveStore(g);
     return OKAY;
 }
 
 int regCreateKeyWithKeyname_String_Wide(int, wchar_t* path, wchar_t* keyname, wchar_t* value)
 {
-    std::lock_guard<std::mutex> g(lock());
+    std::unique_lock<std::mutex> g(lock());
     ensureLoaded();
     store()[joinKey(path, keyname)] = value ? value : L"";
-    saveStore();
+    saveStore(g);
     return OKAY;
 }
 
@@ -219,7 +243,7 @@ int regReadKeyWithKeyname_Dword_Wide(int, wchar_t* path, wchar_t* keyname, int* 
 
 int regRecursiveDeleteFolder_Wide(int, wchar_t* path)
 {
-    std::lock_guard<std::mutex> g(lock());
+    std::unique_lock<std::mutex> g(lock());
     ensureLoaded();
     std::wstring prefix = path ? path : L"";
     for (auto it = store().begin(); it != store().end();)
@@ -232,7 +256,7 @@ int regRecursiveDeleteFolder_Wide(int, wchar_t* path)
         if (in_folder) it = store().erase(it);
         else ++it;
     }
-    saveStore();
+    saveStore(g);
     return OKAY;
 }
 

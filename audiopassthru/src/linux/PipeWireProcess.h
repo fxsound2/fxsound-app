@@ -19,6 +19,11 @@ class FxProcessor
 {
 public:
     static constexpr int kChannels = 2;
+    // Interleave buffers are sized once for PipeWire's default max quantum so
+    // the realtime path never allocates; larger quanta are processed in chunks.
+    static constexpr uint32_t kMaxFrames = 8192;
+
+    FxProcessor() : ileave_in_(kMaxFrames * kChannels), ileave_out_(kMaxFrames * kChannels) {}
 
     void setDsp(DfxDsp* dsp) { dsp_ = dsp; }
     void setMuted(bool mute) { muted_.store(mute, std::memory_order_relaxed); }
@@ -40,26 +45,11 @@ public:
                 dsp_->setSignalFormat(32, kChannels, rate, 32);
                 configured_rate_ = rate;
             }
-            if (ileave_in_.size() < n * kChannels) {
-                ileave_in_.resize(n * kChannels);
-                ileave_out_.resize(n * kChannels);
-            }
-            for (uint32_t i = 0; i < n; ++i) {
-                ileave_in_[i*2]     = in[0][i];
-                ileave_in_[i*2 + 1] = in[1][i];
-            }
-            // processAudio takes short*; for bps=32 the engine reinterprets the
-            // buffers as 32-bit float internally.
-            dsp_->processAudio(reinterpret_cast<short*>(ileave_in_.data()),
-                               reinterpret_cast<short*>(ileave_out_.data()), (int)n, 0);
-            for (uint32_t i = 0; i < n; ++i) {
-                float l = ileave_out_[i*2];
-                float r = ileave_out_[i*2 + 1];
-                // Final hard-clip to prevent digital distortion reaching PipeWire/mixer.
-                if (l > 1.0f) l = 1.0f; else if (l < -1.0f) l = -1.0f;
-                if (r > 1.0f) r = 1.0f; else if (r < -1.0f) r = -1.0f;
-                out[0][i] = l;
-                out[1][i] = r;
+            for (uint32_t done = 0; done < n; done += kMaxFrames) {
+                uint32_t len = n - done < kMaxFrames ? n - done : kMaxFrames;
+                const float* chunk_in[kChannels] = {in[0] + done, in[1] + done};
+                float* chunk_out[kChannels] = {out[0] + done, out[1] + done};
+                processChunk(chunk_in, chunk_out, len);
             }
         } else if (have_in) {
             for (int c = 0; c < kChannels; ++c) std::memcpy(out[c], in[c], n * sizeof(float));
@@ -69,6 +59,27 @@ public:
     }
 
 private:
+    void processChunk(const float* const in[kChannels], float* const out[kChannels], uint32_t n)
+    {
+        for (uint32_t i = 0; i < n; ++i) {
+            ileave_in_[i*2]     = in[0][i];
+            ileave_in_[i*2 + 1] = in[1][i];
+        }
+        // processAudio takes short*; for bps=32 the engine reinterprets the
+        // buffers as 32-bit float internally.
+        dsp_->processAudio(reinterpret_cast<short*>(ileave_in_.data()),
+                           reinterpret_cast<short*>(ileave_out_.data()), (int)n, 0);
+        for (uint32_t i = 0; i < n; ++i) {
+            float l = ileave_out_[i*2];
+            float r = ileave_out_[i*2 + 1];
+            // Final hard-clip to prevent digital distortion reaching PipeWire/mixer.
+            if (l > 1.0f) l = 1.0f; else if (l < -1.0f) l = -1.0f;
+            if (r > 1.0f) r = 1.0f; else if (r < -1.0f) r = -1.0f;
+            out[0][i] = l;
+            out[1][i] = r;
+        }
+    }
+
     DfxDsp* dsp_ = nullptr;
     std::atomic<bool> muted_{false};
     int configured_rate_ = 0;   // last rate passed to dsp->setSignalFormat
