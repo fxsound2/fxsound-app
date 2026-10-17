@@ -168,6 +168,13 @@ foreach(scenario roundtrip persisted malformed rmdir)
 endforeach()
 set_tests_properties(dsp_selftest PROPERTIES LABELS unit
     ENVIRONMENT "XDG_CONFIG_HOME=${CMAKE_CURRENT_BINARY_DIR}/test-config/dsp")
+# Effect/power settings keep separate keys and do not interfere.
+add_executable(dsp_settings_selftest ${DSP_DIR}/linux/test_dsp_settings.cpp)
+target_include_directories(dsp_settings_selftest PRIVATE ${DSP_DIR}/../audiopassthru/src/linux)
+target_link_libraries(dsp_settings_selftest PRIVATE DfxDsp)
+add_test(NAME dsp_settings_selftest COMMAND dsp_settings_selftest)
+set_tests_properties(dsp_settings_selftest PROPERTIES LABELS unit
+    ENVIRONMENT "XDG_CONFIG_HOME=${CMAKE_CURRENT_BINARY_DIR}/test-config/dsp_settings")
 # Same run with glibc filling fresh allocations with a non-zero byte, so members
 # that are read before being initialized fail deterministically.
 add_test(NAME dsp_selftest_perturb COMMAND dsp_selftest)

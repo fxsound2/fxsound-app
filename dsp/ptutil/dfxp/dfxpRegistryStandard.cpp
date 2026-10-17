@@ -80,7 +80,7 @@ int dfxpGetInstallationDate_NoHandle(wchar_t *wcp_product_name, int i_vendor_cod
 	if (wcp_product_name == NULL)
 		return(NOT_OKAY);
 
-	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%s\\%s\\%d\\%s", DFXP_REGISTRY_TOP_WIDE, 
+	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%ls\\%ls\\%d\\%ls", DFXP_REGISTRY_TOP_WIDE, 
 			                  wcp_product_name, 
 									i_vendor_code,
 		                     DFXP_REGISTRY_DATE_INSTALLED_WIDE);
@@ -128,7 +128,7 @@ int dfxpGetLastUsedDate(PT_HANDLE *hp_dfxp, int32_t *lp_date, int *ip_date_exist
 	if (cast_handle->vendor_code == 0)
       return(OKAY);
 
-	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%s\\%s\\%d\\%d\\%s", 
+	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%ls\\%ls\\%d\\%d\\%ls", 
 									DFXP_REGISTRY_TOP_WIDE, 
 									cast_handle->wcp_product_name, 
 									cast_handle->major_version,
@@ -181,7 +181,7 @@ int dfxp_RecordLastUsedDate(PT_HANDLE *hp_dfxp)
 	
 	swprintf(wcp_time, sizeof(wcp_time)/sizeof(*(wcp_time)), L"%ld", (int32_t)secs);
 	
-	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%s\\%s\\%d\\%d\\%s", 
+	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%ls\\%ls\\%d\\%d\\%ls", 
 									DFXP_REGISTRY_TOP_WIDE, 
 									cast_handle->wcp_product_name, 
 									cast_handle->major_version,
@@ -221,7 +221,7 @@ int dfxp_RegistryGetTopSharedFolderPath(PT_HANDLE *hp_dfxp,
 
 	swprintf(wcp_top_shared_folder_path, DFXP_REGISTRY_BUFFER_LENGTH, L"");
 
-	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%s\\%s\\%s\\%s", DFXP_REGISTRY_TOP_WIDE, 
+	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%ls\\%ls\\%ls\\%ls", DFXP_REGISTRY_TOP_WIDE, 
 			     cast_handle->wcp_product_name, 
 				  DFXP_REGISTRY_SHARED_WIDE,
 		        DFXP_REGISTRY_TOP_SHARED_FOLDER_WIDE);
@@ -258,7 +258,7 @@ int dfxp_RegistryGetTopVendorSpecificFolderPath(PT_HANDLE *hp_dfxp,
 
 	swprintf(wcp_top_vendor_specific_folder_path, DFXP_REGISTRY_BUFFER_LENGTH, L"");
 
-	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%s\\%s\\%d\\%s", DFXP_REGISTRY_TOP_WIDE, 
+	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%ls\\%ls\\%d\\%ls", DFXP_REGISTRY_TOP_WIDE, 
 			     cast_handle->wcp_product_name, 
 				  cast_handle->vendor_code,
 		        DFXP_REGISTRY_TOP_FOLDER_WIDE);
@@ -293,7 +293,7 @@ int dfxp_RegistryGetDfxUniversalUiFullpath(PT_HANDLE *hp_dfxp, wchar_t *wcp_dfx_
 
 	swprintf(wcp_dfx_ui_path, DFXP_REGISTRY_BUFFER_LENGTH, L"");
 
-	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%s\\%s\\%d\\%s", DFXP_REGISTRY_TOP_WIDE, 
+	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%ls\\%ls\\%d\\%ls", DFXP_REGISTRY_TOP_WIDE, 
 			     cast_handle->wcp_product_name, 
 				  cast_handle->vendor_code,
 		        DFXP_REGISTRY_DFX_UNIVERSAL_UI_PATH_WIDE);

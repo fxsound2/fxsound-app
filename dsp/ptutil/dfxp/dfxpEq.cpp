@@ -119,7 +119,7 @@ int dfxpEqSetProcessingOn(PT_HANDLE *hp_dfxp, int i_storage_type, int i_on)
 	if ((i_storage_type == DFXP_STORAGE_TYPE_REGISTRY) ||
 		 (i_storage_type == DFXP_STORAGE_TYPE_ALL))
 	{
-		swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%s\\%s\\%d\\%d\\%s\\%s\\%s", 
+		swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%ls\\%ls\\%d\\%d\\%ls\\%ls\\%ls", 
 									DFXP_REGISTRY_TOP_WIDE, 
 									cast_handle->wcp_product_name, 
 									cast_handle->major_version,
@@ -169,7 +169,7 @@ int dfxpEqGetProcessingOn(PT_HANDLE *hp_dfxp, int i_storage_type, int *ip_on)
 		return(OKAY);
 	}
 
-	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%s\\%s\\%d\\%d\\%s\\%s\\%s", 
+	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%ls\\%ls\\%d\\%d\\%ls\\%ls\\%ls", 
 									DFXP_REGISTRY_TOP_WIDE, 
 									cast_handle->wcp_product_name, 
 									cast_handle->major_version,
@@ -260,9 +260,9 @@ int dfxpEqSetBandBoostCut(PT_HANDLE *hp_dfxp, int i_storage_type, int i_band_num
 		 (i_storage_type == DFXP_STORAGE_TYPE_ALL))
 	{
 		/* Save the new setting in the registry */
-		swprintf(wcp_keyname, sizeof(wcp_keyname)/sizeof(*(wcp_keyname)), L"%s%d", DFXP_REGISTRY_EQ_BAND_NAME_WIDE, i_band_num);
+		swprintf(wcp_keyname, sizeof(wcp_keyname)/sizeof(*(wcp_keyname)), L"%ls%d", DFXP_REGISTRY_EQ_BAND_NAME_WIDE, i_band_num);
 
-		swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%s\\%s\\%d\\%d\\%s\\%s\\%s", 
+		swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%ls\\%ls\\%d\\%d\\%ls\\%ls\\%ls", 
 									DFXP_REGISTRY_TOP_WIDE, 
 									cast_handle->wcp_product_name, 
 									cast_handle->major_version,
@@ -344,9 +344,9 @@ int dfxpEqGetBandBoostCut_FromRegistry(PT_HANDLE *hp_dfxp, int i_band_num, realt
 		return(NOT_OKAY);
 
 	/* Calculate name the registry */
-	swprintf(wcp_keyname, sizeof(wcp_keyname)/sizeof(*(wcp_keyname)), L"%s%d", DFXP_REGISTRY_EQ_BAND_NAME_WIDE, i_band_num);
+	swprintf(wcp_keyname, sizeof(wcp_keyname)/sizeof(*(wcp_keyname)), L"%ls%d", DFXP_REGISTRY_EQ_BAND_NAME_WIDE, i_band_num);
 
-	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%s\\%s\\%d\\%d\\%s\\%s\\%s", 
+	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%ls\\%ls\\%d\\%d\\%ls\\%ls\\%ls", 
 									DFXP_REGISTRY_TOP_WIDE, 
 									cast_handle->wcp_product_name, 
 									cast_handle->major_version,
@@ -373,7 +373,7 @@ int dfxpEqGetBandBoostCut_FromRegistry(PT_HANDLE *hp_dfxp, int i_band_num, realt
 	else if (*rp_boost_cut > DFXP_GRAPHIC_EQ_MAX_BOOST_OR_CUT_DB)
 		*rp_boost_cut = DFXP_GRAPHIC_EQ_MAX_BOOST_OR_CUT_DB;
 
-	swprintf(wcp_boost_cut, sizeof(wcp_boost_cut)/sizeof(*(wcp_boost_cut)), L"%s", wcp_key_value);
+	swprintf(wcp_boost_cut, wcslen(wcp_key_value) + 1, L"%ls", wcp_key_value);
 
 	return(OKAY);
 }

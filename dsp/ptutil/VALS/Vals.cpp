@@ -363,7 +363,7 @@ int PT_DECLSPEC valsCopy(PT_HANDLE *hp_from_vals, PT_HANDLE **hpp_to_vals)
 	     return(NOT_OKAY);
 
       /* Set the string */
-	  swprintf(cast_to_hdl->wcp_comment, sizeof(cast_to_hdl->wcp_comment)/sizeof(*(cast_to_hdl->wcp_comment)), L"%s", cast_from_hdl->wcp_comment);
+	  swprintf(cast_to_hdl->wcp_comment, length + 1, L"%ls", cast_from_hdl->wcp_comment);
    }
 
    /* Copy the main params */
@@ -627,7 +627,7 @@ int PT_DECLSPEC valsDump(PT_HANDLE *hp_vals)
 	if (cast_handle->wcp_comment == NULL)
        swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Comment is NULL\n");
 	else
-	   swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Comment: %s\n", cast_handle->wcp_comment);
+	   swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Comment: %ls\n", cast_handle->wcp_comment);
 	cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
  
 	swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"Double Params = %d\n", cast_handle->double_params);
@@ -741,7 +741,7 @@ int PT_DECLSPEC valsDump(PT_HANDLE *hp_vals)
     {
        if (valsGetAppDependentString((PT_HANDLE *)cast_handle, index, &wcp_string_val) != OKAY)
           return(NOT_OKAY);       
-       swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"   strings[%d] = %s\n", index, wcp_string_val);
+       swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"   strings[%d] = %ls\n", index, wcp_string_val);
        cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
     }    
     

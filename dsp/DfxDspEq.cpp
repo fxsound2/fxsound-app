@@ -278,7 +278,7 @@ int DfxDspPrivate::eqSetProcessingOn(int i_storage_type, int i_on)
 	if ((i_storage_type == DFXP_STORAGE_TYPE_REGISTRY) ||
 		(i_storage_type == DFXP_STORAGE_TYPE_ALL))
 	{
-		swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%s\\%s\\%d\\%d\\%s\\%s\\%s",
+		swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%ls\\%ls\\%d\\%d\\%ls\\%ls\\%ls",
 			DFXP_REGISTRY_TOP_WIDE,
 			product_specific_.wcp_registry_product_name,
 			product_specific_.major_version,
@@ -315,7 +315,7 @@ int DfxDspPrivate::eqGetProcessingOn(int i_storage_type, int *ip_on)
 		return(OKAY);
 	}
 
-	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%s\\%s\\%d\\%d\\%s\\%s\\%s",
+	swprintf(wcp_full_key_path, sizeof(wcp_full_key_path)/sizeof(*(wcp_full_key_path)), L"%ls\\%ls\\%d\\%d\\%ls\\%ls\\%ls",
 		DFXP_REGISTRY_TOP_WIDE,
 		product_specific_.wcp_registry_product_name,
 		product_specific_.major_version,
