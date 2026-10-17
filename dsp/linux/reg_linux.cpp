@@ -56,6 +56,10 @@ static std::wstring utf8ToWstr(const std::string& s)
     while (i < s.size()) {
         uint32_t cp;
         unsigned char c = (unsigned char)s[i];
+        size_t len = c < 0x80 ? 1 : c < 0xE0 ? 2 : c < 0xF0 ? 3 : 4;
+        // Truncated sequence (hand-edited or corrupt file): emit U+FFFD
+        // instead of reading past the end of the string.
+        if (i + len > s.size()) { out += (wchar_t)0xFFFD; i += 1; continue; }
         if (c < 0x80)      { cp = c; i += 1; }
         else if (c < 0xE0) { cp = (c & 0x1F) << 6  | ((unsigned char)s[i+1] & 0x3F); i += 2; }
         else if (c < 0xF0) { cp = (c & 0x0F) << 12 | ((unsigned char)s[i+1] & 0x3F) << 6
@@ -220,7 +224,12 @@ int regRecursiveDeleteFolder_Wide(int, wchar_t* path)
     std::wstring prefix = path ? path : L"";
     for (auto it = store().begin(); it != store().end();)
     {
-        if (it->first.compare(0, prefix.size(), prefix) == 0) it = store().erase(it);
+        // Match the folder itself or keys below it, not siblings sharing a
+        // name prefix ("P\1" must not remove "P\10").
+        bool in_folder = it->first.compare(0, prefix.size(), prefix) == 0 &&
+                         (it->first.size() == prefix.size() || it->first[prefix.size()] == L'\\' ||
+                          (!prefix.empty() && prefix.back() == L'\\'));
+        if (in_folder) it = store().erase(it);
         else ++it;
     }
     saveStore();

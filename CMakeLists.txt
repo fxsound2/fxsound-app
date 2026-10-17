@@ -25,6 +25,8 @@ endif()
 option(FXSOUND_STUB_DSP        "Use stub DfxDsp instead of the ported engine"    OFF)
 option(FXSOUND_STUB_AUDIO      "Use stub AudioPassthru instead of PipeWire"       OFF)
 
+enable_testing()
+
 set(FX_ROOT       ${CMAKE_CURRENT_SOURCE_DIR})
 set(JUCE_DIR      ${FX_ROOT}/third_party/JUCE)
 set(JUCE_MODULES  ${JUCE_DIR}/modules)

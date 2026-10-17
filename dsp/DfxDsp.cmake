@@ -127,6 +127,22 @@ target_include_directories(DfxDsp PRIVATE ${DSP_DIR}/linux/lc_headers)
 # DSP self-test: exercises processAudio with no I/O.
 add_executable(dsp_selftest ${DSP_DIR}/linux/test_dsp.cpp)
 target_link_libraries(dsp_selftest PRIVATE DfxDsp)
+add_test(NAME dsp_selftest COMMAND dsp_selftest)
+
+# reg_linux self-test: built standalone with libstdc++ bounds assertions so an
+# out-of-range read aborts instead of passing silently.
+add_executable(reg_selftest ${DSP_DIR}/linux/test_reg.cpp ${DSP_DIR}/linux/reg_linux.cpp)
+target_include_directories(reg_selftest PRIVATE
+    ${DSP_DIR}/ptutil/include ${DSP_DIR}/linux ${DSP_DIR}/linux/lc_headers)
+target_compile_definitions(reg_selftest PRIVATE PT_LINUX=1 PT_NON_MFC _GLIBCXX_ASSERTIONS)
+target_compile_options(reg_selftest PRIVATE -fpermissive -Wno-write-strings)
+foreach(scenario roundtrip persisted malformed rmdir)
+    add_test(NAME reg_${scenario} COMMAND reg_selftest ${scenario})
+    set_tests_properties(reg_${scenario} PROPERTIES LABELS unit
+        ENVIRONMENT "XDG_CONFIG_HOME=${CMAKE_CURRENT_BINARY_DIR}/test-config/reg_${scenario}")
+endforeach()
+set_tests_properties(dsp_selftest PROPERTIES LABELS unit
+    ENVIRONMENT "XDG_CONFIG_HOME=${CMAKE_CURRENT_BINARY_DIR}/test-config/dsp")
 
 target_compile_definitions(DfxDsp PRIVATE
     PT_LINUX=1
