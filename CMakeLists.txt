@@ -177,3 +177,9 @@ add_test(NAME app_exit_restores_default_sink
     COMMAND bash ${FX_ROOT}/audiopassthru/src/linux/test_app_exit_live.sh $<TARGET_FILE:FxSound> TERM)
 set_tests_properties(app_exit_restores_default_sink PROPERTIES
     LABELS pw-live SKIP_RETURN_CODE 77 RUN_SERIAL TRUE TIMEOUT 60)
+
+# Live: with power on, hot-plugged sinks appear in and leave the tray output menu.
+add_test(NAME app_hotplug_updates_output_menu
+    COMMAND bash ${FX_ROOT}/audiopassthru/src/linux/test_app_hotplug_live.sh $<TARGET_FILE:FxSound>)
+set_tests_properties(app_hotplug_updates_output_menu PROPERTIES
+    LABELS pw-live SKIP_RETURN_CODE 77 RUN_SERIAL TRUE TIMEOUT 60)

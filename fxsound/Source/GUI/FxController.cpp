@@ -1560,6 +1560,21 @@ void FxController::onSoundDeviceChange(std::vector<SoundDevice> sound_devices)
 // Handled when FxSound processing is off
 void FxController::onSoundDeviceChange()
 {
+#ifndef _WIN32
+	// The PipeWire backend reports every device change through this overload,
+	// from its loop thread and whatever the power state. Handle it on the
+	// message thread, using the power-on path when processing is running.
+	if (!juce::MessageManager::getInstance()->isThisTheMessageThread())
+	{
+		juce::MessageManager::callAsync([this] {
+			if (isTimerRunning())
+				onSoundDeviceChange(audio_passthru_->getSoundDevices(false));
+			else
+				onSoundDeviceChange();
+		});
+		return;
+	}
+#endif
 	if (!isTimerRunning())
 	{
 		ScopedLock auto_lock(lock_);
