@@ -17,8 +17,9 @@ _repo="$startdir/.."
 
 prepare() {
     git -C "$_repo" submodule update --init Resources
-    # Shallow-clone JUCE 6.1.6 only if not already present.
-    if [[ ! -d "$_repo/third_party/JUCE" ]]; then
+    # Shallow-clone JUCE 6.1.6 only if not already present. A fresh checkout
+    # leaves an empty third_party/JUCE (submodule path), so test for a file.
+    if [[ ! -f "$_repo/third_party/JUCE/modules/juce_core/juce_core.h" ]]; then
         git clone --depth=1 --branch 6.1.6 \
             https://github.com/juce-framework/JUCE \
             "$_repo/third_party/JUCE"

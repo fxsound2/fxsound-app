@@ -2,3 +2,7 @@
 	path = Resources
 	url = https://github.com/fxsound2/Resources.git
 	branch = main
+[submodule "third_party/JUCE"]
+	path = third_party/JUCE
+	url = https://github.com/juce-framework/JUCE.git
+	shallow = true

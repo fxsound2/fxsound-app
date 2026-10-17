@@ -2,16 +2,18 @@ name: Build AppImage
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop/linux]
     tags: ['v*.*.*.*']
   pull_request:
-    branches: [main]
+    branches: [main, develop/linux]
 
 jobs:
   build:
-    # Ubuntu 20.04 → glibc 2.31. Lowest practical baseline for a PipeWire app.
-    # The resulting AppImage runs on any distro with glibc ≥ 2.31 and PipeWire.
-    runs-on: ubuntu-20.04
+    # Ubuntu 22.04 → glibc 2.35, PipeWire 0.3.48. 20.04 is not usable: the
+    # runner image is retired, it has no libpipewire-0.3-dev, and its cmake
+    # (3.16) is older than the required 3.20.
+    # The resulting AppImage runs on any distro with glibc ≥ 2.35 and PipeWire.
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout
@@ -39,8 +41,6 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          # Enable universe for libpipewire-0.3-dev on 20.04
-          sudo add-apt-repository -y universe
           sudo apt-get install -y \
             cmake ninja-build \
             libx11-dev libxext-dev libxinerama-dev libxrandr-dev libxcursor-dev \
@@ -49,7 +49,7 @@ jobs:
             libasound2-dev \
             libglib2.0-dev \
             libpipewire-0.3-dev \
-            libxcb-dev libxcb-keysyms1-dev
+            libxcb1-dev libxcb-keysyms1-dev
 
       - name: Configure
         run: |
@@ -59,6 +59,10 @@ jobs:
 
       - name: Build
         run: cmake --build build --parallel $(nproc)
+
+      # Portable tests only; pw-live tests need a PipeWire session and skip here.
+      - name: Test
+        run: ctest --test-dir build -L unit --output-on-failure
 
       - name: Install into AppDir
         run: DESTDIR=$PWD/AppDir cmake --install build

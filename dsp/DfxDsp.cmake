@@ -111,16 +111,41 @@ foreach(d
 endforeach()
 
 # Case-insensitivity bridge: the Windows sources include headers with
-# inconsistent casing. lc_headers holds symlinks (both original-cased and
-# lowercase) so every variant resolves on a case-sensitive filesystem.
-# lc_headers/ is gitignored; regenerate after a fresh clone with:
-#   mkdir -p dsp/linux/lc_headers
-#   find . -name '*.h' -not -path '*/lc_headers/*' -not -path '*/.git/*' | while read h; do
-#     ln -sf "$(realpath "$h")" dsp/linux/lc_headers/$(basename "$h")
-#     lc=$(basename "$h" | tr A-Z a-z)
-#     ln -sf "$(realpath "$h")" dsp/linux/lc_headers/$lc
-#   done
-target_include_directories(DfxDsp PRIVATE ${DSP_DIR}/linux/lc_headers)
+# inconsistent casing ("C_aural.h" for c_aural.h). At configure time, link every
+# include spelling used by the DSP sources and headers that names a project
+# header, plus each header's own and lowercase name, to the real file. The
+# links live in the build tree, so a fresh clone needs no manual step. Several names exist in
+# more than one copy (e.g. pt_defs.h in dsp/ptutil/include and
+# audiopassthru/include); later lists win, so the DSP's own copies are preferred.
+set(DSP_LC_HEADERS ${CMAKE_CURRENT_BINARY_DIR}/lc_headers)
+file(REMOVE_RECURSE ${DSP_LC_HEADERS})
+file(MAKE_DIRECTORY ${DSP_LC_HEADERS})
+file(GLOB_RECURSE _lc_ap_headers ${DSP_DIR}/../audiopassthru/*.h ${DSP_DIR}/../audiopassthru/*.H)
+file(GLOB_RECURSE _lc_dsp_headers ${DSP_DIR}/*.h ${DSP_DIR}/*.H)
+file(GLOB _lc_core_headers ${DSP_DIR}/ptutil/include/*.h)
+list(FILTER _lc_dsp_headers EXCLUDE REGEX "/lc_headers/")
+set(_lc_names "")
+foreach(h IN LISTS _lc_ap_headers _lc_dsp_headers _lc_core_headers)
+    get_filename_component(n ${h} NAME)
+    string(TOLOWER ${n} lc)
+    set(_lc_target_${lc} ${h})
+    list(APPEND _lc_names ${n} ${lc})
+endforeach()
+foreach(f IN LISTS DSP_SOURCES _lc_dsp_headers _lc_ap_headers)
+    file(STRINGS ${f} _incs REGEX "^[ \t]*#[ \t]*include[ \t]*[<\"][^>\"/]+[>\"]")
+    foreach(line IN LISTS _incs)
+        string(REGEX REPLACE ".*[<\"]([^>\"]+)[>\"].*" "\\1" n "${line}")
+        list(APPEND _lc_names ${n})
+    endforeach()
+endforeach()
+list(REMOVE_DUPLICATES _lc_names)
+foreach(n IN LISTS _lc_names)
+    string(TOLOWER ${n} lc)
+    if(DEFINED _lc_target_${lc})
+        file(CREATE_LINK ${_lc_target_${lc}} ${DSP_LC_HEADERS}/${n} SYMBOLIC)
+    endif()
+endforeach()
+target_include_directories(DfxDsp PRIVATE ${DSP_LC_HEADERS})
 
 # Project defines from dsp/DfxDsp.vcxproj (minus WIN32). DSPSOFT_TARGET selects
 # the software DSP path (no hardware dma32.h); PT_DSP_BUILD picks the DFX build.
@@ -133,7 +158,7 @@ add_test(NAME dsp_selftest COMMAND dsp_selftest)
 # out-of-range read aborts instead of passing silently.
 add_executable(reg_selftest ${DSP_DIR}/linux/test_reg.cpp ${DSP_DIR}/linux/reg_linux.cpp)
 target_include_directories(reg_selftest PRIVATE
-    ${DSP_DIR}/ptutil/include ${DSP_DIR}/linux ${DSP_DIR}/linux/lc_headers)
+    ${DSP_DIR}/ptutil/include ${DSP_DIR}/linux ${DSP_LC_HEADERS})
 target_compile_definitions(reg_selftest PRIVATE PT_LINUX=1 PT_NON_MFC _GLIBCXX_ASSERTIONS)
 target_compile_options(reg_selftest PRIVATE -fpermissive -Wno-write-strings)
 foreach(scenario roundtrip persisted malformed rmdir)
