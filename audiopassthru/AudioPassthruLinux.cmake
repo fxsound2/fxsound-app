@@ -17,6 +17,13 @@ target_link_libraries(AudioPassthru PUBLIC DfxDsp PRIVATE ${PIPEWIRE_LIBRARIES})
 add_executable(passthru_selftest ${AP_DIR}/src/linux/test_passthru.cpp)
 target_link_libraries(passthru_selftest PRIVATE AudioPassthru ${PIPEWIRE_LIBRARIES})
 
+# Realtime process block against the real DSP; no PipeWire needed at runtime.
+add_executable(process_selftest ${AP_DIR}/src/linux/test_process.cpp)
+target_link_libraries(process_selftest PRIVATE DfxDsp)
+add_test(NAME process_selftest COMMAND process_selftest)
+set_tests_properties(process_selftest PROPERTIES LABELS unit
+    ENVIRONMENT "XDG_CONFIG_HOME=${CMAKE_CURRENT_BINARY_DIR}/test-config/process")
+
 # Live-graph tests need a running PipeWire session; they skip (77) without one.
 add_test(NAME routing_follows_default_sink
     COMMAND bash ${AP_DIR}/src/linux/test_routing_live.sh $<TARGET_FILE:passthru_selftest>)

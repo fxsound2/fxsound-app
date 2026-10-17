@@ -19,6 +19,7 @@ methods take the loop lock. The realtime process callback is lock-free.
 
 #include "AudioPassthru.h"
 #include "DfxDsp.h"
+#include "PipeWireProcess.h"
 
 #include <pipewire/pipewire.h>
 #include <pipewire/filter.h>
@@ -76,8 +77,7 @@ struct AudioPassthruPrivate
     float* in_ports[kChannels]  = {nullptr, nullptr};
     float* out_ports[kChannels] = {nullptr, nullptr};
 
-    DfxDsp* dsp = nullptr;
-    std::atomic<bool> muted{false};
+    FxProcessor processor;   // realtime DSP block (see PipeWireProcess.h)
     AudioPassthruCallback* callback = nullptr;
 
     // Graph model (guarded by the thread-loop lock).
@@ -88,10 +88,6 @@ struct AudioPassthruPrivate
     bool        have_configured_sink = false;  // default.configured.audio.sink seen
     std::string selected_sink_name;      // user choice; empty => default
 
-    std::vector<float> ileave_in;     // interleaved L/R, 32-bit float
-    std::vector<float> ileave_out;
-
-    int  configured_rate = 0;   // last rate passed to dsp->setSignalFormat
     bool started = false;
 };
 
@@ -112,47 +108,8 @@ void on_process(void* userdata, struct spa_io_position* position)
     }
     for (int c = 0; c < kChannels; ++c) if (!out[c]) return;
 
-    if (d->muted.load(std::memory_order_relaxed)) {
-        for (int c = 0; c < kChannels; ++c) std::memset(out[c], 0, n * sizeof(float));
-        return;
-    }
-
-    bool have_in = in[0] && in[1];
-    if (d->dsp && have_in) {
-        // Process in native 32-bit float (PipeWire's format) so there is no
-        // 16-bit quantization loss. The DSP must be told the format or it
-        // produces no output; bps=32 routes it through the float path.
-        int rate = (position->clock.rate.denom > 0) ? (int)position->clock.rate.denom : 48000;
-        if (d->configured_rate != rate) {
-            d->dsp->setSignalFormat(32, kChannels, rate, 32);
-            d->configured_rate = rate;
-        }
-        if (d->ileave_in.size() < n * kChannels) {
-            d->ileave_in.resize(n * kChannels);
-            d->ileave_out.resize(n * kChannels);
-        }
-        for (uint32_t i = 0; i < n; ++i) {
-            d->ileave_in[i*2]     = in[0][i];
-            d->ileave_in[i*2 + 1] = in[1][i];
-        }
-        // processAudio takes short*; for bps=32 the engine reinterprets the
-        // buffers as 32-bit float internally.
-        d->dsp->processAudio(reinterpret_cast<short*>(d->ileave_in.data()),
-                             reinterpret_cast<short*>(d->ileave_out.data()), (int)n, 0);
-        for (uint32_t i = 0; i < n; ++i) {
-            float l = d->ileave_out[i*2];
-            float r = d->ileave_out[i*2 + 1];
-            // Final hard-clip to prevent digital distortion reaching PipeWire/mixer.
-            if (l > 1.0f) l = 1.0f; else if (l < -1.0f) l = -1.0f;
-            if (r > 1.0f) r = 1.0f; else if (r < -1.0f) r = -1.0f;
-            out[0][i] = l;
-            out[1][i] = r;
-        }
-    } else if (have_in) {
-        for (int c = 0; c < kChannels; ++c) std::memcpy(out[c], in[c], n * sizeof(float));
-    } else {
-        for (int c = 0; c < kChannels; ++c) std::memset(out[c], 0, n * sizeof(float));
-    }
+    int rate = (position->clock.rate.denom > 0) ? (int)position->clock.rate.denom : 48000;
+    d->processor.process(in, out, n, rate);
 }
 
 const struct pw_filter_events filter_events = {
@@ -550,7 +507,7 @@ int AudioPassthru::init()
 
 void AudioPassthru::mute(bool mute)
 {
-    if (data_) data_->muted.store(mute, std::memory_order_relaxed);
+    if (data_) data_->processor.setMuted(mute);
 }
 
 std::vector<SoundDevice> AudioPassthru::getSoundDevices(bool)
@@ -598,7 +555,7 @@ int  AudioPassthru::processTimer()                          { return 0; }
 
 void AudioPassthru::setDspProcessingModule(DfxDsp* dsp)
 {
-    if (data_) data_->dsp = dsp;
+    if (data_) data_->processor.setDsp(dsp);
 }
 
 void AudioPassthru::setAsPlaybackDevice(const SoundDevice sound_device)
