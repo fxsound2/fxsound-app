@@ -41,3 +41,9 @@ DSP's own header copies over `audiopassthru/include` duplicates.
 **DEC-6 — Default sink: trust `default.configured.audio.sink`.** While
 WirePlumber switches to FxSound it briefly publishes another sink as
 `default.audio.sink`; that key is only used when nothing is configured.
+
+**DEC-7 — The FxSound sink monitor follows the sink volume
+(`monitor.channel-volumes=true`).** Volume keys change the default sink, which
+is "FxSound"; with the flag off the processor captured pre-volume audio and the
+keys did nothing. The volume now applies before the DSP (as in EasyEffects), so
+effects see a quieter signal at low volume.

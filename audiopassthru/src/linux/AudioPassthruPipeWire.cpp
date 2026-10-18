@@ -443,7 +443,7 @@ int AudioPassthru::init()
         PW_KEY_NODE_DESCRIPTION, "FxSound",
         PW_KEY_MEDIA_CLASS,      "Audio/Sink",
         "audio.position",        "FL,FR",
-        "monitor.channel-volumes", "false",
+        "monitor.channel-volumes", "true",
         "monitor.passthrough",   "true",
         "node.virtual",          "true",
         nullptr);
