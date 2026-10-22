@@ -7,7 +7,7 @@ under a strict Content-Security-Policy (script-src 'self') and inside an <iframe
 */
 (function () {
   "use strict";
-  var VERSION = "1.2.1";
+  var VERSION = "1.2.2";
   var STORAGE_KEY = "fxsound-dsp-tutorial:v1";
   var Pcm = window.FxPcm, Dsp = window.FxDsp, Explain = window.FxExplain;
   var FS = Pcm.SAMPLE_RATE;
@@ -615,14 +615,12 @@ under a strict Content-Security-Policy (script-src 'self') and inside an <iframe
   function stop() { if (source) { try { source.stop(); } catch (e) { /* already stopped */ } source = null; } }
 
   // ---- Embedding -----------------------------------------------------------------------------------
+  // ?embed=1 only hides the page header. The page deliberately does not report its height to the host:
+  // the workbench is sized to the window, so an iframe resized to fit the content would keep growing.
+  // Hosts give the iframe a fixed height (e.g. 100vh) and the page scrolls inside it.
   function setupEmbed() {
     var params = new URLSearchParams(window.location.search);
-    if (params.get("embed") !== "1") return;
-    document.documentElement.classList.add("embed");
-    if (window.parent === window || !("ResizeObserver" in window)) return;
-    new ResizeObserver(function () {
-      window.parent.postMessage({ type: "fxsound-dsp-tutorial:height", height: document.documentElement.scrollHeight }, "*");
-    }).observe(document.body);
+    if (params.get("embed") === "1") document.documentElement.classList.add("embed");
   }
 
   // ---- Start ---------------------------------------------------------------------------------------
