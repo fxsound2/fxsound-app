@@ -60,8 +60,9 @@ node tests/serve.js 8737
 
 - Tutorial: <http://localhost:8737/learn/dsp-tutorial/> (served under a sub-path, with
   `Content-Security-Policy: script-src 'self'; style-src 'self'`). The browser console should be empty.
-- Embed test: <http://localhost:8737/embed-test.html> loads the page in an `<iframe>` with `?embed=1`; the
-  iframe should resize itself to the page height.
+- Embed test: <http://localhost:8737/embed-test.html> loads the page in a fixed-height (`100vh`) `<iframe>` with
+  `?embed=1`, as the bundle README recommends. The iframe should keep its height, the tutorial should scroll inside
+  it with the graph staying in view, and the page title should be hidden while the footer stays.
 - `--capture <dir>` additionally accepts `POST /__capture/<name>.png` with a canvas data URL. This was used to
   produce the images in `docs/img/dsp-tutorial/`: the page in light mode, the plot forced to 960×360 CSS pixels,
   and the canvas drawn onto an opaque white background before saving. The plot canvas itself is transparent, and a

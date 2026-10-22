@@ -40,9 +40,8 @@ Pages and fxsound.com links to it or embeds it:
 
 - **Link:** point a menu item, button or blog post at the URL above. Keep the trailing `/`: without it the browser
   resolves `css/` and `js/` one folder too high and the page loads unstyled.
-- **Embed:** add a Code Block with the iframe snippet under [Embedding in another page](#embedding-in-another-page),
-  using the full URL. The height-reporting `<script>` part needs a Squarespace plan that allows JavaScript in Code
-  Blocks; without it the iframe still works at the fixed height you give it.
+- **Embed:** add a Code Block with the iframe snippet under [Embedding in another page](#embedding-in-another-page).
+  It contains no JavaScript, so it doesn't depend on the Squarespace plan.
 
 Optional: to serve the page from an fxsound.com address (for example `learn.fxsound.com`), add a DNS CNAME record
 `learn → fxsound2.github.io`, enter the domain under **Settings → Pages → Custom domain**, tick **Enforce HTTPS**,
@@ -65,20 +64,22 @@ Audio playback uses the Web Audio API and needs no extra permissions.
 
 ### Embedding in another page
 
-Add `?embed=1` to hide the page's own header and footer. The page then reports its height to the host page so the
-iframe can fit its content:
+Give the iframe a **fixed height** about the size of the visitor's window, and add `?embed=1` to hide the page's own
+title (the host page provides one; the footer stays because it carries the source-code link the AGPL requires):
 
 ```html
-<iframe id="fxsound-dsp-tutorial" src="https://fxsound2.github.io/fxsound-app/dsp-tutorial/?embed=1"
-        title="FxSound DSP Tutorial" style="width:100%;border:0;height:900px"></iframe>
-<script>
-  window.addEventListener("message", function (e) {
-    if (e.data && e.data.type === "fxsound-dsp-tutorial:height") {
-      document.getElementById("fxsound-dsp-tutorial").style.height = e.data.height + "px";
-    }
-  });
-</script>
+<iframe src="https://fxsound2.github.io/fxsound-app/dsp-tutorial/?embed=1"
+        title="FxSound DSP Tutorial" loading="lazy"
+        style="display:block;width:100%;height:100vh;min-height:640px;border:0"></iframe>
 ```
+
+The tutorial then scrolls inside the frame, and its graph stays in view while the controls scroll under it, as in
+the standalone page.
+
+Don't resize the iframe to fit its content. The page's graph-and-controls area is sized to the window it is shown
+in, so a frame that grows to fit the content makes the content grow too, and the frame grows without limit. The page
+therefore doesn't report its height to the host (versions before 1.2.2 did, and their README showed a script for
+it; don't use that script).
 
 ### Storage
 

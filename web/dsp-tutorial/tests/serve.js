@@ -1,7 +1,7 @@
 // Local test server that mimics website hosting conditions (not deployed):
 //  - serves the bundle under a sub-path (/learn/dsp-tutorial/) to prove all asset paths are relative
 //  - sends a strict Content-Security-Policy so any inline script/style/handler would be blocked
-//  - /embed-test.html loads the tutorial in an <iframe> with ?embed=1 and auto-sizes it
+//  - /embed-test.html loads the tutorial in a fixed-height <iframe> with ?embed=1, as the README recommends
 // Usage: node tests/serve.js [port]
 "use strict";
 const http = require("http");
@@ -19,14 +19,8 @@ const CSP = "default-src 'none'; script-src 'self'; style-src 'self'; img-src 's
 const EMBED_TEST = `<!doctype html><html><head><meta charset="utf-8"><title>Embed test</title>
 <link rel="stylesheet" href="/embed-test.css"></head><body><h1>Host page</h1>
 <iframe id="tut" src="${BASE}?embed=1" title="FxSound DSP Tutorial"></iframe>
-<script src="/embed-test.js"></script></body></html>`;
-const EMBED_JS = `window.addEventListener("message", function (e) {
-  if (e.data && e.data.type === "fxsound-dsp-tutorial:height") {
-    document.getElementById("tut").style.height = e.data.height + "px";
-    document.title = "Embed test (height " + e.data.height + ")";
-  }
-});`;
-const EMBED_CSS = `body{font-family:system-ui;margin:16px} iframe{width:100%;border:2px dashed #888;height:400px}`;
+<p>Host page content after the tutorial.</p></body></html>`;
+const EMBED_CSS = `body{font-family:system-ui;margin:16px} iframe{display:block;width:100%;height:100vh;min-height:640px;border:2px dashed #888}`;
 
 // Optional: --capture <dir> lets the page POST canvas PNGs (data URLs) to /__capture/<name>.png,
 // used to produce the screenshots in docs/img/dsp-tutorial. Off unless the flag is given.
@@ -50,7 +44,6 @@ http.createServer((req, res) => {
     return;
   }
   if (url === "/embed-test.html") return send(200, TYPES[".html"], EMBED_TEST);
-  if (url === "/embed-test.js") return send(200, TYPES[".js"], EMBED_JS);
   if (url === "/embed-test.css") return send(200, TYPES[".css"], EMBED_CSS);
   if (!url.startsWith(BASE)) return send(404, "text/plain", "Not found (bundle is served under " + BASE + ")");
   let file = path.normalize(path.join(ROOT, url.slice(BASE.length) || "index.html"));
