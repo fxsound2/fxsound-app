@@ -52,6 +52,7 @@ public:
         try
         {
             SetUnhandledExceptionFilter(unhandledExceptionFilter);
+            start_tick_ = GetTickCount64();
 
             HRESULT hRes = CoInitializeEx(0, COINIT_MULTITHREADED);
             if (SUCCEEDED(hRes))
@@ -145,6 +146,8 @@ public:
 private:
     FxTheme theme_;
     static constexpr int MAX_FRAMES = 64;
+    static constexpr ULONGLONG MIN_UPTIME_FOR_RELAUNCH_MS = 60 * 1000;
+    static inline ULONGLONG start_tick_ = 0;
 
     static LONG WINAPI unhandledExceptionFilter(EXCEPTION_POINTERS* exception_info)
     {
@@ -188,7 +191,48 @@ private:
         // Capture stack based on crash context
         CaptureAndLogCallStack(exception_info->ContextRecord);
 
+        relaunchAfterCrash();
+
         return EXCEPTION_EXECUTE_HANDLER;
+    }
+
+    // Starts a fresh instance after a crash so the app doesn't just disappear from the tray.
+    // The new instance is started by a hidden helper that waits a few seconds, because the
+    // single instance check would otherwise see this process while it is still exiting.
+    // Skipped when the process crashed shortly after starting, to avoid a crash loop.
+    static void relaunchAfterCrash()
+    {
+        auto& controller = FxController::getInstance();
+
+        if (GetTickCount64() - start_tick_ < MIN_UPTIME_FOR_RELAUNCH_MS)
+        {
+            controller.logMessage("Crashed shortly after start, not relaunching\n");
+            return;
+        }
+
+        wchar_t module_file[MAX_PATH];
+        DWORD length = GetModuleFileNameW(NULL, module_file, MAX_PATH);
+        if (length == 0 || length >= MAX_PATH)
+        {
+            return;
+        }
+
+        std::wstring command_line = L"cmd.exe /c \"ping -n 4 127.0.0.1 >nul & start \"\" \"";
+        command_line += module_file;
+        command_line += L"\"\"";
+
+        STARTUPINFOW startup_info = { sizeof(STARTUPINFOW) };
+        PROCESS_INFORMATION process_info = { 0 };
+        if (CreateProcessW(NULL, command_line.data(), NULL, NULL, FALSE, CREATE_NO_WINDOW | DETACHED_PROCESS, NULL, NULL, &startup_info, &process_info))
+        {
+            CloseHandle(process_info.hThread);
+            CloseHandle(process_info.hProcess);
+            controller.logMessage("Relaunching after crash\n");
+        }
+        else
+        {
+            controller.logMessage("Relaunch after crash failed\n");
+        }
     }
 
     static void CaptureAndLogCallStack(CONTEXT* context = nullptr)

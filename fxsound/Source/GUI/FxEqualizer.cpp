@@ -82,6 +82,8 @@ void FxEqualizer::reinit(int num_bands)
 
     removeAllChildren();
 
+    tooltips_valid_ = false;
+
     // ------------------------------------------------------------ clear and reinitialize arrays
     labels_.clear();
     band_boosts_.clear();
@@ -317,8 +319,33 @@ void FxEqualizer::resized()
     }
 }
 
-void FxEqualizer::paint(Graphics& g)
+void FxEqualizer::updateTooltips(int num_bands)
 {
+    auto& controller = FxController::getInstance();
+
+    auto hidden = controller.isHelpTooltipsHidden();
+    auto language = controller.getLanguage();
+
+    if (tooltips_valid_ && tooltips_hidden_ == hidden && tooltips_num_bands_ == num_bands && tooltips_language_ == language)
+    {
+        return;
+    }
+
+    tooltips_valid_ = true;
+    tooltips_hidden_ = hidden;
+    tooltips_num_bands_ = num_bands;
+    tooltips_language_ = language;
+
+    if (hidden)
+    {
+        for (int i = 0; i < num_bands; i++)
+        {
+            band_boosts_[i]->setTooltip("");
+            center_frequencies_[i]->setTooltip("");
+        }
+        return;
+    }
+
     StringArray tool_tips = { TRANS("Hyper-low Bass - First band for very low frequencies down to 20 Hz."),
                               TRANS("Super-low Bass. Increase this for more rumble and \"thump\", decrease if there's too much boominess."),
                               TRANS("Center of your Bass sound. Increase this for a fuller low end, decrease if the bass sounds overwhelming."),
@@ -335,6 +362,15 @@ void FxEqualizer::paint(Graphics& g)
                                    "controls the volume of this EQ band. Increase or decrease to boost or cut\r\n" 
                                    "a portion of your audio's frequencies, without modifying the rest of your sound.");
 
+    for (int i = 0; i < num_bands; i++)
+    {
+        if (num_bands == 10) band_boosts_[i]->setTooltip(tool_tips[i]);
+        center_frequencies_[i]->setTooltip(center_freq_tip);
+    }
+}
+
+void FxEqualizer::paint(Graphics& g)
+{
     auto& controller = FxController::getInstance();
 
     int num_bands = controller.getNumEqBands();
@@ -361,19 +397,7 @@ void FxEqualizer::paint(Graphics& g)
     }
     else
     {
-        for (int i = 0; i < num_bands; i++)
-        {
-            if (!controller.isHelpTooltipsHidden())
-            {
-                if (num_bands == 10) band_boosts_[i]->setTooltip(tool_tips[i]);
-                center_frequencies_[i]->setTooltip(center_freq_tip);
-            }
-            else
-            {
-                band_boosts_[i]->setTooltip("");
-                center_frequencies_[i]->setTooltip("");
-            }
-        }
+        updateTooltips(num_bands);
     }
 
     if (highlight_mode_)
@@ -381,7 +405,11 @@ void FxEqualizer::paint(Graphics& g)
         gradient_colour_2 = gradient_colour_2.withSaturation(0.0);
     }
 
-    for (auto i = 0; i < band_boosts_.size() - 1; i++) 
+    // One stroke per colour instead of one per segment, so only two edge tables are built
+    Path enabled_lines;
+    Path disabled_lines;
+
+    for (auto i = 0; i < band_boosts_.size() - 1; i++)
     {
         auto y0 = static_cast<float>(band_boosts_[i]->getPositionOfValue(band_boosts_[i]->getValue()) + Y_MARGIN);
         auto y1 = static_cast<float>(band_boosts_[i + 1]->getPositionOfValue(band_boosts_[i + 1]->getValue()) + Y_MARGIN);
@@ -389,18 +417,20 @@ void FxEqualizer::paint(Graphics& g)
         auto x0 = static_cast<float>(band_boosts_[i]->getX() + band_boosts_[i]->getWidth() / 2);
         auto x1 = static_cast<float>(band_boosts_[i + 1]->getX() + band_boosts_[i + 1]->getWidth() / 2);
 
-        path.addLineSegment(Line<float>(x0, y0, x1, y1), 1.0f);
+        auto& lines = (band_boosts_[i]->isEnabled() || band_boosts_[i + 1]->isEnabled()) ? enabled_lines : disabled_lines;
+        lines.addLineSegment(Line<float>(x0, y0, x1, y1), 1.0f);
+    }
 
-        if (band_boosts_[i]->isEnabled() || band_boosts_[i + 1]->isEnabled())
-        {
-            g.setColour(line_colour);
-        }
-        else
-        {
-            g.setColour(line_colour.withSaturation(0.0));
-        }
-        g.strokePath(path, PathStrokeType(1.0));
-        path.clear();
+    if (!enabled_lines.isEmpty())
+    {
+        g.setColour(line_colour);
+        g.strokePath(enabled_lines, PathStrokeType(1.0));
+    }
+
+    if (!disabled_lines.isEmpty())
+    {
+        g.setColour(line_colour.withSaturation(0.0));
+        g.strokePath(disabled_lines, PathStrokeType(1.0));
     }
 
     for (auto i = 0; i < band_boosts_.size(); i++) 

@@ -113,6 +113,7 @@ private:
 	void paint(Graphics& g) override;
 
     void restoreDefaults();
+    void updateTooltips(int num_bands);
 
 	std::vector<std::unique_ptr<Label>> labels_;
     std::vector<std::unique_ptr<FxEqSlider>> band_boosts_;
@@ -124,6 +125,12 @@ private:
     std::unique_ptr<Drawable> restore_defaults_hover_image_;
 
     bool highlight_mode_;
+
+    // State the tooltips were last built for, so paint() only rebuilds them when it changes
+    bool tooltips_valid_ = false;
+    bool tooltips_hidden_ = false;
+    int tooltips_num_bands_ = 0;
+    String tooltips_language_;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxEqualizer)
 };
