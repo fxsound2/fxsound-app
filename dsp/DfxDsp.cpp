@@ -77,6 +77,26 @@ int DfxDsp::getNumEqBands()
 	return data_->getNumEqBands();
 }
 
+void DfxDsp::filtersOn(bool on)
+{
+	data_->filtersOn(on);
+}
+
+bool DfxDsp::isFiltersOn()
+{
+	return data_->isFiltersOn();
+}
+
+void DfxDsp::setCutSlope(int db_per_octave)
+{
+	data_->setCutSlope(db_per_octave);
+}
+
+int DfxDsp::getCutSlope()
+{
+	return data_->getCutSlope();
+}
+
 void DfxDsp::lowCutOn(bool on)
 {
 	data_->lowCutOn(on);
@@ -87,44 +107,69 @@ bool DfxDsp::isLowCutOn()
 	return data_->isLowCutOn();
 }
 
-void DfxDsp::setLowCutSlope(int db_per_octave)
+void DfxDsp::setLowCutCutoff(float hz)
 {
-	data_->setLowCutSlope(db_per_octave);
-}
-
-int DfxDsp::getLowCutSlope()
-{
-	return data_->getLowCutSlope();
-}
-
-void DfxDsp::setLowCutQ(float q)
-{
-	data_->setLowCutQ(q);
-}
-
-float DfxDsp::getLowCutQ()
-{
-	return data_->getLowCutQ();
-}
-
-void DfxDsp::lowCutPreviewOn(bool on)
-{
-	data_->lowCutPreviewOn(on);
-}
-
-bool DfxDsp::isLowCutPreviewOn()
-{
-	return data_->isLowCutPreviewOn();
-}
-
-void DfxDsp::setLowCutCutoff(float cutoff_hz)
-{
-	data_->setLowCutCutoff(cutoff_hz);
+	data_->setLowCutCutoff(hz);
 }
 
 float DfxDsp::getLowCutCutoff()
 {
 	return data_->getLowCutCutoff();
+}
+
+void DfxDsp::highCutOn(bool on)
+{
+	data_->highCutOn(on);
+}
+
+bool DfxDsp::isHighCutOn()
+{
+	return data_->isHighCutOn();
+}
+
+void DfxDsp::setHighCutCutoff(float hz)
+{
+	data_->setHighCutCutoff(hz);
+}
+
+float DfxDsp::getHighCutCutoff()
+{
+	return data_->getHighCutCutoff();
+}
+
+void DfxDsp::monoBassOn(bool on)
+{
+	data_->monoBassOn(on);
+}
+
+bool DfxDsp::isMonoBassOn()
+{
+	return data_->isMonoBassOn();
+}
+
+void DfxDsp::setMonoBassCutoff(float hz)
+{
+	data_->setMonoBassCutoff(hz);
+}
+
+float DfxDsp::getMonoBassCutoff()
+{
+	return data_->getMonoBassCutoff();
+}
+
+bool DfxDsp::isFilterPreviewAvailable(int preview_flags)
+{
+	return data_->isFilterPreviewAvailable(preview_flags);
+}
+
+void DfxDsp::setFilterPreview(int preview_flags)
+{
+	data_->setFilterPreview(preview_flags);
+}
+
+int DfxDsp::getFilterPreview()
+{
+	return data_->getFilterPreview();
 }
 
 DfxPreset DfxDsp::getPresetInfo(std::wstring preset_file_full_path)

@@ -31,11 +31,11 @@ FxAudioControls::FxAudioControls() : flip_button_("flipButton", DrawableButton::
 
 	addAndMakeVisible(effects_);
 	addChildComponent(equalizer_control_);
-	addChildComponent(low_cut_control_);
+	addChildComponent(filters_control_);
 
 	effects_.addMouseListener(this, true);
 	equalizer_control_.addMouseListener(this, true);
-	low_cut_control_.addMouseListener(this, true);
+	filters_control_.addMouseListener(this, true);
 
 	flip_button_.setMouseCursor(MouseCursor::PointingHandCursor);
 	flip_button_.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -55,7 +55,7 @@ void FxAudioControls::showPage(int page)
 
 	effects_.setVisible(page_ == EffectsPage);
 	equalizer_control_.setVisible(page_ == EqualizerPage);
-	low_cut_control_.setVisible(page_ == LowCutPage);
+	filters_control_.setVisible(page_ == FiltersPage);
 }
 
 void FxAudioControls::update()
@@ -64,7 +64,7 @@ void FxAudioControls::update()
 	effects_.showValues(true);
 
 	equalizer_control_.update();
-	low_cut_control_.update();
+	filters_control_.update();
 }
 
 void FxAudioControls::showValues(bool show)
@@ -82,14 +82,14 @@ void FxAudioControls::setLookAndFeel()
 	flip_button_.setImages(flip_image_.get(), flip_hover_image_.get());
 
 	equalizer_control_.setLookAndFeel(theme);
-	low_cut_control_.setLookAndFeel(theme);
+	filters_control_.setLookAndFeel(theme);
 }
 
 void FxAudioControls::resized()
 {
 	effects_.setBounds(0, 0, WIDTH, HEIGHT);
 	equalizer_control_.setBounds(0, 0, WIDTH, HEIGHT);
-	low_cut_control_.setBounds(0, 0, WIDTH, HEIGHT);
+	filters_control_.setBounds(0, 0, WIDTH, HEIGHT);
 
 	flip_button_.setBounds(getWidth() - BUTTON_WIDTH - 5, 5, BUTTON_WIDTH, BUTTON_HEIGHT);
 }
@@ -579,199 +579,145 @@ void FxEqualizerControl::visibilityChanged()
 
 namespace
 {
-	constexpr int LOW_CUT_FIRST_ORDER_SLOPE_DB = 6;
+	// The mono bass stage is a Linkwitz-Riley LR4 on the side signal: two identical 12dB/Oct Butterworth
+	// sections at the cut Q (FiltChain's filtChainDesignLinkwitzRiley).
+	constexpr int MONO_BASS_SLOPE_DB = 24;
 
-	String lowCutSlopeValue(int slope_db)
+	// "48dB/Oct (maximally flat)": the low and high cut's selected slope. They are true Butterworth cascades, each
+	// section with its own Q, so no single Q is named.
+	String cutSlope()
 	{
-		return String(slope_db) + " dB";
-	}
-
-	String lowCutSlopeTooltip(int slope_db)
-	{
-		String meaning = TRANS("The dB value is the slope in dB per octave: how much the level drops for every halving of frequency below the cutoff.");
-
-		switch (slope_db)
-		{
-		case 6:
-			return TRANS("6 dB/oct: the gentlest rolloff, a single first-order stage. Q has no effect.") + "\n" + meaning;
-		case 12:
-			return TRANS("12 dB/oct: gentle rolloff.") + "\n" + meaning;
-		case 18:
-			return TRANS("18 dB/oct: moderate rolloff.") + "\n" + meaning;
-		case 24:
-			return TRANS("24 dB/oct: firm rolloff. Recommended for most listening.") + "\n" + meaning;
-		case 36:
-			return TRANS("36 dB/oct: steep rolloff, a firmer guard against subsonic content.") + "\n" + meaning;
-		case 48:
-		default:
-			return TRANS("48 dB/oct: steepest rolloff, at the cost of more phase shift near the cutoff.") + "\n" + meaning;
-		}
-	}
-
-	int lowCutSlopePosition(int slope_db)
-	{
-		for (int position = 0; position < DfxDsp::LOW_CUT_NUM_SLOPES; position++)
-		{
-			if (DfxDsp::LOW_CUT_SLOPES_DB[position] == slope_db)
-			{
-				return position;
-			}
-		}
-
-		return 0;
+		return String(FxController::getInstance().getCutSlope()) + "dB/Oct (" + TRANS("maximally flat") + ")";
 	}
 
 	String lowCutToggleTooltip(int hp_cutoff_hz)
 	{
+		String type = TRANS("Butterworth high-pass") + ", " + cutSlope();
+
 		if (hp_cutoff_hz <= 0)
 		{
-			return TRANS("Butterworth high-pass. The cutoff is Off (0Hz), so audio passes through unfiltered.");
+			return type + ". " + TRANS("The cutoff is Off (0Hz), so audio passes through unfiltered.");
 		}
 
-		return TRANS("Butterworth high-pass: removes content below") + " " + String(hp_cutoff_hz) + "Hz. " + TRANS("Adds no delay.");
+		return type + ": " + TRANS("removes content below") + " " + String(hp_cutoff_hz) + "Hz. " + TRANS("Adds no delay.");
 	}
-}
 
-FxLowCutControl::ValueSlider::ValueSlider()
-{
-	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
-
-	value_label_.setFont(theme.getSmallFont().withHeight(11.0f));
-	value_label_.setJustificationType(Justification::centredLeft);
-	value_label_.setInterceptsMouseClicks(false, false);
-}
-
-void FxLowCutControl::ValueSlider::setValueText(const String& text)
-{
-	value_label_.setText(text, NotificationType::dontSendNotification);
-	positionValueLabel();
-}
-
-void FxLowCutControl::ValueSlider::resized()
-{
-	Slider::resized();
-	positionValueLabel();
-}
-
-void FxLowCutControl::ValueSlider::moved()
-{
-	positionValueLabel();
-}
-
-void FxLowCutControl::ValueSlider::valueChanged()
-{
-	positionValueLabel();
-}
-
-void FxLowCutControl::ValueSlider::parentHierarchyChanged()
-{
-	auto* parent = getParentComponent();
-
-	if (parent != nullptr && value_label_.getParentComponent() != parent)
+	String highCutToggleTooltip(int lp_cutoff_hz)
 	{
-		parent->addAndMakeVisible(value_label_);
-		positionValueLabel();
+		String type = TRANS("Butterworth low-pass") + ", " + cutSlope();
+
+		if (lp_cutoff_hz >= DfxDsp::HIGH_CUT_OFF_HZ)
+		{
+			return type + ". " + TRANS("The cutoff is Off, so audio passes through unfiltered.");
+		}
+
+		return type + ": " + TRANS("removes content above") + " " + String(lp_cutoff_hz / 1000.0, 1) + "kHz. " + TRANS("Adds no delay.");
 	}
-}
 
-void FxLowCutControl::ValueSlider::enablementChanged()
-{
-	Slider::enablementChanged();
-	value_label_.setEnabled(isEnabled());
-}
-
-void FxLowCutControl::ValueSlider::mouseWheelMove(const MouseEvent& event, const MouseWheelDetails& wheel)
-{
-	if (!FxAudioSlider::stepByWheel(*this, wheel))
+	String monoBassToggleTooltip(int mono_cutoff_hz)
 	{
-		Slider::mouseWheelMove(event, wheel);
+		String type = TRANS("Mono bass, Linkwitz-Riley (LR4) high-pass on the side signal") + ", " +
+			String(MONO_BASS_SLOPE_DB) + "dB/Oct, " + TRANS("two standard Q") + " (" + String(DfxDsp::CUT_Q, 2) + ") " +
+			TRANS("Butterworth stages");
+
+		if (mono_cutoff_hz <= 0)
+		{
+			return type + ". " + TRANS("The cutoff is Off (0Hz), so stereo passes through untouched.");
+		}
+
+		return type + ": " + TRANS("folds bass below") + " " + String(mono_cutoff_hz) + "Hz " + TRANS("to mono; everything above stays stereo.");
+	}
+
+	// The high cut slider works in kHz; the controller works in Hz.
+	constexpr double HZ_PER_KHZ = 1000.0;
+
+	// The most one mouse wheel notch (on a fast spin) moves the low cut and mono bass sliders, in slider steps
+	// (1 Hz). A slow notch moves one step. The high cut is scaled to move its thumb as fast (see the constructor).
+	constexpr double WHEEL_MAX_NOTCH_STEPS = 6.0;
+
+	// Number of steps across a slider's range.
+	double sliderSteps(const Slider& slider)
+	{
+		return (slider.getMaximum() - slider.getMinimum()) / slider.getInterval();
 	}
 }
 
-void FxLowCutControl::ValueSlider::positionValueLabel()
-{
-	auto text_width = static_cast<int>(GlyphArrangement::getStringWidth(value_label_.getFont(), value_label_.getText())) +
-		value_label_.getBorderSize().getLeftAndRight() + 2;
-	auto pos = (int)getPositionOfValue(getValue());
-	auto x = getX() + pos + FxTheme::SLIDER_THUMB_RADIUS / 2 + 1;
-
-	value_label_.setBounds(x, getY() + (getHeight() - LABEL_HEIGHT) / 2, text_width, LABEL_HEIGHT);
-}
-
-FxLowCutControl::FxLowCutControl() :
-	power_button_(L"lowCutPowerButton"),
-	hp_cutoff_slider_("%0.0f Hz", (float)DfxDsp::LOW_CUT_DEFAULT_CUTOFF_HZ),
-	q_slider_("%.2f", DfxDsp::LOW_CUT_DEFAULT_Q),
+FxFiltersControl::FxFiltersControl() :
+	low_cut_(L"lowCutPowerButton", "%0.0f Hz", (float)DfxDsp::LOW_CUT_DEFAULT_CUTOFF_HZ, DfxDsp::PreviewLowCut),
+	high_cut_(L"highCutPowerButton", "%0.1f kHz", (float)(DfxDsp::HIGH_CUT_DEFAULT_CUTOFF_HZ / HZ_PER_KHZ), DfxDsp::PreviewHighCut),
+	mono_bass_(L"monoBassPowerButton", "%0.0f Hz", (float)DfxDsp::MONO_BASS_DEFAULT_CUTOFF_HZ, DfxDsp::PreviewMonoBass),
+	global_power_button_(L"filtersPowerButton"),
 	restore_defaults_button_("restoreDefaultsButton", DrawableButton::ButtonStyle::ImageFitted)
 {
-	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
+	low_cut_.cutoff.setRange(DfxDsp::LOW_CUT_MIN_CUTOFF_HZ, DfxDsp::LOW_CUT_MAX_CUTOFF_HZ, 1);
+	// One step when dragging or for a slow wheel notch; up to WHEEL_MAX_NOTCH_STEPS per notch as the wheel spins faster.
+	low_cut_.cutoff.setWheelMaxNotchStep(WHEEL_MAX_NOTCH_STEPS * low_cut_.cutoff.getInterval());
+	initBlock(low_cut_,
+		[](bool on) { FxController::getInstance().setLowCutOn(on); },
+		[](double value) {
+			auto& controller = FxController::getInstance();
+			int cutoff_hz = roundToInt(value);
+			if (controller.getLowCutCutoff() != cutoff_hz)
+			{
+				controller.setLowCutCutoff(cutoff_hz);
+			}
+		});
 
-	power_button_.setMouseCursor(MouseCursor::PointingHandCursor);
-	power_button_.setImageWidth(POWER_ICON_SIZE);
-	power_button_.setWantsKeyboardFocus(true);
-	power_button_.onClick = [this]() {
-		bool on = !power_button_.getPowerState();
+	high_cut_.cutoff.setRange(DfxDsp::HIGH_CUT_MIN_CUTOFF_HZ / HZ_PER_KHZ, DfxDsp::HIGH_CUT_OFF_HZ / HZ_PER_KHZ, DfxDsp::HIGH_CUT_STEP_HZ / HZ_PER_KHZ);
+	// The high cut has far fewer steps (61) than the low cut (200), so the same steps per notch would move its thumb
+	// about three times as far. Its fast-spin step covers about the same share of the slider as the low cut's (2 steps,
+	// 200 Hz); a slow notch still moves one 100 Hz step, the smallest the high cut takes.
+	high_cut_.cutoff.setWheelMaxNotchStep(high_cut_.cutoff.getInterval() *
+		jmax(1.0, std::round(WHEEL_MAX_NOTCH_STEPS * sliderSteps(high_cut_.cutoff) / sliderSteps(low_cut_.cutoff))));
+	initBlock(high_cut_,
+		[](bool on) { FxController::getInstance().setHighCutOn(on); },
+		[](double value) {
+			auto& controller = FxController::getInstance();
+			int cutoff_hz = roundToInt(value * HZ_PER_KHZ);
+			if (controller.getHighCutCutoff() != cutoff_hz)
+			{
+				controller.setHighCutCutoff(cutoff_hz);
+			}
+		});
 
-		power_button_.setPowerState(on);
-		FxController::getInstance().setLowCutOn(on);
-		if (!on)
-		{
-			preview_button_.setToggleState(false, NotificationType::dontSendNotification);
-		}
-		updateEnabled();
+	mono_bass_.cutoff.setRange(DfxDsp::MONO_BASS_MIN_CUTOFF_HZ, DfxDsp::MONO_BASS_MAX_CUTOFF_HZ, 1);
+	mono_bass_.cutoff.setWheelMaxNotchStep(WHEEL_MAX_NOTCH_STEPS * mono_bass_.cutoff.getInterval());
+	initBlock(mono_bass_,
+		[](bool on) { FxController::getInstance().setMonoBassOn(on); },
+		[](double value) {
+			auto& controller = FxController::getInstance();
+			int cutoff_hz = roundToInt(value);
+			if (controller.getMonoBassCutoff() != cutoff_hz)
+			{
+				controller.setMonoBassCutoff(cutoff_hz);
+			}
+		});
+
+	global_power_button_.setMouseCursor(MouseCursor::PointingHandCursor);
+	global_power_button_.setImageWidth(POWER_ICON_SIZE);
+	global_power_button_.setWantsKeyboardFocus(true);
+	global_power_button_.onClick = [this]() {
+		bool on = !global_power_button_.getPowerState();
+
+		global_power_button_.setPowerState(on);
+		FxController::getInstance().setFiltersOn(on);
+		refresh();
 		};
 
-	for (auto* title : { &slope_title_, &hp_cutoff_title_, &q_title_ })
+	// One slope for the low and high cut (the mono bass stage is a fixed LR4).
+	slope_.setMouseCursor(MouseCursor::PointingHandCursor);
+	slope_.setWantsKeyboardFocus(true);
+	for (auto slope_db : DfxDsp::CUT_SLOPES_DB)
 	{
-		title->setFont(theme.getNormalFont().withHeight(12.0f));
-		title->setJustificationType(Justification::topLeft);
-		auto border = title->getBorderSize();
-		border.setLeft(0);
-		title->setBorderSize(border);
+		slope_.addItem(String(slope_db) + " dB/Oct", slope_db);
 	}
-
-	for (auto* slider : std::initializer_list<Slider*>{ &slope_slider_, &hp_cutoff_slider_, &q_slider_ })
-	{
-		slider->setSliderStyle(Slider::LinearHorizontal);
-		slider->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
-		slider->setMouseCursor(MouseCursor::PointingHandCursor);
-		slider->setWantsKeyboardFocus(true);
-	}
-
-	slope_slider_.setRange(0, DfxDsp::LOW_CUT_NUM_SLOPES - 1, 1);
-	slope_slider_.onValueChange = [this]() {
-		int position = jlimit(0, DfxDsp::LOW_CUT_NUM_SLOPES - 1, static_cast<int>(slope_slider_.getValue()));
-
-		FxController::getInstance().setLowCutSlope(DfxDsp::LOW_CUT_SLOPES_DB[position]);
-		updateLabels();
-		updateEnabled();
-		};
-
-	hp_cutoff_slider_.setRange(DfxDsp::LOW_CUT_MIN_CUTOFF_HZ, DfxDsp::LOW_CUT_MAX_CUTOFF_HZ, 1);
-	hp_cutoff_slider_.setWheelStepsByInterval(true);
-	hp_cutoff_slider_.onValueChange = [this]() {
-		auto& controller = FxController::getInstance();
-		int cutoff_hz = static_cast<int>(hp_cutoff_slider_.getValue());
-
-		if (controller.getLowCutCutoff() != cutoff_hz)
+	slope_.onChange = [this]() {
+		auto slope_db = slope_.getSelectedId();
+		if (slope_db != 0 && slope_db != FxController::getInstance().getCutSlope())
 		{
-			controller.setLowCutCutoff(cutoff_hz);
+			FxController::getInstance().setCutSlope(slope_db);
+			refresh();
 		}
-		updateLabels();
-		};
-
-	q_slider_.setRange(DfxDsp::LOW_CUT_MIN_Q, DfxDsp::LOW_CUT_MAX_Q, 0.01);
-	q_slider_.setSkewFactorFromMidPoint(DfxDsp::LOW_CUT_DEFAULT_Q);
-	q_slider_.setWheelStepsByInterval(true);
-	q_slider_.onValueChange = [this]() {
-		auto& controller = FxController::getInstance();
-		auto q = static_cast<float>(q_slider_.getValue());
-
-		if (std::abs(controller.getLowCutQ() - q) > 0.001f)
-		{
-			controller.setLowCutQ(q);
-		}
-		updateLabels();
 		};
 
 	restore_defaults_button_.setMouseCursor(MouseCursor::PointingHandCursor);
@@ -780,58 +726,113 @@ FxLowCutControl::FxLowCutControl() :
 		restoreDefaults();
 		};
 
-	preview_button_.setWantsKeyboardFocus(true);
-	preview_button_.onClick = [this]() {
-		FxController::getInstance().setLowCutPreviewOn(preview_button_.getToggleState());
+	global_delta_button_.setWantsKeyboardFocus(true);
+	global_delta_button_.onClick = [this]() {
+		auto& controller = FxController::getInstance();
+
+		controller.setFilterPreview(DfxDsp::toggledFilterPreview(controller.getFilterPreview(), DfxDsp::PreviewAll));
+		update();
 		};
 
 	setText();
 	update();
 
-	filter_title_.setColour(Label::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-	filter_title_.setJustificationType(Justification::centredLeft);
-	filter_title_.setInterceptsMouseClicks(false, false);
-	auto filter_title_border = filter_title_.getBorderSize();
-	filter_title_border.setLeft(0);
-	filter_title_.setBorderSize(filter_title_border);
-
-	addAndMakeVisible(power_button_);
-	addAndMakeVisible(filter_title_);
-	addAndMakeVisible(slope_title_);
-	addAndMakeVisible(slope_slider_);
-	addAndMakeVisible(hp_cutoff_title_);
-	addAndMakeVisible(hp_cutoff_slider_);
-	addAndMakeVisible(q_title_);
-	addAndMakeVisible(q_slider_);
+	for (auto* block : { &low_cut_, &high_cut_, &mono_bass_ })
+	{
+		addAndMakeVisible(block->power);
+		addAndMakeVisible(block->title);
+		addAndMakeVisible(block->cutoff);
+		addAndMakeVisible(block->delta);
+	}
+	addAndMakeVisible(global_power_button_);
+	addAndMakeVisible(slope_);
 	addAndMakeVisible(restore_defaults_button_);
-	addAndMakeVisible(preview_button_);
+	addAndMakeVisible(global_delta_button_);
 }
 
-FxLowCutControl::~FxLowCutControl()
+FxFiltersControl::~FxFiltersControl()
 {
-	power_button_.onClick = nullptr;
-	slope_slider_.onValueChange = nullptr;
-	hp_cutoff_slider_.onValueChange = nullptr;
-	q_slider_.onValueChange = nullptr;
+	for (auto* block : { &low_cut_, &high_cut_, &mono_bass_ })
+	{
+		block->power.onClick = nullptr;
+		block->cutoff.onValueChange = nullptr;
+		block->delta.onClick = nullptr;
+	}
+	global_power_button_.onClick = nullptr;
+	slope_.onChange = nullptr;
 	restore_defaults_button_.onClick = nullptr;
-	preview_button_.onClick = nullptr;
+	global_delta_button_.onClick = nullptr;
 }
 
-void FxLowCutControl::update()
+void FxFiltersControl::initBlock(FilterBlock& block, std::function<void(bool)> set_on, std::function<void(double)> set_cutoff)
+{
+	block.power.setMouseCursor(MouseCursor::PointingHandCursor);
+	block.power.setImageWidth(FILTER_POWER_ICON_SIZE);
+	block.power.setWantsKeyboardFocus(true);
+	block.power.onClick = [this, &block, set_on]() {
+		bool on = !block.power.getPowerState();
+
+		block.power.setPowerState(on);
+		set_on(on);
+		refresh();
+		};
+
+	// Same title style as the Effects and EQ pages (normal font at 12, default label colour).
+	block.title.setJustificationType(Justification::topLeft);
+	block.title.setInterceptsMouseClicks(false, false);
+	auto border = block.title.getBorderSize();
+	border.setLeft(0);
+	block.title.setBorderSize(border);
+
+	block.cutoff.setSliderStyle(Slider::LinearHorizontal);
+	block.cutoff.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	block.cutoff.setMouseCursor(MouseCursor::PointingHandCursor);
+	block.cutoff.setWantsKeyboardFocus(true);
+	block.cutoff.setWheelStepsByInterval(true);
+	// The value moves with the thumb, just right of it and vertically centred on the slider (FxAudioSlider's default;
+	// the track leaves room for it at its right end).
+	block.cutoff.onValueChange = [this, &block, set_cutoff]() {
+		set_cutoff(block.cutoff.getValue());
+		refresh();
+		};
+
+	block.delta.setWantsKeyboardFocus(true);
+	// Individual deltas combine (their removed signals are summed); pressing one while the global delta is active
+	// starts again from just this one.
+	block.delta.onClick = [this, &block]() {
+		auto& controller = FxController::getInstance();
+
+		controller.setFilterPreview(DfxDsp::toggledFilterPreview(controller.getFilterPreview(), block.preview));
+		update();
+		};
+}
+
+void FxFiltersControl::update()
 {
 	auto& controller = FxController::getInstance();
 
-	power_button_.setPowerState(controller.isLowCutOn());
-	slope_slider_.setValue(static_cast<double>(lowCutSlopePosition(controller.getLowCutSlope())), NotificationType::dontSendNotification);
-	hp_cutoff_slider_.setValue(static_cast<double>(controller.getLowCutCutoff()), NotificationType::sendNotificationSync);
-	q_slider_.setValue(static_cast<double>(controller.getLowCutQ()), NotificationType::sendNotificationSync);
-	preview_button_.setToggleState(controller.isLowCutPreviewOn(), NotificationType::dontSendNotification);
+	global_power_button_.setPowerState(controller.isFiltersOn());
+	low_cut_.power.setPowerState(controller.isLowCutOn());
+	high_cut_.power.setPowerState(controller.isHighCutOn());
+	mono_bass_.power.setPowerState(controller.isMonoBassOn());
+	slope_.setSelectedId(controller.getCutSlope(), NotificationType::dontSendNotification);
 
+	// Cutoff sliders notify synchronously so FxAudioSlider refreshes its value label; the setters are guarded.
+	low_cut_.cutoff.setValue(static_cast<double>(controller.getLowCutCutoff()), NotificationType::sendNotificationSync);
+	high_cut_.cutoff.setValue(controller.getHighCutCutoff() / HZ_PER_KHZ, NotificationType::sendNotificationSync);
+	mono_bass_.cutoff.setValue(static_cast<double>(controller.getMonoBassCutoff()), NotificationType::sendNotificationSync);
+
+	refresh();
+}
+
+void FxFiltersControl::refresh()
+{
+	updatePreviewButtons();
 	updateLabels();
 	updateEnabled();
 }
 
-void FxLowCutControl::setLookAndFeel(FxTheme&)
+void FxFiltersControl::setLookAndFeel(FxTheme&)
 {
 	restore_defaults_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButton), FXIMAGESIZE(RestoreDefaultsButton));
 	restore_defaults_hover_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButtonHover), FXIMAGESIZE(RestoreDefaultsButtonHover));
@@ -839,121 +840,237 @@ void FxLowCutControl::setLookAndFeel(FxTheme&)
 	restore_defaults_button_.setImages(restore_defaults_image_.get(), restore_defaults_hover_image_.get());
 }
 
-void FxLowCutControl::updateLabels()
+void FxFiltersControl::updatePreviewButtons()
+{
+	// The controller/DSP owns the preview state (it can drop a preview that is no longer
+	// available, e.g. when a slider reaches Off), so the delta buttons always mirror it.
+	int preview = FxController::getInstance().getFilterPreview();
+
+	bool global_preview = (preview & DfxDsp::PreviewAll) != 0;
+
+	for (auto* block : { &low_cut_, &high_cut_, &mono_bass_ })
+	{
+		block->delta.setPlaying((preview & block->preview) != 0);
+
+		// With the global switch off every filter is dimmed (none is heard and no delta can play). While a delta
+		// plays, the filters being heard in it are highlighted and the others dimmed; the global delta plays the
+		// filters whose own switch is on. Otherwise a filter switched off on its own toggle has its title and slider
+		// dimmed; its switch and delta stay bright, since it can still be switched on or auditioned.
+		bool in_preview = global_preview ? block->power.getPowerState() : (preview & block->preview) != 0;
+		bool dimmed = !global_power_button_.getPowerState() || (preview != DfxDsp::PreviewNone && !in_preview);
+		bool switched_off = !dimmed && preview == DfxDsp::PreviewNone && !block->power.getPowerState();
+
+		if (preview != DfxDsp::PreviewNone && in_preview)
+		{
+			block->title.setColour(Label::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+		}
+		else
+		{
+			block->title.removeColour(Label::textColourId);
+		}
+		for (auto* component : std::initializer_list<Component*>{ &block->title, &block->power, &block->cutoff, &block->delta })
+		{
+			bool faded = dimmed || (switched_off && (component == &block->title || component == &block->cutoff));
+
+			component->setAlpha(faded ? DIMMED_ALPHA : 1.0f);
+		}
+	}
+	// The slope dropdown dims with the filters when the global switch is off (still usable, like the sliders).
+	slope_.setAlpha(global_power_button_.getPowerState() ? 1.0f : DIMMED_ALPHA);
+	global_delta_button_.setPlaying(global_preview);
+}
+
+void FxFiltersControl::updateLabels()
 {
 	auto& controller = FxController::getInstance();
-	int slope_db = controller.getLowCutSlope();
-	int hp_cutoff_hz = static_cast<int>(hp_cutoff_slider_.getValue());
 	bool show_help = !controller.isHelpTooltipsHidden();
 
-	slope_title_.setText(TRANS("Steepness"), NotificationType::dontSendNotification);
-	slope_slider_.setValueText(lowCutSlopeValue(slope_db));
-	slope_slider_.setTooltip(show_help ? lowCutSlopeTooltip(slope_db) : String());
-
-	hp_cutoff_title_.setText(TRANS("Cutoff Frequency"), NotificationType::dontSendNotification);
-	hp_cutoff_slider_.setTooltip(show_help ? TRANS("Frequencies below this are removed. Set to Off (0Hz) to pass audio through unfiltered.") + "\n" +
+	low_cut_.cutoff.setTooltip(show_help ? TRANS("Frequencies below this are removed. Set to Off (0Hz) to pass audio through unfiltered.") + "\n" +
 		TRANS("-3dB at the cutoff itself.") : String());
+	low_cut_.power.setTooltip(show_help ? lowCutToggleTooltip(controller.getLowCutCutoff()) : String());
 
-	q_title_.setText(TRANS("Filter Q"), NotificationType::dontSendNotification);
-	q_slider_.setTooltip(show_help ? TRANS("Resonance at the cutoff. 0.71 is neutral. Higher values add a bass boost just above the cutoff (up to about +6dB, which can clip loud audio); lower values soften the knee.") +
-		(slope_db == LOW_CUT_FIRST_ORDER_SLOPE_DB ? "\n" + TRANS("Q has no effect at 6 dB/oct.") : String()) : String());
-	power_button_.setTooltip(show_help ? lowCutToggleTooltip(hp_cutoff_hz) : String());
+	high_cut_.cutoff.setTooltip(show_help ? TRANS("Frequencies above this are removed. Set to Off to pass audio through unfiltered.") : String());
+	high_cut_.power.setTooltip(show_help ? highCutToggleTooltip(controller.getHighCutCutoff()) : String());
+
+	mono_bass_.cutoff.setTooltip(show_help ? TRANS("Bass below this is folded to mono; everything above stays stereo. Set to Off (0Hz) to leave stereo untouched.") : String());
+	mono_bass_.power.setTooltip(show_help ? monoBassToggleTooltip(controller.getMonoBassCutoff()) : String());
+
+	global_power_button_.setTooltip(show_help ? TRANS("Turns all filters on or off together. Each filter keeps its own on/off setting.") : String());
+	slope_.setTooltip(show_help ? TRANS("Slope of the low cut and high cut: how fast they roll off past the cutoff. Steeper removes more just past the cutoff. Mono Bass always uses 24dB/Oct.") : String());
 }
 
-void FxLowCutControl::updateEnabled()
+void FxFiltersControl::updateEnabled()
 {
-	bool on = power_button_.getPowerState();
-	bool q_applies = FxController::getInstance().getLowCutSlope() != LOW_CUT_FIRST_ORDER_SLOPE_DB;
-
-	for (auto* component : std::initializer_list<Component*>{ &slope_title_, &slope_slider_,
-		&hp_cutoff_title_, &hp_cutoff_slider_, &restore_defaults_button_, &preview_button_ })
-	{
-		component->setEnabled(on);
-	}
-	q_title_.setEnabled(on && q_applies);
-	q_slider_.setEnabled(on && q_applies);
-}
-
-void FxLowCutControl::restoreDefaults()
-{
+	// Switches never grey anything out: a filter can be set up and auditioned before it is switched on. Only the
+	// deltas depend on availability (an individual delta needs its slider not at "Off"; the global delta needs such a
+	// filter with its own switch on).
 	auto& controller = FxController::getInstance();
 
-	controller.setLowCutPreviewOn(false);
-	controller.setLowCutSlope(DfxDsp::LOW_CUT_DEFAULT_SLOPE_DB);
-	controller.setLowCutQ(DfxDsp::LOW_CUT_DEFAULT_Q);
-	controller.setLowCutCutoff(DfxDsp::LOW_CUT_DEFAULT_CUTOFF_HZ);
+	for (auto* block : { &low_cut_, &high_cut_, &mono_bass_ })
+	{
+		block->delta.setEnabled(controller.isFilterPreviewAvailable(block->preview));
+	}
+
+	global_delta_button_.setEnabled(controller.isFilterPreviewAvailable(DfxDsp::PreviewAll));
+	restore_defaults_button_.setEnabled(true);
+}
+
+void FxFiltersControl::restoreDefaults()
+{
+	FxController::getInstance().restoreFilterDefaults();
 
 	update();
 }
 
-void FxLowCutControl::resized()
+int FxFiltersControl::powerColumnX() const
 {
-	auto width = getWidth() - (X_MARGIN * 2);
-
-	int y = Y_MARGIN;
-	power_button_.setBounds(X_MARGIN, y, TOGGLE_HEIGHT, TOGGLE_HEIGHT);
-	filter_title_.setBounds(power_button_.getRight() + TOGGLE_GAP, y, width - TOGGLE_HEIGHT - TOGGLE_GAP, TOGGLE_HEIGHT);
-
-	y = power_button_.getBottom() + ROW_GAP;
-	slope_title_.setBounds(X_MARGIN + FxTheme::SLIDER_THUMB_RADIUS, y, SLIDER_WIDTH, LABEL_HEIGHT);
-	slope_slider_.setBounds(X_MARGIN, slope_title_.getBottom() + 1, SLIDER_WIDTH, SLIDER_HEIGHT);
-
-	y = slope_slider_.getBottom() + ROW_GAP;
-	hp_cutoff_title_.setBounds(X_MARGIN + FxTheme::SLIDER_THUMB_RADIUS, y, SLIDER_WIDTH, LABEL_HEIGHT);
-	hp_cutoff_slider_.setBounds(X_MARGIN, hp_cutoff_title_.getBottom() + 1, SLIDER_WIDTH, SLIDER_HEIGHT);
-
-	y = hp_cutoff_slider_.getBottom() + ROW_GAP;
-	q_title_.setBounds(X_MARGIN + FxTheme::SLIDER_THUMB_RADIUS, y, SLIDER_WIDTH, LABEL_HEIGHT);
-	q_slider_.setBounds(X_MARGIN, q_title_.getBottom() + 1, SLIDER_WIDTH, SLIDER_HEIGHT);
-
-	restore_defaults_button_.setBounds(X_MARGIN, BUTTONS_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
-	preview_button_.setBounds(restore_defaults_button_.getRight() + BUTTON_GAP, BUTTONS_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
+	return getWidth() - FLIP_BUTTON_MARGIN - HEADER_HEIGHT;
 }
 
-void FxLowCutControl::paint(Graphics&)
+int FxFiltersControl::deltaColumnX() const
 {
+	return powerColumnX() - TOGGLE_GAP - HEADER_HEIGHT;
+}
+
+int FxFiltersControl::layoutBlock(FilterBlock& block, int y)
+{
+	// Title row: [delta] title ...... [power]. The delta sits at the left, lined up with the slider's left edge (as on
+	// the EQ page, X_MARGIN in); the
+	// power button is centred in the right-hand power column (under the global one).
+	// Then the slider row, the full width, its value moving with the thumb.
+	block.power.setBounds(powerColumnX() + (HEADER_HEIGHT - FILTER_POWER_SIZE) / 2, y + (LABEL_HEIGHT - FILTER_POWER_SIZE) / 2,
+		FILTER_POWER_SIZE, FILTER_POWER_SIZE);
+	block.delta.setBounds(X_MARGIN, y + (LABEL_HEIGHT - BUTTON_HEIGHT) / 2, BUTTON_WIDTH, BUTTON_HEIGHT);
+	auto title_x = block.delta.getRight() + TOGGLE_GAP;
+	block.title.setBounds(title_x, y, powerColumnX() - TOGGLE_GAP - title_x, LABEL_HEIGHT);
+
+	auto slider_y = block.title.getBottom() + TITLE_GAP;
+	block.cutoff.setBounds(X_MARGIN, slider_y, SLIDER_WIDTH, SLIDER_HEIGHT);
+
+	return block.cutoff.getBottom();
+}
+
+void FxFiltersControl::resized()
+{
+	// Rows in the 168x257 panel, lined up with the EQ page (the flip button alone on the top line): the slope dropdown
+	// 28-47 the full width (like the EQ bands dropdown), the first filter title ROW_GAP below it, then the filter
+	// blocks spread evenly down to the bottom row 233-252: [restore defaults] ...... [delta][power] (restore defaults
+	// at the EQ page's height). A divider in the gap above the bottom row separates the filters from the page-wide
+	// controls (see paint).
+	// Each filter block: title row (14 high, [delta] title ... [power]), 10 px gap, slider row (18 high, the value
+	// moving beside the thumb).
+	slope_.setBounds(X_MARGIN, SLOPE_Y, getWidth() - 2 * X_MARGIN, SLOPE_HEIGHT);
+
+	// Bottom row, centred on the restore defaults button: restore defaults on the left, the global delta and the global
+	// power button (both 20x20) in the right-hand columns.
+	auto bottom_y = BUTTONS_Y + (BUTTON_HEIGHT - HEADER_HEIGHT) / 2;
+	restore_defaults_button_.setBounds(X_MARGIN, BUTTONS_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
+	global_delta_button_.setBounds(deltaColumnX(), bottom_y, HEADER_HEIGHT, HEADER_HEIGHT);
+	global_power_button_.setBounds(powerColumnX(), bottom_y, HEADER_HEIGHT, HEADER_HEIGHT);
+
+	// The first block ROW_GAP below the dropdown (as on the EQ page), the rest spread evenly down to the bottom row:
+	// three equal gaps, between the blocks and below the last.
+	int top = slope_.getBottom() + ROW_GAP;
+	int gap = jmax(0, global_power_button_.getY() - top - 3 * FILTER_BLOCK_HEIGHT) / 3;
+	int y = layoutBlock(low_cut_, top) + gap;
+	y = layoutBlock(high_cut_, y) + gap;
+	layoutBlock(mono_bass_, y);
+}
+
+void FxFiltersControl::paint(Graphics& g)
+{
+	// Divider centred in the gap between the mono bass slider and the bottom row (restore defaults, global delta and
+	// power), separating the per-filter controls from the page-wide ones; X_MARGIN in from both sides.
+	auto divider_y = (mono_bass_.cutoff.getBottom() + global_power_button_.getY()) / 2;
+	g.setColour(Colour(FXCOLOR(Outline)).withAlpha(1.0f));
+	g.drawHorizontalLine(divider_y, static_cast<float>(X_MARGIN), static_cast<float>(getWidth() - X_MARGIN));
+
 	setText();
 }
 
-void FxLowCutControl::setText()
+void FxFiltersControl::setText()
 {
 	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
 
-	filter_title_.setText(TRANS("Low Cut Filter"), NotificationType::dontSendNotification);
-	filter_title_.setFont(theme.getNormalFont().withHeight(14.0f));
-	for (auto* title : { &slope_title_, &hp_cutoff_title_, &q_title_ })
+	low_cut_.title.setText(TRANS("Low Cut"), NotificationType::dontSendNotification);
+	high_cut_.title.setText(TRANS("High Cut"), NotificationType::dontSendNotification);
+	mono_bass_.title.setText(TRANS("Mono Bass"), NotificationType::dontSendNotification);
+	for (auto* title : { &low_cut_.title, &high_cut_.title, &mono_bass_.title })
 	{
-		title->setFont(theme.getNormalFont().withHeight(12.0f));
+		title->setFont(theme.getNormalFont().withHeight(TITLE_FONT_HEIGHT));
 	}
-	hp_cutoff_slider_.setZeroValueText(TRANS("Off"));
+
+	low_cut_.cutoff.setZeroValueText(TRANS("Off"));
+	high_cut_.cutoff.setMaxValueText(TRANS("Off"));
+	mono_bass_.cutoff.setZeroValueText(TRANS("Off"));
 
 	restore_defaults_button_.setTooltip(TRANS("Restore Defaults"));
-	preview_button_.setTooltip(TRANS("Plays back only the content the filter is removing, so you can hear what it affects."));
+	for (auto* block : { &low_cut_, &high_cut_, &mono_bass_ })
+	{
+		block->delta.setTooltip(TRANS("Plays back only the content this filter is removing, so you can hear what it affects. When the filter is off, plays what it would remove."));
+	}
+	global_delta_button_.setTooltip(TRANS("Plays back everything the switched-on filters are removing. Available while the global switch is on."));
 
 	updateLabels();
 }
 
-void FxLowCutControl::visibilityChanged()
+void FxFiltersControl::visibilityChanged()
 {
 	if (isVisible())
 	{
 		update();
 	}
-	else if (preview_button_.getToggleState())
+	else
 	{
-		FxController::getInstance().setLowCutPreviewOn(false);
-		preview_button_.setToggleState(false, NotificationType::dontSendNotification);
+		auto& controller = FxController::getInstance();
+
+		// Leaving the page releases any delta preview. Same effect as FxController::stopFilterPreview()
+		// (which is private) on the message thread.
+		if (controller.getFilterPreview() != DfxDsp::PreviewNone)
+		{
+			controller.setFilterPreview(DfxDsp::PreviewNone);
+		}
+		updatePreviewButtons();
 	}
 }
 
-void FxLowCutControl::PreviewButton::paintButton(Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
+void FxFiltersControl::PreviewButton::setPlaying(bool playing)
+{
+	setToggleState(playing, NotificationType::dontSendNotification);
+	if (playing && !isTimerRunning())
+	{
+		startTimer(PULSE_FRAME_MS);
+	}
+	else if (!playing && isTimerRunning())
+	{
+		stopTimer();
+		repaint();
+	}
+}
+
+void FxFiltersControl::PreviewButton::timerCallback()
+{
+	repaint();
+}
+
+float FxFiltersControl::PreviewButton::pulseAlpha()
+{
+	// A cosine from full brightness down to PULSE_DIM_ALPHA and back, once per period. The phase comes from the
+	// shared millisecond clock, so every playing delta pulses in step.
+	auto ms = Time::getMillisecondCounter() % (uint32)PULSE_PERIOD_MS;
+	auto phase = MathConstants<float>::twoPi * (float)ms / (float)PULSE_PERIOD_MS;
+
+	return PULSE_DIM_ALPHA + (1.0f - PULSE_DIM_ALPHA) * 0.5f * (1.0f + std::cos(phase));
+}
+
+void FxFiltersControl::PreviewButton::paintButton(Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
 {
 	auto bounds = getLocalBounds().toFloat().reduced(2.0f);
 
 	Colour colour;
 	if (getToggleState())
 	{
-		colour = Colour(FXCOLOR(SliderTrack)).withAlpha(1.0f);
+		colour = Colour(FXCOLOR(SliderTrack)).withAlpha(pulseAlpha());
 	}
 	else if (isEnabled())
 	{

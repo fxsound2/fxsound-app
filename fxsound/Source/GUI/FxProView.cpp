@@ -95,8 +95,7 @@ void FxProView::resized()
     auto bounds = getLocalBounds();
 
 	audio_controls_.setBounds(audio_controls_.getBounds().withX(AUDIO_X).withY(AUDIO_Y+visualizer_offset));
-	auto equalizer_x = audio_controls_.getRight() + 16;
-	equalizer_.setBounds(equalizer_x, AUDIO_Y + visualizer_offset, EQUALIZER_RIGHT - equalizer_x, equalizer_.getHeight());
+	equalizer_.setBounds(equalizer_.getBounds().withX(audio_controls_.getRight() + 16).withY(AUDIO_Y+visualizer_offset));
 }
 
 void FxProView::paint(Graphics& g)

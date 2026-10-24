@@ -256,6 +256,7 @@
     <ClInclude Include="ptutil\include\dynamic_build_defines.h" />
     <ClInclude Include="ptutil\include\filt.h" />
     <ClInclude Include="ptutil\include\FiltLowCut.h" />
+    <ClInclude Include="ptutil\include\FiltChain.h" />
     <ClInclude Include="ptutil\include\GraphicEq.h" />
     <ClInclude Include="ptutil\include\midi.h" />
     <ClInclude Include="ptutil\include\platform.h" />
@@ -274,6 +275,8 @@
     <ClInclude Include="ptutil\PWAV\U_pwav.h" />
     <ClInclude Include="ptutil\realSample\u_realSample.h" />
     <ClInclude Include="ptutil\VALS\U_vals.h" />
+    <ClInclude Include="FilterEngine.h" />
+    <ClInclude Include="FilterPreviewLeveller.h" />
     <ClInclude Include="u_DfxDsp.h" />
   </ItemGroup>
   <ItemGroup>
@@ -282,6 +285,8 @@
     <ClCompile Include="DfxDspPreset.cpp" />
     <ClCompile Include="DfxDspPrivate.cpp" />
     <ClCompile Include="DfxDspRegistry.cpp" />
+    <ClCompile Include="FilterEngine.cpp" />
+    <ClCompile Include="FilterPreviewLeveller.cpp" />
     <ClCompile Include="ptComSftDfx\Comsftwr.c" />
     <ClCompile Include="ptComSftDfx\ComsftwrCPP.cpp" />
     <ClCompile Include="ptechDsp\Aural\Aural032\Auralp32.c" />
@@ -356,6 +361,7 @@
     <ClCompile Include="ptutil\DspUtil\SurroundSyn\SurroundSynProcess.cpp" />
     <ClCompile Include="ptutil\Filt\Fil12But.cpp" />
     <ClCompile Include="ptutil\Filt\FiltLowCut.cpp" />
+    <ClCompile Include="ptutil\Filt\FiltChain.cpp" />
     <ClCompile Include="ptutil\Filt\FiltbiqdSos.cpp" />
     <ClCompile Include="ptutil\Filt\FiltCalcBiqd.cpp" />
     <ClCompile Include="ptutil\Filt\FiltCalcFilterResponse.cpp" />

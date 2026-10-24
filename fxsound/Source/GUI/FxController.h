@@ -150,16 +150,29 @@ public:
 	bool isAlwaysOnTop();
 	void setAlwaysOnTop(bool always_on_top);
 
+	// Filter setters (incl. preview) must be called from the GUI/message thread only; DfxDsp filter setters are not concurrency-safe.
+	bool isFiltersOn();
+	void setFiltersOn(bool on);
+	// Slope of the low and high cut, one of DfxDsp::CUT_SLOPES_DB (snapped).
+	int getCutSlope();
+	void setCutSlope(int slope_db);
 	bool isLowCutOn();
 	void setLowCutOn(bool on);
-	int getLowCutSlope();
-	void setLowCutSlope(int slope_db);
-	float getLowCutQ();
-	void setLowCutQ(float q);
-	bool isLowCutPreviewOn();
-	void setLowCutPreviewOn(bool on);
 	int getLowCutCutoff();
 	void setLowCutCutoff(int cutoff_hz);
+	bool isHighCutOn();
+	void setHighCutOn(bool on);
+	int getHighCutCutoff();
+	void setHighCutCutoff(int cutoff_hz);
+	bool isMonoBassOn();
+	void setMonoBassOn(bool on);
+	int getMonoBassCutoff();
+	void setMonoBassCutoff(int cutoff_hz);
+	// Preview selection: a combination of DfxDsp::FilterPreview flags (see DfxDsp::toggledFilterPreview).
+	int getFilterPreview();
+	void setFilterPreview(int preview_flags);
+	bool isFilterPreviewAvailable(int preview_flags);
+	void restoreFilterDefaults();
 
 	bool isLaunchOnStartup();
 	void setLaunchOnStartup(bool launch_on_startup);
@@ -267,7 +280,8 @@ private:
 	void sortByDeviceConfigPriority(std::vector<SoundDevice>& devices);
 
 	void powerOn(bool on);
-	void stopLowCutPreview();
+	void stopFilterPreview();
+	void notifyIfPreviewChanged(int before);
 
 	String getAutoSavePath() const;
     String getAutoSavePresetPath(const String& preset_name) const;
