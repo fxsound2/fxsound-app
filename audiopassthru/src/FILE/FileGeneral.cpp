@@ -77,7 +77,7 @@ FILE PT_DECLSPEC *fileOpen_Wide(wchar_t *wcp_name, wchar_t *wcp_mode, CSlout *hp
 	{
 		if (hp_slout != NULL)
 		{
-		   swprintf(wcp_file_msg, L"Unable to open file with no name.");
+		   swprintf(wcp_file_msg, sizeof(wcp_file_msg)/sizeof(*(wcp_file_msg)), L"Unable to open file with no name.");
 		   hp_slout->Message_Wide(FIRST_LINE, wcp_file_msg);
 		}
 		return(NULL);
@@ -87,7 +87,7 @@ FILE PT_DECLSPEC *fileOpen_Wide(wchar_t *wcp_name, wchar_t *wcp_mode, CSlout *hp
 	{
 		if (hp_slout != NULL)
 		{
-		   swprintf(wcp_file_msg, L"%s: %s", wcp_name, _wcserror(errno));
+		   swprintf(wcp_file_msg, sizeof(wcp_file_msg)/sizeof(*(wcp_file_msg)), L"%s: %s", wcp_name, _wcserror(errno));
 
 		   /* Get rid of the carriage return */
 		   length = (int)wcslen(wcp_file_msg);
@@ -123,7 +123,7 @@ int PT_DECLSPEC fileWaitOnWriteBlock_Wide(wchar_t *wcp_name, int *ip_timed_out, 
 	{
 		if (hp_slout != NULL)
 		{
-		   swprintf(wcp_file_msg, L"Unable to open file with no name.");
+		   swprintf(wcp_file_msg, sizeof(wcp_file_msg)/sizeof(*(wcp_file_msg)), L"Unable to open file with no name.");
 		   hp_slout->Message_Wide(FIRST_LINE, wcp_file_msg);
 		}
 		
@@ -245,7 +245,7 @@ int PT_DECLSPEC fileRemove_Wide(wchar_t *wcp_name, CSlout *hp_slout)
 	{
 		if (hp_slout != NULL)
 		{
-		   swprintf(wcp_file_msg, L"%s: %s", wcp_name, _wcserror(errno));
+		   swprintf(wcp_file_msg, sizeof(wcp_file_msg)/sizeof(*(wcp_file_msg)), L"%s: %s", wcp_name, _wcserror(errno));
 
 		   /* Get rid of the carriage return */
 		   length = (int)wcslen(wcp_file_msg);
@@ -453,7 +453,7 @@ int PT_DECLSPEC fileToString_WithAllocation_Wide(wchar_t * wcp_filepath, wchar_t
 	{
 		if (hp_slout != NULL)
 		{
-			swprintf(wcp_msg1, L"Unable to open file \"%s\"", wcp_filepath);
+			swprintf(wcp_msg1, sizeof(wcp_msg1)/sizeof(*(wcp_msg1)), L"Unable to open file \"%s\"", wcp_filepath);
 			hp_slout->Error_Wide(FIRST_LINE, wcp_msg1);
 		}
 
@@ -503,7 +503,7 @@ int PT_DECLSPEC fileWriteString_Wide(wchar_t * wcp_filepath, wchar_t * wcp_strin
 	{
 		if (hp_slout != NULL)
 		{
-			swprintf(wcp_msg1, L"Unable to open file \"%s\"", wcp_filepath);
+			swprintf(wcp_msg1, sizeof(wcp_msg1)/sizeof(*(wcp_msg1)), L"Unable to open file \"%s\"", wcp_filepath);
 			hp_slout->Error_Wide(FIRST_LINE, wcp_msg1);
 		}
 
@@ -657,8 +657,8 @@ int PT_DECLSPEC fileSplitFullpath_Wide(wchar_t *wcp_fullpath, wchar_t *wcp_direc
       
    _wsplitpath(wcp_fullpath, drive, dir, fname, ext);      
       
-   swprintf(wcp_directory, L"%s%s", drive, dir);
-   swprintf(wcp_filename, L"%s%s", fname, ext);
+   swprintf(wcp_directory, sizeof(wcp_directory)/sizeof(*(wcp_directory)), L"%s%s", drive, dir);
+   swprintf(wcp_filename, sizeof(wcp_filename)/sizeof(*(wcp_filename)), L"%s%s", fname, ext);
    
    return(OKAY);
 }
@@ -722,7 +722,7 @@ int PT_DECLSPEC fileGetUNCFolderFromUNCpath_Wide(wchar_t *wcp_unc_path, wchar_t 
 	if (pstrSplitIntoWords_Wide(wcp_unc_path_backup, &wcpp_array, &i_num_words, PT_MAX_GENERIC_STRLEN, wcp_separator) != OKAY)
 		return(NOT_OKAY);
 
-	swprintf(wcp_unc_folder_fullpath, L"\\\\%s\\%s\\", wcpp_array[0], wcpp_array[1]);
+	swprintf(wcp_unc_folder_fullpath, sizeof(wcp_unc_folder_fullpath)/sizeof(*(wcp_unc_folder_fullpath)), L"\\\\%s\\%s\\", wcpp_array[0], wcpp_array[1]);
 
 	if (mryFreeUpStringArray_Wide(&wcpp_array, i_num_words) != OKAY)
 		return(NOT_OKAY);
@@ -838,7 +838,7 @@ int PT_DECLSPEC fileOkToWriteInDir_Wide(wchar_t *wcp_dirpath, int *ip_location_o
    if (is_dir)
    {
 	  /* Try to open a temp file in the directory. */
-      swprintf(tempfile_path, L"%s\\m5xe9hk2.u3w", wcp_dirpath);
+      swprintf(tempfile_path, sizeof(tempfile_path)/sizeof(*(tempfile_path)), L"%s\\m5xe9hk2.u3w", wcp_dirpath);
       stream = fileOpen_Wide(tempfile_path, L"w", hp_slout);
       
 	  /* If we couldn't open, simply return that location is not ok to write */
@@ -878,7 +878,7 @@ int PT_DECLSPEC fileReadNextNonBlankLine_Wide(FILE *fp_file, wchar_t *wcp_line_s
 	done = IS_FALSE;
    *ip_eof = IS_FALSE;
 
-	swprintf(wcp_line_str, L"");
+	swprintf(wcp_line_str, sizeof(wcp_line_str)/sizeof(*(wcp_line_str)), L"");
 
 	if (wcp_comment_str == NULL)
 	   comment_strlen = 0;
@@ -978,7 +978,7 @@ int PT_DECLSPEC fileCreateDirectory_Wide(wchar_t *wcp_fullpath, int *ip_successf
 		return(NOT_OKAY);
 
 	/* Make a version of the folder path with a trailing backslash */
-	swprintf(wcp_fullpath_no_trailing_backslash, L"%s", wcp_fullpath);
+	swprintf(wcp_fullpath_no_trailing_backslash, sizeof(wcp_fullpath_no_trailing_backslash)/sizeof(*(wcp_fullpath_no_trailing_backslash)), L"%s", wcp_fullpath);
 	if (pstrRemoveTrailingBackslash_Wide(wcp_fullpath_no_trailing_backslash) != OKAY)
 		return(NOT_OKAY);
 

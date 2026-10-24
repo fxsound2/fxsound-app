@@ -79,12 +79,12 @@ void main(int argc, char *argv[])
 
 /* Only build init function in 32 bit files (same for both) */
 #if defined(DSPSOFT_32_BIT)
-DSP_FUNC_DEF int DSPS_PLAY_INIT(float *fp_params, float *fp_memory, long l_memsize, float *fp_state, int i_init_flag, float r_samp_freq)
+DSP_FUNC_DEF int DSPS_PLAY_INIT(float *fp_params, float *fp_memory, int32_t l_memsize, float *fp_state, int i_init_flag, float r_samp_freq)
 {
 	float *params = fp_params;
 	float *memory = fp_memory;
 	float *state  = fp_state;
-	long stereo_mode;
+	int32_t stereo_mode;
 
 	/* Initialize play specific parameters. These share the parameter space with
 	 * the activator params, and are located above the last activator param.
@@ -94,7 +94,7 @@ DSP_FUNC_DEF int DSPS_PLAY_INIT(float *fp_params, float *fp_memory, long l_memsi
 		struct dspPlayStructType *s = (struct dspPlayStructType *)params;
 
 		/* Save stereo mode for transfer to other parameter sets. */
-		stereo_mode = ((long *)(fp_params))[DSP_PLAY_STEREO_MODE_INDEX];
+		stereo_mode = ((int32_t *)(fp_params))[DSP_PLAY_STEREO_MODE_INDEX];
 
 		s->bypass_on = 0L;
 		s->activator_on = 1L;
@@ -105,14 +105,14 @@ DSP_FUNC_DEF int DSPS_PLAY_INIT(float *fp_params, float *fp_memory, long l_memsi
 		/* Initialize internal states */
 		s->bypass_mode = 0;
 		s->sample_count = 0;
-		s->max_sample_count_process = (unsigned long)(r_samp_freq * (realtype)DSP_PLAY_PROCESS_TIME);
-		s->max_sample_count_demo = (unsigned long)(r_samp_freq * (realtype)DSP_PLAY_DEMO_TIME);
+		s->max_sample_count_process = (uint32_t)(r_samp_freq * (realtype)DSP_PLAY_PROCESS_TIME);
+		s->max_sample_count_demo = (uint32_t)(r_samp_freq * (realtype)DSP_PLAY_DEMO_TIME);
 
 		/* Note that the head_delay variable is initialized to twice the desired delay
 		 * in samples due to the stereo delay. Note that with a delay of 0.227 mS at 44.1kHz
 		 * there is a delay of 10 samples in each channel.
 		 */
-		s->head_delay = 2 * (long)( (float)(0.227e-3) * r_samp_freq );
+		s->head_delay = 2 * (int32_t)( (float)(0.227e-3) * r_samp_freq );
 
 		/* Zero delay line memory */
 		{
@@ -239,7 +239,7 @@ DSP_FUNC_DEF int DSPS_PLAY_INIT(float *fp_params, float *fp_memory, long l_memsi
 		struct dspAuralStructType *s = (struct dspAuralStructType *)params;
 
 		/* Need to transfer the stereo mode from the first set to each set */
-		((long *)(params))[DSP_PLAY_STEREO_MODE_INDEX] = stereo_mode;
+		((int32_t *)(params))[DSP_PLAY_STEREO_MODE_INDEX] = stereo_mode;
 
 		/* Initialization values from Quick preset 1, 44khz */
 		s->dry_gain = (realtype)0.622047;	  
@@ -266,7 +266,7 @@ DSP_FUNC_DEF int DSPS_PLAY_INIT(float *fp_params, float *fp_memory, long l_memsi
 		struct dspLexStructType *s = (struct dspLexStructType *)params;
 
 		/* Need to transfer the stereo mode from the first set to each set */
-		((long *)(params))[DSP_PLAY_STEREO_MODE_INDEX] = stereo_mode;
+		((int32_t *)(params))[DSP_PLAY_STEREO_MODE_INDEX] = stereo_mode;
 
 		/* Initial values from quick pick one but with dry/wet of 0.21, 44.1kHz.
 		 * Wet-Dry are boosted for better bypass balance
@@ -306,7 +306,7 @@ DSP_FUNC_DEF int DSPS_PLAY_INIT(float *fp_params, float *fp_memory, long l_memsi
 		struct dspWideStructType *s = (struct dspWideStructType *)params;
  
 		/* Need to transfer the stereo mode from the first set to each set */
-		((long *)(params))[DSP_PLAY_STEREO_MODE_INDEX] = stereo_mode;
+		((int32_t *)(params))[DSP_PLAY_STEREO_MODE_INDEX] = stereo_mode;
 
 		/* Starting Presets - at 44.1 hHz.
 		 * Intensity - 35
@@ -344,7 +344,7 @@ DSP_FUNC_DEF int DSPS_PLAY_INIT(float *fp_params, float *fp_memory, long l_memsi
 		float *COMM_MEM_OFFSET = params;
 
  		/* Need to transfer the stereo mode from the first set to each set */
-		((long *)(params))[DSP_PLAY_STEREO_MODE_INDEX] = stereo_mode;
+		((int32_t *)(params))[DSP_PLAY_STEREO_MODE_INDEX] = stereo_mode;
 
 		/* Set input muting value to 1.0 */
 		*(volatile float *)(DSP_MUTE_IN_FLAG) = 1.0;
@@ -373,7 +373,7 @@ DSP_FUNC_DEF int DSPS_PLAY_INIT(float *fp_params, float *fp_memory, long l_memsi
 		struct dspMaxiStructType *s = (struct dspMaxiStructType *)params;
  
 		/* Need to transfer the stereo mode from the first set to each set */
-		((long *)(params))[DSP_PLAY_STEREO_MODE_INDEX] = stereo_mode;
+		((int32_t *)(params))[DSP_PLAY_STEREO_MODE_INDEX] = stereo_mode;
 
 		/* Initializations from quick pick 1, 44.1khz */
 		s->wet_gain = (realtype)1.0;	  
@@ -392,7 +392,7 @@ DSP_FUNC_DEF int DSPS_PLAY_INIT(float *fp_params, float *fp_memory, long l_memsi
 #endif /* DSPSOFT_32_BIT */
 
 #ifdef DSPSOFT_TARGET
-DSP_FUNC_DEF void DSPS_PLAY_PROCESS(long *lp_data, int l_length,
+DSP_FUNC_DEF void DSPS_PLAY_PROCESS(int32_t *lp_data, int l_length,
 								   float *fp_params, float *fp_memory, float *fp_state,
 								   struct hardwareMeterValType *sp_meters, int DSP_data_type)
 {
@@ -414,8 +414,8 @@ DSP_FUNC_DEF void DSPS_PLAY_PROCESS(long *lp_data, int l_length,
 		{
 #if(PT_DSP_BUILD == PT_DSP_DSPFX)
 			/* Below only used in DSP-FX builds */
-			long transfer_state = 0; /* For sending out meter values */
-			long status = 0;         /* For sending run time status to PC */
+			int32_t transfer_state = 0; /* For sending out meter values */
+			int32_t status = 0;         /* For sending run time status to PC */
 
 			float in_meter1_dma = 0.0;			
 			float in_meter2_dma = 0.0;
@@ -425,8 +425,8 @@ DSP_FUNC_DEF void DSPS_PLAY_PROCESS(long *lp_data, int l_length,
 
 			/* Needed for dutil io macros */
 			unsigned data_index = 0;
-			long *read_in_buf;
-			long *read_out_buf;
+			int32_t *read_in_buf;
+			int32_t *read_out_buf;
 
 			float in1_bs, in1_bp, in2_bs, in2_bp;
 			float diff, diff_gain;
@@ -576,8 +576,8 @@ DSP_FUNC_DEF void DSPS_PLAY_PROCESS(long *lp_data, int l_length,
 			{
 				float in1, in2;
 				float out1, out2;
-				volatile long in_count = 0;
-				volatile long out_count = 0;
+				volatile int32_t in_count = 0;
+				volatile int32_t out_count = 0;
 
 				dutilGetInputsAndMeter( in1, in2, status);
 
@@ -661,8 +661,8 @@ DSP_FUNC_DEF void DSPS_PLAY_PROCESS(long *lp_data, int l_length,
 		{
 #if(PT_DSP_BUILD == PT_DSP_DSPFX)
 			/* Below only used in DSP-FX builds */
-			long transfer_state = 0; /* For sending out meter values */
-			long status = 0;         /* For sending run time status to PC */
+			int32_t transfer_state = 0; /* For sending out meter values */
+			int32_t status = 0;         /* For sending run time status to PC */
 
 			float in_meter1_dma = 0.0;			
 			float in_meter2_dma = 0.0;
@@ -672,8 +672,8 @@ DSP_FUNC_DEF void DSPS_PLAY_PROCESS(long *lp_data, int l_length,
 
 			/* Needed for dutil io macros */
 			unsigned data_index = 0;
-			long *read_in_buf;
-			long *read_out_buf;
+			int32_t *read_in_buf;
+			int32_t *read_out_buf;
 
 			int i;
 
@@ -684,8 +684,8 @@ DSP_FUNC_DEF void DSPS_PLAY_PROCESS(long *lp_data, int l_length,
 			{
 				float in1, in2;
 				float out1, out2;
-				volatile long in_count = 0;
-				volatile long out_count = 0;
+				volatile int32_t in_count = 0;
+				volatile int32_t out_count = 0;
 
 				dutilGetInputsAndMeter( in1, in2, status);
 
@@ -717,8 +717,8 @@ DSP_FUNC_DEF void DSPS_PLAY_PROCESS(long *lp_data, int l_length,
 		{
 #if(PT_DSP_BUILD == PT_DSP_DSPFX)
 			/* Below only used in DSP-FX builds */
-			long transfer_state = 0; /* For sending out meter values */
-			long status = 0;         /* For sending run time status to PC */
+			int32_t transfer_state = 0; /* For sending out meter values */
+			int32_t status = 0;         /* For sending run time status to PC */
 
 			float in_meter1_dma = 0.0;			
 			float in_meter2_dma = 0.0;
@@ -727,8 +727,8 @@ DSP_FUNC_DEF void DSPS_PLAY_PROCESS(long *lp_data, int l_length,
 #endif
 			/* Needed for dutil io macros */
 			unsigned data_index = 0;
-			long *read_in_buf;
-			long *read_out_buf;
+			int32_t *read_in_buf;
+			int32_t *read_out_buf;
 
 			realtype *delay_p = &(s->delay_lines);
 
@@ -751,8 +751,8 @@ DSP_FUNC_DEF void DSPS_PLAY_PROCESS(long *lp_data, int l_length,
 					float out1, out2;
 					float left_delayed, right_delayed;
 					float cross_gain = (float)PLY_HEADPHONE_CROSSGAIN;
-					volatile long in_count = 0;
-					volatile long out_count = 0;
+					volatile int32_t in_count = 0;
+					volatile int32_t out_count = 0;
 
 					dutilGetInputsAndMeter( in1, in2, status);
 

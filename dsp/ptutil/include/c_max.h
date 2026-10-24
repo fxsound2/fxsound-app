@@ -61,26 +61,26 @@ struct dspMaxiStructType
 {
 	/* Parameters common to all dsp functions */
 	/* Note- must occupy same 32 word locations as defines in Boardrv1.h */
-	long pc_to_dsp_flags;
-	long dsp_to_pc_flags;
-	long dsp_number_of_elements;
+	int32_t pc_to_dsp_flags;
+	int32_t dsp_to_pc_flags;
+	int32_t dsp_number_of_elements;
 	realtype dsp_sampling_freq;
-	long stereo_in_flag;
-	long dsp_mute_in_flag;
-	long unassigned6;
-	long unassigned7;
-	long unassigned8;
-	long unassigned9;
+	int32_t stereo_in_flag;
+	int32_t dsp_mute_in_flag;
+	int32_t unassigned6;
+	int32_t unassigned7;
+	int32_t unassigned8;
+	int32_t unassigned9;
 	realtype dry_gain;
 	realtype wet_gain;
 	realtype master_gain;
-	long dsp_dma_in_transfer;
-	long unassigned14;
-	long unassigned15;
-	long unassigned16;
-	long unassigned17;
-	long unassigned18;
-	long unassigned19;
+	int32_t dsp_dma_in_transfer;
+	int32_t unassigned14;
+	int32_t unassigned15;
+	int32_t unassigned16;
+	int32_t unassigned17;
+	int32_t unassigned18;
+	int32_t unassigned19;
 
 	/* Note- algorithm specific parameters must occupy same 32 word locations
 	 * as defines below.
@@ -90,8 +90,8 @@ struct dspMaxiStructType
 	realtype gain_boost;
 	realtype max_output;
 	realtype release_time_beta; /* To be replaced by quant funct that sends delay instead */
-	long num_quant_bits;
-	long dither_type;
+	int32_t num_quant_bits;
+	int32_t dither_type;
 	int max_delay;
 	int quantize_on_flag;
 	/* Added for auto mode, the max desired boosted output level */

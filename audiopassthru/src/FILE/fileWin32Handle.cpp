@@ -44,7 +44,7 @@ HANDLE PT_DECLSPEC fileWin32CreateFile(LPCTSTR lpFileName, DWORD dwDesiredAccess
 	{
 		if (hp_slout != NULL)
 		{
- 			swprintf(wcp_msg1, L"Unable to create file \"%s\"", lpFileName);
+ 			swprintf(wcp_msg1, sizeof(wcp_msg1)/sizeof(*(wcp_msg1)), L"Unable to create file \"%s\"", lpFileName);
 			hp_slout->Error_Wide(FIRST_LINE, wcp_msg1);
 		}
 

@@ -76,3 +76,26 @@ in your comment instead of guessing.
   explicitly given permission and instruction to do so.
 - Don't make changes to `audiopassthru/` or `dsp/` in an automated fix without
   flagging it clearly for human review before merge.
+
+## Linux / PipeWire port
+
+This tree also builds a Linux port with the CMake build (`CMakeLists.txt`,
+`dsp/DfxDsp.cmake`, `audiopassthru/AudioPassthruLinux.cmake`). Windows builds
+still use the Visual Studio solutions and are untouched by CMake. Notes live
+in `docs/development/ARCHITECTURE.md`, `TESTING.md`, `DECISIONS.md` and
+`KNOWN_ISSUES.md`.
+
+```sh
+git submodule update --init Resources third_party/JUCE   # JUCE 6.1.6
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug && cmake --build build
+ctest --test-dir build -L unit       # always
+ctest --test-dir build -L pw-live    # touches the live PipeWire graph
+```
+
+- Realtime path (`on_process` → `FxProcessor` → `DfxDsp::processAudio`): no
+  allocation, no file I/O, no blocking locks. `process_selftest` counts mallocs.
+- `dsp/` and `fxsound/Source` are shared with Windows: keep changes minimal,
+  guard Linux-only code with `#ifdef _WIN32` / `PT_LINUX`, and say in the
+  commit that Windows was not built.
+- Dependencies: cmake ≥ 3.20, ninja, libpipewire-0.3, gio-2.0, X11/xcb/freetype/
+  fontconfig/GL/alsa dev packages (full list in `linux/README.md`).

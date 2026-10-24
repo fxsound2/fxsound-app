@@ -25,7 +25,7 @@ int PT_DECLSPEC dfxSharedUtilInit(PT_HANDLE **, int, CSlout *);
 int PT_DECLSPEC dfxSharedUtilFreeUp(PT_HANDLE **);
 int PT_DECLSPEC dfxSharedUtilSetSpectrumValues(PT_HANDLE *, realtype *, int);
 int PT_DECLSPEC dfxSharedUtilGetSpectrumValues(PT_HANDLE *, realtype *, int);
-int PT_DECLSPEC dfxSharedUtilSetTotalProcessedTime(PT_HANDLE *, unsigned long);
-int PT_DECLSPEC dfxSharedUtilGetTotalProcessedTime(PT_HANDLE *, unsigned long *);
+int PT_DECLSPEC dfxSharedUtilSetTotalProcessedTime(PT_HANDLE *, uint32_t);
+int PT_DECLSPEC dfxSharedUtilGetTotalProcessedTime(PT_HANDLE *, uint32_t *);
 
 #endif // _DFX_SHARED_UTIL_H_

@@ -48,21 +48,21 @@ int PT_DECLSPEC mthIsHex(char *, int *);
 int PT_DECLSPEC mthIsHex_Wide(wchar_t *, int *);
 int PT_DECLSPEC mthSearchForClosestValueInRealArray(realtype, realtype *, int, int *);
 int PT_DECLSPEC mthRoundRealToInt(realtype, int *);
-int PT_DECLSPEC mthCalcIterativeAverage(realtype, realtype, long, realtype *);
+int PT_DECLSPEC mthCalcIterativeAverage(realtype, realtype, int32_t, realtype *);
 realtype PT_DECLSPEC mthFastSqrt(realtype r_x);
 
 /* mthRand.cpp */
-int PT_DECLSPEC mthGenRandomLongFromSeed(long init_rand, long *value);
+int PT_DECLSPEC mthGenRandomLongFromSeed(int32_t init_rand, int32_t *value);
 int PT_DECLSPEC mthGenerateRandomInt(int i_max_val, int *ip_random_val);
-int PT_DECLSPEC mthGenerateRandomUnsignedLong(unsigned long, unsigned long, unsigned long *);
+int PT_DECLSPEC mthGenerateRandomUnsignedLong(uint32_t, uint32_t, uint32_t *);
 
 /* mthfreq.cpp */
 int PT_DECLSPEC mthMidiOctaveFreqs( realtype *, int );
 int PT_DECLSPEC mthMidiOctaveFreqsPara( realtype *freqs, int num_pts );
 
 /* mthcrypt.cpp */
-int PT_DECLSPEC mthEncryptLong(unsigned long ul_key, long l_inval, long *lp_encrypted);
-int PT_DECLSPEC mthDecryptLong(unsigned long ul_key, long l_inval, long *lp_decrypted);
+int PT_DECLSPEC mthEncryptLong(uint32_t ul_key, int32_t l_inval, int32_t *lp_encrypted);
+int PT_DECLSPEC mthDecryptLong(uint32_t ul_key, int32_t l_inval, int32_t *lp_decrypted);
 
 /* mthStat.cpp */
 int PT_DECLSPEC mthGenerateStatistics( realtype *rp_values, int i_num_vals, realtype *rp_average,

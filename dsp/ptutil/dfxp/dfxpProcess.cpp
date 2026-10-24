@@ -62,7 +62,7 @@ int dfxpBeginProcess(PT_HANDLE *hp_dfxp, int i_bits_per_sample, int i_num_channe
 
 	if (cast_handle->trace.mode)
 	{
-		swprintf(cast_handle->wcp_msg1, L"dfxpBeginProcess: Entered: bps = %d, nch = %d, samp_rate = %d",
+		swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"dfxpBeginProcess: Entered: bps = %d, nch = %d, samp_rate = %d",
 			     i_bits_per_sample, i_num_channels, i_sample_rate);
 	   (cast_handle->slout1)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
    }
@@ -143,7 +143,7 @@ int dfxpBeginProcess(PT_HANDLE *hp_dfxp, int i_bits_per_sample, int i_num_channe
 
 	if (cast_handle->trace.mode)
 	{
-		swprintf(cast_handle->wcp_msg1, L"dfxpBeginProcess: Successful Finish");
+		swprintf(cast_handle->wcp_msg1, SLOUT_MAX_MSG_STRLEN, L"dfxpBeginProcess: Successful Finish");
 	   (cast_handle->slout1)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
    }
 

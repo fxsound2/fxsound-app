@@ -84,8 +84,8 @@ int PT_DECLSPEC fileCalcDspPath(char *, char *, char *, char *, char *, int,
 										  int, int, int, int, realtype, realtype);
 
 /* FileDate.cpp */
-int PT_DECLSPEC fileSetBackCreateTime(char *, long, CSlout *);
-int PT_DECLSPEC fileSetBackCreateTime_Wide(wchar_t *, long, CSlout *);
+int PT_DECLSPEC fileSetBackCreateTime(char *, int32_t, CSlout *);
+int PT_DECLSPEC fileSetBackCreateTime_Wide(wchar_t *, int32_t, CSlout *);
 int PT_DECLSPEC fileGetModifiedDate(char *, FILETIME *, CSlout *);
 int PT_DECLSPEC fileGetModifiedDate_Wide(wchar_t *, FILETIME *, CSlout *);
 int PT_DECLSPEC fileGetCreationDate(char *, FILETIME *, CSlout *);
@@ -101,7 +101,7 @@ int PT_DECLSPEC fileGetModifiedDateString_Wide(wchar_t *, wchar_t *, CSlout *);
 
 /* FileRegistry.cpp */
 int PT_DECLSPEC fileRegCreateKey_Wide(wchar_t *, wchar_t *, wchar_t *);
-int PT_DECLSPEC fileRegReadKey_Wide(wchar_t *, int *, wchar_t *, unsigned long);
+int PT_DECLSPEC fileRegReadKey_Wide(wchar_t *, int *, wchar_t *, uint32_t);
 int PT_DECLSPEC fileRegRemoveKey_Wide(wchar_t *, wchar_t *);
 
 /* FileTrace.cpp */

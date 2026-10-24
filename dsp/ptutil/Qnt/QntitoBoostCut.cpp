@@ -167,7 +167,7 @@ int PT_DECLSPEC qntIToBoostCutInit(PT_HANDLE **hpp_qnt, CSlout *hp_slout,
 /*
  * FUNCTION: qntIToBoostCutCalc()
  * DESCRIPTION:
- *  Calculates the long output based on the passed integer input.
+ *  Calculates the int32_t output based on the passed integer input.
  */
 int PT_DECLSPEC qntIToBoostCutCalc(PT_HANDLE *hp_qnt, int i_input,
 											  struct filt2ndOrderBoostCutShelfFilterType *sp_filt)

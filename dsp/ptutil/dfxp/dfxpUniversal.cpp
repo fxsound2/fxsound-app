@@ -116,7 +116,7 @@ int dfxpUniversalModifySamples(PT_HANDLE *hp_dfxp, short int *si_input_samples, 
 /*
 	if (cast_handle->trace.mode)
 	{
-	   swprintf(cast_handle->wcp_msg1, L"dfxpUniversalModifySamples: Entered");
+	   swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"dfxpUniversalModifySamples: Entered");
 	   (cast_handle->slout1)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 	}
 */
@@ -222,7 +222,7 @@ int dfxpUniversalModifySamples(PT_HANDLE *hp_dfxp, short int *si_input_samples, 
 			/* Trace the hash value of the processed buffer */
 			if (cast_handle->trace.mode)
 			{
-				swprintf(cast_handle->wcp_msg1, L"dfxpUniversalModifySamples: processed hash value = %d", cast_handle->universal.hash_queue_vals[cast_handle->universal.hash_queue_index]);
+				swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"dfxpUniversalModifySamples: processed hash value = %d", cast_handle->universal.hash_queue_vals[cast_handle->universal.hash_queue_index]);
 				(cast_handle->slout1)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);	
 			}
 
@@ -336,9 +336,9 @@ int dfxp_UniversalUpdateTotalTimeProcessed(PT_HANDLE *hp_dfxp, int i_num_sample_
 	if (cast_handle == NULL)
 		return(OKAY);
 
-	unsigned long ul_msecs_processed_by_buffer;
-	unsigned long ul_previous_total_processed_time_msecs;
-	unsigned long ul_new_total_processed_time_msecs;
+	uint32_t ul_msecs_processed_by_buffer;
+	uint32_t ul_previous_total_processed_time_msecs;
+	uint32_t ul_new_total_processed_time_msecs;
 	int bypass_all;
 
 	realtype r_num_secs;
@@ -350,7 +350,7 @@ int dfxp_UniversalUpdateTotalTimeProcessed(PT_HANDLE *hp_dfxp, int i_num_sample_
 		return(OKAY);
 
 	r_num_secs = (realtype)i_num_sample_sets / (realtype)cast_handle->universal.last_called_srate;
-	ul_msecs_processed_by_buffer = (long)(r_num_secs * (realtype)1000);
+	ul_msecs_processed_by_buffer = (int32_t)(r_num_secs * (realtype)1000);
 
 	if (dfxpGetButtonValue(hp_dfxp, DFX_UI_BUTTON_BYPASS, &bypass_all) != OKAY)
 		return(NOT_OKAY);
@@ -506,7 +506,7 @@ int dfxpUniversalCheckParentCompatibility(PT_HANDLE *hp_dfxp, int i_processing_m
 
 	if (cast_handle->trace.mode)
 	{
-		swprintf(cast_handle->wcp_msg1, L"dfxpUniversalCheckParentCompatibility: allow_processing = %d", *ip_allow_processing);
+		swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"dfxpUniversalCheckParentCompatibility: allow_processing = %d", *ip_allow_processing);
 		(cast_handle->slout1)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 	}
 

@@ -57,7 +57,7 @@ extern "C"
  *  Process the passed buffer.
  *
  */
-int PT_DECLSPEC comProcessBuffer(PT_HANDLE *hp_com, long *lp_data, long l_length, 
+int PT_DECLSPEC comProcessBuffer(PT_HANDLE *hp_com, int32_t *lp_data, int32_t l_length, 
                          int i_stereo_in_mode, int i_stereo_out_mode,
 								 int i_buffer_type)
 {
@@ -86,13 +86,13 @@ int PT_DECLSPEC comProcessBuffer(PT_HANDLE *hp_com, long *lp_data, long l_length
  *  before processing and then upsample it after processing.
  *
  */
-int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, long *lp_data, float *rp_float, long l_length, 
+int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, int32_t *lp_data, float *rp_float, int32_t l_length, 
                          int i_stereo_in_mode, int i_stereo_out_mode, int i_down_sample_ratio,
 								 int i_format_flag)
 {
    /* l_length comes in with the buffer size in sample sets */
    struct comHdlType *cast_handle;
-	long *l_ptr;
+	int32_t *l_ptr;
 	float *f_ptr;
 	int leftover_samples;
 	int num_down_sample_sets;
@@ -111,7 +111,7 @@ int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, long *lp_data, float *rp
 		if (pwav24BitToFloat((char *)lp_data, rp_float, l_length, i_stereo_in_mode) != OKAY)
 			return(NOT_OKAY);
 
-		l_ptr = (long *)rp_float;
+		l_ptr = (int32_t *)rp_float;
 	}
 	else
 		l_ptr = lp_data;

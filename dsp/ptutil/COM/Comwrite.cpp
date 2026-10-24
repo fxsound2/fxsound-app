@@ -51,7 +51,7 @@ int fmsbintoti(realtype *,realtype *);
  *  Writes the passed integer value to the passed memory location.
  *  (memory location = i_mem_offset + COMM_MEM_BASE_ADDR).
  */
-int PT_DECLSPEC comIntWrite(PT_HANDLE *hp_com, long l_mem_offset, int i_value)
+int PT_DECLSPEC comIntWrite(PT_HANDLE *hp_com, int32_t l_mem_offset, int i_value)
 {
 	struct comHdlType *cast_handle;
 	long long_value;
@@ -70,15 +70,15 @@ int PT_DECLSPEC comIntWrite(PT_HANDLE *hp_com, long l_mem_offset, int i_value)
 	if (l_mem_offset < 0L)
 		return(NOT_OKAY);
     
-   /* Transfer value to a long */
-   long_value = (long)i_value;
+   /* Transfer value to a int32_t */
+   long_value = (int32_t)i_value;
     
 	/* To speed up parameter writes with remote operation, use single call.
 	 * This new function will handle COMM_MEM_BASE_ADDR offsetting.
 	 */
 	if(cast_handle->softdsp_mode)
    {
-		if( comSftwrWriteParam(cast_handle->comSftwr_hdl, (long)(l_mem_offset), long_value) != OKAY)
+		if( comSftwrWriteParam(cast_handle->comSftwr_hdl, (int32_t)(l_mem_offset), long_value) != OKAY)
 			return(NOT_OKAY);
 	}
 
@@ -98,10 +98,10 @@ int PT_DECLSPEC comIntWrite(PT_HANDLE *hp_com, long l_mem_offset, int i_value)
 /*
  * FUNCTION: comLongIntWrite()
  * DESCRIPTION:
- *  Writes the passed long integer value to the passed memory location.
+ *  Writes the passed int32_t integer value to the passed memory location.
  *  (memory location = i_mem_offset + COMM_MEM_BASE_ADDR).
  */
-int PT_DECLSPEC comLongIntWrite(PT_HANDLE *hp_com, long l_mem_offset, long l_value)
+int PT_DECLSPEC comLongIntWrite(PT_HANDLE *hp_com, int32_t l_mem_offset, int32_t l_value)
 {
 	struct comHdlType *cast_handle;
 
@@ -124,14 +124,14 @@ int PT_DECLSPEC comLongIntWrite(PT_HANDLE *hp_com, long l_mem_offset, long l_val
 	 */
 	if( cast_handle->softdsp_mode )
 	{
-	  if( comSftwrWriteParam(cast_handle->comSftwr_hdl, (long)(l_mem_offset), l_value) != OKAY)
+	  if( comSftwrWriteParam(cast_handle->comSftwr_hdl, (int32_t)(l_mem_offset), l_value) != OKAY)
 		return(NOT_OKAY);
 	}
 
 	/* Print the sent value if in debug mode */
 	if (cast_handle->debug_mode)
 	{
-		sprintf(cast_handle->msg1, "(long) value=%ld", l_value);
+		sprintf(cast_handle->msg1, "(int32_t) value=%ld", l_value);
 		(cast_handle->slout_hdl)->Message(FIRST_LINE, cast_handle->msg1);
 		
 		sprintf(cast_handle->msg1, "   mem_offset=%ld", l_mem_offset);
@@ -147,7 +147,7 @@ int PT_DECLSPEC comLongIntWrite(PT_HANDLE *hp_com, long l_mem_offset, long l_val
  *  Writes the passed real value to the passed memory location.
  *  (memory location = i_mem_offset + COMM_MEM_BASE_ADDR).
  */
-int PT_DECLSPEC comRealWrite(PT_HANDLE *hp_com, long l_mem_offset, realtype r_value)
+int PT_DECLSPEC comRealWrite(PT_HANDLE *hp_com, int32_t l_mem_offset, realtype r_value)
 {
 	struct comHdlType *cast_handle;
 
@@ -173,7 +173,7 @@ int PT_DECLSPEC comRealWrite(PT_HANDLE *hp_com, long l_mem_offset, realtype r_va
   	    /* To speed up parameter writes with remote operation, use single call.
 	     * This new function will handle COMM_MEM_BASE_ADDR offsetting.
 	     */
-	    if( comSftwrWriteParam(cast_handle->comSftwr_hdl, (long)(l_mem_offset), *(long*)i_val) != OKAY)
+	    if( comSftwrWriteParam(cast_handle->comSftwr_hdl, (int32_t)(l_mem_offset), *(int32_t*)i_val) != OKAY)
 		  return(NOT_OKAY);
 	}
 
@@ -276,9 +276,9 @@ int fmsbintoti(float *src4, float *dest4)
 	if(sign)
 	{
 		unsigned char exp = ti[3];  /* Save formed exponent */
-		*(long *)ti &= 0x00FFFFFFL; /* Mask out exponent bits */
-		*(long *)ti ^= 0x00FFFFFFL; /* Reverse all the mantissa bits */
-		*(long *)ti += 1;           /* Add one, completeing mantissa negation */
+		*(int32_t *)ti &= 0x00FFFFFFL; /* Mask out exponent bits */
+		*(int32_t *)ti ^= 0x00FFFFFFL; /* Reverse all the mantissa bits */
+		*(int32_t *)ti += 1;           /* Add one, completeing mantissa negation */
 											 /* Carry bit will overflow into exponent */
 											 /* where it needs to be treated as a decrement */
 		ti[3] = exp - ti[3];			 /* Restore exponent, decremented by carry bit */

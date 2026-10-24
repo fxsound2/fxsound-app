@@ -103,26 +103,26 @@ struct dspLexStructType
 {
 	/* Parameters common to all dsp functions */
 	/* Note- must occupy same 32 word locations as defines in Boardrv1.h */
-	long pc_to_dsp_flags;
-	long dsp_to_pc_flags;
-	long dsp_number_of_elements;
+	int32_t pc_to_dsp_flags;
+	int32_t dsp_to_pc_flags;
+	int32_t dsp_number_of_elements;
 	realtype dsp_sampling_freq;
-	long stereo_in_flag;
+	int32_t stereo_in_flag;
 	float dsp_mute_in_flag;
-	long unassigned6;
-	long unassigned7;
-	long unassigned8;
-	long unassigned9;
+	int32_t unassigned6;
+	int32_t unassigned7;
+	int32_t unassigned8;
+	int32_t unassigned9;
 	realtype dry_gain;
 	realtype wet_gain;
 	realtype master_gain;
-	long dsp_dma_in_transfer;
-	long unassigned14;
-	long unassigned15;
-	long unassigned16;
-	long unassigned17;
-	long unassigned18;
-	long unassigned19;
+	int32_t dsp_dma_in_transfer;
+	int32_t unassigned14;
+	int32_t unassigned15;
+	int32_t unassigned16;
+	int32_t unassigned17;
+	int32_t unassigned18;
+	int32_t unassigned19;
 
 	/* Note- algorithm specific parameters must occupy same 32 word locations
 	 * as defines below.
@@ -138,7 +138,7 @@ struct dspLexStructType
 	float one_minus_bandwidth;
 	float damping;
 	float one_minus_damping;
-	unsigned long pre_delay;
+	uint32_t pre_delay;
 	float modulation_depth;
 	float modulation_freq;
 
@@ -149,53 +149,53 @@ struct dspLexStructType
 	float f_num_pts;
 
 	float *ptr;
-	unsigned long MasterLen;
+	uint32_t MasterLen;
 	float *MasterStart;
 	float *MasterEnd;
 
-	unsigned long pre_dly_len_l;
+	uint32_t pre_dly_len_l;
 
-	unsigned long lat1_dly_len_l;
+	uint32_t lat1_dly_len_l;
 
-	unsigned long lat2_dly_len_l;
+	uint32_t lat2_dly_len_l;
 
-	unsigned long lat3_dly_len_l;
+	uint32_t lat3_dly_len_l;
 
-	unsigned long lat4_dly_len_l;
+	uint32_t lat4_dly_len_l;
 
 	float lat5_dly_len_l;
-	unsigned long lat5_dly_maxlen_l;
+	uint32_t lat5_dly_maxlen_l;
 
-	unsigned long D1_tap1;
-	unsigned long D1_tap2;
-	unsigned long D1_tap3;
-	unsigned long D1_tap4;
+	uint32_t D1_tap1;
+	uint32_t D1_tap2;
+	uint32_t D1_tap3;
+	uint32_t D1_tap4;
 
-	unsigned long lat6_tap1;
-	unsigned long lat6_tap2;
-	unsigned long lat6_dly_len_l;
+	uint32_t lat6_tap1;
+	uint32_t lat6_tap2;
+	uint32_t lat6_dly_len_l;
 	float lat6_out_old_l;
 
-	unsigned long D2_tap1;
-	unsigned long D2_tap2;
-	unsigned long D2_tap3;
+	uint32_t D2_tap1;
+	uint32_t D2_tap2;
+	uint32_t D2_tap3;
 
 	float lat7_dly_len_l;
-	unsigned long lat7_dly_maxlen_l;
+	uint32_t lat7_dly_maxlen_l;
 
-	unsigned long D3_tap1;
-	unsigned long D3_tap2;
-	unsigned long D3_tap3;
-	unsigned long D3_tap4;
+	uint32_t D3_tap1;
+	uint32_t D3_tap2;
+	uint32_t D3_tap3;
+	uint32_t D3_tap4;
 
-	unsigned long lat8_tap1;
-	unsigned long lat8_tap2;
-	unsigned long lat8_dly_len_l;
+	uint32_t lat8_tap1;
+	uint32_t lat8_tap2;
+	uint32_t lat8_dly_len_l;
 	float lat8_out_old_l;
 
-	unsigned long D4_tap1;
-	unsigned long D4_tap2;
-	unsigned long D4_tap3;
+	uint32_t D4_tap1;
+	uint32_t D4_tap2;
+	uint32_t D4_tap3;
 	float D4_out;
 
 	float old_damp_val1_l;

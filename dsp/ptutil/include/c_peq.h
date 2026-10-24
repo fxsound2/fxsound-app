@@ -46,7 +46,7 @@
 
 /* Algorithm specific parameters */
 
-/* Flag to turn on SHELFS, a long */
+/* Flag to turn on SHELFS, a int32_t */
 #define DSP_PEQ_SHELFS_ON 			19L + COMM_MEM_OFFSET
 /* First the input parameter locations */
 #define DSP_PEQ_LEFT_GAIN 			20L + COMM_MEM_OFFSET
