@@ -213,6 +213,9 @@
     <ClInclude Include="ptutil\include\FiltLowCut.h">
       <Filter>Header Files\ptutil</Filter>
     </ClInclude>
+    <ClInclude Include="ptutil\include\FiltChain.h">
+      <Filter>Header Files\ptutil</Filter>
+    </ClInclude>
     <ClInclude Include="ptutil\include\GraphicEq.h">
       <Filter>Header Files\ptutil</Filter>
     </ClInclude>
@@ -263,6 +266,12 @@
     </ClInclude>
     <ClInclude Include="ptutil\realSample\u_realSample.h">
       <Filter>Source Files\ptutil\realSample</Filter>
+    </ClInclude>
+    <ClInclude Include="FilterEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FilterPreviewLeveller.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="u_DfxDsp.h">
       <Filter>Header Files</Filter>
@@ -351,6 +360,9 @@
       <Filter>Source Files\ptutil\Filt</Filter>
     </ClCompile>
     <ClCompile Include="ptutil\Filt\FiltLowCut.cpp">
+      <Filter>Source Files\ptutil\Filt</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\Filt\FiltChain.cpp">
       <Filter>Source Files\ptutil\Filt</Filter>
     </ClCompile>
     <ClCompile Include="ptutil\Filt\FiltbiqdSos.cpp">
@@ -522,6 +534,12 @@
       <Filter>Source Files\ptutil\realSample</Filter>
     </ClCompile>
     <ClCompile Include="DfxDspPrivate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FilterEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FilterPreviewLeveller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ptComSftDfx\Comsftwr.c">

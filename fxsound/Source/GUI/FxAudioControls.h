@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxBalanceSlider.h"
 #include "FxPowerButton.h"
 #include "FxTheme.h"
+#include "DfxDsp.h"
 
 //==============================================================================
 /*
@@ -134,18 +135,18 @@ private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxEqualizerControl)
 };
 
-class FxLowCutControl : public Component
+class FxFiltersControl : public Component
 {
 public:
-	FxLowCutControl();
-	~FxLowCutControl();
+	FxFiltersControl();
+	~FxFiltersControl();
 
 	void update();
 
 	void setLookAndFeel(FxTheme& theme);
 
 private:
-	class PreviewButton : public Button
+	class PreviewButton : public Button, private Timer
 	{
 	public:
 		PreviewButton() : Button("HearWhatsRemoved")
@@ -155,44 +156,61 @@ private:
 		}
 		~PreviewButton() = default;
 
+		// Shows the playing state: the icon pulses (fades out and back in) while on, steady otherwise.
+		void setPlaying(bool playing);
+
 		void paintButton(Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
-	};
-
-	class ValueSlider : public Slider
-	{
-	public:
-		ValueSlider();
-		~ValueSlider() = default;
-
-		void setValueText(const String& text);
 
 	private:
-		static constexpr int LABEL_HEIGHT = 14;
+		static constexpr int PULSE_PERIOD_MS = 1050;
+		static constexpr int PULSE_FRAME_MS = 33;
+		static constexpr float PULSE_DIM_ALPHA = 0.3f;
 
-		void resized() override;
-		void moved() override;
-		void valueChanged() override;
-		void parentHierarchyChanged() override;
-		void enablementChanged() override;
-		void mouseWheelMove(const MouseEvent& event, const MouseWheelDetails& wheel) override;
-		void positionValueLabel();
+		void timerCallback() override;
+		static float pulseAlpha();
+	};
 
-		Label value_label_;
+	// One filter: header row title ...... [power][delta], then its cutoff slider.
+	struct FilterBlock
+	{
+		FilterBlock(const String& power_name, const String& label_format, float default_value, DfxDsp::FilterPreview preview_stage) :
+			power(power_name), cutoff(label_format, default_value), preview(preview_stage)
+		{
+		}
+
+		FxPowerButton power;
+		Label title;
+		FxAudioSlider cutoff;
+		PreviewButton delta;
+		const DfxDsp::FilterPreview preview;
 	};
 
 	static constexpr int X_MARGIN = 8;
-	static constexpr int Y_MARGIN = 28;
+	// The page flip button FxAudioControls puts at the top right (5 px from the top and right edges); the power buttons
+	// and the slider rows use its margin.
+	static constexpr int FLIP_BUTTON_MARGIN = 5;
+	// The low and high cut slope dropdown, below the flip button at the EQ page's dropdown position and size.
+	static constexpr int SLOPE_Y = 28;
+	static constexpr int SLOPE_HEIGHT = 20;
 	static constexpr int ROW_GAP = 8;
-	static constexpr int TOGGLE_HEIGHT = 20;
+	static constexpr int TITLE_GAP = 10;
+	// The slider rows match the EQ page's: X_MARGIN from the left, SLIDER_WIDTH wide.
+	static constexpr int SLIDER_WIDTH = 160;
+	static constexpr int HEADER_HEIGHT = 20;
 	static constexpr int TOGGLE_GAP = 6;
 	static constexpr int POWER_ICON_SIZE = 16;
-	static constexpr int SLIDER_WIDTH = 160;
+	static constexpr int FILTER_POWER_SIZE = 16;
+	static constexpr int FILTER_POWER_ICON_SIZE = 12;
+	static constexpr float TITLE_FONT_HEIGHT = 12.0f;
+	// Alpha of a filter block that is not part of the playing delta.
+	static constexpr float DIMMED_ALPHA = 0.4f;
 	static constexpr int SLIDER_HEIGHT = 18;
 	static constexpr int LABEL_HEIGHT = 14;
 	static constexpr int BUTTON_WIDTH = 18;
 	static constexpr int BUTTON_HEIGHT = 18;
-	static constexpr int BUTTON_GAP = 8;
 	static constexpr int BUTTONS_Y = 234;
+	// Title row, gap, slider row.
+	static constexpr int FILTER_BLOCK_HEIGHT = LABEL_HEIGHT + TITLE_GAP + SLIDER_HEIGHT;
 
 	void resized() override;
 	void paint(Graphics& g) override;
@@ -201,23 +219,30 @@ private:
 	void setText();
 	void updateLabels();
 	void updateEnabled();
+	void updatePreviewButtons();
+	void refresh();
 	void restoreDefaults();
 
-	FxPowerButton power_button_;
-	Label filter_title_;
-	Label slope_title_;
-	ValueSlider slope_slider_;
-	Label hp_cutoff_title_;
-	FxAudioSlider hp_cutoff_slider_;
-	Label q_title_;
-	FxAudioSlider q_slider_;
+	void initBlock(FilterBlock& block, std::function<void(bool)> set_on, std::function<void(double)> set_cutoff);
+	int layoutBlock(FilterBlock& block, int y);
+	// The two HEADER_HEIGHT-wide button columns at the right: the power buttons at the very right (in the flip button's
+	// margin, shared by the filter rows and the bottom row), the global delta just left of them. The filter rows' deltas
+	// sit at the left of their titles instead.
+	int powerColumnX() const;
+	int deltaColumnX() const;
+
+	FilterBlock low_cut_;
+	FilterBlock high_cut_;
+	FilterBlock mono_bass_;
+	FxPowerButton global_power_button_;
+	ComboBox slope_;
 	DrawableButton restore_defaults_button_;
-	PreviewButton preview_button_;
+	PreviewButton global_delta_button_;
 
 	std::unique_ptr<Drawable> restore_defaults_image_;
 	std::unique_ptr<Drawable> restore_defaults_hover_image_;
 
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxLowCutControl)
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxFiltersControl)
 };
 
 class FxAudioControls : public Component
@@ -232,7 +257,7 @@ public:
 	void setLookAndFeel();
 
 private:
-	static constexpr int WIDTH = 176;
+	static constexpr int WIDTH = 168;
 	static constexpr int HEIGHT = 257;
 	static constexpr int BUTTON_WIDTH = 18;
 	static constexpr int BUTTON_HEIGHT = 18;
@@ -242,13 +267,13 @@ private:
 
 	FxEffects effects_;
 	FxEqualizerControl equalizer_control_;
-	FxLowCutControl low_cut_control_;
+	FxFiltersControl filters_control_;
 	DrawableButton flip_button_;
 
 	std::unique_ptr<Drawable> flip_image_;
 	std::unique_ptr<Drawable> flip_hover_image_;
 
-	enum Page { EffectsPage = 0, EqualizerPage = 1, LowCutPage = 2, NumPages = 3 };
+	enum Page { EffectsPage = 0, EqualizerPage = 1, FiltersPage = 2, NumPages = 3 };
 
 	void showPage(int page);
 

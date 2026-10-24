@@ -163,7 +163,7 @@ void FxTheme::drawComboBox(Graphics& g, int width, int height, bool,
 	}
 	
 	int margin = 32;
-	if (width <= 160)
+	if (width <= 150)
         margin = 24;
 
 	g.setColour(box.findColour(ComboBox::arrowColourId).withAlpha((box.isEnabled() ? 1.0f : 0.2f)));
@@ -366,6 +366,7 @@ Slider::SliderLayout FxTheme::getSliderLayout(Slider& slider)
 	}
 	else if (style == Slider::LinearHorizontal)
 	{
+		// Leave room on the right for a value label drawn beside the thumb.
 		auto width = layout.sliderBounds.getWidth() - (SLIDER_THUMB_RADIUS*4);
 		layout.sliderBounds.setWidth(width);
 	}
