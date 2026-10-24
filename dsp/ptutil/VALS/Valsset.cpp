@@ -83,7 +83,7 @@ int PT_DECLSPEC valsSetComment(PT_HANDLE *hp_vals, wchar_t *wcp_comment)
 		return(NOT_OKAY);
 
 	/* Set the string */
-	swprintf(cast_handle->wcp_comment, sizeof(cast_handle->wcp_comment)/sizeof(*(cast_handle->wcp_comment)), L"%s", wcp_comment);
+	swprintf(cast_handle->wcp_comment, length + 1, L"%ls", wcp_comment);
 
 	return(OKAY);
 }
@@ -471,7 +471,7 @@ int PT_DECLSPEC valsSetAppDependentString(PT_HANDLE *hp_vals, int i_index, wchar
 		return(NOT_OKAY);
 
 	/* Set the string */
-	swprintf(cast_handle->app_depend.wcpp_strings[i_index], sizeof(cast_handle->app_depend.wcpp_strings[i_index])/sizeof(*(cast_handle->app_depend.wcpp_strings[i_index])), L"%s", wcp_string);
+	swprintf(cast_handle->app_depend.wcpp_strings[i_index], length + 1, L"%ls", wcp_string);
 
 	return(OKAY);
 }

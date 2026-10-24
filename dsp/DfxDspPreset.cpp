@@ -446,8 +446,8 @@ if (wcp_comment == NULL)
 return(NOT_OKAY);
 
 // Construct the line
-//	      swprintf(wcp_line_str, sizeof(wcp_line_str)/sizeof(*(wcp_line_str)), L"(%d) %s", index + 1, wcp_comment);
-swprintf(wcp_line_str, sizeof(wcp_line_str)/sizeof(*(wcp_line_str)), L"%s", wcp_comment);
+//	      swprintf(wcp_line_str, sizeof(wcp_line_str)/sizeof(*(wcp_line_str)), L"(%d) %ls", index + 1, wcp_comment);
+swprintf(wcp_line_str, sizeof(wcp_line_str)/sizeof(*(wcp_line_str)), L"%ls", wcp_comment);
 
 SendDlgItemMessage(hDlg, IDC_PRESET_LIST, LB_ADDSTRING,
 0, (LPARAM)(LPSTR)wcp_line_str);

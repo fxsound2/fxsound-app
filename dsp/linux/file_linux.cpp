@@ -14,12 +14,28 @@ FileGeneral.cpp is built on Win32 file APIs (_wstat/_wsplitpath/CreateDirectory
 #include <cwchar>
 #include <sys/stat.h>
 
+// Encode explicitly: wcstombs depends on the locale, and in the default "C"
+// locale any non-ASCII character (preset names, a home directory like
+// /home/josé) made the whole path empty.
 static void wideToUtf8(const wchar_t* w, char* out, size_t n)
 {
-    if (!w) { if (n) out[0] = '\0'; return; }
-    size_t r = wcstombs(out, w, n);
-    if (r == (size_t)-1) out[0] = '\0';
-    else if (r < n) out[r] = '\0';
+    if (!n) return;
+    size_t o = 0;
+    for (; w && *w; ++w) {
+        uint32_t cp = (uint32_t)*w;
+        char b[4];
+        size_t len;
+        if (cp < 0x80)         { b[0] = (char)cp; len = 1; }
+        else if (cp < 0x800)   { b[0] = (char)(0xC0 | (cp >> 6)); b[1] = (char)(0x80 | (cp & 0x3F)); len = 2; }
+        else if (cp < 0x10000) { b[0] = (char)(0xE0 | (cp >> 12)); b[1] = (char)(0x80 | ((cp >> 6) & 0x3F));
+                                 b[2] = (char)(0x80 | (cp & 0x3F)); len = 3; }
+        else                   { b[0] = (char)(0xF0 | (cp >> 18)); b[1] = (char)(0x80 | ((cp >> 12) & 0x3F));
+                                 b[2] = (char)(0x80 | ((cp >> 6) & 0x3F)); b[3] = (char)(0x80 | (cp & 0x3F)); len = 4; }
+        if (o + len >= n) break;
+        std::memcpy(out + o, b, len);
+        o += len;
+    }
+    out[o] = '\0';
 }
 
 FILE* fileOpen_Wide(wchar_t* path, wchar_t* mode, CSlout*)

@@ -154,6 +154,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PT_WS_FMT L"%s"
 #endif
 
+/* "<dir><separator><file>" for wide file paths. Registry keys keep '\\'. */
+#ifdef _WIN32
+#define PT_PATH_JOIN_FMT L"%ls\\%ls"
+#else
+#define PT_PATH_JOIN_FMT L"%ls/%ls"
+#endif
+
 /* Define a PT_HANDLE */
 typedef int PT_HANDLE;
 

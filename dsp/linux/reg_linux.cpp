@@ -14,6 +14,7 @@ write).
 #include <map>
 #include <mutex>
 #include <string>
+#include <string_view>
 #include <cwchar>
 #include <fstream>
 #include <filesystem>
@@ -56,6 +57,10 @@ static std::wstring utf8ToWstr(const std::string& s)
     while (i < s.size()) {
         uint32_t cp;
         unsigned char c = (unsigned char)s[i];
+        size_t len = c < 0x80 ? 1 : c < 0xE0 ? 2 : c < 0xF0 ? 3 : 4;
+        // Truncated sequence (hand-edited or corrupt file): emit U+FFFD
+        // instead of reading past the end of the string.
+        if (i + len > s.size()) { out += (wchar_t)0xFFFD; i += 1; continue; }
         if (c < 0x80)      { cp = c; i += 1; }
         else if (c < 0xE0) { cp = (c & 0x1F) << 6  | ((unsigned char)s[i+1] & 0x3F); i += 2; }
         else if (c < 0xF0) { cp = (c & 0x0F) << 12 | ((unsigned char)s[i+1] & 0x3F) << 6
@@ -80,9 +85,12 @@ static std::filesystem::path getRegPath()
 
 // --- Persistent store --------------------------------------------------------
 
-std::map<std::wstring, std::wstring>& store()
+// std::less<> allows lookups by wstring_view: the DSP reads keys from the
+// realtime thread every block, so reads must not allocate.
+using Store = std::map<std::wstring, std::wstring, std::less<>>;
+Store& store()
 {
-    static std::map<std::wstring, std::wstring> s;
+    static Store s;
     return s;
 }
 std::mutex& lock() { static std::mutex m; return m; }
@@ -107,15 +115,35 @@ static void ensureLoaded()
     if (!storeLoaded()) loadStore();
 }
 
-static void saveStore()
+// Called with the store lock held by a writer. Snapshots the store, then
+// releases the lock before touching the disk so the realtime thread never
+// waits on file I/O. The generation check keeps a slower writer from replacing
+// a newer file with an older snapshot.
+static void saveStore(std::unique_lock<std::mutex>& g)
 {
+    static std::mutex file_lock;
+    static uint64_t generation = 0, written = 0;
+    Store snapshot = store();
+    uint64_t gen = ++generation;
+    g.unlock();
+
+    std::lock_guard<std::mutex> f_guard(file_lock);
+    if (gen < written) return;
+    written = gen;
     auto path = getRegPath();
     std::error_code ec;
     std::filesystem::create_directories(path.parent_path(), ec);
-    std::ofstream f(path, std::ios::trunc);
-    if (!f) return;
-    for (auto& [k, v] : store())
-        f << wstrToUtf8(k) << '=' << wstrToUtf8(v) << '\n';
+    // Write a temp file and rename it so a crash never leaves a truncated file.
+    auto tmp = path;
+    tmp += ".tmp";
+    {
+        std::ofstream f(tmp, std::ios::trunc);
+        if (!f) return;
+        for (auto& [k, v] : snapshot)
+            f << wstrToUtf8(k) << '=' << wstrToUtf8(v) << '\n';
+        if (!f) return;
+    }
+    std::filesystem::rename(tmp, path, ec);
 }
 
 std::wstring joinKey(const wchar_t* path, const wchar_t* keyname)
@@ -137,10 +165,10 @@ void copyOut(const std::wstring& v, wchar_t* buf, uint32_t buflen)
 
 int regCreateKey_Wide(int, wchar_t* path, wchar_t* value)
 {
-    std::lock_guard<std::mutex> g(lock());
+    std::unique_lock<std::mutex> g(lock());
     ensureLoaded();
     store()[path ? path : L""] = value ? value : L"";
-    saveStore();
+    saveStore(g);
     return OKAY;
 }
 
@@ -148,7 +176,7 @@ int regReadKey_Wide(int, wchar_t* path, int* key_exists, wchar_t* value, uint32_
 {
     std::lock_guard<std::mutex> g(lock());
     ensureLoaded();
-    auto it = store().find(path ? path : L"");
+    auto it = store().find(std::wstring_view(path ? path : L""));
     if (it == store().end()) { if (key_exists) *key_exists = IS_FALSE; return OKAY; }
     if (key_exists) *key_exists = IS_TRUE;
     copyOut(it->second, value, buflen);
@@ -164,28 +192,28 @@ int regCreateKeyTest_Wide(int, wchar_t* path, wchar_t* value, int* created)
 
 int regRemoveKey_Wide(int, wchar_t* path)
 {
-    std::lock_guard<std::mutex> g(lock());
+    std::unique_lock<std::mutex> g(lock());
     ensureLoaded();
     store().erase(path ? path : L"");
-    saveStore();
+    saveStore(g);
     return OKAY;
 }
 
 int regCreateKeyWithKeyname_Dword_Wide(int, wchar_t* path, wchar_t* keyname, uint32_t value)
 {
-    std::lock_guard<std::mutex> g(lock());
+    std::unique_lock<std::mutex> g(lock());
     ensureLoaded();
     store()[joinKey(path, keyname)] = std::to_wstring(value);
-    saveStore();
+    saveStore(g);
     return OKAY;
 }
 
 int regCreateKeyWithKeyname_String_Wide(int, wchar_t* path, wchar_t* keyname, wchar_t* value)
 {
-    std::lock_guard<std::mutex> g(lock());
+    std::unique_lock<std::mutex> g(lock());
     ensureLoaded();
     store()[joinKey(path, keyname)] = value ? value : L"";
-    saveStore();
+    saveStore(g);
     return OKAY;
 }
 
@@ -215,15 +243,20 @@ int regReadKeyWithKeyname_Dword_Wide(int, wchar_t* path, wchar_t* keyname, int* 
 
 int regRecursiveDeleteFolder_Wide(int, wchar_t* path)
 {
-    std::lock_guard<std::mutex> g(lock());
+    std::unique_lock<std::mutex> g(lock());
     ensureLoaded();
     std::wstring prefix = path ? path : L"";
     for (auto it = store().begin(); it != store().end();)
     {
-        if (it->first.compare(0, prefix.size(), prefix) == 0) it = store().erase(it);
+        // Match the folder itself or keys below it, not siblings sharing a
+        // name prefix ("P\1" must not remove "P\10").
+        bool in_folder = it->first.compare(0, prefix.size(), prefix) == 0 &&
+                         (it->first.size() == prefix.size() || it->first[prefix.size()] == L'\\' ||
+                          (!prefix.empty() && prefix.back() == L'\\'));
+        if (in_folder) it = store().erase(it);
         else ++it;
     }
-    saveStore();
+    saveStore(g);
     return OKAY;
 }
 

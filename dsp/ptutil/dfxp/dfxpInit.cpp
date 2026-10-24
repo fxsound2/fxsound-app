@@ -75,7 +75,7 @@ int dfxpInit(PT_HANDLE **hpp_dfxp,
 	/* Store the product name */
 	if (wcp_product_name == NULL)
 		return(NOT_OKAY);
-	swprintf(cast_handle->wcp_product_name, sizeof(cast_handle->wcp_product_name)/sizeof(*(cast_handle->wcp_product_name)), L"%s", wcp_product_name);
+	swprintf(cast_handle->wcp_product_name, sizeof(cast_handle->wcp_product_name)/sizeof(*(cast_handle->wcp_product_name)), L"%ls", wcp_product_name);
 
 	/* Store the vendor specific info */
 	cast_handle->vendor_code = i_vendor_code;

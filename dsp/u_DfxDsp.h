@@ -133,11 +133,11 @@ private:
 
 	// Handles
 	int *dfxp_handle_;
-	int *preset_list_handle_;
+	int *preset_list_handle_ = NULL;  // never assigned; freed in the destructor if non-NULL
 	int *midi_to_rval_qnt_handle_; // Midi to Real Value
 	int *rval_to_midi_qnt_handle_; // and visa versa QNT handles
 
-	CDerivedSlout1 *slout1_;
+	CDerivedSlout1 *slout1_ = NULL;  // never created; deleted in the destructor if non-NULL
 
 	// Section specific information
 	struct dfxg_section_type fidelity_;

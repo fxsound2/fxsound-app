@@ -57,8 +57,8 @@ DfxDspPrivate::DfxDspPrivate()
 	midi_to_rval_qnt_handle_ = NULL;
 	rval_to_midi_qnt_handle_ = NULL;
 
-	swprintf(product_specific_.wcp_registry_product_name, PT_MAX_GENERIC_STRLEN, L"%s", DFXG_REGISTRY_DFX_PRODUCT_NAME_WIDE);
-	swprintf(product_specific_.wcp_displayed_product_name, PT_MAX_GENERIC_STRLEN, L"%s", DFXG_DISPLAYED_DFX_PRODUCT_NAME_WIDE);
+	swprintf(product_specific_.wcp_registry_product_name, PT_MAX_GENERIC_STRLEN, L"%ls", DFXG_REGISTRY_DFX_PRODUCT_NAME_WIDE);
+	swprintf(product_specific_.wcp_displayed_product_name, PT_MAX_GENERIC_STRLEN, L"%ls", DFXG_DISPLAYED_DFX_PRODUCT_NAME_WIDE);
 	product_specific_.full_version = static_cast<float>(13.028);
 	product_specific_.major_version = static_cast<int>(13.028);
 	vendor_specific_.vendor_code = DFXP_VENDOR_CODE_UNIVERSAL;

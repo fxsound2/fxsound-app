@@ -34,7 +34,7 @@ int DfxDspPrivate::writeRegistrySessionLongValue(int32_t l_value, wchar_t *wcp_k
 
 	if (vendor_specific_.vendor_code != 0)
 	{
-		swprintf(wcp_full_key_path, PT_MAX_PATH_STRLEN, L"%s\\%s\\%d\\%d\\%s\\%s",
+		swprintf(wcp_full_key_path, PT_MAX_PATH_STRLEN, L"%ls\\%ls\\%d\\%d\\%ls\\%ls",
 			DFXG_REGISTRY_TOP_WIDE,
 			product_specific_.wcp_registry_product_name,
 			product_specific_.major_version,

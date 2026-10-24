@@ -25,6 +25,8 @@ endif()
 option(FXSOUND_STUB_DSP        "Use stub DfxDsp instead of the ported engine"    OFF)
 option(FXSOUND_STUB_AUDIO      "Use stub AudioPassthru instead of PipeWire"       OFF)
 
+enable_testing()
+
 set(FX_ROOT       ${CMAKE_CURRENT_SOURCE_DIR})
 set(JUCE_DIR      ${FX_ROOT}/third_party/JUCE)
 set(JUCE_MODULES  ${JUCE_DIR}/modules)
@@ -118,6 +120,8 @@ target_compile_definitions(FxSound PRIVATE
     JUCE_USE_CURL=0
     JUCE_STANDALONE_APPLICATION=1
     JUCE_MODAL_LOOPS_PERMITTED=1
+    # Last-resort factory preset location for builds run without installing.
+    FXSOUND_SOURCE_PRESET_DIR="${FX_ROOT}/Installer/Resources/Factsoft"
     $<$<CONFIG:Debug>:DEBUG=1 _DEBUG=1>
     $<$<CONFIG:Release>:NDEBUG=1>)
 
@@ -167,3 +171,21 @@ if(EXISTS ${FX_ROOT}/bin/BonusPresets)
     install(DIRECTORY ${FX_ROOT}/bin/BonusPresets
             DESTINATION ${CMAKE_INSTALL_DATADIR}/fxsound)
 endif()
+
+# Live: quitting via SIGTERM (logout/shutdown) hands the default sink back.
+add_test(NAME app_exit_restores_default_sink
+    COMMAND bash ${FX_ROOT}/audiopassthru/src/linux/test_app_exit_live.sh $<TARGET_FILE:FxSound> TERM)
+set_tests_properties(app_exit_restores_default_sink PROPERTIES
+    LABELS pw-live SKIP_RETURN_CODE 77 RUN_SERIAL TRUE TIMEOUT 60)
+
+# Live: the FxSound sink volume (volume keys) is applied to what we process.
+add_test(NAME app_sink_volume_applies
+    COMMAND bash ${FX_ROOT}/audiopassthru/src/linux/test_app_volume_live.sh $<TARGET_FILE:FxSound>)
+set_tests_properties(app_sink_volume_applies PROPERTIES
+    LABELS pw-live SKIP_RETURN_CODE 77 RUN_SERIAL TRUE TIMEOUT 60)
+
+# Live: with power on, hot-plugged sinks appear in and leave the tray output menu.
+add_test(NAME app_hotplug_updates_output_menu
+    COMMAND bash ${FX_ROOT}/audiopassthru/src/linux/test_app_hotplug_live.sh $<TARGET_FILE:FxSound>)
+set_tests_properties(app_hotplug_updates_output_menu PROPERTIES
+    LABELS pw-live SKIP_RETURN_CODE 77 RUN_SERIAL TRUE TIMEOUT 60)

@@ -137,8 +137,10 @@ FxController::FxController()
 	hotkeys_registered_ = false;
 	output_changed_ = false;
 	playback_device_available_ = true;
+#ifdef _WIN32
 	powerNotify_ = nullptr;
 	unregister_suspend_resume_notification_ = nullptr;
+#endif
 
 	device_count_ = 0;
 	output_device_name_ = L"";
@@ -223,11 +225,13 @@ FxController::FxController()
 
 FxController::~FxController()
 {
+#ifdef _WIN32
 	if (powerNotify_ != nullptr && unregister_suspend_resume_notification_ != nullptr)
 	{
 		unregister_suspend_resume_notification_(powerNotify_);
 		powerNotify_ = nullptr;
 	}
+#endif
 	stopTimer();
 #ifdef _WIN32
 	WTSUnRegisterSessionNotification(message_window_.getHandle());
@@ -695,6 +699,7 @@ void FxController::printStatus()
 	status_file.getParentDirectory().createDirectory();
 	status_file.replaceWithText(json_text);
 
+#ifdef _WIN32
 	// Best-effort console output for interactive use. Attaches to this
 	// (already-running) instance's own parent console - i.e. whichever
 	// console FxSound.exe was originally launched from - not the console of
@@ -709,6 +714,7 @@ void FxController::printStatus()
 
 		FreeConsole();
 	}
+#endif
 }
 
 void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray_view, AudioPassthru* audio_passthru)
@@ -732,7 +738,9 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		auto prev_version = settings_.getString("version");
 		if (prev_version != app_version)
 		{
+#ifdef _WIN32
 			RegDeleteTree(HKEY_CURRENT_USER, L"Software\\DFX");
+#endif
 
 			FxModel::getModel().pushMessage(" ", { TRANS("Click here to see what's new on this version!"), "https://www.fxsound.com/changelog" });
 
@@ -802,6 +810,7 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		main_window_->setIcon(power, false);
 		system_tray_view_->setStatus(power, false);
 
+#ifdef _WIN32
 		HMODULE user32_module = GetModuleHandleW(L"user32.dll");
 		if (user32_module != nullptr)
 		{
@@ -815,6 +824,7 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 				powerNotify_ = register_suspend_resume_notification(message_window_.getHandle(), DEVICE_NOTIFY_WINDOW_HANDLE);
 			}
 		}
+#endif
 	}
 }
 
@@ -871,6 +881,10 @@ juce::File FxController::getFactoryPresetDir()
 	// 3) Standard system prefixes.
 	for (auto* p : { "/usr/share/fxsound/Factsoft", "/usr/local/share/fxsound/Factsoft" })
 		if (File(p).isDirectory()) return File(p);
+#ifdef FXSOUND_SOURCE_PRESET_DIR
+	// 4) Uninstalled build run from anywhere: the source tree's presets.
+	if (File(FXSOUND_SOURCE_PRESET_DIR).isDirectory()) return File(FXSOUND_SOURCE_PRESET_DIR);
+#endif
 
 	return cwd; // fall back (may be empty)
 }
@@ -2244,8 +2258,10 @@ void FxController::timerCallback()
 
 void FxController::onSoundDeviceChange(bool processing)
 {
+#ifdef _WIN32
 	if (session_id_ != WTSGetActiveConsoleSessionId())
 		return; // Ignore device changes on another user session
+#endif
 
 	ScopedLock auto_lock(lock_);
 

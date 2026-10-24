@@ -268,13 +268,17 @@ private:
 
     String FormatString(const String& format, const String& arg);
 
+#ifdef _WIN32
 	typedef HPOWERNOTIFY(WINAPI* RegisterSuspendResumeNotificationFunc)(HANDLE, DWORD);
 	typedef BOOL(WINAPI* UnregisterSuspendResumeNotificationFunc)(HPOWERNOTIFY);
+#endif
 
 	MessageWindow message_window_;
 	bool hotkeys_registered_;
+#ifdef _WIN32
 	HPOWERNOTIFY powerNotify_;
 	UnregisterSuspendResumeNotificationFunc unregister_suspend_resume_notification_;
+#endif
 
 	FxMainWindow* main_window_;
 	FxSystemTrayView* system_tray_view_;

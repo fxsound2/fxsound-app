@@ -19,6 +19,7 @@ methods take the loop lock. The realtime process callback is lock-free.
 
 #include "AudioPassthru.h"
 #include "DfxDsp.h"
+#include "PipeWireProcess.h"
 
 #include <pipewire/pipewire.h>
 #include <pipewire/filter.h>
@@ -76,8 +77,7 @@ struct AudioPassthruPrivate
     float* in_ports[kChannels]  = {nullptr, nullptr};
     float* out_ports[kChannels] = {nullptr, nullptr};
 
-    DfxDsp* dsp = nullptr;
-    std::atomic<bool> muted{false};
+    FxProcessor processor;   // realtime DSP block (see PipeWireProcess.h)
     AudioPassthruCallback* callback = nullptr;
 
     // Graph model (guarded by the thread-loop lock).
@@ -85,12 +85,9 @@ struct AudioPassthruPrivate
     std::map<uint32_t, PortInfo> ports;
     std::vector<pw_proxy*> links;        // links we created (FxSound -> device)
     std::string default_sink_name;       // from the default-metadata
+    bool        have_configured_sink = false;  // default.configured.audio.sink seen
     std::string selected_sink_name;      // user choice; empty => default
 
-    std::vector<float> ileave_in;     // interleaved L/R, 32-bit float
-    std::vector<float> ileave_out;
-
-    int  configured_rate = 0;   // last rate passed to dsp->setSignalFormat
     bool started = false;
 };
 
@@ -111,47 +108,8 @@ void on_process(void* userdata, struct spa_io_position* position)
     }
     for (int c = 0; c < kChannels; ++c) if (!out[c]) return;
 
-    if (d->muted.load(std::memory_order_relaxed)) {
-        for (int c = 0; c < kChannels; ++c) std::memset(out[c], 0, n * sizeof(float));
-        return;
-    }
-
-    bool have_in = in[0] && in[1];
-    if (d->dsp && have_in) {
-        // Process in native 32-bit float (PipeWire's format) so there is no
-        // 16-bit quantization loss. The DSP must be told the format or it
-        // produces no output; bps=32 routes it through the float path.
-        int rate = (position->clock.rate.denom > 0) ? (int)position->clock.rate.denom : 48000;
-        if (d->configured_rate != rate) {
-            d->dsp->setSignalFormat(32, kChannels, rate, 32);
-            d->configured_rate = rate;
-        }
-        if (d->ileave_in.size() < n * kChannels) {
-            d->ileave_in.resize(n * kChannels);
-            d->ileave_out.resize(n * kChannels);
-        }
-        for (uint32_t i = 0; i < n; ++i) {
-            d->ileave_in[i*2]     = in[0][i];
-            d->ileave_in[i*2 + 1] = in[1][i];
-        }
-        // processAudio takes short*; for bps=32 the engine reinterprets the
-        // buffers as 32-bit float internally.
-        d->dsp->processAudio(reinterpret_cast<short*>(d->ileave_in.data()),
-                             reinterpret_cast<short*>(d->ileave_out.data()), (int)n, 0);
-        for (uint32_t i = 0; i < n; ++i) {
-            float l = d->ileave_out[i*2];
-            float r = d->ileave_out[i*2 + 1];
-            // Final hard-clip to prevent digital distortion reaching PipeWire/mixer.
-            if (l > 1.0f) l = 1.0f; else if (l < -1.0f) l = -1.0f;
-            if (r > 1.0f) r = 1.0f; else if (r < -1.0f) r = -1.0f;
-            out[0][i] = l;
-            out[1][i] = r;
-        }
-    } else if (have_in) {
-        for (int c = 0; c < kChannels; ++c) std::memcpy(out[c], in[c], n * sizeof(float));
-    } else {
-        for (int c = 0; c < kChannels; ++c) std::memset(out[c], 0, n * sizeof(float));
-    }
+    int rate = (position->clock.rate.denom > 0) ? (int)position->clock.rate.denom : 48000;
+    d->processor.process(in, out, n, rate);
 }
 
 const struct pw_filter_events filter_events = {
@@ -283,11 +241,46 @@ void setDefaultSinkToFxSound(AudioPassthruPrivate* d)
     d->default_set = true;
 }
 
+// Extract "name" from a default-sink metadata value: { "name": "<node.name>" }.
+std::string sinkNameFromJson(const char* value)
+{
+    struct spa_json it[2];
+    char key[64], name[512];
+    spa_json_init(&it[0], value, strlen(value));
+    if (spa_json_enter_object(&it[0], &it[1]) <= 0) return "";
+    while (spa_json_get_string(&it[1], key, sizeof(key)) > 0) {
+        if (spa_streq(key, "name"))
+            return spa_json_get_string(&it[1], name, sizeof(name)) > 0 ? name : "";
+        const char* skip;
+        if (spa_json_next(&it[1], &skip) <= 0) break;
+    }
+    return "";
+}
+
 int metadata_property(void* data, uint32_t subject, const char* key,
                       const char* /*type*/, const char* value)
 {
     auto* d = static_cast<AudioPassthruPrivate*>(data);
     if (subject != 0 || !key) return 0;
+    // Track the user's real default device (never ourselves) so that with no
+    // explicit selection the processor feeds it rather than the lowest-id sink.
+    // The configured value is the user's choice; the effective default.audio.sink
+    // briefly reports another sink while WirePlumber switches to FxSound, so it
+    // is only used when nothing has been configured.
+    bool configured = spa_streq(key, "default.configured.audio.sink");
+    if (value && (configured || (spa_streq(key, "default.audio.sink") && !d->have_configured_sink)))
+    {
+        std::string name = sinkNameFromJson(value);
+        if (!name.empty() && name != "FxSound")
+        {
+            if (configured) d->have_configured_sink = true;
+            if (name != d->default_sink_name)
+            {
+                d->default_sink_name = name;
+                if (d->selected_sink_name.empty()) reroute(d);
+            }
+        }
+    }
     // Capture the existing default sink once (before we override it) so we can
     // restore it on exit. Ignore our own value.
     if (spa_streq(key, "default.configured.audio.sink") && value && !d->captured_default)
@@ -327,7 +320,7 @@ void registry_global(void* data, uint32_t id, uint32_t /*perm*/, const char* typ
         if (mc && spa_streq(mc, "Audio/Sink") && ni.name == "FxSound")
             d->sink_node_id = id;
         if (mc && spa_streq(mc, "Audio/Sink") && ni.name != "FxSound") {
-            if (d->callback) d->callback->onSoundDeviceChange();
+            if (d->callback) d->callback->onSoundDeviceChange(true);
         }
         reroute(d);
         setDefaultSinkToFxSound(d);
@@ -370,7 +363,7 @@ void registry_global_remove(void* data, uint32_t id)
     }
     d->ports.erase(id);
     if (was_sink) {
-        if (d->callback) d->callback->onSoundDeviceChange();
+        if (d->callback) d->callback->onSoundDeviceChange(true);
         reroute(d);
     }
 }
@@ -450,7 +443,7 @@ int AudioPassthru::init()
         PW_KEY_NODE_DESCRIPTION, "FxSound",
         PW_KEY_MEDIA_CLASS,      "Audio/Sink",
         "audio.position",        "FL,FR",
-        "monitor.channel-volumes", "false",
+        "monitor.channel-volumes", "true",
         "monitor.passthrough",   "true",
         "node.virtual",          "true",
         nullptr);
@@ -514,7 +507,7 @@ int AudioPassthru::init()
 
 void AudioPassthru::mute(bool mute)
 {
-    if (data_) data_->muted.store(mute, std::memory_order_relaxed);
+    if (data_) data_->processor.setMuted(mute);
 }
 
 std::vector<SoundDevice> AudioPassthru::getSoundDevices(bool)
@@ -562,7 +555,7 @@ int  AudioPassthru::processTimer()                          { return 0; }
 
 void AudioPassthru::setDspProcessingModule(DfxDsp* dsp)
 {
-    if (data_) data_->dsp = dsp;
+    if (data_) data_->processor.setDsp(dsp);
 }
 
 void AudioPassthru::setAsPlaybackDevice(const SoundDevice sound_device)

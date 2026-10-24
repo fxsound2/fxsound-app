@@ -160,30 +160,69 @@ static inline int _wfopen_s(FILE** pf, const wchar_t* name, const wchar_t* mode)
 #define FORMAT_MESSAGE_IGNORE_INSERTS  0x00000200
 #define FORMAT_MESSAGE_ALLOCATE_BUFFER 0x00000100
 
-static inline int MultiByteToWideChar(UINT, DWORD, LPCSTR src, int srclen,
+/* UTF-8 is encoded/decoded explicitly (the code page argument is CP_UTF8 at
+ * every call site). wcstombs/mbstowcs depend on the locale and fail for any
+ * non-ASCII text in the default "C" locale. Win32 contract: srclen == -1 means
+ * NUL-terminated and the NUL is counted; dstlen == 0 returns the size needed. */
+static inline int MultiByteToWideChar(UINT cp, DWORD flags, LPCSTR src, int srclen,
                                       LPWSTR dst, int dstlen)
 {
+    const unsigned char* s = (const unsigned char*)src;
+    size_t len, i = 0;
+    int out = 0;
+    (void)cp; (void)flags;
     if (!src) return 0;
-    size_t need = mbstowcs(NULL, src, 0);
-    if (need == (size_t)-1) return 0;
-    if (dstlen == 0 || !dst) return (int)need + ((srclen == -1) ? 1 : 0);
-    size_t n = mbstowcs(dst, src, (size_t)dstlen);
-    if (n == (size_t)-1) return 0;
-    if ((int)n < dstlen) dst[n] = L'\0';
-    return (int)n + ((srclen == -1) ? 1 : 0);
+    len = (srclen < 0) ? strlen(src) + 1 : (size_t)srclen;
+    while (i < len) {
+        uint32_t c = s[i];
+        size_t extra = c < 0x80 ? 0 : c >= 0xF0 ? 3 : c >= 0xE0 ? 2 : c >= 0xC0 ? 1 : 0;
+        size_t k;
+        if (c >= 0x80 && extra == 0) { c = 0xFFFD; i += 1; }        /* stray continuation */
+        else if (extra && i + extra >= len) { c = 0xFFFD; i = len; }   /* truncated */
+        else {
+            if (extra) c &= (0x3F >> extra);
+            for (k = 1; k <= extra; ++k) {
+                if ((s[i + k] & 0xC0) != 0x80) { c = 0xFFFD; extra = k - 1; break; }
+                c = (c << 6) | (s[i + k] & 0x3F);
+            }
+            i += extra + 1;
+        }
+        if (dstlen > 0) {
+            if (out >= dstlen) return 0;                             /* buffer too small */
+            dst[out] = (wchar_t)c;
+        }
+        ++out;
+    }
+    return out;
 }
 
-static inline int WideCharToMultiByte(UINT, DWORD, LPCWSTR src, int srclen,
-                                      LPSTR dst, int dstlen, const char*, int*)
+static inline int WideCharToMultiByte(UINT cp, DWORD flags, LPCWSTR src, int srclen,
+                                      LPSTR dst, int dstlen, const char* def, int* used_def)
 {
+    size_t len, i;
+    int out = 0;
+    (void)cp; (void)flags; (void)def;
+    if (used_def) *used_def = 0;
     if (!src) return 0;
-    size_t need = wcstombs(NULL, src, 0);
-    if (need == (size_t)-1) return 0;
-    if (dstlen == 0 || !dst) return (int)need + ((srclen == -1) ? 1 : 0);
-    size_t n = wcstombs(dst, src, (size_t)dstlen);
-    if (n == (size_t)-1) return 0;
-    if ((int)n < dstlen) dst[n] = '\0';
-    return (int)n + ((srclen == -1) ? 1 : 0);
+    len = (srclen < 0) ? wcslen(src) + 1 : (size_t)srclen;
+    for (i = 0; i < len; ++i) {
+        uint32_t c = (uint32_t)src[i];
+        unsigned char b[4];
+        int n, k;
+        if (c > 0x10FFFF || (c >= 0xD800 && c <= 0xDFFF)) c = 0xFFFD;
+        if (c < 0x80)         { b[0] = (unsigned char)c; n = 1; }
+        else if (c < 0x800)   { b[0] = (unsigned char)(0xC0 | (c >> 6)); b[1] = (unsigned char)(0x80 | (c & 0x3F)); n = 2; }
+        else if (c < 0x10000) { b[0] = (unsigned char)(0xE0 | (c >> 12)); b[1] = (unsigned char)(0x80 | ((c >> 6) & 0x3F));
+                                b[2] = (unsigned char)(0x80 | (c & 0x3F)); n = 3; }
+        else                  { b[0] = (unsigned char)(0xF0 | (c >> 18)); b[1] = (unsigned char)(0x80 | ((c >> 12) & 0x3F));
+                                b[2] = (unsigned char)(0x80 | ((c >> 6) & 0x3F)); b[3] = (unsigned char)(0x80 | (c & 0x3F)); n = 4; }
+        if (dstlen > 0) {
+            if (out + n > dstlen) return 0;                          /* buffer too small */
+            for (k = 0; k < n; ++k) dst[out + k] = (char)b[k];
+        }
+        out += n;
+    }
+    return out;
 }
 
 /* ---- Misc Win32 stubs referenced by the shared util layer -------------- */

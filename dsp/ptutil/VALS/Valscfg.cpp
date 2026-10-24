@@ -69,7 +69,7 @@ int PT_DECLSPEC valsCfgRead(PT_HANDLE **hpp_vals_cfg, wchar_t *wcp_file_path,
 		return(NOT_OKAY);
 
     /* Store the filepath */
-    swprintf(cast_handle->wcp_filepath, sizeof(cast_handle->wcp_filepath)/sizeof(*(cast_handle->wcp_filepath)), L"%s", wcp_file_path);
+    swprintf(cast_handle->wcp_filepath, sizeof(cast_handle->wcp_filepath)/sizeof(*(cast_handle->wcp_filepath)), L"%ls", wcp_file_path);
 
 	/* Skip past the first line */
 	fgetws(wcp_str, LINE_LENGTH, stream);
@@ -86,7 +86,7 @@ int PT_DECLSPEC valsCfgRead(PT_HANDLE **hpp_vals_cfg, wchar_t *wcp_file_path,
     if (title_length < 1)
        return(NOT_OKAY);
 	wcp_str[title_length - 1] = L'\0';
-	swprintf((cast_handle->wcp_title), sizeof((cast_handle->wcp_title))/sizeof(*((cast_handle->wcp_title))), L"%s", wcp_str);
+	swprintf((cast_handle->wcp_title), sizeof((cast_handle->wcp_title))/sizeof(*((cast_handle->wcp_title))), L"%ls", wcp_str);
 
 	/* Get the number of elements */
 	fgetws(wcp_str, LINE_LENGTH, stream);
@@ -161,7 +161,7 @@ int PT_DECLSPEC valsCfgWrite(PT_HANDLE *hp_vals_cfg)
     
     fwprintf(stream, L"1.0: Version\n");
     
-    fwprintf(stream, L"%s\n", cast_handle->wcp_title);
+    fwprintf(stream, L"%ls\n", cast_handle->wcp_title);
     
     fwprintf(stream, L"%d: Number of Elements (1,2,4,8)\n", cast_handle->num_elements);
     
@@ -215,7 +215,7 @@ int PT_DECLSPEC valsCfgCheckFileType(wchar_t *wcp_file_path, int *ip_proper_type
 		return(OKAY);
 	}
 
-	swscanf(wcp_line_str, L"%s\n", wcp_type_str);
+	swscanf(wcp_line_str, L"%ls\n", wcp_type_str);
 
 	if (wcslen(wcp_type_str) <= 0)
 	{
@@ -251,7 +251,7 @@ int PT_DECLSPEC valsCfgGetTitle(PT_HANDLE *hp_vals_cfg, wchar_t *wcp_title)
 	if (wcp_title == NULL)
 	   return(NOT_OKAY);
 	   
-	swprintf(wcp_title, sizeof(wcp_title)/sizeof(*(wcp_title)), L"%s", cast_handle->wcp_title);
+	swprintf(wcp_title, wcslen(cast_handle->wcp_title) + 1, L"%ls", cast_handle->wcp_title);
 
 	return(OKAY);
 }
