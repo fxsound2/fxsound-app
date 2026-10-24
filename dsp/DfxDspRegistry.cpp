@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /*
 * Modeled after dfxg_WriteRegistrySessionLongValue() in dfxgSession.cpp.
 */
-int DfxDspPrivate::writeRegistrySessionLongValue(long l_value, wchar_t *wcp_key_name)
+int DfxDspPrivate::writeRegistrySessionLongValue(int32_t l_value, wchar_t *wcp_key_name)
 {
 	wchar_t wcp_key_value[DFXG_REGISTRY_BUFFER_LENGTH];
 	wchar_t wcp_full_key_path[PT_MAX_PATH_STRLEN];

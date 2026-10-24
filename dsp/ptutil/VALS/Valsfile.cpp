@@ -37,6 +37,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define LINE_LENGTH 128
 
+#if defined(__linux__) || defined(__APPLE__)
+// glibc forbids mixing wide (fgetws) and byte (fgets) reads on one FILE stream:
+// the first fgetws orients the stream wide and a later fgets then fails. valsRead
+// reads numeric/label lines wide but the (UTF-8) comment line with fgets, so we
+// route the wide reads through this byte-based helper to keep the stream byte-
+// oriented. The numeric/label lines are ASCII, so a 1:1 byte->wchar widening is
+// sufficient; the comment keeps its dedicated UTF-8 conversion path.
+static wchar_t* pt_fgetws(wchar_t* ws, int n, FILE* s)
+{
+    char buf[512];
+    int cap = (n < (int)sizeof(buf)) ? n : (int)sizeof(buf);
+    if (cap <= 0 || fgets(buf, cap, s) == nullptr) return nullptr;
+    int i = 0;
+    for (; buf[i] != '\0' && i < n - 1; ++i) ws[i] = (wchar_t)(unsigned char)buf[i];
+    ws[i] = L'\0';
+    return ws;
+}
+#define fgetws pt_fgetws
+#endif
+
 /*
  * FUNCTION: valsSave()
  * DESCRIPTION:
@@ -66,7 +86,7 @@ int PT_DECLSPEC valsSave(PT_HANDLE *hp_vals, wchar_t *wcp_dir_path, wchar_t *wcp
 		return(NOT_OKAY);
 
 	/* Construct the fullpath */
-	swprintf(fullpath_str, L"%s\\%s", wcp_dir_path, wcp_filename);
+	swprintf(fullpath_str, sizeof(fullpath_str)/sizeof(*(fullpath_str)), L"%s\\%s", wcp_dir_path, wcp_filename);
 
 	/* Open the file for writing */
 	stream = fileOpen_Wide(fullpath_str, L"w", cast_handle->slout_hdl);
@@ -202,7 +222,7 @@ int PT_DECLSPEC valsCalcDateStrings(wchar_t *wcp_filename, wchar_t *wcp_formatte
 {
 	time_t time_structure;
 	struct tm *tm_struct_ptr;
-	long seconds;
+	int32_t seconds;
 	wchar_t wcp_short_sec_str[8];
 	wchar_t wcp_sec_str[8];
 	wchar_t wcp_date_str[8];
@@ -218,9 +238,9 @@ int PT_DECLSPEC valsCalcDateStrings(wchar_t *wcp_filename, wchar_t *wcp_formatte
 		return(NOT_OKAY);
 
 	/* Calculate number of seconds since midnight */
-	seconds = (long)(tm_struct_ptr->tm_hour * 3600L) +
-				 (long)(tm_struct_ptr->tm_min * 60L) +
-				 (long)(tm_struct_ptr->tm_sec);
+	seconds = (int32_t)(tm_struct_ptr->tm_hour * 3600L) +
+				 (int32_t)(tm_struct_ptr->tm_min * 60L) +
+				 (int32_t)(tm_struct_ptr->tm_sec);
 
 	if (wcsftime(wcp_date_str, 16, L"%m%d%y", tm_struct_ptr) == 0)
 		return(NOT_OKAY);
@@ -230,30 +250,30 @@ int PT_DECLSPEC valsCalcDateStrings(wchar_t *wcp_filename, wchar_t *wcp_formatte
 	 * This is tricky because we want to fill in leading 0's.  For example
 	 * If seconds are only 12 we want it to be 00012.
 	 */
-	swprintf(wcp_short_sec_str, L"%ld", seconds);
+	swprintf(wcp_short_sec_str, sizeof(wcp_short_sec_str)/sizeof(*(wcp_short_sec_str)), L"%ld", seconds);
 	length = (int)wcslen(wcp_short_sec_str);
 	if (length == 5)
-		swprintf(wcp_sec_str, L"%c%c.%c%c%c",
+		swprintf(wcp_sec_str, sizeof(wcp_sec_str)/sizeof(*(wcp_sec_str)), L"%c%c.%c%c%c",
 			wcp_short_sec_str[0], wcp_short_sec_str[1],
 			wcp_short_sec_str[2], wcp_short_sec_str[3], wcp_short_sec_str[4]);
 	else if (length == 4)
-		swprintf(wcp_sec_str, L"0%c.%c%c%c",
+		swprintf(wcp_sec_str, sizeof(wcp_sec_str)/sizeof(*(wcp_sec_str)), L"0%c.%c%c%c",
 			wcp_short_sec_str[0], wcp_short_sec_str[1],
 			wcp_short_sec_str[2], wcp_short_sec_str[3]);
 	else if (length == 3)
-		swprintf(wcp_sec_str, L"00.%c%c%c",
+		swprintf(wcp_sec_str, sizeof(wcp_sec_str)/sizeof(*(wcp_sec_str)), L"00.%c%c%c",
 			wcp_short_sec_str[0], wcp_short_sec_str[1],
 			wcp_short_sec_str[2]);
 	else if (length == 2)
-		swprintf(wcp_sec_str, L"00.0%c%c",
+		swprintf(wcp_sec_str, sizeof(wcp_sec_str)/sizeof(*(wcp_sec_str)), L"00.0%c%c",
 			wcp_short_sec_str[0], wcp_short_sec_str[1]);
 	else if (length == 1)
-		swprintf(wcp_sec_str, L"00.00%c",
+		swprintf(wcp_sec_str, sizeof(wcp_sec_str)/sizeof(*(wcp_sec_str)), L"00.00%c",
 			wcp_short_sec_str[0]);
 	else if (length == 0)
-		swprintf(wcp_sec_str, L"00.000");
+		swprintf(wcp_sec_str, sizeof(wcp_sec_str)/sizeof(*(wcp_sec_str)), L"00.000");
 
-	swprintf(wcp_filename, L"%s%s", wcp_date_str, wcp_sec_str);
+	swprintf(wcp_filename, sizeof(wcp_filename)/sizeof(*(wcp_filename)), L"%s%s", wcp_date_str, wcp_sec_str);
 
 	return(OKAY);
 }
@@ -284,6 +304,11 @@ int PT_DECLSPEC valsRead(wchar_t *wcp_file_path, int i_trace_mode, CSlout *hp_sl
 	realtype r_boost_cut;
 	int i_band_num;
     
+	/* Default the out-param so callers never see an uninitialized handle if we
+	   bail out early (file missing, parse error, ...). */
+	if (hpp_vals != NULL)
+		*hpp_vals = NULL;
+
 	if (wcp_file_path == NULL)
 		return(NOT_OKAY);
 
@@ -299,7 +324,7 @@ int PT_DECLSPEC valsRead(wchar_t *wcp_file_path, int i_trace_mode, CSlout *hp_sl
 
 	if (cast_handle->i_trace_mode)
 	{
-		swprintf(cast_handle->wcp_msg1, L"valsRead(): Entered, wcp_file_path = %s", wcp_file_path);
+		swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"valsRead(): Entered, wcp_file_path = %s", wcp_file_path);
 		(cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 	}
 
@@ -320,7 +345,7 @@ int PT_DECLSPEC valsRead(wchar_t *wcp_file_path, int i_trace_mode, CSlout *hp_sl
 	fgets(cp_str_utf8, LINE_LENGTH, stream);
 	if (pstrCovertUTF8StringToWideCharString_WithAlloc(cp_str_utf8, &wcp_utf8_comment, &wcp_utf8_comment_length) != OKAY)
 		return(NOT_OKAY);
-	swprintf(wcp_str, L"%s", wcp_utf8_comment);
+	swprintf(wcp_str, sizeof(wcp_str)/sizeof(*(wcp_str)), PT_WS_FMT, wcp_utf8_comment);
 	free(wcp_utf8_comment);
 	wcp_utf8_comment = NULL;
 
@@ -337,7 +362,7 @@ int PT_DECLSPEC valsRead(wchar_t *wcp_file_path, int i_trace_mode, CSlout *hp_sl
 			fclose(stream);
 			return(NOT_OKAY);
 		}
-		swprintf(cast_handle->wcp_comment, L"%s", wcp_str);
+		swprintf(cast_handle->wcp_comment, wcslen(wcp_str) + 1, PT_WS_FMT, wcp_str);
 	}
 	else
 		cast_handle->wcp_comment = NULL;
@@ -457,7 +482,7 @@ int PT_DECLSPEC valsRead(wchar_t *wcp_file_path, int i_trace_mode, CSlout *hp_sl
 		{
 			if (cast_handle->i_trace_mode)
 			{
-				swprintf(cast_handle->wcp_msg1, L"valsRead(): Calling GraphicEqFreeUp()");
+				swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"valsRead(): Calling GraphicEqFreeUp()");
 				(cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 			}
 

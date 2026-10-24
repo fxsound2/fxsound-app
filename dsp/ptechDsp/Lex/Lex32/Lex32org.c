@@ -54,7 +54,7 @@ void main(int argc, char *argv[])
 
 /* Only build init function in 32 bit files (same for both) */
 #if defined(DSPSOFT_32_BIT)
-DSP_FUNC_DEF int DSPS_LEX_INIT(float *fp_params, float *fp_memory, long l_memsize, float *fp_state, int i_init_flag, float r_samp_freq)
+DSP_FUNC_DEF int DSPS_LEX_INIT(float *fp_params, float *fp_memory, int32_t l_memsize, float *fp_state, int i_init_flag, float r_samp_freq)
 {
 	float *COMM_MEM_OFFSET = fp_params;
 	float *MEMBANK0_START = fp_memory;
@@ -63,7 +63,7 @@ DSP_FUNC_DEF int DSPS_LEX_INIT(float *fp_params, float *fp_memory, long l_memsiz
 	 * stored back at end of buffer processing
 	 */
 
-	long i;
+	int32_t i;
 	struct dspLexStructType *s = (struct dspLexStructType *)(COMM_MEM_OFFSET);
  
 	s->dsp_sampling_freq = r_samp_freq;
@@ -138,24 +138,24 @@ DSP_FUNC_DEF int DSPS_LEX_INIT(float *fp_params, float *fp_memory, long l_memsiz
 		float r_roomsize;
 
 		s->pre_dly_start_l = s->osc_plus_table + LEX_NUM_OSC_PTS;
-		s->pre_dly_end_l = s->pre_dly_start_l + (long)(r_samp_freq * (realtype)LEX_PREDELAY_LEN);
+		s->pre_dly_end_l = s->pre_dly_start_l + (int32_t)(r_samp_freq * (realtype)LEX_PREDELAY_LEN);
 		s->pre_ptr_l = s->pre_dly_start_l;
-		s->pre_dly_len_l = (unsigned long)(r_samp_freq * (realtype)LEX_PREDELAY_LEN);
+		s->pre_dly_len_l = (uint32_t)(r_samp_freq * (realtype)LEX_PREDELAY_LEN);
 
 		s->lat1_dly_start_l = s->pre_dly_end_l;
-		s->lat1_dly_end_l = s->lat1_dly_start_l + (long)(r_samp_freq * (realtype)LAT1_LEFT_DELAY_LEN);
+		s->lat1_dly_end_l = s->lat1_dly_start_l + (int32_t)(r_samp_freq * (realtype)LAT1_LEFT_DELAY_LEN);
 		s->lat1_ptr_l = s->lat1_dly_start_l;
 
 		s->lat2_dly_start_l = s->lat1_dly_end_l;
-		s->lat2_dly_end_l = s->lat2_dly_start_l + (long)(r_samp_freq * (realtype)LAT2_LEFT_DELAY_LEN);
+		s->lat2_dly_end_l = s->lat2_dly_start_l + (int32_t)(r_samp_freq * (realtype)LAT2_LEFT_DELAY_LEN);
 		s->lat2_ptr_l = s->lat2_dly_start_l;
 
 		s->lat3_dly_start_l = s->lat2_dly_end_l;
-		s->lat3_dly_end_l = s->lat3_dly_start_l + (long)(r_samp_freq * (realtype)LAT3_LEFT_DELAY_LEN);
+		s->lat3_dly_end_l = s->lat3_dly_start_l + (int32_t)(r_samp_freq * (realtype)LAT3_LEFT_DELAY_LEN);
 		s->lat3_ptr_l = s->lat3_dly_start_l;
 
 		s->lat4_dly_start_l = s->lat3_dly_end_l;
-		s->lat4_dly_end_l = s->lat4_dly_start_l + (long)(r_samp_freq * (realtype)LAT4_LEFT_DELAY_LEN);
+		s->lat4_dly_end_l = s->lat4_dly_start_l + (int32_t)(r_samp_freq * (realtype)LAT4_LEFT_DELAY_LEN);
 		s->lat4_ptr_l = s->lat4_dly_start_l;
 
 		/* Note that for the rest of this function, we need to normalize r_roomsize
@@ -164,61 +164,61 @@ DSP_FUNC_DEF int DSPS_LEX_INIT(float *fp_params, float *fp_memory, long l_memsiz
 		r_roomsize = s->roomsize * r_samp_freq;
 		
 		/* Make sure non-modulated is right on an integer value */
-		s->lat5_dly_len_l = (float)((long)(LAT5_LEFT_DELAY_LEN_NOMINAL * r_roomsize));
+		s->lat5_dly_len_l = (float)((int32_t)(LAT5_LEFT_DELAY_LEN_NOMINAL * r_roomsize));
 		/* Add one for roundoff room */
-		s->lat5_dly_maxlen_l = (unsigned long)s->lat5_dly_len_l + (unsigned long)(r_samp_freq * (realtype)LEX_MAX_MODULATION_DELAY) + 1;
+		s->lat5_dly_maxlen_l = (uint32_t)s->lat5_dly_len_l + (uint32_t)(r_samp_freq * (realtype)LEX_MAX_MODULATION_DELAY) + 1;
 		s->lat5_dly_start_l = s->lat4_dly_end_l;
 		s->lat5_dly_end_l = s->lat5_dly_start_l + s->lat5_dly_maxlen_l;
 		s->lat5_ptr_l = s->lat5_dly_start_l;
 
-		s->D1_tap1 = (unsigned long)(D1_LEFT_TAP1_DELAY * r_roomsize);
-		s->D1_tap2 = (unsigned long)(D1_LEFT_TAP2_DELAY * r_roomsize);
-		s->D1_tap3 = (unsigned long)(D1_LEFT_TAP3_DELAY * r_roomsize);
-		s->D1_tap4 = (unsigned long)(D1_LEFT_TAP4_DELAY * r_roomsize);
+		s->D1_tap1 = (uint32_t)(D1_LEFT_TAP1_DELAY * r_roomsize);
+		s->D1_tap2 = (uint32_t)(D1_LEFT_TAP2_DELAY * r_roomsize);
+		s->D1_tap3 = (uint32_t)(D1_LEFT_TAP3_DELAY * r_roomsize);
+		s->D1_tap4 = (uint32_t)(D1_LEFT_TAP4_DELAY * r_roomsize);
 		s->D1_dly_start_l = s->lat5_dly_end_l;
 		s->D1_dly_end_l = s->D1_dly_start_l + s->D1_tap4;
 		s->D1_ptr_l = s->D1_dly_start_l;
 
-		s->lat6_tap1 = (unsigned long)(LAT6_LEFT_TAP1_DELAY * r_roomsize);
-		s->lat6_tap2 = (unsigned long)(LAT6_LEFT_TAP2_DELAY * r_roomsize);
-		s->lat6_dly_len_l = (unsigned long)(LAT6_LEFT_DELAY_LEN * r_roomsize);
+		s->lat6_tap1 = (uint32_t)(LAT6_LEFT_TAP1_DELAY * r_roomsize);
+		s->lat6_tap2 = (uint32_t)(LAT6_LEFT_TAP2_DELAY * r_roomsize);
+		s->lat6_dly_len_l = (uint32_t)(LAT6_LEFT_DELAY_LEN * r_roomsize);
 		s->lat6_dly_start_l = s->D1_dly_end_l;
 		s->lat6_dly_end_l = s->lat6_dly_start_l + s->lat6_dly_len_l;
 		s->lat6_ptr_l = s->lat6_dly_start_l;
 
-		s->D2_tap1 = (unsigned long)(D2_LEFT_TAP1_DELAY * r_roomsize);
-		s->D2_tap2 = (unsigned long)(D2_LEFT_TAP2_DELAY * r_roomsize);
-		s->D2_tap3 = (unsigned long)(D2_LEFT_TAP3_DELAY * r_roomsize);
+		s->D2_tap1 = (uint32_t)(D2_LEFT_TAP1_DELAY * r_roomsize);
+		s->D2_tap2 = (uint32_t)(D2_LEFT_TAP2_DELAY * r_roomsize);
+		s->D2_tap3 = (uint32_t)(D2_LEFT_TAP3_DELAY * r_roomsize);
 		s->D2_dly_start_l = s->lat6_dly_end_l;
 		s->D2_dly_end_l = s->D2_dly_start_l + s->D2_tap3;
 		s->D2_ptr_l = s->D2_dly_start_l;
 
 		/* Make sure non-modulated is right on an integer value */
-		s->lat7_dly_len_l = (float)((long)(LAT7_LEFT_DELAY_LEN_NOMINAL * r_roomsize));
+		s->lat7_dly_len_l = (float)((int32_t)(LAT7_LEFT_DELAY_LEN_NOMINAL * r_roomsize));
 		/* Add one for roundoff room */
-		s->lat7_dly_maxlen_l = (unsigned long)s->lat7_dly_len_l + (unsigned long)(r_samp_freq * (realtype)LEX_MAX_MODULATION_DELAY) + 1;
+		s->lat7_dly_maxlen_l = (uint32_t)s->lat7_dly_len_l + (uint32_t)(r_samp_freq * (realtype)LEX_MAX_MODULATION_DELAY) + 1;
 		s->lat7_dly_start_l = s->D2_dly_end_l;
 		s->lat7_dly_end_l = s->lat7_dly_start_l + s->lat7_dly_maxlen_l;
 		s->lat7_ptr_l = s->lat7_dly_start_l;
 
-		s->D3_tap1 = (unsigned long)(D3_LEFT_TAP1_DELAY * r_roomsize);
-		s->D3_tap2 = (unsigned long)(D3_LEFT_TAP2_DELAY * r_roomsize);
-		s->D3_tap3 = (unsigned long)(D3_LEFT_TAP3_DELAY * r_roomsize);
-		s->D3_tap4 = (unsigned long)(D3_LEFT_TAP4_DELAY * r_roomsize);
+		s->D3_tap1 = (uint32_t)(D3_LEFT_TAP1_DELAY * r_roomsize);
+		s->D3_tap2 = (uint32_t)(D3_LEFT_TAP2_DELAY * r_roomsize);
+		s->D3_tap3 = (uint32_t)(D3_LEFT_TAP3_DELAY * r_roomsize);
+		s->D3_tap4 = (uint32_t)(D3_LEFT_TAP4_DELAY * r_roomsize);
 		s->D3_dly_start_l = s->lat7_dly_end_l;
 		s->D3_dly_end_l = s->D3_dly_start_l + s->D3_tap4;
 		s->D3_ptr_l = s->D3_dly_start_l;
 
-		s->lat8_tap1 = (unsigned long)(LAT8_LEFT_TAP1_DELAY * r_roomsize);
-		s->lat8_tap2 = (unsigned long)(LAT8_LEFT_TAP2_DELAY * r_roomsize);
-		s->lat8_dly_len_l = (unsigned long)(LAT8_LEFT_DELAY_LEN * r_roomsize);
+		s->lat8_tap1 = (uint32_t)(LAT8_LEFT_TAP1_DELAY * r_roomsize);
+		s->lat8_tap2 = (uint32_t)(LAT8_LEFT_TAP2_DELAY * r_roomsize);
+		s->lat8_dly_len_l = (uint32_t)(LAT8_LEFT_DELAY_LEN * r_roomsize);
 		s->lat8_dly_start_l = s->D3_dly_end_l;
 		s->lat8_dly_end_l = s->lat8_dly_start_l + s->lat8_dly_len_l;
 		s->lat8_ptr_l = s->lat8_dly_start_l;
 
-		s->D4_tap1 = (unsigned long)(D4_LEFT_TAP1_DELAY * r_roomsize);
-		s->D4_tap2 = (unsigned long)(D4_LEFT_TAP2_DELAY * r_roomsize);
-		s->D4_tap3 = (unsigned long)(D4_LEFT_TAP3_DELAY * r_roomsize);
+		s->D4_tap1 = (uint32_t)(D4_LEFT_TAP1_DELAY * r_roomsize);
+		s->D4_tap2 = (uint32_t)(D4_LEFT_TAP2_DELAY * r_roomsize);
+		s->D4_tap3 = (uint32_t)(D4_LEFT_TAP3_DELAY * r_roomsize);
 		s->D4_dly_start_l = s->lat8_dly_end_l;
 		s->D4_dly_end_l = s->D4_dly_start_l + s->D4_tap3;
 		s->D4_ptr_l = s->D4_dly_start_l;
@@ -234,7 +234,7 @@ DSP_FUNC_DEF int DSPS_LEX_INIT(float *fp_params, float *fp_memory, long l_memsiz
 #endif /* DSPSOFT_32_BIT */
 
 #ifdef DSPSOFT_TARGET
-DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
+DSP_FUNC_DEF void DSPS_LEX_PROCESS(int32_t *lp_data, int l_length,
 								   float *fp_params, float *fp_memory, float *fp_state,
 								   struct hardwareMeterValType *sp_meters, int DSP_data_type)
 {
@@ -246,12 +246,12 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 	 */
 	/*
 	float **fpp = (float **)&(fp_state[0]);
-	long *lpp  =  (long *)&(fp_state[0]);
+	int32_t *lpp  =  (int32_t *)&(fp_state[0]);
 	float *ptr0 = fpp[0];
 	*/
 
-	long transfer_state = 0; /* For sending out meter values */
-	long status = 0;         /* For sending run time status to PC */
+	int32_t transfer_state = 0; /* For sending out meter values */
+	int32_t status = 0;         /* For sending run time status to PC */
 
 	/* All the vars below are from DMA_LOCAL_DECLARATIONS.
 	 * They are declared there as statics, but don't need to be
@@ -265,8 +265,8 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 	/* All the vars below are from DMA_GLOBAL_DECLARATIONS.
 	 * They are declared there as statics, but don't need to be
 	 */
-	long *read_in_buf;
-	long *read_out_buf;
+	int32_t *read_in_buf;
+	int32_t *read_out_buf;
 
 	int i;
 	struct dspLexStructType *s = (struct dspLexStructType *)(COMM_MEM_OFFSET);
@@ -285,8 +285,8 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 		float input_diffuser_out;
 		float osc;
 		float delay_real;
-		volatile long in_count = 0;
-		volatile long out_count = 0;
+		volatile int32_t in_count = 0;
+		volatile int32_t out_count = 0;
 
 	  	load_parameter(); /* If its been sent, loads a parameter into memory */
 
@@ -380,13 +380,13 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
    {
 		float factor = (float)PC_24BIT_FLOAT_PLUS_CLIP/(float)l_length;
 
-		sp_meters->left_in = (long)(in_meter1_dma * factor); 
+		sp_meters->left_in = (int32_t)(in_meter1_dma * factor); 
    
-		sp_meters->right_in = (long)(in_meter2_dma * factor); 
+		sp_meters->right_in = (int32_t)(in_meter2_dma * factor); 
    
-		sp_meters->left_out = (long)(out_meter1_dma * factor); 
+		sp_meters->left_out = (int32_t)(out_meter1_dma * factor); 
    
-		sp_meters->right_out = (long)(out_meter2_dma * factor); 
+		sp_meters->right_out = (int32_t)(out_meter2_dma * factor); 
 
 		sp_meters->dsp_status = status;
 	}
@@ -396,7 +396,7 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 	{
 		/*
 		float **fpp = (float **)&(fp_state[0]);
-		long *lpp  =  (long *)&(fp_state[0]);
+		int32_t *lpp  =  (int32_t *)&(fp_state[0]);
 		fpp[0] = ptr0;
 		*/
 	}

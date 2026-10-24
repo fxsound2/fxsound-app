@@ -305,7 +305,7 @@ void FxSettingsDialog::AudioSettingsPane::resizeResetButton(int x, int y)
 		}
 	} while (lineCount <= 3); // Resize the button height for upto 3 lines of text
 
-	int buttonWidth = min(reset_presets_button_.getBestWidthForHeight(BUTTON_HEIGHT * lineCount), MAX_BUTTON_WIDTH);
+	int buttonWidth = jmin(reset_presets_button_.getBestWidthForHeight(BUTTON_HEIGHT * lineCount), MAX_BUTTON_WIDTH);
 	if (buttonWidth < RESET_PRESETS_BUTTON_WIDTH)
 	{
 		buttonWidth = RESET_PRESETS_BUTTON_WIDTH;

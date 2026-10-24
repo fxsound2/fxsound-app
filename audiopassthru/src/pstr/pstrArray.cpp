@@ -92,7 +92,7 @@ int PT_DECLSPEC pstrAddStringToStringList_Wide(wchar_t ***wcppp_array, int i_ori
 		return(NOT_OKAY);
 
 	/* Copy the new string */
-	swprintf((*wcppp_array)[i_original_array_length], L"%s", wcp_new_string);
+	swprintf((*wcppp_array)[i_original_array_length], sizeof((*wcppp_array)[i_original_array_length])/sizeof(*((*wcppp_array)[i_original_array_length])), L"%s", wcp_new_string);
 
 	/* Sort the array if requested */
 	if (i_sort)
@@ -136,7 +136,7 @@ int PT_DECLSPEC pstrArrayCopyStringList(wchar_t **wcpp_original_array,
 			return(NOT_OKAY);
 
 		/* Copy the new string */
-		swprintf((*wcppp_new_array)[index], L"%s", wcpp_original_array[index]);
+		swprintf((*wcppp_new_array)[index], sizeof((*wcppp_new_array)[index])/sizeof(*((*wcppp_new_array)[index])), L"%s", wcpp_original_array[index]);
 	}
 
 	return(OKAY);
@@ -540,7 +540,7 @@ int PT_DECLSPEC pstrArrayPrependString_Wide(wchar_t ***wcppp_str_array,
 
 	for (index = 0; index < i_num_elements; index++)
 	{
-		swprintf(wcp_temp_string, L"%s%s", wcp_prefix_to_prepend, (*wcppp_str_array)[index]);
+		swprintf(wcp_temp_string, sizeof(wcp_temp_string)/sizeof(*(wcp_temp_string)), L"%s%s", wcp_prefix_to_prepend, (*wcppp_str_array)[index]);
 
 		if (pstrAddStringToStringList_Wide(&wcpp_new_str_array, i_old_num_elements,
 												wcp_temp_string, IS_TRUE,
@@ -602,7 +602,7 @@ int PT_DECLSPEC pstrArrayReplacePrefix_Wide(wchar_t ***wcppp_str_array,
 				if(pstrRemovePrefixFromLine_Wide((*wcppp_str_array)[index], wcp_source_prefix, wcp_without_prefix) != OKAY)
 					return(NOT_OKAY);
 
-				swprintf(wcp_temp_string, L"%s%s", wcp_new_prefix, wcp_without_prefix);
+				swprintf(wcp_temp_string, sizeof(wcp_temp_string)/sizeof(*(wcp_temp_string)), L"%s%s", wcp_new_prefix, wcp_without_prefix);
 
 				if (pstrAddStringToStringList_Wide(&wcpp_new_str_array, i_old_num_elements,
 												wcp_temp_string, IS_TRUE,

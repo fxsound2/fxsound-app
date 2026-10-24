@@ -50,7 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 int dfxpInit(PT_HANDLE **hpp_dfxp, 
 				 wchar_t *wcp_product_name, int i_vendor_code,
 				 int i_num_first_trial_days, int i_num_extend_trial1_days,
-				 int i_freemium_version, int i_allow_remix, long l_host_buffer_delay_msecs,
+				 int i_freemium_version, int i_allow_remix, int32_t l_host_buffer_delay_msecs,
 				 int i_oem_build, int i_processing_only, int i_trace_mode, CSlout *hp_slout)
 {
 	struct dfxpHdlType *cast_handle;
@@ -75,7 +75,7 @@ int dfxpInit(PT_HANDLE **hpp_dfxp,
 	/* Store the product name */
 	if (wcp_product_name == NULL)
 		return(NOT_OKAY);
-	swprintf(cast_handle->wcp_product_name, L"%s", wcp_product_name);
+	swprintf(cast_handle->wcp_product_name, sizeof(cast_handle->wcp_product_name)/sizeof(*(cast_handle->wcp_product_name)), L"%s", wcp_product_name);
 
 	/* Store the vendor specific info */
 	cast_handle->vendor_code = i_vendor_code;
@@ -241,8 +241,8 @@ int dfxp_InitFirstTimeRunFlag(PT_HANDLE *hp_dfxp)
 	if (cast_handle == NULL)
 		return(OKAY);
 
-	long installation_date;
-	long last_run_date;
+	int32_t installation_date;
+	int32_t last_run_date;
    int installation_date_exists;
 	int last_run_date_exists;
 

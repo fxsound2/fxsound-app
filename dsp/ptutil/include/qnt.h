@@ -112,10 +112,10 @@ int PT_DECLSPEC qntIToRdBCalcInit(PT_HANDLE **, PT_HANDLE *, CSlout *, realtype)
 int PT_DECLSPEC qntIToRTimeConstantBeta(PT_HANDLE **hpp_beta_qnt, PT_HANDLE *hp_time_constant_qnt, CSlout *hp_slout,
 													 realtype r_sampling_freq);
 /* qntIToL.c */
-int PT_DECLSPEC qntIToLInit(PT_HANDLE **, CSlout *, int, int, long, long,
+int PT_DECLSPEC qntIToLInit(PT_HANDLE **, CSlout *, int, int, int32_t, int32_t,
 					 int, int, int);
-int PT_DECLSPEC qntIToLInitTrackIToR(PT_HANDLE **, PT_HANDLE *, CSlout *, long, long);
-int PT_DECLSPEC qntIToLCalc(PT_HANDLE *hp_qnt, int, long *);
+int PT_DECLSPEC qntIToLInitTrackIToR(PT_HANDLE **, PT_HANDLE *, CSlout *, int32_t, int32_t);
+int PT_DECLSPEC qntIToLCalc(PT_HANDLE *hp_qnt, int, int32_t *);
 
 /* qntRToI.c */
 int PT_DECLSPEC qntRToIInit(PT_HANDLE **, CSlout *, realtype, realtype, int, int, int, int, int);
@@ -123,9 +123,9 @@ int PT_DECLSPEC qntRToICalc(PT_HANDLE *hp_qnt, realtype, int *);
 int PT_DECLSPEC qntRToICalcFromOut(PT_HANDLE *hp_qnt, int, realtype *);
 
 /* qntRToL.c */
-int PT_DECLSPEC qntRToLInit(PT_HANDLE **, CSlout *, realtype, realtype, long, long, int, int);
-int PT_DECLSPEC qntRToLCalc(PT_HANDLE *hp_qnt, realtype, long *);
-int PT_DECLSPEC qntRToLCalcFromOut(PT_HANDLE *hp_qnt, long, realtype *);
+int PT_DECLSPEC qntRToLInit(PT_HANDLE **, CSlout *, realtype, realtype, int32_t, int32_t, int, int);
+int PT_DECLSPEC qntRToLCalc(PT_HANDLE *hp_qnt, realtype, int32_t *);
+int PT_DECLSPEC qntRToLCalcFromOut(PT_HANDLE *hp_qnt, int32_t, realtype *);
 
 /* qntRToR.c */
 int PT_DECLSPEC qntRToRInit(PT_HANDLE **, CSlout *, realtype, realtype, realtype, realtype,

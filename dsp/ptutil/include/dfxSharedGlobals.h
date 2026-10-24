@@ -28,7 +28,7 @@ struct dfxSharedGlobalsType
 	// in dfxShared.cpp . If the initializations are not set correctly the variables will not be created.
 
 	realtype rp_meter_vals[DFXP_SPECTRUM_NUM_BANDS];
-	unsigned long ul_msecs_processed; 
+	uint32_t ul_msecs_processed; 
 };
 
 #endif //_DFX_SHARED_GLOBALS_H_

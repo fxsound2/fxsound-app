@@ -47,10 +47,10 @@ int dfxpGetFirstTimeRunFlag(PT_HANDLE *, int *);
 int dfxpGetTemporaryBypassAll(PT_HANDLE *, int *);
 int dfxpGetDfxTunedTrackPlaying(PT_HANDLE *, int *);
 int dfxpSetDfxTunedTrackPlaying(PT_HANDLE *, int);
-int dfxpGetTotalAudioProcessedTime(PT_HANDLE *, unsigned long *);
+int dfxpGetTotalAudioProcessedTime(PT_HANDLE *, uint32_t *);
 
 /* dfxpInit */
-int dfxpInit(PT_HANDLE **, wchar_t *, int, int, int, int, int, long, int, int, int, CSlout *);
+int dfxpInit(PT_HANDLE **, wchar_t *, int, int, int, int, int, int32_t, int, int, int, CSlout *);
 
 /* dfxpProcess */
 int dfxpSetValidBits(PT_HANDLE *, int);
@@ -61,9 +61,9 @@ int dfxpClearPreviousBufferedAudio(PT_HANDLE *);
 int dfxpQuit(PT_HANDLE **);
 
 /* dfxpRegistryStandard */
-int dfxpGetInstallationDate(PT_HANDLE *, long *, int *);
-int dfxpGetLastUsedDate(PT_HANDLE *, long *, int *);
-int dfxpGetInstallationDate_NoHandle(wchar_t *, int, long *, int *);
+int dfxpGetInstallationDate(PT_HANDLE *, int32_t *, int *);
+int dfxpGetLastUsedDate(PT_HANDLE *, int32_t *, int *);
+int dfxpGetInstallationDate_NoHandle(wchar_t *, int, int32_t *, int *);
 
 /* dfxpSet */
 int dfxpSetKnobValue(PT_HANDLE *, int, float, bool);
@@ -71,7 +71,7 @@ int dfxpSetButtonValue(PT_HANDLE *, int, int);
 int dfxpConvertFaderRealValueToInt(PT_HANDLE *, realtype, int *, int);
 int dfxpSetProcessingOverride(PT_HANDLE *, int);
 int dfxpSetTemporaryBypassAll(PT_HANDLE *, int);
-int dfxpSetTotalAudioProcessedTime(PT_HANDLE *, unsigned long);
+int dfxpSetTotalAudioProcessedTime(PT_HANDLE *, uint32_t);
 
 /* dfxpSharedMemory */
 int dfxpSharedMemorySetFlag(PT_HANDLE *, int, int);
@@ -85,7 +85,7 @@ int dfxpSpectrumGetBandValues(PT_HANDLE *, realtype *, int);
 
 
 /* dfxpUniversal */
-int dfxpUniversalInit(PT_HANDLE **, long, int, CSlout *);
+int dfxpUniversalInit(PT_HANDLE **, int32_t, int, CSlout *);
 int dfxpUniversalSetSignalFormat(PT_HANDLE *, int, int, int, int);
 int dfxpUniversalModifySamples(PT_HANDLE *, short int *, short int *, int, int);
 int dfxpUniversalCheckParentCompatibility(PT_HANDLE *, int, int *);

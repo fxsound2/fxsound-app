@@ -100,27 +100,27 @@ int dfxp_GetKnobValue_MIDI(PT_HANDLE *hp_dfxp, int i_knob_type, int *ip_midi_val
 	if (i_knob_type == DFX_UI_KNOB_FIDELITY)
 	{
 		default_value = DFXP_INIT_FIDELITY_MIDI_VAL;
-		swprintf(wcp_key_name, L"%s", DFXP_REGISTRY_VALUE_FIDELITY_WIDE);
+		swprintf(wcp_key_name, sizeof(wcp_key_name)/sizeof(*(wcp_key_name)), L"%s", DFXP_REGISTRY_VALUE_FIDELITY_WIDE);
 	}
 	else if (i_knob_type == DFX_UI_KNOB_AMBIENCE)
 	{
 		default_value = DFXP_INIT_AMBIENCE_MIDI_VAL;
-		swprintf(wcp_key_name, L"%s", DFXP_REGISTRY_VALUE_AMBIENCE_WIDE);
+		swprintf(wcp_key_name, sizeof(wcp_key_name)/sizeof(*(wcp_key_name)), L"%s", DFXP_REGISTRY_VALUE_AMBIENCE_WIDE);
 	}
 	else if (i_knob_type == DFX_UI_KNOB_DYNAMIC_BOOST)
 	{
 		default_value = DFXP_INIT_DYNAMIC_BOOST_MIDI_VAL;
-		swprintf(wcp_key_name, L"%s", DFXP_REGISTRY_VALUE_DYNAMIC_BOOST_WIDE);
+		swprintf(wcp_key_name, sizeof(wcp_key_name)/sizeof(*(wcp_key_name)), L"%s", DFXP_REGISTRY_VALUE_DYNAMIC_BOOST_WIDE);
 	}
 	else if (i_knob_type == DFX_UI_KNOB_SURROUND)
 	{
 		default_value = DFXP_INIT_SURROUND_MIDI_VAL;
-		swprintf(wcp_key_name, L"%s", DFXP_REGISTRY_VALUE_SURROUND_WIDE);
+		swprintf(wcp_key_name, sizeof(wcp_key_name)/sizeof(*(wcp_key_name)), L"%s", DFXP_REGISTRY_VALUE_SURROUND_WIDE);
 	}
 	else if (i_knob_type == DFX_UI_KNOB_BASS_BOOST)
 	{
 		default_value = DFXP_INIT_BASS_BOOST_MIDI_VAL;
-		swprintf(wcp_key_name, L"%s", DFXP_REGISTRY_VALUE_BASS_BOOST_WIDE);
+		swprintf(wcp_key_name, sizeof(wcp_key_name)/sizeof(*(wcp_key_name)), L"%s", DFXP_REGISTRY_VALUE_BASS_BOOST_WIDE);
 	}
 	else 
 		return(OKAY);
@@ -177,51 +177,51 @@ int dfxpGetButtonValue(PT_HANDLE *hp_dfxp, int i_button_type, int *ip_value)
 	if (i_button_type == DFX_UI_BUTTON_BYPASS)
 	{
 		default_bypass_value = IS_FALSE;
-		swprintf(wcp_key_name, L"%s", DFXP_REGISTRY_BYPASS_ALL_WIDE);
+		swprintf(wcp_key_name, sizeof(wcp_key_name)/sizeof(*(wcp_key_name)), L"%s", DFXP_REGISTRY_BYPASS_ALL_WIDE);
 		use_opposite_of_registy_value = IS_FALSE;
 	}
 	else if (i_button_type == DFX_UI_BUTTON_FIDELITY)
 	{
 		default_bypass_value = IS_FALSE;
-		swprintf(wcp_key_name, L"%s", DFXP_REGISTRY_BYPASS_FIDELITY_WIDE);
+		swprintf(wcp_key_name, sizeof(wcp_key_name)/sizeof(*(wcp_key_name)), L"%s", DFXP_REGISTRY_BYPASS_FIDELITY_WIDE);
 		use_opposite_of_registy_value = IS_TRUE;
 	}
 	else if (i_button_type == DFX_UI_BUTTON_AMBIENCE)
 	{
 		default_bypass_value = IS_FALSE;
-		swprintf(wcp_key_name, L"%s", DFXP_REGISTRY_BYPASS_AMBIENCE_WIDE);
+		swprintf(wcp_key_name, sizeof(wcp_key_name)/sizeof(*(wcp_key_name)), L"%s", DFXP_REGISTRY_BYPASS_AMBIENCE_WIDE);
 		use_opposite_of_registy_value = IS_TRUE;
 	}
 	else if (i_button_type == DFX_UI_BUTTON_DYNAMIC_BOOST)
 	{
 		default_bypass_value = IS_FALSE;
 
-		swprintf(wcp_key_name, L"%s", DFXP_REGISTRY_BYPASS_DYNAMIC_BOOST_WIDE);
+		swprintf(wcp_key_name, sizeof(wcp_key_name)/sizeof(*(wcp_key_name)), L"%s", DFXP_REGISTRY_BYPASS_DYNAMIC_BOOST_WIDE);
 		use_opposite_of_registy_value = IS_TRUE;
 	}
 	else if (i_button_type == DFX_UI_BUTTON_SURROUND)
 	{
 		default_bypass_value = IS_FALSE;
 
-		swprintf(wcp_key_name, L"%s", DFXP_REGISTRY_BYPASS_SURROUND_WIDE);
+		swprintf(wcp_key_name, sizeof(wcp_key_name)/sizeof(*(wcp_key_name)), L"%s", DFXP_REGISTRY_BYPASS_SURROUND_WIDE);
 		use_opposite_of_registy_value = IS_TRUE;
 	}
 	else if (i_button_type == DFX_UI_BUTTON_BASS_BOOST)
 	{
 		default_bypass_value = IS_FALSE;
-		swprintf(wcp_key_name, L"%s", DFXP_REGISTRY_BYPASS_BASS_BOOST_WIDE);
+		swprintf(wcp_key_name, sizeof(wcp_key_name)/sizeof(*(wcp_key_name)), L"%s", DFXP_REGISTRY_BYPASS_BASS_BOOST_WIDE);
 		use_opposite_of_registy_value = IS_TRUE;
 	}
 	else if (i_button_type == DFX_UI_BUTTON_HEADPHONE)
 	{
 		default_bypass_value = IS_TRUE;
-		swprintf(wcp_key_name, L"%s", DFXP_REGISTRY_BYPASS_HEADPHONE_WIDE);
+		swprintf(wcp_key_name, sizeof(wcp_key_name)/sizeof(*(wcp_key_name)), L"%s", DFXP_REGISTRY_BYPASS_HEADPHONE_WIDE);
 		use_opposite_of_registy_value = IS_TRUE;
 	}
 	else if (i_button_type == DFX_UI_BUTTON_REMIX_BYPASS)
 	{
 		default_bypass_value = IS_FALSE;
-		swprintf(wcp_key_name, L"%s", DFXP_REGISTRY_REMIX_BYPASS_ALL_WIDE);
+		swprintf(wcp_key_name, sizeof(wcp_key_name)/sizeof(*(wcp_key_name)), L"%s", DFXP_REGISTRY_REMIX_BYPASS_ALL_WIDE);
 		use_opposite_of_registy_value = IS_FALSE;;
 	}
 	else
@@ -359,7 +359,7 @@ int dfxpGetDfxTunedTrackPlaying(PT_HANDLE *hp_dfxp, int *ip_dfx_tuned_track_play
  * DESCRIPTION:
  *   Get the total audio processed time
  */
-int dfxpGetTotalAudioProcessedTime(PT_HANDLE *hp_dfxp, unsigned long *ul_msec_audio_processed_time)
+int dfxpGetTotalAudioProcessedTime(PT_HANDLE *hp_dfxp, uint32_t *ul_msec_audio_processed_time)
 {
 	struct dfxpHdlType *cast_handle;
 

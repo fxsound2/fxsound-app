@@ -14,16 +14,16 @@
 #if (defined(DUIO_B) | defined(DUIO_BA) | defined(DUIO_BD))
 /* Global to code - LOOK OUT- CODE SEEMS VERY SENSITIVE TO LOCATION OF THESE */
 #define DMA_GLOBAL_DECLARATIONS \
-volatile unsigned long *comd_stat = (unsigned long *)(0x82FFF0);\
-volatile unsigned long *xfer_reg = (unsigned long *)(0x82fff3);\
-long *in_data_buf0;\
-long *in_data_buf1;\
-long *out_data_buf0;\
-long *out_data_buf1;\
-long *read_in_buf;\
-long *read_out_buf;\
-static long parm_address_MACRO;\
-static long address_valid_flag_MACRO = 0;
+volatile uint32_t *comd_stat = (uint32_t *)(0x82FFF0);\
+volatile uint32_t *xfer_reg = (uint32_t *)(0x82fff3);\
+int32_t *in_data_buf0;\
+int32_t *in_data_buf1;\
+int32_t *out_data_buf0;\
+int32_t *out_data_buf1;\
+int32_t *read_in_buf;\
+int32_t *read_out_buf;\
+static int32_t parm_address_MACRO;\
+static int32_t address_valid_flag_MACRO = 0;
 
 /* Local to code (just above main run loop) LOOK OUT- CODE SEEMS VERY SENSITIVE TO LOCATION OF THESE
  * buf_num, data_index, dma_mode_flag are set to start off, will use buf0 first.
@@ -40,10 +40,10 @@ unsigned buf_num  = 1;\
 unsigned data_index;\
 unsigned first_time_output = 1;\
 unsigned first_time_input = 1; \
-static long in_meter1_dma = 0; \
-static long in_meter2_dma = 0;
-static long out_meter1_dma = 0; \
-static long out_meter2_dma = 0;
+static int32_t in_meter1_dma = 0; \
+static int32_t in_meter2_dma = 0;
+static int32_t out_meter1_dma = 0; \
+static int32_t out_meter2_dma = 0;
 
 /* Macro version. For some reason, subroutine version causes pops
  * when used in program. See subroutine version for comments.
@@ -70,7 +70,7 @@ static long out_meter2_dma = 0;
     asm("	LSH  16,AR2");\
 	asm("	OR   AR2,IE");\
 	asm("	POP  AR2");\
-	*(volatile long *)(DSP_DMA_IN_TRANSFER) = 0L;
+	*(volatile int32_t *)(DSP_DMA_IN_TRANSFER) = 0L;
 
 #endif
 /* DUIO_B */

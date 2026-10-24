@@ -37,7 +37,7 @@ int com_CalcPassAddress(PT_HANDLE *, int, int, int, short unsigned *);
  *   NOTE - modified to only read from card, no longer supports dongle.
  */
 int PT_DECLSPEC comReadPassword(PT_HANDLE *hp_com, int i_password_type, 
-					unsigned long *ulp_password)
+					uint32_t *ulp_password)
 {
    struct comHdlType *cast_handle;
    short unsigned address;
@@ -90,7 +90,7 @@ int PT_DECLSPEC comReadPassword(PT_HANDLE *hp_com, int i_password_type,
  *   NOTE - modified to only read from card, no longer supports dongle.
  */
 int PT_DECLSPEC comWritePassword(PT_HANDLE *hp_com, int i_password_type,
-					 unsigned long ul_password)
+					 uint32_t ul_password)
 {
 	struct comHdlType *cast_handle;
 	short unsigned address;
@@ -143,7 +143,7 @@ int PT_DECLSPEC comWritePassword(PT_HANDLE *hp_com, int i_password_type,
  *   NOTE - modified to only read from card, no longer supports dongle.
  */
 int com_ReadSerialNum(PT_HANDLE *hp_com, int i_force_from_card, 
-					 unsigned long *ulp_serial_num)
+					 uint32_t *ulp_serial_num)
 {
    struct comHdlType *cast_handle;
    short unsigned address;
@@ -194,7 +194,7 @@ int com_ReadSerialNum(PT_HANDLE *hp_com, int i_force_from_card,
  *   NOTE - modified to only read from card, no longer supports dongle.
  */
 int PT_DECLSPEC comWriteSerialNum(PT_HANDLE *hp_com, int i_force_to_card, 
-					 unsigned long ul_serial_num)
+					 uint32_t ul_serial_num)
 {
    struct comHdlType *cast_handle;
    short unsigned address;

@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *   Sets up and reads from the input.
  *
  */
-int PT_DECLSPEC pwavCheckIfLegalSampFreq(long l_samp_freq, int *ip_legal_samp_freq)
+int PT_DECLSPEC pwavCheckIfLegalSampFreq(int32_t l_samp_freq, int *ip_legal_samp_freq)
 {
 	*ip_legal_samp_freq = IS_FALSE;
 

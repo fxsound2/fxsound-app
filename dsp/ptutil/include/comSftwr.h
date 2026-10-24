@@ -63,12 +63,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 int COMSFTWR_DECL comSftwrInitDspAlgorithm(PT_HANDLE *hp_comSftwr, realtype r_sampling_freq, int i_init_flag);
 int COMSFTWR_DECL comSftwrZeroDspMemory(PT_HANDLE *hp_comSftwr);
 
-int COMSFTWR_DECL comSftwrWriteParam(PT_HANDLE *hp_comSftwr, long l_offset, long l_val);
+int COMSFTWR_DECL comSftwrWriteParam(PT_HANDLE *hp_comSftwr, int32_t l_offset, int32_t l_val);
 
-int COMSFTWR_DECL comSftwrProcessWaveBuffer(PT_HANDLE *hp_comSftwr, long *lp_data, long l_length, 
+int COMSFTWR_DECL comSftwrProcessWaveBuffer(PT_HANDLE *hp_comSftwr, int32_t *lp_data, int32_t l_length, 
                          int i_stereo_in_mode, int i_stereo_out_mode, int i_buffer_type);
 
-int COMSFTWR_DECL comSftwrProcessActiveBuffer(PT_HANDLE *hp_comSftwr, short *sp_data, long l_length, 
+int COMSFTWR_DECL comSftwrProcessActiveBuffer(PT_HANDLE *hp_comSftwr, short *sp_data, int32_t l_length, 
                          int i_stereo_in_mode, int i_stereo_out_mode, int);
 
 int COMSFTWR_DECL comSftwrInitFunctions(PT_HANDLE *hp_comSftwr);
