@@ -51,9 +51,6 @@ int PT_DECLSPEC dfxSharedUtilInit(PT_HANDLE **hpp_dfxSharedUtil,
 	if (cast_handle == NULL)
 		return(NOT_OKAY);
 
-	wchar_t wcp_dll_fullpath[PT_MAX_PATH_STRLEN];
-	wchar_t wcp_top_shared_folder_path[PT_MAX_PATH_STRLEN];
-
 	/*
 	 * Store the trace mode.
 	 */
@@ -65,6 +62,9 @@ int PT_DECLSPEC dfxSharedUtilInit(PT_HANDLE **hpp_dfxSharedUtil,
 	cast_handle->sp_shared_memory_data = NULL;
 
 #if 0
+	wchar_t wcp_dll_fullpath[PT_MAX_PATH_STRLEN];
+	wchar_t wcp_top_shared_folder_path[PT_MAX_PATH_STRLEN];
+
 	/* Get the common files folder path ( "C:\\Program Files\\Common Files\\DFX" ) */
 	if (dfxSharedUtil_RegistryGetTopSharedFolderPath((PT_HANDLE *)cast_handle, wcp_top_shared_folder_path) != OKAY)
 		return(NOT_OKAY);

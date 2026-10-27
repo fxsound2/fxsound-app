@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include <JuceHeader.h>
+#include <functional>
 #include "FxModel.h"
 #include "FxTheme.h"
 #include "FxAudioControls.h"
@@ -109,7 +110,7 @@ public:
 	void deletePreset();
 	void undoPreset();
 	void resetPresets();
-    bool exportPresets(const Array< FxModel::Preset>& presets);
+    void exportPresets(const Array< FxModel::Preset>& presets, std::function<void (bool)> onComplete);
     bool importPresets(const Array<File>& preset_files, StringArray& imported_presets, StringArray& skipped_presets);
 
 	float getEffectValue(FxEffects::EffectType effect);
@@ -130,6 +131,7 @@ public:
 	float getEqBandFrequency(int band_num);
     void setEqBandFrequency(int band_num, float freq);
     void getEqBandFrequencyRange(int band_num, float* min_freq, float* max_freq);
+    bool getDefaultEqBandFrequency(int band_num, float* freq);
 	float getEqBandBoostCut(int band_num);
 	void setEqBandBoostCut(int band_num, float boost);
     void getSpectrumBandValues(Array<float>& band_values);
@@ -168,7 +170,6 @@ public:
 
     String getLanguage() const;
     void setLanguage(String language_code);
-    String getLanguageName(String language_code) const;
 	int getMaxUserPresets() const;
 
 	bool getAutoUpdates();
@@ -177,6 +178,8 @@ public:
 
 	void saveWindowPosition(int x, int y);
 	void getWindowPosition(int& x, int& y);
+
+    void setRenderingEngine(juce::Component& component);
 
 	void logMessage(const String& message)
 	{
@@ -287,6 +290,7 @@ private:
     bool hide_help_tooltips_;
 	bool hide_notifications_;
 	bool auto_updates_;
+    bool gpu_render_;
 
 	unsigned long audio_process_time_;
 	int audio_process_on_counter_;

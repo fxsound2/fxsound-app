@@ -86,6 +86,11 @@ public:
 	Font getTitleFont();
     Typeface::Ptr getDefaultTypeface();
 
+    // Loads a typeface from a font file in the app's working directory
+    // (used for languages that need a font other than the built-in Gilroy),
+    // or nullptr if the file doesn't exist.
+    Typeface::Ptr loadTypeface(String fileName);
+
 	static FxThemeMode getThemeMode();
 	static void setThemeMode(FxThemeMode theme_mode);
 	static uint32 getColor(FxColor color);
@@ -96,7 +101,6 @@ private:
 	void init();
 
     TextLayout layoutTooltipText(const String& text, Colour colour) noexcept;
-    Typeface::Ptr loadTypeface(String fileName);
 
 	std::unique_ptr<Drawable> drop_down_arrow_;
 	std::unique_ptr<Drawable> slider_thumb_;
@@ -106,6 +110,9 @@ private:
 	Typeface::Ptr font_400_;
 	Typeface::Ptr font_600_;
 	Typeface::Ptr font_700_;
+
+	StringArray loaded_typeface_keys_;
+	Array<Typeface::Ptr> loaded_typefaces_;
 
 	static const uint32 theme_colors_[FxThemeMode::NumModes][FxColor::NumColors];
 	static const char* theme_images_[FxThemeMode::NumModes][FxImage::NumImages];

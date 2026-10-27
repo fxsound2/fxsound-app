@@ -108,10 +108,9 @@ int PT_DECLSPEC sndDevicesInit(PT_HANDLE *hp_sndDevices, CSlout *hp_slout, int i
 	cast_handle->defaultDeviceWasChanged = FALSE;
 	cast_handle->routingStatus = SND_DEVICES_DEVICE_OPERATION_COMPLETED;
 
-	// No playback device has been used yet, so there are no settings of one to hold onto.
+	// No playback device has been used yet, so there is no mute setting of one to hold onto.
 	// Note these must survive a re-init, they are only reset here in the one time init call.
 	wcscpy(cast_handle->savedPlaybackDeviceID, L"");
-	cast_handle->savedPlaybackVolume = 0.25f;
 	cast_handle->savedPlaybackMute = FALSE;
 	cast_handle->playbackSettingsAreSaved = FALSE;
 
@@ -279,7 +278,6 @@ int PT_DECLSPEC sndDevicesFree(PT_HANDLE *hp_sndDevices)
 int PT_DECLSPEC sndDevices_ReleaseAllAudioObjects(PT_HANDLE *hp_sndDevices)
 {
 	struct sndDevicesHdlType* cast_handle;
-	HRESULT hr;
 
 	cast_handle = (struct sndDevicesHdlType *)hp_sndDevices;
 

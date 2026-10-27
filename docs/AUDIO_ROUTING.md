@@ -39,7 +39,7 @@ The new input ID is saved in `user_selected_input` under the same base key. An e
 ## Build and verify on Windows
 
 1. Install the normal FxSound package so its signed driver is present. Close the installed FxSound before starting a modified build.
-2. Install Visual Studio 2022 with Desktop development with C++, a Windows SDK, and JUCE 6.1.6 for x64/x86 as described in the repository README. The checked-in project expects JUCE modules at `C:\JUCE\modules`. Extract the JUCE 6.1.6 source download and copy its `modules` folder there. Confirm that `C:\JUCE\modules\juce_core\juce_core.h` exists; avoid an extra `JUCE-6.1.6` folder between `C:\JUCE` and `modules`.
+2. Use the `develop/windows` build requirements in the repository README: Visual Studio 2026 (v145), a Windows SDK, and JUCE 9. The checked-in project was generated with JUCE 9.0.3; the routing CI pins that version. Its module include path is `C:\JUCE8\modules` (the folder name is historical). Projucer also emits source paths relative to the original developer checkout; adjust those paths for your checkout or re-export with the matching Projucer, restoring the library project references as described in the README. The CI workflow normalizes those paths in its temporary workspace.
 3. Open `fxsound/Project/FxSound.sln` and build **Release | x64**. From a Visual Studio developer shell, the equivalent command is:
 
    ```bat
@@ -72,3 +72,9 @@ The test executable exercises the production selection policy. It does not test 
 ## Verification boundary
 
 The implementation was developed on macOS. The portable policy tests were compiled with warnings as errors, AddressSanitizer, and UndefinedBehaviorSanitizer. The contributor reports a successful Windows build and working application after testing the changes. That runtime result was reported by the contributor, rather than independently reproduced in the macOS development environment. The complete device, format, and reconnection matrix above remains a checklist for further validation.
+
+## Contribution and review
+
+This feature is proposed in [issue #666](https://github.com/fxsound2/fxsound-app/issues/666), with related requests #39 and #435. The PR was opened before the issue discussion; maintainer agreement is still pending. The PR targets `develop/windows` and retains its existing volume/mute fixes. Changes under `audiopassthru/` require particular human review before merge.
+
+The `Validate audio routing` workflow runs the production policy tests with sanitizers and builds Release x64 with Visual Studio 2026 and JUCE 9.0.3. Compilation does not verify WASAPI behavior on physical devices. The contributor-reported runtime test used the earlier JUCE 6.1.6/main-based revision; the rebased development version needs the Windows acceptance checks above.

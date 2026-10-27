@@ -44,7 +44,7 @@ void FxHyperlink::paintButton(Graphics& g, bool, bool)
 int FxHyperlink::getTextWidth()
 {
 	auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
-	auto font = theme.getNormalFont();
-	font.setUnderline(true);
-	return font.getStringWidth(getButtonText());
+	auto text_font = theme.getNormalFont();
+	text_font.setUnderline(true);
+	return static_cast<int>(GlyphArrangement::getStringWidth(text_font, getButtonText()));
 }

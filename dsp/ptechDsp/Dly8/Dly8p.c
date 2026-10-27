@@ -387,7 +387,7 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 	  	float *tmp_ptr = ptr0;
 
 		rp_MACRO = (float *)(ptr0 - delay_filtered[0] );
-	 	if( (long)rp_MACRO < (long)delay0_start ) 		
+		if( rp_MACRO < delay0_start )
 			rp_MACRO += line_len; 	
 		/* Note - currently in PC version, init calls are asynchronous
 		 * to processing calls. This can cause bad delay setting values
@@ -396,7 +396,7 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 		 * on both ends.
 		 */
 		#ifndef DSP_TARGET
-	 	if( (long)rp_MACRO >= (long)delay1_start ) 		
+		if( rp_MACRO >= delay1_start )
 			rp_MACRO = delay0_start;
 		#endif
 		dly_out[0] = *rp_MACRO; 
@@ -405,10 +405,10 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 #ifdef ELEM1
 		tmp_ptr = ptr0 + line_len; /* These LINE_LEN increments could be done on PC side */
 		rp_MACRO = (float *)(tmp_ptr - delay_filtered[1] );
-	 	if( (long)rp_MACRO < (long)delay1_start ) 		
+		if( rp_MACRO < delay1_start )
 			rp_MACRO += line_len; 	
 		#ifndef DSP_TARGET
-	 	if( (long)rp_MACRO >= (long)delay2_start ) 		
+		if( rp_MACRO >= delay2_start )
 			rp_MACRO = delay1_start;
 		#endif
 		dly_out[1] = *rp_MACRO; 
@@ -418,10 +418,10 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 #ifdef ELEM2
 		tmp_ptr += line_len;
 		rp_MACRO = (float *)(tmp_ptr - delay_filtered[2] );
-	 	if( (long)rp_MACRO < (long)delay2_start ) 		
+		if( rp_MACRO < delay2_start )
 			rp_MACRO += line_len; 	
 		#ifndef DSP_TARGET
-	 	if( (long)rp_MACRO >= (long)delay3_start ) 		
+		if( rp_MACRO >= delay3_start )
 			rp_MACRO = delay2_start;
 		#endif
 		dly_out[2] = *rp_MACRO; 
@@ -431,10 +431,10 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 #ifdef ELEM3
 		tmp_ptr += line_len;
 		rp_MACRO = (float *)(tmp_ptr - delay_filtered[3] );
-	 	if( (long)rp_MACRO < (long)delay3_start ) 		
-			rp_MACRO += line_len; 	
+		if( rp_MACRO < delay3_start )
+			rp_MACRO += line_len;
 		#ifndef DSP_TARGET
-	 	if( (long)rp_MACRO >= (long)delay4_start ) 		
+		if( rp_MACRO >= delay4_start )
 			rp_MACRO = delay3_start;
 		#endif
 		dly_out[3] = *rp_MACRO; 
@@ -444,10 +444,10 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 #ifdef ELEM4
 		tmp_ptr += line_len;
 		rp_MACRO = (float *)(tmp_ptr - delay_filtered[4] );
-	 	if( (long)rp_MACRO < (long)delay4_start ) 		
-			rp_MACRO += line_len; 	
+		if( rp_MACRO < delay4_start )
+			rp_MACRO += line_len;
 		#ifndef DSP_TARGET
-	 	if( (long)rp_MACRO >= (long)delay5_start ) 		
+		if( rp_MACRO >= delay5_start )
 			rp_MACRO = delay4_start;
 		#endif
 		dly_out[4] = *rp_MACRO; 
@@ -457,10 +457,10 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 #ifdef ELEM5
 		tmp_ptr += line_len;
 		rp_MACRO = (float *)(tmp_ptr - delay_filtered[5] );
-	 	if( (long)rp_MACRO < (long)delay5_start ) 		
+		if( rp_MACRO < delay5_start )
 			rp_MACRO += line_len; 	
 		#ifndef DSP_TARGET
-	 	if( (long)rp_MACRO >= (long)delay6_start ) 		
+		if( rp_MACRO >= delay6_start )
 			rp_MACRO = delay5_start;
 		#endif
 		dly_out[5] = *rp_MACRO; 
@@ -472,10 +472,10 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 #ifdef ELEM6
 		tmp_ptr += line_len;
 		rp_MACRO = (float *)(tmp_ptr - delay_filtered[6] );
-	 	if( (long)rp_MACRO < (long)delay6_start ) 		
-			rp_MACRO += line_len; 	
+		if( rp_MACRO < delay6_start )
+			rp_MACRO += line_len;
 		#ifndef DSP_TARGET
-	 	if( (long)rp_MACRO >= (long)delay7_start ) 		
+		if( rp_MACRO >= delay7_start )
 			rp_MACRO = delay6_start;
 		#endif
 		dly_out[6] = *rp_MACRO; 
@@ -485,10 +485,10 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 #ifdef ELEM7
 		tmp_ptr += line_len;
 		rp_MACRO = (float *)(tmp_ptr - delay_filtered[7] );
-	 	if( (long)rp_MACRO < (long)delay7_start ) 		
-			rp_MACRO += line_len; 	
+		if( rp_MACRO < delay7_start )
+			rp_MACRO += line_len;
 		#ifndef DSP_TARGET
-	 	if( (long)rp_MACRO >= (long)delay_end ) 		
+		if( rp_MACRO >= delay_end )
 			rp_MACRO = delay7_start;
 		#endif
 		dly_out[7] = *rp_MACRO;		

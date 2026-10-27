@@ -50,6 +50,7 @@ private:
 	void paint(Graphics& g) override;
 	void textEditorTextChanged(TextEditor& textEditor) override;
 	void lookAndFeelChanged() override;
+    void visibilityChanged() override;
 
 	TextEditor preset_editor_;
 	PresetNameInputFilter preset_name_input_filter_;

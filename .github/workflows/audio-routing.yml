@@ -1,0 +1,85 @@
+name: Validate audio routing
+
+on:
+  pull_request:
+    branches: [develop/windows]
+    paths:
+      - 'audiopassthru/**'
+      - 'dsp/**'
+      - 'fxsound/**'
+      - '.github/workflows/audio-routing.yml'
+  push:
+    branches: [feat/selectable-audio-input]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  routing-policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: |
+            audiopassthru/include
+            audiopassthru/tests
+      - name: Compile and test routing policy with sanitizers
+        run: |
+          clang++ -std=c++14 -Wall -Wextra -Werror \
+            -fsanitize=address,undefined -g \
+            audiopassthru/tests/routing_policy_test.cpp -o routing_policy_test
+          ./routing_policy_test
+
+  windows-release:
+    runs-on: windows-2025-vs2026
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: true
+          sparse-checkout: |
+            fxsound
+            audiopassthru
+            dsp
+            bin/x64/Factsoft
+            Resources
+
+      - name: Install JUCE 9.0.3 modules matching the generated project
+        shell: pwsh
+        run: |
+          $archive = Join-Path $env:RUNNER_TEMP 'JUCE-9.0.3.zip'
+          $commit = 'be29c81492b6151c8ea8d14c840e1311963b3a83'
+          Invoke-WebRequest "https://github.com/juce-framework/JUCE/archive/$commit.zip" -OutFile $archive
+          Expand-Archive $archive -DestinationPath $env:RUNNER_TEMP
+          New-Item -ItemType Directory -Path 'C:\JUCE8' -Force | Out-Null
+          Copy-Item (Join-Path $env:RUNNER_TEMP "JUCE-$commit\modules") 'C:\JUCE8\modules' -Recurse
+          if (-not (Test-Path 'C:\JUCE8\modules\juce_core\juce_core.h')) {
+            throw 'JUCE modules are missing.'
+          }
+
+          # Projucer also emits source-file paths relative to the developer's
+          # checkout depth. Normalize those paths in the CI workspace only.
+          $project = Join-Path $env:GITHUB_WORKSPACE 'fxsound\Project\FxSound_App.vcxproj'
+          $content = [IO.File]::ReadAllText($project)
+          $content = $content -replace '(?:\.\.\\)+JUCE8\\modules', 'C:\JUCE8\modules'
+          [IO.File]::WriteAllText($project, $content)
+
+      - name: Build Windows Release x64 application
+        shell: pwsh
+        run: |
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+          $installation = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if (-not $installation) { throw 'Visual C++ tools were not found.' }
+          & "$installation\MSBuild\Current\Bin\MSBuild.exe" 'fxsound\Project\FxSound.sln' /m /p:Configuration=Release /p:Platform=x64 /verbosity:minimal 2>&1 | Tee-Object -FilePath 'windows-build.log'
+          if ($LASTEXITCODE -ne 0) { throw "MSBuild failed with exit code $LASTEXITCODE." }
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audio-routing-windows-build-log
+          path: windows-build.log
+          if-no-files-found: ignore
+          retention-days: 7

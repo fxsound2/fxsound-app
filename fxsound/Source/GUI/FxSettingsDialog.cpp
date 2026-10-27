@@ -72,7 +72,7 @@ void FxSettingsDialog::SettingsButton::paint(Graphics& g)
 	auto w = bounds.getWidth() - bounds.getHeight() + 5;
 
 	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
-	g.setFont(theme.getNormalFont());
+	g.setFont(theme.getNormalFont().withHeight(15.0f));
 	g.drawText(TRANS(getName()), juce::Rectangle<int>(bounds.getHeight()+5, 0, w, bounds.getHeight()), Justification::centredLeft);
 }
 
@@ -190,7 +190,7 @@ FxSettingsDialog::SettingsPane::SettingsPane(String name)
 
     title_.setFont(theme.getTitleFont());
 	title_.setText(TRANS(name_), NotificationType::dontSendNotification);	
-	title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	title_.setColour(Label::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
 	title_.setJustificationType(Justification::centredLeft);
 	addAndMakeVisible(title_);
 }
@@ -208,9 +208,9 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 	prioritize_new_output_toggle_(TRANS("Prioritize new output devices")),
 	reset_presets_button_(TRANS("Reset presets to factory defaults"))
 {
-	setFocusContainer(true);
+	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
 
-	output_preference_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	output_preference_title_.setColour(Label::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
 	output_preference_title_.setJustificationType(Justification::centredLeft);
 
 	output_preference_.setMouseCursor(MouseCursor::PointingHandCursor);
@@ -218,8 +218,8 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 	output_preference_.setEnabled(true);
 
 	prioritize_new_output_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
-	prioritize_new_output_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-	prioritize_new_output_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	prioritize_new_output_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+	prioritize_new_output_toggle_.setColour(ToggleButton::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
 	prioritize_new_output_toggle_.setWantsKeyboardFocus(true);
 
 	reset_presets_button_.setSize(RESET_PRESETS_BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -272,10 +272,10 @@ void FxSettingsDialog::AudioSettingsPane::resized()
     y = output_preference_.getBottom() + 10;
     prioritize_new_output_toggle_.setBounds(X_MARGIN, y, width, TOGGLE_BUTTON_HEIGHT);
 
-	auto group_x = output_preference_title_.getX() - GROUP_MARGIN;
-	auto group_y = output_preference_title_.getY() - GROUP_MARGIN;
-	auto group_width = output_preference_.getRight() - group_x + GROUP_MARGIN;
-	auto group_height = prioritize_new_output_toggle_.getBottom() - group_y + GROUP_MARGIN;
+	auto group_x = static_cast<float>(output_preference_title_.getX() - GROUP_MARGIN);
+	auto group_y = static_cast<float>(output_preference_title_.getY() - GROUP_MARGIN);
+	auto group_width = static_cast<float>(output_preference_.getRight() - group_x + GROUP_MARGIN);
+	auto group_height = static_cast<float>(prioritize_new_output_toggle_.getBottom() - group_y + GROUP_MARGIN);
 	output_preference_bounds_ = juce::Rectangle<float>(group_x, group_y, group_width, group_height);
 
 	y = prioritize_new_output_toggle_.getBottom() + 30;
@@ -298,7 +298,7 @@ void FxSettingsDialog::AudioSettingsPane::setText()
 {
 	auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
 
-	output_preference_title_.setFont(theme.getNormalFont());
+	output_preference_title_.setFont(theme.getNormalFont().withHeight(15.0f));
 	output_preference_title_.setText(TRANS("Output Device Preference"), NotificationType::dontSendNotification);
 
 	prioritize_new_output_toggle_.setButtonText(TRANS("Prioritize new output devices"));
@@ -364,24 +364,24 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	StringArray hotkey_names = { "Turn FxSound On/Off", "Open/Close FxSound",
 								   "Use Next Preset", "Use Previous Preset", "Change Playback Device"};
 
-	setFocusContainer(true);
+	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
 
 	launch_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
-	launch_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-	launch_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	launch_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+	launch_toggle_.setColour(ToggleButton::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
 	launch_toggle_.setWantsKeyboardFocus(true);
 	
 	hide_help_tips_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
-    hide_help_tips_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-    hide_help_tips_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+    hide_help_tips_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+    hide_help_tips_toggle_.setColour(ToggleButton::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
 	hide_help_tips_toggle_.setWantsKeyboardFocus(true);
 	hide_notifications_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
-	hide_notifications_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-	hide_notifications_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	hide_notifications_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+	hide_notifications_toggle_.setColour(ToggleButton::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
 	hide_notifications_toggle_.setWantsKeyboardFocus(true);
 	hotkeys_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
-	hotkeys_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-	hotkeys_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	hotkeys_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+	hotkeys_toggle_.setColour(ToggleButton::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
 	hotkeys_toggle_.setWantsKeyboardFocus(true);
 
 	bool hotkey_enabled = FxModel::getModel().getHotkeySupport();
@@ -419,6 +419,9 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	
 	hide_notifications_toggle_.setToggleState(FxController::getInstance().isNotificationsHidden(), NotificationType::dontSendNotification);
 	hide_notifications_toggle_.onClick = [this]() { FxController::getInstance().setNotificationsHidden(hide_notifications_toggle_.getToggleState()); };
+
+	language_switch_.setSelectedLanguage(FxController::getInstance().getLanguage());
+	language_switch_.onLanguageChanged = [](String language_code) { FxController::getInstance().setLanguage(language_code); };
 
 	auto os = SystemStats::getOperatingSystemType();
 	if (os == SystemStats::OperatingSystemType::Windows7)
@@ -479,9 +482,6 @@ void FxSettingsDialog::GeneralSettingsPane::paint(Graphics& g)
 
 void FxSettingsDialog::GeneralSettingsPane::setText()
 {
-    auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
-
-    int height = FxSettingsDialog::SettingsComponent::HEIGHT;
     launch_toggle_.setButtonText(TRANS("Launch on system startup"));
     hide_help_tips_toggle_.setButtonText(TRANS("Hide help tips for audio controls"));
 	hide_notifications_toggle_.setButtonText(TRANS("Hide notifications"));
@@ -491,12 +491,12 @@ void FxSettingsDialog::GeneralSettingsPane::setText()
 
 FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), auto_updates_toggle_(TRANS("Automatic updates"))
 {	
-	version_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	version_title_.setColour(Label::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
 	version_title_.setJustificationType(Justification::centredLeft);
 	version_text_.setJustificationType(Justification::centredLeft);	
-	support_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	support_title_.setColour(Label::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
 	support_title_.setJustificationType(Justification::centredLeft);	
-	maintenance_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	maintenance_title_.setColour(Label::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
 	maintenance_title_.setJustificationType(Justification::centredLeft);
 
 	changelog_link_.setURL(URL(L"https://www.fxsound.com/changelog"));
@@ -510,8 +510,8 @@ FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), a
 
 	auto_updates_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
 	auto_updates_toggle_.setToggleState(FxController::getInstance().getAutoUpdates(), NotificationType::dontSendNotification);
-	auto_updates_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
-	auto_updates_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	auto_updates_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+	auto_updates_toggle_.setColour(ToggleButton::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
 
 	auto_updates_toggle_.onClick = [this]() {
 		FxController::getInstance().setAutoUpdates(auto_updates_toggle_.getToggleState());
@@ -577,37 +577,51 @@ void FxSettingsDialog::HelpSettingsPane::setText()
 	auto_updates_toggle_.setButtonText(TRANS("Automatic updates"));;
 }
 
-
-FxSettingsDialog::RoutingSettingsPane::RoutingSettingsPane() : SettingsPane("Audio routing")
+FxSettingsDialog::RoutingSettingsPane::RoutingSettingsPane()
+    : SettingsPane("Audio routing")
 {
-	setFocusContainer(true);
-	const auto textColour = getLookAndFeel().findColour(TextButton::textColourOnId);
+	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
+	const auto text_colour =
+	    getLookAndFeel().findColour(TextButton::text_colourOnId);
 	input_label_.setText(TRANS("Input device"), dontSendNotification);
 	output_label_.setText(TRANS("Output device"), dontSendNotification);
-	input_help_.setText(TRANS("Playback devices capture app audio via loopback. Recording devices capture a microphone, line-in, or virtual cable."), dontSendNotification);
-	for (auto* label : { &input_label_, &output_label_, &input_help_, &status_ })
+	input_help_.setText(
+	    TRANS("Playback devices capture app audio via loopback. Recording "
+		      "devices capture a microphone, line-in, or virtual cable."),
+	    dontSendNotification);
+	for (auto* label : {&input_label_, &output_label_, &input_help_, &status_})
 	{
-		label->setColour(Label::textColourId, textColour);
+		label->setColour(Label::text_colourId, text_colour);
 		label->setJustificationType(Justification::topLeft);
 		label->setMinimumHorizontalScale(1.0f);
 		addAndMakeVisible(label);
 	}
-	input_help_.setFont(Font(13.0f));
-	status_.setFont(Font(13.0f));
+	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
+	input_help_.setFont(theme.getNormalFont().withHeight(13.0f));
+	status_.setFont(theme.getNormalFont().withHeight(13.0f));
 	input_list_.setTextWhenNothingSelected(TRANS("Choose an input"));
 	output_list_.setTextWhenNothingSelected(TRANS("No available output"));
 	input_list_.setTitle(TRANS("Input device"));
 	output_list_.setTitle(TRANS("Output device"));
-	input_list_.setTooltip(TRANS("Choose a playback loopback source or a recording device. Input and playback output must be different."));
-	output_list_.setTooltip(TRANS("FxSound sends processed audio to this device."));
-	automatic_default_toggle_.setButtonText(TRANS("Make FxSound the Windows default output"));
-	automatic_default_toggle_.setTooltip(TRANS("Applies when using FxSound Audio Enhancer as input. Turning this off releases a default claimed by FxSound."));
+	input_list_.setTooltip(
+	    TRANS("Choose a playback loopback source or a recording device. Input "
+		      "and playback output must be different."));
+	output_list_.setTooltip(
+	    TRANS("FxSound sends processed audio to this device."));
+	automatic_default_toggle_.setButtonText(
+	    TRANS("Make FxSound the Windows default output"));
+	automatic_default_toggle_.setTooltip(
+	    TRANS("Applies when using FxSound Audio Enhancer as input. Turning "
+		      "this off releases a default claimed by FxSound."));
 	pin_output_toggle_.setButtonText(TRANS("Keep this output device"));
-	pin_output_toggle_.setTooltip(TRANS("Prefer the selected output even when other devices connect. If it disconnects, keep its preference and temporarily use an available output."));
-	for (auto* toggle : { &automatic_default_toggle_, &pin_output_toggle_ })
+	pin_output_toggle_.setTooltip(
+	    TRANS("Prefer the selected output even when other devices connect. If "
+		      "it disconnects, keep its preference and temporarily use an "
+		      "available output."));
+	for (auto* toggle : {&automatic_default_toggle_, &pin_output_toggle_})
 	{
-		toggle->setColour(ToggleButton::textColourId, textColour);
-		toggle->setColour(ToggleButton::tickColourId, textColour);
+		toggle->setColour(ToggleButton::text_colourId, text_colour);
+		toggle->setColour(ToggleButton::tickColourId, text_colour);
 		toggle->setMouseCursor(MouseCursor::PointingHandCursor);
 		addAndMakeVisible(toggle);
 	}
@@ -615,37 +629,63 @@ FxSettingsDialog::RoutingSettingsPane::RoutingSettingsPane() : SettingsPane("Aud
 	addAndMakeVisible(output_list_);
 	refresh_button_.setButtonText(TRANS("Refresh devices"));
 	addAndMakeVisible(refresh_button_);
-	input_list_.onChange = [this]() {
+	input_list_.onChange = [this]()
+	{
 		const int index = input_list_.getSelectedId() - 1;
-		if (index < 0 || index >= static_cast<int>(input_ids_.size())) return;
-		const bool saved = FxController::getInstance().setInputDeviceId(input_ids_[index]);
-		change_error_ = saved ? String() : TRANS("Input was not changed. Choose an available device different from the current output.");
+		if (index < 0 || index >= static_cast<int>(input_ids_.size()))
+		{
+			return;
+		}
+		const bool saved =
+		    FxController::getInstance().setInputDeviceId(input_ids_[index]);
+		change_error_ = saved
+		                    ? String()
+		                    : TRANS(
+		                          "Input was not changed. Choose an available "
+								  "device different from the current output.");
 		device_signature_.clear();
 		refreshDevices();
 	};
-	output_list_.onChange = [this]() {
+	output_list_.onChange = [this]()
+	{
 		const int index = output_list_.getSelectedId() - 1;
-		if (index < 0 || index >= static_cast<int>(output_ids_.size())) return;
+		if (index < 0 || index >= static_cast<int>(output_ids_.size()))
+		{
+			return;
+		}
 		FxController::getInstance().setOutput(output_ids_[index]);
 		change_error_.clear();
 		device_signature_.clear();
 		refreshDevices();
 	};
-	automatic_default_toggle_.onClick = [this]() {
-		const bool saved = FxController::getInstance().setAutomaticDefaultEnabled(automatic_default_toggle_.getToggleState());
-		change_error_ = saved ? String() : TRANS("Unable to save the Windows default setting.");
+	automatic_default_toggle_.onClick = [this]()
+	{
+		const bool saved =
+		    FxController::getInstance().setAutomaticDefaultEnabled(
+		        automatic_default_toggle_.getToggleState());
+		change_error_ =
+		    saved ? String()
+			      : TRANS("Unable to save the Windows default setting.");
 		refreshDevices();
 	};
-	pin_output_toggle_.onClick = [this]() {
-		const bool saved = FxController::getInstance().setOutputPinned(pin_output_toggle_.getToggleState());
-		change_error_ = saved ? String() : TRANS("Choose an available output before pinning it.");
+	pin_output_toggle_.onClick = [this]()
+	{
+		const bool saved = FxController::getInstance().setOutputPinned(
+		    pin_output_toggle_.getToggleState());
+		change_error_ =
+		    saved ? String()
+			      : TRANS("Choose an available output before pinning it.");
 		refreshDevices();
 	};
-	refresh_button_.onClick = [this]() {
+	refresh_button_.onClick = [this]()
+	{
 		change_error_.clear();
 		device_signature_.clear();
 		if (!FxController::getInstance().refreshAudioRouting())
-			change_error_ = TRANS("Unable to restart audio. Close and reopen FxSound.");
+		{
+			change_error_ =
+			    TRANS("Unable to restart audio. Close and reopen FxSound.");
+		}
 		refreshDevices();
 	};
 	refreshDevices();
@@ -674,13 +714,17 @@ void FxSettingsDialog::RoutingSettingsPane::visibilityChanged()
 		startTimer(1000);
 	}
 	else
+	{
 		stopTimer();
+	}
 }
 
 void FxSettingsDialog::RoutingSettingsPane::timerCallback()
 {
 	if (!input_list_.isPopupActive() && !output_list_.isPopupActive())
+	{
 		refreshDevices();
+	}
 }
 
 void FxSettingsDialog::RoutingSettingsPane::refreshDevices()
@@ -688,12 +732,17 @@ void FxSettingsDialog::RoutingSettingsPane::refreshDevices()
 	auto& controller = FxController::getInstance();
 	devices_ = controller.getRoutingDevices();
 	const auto input = controller.getInputDeviceId();
-	const auto output = String(FxModel::getModel().getSelectedOutput().pwszID.c_str());
+	const auto output =
+	    String(FxModel::getModel().getSelectedOutput().pwszID.c_str());
 	const auto pin = controller.getPinnedOutputDeviceId();
 	String signature = input + "|" + output;
 	for (const auto& device : devices_)
-		signature += "|" + String(device.pwszID.c_str()) + ":" + String(device.deviceFriendlyName.c_str()) +
-			":" + String(device.isActive ? 1 : 0) + ":" + String(device.deviceNumChannel);
+	{
+		signature += "|" + String(device.pwszID.c_str()) + ":" +
+		             String(device.deviceFriendlyName.c_str()) + ":" +
+		             String(device.isActive ? 1 : 0) + ":" +
+		             String(device.deviceNumChannel);
+	}
 	if (signature != device_signature_)
 	{
 		device_signature_ = signature;
@@ -703,27 +752,34 @@ void FxSettingsDialog::RoutingSettingsPane::refreshDevices()
 		output_ids_.clear();
 		input_ids_.push_back(String());
 		input_list_.addItem(TRANS("FxSound Audio Enhancer (default)"), 1);
-		input_list_.setSelectedId(input.isEmpty() ? 1 : 0, dontSendNotification);
-		bool selectedInputFound = input.isEmpty();
-		for (const bool recording : { false, true })
+		input_list_.setSelectedId(input.isEmpty() ? 1 : 0,
+		                          dontSendNotification);
+		bool selected_input_found = input.isEmpty();
+		for (const bool recording : {false, true})
 		{
-			input_list_.addSectionHeading(recording ? TRANS("Recording devices") : TRANS("Playback audio (loopback)"));
+			input_list_.addSectionHeading(
+			    recording ? TRANS("Recording devices")
+				          : TRANS("Playback audio (loopback)"));
 			for (const auto& device : devices_)
 			{
-				if (device.isDFXDevice || !device.isActive || device.isRecordingDevice != recording)
+				if (device.isDFXDevice || !device.isActive ||
+				    device.isRecordingDevice != recording)
+				{
 					continue;
+				}
 				const String id(device.pwszID.c_str());
 				input_ids_.push_back(id);
 				const int item = static_cast<int>(input_ids_.size());
-				input_list_.addItem(String(device.deviceFriendlyName.c_str()), item);
+				input_list_.addItem(String(device.deviceFriendlyName.c_str()),
+				                    item);
 				if (id == input)
 				{
 					input_list_.setSelectedId(item, dontSendNotification);
-					selectedInputFound = true;
+					selected_input_found = true;
 				}
 			}
 		}
-		if (!selectedInputFound)
+		if (!selected_input_found)
 		{
 			input_ids_.push_back(input);
 			const int item = static_cast<int>(input_ids_.size());
@@ -733,20 +789,33 @@ void FxSettingsDialog::RoutingSettingsPane::refreshDevices()
 		}
 		for (const auto& device : devices_)
 		{
-			if (!device.isActive || !device.isRealDevice || device.isRecordingDevice ||
-				!AudioRouting::supportsOutput(device.deviceNumChannel) || String(device.pwszID.c_str()) == input)
+			if (!device.isActive || !device.isRealDevice ||
+			    device.isRecordingDevice ||
+			    !AudioRouting::supportsOutput(device.deviceNumChannel) ||
+			    String(device.pwszID.c_str()) == input)
+			{
 				continue;
+			}
 			output_ids_.push_back(String(device.pwszID.c_str()));
 			const int item = static_cast<int>(output_ids_.size());
-			output_list_.addItem(String(device.deviceFriendlyName.c_str()), item);
+			output_list_.addItem(String(device.deviceFriendlyName.c_str()),
+			                     item);
 			if (String(device.pwszID.c_str()) == output)
+			{
 				output_list_.setSelectedId(item, dontSendNotification);
+			}
 		}
 	}
-	automatic_default_toggle_.setToggleState(controller.isAutomaticDefaultEnabled(), dontSendNotification);
+	automatic_default_toggle_.setToggleState(
+	    controller.isAutomaticDefaultEnabled(), dontSendNotification);
 	automatic_default_toggle_.setEnabled(input.isEmpty());
 	pin_output_toggle_.setToggleState(pin.isNotEmpty(), dontSendNotification);
-	pin_output_toggle_.setEnabled(pin.isNotEmpty() || output_list_.getSelectedId() > 0);
-	pin_output_toggle_.setButtonText(pin.isNotEmpty() && pin != output ? TRANS("Keep saved output preference") : TRANS("Keep this output device"));
-	status_.setText(change_error_.isEmpty() ? controller.getRoutingStatusText() : change_error_, dontSendNotification);
+	pin_output_toggle_.setEnabled(pin.isNotEmpty() ||
+	                              output_list_.getSelectedId() > 0);
+	pin_output_toggle_.setButtonText(pin.isNotEmpty() && pin != output
+	                                     ? TRANS("Keep saved output preference")
+										 : TRANS("Keep this output device"));
+	status_.setText(change_error_.isEmpty() ? controller.getRoutingStatusText()
+	                                        : change_error_,
+	                dontSendNotification);
 }

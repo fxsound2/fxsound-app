@@ -334,7 +334,7 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 			if(s->ptr > s->MasterEnd)
 				s->ptr -= s->MasterLen;
 			rp_MACRO = (float *)(s->ptr - s->pre_delay );
-			if((long)rp_MACRO < (long)s->MasterStart)
+			if(rp_MACRO < s->MasterStart)
 				rp_MACRO += s->MasterLen;
 			tmp_b = *rp_MACRO;
 			next_out = *s->ptr;
@@ -443,7 +443,7 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 			if(s->ptr > s->MasterEnd)
 				s->ptr -= s->MasterLen;
 			tmp_ptr = s->ptr - idly;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			y1 = *(tmp_ptr);
 
@@ -451,7 +451,7 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 #if (PT_DSP_BUILD == PT_DSP_DSPFX)
 			idly++;
 			tmp_ptr = s->ptr - idly;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			y2 = *(tmp_ptr);
 			dl_out = (y1 + (y2 - y1) * del);
@@ -475,15 +475,15 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 			next_out = *s->ptr;
 			*s->ptr = tmp_a;
 			tmp_ptr = s->ptr - s->D1_tap1;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			tap1_out = *tmp_ptr;
 			tmp_ptr = s->ptr - s->D1_tap2;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			tap2_out = *tmp_ptr;
 			tmp_ptr = s->ptr - s->D1_tap3;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			tap3_out = *tmp_ptr;
 		}
@@ -509,11 +509,11 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 			*s->ptr = Dl_in;
 			tmp_b = Dl_out + s->lat6_coeff * Dl_in;
 			tmp_ptr = s->ptr - s->lat6_tap1;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			tap1_out = *tmp_ptr;
 			tmp_ptr = s->ptr - s->lat6_tap2;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			tap2_out = *tmp_ptr;
 		}
@@ -530,11 +530,11 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 			/* next_out = *s->ptr; Not needed for next section */
 			*s->ptr = tmp_b;
 			tmp_ptr = s->ptr - s->D2_tap1;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			tap1_out = *tmp_ptr;
 			tmp_ptr = s->ptr - s->D2_tap2;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			tap2_out = *tmp_ptr;
 		}
@@ -566,14 +566,14 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 			if(s->ptr > s->MasterEnd)
 				s->ptr -= s->MasterLen;
 			tmp_ptr = s->ptr - idly;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			y1 = *(tmp_ptr);
 
 #if (PT_DSP_BUILD == PT_DSP_DSPFX)
 			idly++;
 			tmp_ptr = s->ptr - idly;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			y2 = *(tmp_ptr);
 			dl_out = (y1 + (y2 - y1) * del);
@@ -597,15 +597,15 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 			next_out = *s->ptr;
 			*s->ptr = tmp_a;
 			tmp_ptr = s->ptr - s->D3_tap1;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			tap1_out = *tmp_ptr;
 			tmp_ptr = s->ptr - s->D3_tap2;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			tap2_out = *tmp_ptr;
 			tmp_ptr = s->ptr - s->D3_tap3;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			tap3_out = *tmp_ptr;
 		}
@@ -631,11 +631,11 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 			*s->ptr = Dl_in;
 			tmp_b = Dl_out + s->lat6_coeff * Dl_in;
 			tmp_ptr = s->ptr - s->lat8_tap1;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			tap1_out = *tmp_ptr;
 			tmp_ptr = s->ptr - s->lat8_tap2;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			tap2_out = *tmp_ptr;
 		}
@@ -652,11 +652,11 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 			/* next_out = *s->ptr; Not needed for next section */
 			*s->ptr = tmp_b;
 			tmp_ptr = s->ptr - s->D4_tap1;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			tap1_out = *tmp_ptr;
 			tmp_ptr = s->ptr - s->D4_tap2;
-			if( (long)tmp_ptr < (long)s->MasterStart )
+			if( tmp_ptr < s->MasterStart )
 				tmp_ptr += s->MasterLen;
 			tap2_out = *tmp_ptr;
 		}

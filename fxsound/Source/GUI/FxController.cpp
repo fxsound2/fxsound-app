@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxMainWindow.h"
 #include "FxSystemTrayView.h"
 #include "FxMessage.h"
+#include "FxLanguage.h"
 #include "../Utils/SysInfo/SysInfo.h"
 #include <iostream>
 #include <cstdio>
@@ -172,6 +173,8 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 		logMessage(String("ARM64"));
 	}
 
+    gpu_render_ = false;
+
 	auto view = settings_.getInt("view");
 	if (view <= 0 || view > 2)
 	{
@@ -235,6 +238,14 @@ void FxController::initConfig(const String& commandline)
 	auto mastergain = arg_list.getValueForOption("--master_gain");
 	auto volume_leveling = arg_list.getValueForOption("--volume_leveling");
 
+    if (arg_list.containsOption("--gpu"))
+    {
+		if (juce::SystemStats::getOperatingSystemType() > juce::SystemStats::Windows7)
+		{
+            gpu_render_ = true;
+		}
+    }
+
 	if (arg_list.containsOption("--run_minimized"))
 	{
 		settings_.setBool("run_minimized", true);
@@ -297,7 +308,7 @@ void FxController::initConfig(const String& commandline)
 	float vl = 0;
 	if (volume_leveling.isEmpty())
 	{
-		vl = settings_.getDouble("volume_leveling");
+		vl = static_cast<float>(settings_.getDouble("volume_leveling"));
 	}
 	else
 	{
@@ -309,7 +320,7 @@ void FxController::initConfig(const String& commandline)
 	float bl = 0;
 	if (balance == "")
 	{
-		bl = settings_.getDouble("balance");
+		bl = static_cast<float>(settings_.getDouble("balance"));
 	}
 	else
 	{
@@ -321,7 +332,7 @@ void FxController::initConfig(const String& commandline)
 	float fq = 0;
 	if (filterq == "")
 	{
-		fq = settings_.getDouble("filter_q");
+		fq = static_cast<float>(settings_.getDouble("filter_q"));
 	}
 	else
 	{
@@ -333,7 +344,7 @@ void FxController::initConfig(const String& commandline)
 	float mg = 0;
 	if (mastergain == "")
 	{
-		mg = settings_.getDouble("master_gain");
+		mg = static_cast<float>(settings_.getDouble("master_gain"));
 	}
 	else
 	{
@@ -706,9 +717,12 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		if (audio_passthru_->init() != 0)
 		{
 			String message(TRANS("Error in system audio configuration. Unable to run FxSound"));
-			AlertWindow::showMessageBox(AlertWindow::AlertIconType::WarningIcon, JUCEApplication::getInstance()->getApplicationName(), message, TRANS("OK"));
+			AlertWindow::showMessageBoxAsync(AlertWindow::AlertIconType::WarningIcon, JUCEApplication::getInstance()->getApplicationName(), message, TRANS("OK"), nullptr,
+				ModalCallbackFunction::create([] (int)
+				{
+					JUCEApplication::getInstance()->systemRequestedQuit();
+				}));
 
-			JUCEApplication::getInstance()->systemRequestedQuit();
 			return;
 		}
 
@@ -731,9 +745,11 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		if (!dfx_enabled_ && !SysInfo::isRemoteSession())
 		{
 			main_window_->removeFromDesktop();
-			FxDeviceErrorMessage error_message;
-			error_message.runModalLoop();
-			JUCEApplication::getInstance()->systemRequestedQuit();
+			auto* error_message = new FxDeviceErrorMessage();
+			error_message->enterModalState(true, ModalCallbackFunction::create([](int)
+			{
+				JUCEApplication::getInstance()->systemRequestedQuit();
+			}), true);
 			return;
 		}
 
@@ -940,16 +956,16 @@ void FxController::showMainWindow()
 
 		if (survey_tip_)
 		{
-			uint32_t survey_timer = settings_.getInt("survey_timer");
+			int survey_timer = settings_.getInt("survey_timer");
 			if (survey_timer == 0)
 			{
-				survey_timer = std::time(nullptr) + (7 * (24 * 60 * 60));
+				survey_timer = static_cast<int>(std::time(nullptr) + (7 * (24 * 60 * 60)));
 				settings_.setInt("survey_timer", survey_timer);
 			}
 			else
 			{
-				uint32_t current_time = std::time(nullptr);
-				if (current_time > survey_timer)
+				uint64_t current_time = std::time(nullptr);
+				if ((int)current_time > survey_timer)
 				{
 					survey_tip_ = false;
 					settings_.setBool("survey_displayed", true);
@@ -1389,7 +1405,7 @@ void FxController::resetPresets()
 	FxModel::getModel().pushMessage(TRANS("Presets are restored to factory defaults"));
 }
 
-bool FxController::exportPresets(const Array< FxModel::Preset>& presets)
+void FxController::exportPresets(const Array< FxModel::Preset>& presets, std::function<void (bool)> onComplete)
 {
 	auto path_name = File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory).getFullPathName()) + L"FxSound\\Presets\\Export\\";
 
@@ -1399,29 +1415,58 @@ bool FxController::exportPresets(const Array< FxModel::Preset>& presets)
 		path.createDirectory();
 	}
 
-	bool exported = false;
+	auto export_path = path.getFullPathName();
 
-	for (auto preset : presets)
+	// Walk the presets one at a time instead of a blocking for-loop: FxConfirmationMessage::showMessage()
+	// is asynchronous now, so each preset only moves on to the next once the user has answered (or once
+	// it is exported outright, when no overwrite confirmation is needed).
+	auto presets_to_process = std::make_shared<Array<FxModel::Preset>>(presets);
+	auto index = std::make_shared<int>(0);
+	auto exported = std::make_shared<bool>(false);
+
+	auto processNext = std::make_shared<std::function<void()>>();
+	*processNext = [this, presets_to_process, index, exported, path_name, export_path, processNext, onComplete]()
 	{
-		bool skip = false;
+		if (*index >= presets_to_process->size())
+		{
+			onComplete(*exported);
+			*processNext = nullptr;
+			return;
+		}
 
+		auto preset = (*presets_to_process)[(*index)++];
 		auto preset_file = File(path_name + preset.name + ".fac");
+
+		auto doExport = [this, preset, export_path, exported, processNext]()
+		{
+			dfx_dsp_.exportPreset(preset.path.toWideCharPointer(), preset.name.toWideCharPointer(), export_path.toWideCharPointer());
+			*exported = true;
+			(*processNext)();
+		};
+
 		if (preset_file.exists())
 		{
-			if (!FxConfirmationMessage::showMessage(FormatString(TRANS("Preset file %s already exists in the export path, do you want to overwrite the preset file?"), preset.name)))
-			{
-				skip = true;
-			}
+			FxConfirmationMessage::showMessage(FormatString(TRANS("Preset file %s already exists in the export path, do you want to overwrite the preset file?"), preset.name),
+				FxConfirmationMessage::Style::YesNo,
+				[doExport, processNext](bool overwrite)
+				{
+					if (overwrite)
+					{
+						doExport();
+					}
+					else
+					{
+						(*processNext)();
+					}
+				});
 		}
-
-		if (!skip)
+		else
 		{
-			dfx_dsp_.exportPreset(preset.path.toWideCharPointer(), preset.name.toWideCharPointer(), path.getFullPathName().toWideCharPointer());
-			exported = true;
+			doExport();
 		}
-	}
+	};
 
-	return exported;
+	(*processNext)();
 }
 
 bool FxController::importPresets(const Array<File>& preset_files, StringArray& imported_presets, StringArray& skipped_presets)
@@ -1648,9 +1693,11 @@ void FxController::selectProcessingOutput(std::vector<SoundDevice>& sound_device
 			if (!SysInfo::isRemoteSession())
 			{
 				main_window_->removeFromDesktop();
-				FxDeviceErrorMessage error_message;
-				error_message.runModalLoop();
-				JUCEApplication::getInstance()->systemRequestedQuit();
+                auto* error_message = new FxDeviceErrorMessage();
+                error_message->enterModalState(true, ModalCallbackFunction::create([](int)
+                {
+                    JUCEApplication::getInstance()->systemRequestedQuit();
+                }), true);
 				return;
 			}
 		}
@@ -1906,6 +1953,16 @@ void FxController::getEqBandFrequencyRange(int band_num, float* min_freq, float*
 		*min_freq = 0;
 		*max_freq = 0;
 	}
+}
+
+bool FxController::getDefaultEqBandFrequency(int band_num, float* freq)
+{
+	if (band_num < getNumEqBands())
+	{
+		return dfx_dsp_.getDefaultEqBandFrequency(band_num, freq);
+	}
+
+	return false;
 }
 
 float FxController::getEqBandBoostCut(int band_num)
@@ -2366,121 +2423,10 @@ void FxController::setLanguage(String language_code)
 
 	LocalisedStrings::setCurrentMappings(nullptr);
 
-	if (language_.startsWithIgnoreCase("ko"))
+	auto& language_info = FxLanguage::find(language_);
+	if (language_info.translation_data != nullptr && language_info.translation_data_size != 0)
 	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ko_txt, BinaryData::FxSound_ko_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("vi"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_vi_txt, BinaryData::FxSound_vi_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("id"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_id_txt, BinaryData::FxSound_id_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("pt-br"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ptbr_txt, BinaryData::FxSound_ptbr_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("pt"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_pt_txt, BinaryData::FxSound_pt_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("es"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_es_txt, BinaryData::FxSound_es_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("zh-CN"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_zhCN_txt, BinaryData::FxSound_zhCN_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("zh-TW"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_zhTW_txt, BinaryData::FxSound_zhTW_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("fr"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_fr_txt, BinaryData::FxSound_fr_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("sv"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_sv_txt, BinaryData::FxSound_sv_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("it"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_it_txt, BinaryData::FxSound_it_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ru"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ru_txt, BinaryData::FxSound_ru_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ro"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ro_txt, BinaryData::FxSound_ro_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("tr"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_tr_txt, BinaryData::FxSound_tr_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("pl"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_pl_txt, BinaryData::FxSound_pl_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("de"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_de_txt, BinaryData::FxSound_de_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("hu"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::fxsound_hu_txt, BinaryData::fxsound_hu_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("th"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_th_txt, BinaryData::FxSound_th_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("nl"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_nl_txt, BinaryData::FxSound_nl_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ja"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ja_txt, BinaryData::FxSound_ja_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ar"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ar_txt, BinaryData::FxSound_ar_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("hr"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_hr_txt, BinaryData::FxSound_hr_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ba"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ba_txt, BinaryData::FxSound_ba_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("fa"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_fa_txt, BinaryData::FxSound_fa_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ua"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ua_txt, BinaryData::FxSound_ua_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("no"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_no_txt, BinaryData::FxSound_no_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("sl"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_sl_txt, BinaryData::FxSound_sl_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("fi"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_fi_txt, BinaryData::FxSound_fi_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("cs"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_cs_txt, BinaryData::FxSound_cs_txtSize), false));
+		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(language_info.translation_data, language_info.translation_data_size), false));
 	}
 
 	auto* theme = dynamic_cast<FxTheme*>(&LookAndFeel::getDefaultLookAndFeel());
@@ -2489,135 +2435,20 @@ void FxController::setLanguage(String language_code)
 		theme->loadFont(language_);
 	}
 
-	if (main_window_ != nullptr)
+	// Other top-level windows (e.g. the Settings dialog) aren't children of
+	// main_window_, so they don't hear about a language change unless we
+	// tell them directly. Scoped to FxWindow-derived windows (dialogs) only,
+	// so transient overlays like notifications and the tray icon view -
+	// which don't show translated/language-dependent text - aren't
+	// needlessly repainted on every language switch.
+	auto& desktop = Desktop::getInstance();
+	for (int i = 0; i < desktop.getNumComponents(); i++)
 	{
-		main_window_->sendLookAndFeelChange();
+		if (auto* window = dynamic_cast<FxWindow*>(desktop.getComponent(i)))
+		{
+			window->sendLookAndFeelChange();
+		}
 	}
-}
-
-String FxController::getLanguageName(String language_code) const
-{
-	if (language_code.startsWithIgnoreCase("en"))
-	{
-		return "English";
-	}
-	else if (language_code.startsWithIgnoreCase("ko"))
-	{
-		return L"\ud55c\uad6d\uc5b4";
-	}
-	else if (language_code.startsWithIgnoreCase("vi"))
-	{
-		return L"Ti\u1ebfng Vi\u1ec7t";
-	}
-	else if (language_code.startsWithIgnoreCase("id"))
-	{
-		return L"bahasa Indonesia";
-	}
-	else if (language_code.startsWithIgnoreCase("pt-br"))
-	{
-		return L"portugu\u00eas brasileiro";
-	}
-	else if (language_code.startsWithIgnoreCase("pt"))
-	{
-		return L"Portugu\u00eas";
-	}
-	else if (language_code.startsWithIgnoreCase("es"))
-	{
-		return L"Espa\u00f1ol";
-	}
-	else if (language_code.startsWithIgnoreCase("zh-CN"))
-	{
-		return L"\u7b80\u4f53\u4e2d\u6587";
-	}
-	else if (language_code.startsWithIgnoreCase("zh-TW"))
-	{
-		return L"\u7e41\u9ad4\u4e2d\u6587";
-	}
-	else if (language_code.startsWithIgnoreCase("sv"))
-	{
-		return L"svenska";
-	}
-	else if (language_code.startsWithIgnoreCase("fr"))
-	{
-		return L"fran\u00e7ais";
-	}
-	else if (language_code.startsWithIgnoreCase("it"))
-	{
-		return L"Italiano";
-	}
-	else if (language_code.startsWithIgnoreCase("ru"))
-	{
-		return L"\u0440\u0443\u0441\u0441\u043a\u0438\u0439";
-	}
-	else if (language_code.startsWithIgnoreCase("ro"))
-	{
-		return L"Rom\u00e2n\u0103";
-	}
-	else if (language_code.startsWithIgnoreCase("tr")) {
-		return L"T\u00fcrk";
-	}
-	else if (language_code.startsWithIgnoreCase("pl"))
-	{
-		return L"Polski";
-	}
-	else if (language_code.startsWithIgnoreCase("de"))
-	{
-		return L"Deutsch";
-	}
-	else if (language_code.startsWithIgnoreCase("hu"))
-	{
-		return L"Magyar";
-	}
-	else if (language_code.startsWithIgnoreCase("th"))
-	{
-		return L"\u0e41\u0e1a\u0e1a\u0e44\u0e17\u0e22";
-	}
-	else if (language_code.startsWithIgnoreCase("nl"))
-	{
-		return L"Nederlands";
-	}
-	else if (language_code.startsWithIgnoreCase("ja"))
-	{
-		return L"\u65e5\u672c\u8a9e";
-	}
-	else if (language_code.startsWithIgnoreCase("ar"))
-	{
-		return L"\u0627\u0644\u0639\u0631\u0628\u064a\u0629";
-	}
-	else if (language_code.startsWithIgnoreCase("hr"))
-	{
-		return L"hrvatski";
-	}
-	else if (language_code.startsWithIgnoreCase("ba"))
-	{
-		return L"bosanski";
-	}
-	else if (language_code.startsWithIgnoreCase("fa"))
-	{
-		return L"\u0641\u0627\u0631\u0633\u06cc";
-	}
-	else if (language_code.startsWithIgnoreCase("ua"))
-	{
-		return L"\u0443\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430";
-	}
-	else if (language_code.startsWithIgnoreCase("no"))
-	{
-		return L"Norsk";
-	}
-	else if (language_code.startsWithIgnoreCase("sl"))
-	{
-		return L"Sloven\u0161\u010dina";
-	}
-	else if (language_code.startsWithIgnoreCase("fi"))
-	{
-		return L"Suomi";
-	}
-	else if (language_code.startsWithIgnoreCase("cs"))
-	{
-		return L"\u010cesky";
-    }
-
-	return "English";
 }
 
 int FxController::getMaxUserPresets() const
@@ -2663,6 +2494,15 @@ void FxController::getWindowPosition(int& x, int& y)
 {
 	x = settings_.getInt("window_x", 0);
 	y = settings_.getInt("window_y", 0);
+}
+
+void FxController::setRenderingEngine(juce::Component& component)
+{
+	if (auto* peer = component.getPeer())
+	{
+		// Engine index 0 is GDI (software), 1 is Direct2D.
+		peer->setCurrentRenderingEngine(gpu_render_ ? 1 : 0);
+	}
 }
 
 juce::Array<DeviceConfig> FxController::getDeviceConfigs()
@@ -2929,7 +2769,7 @@ void FxController::getSpectrumBandValues(Array<float>& band_values)
 		}
 		else
 		{
-			band_values.set(i, 0.01);
+			band_values.set(i, 0.01f);
 		}
 	}
 }
@@ -2943,11 +2783,12 @@ String FxController::FormatString(const String& format, const String& arg)
 	return String(buffer);
 }
 
-
 bool FxController::isEligibleOutput(const SoundDevice& device)
 {
-	return device.isActive && device.isRealDevice && !device.isRecordingDevice &&
-		AudioRouting::supportsOutput(device.deviceNumChannel) && String(device.pwszID.c_str()) != getInputDeviceId();
+	return device.isActive && device.isRealDevice &&
+	       !device.isRecordingDevice &&
+	       AudioRouting::supportsOutput(device.deviceNumChannel) &&
+	       String(device.pwszID.c_str()) != getInputDeviceId();
 }
 
 std::vector<SoundDevice> FxController::getRoutingDevices()
@@ -2962,7 +2803,8 @@ bool FxController::refreshAudioRouting()
 
 String FxController::getInputDeviceId()
 {
-	return audio_passthru_ ? String(audio_passthru_->getInputDeviceId().c_str()) : String();
+	return audio_passthru_ ? String(audio_passthru_->getInputDeviceId().c_str())
+	                       : String();
 }
 
 bool FxController::setInputDeviceId(const String& device_id)
@@ -2973,25 +2815,39 @@ bool FxController::setInputDeviceId(const String& device_id)
 		for (const auto& device : getRoutingDevices())
 		{
 			if (String(device.pwszID.c_str()) != device_id || !device.isActive)
-				continue;
-			if (!device.isRecordingDevice && device.pwszID == FxModel::getModel().getSelectedOutput().pwszID)
 			{
-				FxModel::getModel().pushMessage(TRANS("Choose a different output before using this device as input."));
+				continue;
+			}
+			if (!device.isRecordingDevice &&
+			    device.pwszID == FxModel::getModel().getSelectedOutput().pwszID)
+			{
+				FxModel::getModel().pushMessage(
+				    TRANS("Choose a different output before using this device "
+					      "as input."));
 				return false;
 			}
 			found = true;
 			break;
 		}
 		if (!found)
+		{
 			return false;
+		}
 	}
-	if (audio_passthru_->setInputDeviceId(std::wstring(device_id.toWideCharPointer())) != 0)
+	if (audio_passthru_->setInputDeviceId(
+	        std::wstring(device_id.toWideCharPointer())) != 0)
+	{
 		return false;
+	}
 	output_devices_ = getRoutingDevices();
 	active_output_devices_.clear();
 	for (const auto& device : output_devices_)
+	{
 		if (isEligibleOutput(device))
+		{
 			active_output_devices_.push_back(device);
+		}
+	}
 	sortByDeviceConfigPriority(active_output_devices_);
 	FxModel::getModel().initOutputs(active_output_devices_);
 	return true;
@@ -3009,7 +2865,9 @@ bool FxController::setAutomaticDefaultEnabled(bool enabled)
 
 String FxController::getPinnedOutputDeviceId()
 {
-	return audio_passthru_ ? String(audio_passthru_->getPinnedOutputDeviceId().c_str()) : String();
+	return audio_passthru_
+	           ? String(audio_passthru_->getPinnedOutputDeviceId().c_str())
+			   : String();
 }
 
 bool FxController::setOutputPinned(bool pinned)
@@ -3019,7 +2877,9 @@ bool FxController::setOutputPinned(bool pinned)
 	{
 		id = FxModel::getModel().getSelectedOutput().pwszID;
 		if (id.empty())
+		{
 			return false;
+		}
 	}
 	return audio_passthru_->setPinnedOutputDeviceId(id) == 0;
 }
@@ -3028,32 +2888,57 @@ String FxController::getRoutingStatusText()
 {
 	switch (audio_passthru_->getRoutingStatus())
 	{
-	case SND_DEVICES_INPUT_NOT_AVAILABLE:
-		return TRANS("Input unavailable. Reconnect it or select another input. Capture is paused.");
-	case SND_DEVICES_INPUT_OUTPUT_CONFLICT:
-		return TRANS("Playback input and output must be different devices. Capture is paused.");
-	case SND_DEVICES_SAMP_FREQ_NOT_VALID:
-		return TRANS("Unsupported output sample rate. Use 44.1, 48, 88.2, 96, 176.4, or 192 kHz.");
-	case SND_DEVICES_DEVICE_OPERATION_COMPLETED:
-		break;
-	default:
-		return TRANS("Audio could not start. Check device availability, microphone permission, and shared-mode audio settings.");
+		case SND_DEVICES_INPUT_NOT_AVAILABLE:
+			return TRANS(
+			    "Input unavailable. Reconnect it or select another input. "
+				"Capture is paused.");
+		case SND_DEVICES_INPUT_OUTPUT_CONFLICT:
+			return TRANS(
+			    "Playback input and output must be different devices. Capture "
+				"is paused.");
+		case SND_DEVICES_SAMP_FREQ_NOT_VALID:
+			return TRANS(
+			    "Unsupported output sample rate. Use 44.1, 48, 88.2, 96, "
+				"176.4, or 192 kHz.");
+		case SND_DEVICES_DEVICE_OPERATION_COMPLETED:
+			break;
+		default:
+			return TRANS(
+			    "Audio could not start. Check device availability, microphone "
+				"permission, and shared-mode audio settings.");
 	}
 	if (!FxModel::getModel().getPowerState())
-		return TRANS("FxSound is off. Your routing settings are saved for the next time it is turned on.");
-	String status = getInputDeviceId().isEmpty() ?
-		TRANS("Send app audio to FxSound Audio Enhancer.") :
-		TRANS("Recording inputs capture directly. Playback inputs capture audio sent to that device.");
+	{
+		return TRANS(
+		    "FxSound is off. Your routing settings are saved for the next time "
+			"it is turned on.");
+	}
+	String status = getInputDeviceId().isEmpty()
+	                    ? TRANS("Send app audio to FxSound Audio Enhancer.")
+	                    : TRANS(
+	                          "Recording inputs capture directly. Playback "
+							  "inputs capture audio sent to that device.");
 	if (getInputDeviceId().isNotEmpty())
-		status += "\n" + TRANS("Windows defaults and the input device's volume are left unchanged.");
+	{
+		status += "\n" + TRANS(
+		                     "Windows defaults and the input device's volume "
+							 "are left unchanged.");
+	}
 	const auto pin = getPinnedOutputDeviceId();
 	if (pin.isNotEmpty())
 	{
 		bool available = false;
 		for (const auto& device : getRoutingDevices())
-			available |= isEligibleOutput(device) && String(device.pwszID.c_str()) == pin;
+		{
+			available |= isEligibleOutput(device) &&
+			             String(device.pwszID.c_str()) == pin;
+		}
 		if (!available)
-			status += "\n" + TRANS("Pinned output unavailable. Using an available output until it returns.");
+		{
+			status += "\n" + TRANS(
+			                     "Pinned output unavailable. Using an "
+								 "available output until it returns.");
+		}
 	}
 	return status;
 }

@@ -444,7 +444,7 @@ int PT_DECLSPEC mthRotN(char *cp_string, int i_rot_n, int i_encode)
 	if (mthRotN_Wide(wcp_string, i_rot_n, i_encode) != OKAY)
 		return(NOT_OKAY);
 
-	i_buffer_size = strlen(cp_string) + 1;
+	i_buffer_size = static_cast<int>(strlen(cp_string) + 1);
 
 	/* Convert back to ansi */
 	if (pstrConvertWideCharStringToAnsiCharString(wcp_string, 

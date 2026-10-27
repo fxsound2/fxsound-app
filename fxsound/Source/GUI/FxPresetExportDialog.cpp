@@ -64,11 +64,11 @@ void FxPresetExportDialog::PresetExportProgress::paint(Graphics& g)
         colour_gradient_start_ = 0.0;
     }
 
-    ColourGradient gradient = ColourGradient::horizontal(Colour(FXCOLOR(ImageButton)).withAlpha(1.0f), colour_gradient_start_* (float)getWidth(), Colour(FXCOLOR(VerticalSliderLow)).withAlpha(1.0f), getWidth());
+    ColourGradient gradient = ColourGradient::horizontal(Colour(FXCOLOR(ImageButton)).withAlpha(1.0f), colour_gradient_start_* (float)getWidth(), Colour(FXCOLOR(VerticalSliderLow)).withAlpha(1.0f), (float)getWidth());
 
     g.setFillType(FillType(gradient));
-    auto area = juce::Rectangle<float>(0, 0, getWidth(), getHeight());
-    g.fillRoundedRectangle(area, getHeight() / 2);
+    auto area = getLocalBounds().toFloat();
+    g.fillRoundedRectangle(area, (float)getHeight() / 2);
 }
 
 FxPresetExportDialog::PresetExportComponent::PresetExportComponent() : export_button_(TRANS("Export"))
@@ -94,8 +94,6 @@ FxPresetExportDialog::PresetExportComponent::PresetExportComponent() : export_bu
     export_button_.addListener(this);
 
     preset_export_progress_.setSize(WIDTH, 2);
-    
-    font_ = theme.getNormalFont();
 
     addAndMakeVisible(select_presets_label_);
     addAndMakeVisible(export_button_);
@@ -127,7 +125,7 @@ void FxPresetExportDialog::PresetExportComponent::resized()
     preset_export_progress_.setBounds(0, bounds.getY(), WIDTH, 2);
 
     bounds.setTop(preset_export_progress_.getBottom() + 10);
-    
+
     component_area = juce::Rectangle<int>(0, 0, export_button_.getWidth(), export_button_.getHeight());
     placement = RectanglePlacement(RectanglePlacement::xRight
                                   | RectanglePlacement::yTop
@@ -147,11 +145,13 @@ void FxPresetExportDialog::PresetExportComponent::paintListBoxItem(int rowNumber
         g.fillAll(Colour(FXCOLOR(ImageButton)).withAlpha(1.0f));
     }
 
+    auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
+
     auto preset = FxModel::getModel().getPreset(rowNumber);
-    auto area = juce::Rectangle<float>(0, 0, width, height);
+    auto area = juce::Rectangle<float>(0, 0, static_cast<float>(width), static_cast<float>(height));
     area.reduce(10, 0);
     g.setColour(Colour(FXCOLOR(HighlightedText)).withAlpha(1.0f));
-    g.setFont(font_);
+    g.setFont(theme.getNormalFont());
     g.drawText(preset.name, area, Justification::centredLeft, true);
 }
 
@@ -171,10 +171,30 @@ void FxPresetExportDialog::PresetExportComponent::buttonClicked(Button* button)
 {
     if (button == &export_button_)
     {
-        bool show_explorer = false;
         export_button_.setEnabled(false);
 
         auto selected_presets = preset_list_.getSelectedRows();
+        auto* parent = Component::getParentComponent();
+
+        auto finish = [this, parent] (bool show_explorer)
+        {
+            auto closeDialog = [parent] (bool)
+            {
+                parent->exitModalState(0);
+                parent->removeFromDesktop();
+            };
+
+            if (show_explorer)
+            {
+                FxConfirmationMessage::showMessage(TRANS("Presets are exported successfully!"), FxConfirmationMessage::Style::OK, closeDialog);
+                File(File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory).getFullPathName()) + L"FxSound\\Presets\\Export\\").revealToUser();
+            }
+            else
+            {
+                closeDialog(false);
+            }
+        };
+
         if (selected_presets.size() > 0)
         {
             preset_export_progress_.setVisible(true);
@@ -187,16 +207,11 @@ void FxPresetExportDialog::PresetExportComponent::buttonClicked(Button* button)
                 presets.add(FxModel::getModel().getPreset(selected_presets[i]));
             }
 
-            show_explorer = FxController::getInstance().exportPresets(presets);
+            FxController::getInstance().exportPresets(presets, finish);
         }
-        
-        if (show_explorer)
+        else
         {
-            FxConfirmationMessage::showMessage(TRANS("Presets are exported successfully!"), FxConfirmationMessage::Style::OK);
-            File(File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory).getFullPathName()) + L"FxSound\\Presets\\Export\\").revealToUser();
+            finish(false);
         }
-
-        Component::getParentComponent()->exitModalState(0);
-        Component::getParentComponent()->removeFromDesktop();
     }
 }

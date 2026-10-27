@@ -126,20 +126,28 @@ private:
 
 	class RoutingSettingsPane : public SettingsPane, private Timer
 	{
-	public:
+	   public:
 		RoutingSettingsPane();
 		void resized() override;
-	private:
+
+	   private:
 		void timerCallback() override;
 		void refreshDevices();
 		void visibilityChanged() override;
-		Label input_label_, output_label_, input_help_, status_;
-		ComboBox input_list_, output_list_;
-		ToggleButton automatic_default_toggle_, pin_output_toggle_;
+		Label input_label_;
+		Label output_label_;
+		Label input_help_;
+		Label status_;
+		ComboBox input_list_;
+		ComboBox output_list_;
+		ToggleButton automatic_default_toggle_;
+		ToggleButton pin_output_toggle_;
 		TextButton refresh_button_;
 		std::vector<SoundDevice> devices_;
-		std::vector<String> input_ids_, output_ids_;
-		String device_signature_, change_error_;
+		std::vector<String> input_ids_;
+		std::vector<String> output_ids_;
+		String device_signature_;
+		String change_error_;
 	};
 
 	class GeneralSettingsPane : public SettingsPane

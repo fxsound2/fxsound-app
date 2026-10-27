@@ -23,10 +23,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxController.h"
 #include "FxTheme.h"
 
-FxEqualizer::FxEqualizer()
+FxEqualizer::FxEqualizer() : restore_defaults_button_("eqRestoreDefaultsButton", DrawableButton::ButtonStyle::ImageFitted)
 {
-    auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
     auto& controller = FxController::getInstance();
+
+    restore_defaults_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButton), FXIMAGESIZE(RestoreDefaultsButton));
+    restore_defaults_hover_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButtonHover), FXIMAGESIZE(RestoreDefaultsButtonHover));
+    restore_defaults_button_.setImages(restore_defaults_image_.get(), restore_defaults_hover_image_.get());
+    restore_defaults_button_.setMouseCursor(MouseCursor::PointingHandCursor);
+    restore_defaults_button_.setWantsKeyboardFocus(true);
+    restore_defaults_button_.setTooltip(TRANS("Restore Defaults"));
+    restore_defaults_button_.onClick = [this]() { restoreDefaults(); };
 
     int num_bands = controller.getNumEqBands();
     labels_.resize(num_bands);
@@ -52,13 +59,18 @@ FxEqualizer::FxEqualizer()
        
         center_frequencies_[i]->setRotaryParameters(3.66519f, 8.90118f, true);
         FxController::getInstance().getEqBandFrequencyRange(i, &min_freq, &max_freq);
-        center_frequencies_[i]->setRange(min_freq, max_freq, (max_freq-min_freq)/100);
+        // 1 Hz steps: a coarser interval (e.g. the previous span/100) quantizes to a
+        // grid anchored at this band's own min_freq, which doesn't line up with round
+        // reset frequencies (e.g. 1000 Hz was snapping to ~997 Hz).
+        center_frequencies_[i]->setRange(min_freq, max_freq, 1.0);
         center_frequencies_[i]->setFrequency(controller.getEqBandFrequency(i));
         addAndMakeVisible(center_frequencies_[i].get());
 
         band_gain_values_[i] = 0;
     }
-    
+
+    addAndMakeVisible(restore_defaults_button_);
+
     highlight_mode_ = false;
 
     setSize(WIDTH, HEIGHT);
@@ -69,6 +81,8 @@ void FxEqualizer::reinit(int num_bands)
     auto& controller = FxController::getInstance();
 
     removeAllChildren();
+
+    tooltips_valid_ = false;
 
     // ------------------------------------------------------------ clear and reinitialize arrays
     labels_.clear();
@@ -82,7 +96,6 @@ void FxEqualizer::reinit(int num_bands)
     band_gain_values_.resize(num_bands);
 
     // ------------------------------------------------------------ recreate all controls
-    auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
     float min_freq, max_freq;
 
     for (int i = 0; i < num_bands; i++)
@@ -102,12 +115,15 @@ void FxEqualizer::reinit(int num_bands)
 
         center_frequencies_[i]->setRotaryParameters(3.66519f, 8.90118f, true);
         controller.getEqBandFrequencyRange(i, &min_freq, &max_freq);
-        center_frequencies_[i]->setRange(min_freq, max_freq, (max_freq - min_freq) / 100);
+        // 1 Hz steps: see comment in the constructor above.
+        center_frequencies_[i]->setRange(min_freq, max_freq, 1.0);
         center_frequencies_[i]->setFrequency(controller.getEqBandFrequency(i));
         addAndMakeVisible(center_frequencies_[i].get());
 
         band_gain_values_[i] = 0;
     }
+
+    addAndMakeVisible(restore_defaults_button_);
 
     resized();
 
@@ -115,7 +131,7 @@ void FxEqualizer::reinit(int num_bands)
     showValues(true);
 }
 
-void FxEqualizer::sliderValueChanged(Slider* slider)
+void FxEqualizer::sliderValueChanged(Slider*)
 {
 
 }
@@ -226,6 +242,27 @@ void FxEqualizer::update()
     }
 }
 
+void FxEqualizer::restoreDefaults()
+{
+    auto& controller = FxController::getInstance();
+    int num_bands = controller.getNumEqBands();
+
+    for (auto i = 0; i < band_boosts_.size(); i++)
+    {
+        band_boosts_[i]->setValue(0.0, NotificationType::sendNotification);
+    }
+
+    // Center frequencies are only user-adjustable (and visible) below 15 bands,
+    // matching the same threshold used for per-knob right/double-click reset.
+    if (num_bands < 15)
+    {
+        for (auto i = 0; i < center_frequencies_.size(); i++)
+        {
+            center_frequencies_[i]->resetToDefaultFrequency();
+        }
+    }
+}
+
 void FxEqualizer::showValues(bool show)
 {
     for (int i = 0; i < band_boosts_.size(); i++)
@@ -240,6 +277,8 @@ void FxEqualizer::resized()
 
     int num_bands = controller.getNumEqBands();
 
+    restore_defaults_button_.setBounds(getWidth() - BUTTON_WIDTH - BUTTON_MARGIN, BUTTON_MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT);
+
     if (num_bands != labels_.size())
     {
 		repaint();
@@ -249,7 +288,7 @@ void FxEqualizer::resized()
     auto bounds = getLocalBounds();
 
     int x = X_MARGIN;
-    int width = (bounds.getWidth() - X_MARGIN*2) / labels_.size();
+    int width = (bounds.getWidth() - X_MARGIN*2) / static_cast<int>(labels_.size());
     int rotary_width = jmin(ROTARY_SLIDER_HEIGHT, width);
 
     bool show_center_frequencies = true;
@@ -280,8 +319,33 @@ void FxEqualizer::resized()
     }
 }
 
-void FxEqualizer::paint(Graphics& g)
+void FxEqualizer::updateTooltips(int num_bands)
 {
+    auto& controller = FxController::getInstance();
+
+    auto hidden = controller.isHelpTooltipsHidden();
+    auto language = controller.getLanguage();
+
+    if (tooltips_valid_ && tooltips_hidden_ == hidden && tooltips_num_bands_ == num_bands && tooltips_language_ == language)
+    {
+        return;
+    }
+
+    tooltips_valid_ = true;
+    tooltips_hidden_ = hidden;
+    tooltips_num_bands_ = num_bands;
+    tooltips_language_ = language;
+
+    if (hidden)
+    {
+        for (int i = 0; i < num_bands; i++)
+        {
+            band_boosts_[i]->setTooltip("");
+            center_frequencies_[i]->setTooltip("");
+        }
+        return;
+    }
+
     StringArray tool_tips = { TRANS("Hyper-low Bass - First band for very low frequencies down to 20 Hz."),
                               TRANS("Super-low Bass. Increase this for more rumble and \"thump\", decrease if there's too much boominess."),
                               TRANS("Center of your Bass sound. Increase this for a fuller low end, decrease if the bass sounds overwhelming."),
@@ -298,6 +362,15 @@ void FxEqualizer::paint(Graphics& g)
                                    "controls the volume of this EQ band. Increase or decrease to boost or cut\r\n" 
                                    "a portion of your audio's frequencies, without modifying the rest of your sound.");
 
+    for (int i = 0; i < num_bands; i++)
+    {
+        if (num_bands == 10) band_boosts_[i]->setTooltip(tool_tips[i]);
+        center_frequencies_[i]->setTooltip(center_freq_tip);
+    }
+}
+
+void FxEqualizer::paint(Graphics& g)
+{
     auto& controller = FxController::getInstance();
 
     int num_bands = controller.getNumEqBands();
@@ -324,22 +397,7 @@ void FxEqualizer::paint(Graphics& g)
     }
     else
     {
-        auto& controller = FxController::getInstance();
-
-        int num_bands = controller.getNumEqBands();
-        for (int i = 0; i < num_bands; i++)
-        {
-            if (!controller.isHelpTooltipsHidden())
-            {
-                if (num_bands == 10) band_boosts_[i]->setTooltip(tool_tips[i]);
-                center_frequencies_[i]->setTooltip(center_freq_tip);
-            }
-            else
-            {
-                band_boosts_[i]->setTooltip("");
-                center_frequencies_[i]->setTooltip("");
-            }
-        }
+        updateTooltips(num_bands);
     }
 
     if (highlight_mode_)
@@ -347,53 +405,60 @@ void FxEqualizer::paint(Graphics& g)
         gradient_colour_2 = gradient_colour_2.withSaturation(0.0);
     }
 
-    for (auto i = 0; i < band_boosts_.size() - 1; i++) 
+    // One stroke per colour instead of one per segment, so only two edge tables are built
+    Path enabled_lines;
+    Path disabled_lines;
+
+    for (auto i = 0; i < band_boosts_.size() - 1; i++)
     {
-        auto y0 = band_boosts_[i]->getPositionOfValue(band_boosts_[i]->getValue()) + Y_MARGIN;
-        auto y1 = band_boosts_[i + 1]->getPositionOfValue(band_boosts_[i + 1]->getValue()) + Y_MARGIN;
+        auto y0 = static_cast<float>(band_boosts_[i]->getPositionOfValue(band_boosts_[i]->getValue()) + Y_MARGIN);
+        auto y1 = static_cast<float>(band_boosts_[i + 1]->getPositionOfValue(band_boosts_[i + 1]->getValue()) + Y_MARGIN);
 
-        auto x0 = band_boosts_[i]->getX() + band_boosts_[i]->getWidth() / 2;
-        auto x1 = band_boosts_[i + 1]->getX() + band_boosts_[i + 1]->getWidth() / 2;
+        auto x0 = static_cast<float>(band_boosts_[i]->getX() + band_boosts_[i]->getWidth() / 2);
+        auto x1 = static_cast<float>(band_boosts_[i + 1]->getX() + band_boosts_[i + 1]->getWidth() / 2);
 
-        path.addLineSegment(Line<float>(x0, y0, x1, y1), 1.0);
+        auto& lines = (band_boosts_[i]->isEnabled() || band_boosts_[i + 1]->isEnabled()) ? enabled_lines : disabled_lines;
+        lines.addLineSegment(Line<float>(x0, y0, x1, y1), 1.0f);
+    }
 
-        if (band_boosts_[i]->isEnabled() || band_boosts_[i + 1]->isEnabled())
-        {
-            g.setColour(line_colour);
-        }
-        else
-        {
-            g.setColour(line_colour.withSaturation(0.0));
-        }
-        g.strokePath(path, PathStrokeType(1.0));
-        path.clear();
+    if (!enabled_lines.isEmpty())
+    {
+        g.setColour(line_colour);
+        g.strokePath(enabled_lines, PathStrokeType(1.0));
+    }
+
+    if (!disabled_lines.isEmpty())
+    {
+        g.setColour(line_colour.withSaturation(0.0));
+        g.strokePath(disabled_lines, PathStrokeType(1.0));
     }
 
     for (auto i = 0; i < band_boosts_.size(); i++) 
     {
-        auto x = band_boosts_[i]->getX() + band_boosts_[i]->getWidth() / 2;
-        auto y = band_boosts_[i]->getPositionOfValue(band_boosts_[i]->getValue()) + Y_MARGIN;
+        auto x = static_cast<float>(band_boosts_[i]->getX() + band_boosts_[i]->getWidth() / 2);
+        auto y = static_cast<float>(band_boosts_[i]->getPositionOfValue(band_boosts_[i]->getValue()) + Y_MARGIN);
 
         if (i == 0)                                           
         {
-            path.startNewSubPath(Point<float>(x, band_boosts_[i]->getBottom() - FxTheme::SLIDER_THUMB_RADIUS));
+            path.startNewSubPath(Point<float>(x, static_cast<float>(band_boosts_[i]->getBottom() - FxTheme::SLIDER_THUMB_RADIUS)));
         }
 
         path.lineTo(x, y);
 
         if (i == band_boosts_.size() - 1)
         {
-            path.lineTo(x, band_boosts_[i]->getBottom() - FxTheme::SLIDER_THUMB_RADIUS);
+            path.lineTo(x, static_cast<float>(band_boosts_[i]->getBottom() - FxTheme::SLIDER_THUMB_RADIUS));
         }
     }
     path.closeSubPath();
 
-    auto gradient = ColourGradient(gradient_colour_1, 0, band_boosts_[1]->getY(), gradient_colour_2, 0, band_boosts_[1]->getBottom(), false);
+    auto gradient = ColourGradient(gradient_colour_1, 0, static_cast<float>(band_boosts_[1]->getY()),
+                                   gradient_colour_2, 0, static_cast<float>(band_boosts_[1]->getBottom()), false);
     g.setFillType(FillType(gradient));
     g.fillPath(path);
 }
 
-FxEqualizer::FxEqSlider::FxEqSlider(int band, float max_gain)
+FxEqualizer::FxEqSlider::FxEqSlider(int band, float)
 {
     band_ = band;
 
@@ -401,7 +466,7 @@ FxEqualizer::FxEqSlider::FxEqSlider(int band, float max_gain)
 
     auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
 
-    gain_label_.setFont(theme.getNormalFont().withHeight(LABEL_HEIGHT));
+    gain_label_.setFont(theme.getSmallFont().withHeight(LABEL_HEIGHT));
     gain_label_.setJustificationType(Justification::centred);
     gain_label_.setInterceptsMouseClicks(false, false);
     addChildComponent(gain_label_);
@@ -417,7 +482,7 @@ void FxEqualizer::FxEqSlider::setGainValue(float value)
     gain_label_.setText(text, NotificationType::dontSendNotification);
 
     auto y = getPositionOfValue(value) - (FxTheme::SLIDER_THUMB_RADIUS *3);
-    gain_label_.setBounds(gain_label_.getBounds().withY(y));
+    gain_label_.setBounds(gain_label_.getBounds().withY(static_cast<int>(y)));
 }
 
 void FxEqualizer::FxEqSlider::showValue(bool show)
@@ -448,13 +513,13 @@ void FxEqualizer::FxEqSlider::valueChanged()
     auto value = getValue();
     if (value != FxController::getInstance().getEqBandBoostCut(band_))
     {
-        FxController::getInstance().setEqBandBoostCut(band_, value);
+        FxController::getInstance().setEqBandBoostCut(band_, static_cast<float>(value));
 
         auto text = String::formatted(value == 0.0 ? "%.0f" : "%+.0f", value);
         gain_label_.setText(text, NotificationType::dontSendNotification);
 
         auto y = getPositionOfValue(value) - (FxTheme::SLIDER_THUMB_RADIUS*3);
-        gain_label_.setBounds(gain_label_.getBounds().withY(y));
+        gain_label_.setBounds(gain_label_.getBounds().withY(static_cast<int>(y)));
     }
 }
 
@@ -480,10 +545,11 @@ bool FxEqualizer::FxEqSlider::keyPressed(const KeyPress& key)
 // -------------------------------------------------------------------------- SLIDERS GAIN - centered with right mouseDown
 void FxEqualizer::FxEqSlider::mouseDown(const juce::MouseEvent& event)
 {
-    // Check if right mouse button is pressed
-    if (event.mods.isRightButtonDown())
+    // Check if right mouse button is pressed, or this is a double-click
+    if (event.mods.isRightButtonDown() || event.getNumberOfClicks() >= 2)
     {
-        // Reset the slider to 0
+        // Reset the slider to 0. See FxAudioSlider::mouseDown for why this is
+        // handled here rather than in mouseDoubleClick.
         setValue(0.0, juce::NotificationType::sendNotification);
     }
     else
@@ -557,7 +623,7 @@ void FxEqualizer::FxBandCenterFreqSlider::enablementChanged()
 
 void FxEqualizer::FxBandCenterFreqSlider::valueChanged()
 {
-    auto freq = getValue();
+    auto freq = static_cast<float>(getValue());
 
     if (freq != FxController::getInstance().getEqBandFrequency(band_))
     {
@@ -592,57 +658,36 @@ void FxEqualizer::FxBandCenterFreqSlider::mouseDown(const juce::MouseEvent& even
     int nBands = FxController::getInstance().getNumEqBands();
     if (nBands >= 15) return;
 
-    // ------------------------------------------------------- Check if right mouse button is pressed
-    if (event.mods.isRightButtonDown())
+    // ------------------------------------------------------- Check if right mouse button is pressed, or this is a double-click
+    if (event.mods.isRightButtonDown() || event.getNumberOfClicks() >= 2)
     {
-        if (nBands == 5)
-        {
-            static const float defaultFrequencies[] =
-            {
-                62.5f,    // band 1
-                250.0f,   // band 2
-                1000.0f,  // band 3
-                4000.0f,  // band 4
-                16000.0f  // band 5
-            };
-            if (band_ >= 0 && band_ <= 4)
-            {
-                setValue(defaultFrequencies[band_], juce::NotificationType::sendNotification);
-            }
-        }
-        else if (nBands == 10)
-        {
-            // Matches the legacy (pre-ISO) 10 band frequency grid in
-            // GraphicEqReSetAllBandFreqs() that existing presets were authored against.
-            static const float defaultFrequencies[] =
-            {
-                62.5f,     // band 1
-                115.734f,  // band 2
-                214.311f,  // band 3
-                396.85f,   // band 4
-                734.867f,  // band 5
-                1360.79f,  // band 6
-                2519.84f,  // band 7
-                4666.12f,  // band 8
-                8640.48f,  // band 9
-                16000.0f   // band 10
-            };
-            if (band_ >= 0 && band_ <= 9)
-            {
-                setValue(defaultFrequencies[band_], juce::NotificationType::sendNotification);
-            }
-        }
-        else
-        {
-            float min_freq = 20;
-            float max_freq = 20000;
-            int f = min_freq * pow((max_freq / min_freq), ((float)band_ / (nBands - 1)));
-            setValue(f, juce::NotificationType::sendNotification);
-        }
+        // See FxAudioSlider::mouseDown for why this is handled here rather than
+        // in mouseDoubleClick.
+        resetToDefaultFrequency();
     }
     else
     {
         // Default behavior
         juce::Slider::mouseDown(event);
+    }
+}
+
+void FxEqualizer::FxBandCenterFreqSlider::resetToDefaultFrequency()
+{
+    int nBands = FxController::getInstance().getNumEqBands();
+
+    float default_freq;
+    if (FxController::getInstance().getDefaultEqBandFrequency(band_, &default_freq))
+    {
+        setValue(default_freq, juce::NotificationType::sendNotification);
+    }
+    else if (nBands > 1)
+    {
+        // nBands - 1 guarded above: with a single band there's no spacing to
+        // compute, so just fall through and leave the value unchanged.
+        float min_freq = 20;
+        float max_freq = 20000;
+        int f = min_freq * pow((max_freq / min_freq), ((float)band_ / (nBands - 1)));
+        setValue(f, juce::NotificationType::sendNotification);
     }
 }

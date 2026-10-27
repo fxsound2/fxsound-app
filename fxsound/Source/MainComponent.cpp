@@ -7,6 +7,7 @@
 */
 
 #include "MainComponent.h"
+#include "GUI/FxController.h"
 
 //==============================================================================
 MainComponent::MainComponent(const String& name) : Component(name)
@@ -212,6 +213,7 @@ void MainComponent::showAnnouncement()
 		auto bounds = placement.appliedTo(area, Desktop::getInstance().getDisplays().getMainDisplay().userArea);
 
 		announcement_->addToDesktop(ComponentPeer::windowIsTemporary);
+		FxController::getInstance().setRenderingEngine(*announcement_);
 		announcement_->setVisible(true);
 		announcement_->setBounds(bounds);
 		announcement_->goToURL(url);

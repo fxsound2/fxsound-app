@@ -436,7 +436,6 @@ int PT_DECLSPEC fileToString_WithAllocation_Wide(wchar_t * wcp_filepath, wchar_t
 	wchar_t wcp_msg1[PT_MAX_GENERIC_STRLEN];
 	char cp_chunk[FILE_TO_STRING_CHUNK_SIZE];
 	wchar_t wcp_chunk[FILE_TO_STRING_CHUNK_SIZE];
-	int i_characters_read;
 
 	/* Check if the file exists */
 	if (fileExist_Wide(wcp_filepath, &file_exists) != OKAY)
@@ -463,7 +462,7 @@ int PT_DECLSPEC fileToString_WithAllocation_Wide(wchar_t * wcp_filepath, wchar_t
 	while (!feof(fpFile))
 	{
 		// Read 512 bytes/chars at a time, saving 1 byte/char for the null character
-		i_characters_read = fread(cp_chunk, sizeof(char), FILE_TO_STRING_CHUNK_SIZE - 1, fpFile);
+		auto i_characters_read = static_cast<int>(fread(cp_chunk, sizeof(char), FILE_TO_STRING_CHUNK_SIZE - 1, fpFile));
 		*ip_strlen += i_characters_read;
 		cp_chunk[i_characters_read] = '\0';
 		// Read in data is in bytes (char), need to convert to wide characters

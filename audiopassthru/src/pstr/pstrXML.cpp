@@ -167,7 +167,7 @@ int PT_DECLSPEC pstrXmlGetNextTag(wchar_t * wcp_xml_string, wchar_t * wcp_start_
 	 *                         ^
 	 *                         |
 	 */
-	i_value_start_index = *ip_start_tag_index + wcslen(wcp_start_tag);
+	i_value_start_index = *ip_start_tag_index + static_cast<int>(wcslen(wcp_start_tag));
 
 	// Copy the value string to wcp_found_tag_value
 	index_dest = 0;
@@ -184,7 +184,7 @@ int PT_DECLSPEC pstrXmlGetNextTag(wchar_t * wcp_xml_string, wchar_t * wcp_start_
 	wcp_found_tag_value[index_dest] = L'\0';
 
 	// Advance ip_end_tag_index to be pointing at the last '>'
-	*ip_end_tag_index += wcslen(wcp_end_tag) - 1;
+	*ip_end_tag_index += static_cast<int>(wcslen(wcp_end_tag) - 1);
 		
 	return(OKAY);
 }
