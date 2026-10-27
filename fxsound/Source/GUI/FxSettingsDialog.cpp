@@ -190,7 +190,7 @@ FxSettingsDialog::SettingsPane::SettingsPane(String name)
 
     title_.setFont(theme.getTitleFont());
 	title_.setText(TRANS(name_), NotificationType::dontSendNotification);	
-	title_.setColour(Label::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+	title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	title_.setJustificationType(Justification::centredLeft);
 	addAndMakeVisible(title_);
 }
@@ -210,7 +210,7 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 {
 	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
 
-	output_preference_title_.setColour(Label::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+	output_preference_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	output_preference_title_.setJustificationType(Justification::centredLeft);
 
 	output_preference_.setMouseCursor(MouseCursor::PointingHandCursor);
@@ -218,8 +218,8 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 	output_preference_.setEnabled(true);
 
 	prioritize_new_output_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
-	prioritize_new_output_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
-	prioritize_new_output_toggle_.setColour(ToggleButton::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+	prioritize_new_output_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	prioritize_new_output_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	prioritize_new_output_toggle_.setWantsKeyboardFocus(true);
 
 	reset_presets_button_.setSize(RESET_PRESETS_BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -367,21 +367,21 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
 
 	launch_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
-	launch_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
-	launch_toggle_.setColour(ToggleButton::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+	launch_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	launch_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	launch_toggle_.setWantsKeyboardFocus(true);
 	
 	hide_help_tips_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
-    hide_help_tips_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
-    hide_help_tips_toggle_.setColour(ToggleButton::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+    hide_help_tips_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+    hide_help_tips_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	hide_help_tips_toggle_.setWantsKeyboardFocus(true);
 	hide_notifications_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
-	hide_notifications_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
-	hide_notifications_toggle_.setColour(ToggleButton::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+	hide_notifications_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	hide_notifications_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	hide_notifications_toggle_.setWantsKeyboardFocus(true);
 	hotkeys_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
-	hotkeys_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
-	hotkeys_toggle_.setColour(ToggleButton::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+	hotkeys_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	hotkeys_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	hotkeys_toggle_.setWantsKeyboardFocus(true);
 
 	bool hotkey_enabled = FxModel::getModel().getHotkeySupport();
@@ -491,12 +491,12 @@ void FxSettingsDialog::GeneralSettingsPane::setText()
 
 FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), auto_updates_toggle_(TRANS("Automatic updates"))
 {	
-	version_title_.setColour(Label::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+	version_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	version_title_.setJustificationType(Justification::centredLeft);
 	version_text_.setJustificationType(Justification::centredLeft);	
-	support_title_.setColour(Label::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+	support_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	support_title_.setJustificationType(Justification::centredLeft);	
-	maintenance_title_.setColour(Label::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+	maintenance_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	maintenance_title_.setJustificationType(Justification::centredLeft);
 
 	changelog_link_.setURL(URL(L"https://www.fxsound.com/changelog"));
@@ -510,8 +510,8 @@ FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), a
 
 	auto_updates_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
 	auto_updates_toggle_.setToggleState(FxController::getInstance().getAutoUpdates(), NotificationType::dontSendNotification);
-	auto_updates_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
-	auto_updates_toggle_.setColour(ToggleButton::ColourIds::text_colourId, getLookAndFeel().findColour(TextButton::text_colourOnId));
+	auto_updates_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	auto_updates_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 
 	auto_updates_toggle_.onClick = [this]() {
 		FxController::getInstance().setAutoUpdates(auto_updates_toggle_.getToggleState());
@@ -582,7 +582,7 @@ FxSettingsDialog::RoutingSettingsPane::RoutingSettingsPane()
 {
 	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
 	const auto text_colour =
-	    getLookAndFeel().findColour(TextButton::text_colourOnId);
+	    getLookAndFeel().findColour(TextButton::textColourOnId);
 	input_label_.setText(TRANS("Input device"), dontSendNotification);
 	output_label_.setText(TRANS("Output device"), dontSendNotification);
 	input_help_.setText(
@@ -591,7 +591,7 @@ FxSettingsDialog::RoutingSettingsPane::RoutingSettingsPane()
 	    dontSendNotification);
 	for (auto* label : {&input_label_, &output_label_, &input_help_, &status_})
 	{
-		label->setColour(Label::text_colourId, text_colour);
+		label->setColour(Label::textColourId, text_colour);
 		label->setJustificationType(Justification::topLeft);
 		label->setMinimumHorizontalScale(1.0f);
 		addAndMakeVisible(label);
@@ -620,7 +620,7 @@ FxSettingsDialog::RoutingSettingsPane::RoutingSettingsPane()
 		      "available output."));
 	for (auto* toggle : {&automatic_default_toggle_, &pin_output_toggle_})
 	{
-		toggle->setColour(ToggleButton::text_colourId, text_colour);
+		toggle->setColour(ToggleButton::textColourId, text_colour);
 		toggle->setColour(ToggleButton::tickColourId, text_colour);
 		toggle->setMouseCursor(MouseCursor::PointingHandCursor);
 		addAndMakeVisible(toggle);

@@ -85,8 +85,8 @@ protected:
 		void updateLogo();
 
 		String name_;
-		std::unique_ptr<Drawable> icon_;
-		std::unique_ptr<Drawable> animation_icon_;
+		std::unique_ptr<OwningDrawableComponent> icon_;
+		std::unique_ptr<OwningDrawableComponent> animation_icon_;
 		Label title_;
 		std::vector<std::pair<Button*, bool>> toolbar_buttons_;
 		CloseButton close_button_;

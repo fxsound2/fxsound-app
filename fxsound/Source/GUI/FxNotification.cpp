@@ -49,7 +49,7 @@ void FxNotification::setMessage(const String& message, const std::pair<String, S
 
 	setLookAndFeel(&LookAndFeel::getDefaultLookAndFeel());
 
-	icon_ = Drawable::createFromImageData(FXIMAGE(DefaultLogo), FXIMAGESIZE(DefaultLogo));
+	icon_ = OwningDrawableComponent::create(Drawable::createFromImageData(FXIMAGE(DefaultLogo), FXIMAGESIZE(DefaultLogo)));
 	icon_->setTransformToFit(juce::Rectangle<float>(15.0f, 10.0f, (float)ICON_WIDTH, (float)ICON_HEIGHT),
 		{ RectanglePlacement::xMid | RectanglePlacement::yMid });
 	addAndMakeVisible(icon_.get());
