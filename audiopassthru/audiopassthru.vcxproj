@@ -274,6 +274,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AudioPassthru.h" />
+    <ClInclude Include="include\AudioRoutingPolicy.h" />
     <ClInclude Include="include\codedefs.h" />
     <ClInclude Include="include\File.h" />
     <ClInclude Include="include\mry.h" />

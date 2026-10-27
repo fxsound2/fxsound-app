@@ -103,14 +103,18 @@ int PT_DECLSPEC sndDevices_GetAll(PT_HANDLE* hp_sndDevices, int* ip_num_devices)
 	if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_INSTANCE_CREATE_FAILED)
 
 		// Enumerate all playback audio devices, "eRender" means look only for playback devices.
-		hr = pEnumerator->EnumAudioEndpoints(eRender, DEVICE_STATE_ACTIVE | DEVICE_STATE_UNPLUGGED, &pCollectionAllDevices);
+		hr = pEnumerator->EnumAudioEndpoints(eAll, DEVICE_STATE_ACTIVE | DEVICE_STATE_UNPLUGGED, &pCollectionAllDevices);
 	if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_ENUMERATE_FAILED)
 
 		// Now get total number of playback devices
 		hr = pCollectionAllDevices->GetCount(&deviceCount);
 	if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_GETCOUNT_FAILED)
 
-		cast_handle->totalNumDevices = deviceCount;
+		// The endpoint arrays have a fixed capacity, including recording inputs.
+	if (deviceCount > SND_DEVICES_MAX_NUM_DEVICES)
+		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_GETCOUNT_FAILED);
+
+	cast_handle->totalNumDevices = deviceCount;
 	*ip_num_devices = deviceCount;
 
 	// There are no active sound devices and thus also no default device.
@@ -124,11 +128,12 @@ int PT_DECLSPEC sndDevices_GetAll(PT_HANDLE* hp_sndDevices, int* ip_num_devices)
 
 	// First get the ID string for the current default playback device.
 	hr = pEnumerator->GetDefaultAudioEndpoint(eRender, eMultimedia, &pDefaultDevice);
-	if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_GET_AUDIOENDPOINT_FAILED);
+	// Recording-only configurations can have no default render endpoint.
+	cast_handle->defaultDeviceNum = SND_DEVICES_DEVICE_NOT_PRESENT;
 
 	if (pDefaultDevice != NULL)
 	{
-		pDefaultDevice->GetId(&pwszIDdefault);
+		hr = pDefaultDevice->GetId(&pwszIDdefault);
 		if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_GETID_FAILED);
 	}
 
@@ -154,6 +159,13 @@ int PT_DECLSPEC sndDevices_GetAll(PT_HANDLE* hp_sndDevices, int* ip_num_devices)
 		if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_GETID_FAILED);
 		wcscpy_s(cast_handle->pwszID[i], PT_MAX_GENERIC_STRLEN, pID);
 		CoTaskMemFree(pID);
+
+		IMMEndpoint* endpoint = NULL;
+		hr = cast_handle->pAllDevices[i]->QueryInterface(__uuidof(IMMEndpoint), (void**)&endpoint);
+		if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_GETID_FAILED);
+		hr = endpoint->GetDataFlow(&cast_handle->deviceFlow[i]);
+		endpoint->Release();
+		if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_GETID_FAILED);
 
 		// Access the registry properties for this device.
 		hr = cast_handle->pAllDevices[i]->OpenPropertyStore(STGM_READ, &pProps);
@@ -243,7 +255,7 @@ int PT_DECLSPEC sndDevices_GetAll(PT_HANDLE* hp_sndDevices, int* ip_num_devices)
 				PropVariantClear(&DeviceDesc);
 				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_INSTANCE_CREATE_FAILED);
 			}
-			if (i_found_dfx_string)
+			if (i_found_dfx_string && cast_handle->deviceFlow[i] == eRender)
 				cast_handle->dfxDeviceNum = i;
 
 			hr = cast_handle->pAllDevices[i]->GetState(&cast_handle->deviceState[i]);
@@ -272,7 +284,8 @@ int PT_DECLSPEC sndDevices_GetAll(PT_HANDLE* hp_sndDevices, int* ip_num_devices)
 	// -------------------------------------------------------------------------
 	for (i = 0; i < deviceCount; i++)
 	{
-		if ((int)i != cast_handle->dfxDeviceNum)
+		if ((int)i != cast_handle->dfxDeviceNum && cast_handle->deviceFlow[i] == eRender
+				&& cast_handle->deviceState[i] == DEVICE_STATE_ACTIVE)
 		{
 			cast_handle->pwszIDRealDevices[cast_handle->numRealDevices] = cast_handle->pwszID[i];
 			cast_handle->deviceFriendlyNameRealDevices[cast_handle->numRealDevices] = cast_handle->deviceFriendlyName[i];

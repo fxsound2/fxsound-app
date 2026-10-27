@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Mmdeviceapi.h>
 #include <vector> 
 #include <map>
+#include <atomic>
 
 class DspProcessingModule
 {
@@ -52,6 +53,13 @@ public:
     bool isPlaybackDeviceAvailable();
 	bool checkDeviceChanges();
 	void restoreDefaultPlaybackDevice();
+	std::wstring getRoutingSetting(wchar_t* name);
+	int setRoutingSetting(wchar_t* name, const std::wstring& value);
+	int restartRouting();
+	bool isAutomaticDefaultEnabled();
+	int setAutomaticDefaultEnabled(bool enabled);
+	int getRoutingStatus();
+	int refreshRouting();
 
 private:
 	int sndDeviceHandleToSoundDevices(bool active_devices = true);
@@ -71,5 +79,6 @@ private:
 	bool mute_;
 	DfxDsp *p_dfx_dsp_;
 	static AudioPassthruCallback *s_callback_;
+	static std::atomic<bool> s_devices_dirty_;
 };
 

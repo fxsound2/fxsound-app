@@ -112,3 +112,49 @@ void AudioPassthru::restoreDefaultPlaybackDevice()
 {
     data_->restoreDefaultPlaybackDevice();
 }
+
+std::wstring AudioPassthru::getInputDeviceId()
+{
+	return data_->getRoutingSetting(SND_DEVICES_REGISTRY_USER_SELECTED_INPUT_WIDE);
+}
+
+int AudioPassthru::setInputDeviceId(const std::wstring& device_id)
+{
+	return data_->setRoutingSetting(SND_DEVICES_REGISTRY_USER_SELECTED_INPUT_WIDE, device_id);
+}
+
+bool AudioPassthru::isAutomaticDefaultEnabled()
+{
+	return data_->isAutomaticDefaultEnabled();
+}
+
+int AudioPassthru::setAutomaticDefaultEnabled(bool enabled)
+{
+	return data_->setAutomaticDefaultEnabled(enabled);
+}
+
+std::wstring AudioPassthru::getPinnedOutputDeviceId()
+{
+	return data_->getRoutingSetting(SND_DEVICES_REGISTRY_USER_SELECTED_PLAYBACK_WIDE);
+}
+
+int AudioPassthru::setPinnedOutputDeviceId(const std::wstring& device_id)
+{
+	return data_->setRoutingSetting(SND_DEVICES_REGISTRY_USER_SELECTED_PLAYBACK_WIDE, device_id);
+}
+
+int AudioPassthru::getRoutingStatus()
+{
+	return data_->getRoutingStatus();
+}
+
+int AudioPassthru::stopProcessing()
+{
+	// The controller stops its timer before calling this; capture stays stopped until power-on.
+	return data_->restartRouting();
+}
+
+int AudioPassthru::refreshRouting()
+{
+	return data_->refreshRouting();
+}

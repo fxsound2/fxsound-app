@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#include "stdafx.h"
 #include "u_AudioPassthru.h"
 #include "sndDevices.h"
+#include "reg.h"
 
 #define DFXG_SND_SERVER_KILL_THREAD_TIMEOUT_MSECS		  3000
 #define DFXG_SND_SERVER_KILL_THREAD_WAIT_PER_LOOP_MSECS   50
@@ -33,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // there is some truth to it.
 sndDevicesHdlType AudioPassthruPrivate::s_sndDevices_;
 AudioPassthruCallback* AudioPassthruPrivate::s_callback_ = nullptr;
+std::atomic<bool> AudioPassthruPrivate::s_devices_dirty_(false);
 
 AudioPassthruPrivate::AudioPassthruPrivate()
 {
@@ -44,6 +46,8 @@ AudioPassthruPrivate::AudioPassthruPrivate()
 	swprintf(wcp_playback_device_guid_, PT_MAX_GENERIC_STRLEN, L"");
 	b_no_valid_snd_device_dialog_shown_ = false;
 	debug_ = IS_TRUE;
+	mute_ = false;
+	p_dfx_dsp_ = nullptr;
 }
 
 AudioPassthruPrivate::~AudioPassthruPrivate()
@@ -131,12 +135,8 @@ void AudioPassthruPrivate::setDspProcessingModule(DfxDsp* p_dfx_dsp)
 
 std::vector<SoundDevice> AudioPassthruPrivate::getSoundDevices(bool active_devices)
 {
-	if (checkDeviceChanges())
+	if (s_devices_dirty_.exchange(false) || checkDeviceChanges())
 	{
-		int numRealDevices;
-		int DfxDeviceEnabledFlag;
-		int statusFlag;
-
 		sndDevices_GetAll(hp_sndDevices_, &(s_sndDevices_.totalNumDevices));
 	}
 
@@ -147,7 +147,7 @@ std::vector<SoundDevice> AudioPassthruPrivate::getSoundDevices(bool active_devic
 int AudioPassthruPrivate::sndDeviceHandleToSoundDevices(bool active_devices)
 {
 	int i_resultFlag;
-	wchar_t wcp_user_seleted_playback_device_guid[PT_MAX_GENERIC_STRLEN];
+	wchar_t wcp_user_seleted_playback_device_guid[PT_MAX_GENERIC_STRLEN] = {};
 	wchar_t wcp_targeted_real_playback_device_guid[PT_MAX_GENERIC_STRLEN];
 	wchar_t wcp_capture_device_guid[PT_MAX_GENERIC_STRLEN];
 	wchar_t wcp_dfx_device_guid[PT_MAX_GENERIC_STRLEN];
@@ -159,6 +159,9 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices(bool active_devices)
 
 	// Clear SoundDevices
 	sound_devices_.clear();
+
+	sndDeviceReadFromRegistry(hp_sndDevices_, REG_CURRENT_USER,
+		SND_DEVICES_REGISTRY_USER_SELECTED_PLAYBACK_WIDE, wcp_user_seleted_playback_device_guid);
 
 	// Get the guid of the currently selected real playback device
 	if (sndDevicesGetID(hp_sndDevices_, SND_DEVICES_TARGETED_REAL_PLAYBACK, wcp_targeted_real_playback_device_guid, &i_resultFlag) != OKAY ||
@@ -186,6 +189,7 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices(bool active_devices)
 		sound_device.deviceFriendlyName = std::wstring(cast_handle->deviceFriendlyName[index]);
 		sound_device.deviceDescription = std::wstring(cast_handle->deviceDescription[index] != NULL ? cast_handle->deviceDescription[index] : L"");
 		sound_device.deviceNumChannel = cast_handle->deviceNumChannel[index];
+		sound_device.isRecordingDevice = cast_handle->deviceFlow[index] == eCapture;
 		sound_device.deviceFormFactor = std::wstring(cast_handle->deviceFormFactor[index]);
 		if (cast_handle->deviceState[index] == DEVICE_STATE_ACTIVE)
 		{
@@ -197,20 +201,16 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices(bool active_devices)
         }
 
 		// Skip mono devices if SND_DEVICES_MONO_BUG_SKIP_MONO_DEVICES is IS_TRUE
-		if (SND_DEVICES_MONO_BUG_SKIP_MONO_DEVICES && sound_device.deviceNumChannel == 1)
+		if (SND_DEVICES_MONO_BUG_SKIP_MONO_DEVICES && !sound_device.isRecordingDevice
+			&& sound_device.deviceNumChannel == 1)
 		{
 			continue;
 		}
 
 		// Figure out if this is a real device or not
-		sound_device.isRealDevice = false;
-		for (int index2 = 0; index2 < cast_handle->numRealDevices; index2++) 
-		{
-			if (sound_device.pwszID == cast_handle->pwszIDRealDevices[index2]) 
-			{
-				sound_device.isRealDevice = true;
-			}
-		}
+		sound_device.isRealDevice = !sound_device.isRecordingDevice &&
+			sound_device.pwszID != wcp_dfx_device_guid;
+
 
 		if (sound_device.pwszID == wcp_user_seleted_playback_device_guid)
 		{
@@ -242,6 +242,7 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices(bool active_devices)
 
 void AudioPassthruPrivate::onDeviceChange()
 {
+	s_devices_dirty_ = true;
 	// Clear the unavailability flag so processTimer() can retry after this device change.
 	s_sndDevices_.playbackDeviceIsUnavailable = FALSE;
 
@@ -386,9 +387,9 @@ int AudioPassthruPrivate::processTimer()
 		bReturn = GetExitCodeThread(hProcessingThread_, &d_ExitCode);
 		if (d_ExitCode != STILL_ACTIVE)
 		{
-			b_need_to_start_thread = TRUE;
+			b_need_to_start_thread = !s_sndDevices_.playbackDeviceIsUnavailable;
 			CloseHandle(hProcessingThread_);
-			hProcessingThread_ = NULL;
+			hProcessingThread_ = b_need_to_start_thread ? NULL : INVALID_HANDLE_VALUE;
 		}
 	}
 
@@ -399,7 +400,16 @@ int AudioPassthruPrivate::processTimer()
 
 		/* Reinit the sndDevices module */
 		if (sndDevicesReInit(hp_sndDevices_, SND_DEVICES_INIT_FOR_PROCESSING, &numRealDevices, &DfxDeviceEnabledFlag, &statusFlag) != OKAY)
-			return(NOT_OKAY);
+		{
+			s_sndDevices_.routingStatus = statusFlag != SND_DEVICES_DEVICE_OPERATION_COMPLETED ? statusFlag : SND_DEVICES_GENERIC_FAILURE;
+			s_sndDevices_.playbackDeviceIsUnavailable = TRUE;
+			hProcessingThread_ = INVALID_HANDLE_VALUE;
+			return NOT_OKAY;
+		}
+
+		if ((DfxDeviceEnabledFlag != IS_TRUE || numRealDevices <= 0) && statusFlag == SND_DEVICES_DEVICE_OPERATION_COMPLETED)
+			statusFlag = SND_DEVICES_DEVICE_NOT_PRESENT;
+		s_sndDevices_.routingStatus = statusFlag;
 
 		if (statusFlag != SND_DEVICES_DEVICE_OPERATION_COMPLETED)
 		{
@@ -647,15 +657,74 @@ void AudioPassthruPrivate::restoreDefaultPlaybackDevice()
 
 int AudioPassthruPrivate::setTargetedRealPlaybackDevice(const std::wstring sound_device_guid)
 {
-	int i_resultFlag;
-	wchar_t wcp_new_targeted_real_playback_guid[PT_MAX_GENERIC_STRLEN];
-	
-	/* Set the guid of the newly selected playback device */
-	swprintf(wcp_new_targeted_real_playback_guid, PT_MAX_GENERIC_STRLEN, L"%s", sound_device_guid.c_str());
+	if (sound_device_guid.empty() || sound_device_guid.size() >= PT_MAX_GENERIC_STRLEN)
+		return NOT_OKAY;
+	wcscpy_s(s_sndDevices_.requestedPlaybackDeviceID, PT_MAX_GENERIC_STRLEN, sound_device_guid.c_str());
+	return restartRouting();
+}
 
-	/* Set the newly targeted playback device as the default.  It will then automatically become the targeted device */
-	if (sndDevicesSetDeviceType(hp_sndDevices_, SND_DEVICES_DEFAULT, wcp_new_targeted_real_playback_guid, &i_resultFlag) != OKAY)
-		return(NOT_OKAY);
+std::wstring AudioPassthruPrivate::getRoutingSetting(wchar_t* name)
+{
+	wchar_t value[PT_MAX_GENERIC_STRLEN] = {};
+	sndDeviceReadFromRegistry(hp_sndDevices_, REG_CURRENT_USER, name, value);
+	return value;
+}
 
-	return(OKAY);
+int AudioPassthruPrivate::setRoutingSetting(wchar_t* name, const std::wstring& value)
+{
+	if (value.size() >= PT_MAX_GENERIC_STRLEN)
+		return NOT_OKAY;
+	int timed_out;
+	if (killProcessingThread(&timed_out) != OKAY || timed_out)
+		return NOT_OKAY;
+	// Release a default we previously claimed before moving to a custom source.
+	if (wcscmp(name, SND_DEVICES_REGISTRY_USER_SELECTED_INPUT_WIDE) == 0 && !value.empty())
+		restoreDefaultPlaybackDevice();
+	if (sndDevicesWriteToRegistry(hp_sndDevices_, REG_CURRENT_USER, name,
+		const_cast<wchar_t*>(value.c_str())) != OKAY)
+		return NOT_OKAY;
+	return restartRouting();
+}
+
+int AudioPassthruPrivate::restartRouting()
+{
+	int timed_out;
+	if (killProcessingThread(&timed_out) != OKAY || timed_out)
+		return NOT_OKAY;
+	s_sndDevices_.playbackDeviceIsUnavailable = FALSE;
+	s_sndDevices_.routingStatus = SND_DEVICES_DEVICE_OPERATION_COMPLETED;
+	return OKAY;
+}
+
+bool AudioPassthruPrivate::isAutomaticDefaultEnabled()
+{
+	int mode = SND_DEVICES_AUTO_SELECT_DEFAULT_DEVICE_ON;
+	sndDevicesGetDefaultDeviceSelectionMode(hp_sndDevices_, &mode);
+	return mode == SND_DEVICES_AUTO_SELECT_DEFAULT_DEVICE_ON;
+}
+
+int AudioPassthruPrivate::setAutomaticDefaultEnabled(bool enabled)
+{
+	int timed_out;
+	if (killProcessingThread(&timed_out) != OKAY || timed_out)
+		return NOT_OKAY;
+	if (!enabled)
+		restoreDefaultPlaybackDevice();
+	if (sndDevicesSetDefaultDeviceSelectionMode(hp_sndDevices_, enabled ?
+		SND_DEVICES_AUTO_SELECT_DEFAULT_DEVICE_ON : SND_DEVICES_AUTO_SELECT_DEFAULT_DEVICE_OFF) != OKAY)
+		return NOT_OKAY;
+	return restartRouting();
+}
+
+int AudioPassthruPrivate::getRoutingStatus()
+{
+	return s_sndDevices_.routingStatus;
+}
+
+int AudioPassthruPrivate::refreshRouting()
+{
+	const int result = restartRouting();
+	if (result == OKAY)
+		s_devices_dirty_ = true;
+	return result;
 }

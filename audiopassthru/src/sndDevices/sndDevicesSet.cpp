@@ -111,6 +111,13 @@ int PT_DECLSPEC sndDevicesSetDeviceType(PT_HANDLE *hp_sndDevices, int i_deviceTy
 		{
 			hr = pPolicyConfig->SetDefaultEndpoint(cast_handle->pwszID[device_index_num], reserved);
 			pPolicyConfig->Release();
+			if (FAILED(hr))
+			{
+				*ip_resultFlag = SND_DEVICES_PROPERTY_SET_FAILED;
+				return OKAY;
+			}
+			if (device_index_num == cast_handle->dfxDeviceNum)
+				cast_handle->defaultDeviceWasChanged = TRUE;
 
 			// Store the current default device number and set the new one.
 			cast_handle->priorDefaultDeviceNum = cast_handle->defaultDeviceNum;

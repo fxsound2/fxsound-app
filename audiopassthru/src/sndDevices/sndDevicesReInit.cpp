@@ -51,7 +51,7 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 	int captureAllocSize, playbackAllocSize;
 	int captureBufferChannelsForAllocation;
 	BOOL captureMuteState;
-    
+
 	cast_handle = (struct sndDevicesHdlType *)hp_sndDevices;
 
 	if (cast_handle == NULL)
@@ -83,7 +83,7 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 
 	wcscpy(cast_handle->lastDeviceAddCallbackGuid, L"");
 	cast_handle->lastDeviceAddCallbackGuidtype = 0;
-	
+
 	cast_handle->noBufferCount = 0;
 	cast_handle->MeasuredVirtualSilentBufferCount = 0;
 	cast_handle->MeasuredTrueSilentBufferCount = 0;
@@ -132,7 +132,7 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 	// If audio processing will be performed, do additional initialization.
 	if( (i_initType == SND_DEVICES_INIT_FOR_PROCESSING))
 	{
-		if (cast_handle->numRealDevices > 0) 
+		if (cast_handle->numRealDevices > 0)
 		{
 			// Based on current and past default device settings and user selections,
 			// assign the current playback device, the DFX capture device and the default device.
@@ -169,64 +169,68 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_RULES_NOT_POSSIBLE);
 			}
 
-			// Read the FxSound mute setting up front, before the volume-level sync below gets a chance
-			// to touch it. Some drivers clear a device's mute flag as a side effect of a volume-level
-			// write, so reading mute afterwards could see FALSE even if the user had genuinely muted it
-			// (e.g. via Windows sound settings) moments before reinit ran.
-			// The playback device's own mute is not read here: it is saved in
-			// sndDevicesInitialSetupPlaybackDevice() before this app changes anything on that device,
-			// and what gets applied below is the FxSound mute setting, not the device's own.
-			hr = cast_handle->pEndptVolCapture->GetMute(&captureMuteState);
-			if (hr != S_OK)
+			// Custom sources keep their own endpoint volume and mute settings.
+			if (cast_handle->captureDeviceNum == cast_handle->dfxDeviceNum)
 			{
-				*ipDfxDeviceEnabledFlag = IS_FALSE;
-				*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
-				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MUTE_FAILED);
-			}
+				// Read the FxSound mute setting up front, before the volume-level sync below gets a chance
+				// to touch it. Some drivers clear a device's mute flag as a side effect of a volume-level
+				// write, so reading mute afterwards could see FALSE even if the user had genuinely muted it
+				// (e.g. via Windows sound settings) moments before reinit ran.
+				// The playback device's own mute is not read here: it is saved in
+				// sndDevicesInitialSetupPlaybackDevice() before this app changes anything on that device,
+				// and what gets applied below is the FxSound mute setting, not the device's own.
+				hr = cast_handle->pEndptVolCapture->GetMute(&captureMuteState);
+				if (hr != S_OK)
+				{
+					*ipDfxDeviceEnabledFlag = IS_FALSE;
+					*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
+					SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MUTE_FAILED);
+				}
 
-			// Initialize the playback device's volume to the capture device's (DFX) volume.
-			// While FxSound is running the user's main volume control is the DFX "FxSound Audio Enhancer"
-			// device, so its level is the one carried forward: it is applied to whichever real playback
-			// device we have just attached to, rather than this app adopting that device's own level.
-			// That keeps the volume continuous across an output change, and it means a device that is
-			// sitting at full volume does not suddenly play at full volume the moment it is selected.
-			// The device's own level was saved in sndDevicesInitialSetupPlaybackDevice(), which runs
-			// before this point, and is put back on it when FxSound moves to a different playback device.
-			// Recovers capture volume control setting in a nomalized range of 0.0 to 1.0
-			hr = cast_handle->pEndptVolCapture->GetMasterVolumeLevelScalar(&captureVolSetting);
-			if (hr != S_OK)
-			{
-				*ipDfxDeviceEnabledFlag = IS_FALSE;
-				*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
-				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_GET_MASTER_VOLUME_FAILED);
-			}
+				// Initialize the playback device's volume to the capture device's (DFX) volume.
+				// While FxSound is running the user's main volume control is the DFX "FxSound Audio Enhancer"
+				// device, so its level is the one carried forward: it is applied to whichever real playback
+				// device we have just attached to, rather than this app adopting that device's own level.
+				// That keeps the volume continuous across an output change, and it means a device that is
+				// sitting at full volume does not suddenly play at full volume the moment it is selected.
+				// The device's own level was saved in sndDevicesInitialSetupPlaybackDevice(), which runs
+				// before this point, and is put back on it when FxSound moves to a different playback device.
+				// Recovers capture volume control setting in a nomalized range of 0.0 to 1.0
+				hr = cast_handle->pEndptVolCapture->GetMasterVolumeLevelScalar(&captureVolSetting);
+				if (hr != S_OK)
+				{
+					*ipDfxDeviceEnabledFlag = IS_FALSE;
+					*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
+					SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_GET_MASTER_VOLUME_FAILED);
+				}
 
-			// Note, second arg is a GUID used in callbacks generated by this change to identify who made the change.
-			// This is done to ID this change as coming from this program to avoid an infinite loop.
-			hr = cast_handle->pEndptVolPlayback->SetMasterVolumeLevelScalar(captureVolSetting, &(cast_handle->guidThisApplication));
-			if (hr != S_OK)
-			{
-				*ipDfxDeviceEnabledFlag = IS_FALSE;
-				*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
-				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MASTER_VOLUME_FAILED);
-			}
+				// Note, second arg is a GUID used in callbacks generated by this change to identify who made the change.
+				// This is done to ID this change as coming from this program to avoid an infinite loop.
+				hr = cast_handle->pEndptVolPlayback->SetMasterVolumeLevelScalar(captureVolSetting, &(cast_handle->guidThisApplication));
+				if (hr != S_OK)
+				{
+					*ipDfxDeviceEnabledFlag = IS_FALSE;
+					*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
+					SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MASTER_VOLUME_FAILED);
+				}
 
-			// Apply the FxSound mute setting to both devices, re-asserting it after the volume-level
-			// sync above in case that write disturbed a mute flag.
-			hr = cast_handle->pEndptVolCapture->SetMute(captureMuteState, &(cast_handle->guidThisApplication));
-			if ((hr != S_OK) && (hr != S_FALSE))	// Note, will return S_FALSE if the mute was already at that value, check for other errors.
-			{
-				*ipDfxDeviceEnabledFlag = IS_FALSE;
-				*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
-				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MUTE_FAILED);
-			}
+				// Apply the FxSound mute setting to both devices, re-asserting it after the volume-level
+				// sync above in case that write disturbed a mute flag.
+				hr = cast_handle->pEndptVolCapture->SetMute(captureMuteState, &(cast_handle->guidThisApplication));
+				if ((hr != S_OK) && (hr != S_FALSE))	// Note, will return S_FALSE if the mute was already at that value, check for other errors.
+				{
+					*ipDfxDeviceEnabledFlag = IS_FALSE;
+					*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
+					SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MUTE_FAILED);
+				}
 
-			hr = cast_handle->pEndptVolPlayback->SetMute(captureMuteState, &(cast_handle->guidThisApplication));
-			if ((hr != S_OK) && (hr != S_FALSE))	// Note, will return S_FALSE if the mute was already at that value, check for other errors.
-			{
-				*ipDfxDeviceEnabledFlag = IS_FALSE;
-				*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
-				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MUTE_FAILED);
+				hr = cast_handle->pEndptVolPlayback->SetMute(captureMuteState, &(cast_handle->guidThisApplication));
+				if ((hr != S_OK) && (hr != S_FALSE))	// Note, will return S_FALSE if the mute was already at that value, check for other errors.
+				{
+					*ipDfxDeviceEnabledFlag = IS_FALSE;
+					*ip_status = SND_DEVICES_RULES_NOT_POSSIBLE;
+					SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_SET_MUTE_FAILED);
+				}
 			}
 
 			// Setup capture and playback buffers
@@ -363,7 +367,7 @@ int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE* hp_sndDevices, BOOL* bp_deviceC
 	if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_INSTANCE_CREATE_FAILED)
 
 	// Enumerate all playback audio devices, "eRender" means look only for playback devices.
-	hr = pEnumerator->EnumAudioEndpoints(eRender, DEVICE_STATE_ACTIVE | DEVICE_STATE_UNPLUGGED, &pCollectionAllDevices);
+	hr = pEnumerator->EnumAudioEndpoints(eAll, DEVICE_STATE_ACTIVE | DEVICE_STATE_UNPLUGGED, &pCollectionAllDevices);
 	if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_ENUMERATE_FAILED)
 
 	// Now get total number of playback devices

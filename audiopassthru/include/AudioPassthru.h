@@ -36,6 +36,7 @@ struct SoundDevice {
 	bool isTargetedRealPlaybackDevice = false;
 	bool isRealDevice = false;
 	bool isDFXDevice = false;
+	bool isRecordingDevice = false;
 	bool isUserSelectedPlaybackDevice = false;
 	bool isDefaultDevice = false;
     bool isActive = false;
@@ -75,6 +76,15 @@ public:
     bool isPlaybackDeviceAvailable();
 	bool checkDeviceChanges();
 	void restoreDefaultPlaybackDevice();
+	std::wstring getInputDeviceId();
+	int setInputDeviceId(const std::wstring& device_id);
+	bool isAutomaticDefaultEnabled();
+	int setAutomaticDefaultEnabled(bool enabled);
+	std::wstring getPinnedOutputDeviceId();
+	int setPinnedOutputDeviceId(const std::wstring& device_id);
+	int getRoutingStatus();
+	int stopProcessing();
+	int refreshRouting();
 
 private:
 	AudioPassthruPrivate *data_;
