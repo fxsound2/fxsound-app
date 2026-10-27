@@ -2247,6 +2247,66 @@
     <ClCompile Include="..\JuceLibraryCode\include_juce_gui_basics.cpp">
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_core_zlib.c">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libjpg_1.c">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libjpg_2.c">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libjpg_3.c">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libpng.c">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_dec.c">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_dsp_dec.c">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_dsp_dec_avx2.c">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_dsp_dec_sse41.c">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_dsp_enc.c">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_dsp_enc_avx2.c">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_dsp_enc_sse41.c">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_enc.c">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_sharpyuv.c">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_utils.c">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_lunasvg.c">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_gui_basics_2.cpp">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_gui_basics_3.cpp">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_gui_basics_4.cpp">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_gui_basics_5.cpp">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
     <ClCompile Include="..\JuceLibraryCode\include_juce_gui_extra.cpp">
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
