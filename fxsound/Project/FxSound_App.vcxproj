@@ -2224,6 +2224,38 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\ /y
     <ClCompile Include="..\JuceLibraryCode\include_juce_gui_basics.cpp">
       <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_core_zlib.c" />
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libjpg_1.c" />
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libjpg_2.c" />
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libjpg_3.c" />
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libpng.c" />
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_dec.c" />
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_dsp_dec.c" />
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_dsp_dec_avx2.c">
+      <EnableEnhancedInstructionSet Condition="'$(Platform)'!='ARM64'">AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_dsp_dec_sse41.c" />
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_dsp_enc.c" />
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_dsp_enc_avx2.c">
+      <EnableEnhancedInstructionSet Condition="'$(Platform)'!='ARM64'">AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_dsp_enc_sse41.c" />
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_enc.c" />
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_sharpyuv.c" />
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_libwebp_utils.c" />
+    <ClCompile Include="..\JuceLibraryCode\include_juce_graphics_lunasvg.c" />
+    <ClCompile Include="..\JuceLibraryCode\include_juce_gui_basics_2.cpp">
+      <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_gui_basics_3.cpp">
+      <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_gui_basics_4.cpp">
+      <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\JuceLibraryCode\include_juce_gui_basics_5.cpp">
+      <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <ClCompile Include="..\JuceLibraryCode\include_juce_gui_extra.cpp" />
     <ClCompile Include="..\JuceLibraryCode\include_juce_opengl.cpp" />
   </ItemGroup>

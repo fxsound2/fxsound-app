@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Functiondiscoverykeys_devpkey.h>
 #include <endpointvolume.h>
 #include <Propvarutil.h>
+#include <ks.h>
+#include <ksmedia.h>
 
 // This is the include file for the "hidden" IPolicyConfig MS functions.
 #include "PolicyConfig.h"
@@ -85,7 +87,8 @@ int PT_DECLSPEC sndDevicesInitialSetupCaptureDevice(PT_HANDLE *hp_sndDevices, in
 		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_NULL_CAPTURE_CLIENT);
 	}
 
-	if( cast_handle->initializationMode == SND_DEVICES_INIT_FOR_PROCESSING )
+	if( cast_handle->initializationMode == SND_DEVICES_INIT_FOR_PROCESSING
+		&& cast_handle->captureDeviceNum == cast_handle->dfxDeviceNum )
 	{
 		// Activate capture device for volume control.
 		hr = cast_handle->pCaptureDevice->Activate(cast_handle->IID_IAudioEndpointVolume, CLSCTX_ALL, NULL, (void**)&(cast_handle->pEndptVolCapture) );
@@ -124,6 +127,16 @@ int PT_DECLSPEC sndDevicesInitialSetupCaptureDevice(PT_HANDLE *hp_sndDevices, in
 	}
 
 	cast_handle->wfxCapture = *pwfx;
+	if (cast_handle->captureDeviceNum != cast_handle->dfxDeviceNum)
+	{
+		// Convert custom input streams without changing the source endpoint's format.
+		cast_handle->wfxCapture = cast_handle->wfxDfxProcessing;
+		cast_handle->wfxCapture.wFormatTag = WAVE_FORMAT_IEEE_FLOAT;
+		cast_handle->wfxCapture.wBitsPerSample = 32;
+		cast_handle->wfxCapture.nBlockAlign = cast_handle->wfxCapture.nChannels * sizeof(float);
+		cast_handle->wfxCapture.nAvgBytesPerSec = cast_handle->wfxCapture.nSamplesPerSec * cast_handle->wfxCapture.nBlockAlign;
+		cast_handle->wfxCapture.cbSize = 0;
+	}
 	CoTaskMemFree(pwfx);
 
 	return(OKAY);
@@ -172,6 +185,12 @@ int PT_DECLSPEC sndDevicesFinalSetupCaptureDevice(PT_HANDLE *hp_sndDevices, int 
 		// The AUDCLNT_SESSIONFLAGS_DISPLAY_HIDE flag hides extra occurences of our volume control in Mixer dialog.
 		StreamFlags = AUDCLNT_STREAMFLAGS_LOOPBACK|AUDCLNT_SESSIONFLAGS_DISPLAY_HIDE;
 
+	if (cast_handle->deviceFlow[cast_handle->captureDeviceNum] == eCapture)
+		StreamFlags &= ~AUDCLNT_STREAMFLAGS_LOOPBACK;
+	const bool customInput = cast_handle->captureDeviceNum != cast_handle->dfxDeviceNum;
+	if (customInput)
+		StreamFlags |= AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM | AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY;
+
 	// For some reason next call won't take our copied version of this format, likely its expecting WAVEFORMATEXTENSIBLE
 	pwfx = NULL;
 	hr = cast_handle->pAudioClientCapture->GetMixFormat(&pwfx);
@@ -181,9 +200,26 @@ int PT_DECLSPEC sndDevicesFinalSetupCaptureDevice(PT_HANDLE *hp_sndDevices, int 
 		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_DEVICE_GET_FORMAT_FAILED);
 	}
 
-	// Set capture device up to perform loopback capture. Shared mode allows multiple apps to do capture.
+	WAVEFORMATEXTENSIBLE convertedFormat = {};
+	if (customInput)
+	{
+		convertedFormat.Format = cast_handle->wfxCapture;
+		convertedFormat.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
+		convertedFormat.Format.cbSize = sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX);
+		convertedFormat.Samples.wValidBitsPerSample = 32;
+		convertedFormat.SubFormat = KSDATAFORMAT_SUBTYPE_IEEE_FLOAT;
+		switch (convertedFormat.Format.nChannels)
+		{
+		case 2: convertedFormat.dwChannelMask = KSAUDIO_SPEAKER_STEREO; break;
+		case 4: convertedFormat.dwChannelMask = KSAUDIO_SPEAKER_QUAD; break;
+		case 6: convertedFormat.dwChannelMask = KSAUDIO_SPEAKER_5POINT1; break;
+		case 8: convertedFormat.dwChannelMask = KSAUDIO_SPEAKER_7POINT1_SURROUND; break;
+		}
+	}
+
+	// Recording endpoints use normal capture; render endpoints use loopback.
 	hr = cast_handle->pAudioClientCapture->Initialize(AUDCLNT_SHAREMODE_SHARED, StreamFlags,
-																	  cast_handle->hnsRequestedDurationCapture,0, pwfx, NULL);
+		cast_handle->hnsRequestedDurationCapture, 0, customInput ? &convertedFormat.Format : pwfx, NULL);
 	CoTaskMemFree(pwfx);
 	if (FAILED(hr))
 	{
@@ -301,8 +337,14 @@ int PT_DECLSPEC sndDevicesInitialSetupPlaybackDevice(PT_HANDLE *hp_sndDevices, i
 		*ip_status = SND_DEVICES_NULL_PLAYBACK_CLIENT;
 		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_NULL_PLAYBACK_CLIENT);
 	}
+	if (cast_handle->captureDeviceNum != cast_handle->dfxDeviceNum && cast_handle->playbackSettingsAreSaved)
+	{
+		sndDevices_RestoreSavedPlaybackDeviceSettings(cast_handle);
+		cast_handle->playbackSettingsAreSaved = FALSE;
+	}
 
-	if( cast_handle->initializationMode == SND_DEVICES_INIT_FOR_PROCESSING )
+	if( cast_handle->initializationMode == SND_DEVICES_INIT_FOR_PROCESSING
+		&& cast_handle->captureDeviceNum == cast_handle->dfxDeviceNum )
 	{
 		// Activate playback device for volume control.
 		hr = cast_handle->pPlaybackDevice->Activate(cast_handle->IID_IAudioEndpointVolume, CLSCTX_ALL, NULL, (void**)&cast_handle->pEndptVolPlayback);
@@ -542,6 +584,26 @@ int PT_DECLSPEC sndDevicesRestoreDefaultDevice(PT_HANDLE *hp_sndDevices, int *ip
 		return(NOT_OKAY);
 
 	*ip_resultFlag = SND_DEVICES_DEVICE_OPERATION_COMPLETED;
+	int mode;
+	if (sndDevicesGetDefaultDeviceSelectionMode(hp_sndDevices, &mode) != OKAY)
+		return NOT_OKAY;
+	if (mode != SND_DEVICES_AUTO_SELECT_DEFAULT_DEVICE_ON || !cast_handle->defaultDeviceWasChanged)
+		return OKAY;
+	IMMDeviceEnumeratorPtr enumerator;
+	IMMDevicePtr currentDefault;
+	LPWSTR currentID = NULL;
+	HRESULT hr = enumerator.CreateInstance(__uuidof(MMDeviceEnumerator));
+	if (FAILED(hr) || FAILED(enumerator->GetDefaultAudioEndpoint(eRender, eConsole, &currentDefault)) ||
+		FAILED(currentDefault->GetId(&currentID)))
+		return NOT_OKAY;
+	const bool stillOwnsDefault = cast_handle->dfxDeviceNum >= 0 &&
+		wcscmp(currentID, cast_handle->pwszID[cast_handle->dfxDeviceNum]) == 0;
+	CoTaskMemFree(currentID);
+	if (!stillOwnsDefault)
+	{
+		cast_handle->defaultDeviceWasChanged = FALSE;
+		return OKAY;
+	}
 
 	// Handing control back to a real device is an output device switch, in the same sense that Windows
 	// treats picking a different output device, so that device's own mute setting applies from here
@@ -590,19 +652,24 @@ int PT_DECLSPEC sndDevicesRestoreDefaultDevice(PT_HANDLE *hp_sndDevices, int *ip
 	if( sndDevices_UtilsGetIndexFromID(hp_sndDevices, originalDefaultID, &originalDefaultNum) != OKAY )
 		return(NOT_OKAY);
 
-	if( userSelectedPlaybackNum != SND_DEVICES_DEVICE_NOT_PRESENT )
+    const auto usableOutput = [&](int index) {
+        return index >= 0 && index < cast_handle->totalNumDevices &&
+            cast_handle->deviceFlow[index] == eRender && index != cast_handle->dfxDeviceNum &&
+            cast_handle->deviceState[index] == DEVICE_STATE_ACTIVE;
+    };
+	if (usableOutput(userSelectedPlaybackNum))
 		device_num = userSelectedPlaybackNum;
 
-	else if( mostRecentPlaybackNum != SND_DEVICES_DEVICE_NOT_PRESENT )
+	else if (usableOutput(mostRecentPlaybackNum))
 		device_num = mostRecentPlaybackNum;
 
-	else if( mostRecentDefaultNum != SND_DEVICES_DEVICE_NOT_PRESENT )
+	else if (usableOutput(mostRecentDefaultNum))
 		device_num = mostRecentDefaultNum;
 
-	else if( priorDefaultNum != SND_DEVICES_DEVICE_NOT_PRESENT )
+	else if (usableOutput(priorDefaultNum))
 		device_num = priorDefaultNum;
 
-	else if( originalDefaultNum != SND_DEVICES_DEVICE_NOT_PRESENT )
+	else if (usableOutput(originalDefaultNum))
 		device_num = originalDefaultNum;
 
 	// If an active device was found, set it as the default.
@@ -612,6 +679,8 @@ int PT_DECLSPEC sndDevicesRestoreDefaultDevice(PT_HANDLE *hp_sndDevices, int *ip
 			return(NOT_OKAY);
 
 		*ip_resultFlag = result_flag;
+		if (result_flag == SND_DEVICES_DEVICE_OPERATION_COMPLETED)
+			cast_handle->defaultDeviceWasChanged = FALSE;
 	}
 	else
 		*ip_resultFlag = SND_DEVICES_DEVICE_NOT_PRESENT;

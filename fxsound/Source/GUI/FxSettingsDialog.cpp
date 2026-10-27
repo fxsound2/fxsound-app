@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <JuceHeader.h>
 #include "FxSettingsDialog.h"
+#include "AudioRoutingPolicy.h"
 #include "../Utils/SysInfo/SysInfo.h"
 
 //==============================================================================
@@ -95,6 +96,10 @@ FxSettingsDialog::SettingsComponent::SettingsComponent()
 	audio_button_->addListener(this);
 
 
+	routing_button_ = std::make_unique<SettingsButton>("Routing");
+	routing_button_->setImage(Drawable::createFromImageData(BinaryData::speaker_svg, BinaryData::speaker_svgSize).get());
+	routing_button_->addListener(this);
+
 	general_button_ = std::make_unique<SettingsButton>("General");
 	general_button_->setToggleState(false, NotificationType::dontSendNotification);
 	general_button_->setImage(Drawable::createFromImageData(BinaryData::settings_svg, BinaryData::settings_svgSize).get());
@@ -106,10 +111,12 @@ FxSettingsDialog::SettingsComponent::SettingsComponent()
 	help_button_->addListener(this);    
 
 	addAndMakeVisible(audio_button_.get());
+	addAndMakeVisible(routing_button_.get());
 	addAndMakeVisible(general_button_.get());
 	addAndMakeVisible(help_button_.get());
 
 	addAndMakeVisible(audio_settings_pane_);
+	addChildComponent(routing_settings_pane_);
 	addChildComponent(general_settings_pane_);
 	addChildComponent(help_settings_pane_);
 
@@ -119,17 +126,31 @@ FxSettingsDialog::SettingsComponent::SettingsComponent()
 void FxSettingsDialog::SettingsComponent::resized()
 {
 	audio_button_->setBounds(BUTTON_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
-	general_button_->setBounds(BUTTON_X, audio_button_->getBottom() + 20, BUTTON_WIDTH, BUTTON_HEIGHT);
+	routing_button_->setBounds(BUTTON_X, audio_button_->getBottom() + 20, BUTTON_WIDTH, BUTTON_HEIGHT);
+	general_button_->setBounds(BUTTON_X, routing_button_->getBottom() + 20, BUTTON_WIDTH, BUTTON_HEIGHT);
 	help_button_->setBounds(BUTTON_X, general_button_->getBottom() + 20, BUTTON_WIDTH, BUTTON_HEIGHT);
 
 	juce::Rectangle<int> pane_rect(SEPARATOR_X + 1, 1, getWidth() - SEPARATOR_X + 1, getHeight() - 1);
 	audio_settings_pane_.setBounds(pane_rect);
+	routing_settings_pane_.setBounds(pane_rect);
 	general_settings_pane_.setBounds(pane_rect);
 	help_settings_pane_.setBounds(pane_rect);
 }
 
 void  FxSettingsDialog::SettingsComponent::buttonClicked(Button* button)
 {
+	routing_button_->setToggleState(button == routing_button_.get(), NotificationType::dontSendNotification);
+	routing_settings_pane_.setVisible(button == routing_button_.get());
+	if (button == routing_button_.get())
+	{
+		audio_button_->setToggleState(false, NotificationType::dontSendNotification);
+		general_button_->setToggleState(false, NotificationType::dontSendNotification);
+		help_button_->setToggleState(false, NotificationType::dontSendNotification);
+		audio_settings_pane_.setVisible(false);
+		general_settings_pane_.setVisible(false);
+		help_settings_pane_.setVisible(false);
+		return;
+	}
 	if (button == audio_button_.get())
 	{
 		button->setToggleState(true, NotificationType::dontSendNotification);
@@ -554,4 +575,247 @@ void FxSettingsDialog::HelpSettingsPane::setText()
     helpcenter_link_.setButtonText(TRANS("Help center"));        
     feedback_link_.setButtonText(TRANS("Feedback"));
 	auto_updates_toggle_.setButtonText(TRANS("Automatic updates"));;
+}
+
+FxSettingsDialog::RoutingSettingsPane::RoutingSettingsPane()
+    : SettingsPane("Audio routing")
+{
+	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
+	const auto text_colour =
+	    getLookAndFeel().findColour(TextButton::textColourOnId);
+	input_label_.setText(TRANS("Input device"), dontSendNotification);
+	output_label_.setText(TRANS("Output device"), dontSendNotification);
+	input_help_.setText(
+	    TRANS("Playback devices capture app audio via loopback. Recording "
+		      "devices capture a microphone, line-in, or virtual cable."),
+	    dontSendNotification);
+	for (auto* label : {&input_label_, &output_label_, &input_help_, &status_})
+	{
+		label->setColour(Label::textColourId, text_colour);
+		label->setJustificationType(Justification::topLeft);
+		label->setMinimumHorizontalScale(1.0f);
+		addAndMakeVisible(label);
+	}
+	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
+	input_help_.setFont(theme.getNormalFont().withHeight(13.0f));
+	status_.setFont(theme.getNormalFont().withHeight(13.0f));
+	input_list_.setTextWhenNothingSelected(TRANS("Choose an input"));
+	output_list_.setTextWhenNothingSelected(TRANS("No available output"));
+	input_list_.setTitle(TRANS("Input device"));
+	output_list_.setTitle(TRANS("Output device"));
+	input_list_.setTooltip(
+	    TRANS("Choose a playback loopback source or a recording device. Input "
+		      "and playback output must be different."));
+	output_list_.setTooltip(
+	    TRANS("FxSound sends processed audio to this device."));
+	automatic_default_toggle_.setButtonText(
+	    TRANS("Make FxSound the Windows default output"));
+	automatic_default_toggle_.setTooltip(
+	    TRANS("Applies when using FxSound Audio Enhancer as input. Turning "
+		      "this off releases a default claimed by FxSound."));
+	pin_output_toggle_.setButtonText(TRANS("Keep this output device"));
+	pin_output_toggle_.setTooltip(
+	    TRANS("Prefer the selected output even when other devices connect. If "
+		      "it disconnects, keep its preference and temporarily use an "
+		      "available output."));
+	for (auto* toggle : {&automatic_default_toggle_, &pin_output_toggle_})
+	{
+		toggle->setColour(ToggleButton::textColourId, text_colour);
+		toggle->setColour(ToggleButton::tickColourId, text_colour);
+		toggle->setMouseCursor(MouseCursor::PointingHandCursor);
+		addAndMakeVisible(toggle);
+	}
+	addAndMakeVisible(input_list_);
+	addAndMakeVisible(output_list_);
+	refresh_button_.setButtonText(TRANS("Refresh devices"));
+	addAndMakeVisible(refresh_button_);
+	input_list_.onChange = [this]()
+	{
+		const int index = input_list_.getSelectedId() - 1;
+		if (index < 0 || index >= static_cast<int>(input_ids_.size()))
+		{
+			return;
+		}
+		const bool saved =
+		    FxController::getInstance().setInputDeviceId(input_ids_[index]);
+		change_error_ = saved
+		                    ? String()
+		                    : TRANS(
+		                          "Input was not changed. Choose an available "
+								  "device different from the current output.");
+		device_signature_.clear();
+		refreshDevices();
+	};
+	output_list_.onChange = [this]()
+	{
+		const int index = output_list_.getSelectedId() - 1;
+		if (index < 0 || index >= static_cast<int>(output_ids_.size()))
+		{
+			return;
+		}
+		FxController::getInstance().setOutput(output_ids_[index]);
+		change_error_.clear();
+		device_signature_.clear();
+		refreshDevices();
+	};
+	automatic_default_toggle_.onClick = [this]()
+	{
+		const bool saved =
+		    FxController::getInstance().setAutomaticDefaultEnabled(
+		        automatic_default_toggle_.getToggleState());
+		change_error_ =
+		    saved ? String()
+			      : TRANS("Unable to save the Windows default setting.");
+		refreshDevices();
+	};
+	pin_output_toggle_.onClick = [this]()
+	{
+		const bool saved = FxController::getInstance().setOutputPinned(
+		    pin_output_toggle_.getToggleState());
+		change_error_ =
+		    saved ? String()
+			      : TRANS("Choose an available output before pinning it.");
+		refreshDevices();
+	};
+	refresh_button_.onClick = [this]()
+	{
+		change_error_.clear();
+		device_signature_.clear();
+		if (!FxController::getInstance().refreshAudioRouting())
+		{
+			change_error_ =
+			    TRANS("Unable to restart audio. Close and reopen FxSound.");
+		}
+		refreshDevices();
+	};
+	refreshDevices();
+}
+
+void FxSettingsDialog::RoutingSettingsPane::resized()
+{
+	const int width = getWidth() - 2 * X_MARGIN;
+	title_.setBounds(X_MARGIN, Y_MARGIN, width, TITLE_HEIGHT);
+	input_label_.setBounds(X_MARGIN, 50, width, 22);
+	input_list_.setBounds(X_MARGIN, 76, width, 30);
+	input_help_.setBounds(X_MARGIN, 114, width, 54);
+	output_label_.setBounds(X_MARGIN, 182, width, 22);
+	output_list_.setBounds(X_MARGIN, 208, width, 30);
+	automatic_default_toggle_.setBounds(X_MARGIN, 259, width, 32);
+	pin_output_toggle_.setBounds(X_MARGIN, 297, width, 32);
+	status_.setBounds(X_MARGIN, 344, width, 100);
+	refresh_button_.setBounds(X_MARGIN, 462, 150, 28);
+}
+
+void FxSettingsDialog::RoutingSettingsPane::visibilityChanged()
+{
+	if (isShowing())
+	{
+		refreshDevices();
+		startTimer(1000);
+	}
+	else
+	{
+		stopTimer();
+	}
+}
+
+void FxSettingsDialog::RoutingSettingsPane::timerCallback()
+{
+	if (!input_list_.isPopupActive() && !output_list_.isPopupActive())
+	{
+		refreshDevices();
+	}
+}
+
+void FxSettingsDialog::RoutingSettingsPane::refreshDevices()
+{
+	auto& controller = FxController::getInstance();
+	devices_ = controller.getRoutingDevices();
+	const auto input = controller.getInputDeviceId();
+	const auto output =
+	    String(FxModel::getModel().getSelectedOutput().pwszID.c_str());
+	const auto pin = controller.getPinnedOutputDeviceId();
+	String signature = input + "|" + output;
+	for (const auto& device : devices_)
+	{
+		signature += "|" + String(device.pwszID.c_str()) + ":" +
+		             String(device.deviceFriendlyName.c_str()) + ":" +
+		             String(device.isActive ? 1 : 0) + ":" +
+		             String(device.deviceNumChannel);
+	}
+	if (signature != device_signature_)
+	{
+		device_signature_ = signature;
+		input_list_.clear(dontSendNotification);
+		output_list_.clear(dontSendNotification);
+		input_ids_.clear();
+		output_ids_.clear();
+		input_ids_.push_back(String());
+		input_list_.addItem(TRANS("FxSound Audio Enhancer (default)"), 1);
+		input_list_.setSelectedId(input.isEmpty() ? 1 : 0,
+		                          dontSendNotification);
+		bool selected_input_found = input.isEmpty();
+		for (const bool recording : {false, true})
+		{
+			input_list_.addSectionHeading(
+			    recording ? TRANS("Recording devices")
+				          : TRANS("Playback audio (loopback)"));
+			for (const auto& device : devices_)
+			{
+				if (device.isDFXDevice || !device.isActive ||
+				    device.isRecordingDevice != recording)
+				{
+					continue;
+				}
+				const String id(device.pwszID.c_str());
+				input_ids_.push_back(id);
+				const int item = static_cast<int>(input_ids_.size());
+				input_list_.addItem(String(device.deviceFriendlyName.c_str()),
+				                    item);
+				if (id == input)
+				{
+					input_list_.setSelectedId(item, dontSendNotification);
+					selected_input_found = true;
+				}
+			}
+		}
+		if (!selected_input_found)
+		{
+			input_ids_.push_back(input);
+			const int item = static_cast<int>(input_ids_.size());
+			input_list_.addItem(TRANS("Saved input (unavailable)"), item);
+			input_list_.setSelectedId(item, dontSendNotification);
+			input_list_.setItemEnabled(item, false);
+		}
+		for (const auto& device : devices_)
+		{
+			if (!device.isActive || !device.isRealDevice ||
+			    device.isRecordingDevice ||
+			    !AudioRouting::supportsOutput(device.deviceNumChannel) ||
+			    String(device.pwszID.c_str()) == input)
+			{
+				continue;
+			}
+			output_ids_.push_back(String(device.pwszID.c_str()));
+			const int item = static_cast<int>(output_ids_.size());
+			output_list_.addItem(String(device.deviceFriendlyName.c_str()),
+			                     item);
+			if (String(device.pwszID.c_str()) == output)
+			{
+				output_list_.setSelectedId(item, dontSendNotification);
+			}
+		}
+	}
+	automatic_default_toggle_.setToggleState(
+	    controller.isAutomaticDefaultEnabled(), dontSendNotification);
+	automatic_default_toggle_.setEnabled(input.isEmpty());
+	pin_output_toggle_.setToggleState(pin.isNotEmpty(), dontSendNotification);
+	pin_output_toggle_.setEnabled(pin.isNotEmpty() ||
+	                              output_list_.getSelectedId() > 0);
+	pin_output_toggle_.setButtonText(pin.isNotEmpty() && pin != output
+	                                     ? TRANS("Keep saved output preference")
+										 : TRANS("Keep this output device"));
+	status_.setText(change_error_.isEmpty() ? controller.getRoutingStatusText()
+	                                        : change_error_,
+	                dontSendNotification);
 }

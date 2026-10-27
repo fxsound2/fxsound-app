@@ -89,8 +89,17 @@ public:
 	void setPowerState(bool power_state);
     bool setPreset(const String& preset_name, bool notify = true);
 	bool setPreset(int preset_index, bool notify=true);
-	void setOutput(const String output_device_id, bool notify=true);
+	void setOutput(const String output_device_id, bool notify=true, bool update_pin=true);
 	void setOutput(int output, bool notify=true);
+	std::vector<SoundDevice> getRoutingDevices();
+	bool refreshAudioRouting();
+	String getInputDeviceId();
+	bool setInputDeviceId(const String& device_id);
+	bool isAutomaticDefaultEnabled();
+	bool setAutomaticDefaultEnabled(bool enabled);
+	String getPinnedOutputDeviceId();
+	bool setOutputPinned(bool pinned);
+	String getRoutingStatusText();
     
     bool isPlaybackDeviceAvailable();
 	void checkDeviceChanges();
@@ -239,6 +248,7 @@ private:
     void syncOutputWithSystemDefault(std::vector<SoundDevice>& sound_devices);
 
 	void sortByDeviceConfigPriority(std::vector<SoundDevice>& devices);
+	bool isEligibleOutput(const SoundDevice& device);
 
 	void powerOn(bool on);
 

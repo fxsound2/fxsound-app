@@ -117,6 +117,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SND_DEVICES_AUDIO_CLIENT_INIT_FAILED		-54
 #define SND_DEVICES_NO_VALID_PLAYBACK_DEVICE 	-57
 #define SND_DEVICES_ASK_USER_SELECT_PLAYBACK_DEVICE	-58
+#define SND_DEVICES_INPUT_NOT_AVAILABLE -59
+#define SND_DEVICES_INPUT_OUTPUT_CONFLICT -60
 
 /* Device Status Change Events */
 #define SND_DEVICES_NO_CHANGE						0
@@ -162,6 +164,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SND_DEVICES_REGISTRY_PRIOR_DEFAULT_WIDE					L"prior_default"
 #define SND_DEVICES_REGISTRY_MOST_RECENT_PLAYBACK_WIDE		L"most_recent_playback"
 #define SND_DEVICES_REGISTRY_USER_SELECTED_PLAYBACK_WIDE		L"user_selected_playback"
+#define SND_DEVICES_REGISTRY_USER_SELECTED_INPUT_WIDE L"user_selected_input"
 #define SND_DEVICES_REGISTRY_DEFAULT_DEVICE_SELECTION_MODE	L"default_device_mode"
 #define SND_DEVICES_REGISTRY_USER_BUFFER_SIZE					L"user_buffer_size"
 
@@ -348,6 +351,10 @@ struct sndDevicesHdlType {
 	LPWSTR pwszIDRealDevices[SND_DEVICES_MAX_NUM_DEVICES]; // For the GUID ID strings for each real playback device.
 	WCHAR pwszIDPreviousRealDevices[SND_DEVICES_MAX_NUM_DEVICES][PT_MAX_GENERIC_STRLEN]; // To detect when a new devices is added.
     DWORD deviceState[SND_DEVICES_MAX_NUM_DEVICES]; // State of each device.
+	EDataFlow deviceFlow[SND_DEVICES_MAX_NUM_DEVICES];
+	WCHAR requestedPlaybackDeviceID[PT_MAX_GENERIC_STRLEN];
+	BOOL defaultDeviceWasChanged;
+	int routingStatus;
 
 	wchar_t deviceFriendlyName[SND_DEVICES_MAX_NUM_DEVICES][PT_MAX_GENERIC_STRLEN];  // Friendly name, ie "DFX Audio Enhancer 10.5", all devices.
 	wchar_t deviceDescription[SND_DEVICES_MAX_NUM_DEVICES][PT_MAX_GENERIC_STRLEN];  // Descriptive name, ie "Speakers", all devices.

@@ -104,6 +104,9 @@ int PT_DECLSPEC sndDevicesInit(PT_HANDLE *hp_sndDevices, CSlout *hp_slout, int i
 	cast_handle->pEndptVolPlayback  = NULL;
 	cast_handle->ignoreVolumeCallbacks = FALSE;
 	cast_handle->ignoreDeviceCallbacks = FALSE;
+	cast_handle->requestedPlaybackDeviceID[0] = L'\0';
+	cast_handle->defaultDeviceWasChanged = FALSE;
+	cast_handle->routingStatus = SND_DEVICES_DEVICE_OPERATION_COMPLETED;
 
 	// No playback device has been used yet, so there is no mute setting of one to hold onto.
 	// Note these must survive a re-init, they are only reset here in the one time init call.

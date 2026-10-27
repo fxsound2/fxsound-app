@@ -367,17 +367,17 @@ void FxWindow::TitleBar::updateLogo()
 {
 	if (name_.isEmpty())
 	{
-		icon_ = Drawable::createFromImageData(FXIMAGE(DefaultLogo), FXIMAGESIZE(DefaultLogo));
+		icon_ = OwningDrawableComponent::create(Drawable::createFromImageData(FXIMAGE(DefaultLogo), FXIMAGESIZE(DefaultLogo)));
 		icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT) / 2, (float)ICON_WIDTH, (float)ICON_HEIGHT),
 			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
 
-		animation_icon_ = Drawable::createFromImageData(FXIMAGE(HighlightedLogo), FXIMAGESIZE(HighlightedLogo));
+		animation_icon_ = OwningDrawableComponent::create(Drawable::createFromImageData(FXIMAGE(HighlightedLogo), FXIMAGESIZE(HighlightedLogo)));
 		animation_icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT) / 2, (float)ICON_WIDTH, (float)ICON_HEIGHT),
 			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
 	}
 	else
 	{
-		icon_ = Drawable::createFromImageData(FXIMAGE(IconLogo), FXIMAGESIZE(IconLogo));
+		icon_ = OwningDrawableComponent::create(Drawable::createFromImageData(FXIMAGE(IconLogo), FXIMAGESIZE(IconLogo)));
 		auto width = (ICON_HEIGHT - 1) * icon_->getWidth() / icon_->getHeight();
 		icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT - 1) / 2, (float)width, (float)ICON_HEIGHT - 1),
 			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });

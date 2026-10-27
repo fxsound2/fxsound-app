@@ -124,6 +124,32 @@ private:
 		juce::Rectangle<float> output_preference_bounds_;
 	};
 
+	class RoutingSettingsPane : public SettingsPane, private Timer
+	{
+	   public:
+		RoutingSettingsPane();
+		void resized() override;
+
+	   private:
+		void timerCallback() override;
+		void refreshDevices();
+		void visibilityChanged() override;
+		Label input_label_;
+		Label output_label_;
+		Label input_help_;
+		Label status_;
+		ComboBox input_list_;
+		ComboBox output_list_;
+		ToggleButton automatic_default_toggle_;
+		ToggleButton pin_output_toggle_;
+		TextButton refresh_button_;
+		std::vector<SoundDevice> devices_;
+		std::vector<String> input_ids_;
+		std::vector<String> output_ids_;
+		String device_signature_;
+		String change_error_;
+	};
+
 	class GeneralSettingsPane : public SettingsPane
 	{
 	public:
@@ -205,10 +231,12 @@ private:
 		static constexpr int SEPARATOR_X = 152;
 
 		std::unique_ptr<SettingsButton> audio_button_;
+		std::unique_ptr<SettingsButton> routing_button_;
 		std::unique_ptr<SettingsButton> general_button_;
 		std::unique_ptr<SettingsButton> help_button_;
 
 		AudioSettingsPane audio_settings_pane_;
+		RoutingSettingsPane routing_settings_pane_;
 		GeneralSettingsPane general_settings_pane_;
 		HelpSettingsPane help_settings_pane_;
 	};

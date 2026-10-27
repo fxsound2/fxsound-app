@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "FxController.h"
+#include "sndDevices.h"
+#include "AudioRoutingPolicy.h"
 #include "FxMainWindow.h"
 #include "FxSystemTrayView.h"
 #include "FxMessage.h"
@@ -728,7 +730,7 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		auto prev_version = settings_.getString("version");
 		if (prev_version != app_version)
 		{
-			RegDeleteTree(HKEY_CURRENT_USER, L"Software\\DFX");
+			// Keep persisted routing preferences (including settings written by reg.exe).
 
 			FxModel::getModel().pushMessage(" ", { TRANS("Click here to see what's new on this version!"), "https://www.fxsound.com/changelog" });
 
@@ -1120,7 +1122,7 @@ bool FxController::setPreset(int selected_index, bool notify)
 	return true;
 }
 
-void FxController::setOutput(const String output_device_id, bool notify)
+void FxController::setOutput(const String output_device_id, bool notify, bool update_pin)
 {
 	std::vector<SoundDevice> sound_devices = audio_passthru_->getSoundDevices();
 
@@ -1128,11 +1130,17 @@ void FxController::setOutput(const String output_device_id, bool notify)
 
 	for (auto sound_device : sound_devices)
 	{
-		if (sound_device.isRealDevice)
+		if (isEligibleOutput(sound_device))
 		{
 			if (output_device_id == sound_device.pwszID.c_str())
 			{
 				output_found = true;
+				if (update_pin && !getPinnedOutputDeviceId().isEmpty() &&
+					audio_passthru_->setPinnedOutputDeviceId(sound_device.pwszID) != 0)
+				{
+					FxModel::getModel().pushMessage(TRANS("Unable to save the pinned output."));
+					return;
+				}
 				String message = TRANS("Output: ") + sound_device.deviceFriendlyName.c_str();
 
 				if (getOutputName() != sound_device.deviceFriendlyName.c_str())
@@ -1536,7 +1544,7 @@ void FxController::initOutputs(std::vector<SoundDevice>& sound_devices)
 	{
 		if (sound_device.isRealDevice)
 		{
-			if (sound_device.isActive && sound_device.deviceNumChannel >= 2)
+			if (isEligibleOutput(sound_device))
 			{
 				active_output_devices_.push_back(sound_device);
 
@@ -1578,8 +1586,11 @@ void FxController::initOutputs(std::vector<SoundDevice>& sound_devices)
 		}
 	}
 
+	for (const auto& device : active_output_devices_)
+		if (String(device.pwszID.c_str()) == getPinnedOutputDeviceId())
+			default_output = device;
 	FxModel::getModel().initOutputs(active_output_devices_);
-	setOutput(default_output.pwszID.c_str());
+	setOutput(default_output.pwszID.c_str(), true, false);
 }
 
 void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
@@ -1590,7 +1601,7 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 
 	for (auto sound_device : sound_devices)
 	{
-		if (sound_device.isActive && sound_device.isRealDevice && sound_device.deviceNumChannel >= 2)
+		if (isEligibleOutput(sound_device))
 		{
 			active_output_devices_.push_back(sound_device);
 		}
@@ -1607,7 +1618,7 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 
 		for (auto& sound_device : sound_devices)
 		{
-			if (!sound_device.isRealDevice || sound_device.deviceNumChannel < 2)
+			if (!isEligibleOutput(sound_device))
 				continue;
 
 			// Check if the device is a newly connected device
@@ -1649,11 +1660,15 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 		}
 	}
 
+	for (const auto& device : active_output_devices_)
+		if (String(device.pwszID.c_str()) == getPinnedOutputDeviceId())
+			preferred_device = device;
+
 	// Initialize the model to update the output devices in the UI.
 	FxModel::getModel().initOutputs(active_output_devices_);
 	// Set the output to select the new output and update the UI.
 	// If the output has not changed, still output has to be set to update the UI.
-	setOutput(preferred_device.pwszID.c_str());
+	setOutput(preferred_device.pwszID.c_str(), true, false);
 }
 
 // Handled when FxSound processing is on
@@ -1712,11 +1727,22 @@ void FxController::selectProcessingOutput(std::vector<SoundDevice>& sound_device
 // Handled when FxSound processing is off
 void FxController::syncOutputWithSystemDefault(std::vector<SoundDevice>& sound_devices)
 {
+	if (!isAutomaticDefaultEnabled() || getInputDeviceId().isNotEmpty() || getPinnedOutputDeviceId().isNotEmpty())
+	{
+		active_output_devices_.clear();
+		for (const auto& device : sound_devices)
+			if (isEligibleOutput(device))
+				active_output_devices_.push_back(device);
+		sortByDeviceConfigPriority(active_output_devices_);
+		FxModel::getModel().initOutputs(active_output_devices_);
+		device_count_ = static_cast<uint32_t>(sound_devices.size());
+		return;
+	}
 	active_output_devices_.clear();
 
 	for (auto sound_device : sound_devices)
 	{
-		if (sound_device.isRealDevice && sound_device.deviceNumChannel >= 2)
+		if (isEligibleOutput(sound_device))
 		{
 			active_output_devices_.push_back(sound_device);
 		}
@@ -1754,7 +1780,7 @@ void FxController::syncOutputWithSystemDefault(std::vector<SoundDevice>& sound_d
 
 	if (!default_device_found)
 	{
-		setOutput(getPreferredOutput().pwszID.c_str());
+		setOutput(getPreferredOutput().pwszID.c_str(), true, false);
 	}
 }
 
@@ -1791,6 +1817,7 @@ void FxController::powerOn(bool on)
 			stopTimer();
 		}
 
+		audio_passthru_->stopProcessing();
 		audio_passthru_->restoreDefaultPlaybackDevice();
 	}
 }
@@ -2516,6 +2543,9 @@ bool FxController::isOutputDevicePresent(const String& output_device_name)
 
 SoundDevice FxController::getPreferredOutput()
 {
+	for (const auto& device : active_output_devices_)
+		if (String(device.pwszID.c_str()) == getPinnedOutputDeviceId())
+			return device;
 	auto device_configs = DeviceConfig::loadDeviceConfigs(settings_, "device_configs");
 
 	for (auto& device_config : device_configs)
@@ -2751,4 +2781,164 @@ String FxController::FormatString(const String& format, const String& arg)
 	swprintf_s(buffer, format.toWideCharPointer(), arg.toWideCharPointer());
 
 	return String(buffer);
+}
+
+bool FxController::isEligibleOutput(const SoundDevice& device)
+{
+	return device.isActive && device.isRealDevice &&
+	       !device.isRecordingDevice &&
+	       AudioRouting::supportsOutput(device.deviceNumChannel) &&
+	       String(device.pwszID.c_str()) != getInputDeviceId();
+}
+
+std::vector<SoundDevice> FxController::getRoutingDevices()
+{
+	return audio_passthru_->getSoundDevices(false);
+}
+
+bool FxController::refreshAudioRouting()
+{
+	return audio_passthru_->refreshRouting() == 0;
+}
+
+String FxController::getInputDeviceId()
+{
+	return audio_passthru_ ? String(audio_passthru_->getInputDeviceId().c_str())
+	                       : String();
+}
+
+bool FxController::setInputDeviceId(const String& device_id)
+{
+	if (device_id.isNotEmpty())
+	{
+		bool found = false;
+		for (const auto& device : getRoutingDevices())
+		{
+			if (String(device.pwszID.c_str()) != device_id || !device.isActive)
+			{
+				continue;
+			}
+			if (!device.isRecordingDevice &&
+			    device.pwszID == FxModel::getModel().getSelectedOutput().pwszID)
+			{
+				FxModel::getModel().pushMessage(
+				    TRANS("Choose a different output before using this device "
+					      "as input."));
+				return false;
+			}
+			found = true;
+			break;
+		}
+		if (!found)
+		{
+			return false;
+		}
+	}
+	if (audio_passthru_->setInputDeviceId(
+	        std::wstring(device_id.toWideCharPointer())) != 0)
+	{
+		return false;
+	}
+	output_devices_ = getRoutingDevices();
+	active_output_devices_.clear();
+	for (const auto& device : output_devices_)
+	{
+		if (isEligibleOutput(device))
+		{
+			active_output_devices_.push_back(device);
+		}
+	}
+	sortByDeviceConfigPriority(active_output_devices_);
+	FxModel::getModel().initOutputs(active_output_devices_);
+	return true;
+}
+
+bool FxController::isAutomaticDefaultEnabled()
+{
+	return audio_passthru_ && audio_passthru_->isAutomaticDefaultEnabled();
+}
+
+bool FxController::setAutomaticDefaultEnabled(bool enabled)
+{
+	return audio_passthru_->setAutomaticDefaultEnabled(enabled) == 0;
+}
+
+String FxController::getPinnedOutputDeviceId()
+{
+	return audio_passthru_
+	           ? String(audio_passthru_->getPinnedOutputDeviceId().c_str())
+			   : String();
+}
+
+bool FxController::setOutputPinned(bool pinned)
+{
+	std::wstring id;
+	if (pinned)
+	{
+		id = FxModel::getModel().getSelectedOutput().pwszID;
+		if (id.empty())
+		{
+			return false;
+		}
+	}
+	return audio_passthru_->setPinnedOutputDeviceId(id) == 0;
+}
+
+String FxController::getRoutingStatusText()
+{
+	switch (audio_passthru_->getRoutingStatus())
+	{
+		case SND_DEVICES_INPUT_NOT_AVAILABLE:
+			return TRANS(
+			    "Input unavailable. Reconnect it or select another input. "
+				"Capture is paused.");
+		case SND_DEVICES_INPUT_OUTPUT_CONFLICT:
+			return TRANS(
+			    "Playback input and output must be different devices. Capture "
+				"is paused.");
+		case SND_DEVICES_SAMP_FREQ_NOT_VALID:
+			return TRANS(
+			    "Unsupported output sample rate. Use 44.1, 48, 88.2, 96, "
+				"176.4, or 192 kHz.");
+		case SND_DEVICES_DEVICE_OPERATION_COMPLETED:
+			break;
+		default:
+			return TRANS(
+			    "Audio could not start. Check device availability, microphone "
+				"permission, and shared-mode audio settings.");
+	}
+	if (!FxModel::getModel().getPowerState())
+	{
+		return TRANS(
+		    "FxSound is off. Your routing settings are saved for the next time "
+			"it is turned on.");
+	}
+	String status = getInputDeviceId().isEmpty()
+	                    ? TRANS("Send app audio to FxSound Audio Enhancer.")
+	                    : TRANS(
+	                          "Recording inputs capture directly. Playback "
+							  "inputs capture audio sent to that device.");
+	if (getInputDeviceId().isNotEmpty())
+	{
+		status += "\n" + TRANS(
+		                     "Windows defaults and the input device's volume "
+							 "are left unchanged.");
+	}
+	const auto pin = getPinnedOutputDeviceId();
+	if (pin.isNotEmpty())
+	{
+		bool available = false;
+		for (const auto& device : getRoutingDevices())
+		{
+			available |= isEligibleOutput(device) &&
+			             String(device.pwszID.c_str()) == pin;
+		}
+		if (!available)
+		{
+			status += "\n" + TRANS(
+			                     "Pinned output unavailable. Using an "
+								 "available output until it returns.");
+		}
+	}
+	return status;
 }

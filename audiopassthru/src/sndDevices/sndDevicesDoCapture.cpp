@@ -120,10 +120,15 @@ int PT_DECLSPEC sndDevicesDoCapture(PT_HANDLE *hp_sndDevices, float **fpp_buffer
 		numFramesQueuedUpToPlayReferencedToCapture = numFramesQueuedUpToPlay/cast_handle->upsampleRatio;
 
 		// Calculate the number of playback frames to fill, compensated for samp rate differences.
-		cast_handle->numPlaybackFramesAvailableToFill = cast_handle->bufferFrameSizeCapture - numFramesQueuedUpToPlayReferencedToCapture;
+		const UINT32 freePlaybackFrames = cast_handle->bufferFrameSizePlayback > numFramesQueuedUpToPlay ?
+			cast_handle->bufferFrameSizePlayback - numFramesQueuedUpToPlay : 0;
+		cast_handle->numPlaybackFramesAvailableToFill = min(cast_handle->bufferFrameSizeCapture,
+			freePlaybackFrames / cast_handle->upsampleRatio);
 
-		halfCaptureBufferSize = cast_handle->bufferFrameSizeCapture/2;
-		quarterCaptureBufferSize = cast_handle->bufferFrameSizeCapture/4;
+		const UINT32 usableCaptureFrames = min(cast_handle->bufferFrameSizeCapture,
+			cast_handle->bufferFrameSizePlayback / cast_handle->upsampleRatio);
+		halfCaptureBufferSize = usableCaptureFrames / 2;
+		quarterCaptureBufferSize = usableCaptureFrames / 4;
 
 		// If playback buffer is totally empty, don't send more buffers to playback until we fill 1/2 the capture buffer.
 		if( numFramesQueuedUpToPlayReferencedToCapture == 0 )
@@ -181,6 +186,18 @@ int PT_DECLSPEC sndDevicesDoCapture(PT_HANDLE *hp_sndDevices, float **fpp_buffer
 
 				loopsize = cast_handle->numCaptureFramesAvailable * numCaptureChannels;
 				offset = cast_handle->capturedFramesCount * numCaptureChannels;
+
+				// Endpoint periods can differ for a custom input. Never copy past either DSP buffer.
+				const UINT64 totalFrames = static_cast<UINT64>(cast_handle->capturedFramesCount) + cast_handle->numCaptureFramesAvailable;
+				if (totalFrames * numCaptureChannels > static_cast<UINT64>(cast_handle->captureBufAllocSize) ||
+					totalFrames * numPlaybackChannels * cast_handle->upsampleRatio > static_cast<UINT64>(cast_handle->playbackBufAllocSize))
+				{
+					cast_handle->pAudioCaptureLoopback->ReleaseBuffer(cast_handle->numCaptureFramesAvailable);
+					cast_handle->routingStatus = SND_DEVICES_GET_BUFFER_FAILED;
+					cast_handle->playbackDeviceIsUnavailable = TRUE;
+					hr = AUDCLNT_E_BUFFER_TOO_LARGE;
+					goto Exit;
+				}
 
 				// Silent flag means to treat packet as containing all zeros, even though it may not.
 				if( flags & AUDCLNT_BUFFERFLAGS_SILENT )
@@ -416,8 +433,16 @@ int PT_DECLSPEC sndDevicesStartStopCapture(PT_HANDLE *hp_sndDevices, int i_start
 	if( i_startStopFlag == SND_DEVICES_START_CAPTURE )
 	{
 		cast_handle->stopAudioCaptureAndPlaybackLoop = 0;
-		hr = cast_handle->pAudioClientCapture->Start(); // Start capturing, this starts filling of the internal capture buffers.
-		hr = cast_handle->pAudioClientPlayback->Start(); // Start playback, this starts filling of the internal playback buffers.
+		hr = cast_handle->pAudioClientCapture->Start();
+		if (SUCCEEDED(hr))
+			hr = cast_handle->pAudioClientPlayback->Start();
+		if (FAILED(hr))
+		{
+			cast_handle->pAudioClientCapture->Stop();
+			cast_handle->routingStatus = SND_DEVICES_AUDIO_CLIENT_INIT_FAILED;
+			cast_handle->playbackDeviceIsUnavailable = TRUE;
+			return NOT_OKAY;
+		}
 	}
 	else
 	{
