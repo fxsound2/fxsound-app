@@ -197,8 +197,6 @@ private:
     }
 
     // Starts a fresh instance after a crash so the app doesn't just disappear from the tray.
-    // The new instance is started by a hidden helper that waits a few seconds, because the
-    // single instance check would otherwise see this process while it is still exiting.
     // Skipped when the process crashed shortly after starting, to avoid a crash loop.
     static void relaunchAfterCrash()
     {
@@ -210,29 +208,8 @@ private:
             return;
         }
 
-        wchar_t module_file[MAX_PATH];
-        DWORD length = GetModuleFileNameW(NULL, module_file, MAX_PATH);
-        if (length == 0 || length >= MAX_PATH)
-        {
-            return;
-        }
-
-        std::wstring command_line = L"cmd.exe /c \"ping -n 4 127.0.0.1 >nul & start \"\" \"";
-        command_line += module_file;
-        command_line += L"\"\"";
-
-        STARTUPINFOW startup_info = { sizeof(STARTUPINFOW) };
-        PROCESS_INFORMATION process_info = { 0 };
-        if (CreateProcessW(NULL, command_line.data(), NULL, NULL, FALSE, CREATE_NO_WINDOW | DETACHED_PROCESS, NULL, NULL, &startup_info, &process_info))
-        {
-            CloseHandle(process_info.hThread);
-            CloseHandle(process_info.hProcess);
-            controller.logMessage("Relaunching after crash\n");
-        }
-        else
-        {
-            controller.logMessage("Relaunch after crash failed\n");
-        }
+        controller.logMessage("Relaunching after crash\n");
+        FxController::launchNewInstance();
     }
 
     static void CaptureAndLogCallStack(CONTEXT* context = nullptr)
