@@ -227,6 +227,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\DfxDsp.h" />
+    <ClInclude Include="include\Resampler.h" />
     <ClInclude Include="ptComSftDfx\u_comSftwr.h" />
     <ClInclude Include="ptutil\COM\u_com.h" />
     <ClInclude Include="ptutil\dfxp\u_dfxp.h" />
@@ -345,6 +346,7 @@
     <ClCompile Include="ptutil\DspUtil\GraphicEq\GraphicEqInitSections.cpp" />
     <ClCompile Include="ptutil\DspUtil\GraphicEq\GraphicEqProcess.cpp" />
     <ClCompile Include="ptutil\DspUtil\GraphicEq\GraphicEqSet.cpp" />
+    <ClCompile Include="ptutil\DspUtil\Resampler\Resampler.cpp" />
     <ClCompile Include="ptutil\DspUtil\spectrum\spectrumGet.cpp" />
     <ClCompile Include="ptutil\DspUtil\spectrum\spectrumInit.cpp" />
     <ClCompile Include="ptutil\DspUtil\spectrum\spectrumMessageValues.cpp" />
