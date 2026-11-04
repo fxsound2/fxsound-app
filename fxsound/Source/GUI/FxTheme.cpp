@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <JuceHeader.h>
 #include "FxTheme.h"
 #include "FxLanguage.h"
+#include "FxComboBox.h"
 
 const uint32 FxTheme::theme_colors_[FxThemeMode::NumModes][FxColor::NumColors] =
 { { 0x181818, 0x181818, 0x383838, 0x2b2b2b, 0xb1b1b1, 0x000000, 0xffffff, 0x0c0c0c, 0xffffff,
@@ -34,14 +35,14 @@ const char* FxTheme::theme_images_[FxThemeMode::NumModes][FxImage::NumImages] =
 	BinaryData::power_on_svg, BinaryData::power_off_svg, BinaryData::donate_svg, BinaryData::donate_hover_svg, BinaryData::menu_svg, BinaryData::menu_hover_svg,
 	BinaryData::minimize_svg, BinaryData::minimize_hover_svg, BinaryData::maximize_svg, BinaryData::maximize_hover_svg, BinaryData::min_window_svg, BinaryData::min_window_hover_svg,
     BinaryData::flip_white_svg, BinaryData::flip_svg, BinaryData::restore_defaults_white_svg, BinaryData::restore_defaults_svg, BinaryData::remove_svg,
-	BinaryData::arrow_next_svg, BinaryData::arrow_next_bw_svg, BinaryData::arrow_prev_svg, BinaryData::arrow_prev_bw_svg, BinaryData::arrow_up_svg, BinaryData::arrow_up_white_svg, BinaryData::arrow_down_svg,  BinaryData::arrow_down_white_svg, BinaryData::dropdown_arrow_bw_svg, BinaryData::dropdown_arrow_hover_svg,
+    BinaryData::arrow_next_svg, BinaryData::arrow_next_bw_svg, BinaryData::arrow_prev_svg, BinaryData::arrow_prev_bw_svg, BinaryData::arrow_up_svg, BinaryData::arrow_up_white_svg, BinaryData::arrow_down_svg,  BinaryData::arrow_down_white_svg, BinaryData::dropdown_arrow_white_svg, BinaryData::dropdown_arrow_hover_svg, BinaryData::dropdown_arrow_bw_svg,
 	BinaryData::Slider_Thumb_svg, BinaryData::Slider_Thumb_bw_svg },
 
   { BinaryData::logoblack_svg, BinaryData::logoblue_svg, BinaryData::FxSound_Black_Bars_svg,
 	BinaryData::power_on_blue_svg, BinaryData::power_off_black_svg, BinaryData::donate_blue_svg, BinaryData::donate_hover_blue_svg, BinaryData::menu_black_svg, BinaryData::menu_hover_blue_svg,
 	BinaryData::minimize_black_svg, BinaryData::minimize_hover_blue_svg, BinaryData::maximize_black_svg, BinaryData::maximize_hover_blue_svg, BinaryData::min_window_black_svg, BinaryData::min_window_hover_blue_svg,
     BinaryData::flip_black_svg, BinaryData::flip_blue_svg, BinaryData::restore_defaults_black_svg, BinaryData::restore_defaults_blue_svg, BinaryData::remove_svg,
-	BinaryData::arrow_next_blue_svg, BinaryData::arrow_next_bw_svg, BinaryData::arrow_prev_blue_svg, BinaryData::arrow_prev_bw_svg, BinaryData::arrow_up_blue_svg, BinaryData::arrow_up_black_svg, BinaryData::arrow_down_blue_svg, BinaryData::arrow_down_black_svg, BinaryData::dropdown_arrow_bw_svg, BinaryData::dropdown_arrow_hover_blue_svg,
+	BinaryData::arrow_next_blue_svg, BinaryData::arrow_next_bw_svg, BinaryData::arrow_prev_blue_svg, BinaryData::arrow_prev_bw_svg, BinaryData::arrow_up_blue_svg, BinaryData::arrow_up_black_svg, BinaryData::arrow_down_blue_svg, BinaryData::arrow_down_black_svg, BinaryData::dropdown_arrow_black_svg, BinaryData::dropdown_arrow_hover_blue_svg, BinaryData::dropdown_arrow_bw_svg,
 	BinaryData::Slider_Thumb_blue_svg, BinaryData::Slider_Thumb_bw_svg } };
 
 const int FxTheme::theme_image_sizes_[FxThemeMode::NumModes][FxImage::NumImages] =
@@ -49,14 +50,14 @@ const int FxTheme::theme_image_sizes_[FxThemeMode::NumModes][FxImage::NumImages]
    BinaryData::power_on_svgSize, BinaryData::power_off_svgSize, BinaryData::donate_svgSize, BinaryData::donate_hover_svgSize, BinaryData::menu_svgSize, BinaryData::menu_hover_svgSize,
    BinaryData::minimize_svgSize, BinaryData::minimize_hover_svgSize, BinaryData::maximize_svgSize, BinaryData::maximize_hover_svgSize, BinaryData::min_window_svgSize, BinaryData::min_window_hover_svgSize,
    BinaryData::flip_white_svgSize, BinaryData::flip_svgSize, BinaryData::restore_defaults_white_svgSize, BinaryData::restore_defaults_svgSize, BinaryData::remove_svgSize,
-   BinaryData::arrow_next_svgSize, BinaryData::arrow_next_bw_svgSize, BinaryData::arrow_prev_svgSize, BinaryData::arrow_prev_bw_svgSize, BinaryData::arrow_up_svgSize, BinaryData::arrow_up_white_svgSize, BinaryData::arrow_down_svgSize,  BinaryData::arrow_down_white_svgSize, BinaryData::dropdown_arrow_bw_svgSize, BinaryData::dropdown_arrow_hover_svgSize,
+   BinaryData::arrow_next_svgSize, BinaryData::arrow_next_bw_svgSize, BinaryData::arrow_prev_svgSize, BinaryData::arrow_prev_bw_svgSize, BinaryData::arrow_up_svgSize, BinaryData::arrow_up_white_svgSize, BinaryData::arrow_down_svgSize,  BinaryData::arrow_down_white_svgSize, BinaryData::dropdown_arrow_white_svgSize, BinaryData::dropdown_arrow_hover_svgSize, BinaryData::dropdown_arrow_bw_svgSize,
    BinaryData::Slider_Thumb_svgSize, BinaryData::Slider_Thumb_bw_svgSize },
 
   { BinaryData::logoblack_svgSize, BinaryData::logoblue_svgSize, BinaryData::FxSound_Black_Bars_svgSize,
 	BinaryData::power_on_blue_svgSize, BinaryData::power_off_black_svgSize, BinaryData::donate_blue_svgSize, BinaryData::donate_hover_blue_svgSize, BinaryData::menu_black_svgSize, BinaryData::menu_hover_blue_svgSize,
 	BinaryData::minimize_black_svgSize, BinaryData::minimize_hover_blue_svgSize, BinaryData::maximize_black_svgSize, BinaryData::maximize_hover_blue_svgSize, BinaryData::min_window_black_svgSize, BinaryData::min_window_hover_blue_svgSize,
     BinaryData::flip_black_svgSize, BinaryData::flip_blue_svgSize, BinaryData::restore_defaults_black_svgSize, BinaryData::restore_defaults_blue_svgSize, BinaryData::remove_svgSize,
-	BinaryData::arrow_next_blue_svgSize, BinaryData::arrow_next_bw_svgSize, BinaryData::arrow_prev_blue_svgSize, BinaryData::arrow_prev_bw_svgSize, BinaryData::arrow_up_blue_svgSize, BinaryData::arrow_up_black_svgSize, BinaryData::arrow_down_blue_svgSize, BinaryData::arrow_down_black_svgSize, BinaryData::dropdown_arrow_bw_svgSize, BinaryData::dropdown_arrow_hover_blue_svgSize,
+	BinaryData::arrow_next_blue_svgSize, BinaryData::arrow_next_bw_svgSize, BinaryData::arrow_prev_blue_svgSize, BinaryData::arrow_prev_bw_svgSize, BinaryData::arrow_up_blue_svgSize, BinaryData::arrow_up_black_svgSize, BinaryData::arrow_down_blue_svgSize, BinaryData::arrow_down_black_svgSize, BinaryData::dropdown_arrow_black_svgSize, BinaryData::dropdown_arrow_hover_blue_svgSize, BinaryData::dropdown_arrow_bw_svgSize,
 	BinaryData::Slider_Thumb_blue_svgSize, BinaryData::Slider_Thumb_bw_svgSize } };
 
 FxThemeMode FxTheme::theme_mode_ = FxThemeMode::Dark;
@@ -97,9 +98,10 @@ void FxTheme::init()
 	font_600_ = Typeface::createSystemTypefaceFor(BinaryData::GilroySemibold_ttf, BinaryData::GilroySemibold_ttfSize);
 	font_700_ = Typeface::createSystemTypefaceFor(BinaryData::GilroyBold_ttf, BinaryData::GilroyBold_ttfSize);
 
-	drop_down_arrow_ = Drawable::createFromImageData(FXIMAGE(DropDownArrowHover), FXIMAGESIZE(DropDownArrowHover));
+	drop_down_arrow_ = Drawable::createFromImageData(FXIMAGE(DropDownArrow), FXIMAGESIZE(DropDownArrow));
+    drop_down_arrow_hover_ = Drawable::createFromImageData(FXIMAGE(DropDownArrowHover), FXIMAGESIZE(DropDownArrowHover));
 	slider_thumb_ = Drawable::createFromImageData(FXIMAGE(SliderThumb), FXIMAGESIZE(SliderThumb));
-	drop_down_arrow_grey_ = Drawable::createFromImageData(FXIMAGE(DropDownArrow), FXIMAGESIZE(DropDownArrow));
+	drop_down_arrow_grey_ = Drawable::createFromImageData(FXIMAGE(DropDownArrowGrey), FXIMAGESIZE(DropDownArrowGrey));
 	slider_thumb_grey_ = Drawable::createFromImageData(FXIMAGE(SliderThumbBW), FXIMAGESIZE(SliderThumbBW));
 }
 
@@ -131,6 +133,13 @@ void FxTheme::positionComboBoxText(ComboBox& box, Label& label)
 	label.setMinimumHorizontalScale(1.0);
 	LookAndFeel_V4::positionComboBoxText(box, label);
 	label.setBounds(label.getBounds().withX(5).withRight(box.getWidth() - 37));
+
+	// Leave room for the optional button drawn left of the drop down arrow
+	auto fx_box = dynamic_cast<FxComboBox*>(&box);
+	if (fx_box != nullptr && fx_box->getButton() != nullptr)
+	{
+		label.setBounds(label.getBounds().withRight(box.getWidth() - 37 - COMBOBOX_BUTTON_SIZE - COMBOBOX_BUTTON_MARGIN));
+	}
 }
 
 void FxTheme::drawComboBox(Graphics& g, int width, int height, bool,
@@ -158,10 +167,23 @@ void FxTheme::drawComboBox(Graphics& g, int width, int height, bool,
         margin = 24;
 
 	g.setColour(box.findColour(ComboBox::arrowColourId).withAlpha((box.isEnabled() ? 1.0f : 0.2f)));
-    if (box.isEnabled())
-	    drop_down_arrow_->drawWithin(g, Rectangle<float>(static_cast<float>(width - margin), 0.0f, 12.0f, static_cast<float>(height)), { RectanglePlacement::centred }, 1.0f);
+	if (box.isEnabled())
+	{
+		if (box.isMouseOver())
+			drop_down_arrow_hover_->drawWithin(g, Rectangle<float>(static_cast<float>(width - margin), 0.0f, 12.0f, static_cast<float>(height)), { RectanglePlacement::centred }, 1.0f);
+		else
+			drop_down_arrow_->drawWithin(g, Rectangle<float>(static_cast<float>(width - margin), 0.0f, 12.0f, static_cast<float>(height)), { RectanglePlacement::centred }, 1.0f);
+	}
     else
         drop_down_arrow_grey_->drawWithin(g, Rectangle<float>(static_cast<float>(width - margin), 0.0f, 12.0f, static_cast<float>(height)), { RectanglePlacement::centred }, 1.0f);
+
+	auto fx_box = dynamic_cast<FxComboBox*>(&box);
+	if (fx_box != nullptr && fx_box->getButton() != nullptr)
+	{
+		auto button = fx_box->getButton();
+		button->setBounds(width - margin - COMBOBOX_BUTTON_MARGIN - COMBOBOX_BUTTON_SIZE, (height - COMBOBOX_BUTTON_SIZE) / 2, COMBOBOX_BUTTON_SIZE, COMBOBOX_BUTTON_SIZE);
+		button->setVisible(!box.isPopupActive());
+	}
 }
 
 void FxTheme::drawComboBoxTextWhenNothingSelected(Graphics& g, ComboBox& box, Label& label)

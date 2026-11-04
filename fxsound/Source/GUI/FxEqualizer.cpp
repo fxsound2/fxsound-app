@@ -23,17 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxController.h"
 #include "FxTheme.h"
 
-FxEqualizer::FxEqualizer() : restore_defaults_button_("eqRestoreDefaultsButton", DrawableButton::ButtonStyle::ImageFitted)
+FxEqualizer::FxEqualizer()
 {
     auto& controller = FxController::getInstance();
-
-    restore_defaults_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButton), FXIMAGESIZE(RestoreDefaultsButton));
-    restore_defaults_hover_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButtonHover), FXIMAGESIZE(RestoreDefaultsButtonHover));
-    restore_defaults_button_.setImages(restore_defaults_image_.get(), restore_defaults_hover_image_.get());
-    restore_defaults_button_.setMouseCursor(MouseCursor::PointingHandCursor);
-    restore_defaults_button_.setWantsKeyboardFocus(true);
-    restore_defaults_button_.setTooltip(TRANS("Restore Defaults"));
-    restore_defaults_button_.onClick = [this]() { restoreDefaults(); };
 
     int num_bands = controller.getNumEqBands();
     labels_.resize(num_bands);
@@ -68,8 +60,6 @@ FxEqualizer::FxEqualizer() : restore_defaults_button_("eqRestoreDefaultsButton",
 
         band_gain_values_[i] = 0;
     }
-
-    addAndMakeVisible(restore_defaults_button_);
 
     highlight_mode_ = false;
 
@@ -122,8 +112,6 @@ void FxEqualizer::reinit(int num_bands)
 
         band_gain_values_[i] = 0;
     }
-
-    addAndMakeVisible(restore_defaults_button_);
 
     resized();
 
@@ -276,8 +264,6 @@ void FxEqualizer::resized()
     auto& controller = FxController::getInstance();
 
     int num_bands = controller.getNumEqBands();
-
-    restore_defaults_button_.setBounds(getWidth() - BUTTON_WIDTH - BUTTON_MARGIN, BUTTON_MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     if (num_bands != labels_.size())
     {

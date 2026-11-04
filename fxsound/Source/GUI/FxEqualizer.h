@@ -120,7 +120,6 @@ private:
     std::vector<std::unique_ptr<FxBandCenterFreqSlider>> center_frequencies_;
     std::vector<float> band_gain_values_;
 
-    DrawableButton restore_defaults_button_;
     std::unique_ptr<Drawable> restore_defaults_image_;
     std::unique_ptr<Drawable> restore_defaults_hover_image_;
 

@@ -47,6 +47,11 @@ protected:
 	void mouseEnter(const MouseEvent&) override;
 	void mouseExit(const MouseEvent&) override;
 
+	void updatePresetButton();
+
+	DrawableButton undo_button_;
+	std::unique_ptr<Drawable> undo_image_;
+	std::unique_ptr<Drawable> undo_hover_image_;
 	FxComboBox preset_list_;
 	FxComboBox endpoint_list_;
     FxNotification error_notification_;
