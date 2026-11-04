@@ -230,27 +230,6 @@ void FxEqualizer::update()
     }
 }
 
-void FxEqualizer::restoreDefaults()
-{
-    auto& controller = FxController::getInstance();
-    int num_bands = controller.getNumEqBands();
-
-    for (auto i = 0; i < band_boosts_.size(); i++)
-    {
-        band_boosts_[i]->setValue(0.0, NotificationType::sendNotification);
-    }
-
-    // Center frequencies are only user-adjustable (and visible) below 15 bands,
-    // matching the same threshold used for per-knob right/double-click reset.
-    if (num_bands < 15)
-    {
-        for (auto i = 0; i < center_frequencies_.size(); i++)
-        {
-            center_frequencies_[i]->resetToDefaultFrequency();
-        }
-    }
-}
-
 void FxEqualizer::showValues(bool show)
 {
     for (int i = 0; i < band_boosts_.size(); i++)

@@ -111,4 +111,7 @@ void FxComboBox::showPopup()
     }
 
     ComboBox::showPopup();
+
+    // ComboBox::showPopup does not repaint, so repaint to let FxTheme::drawComboBox hide the button
+    repaint();
 }
