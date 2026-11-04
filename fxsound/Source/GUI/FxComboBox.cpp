@@ -29,8 +29,39 @@ FxComboBox::FxComboBox()
     setColour(ComboBox::ColourIds::textColourId, theme.getCurrentColourScheme().getUIColour(LookAndFeel_V4::ColourScheme::defaultText));
 
     error_ = false;
+    button_ = nullptr;
 
     onShowPopup = []{};
+}
+
+void FxComboBox::setButton(DrawableButton* button)
+{
+    if (button_ == button)
+    {
+        return;
+    }
+
+    if (button_ != nullptr)
+    {
+        removeChildComponent(button_);
+    }
+
+    button_ = button;
+
+    // Button is made visible and positioned by FxTheme::drawComboBox
+    if (button_ != nullptr)
+    {
+        button_->setVisible(false);
+        addChildComponent(button_);
+    }
+
+    resized();
+    repaint();
+}
+
+DrawableButton* FxComboBox::getButton() const
+{
+    return button_;
 }
 
 void FxComboBox::highlightText(bool highlight)

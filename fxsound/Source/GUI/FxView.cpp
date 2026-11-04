@@ -18,13 +18,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "FxView.h"
 #include "FxController.h"
-#include "FxSettingsDialog.h"
-#include "FxPresetExportDialog.h"
-#include "FxPresetImportDialog.h"
 
-FxView::FxView()
+FxView::FxView() : undo_button_("presetUndoButton", DrawableButton::ButtonStyle::ImageFitted)
 {
 	FxModel::getModel().addListener(this);
+
+	undo_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButton), FXIMAGESIZE(RestoreDefaultsButton));
+	undo_hover_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButtonHover), FXIMAGESIZE(RestoreDefaultsButtonHover));
+	undo_button_.setImages(undo_image_.get(), undo_hover_image_.get());
+	undo_button_.setMouseCursor(MouseCursor::PointingHandCursor);
+	undo_button_.setWantsKeyboardFocus(true);
+	undo_button_.setTooltip(TRANS("Undo Preset Changes"));
+	undo_button_.onClick = []() { FxController::getInstance().undoPreset(); };
 
 	preset_list_.setJustificationType(Justification::centredLeft);
 	preset_list_.setTextWhenNoChoicesAvailable(L"");
@@ -74,6 +79,11 @@ void FxView::showErrorNotification(bool show)
     {
         error_notification_.setVisible(false);
     }
+}
+
+void FxView::updatePresetButton()
+{
+	preset_list_.setButton(FxModel::getModel().isPresetModified() ? &undo_button_ : nullptr);
 }
 
 void FxView::comboBoxChanged(ComboBox* combobox)
@@ -144,6 +154,7 @@ void FxView::modelChanged(FxModel::Event model_event)
 	if (model_event == FxModel::Event::PresetSelected)
 	{
 		preset_list_.setSelectedId(FxModel::getModel().getSelectedPreset() + 1, NotificationType::dontSendNotification);
+		updatePresetButton();
 	}
 
 	if (model_event == FxModel::Event::PresetListUpdated)
@@ -166,6 +177,7 @@ void FxView::modelChanged(FxModel::Event model_event)
 		}
 
 		preset_list_.setSelectedId(FxModel::getModel().getSelectedPreset() + 1, NotificationType::dontSendNotification);
+		updatePresetButton();
 	}
 
 	if (model_event == FxModel::Event::PresetModified)
@@ -177,7 +189,9 @@ void FxView::modelChanged(FxModel::Event model_event)
 		{
 			return;
 		}
-		
+
+		updatePresetButton();
+
 		if (model.isPresetModified(selected))
 		{
 			preset_list_.changeItemText(selected + 1, preset.name + L" *");
