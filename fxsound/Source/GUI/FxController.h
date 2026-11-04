@@ -172,6 +172,19 @@ public:
 
     void setRenderingEngine(juce::Component& component);
 
+	// Saved preference, applied on the next start.
+	bool isGpuRenderingEnabled();
+	void setGpuRenderingEnabled(bool enable);
+	// Engine this process is actually running with.
+	bool isGpuRenderingActive() const;
+	static bool canSupportGpuRendering();
+
+	// Starts a fresh instance after a short delay, so it runs once this process has exited
+	// and released the single instance lock. Used for crash recovery and user restarts.
+	static bool launchNewInstance();
+	// Saves state, launches a new instance and quits this one.
+	void restartApplication();
+
 	void logMessage(const String& message)
 	{
 		file_logger_->logMessage(message);

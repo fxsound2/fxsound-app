@@ -173,7 +173,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 		logMessage(String("ARM64"));
 	}
 
-    gpu_render_ = false;
+    gpu_render_ = settings_.getBool("gpu_render") && canSupportGpuRendering();
 
 	auto view = settings_.getInt("view");
 	if (view <= 0 || view > 2)
@@ -238,12 +238,10 @@ void FxController::initConfig(const String& commandline)
 	auto mastergain = arg_list.getValueForOption("--master_gain");
 	auto volume_leveling = arg_list.getValueForOption("--volume_leveling");
 
-    if (arg_list.containsOption("--gpu"))
+    // Forces GPU rendering for this session only; the saved preference is not changed.
+    if (arg_list.containsOption("--gpu") && canSupportGpuRendering())
     {
-		if (juce::SystemStats::getOperatingSystemType() > juce::SystemStats::Windows7)
-		{
-            gpu_render_ = true;
-		}
+        gpu_render_ = true;
     }
 
 	if (arg_list.containsOption("--run_minimized"))
@@ -2631,6 +2629,83 @@ void FxController::setRenderingEngine(juce::Component& component)
 	{
 		// Engine index 0 is GDI (software), 1 is Direct2D.
 		peer->setCurrentRenderingEngine(gpu_render_ ? 1 : 0);
+	}
+}
+
+bool FxController::isGpuRenderingEnabled()
+{
+	return settings_.getBool("gpu_render");
+}
+
+void FxController::setGpuRenderingEnabled(bool enable)
+{
+	settings_.setBool("gpu_render", enable);
+}
+
+bool FxController::isGpuRenderingActive() const
+{
+	return gpu_render_;
+}
+
+bool FxController::canSupportGpuRendering()
+{
+	return juce::SystemStats::getOperatingSystemType() > juce::SystemStats::Windows7;
+}
+
+bool FxController::launchNewInstance()
+{
+	auto& controller = getInstance();
+
+	wchar_t module_file[MAX_PATH];
+	DWORD length = GetModuleFileNameW(NULL, module_file, MAX_PATH);
+	if (length == 0 || length >= MAX_PATH)
+	{
+		controller.logMessage("Relaunch failed: module path unavailable\n");
+		return false;
+	}
+
+	// A hidden helper waits ~3 seconds before starting the exe, because the single instance
+	// check would otherwise see this process while it is still exiting.
+	std::wstring command_line = L"cmd.exe /c \"ping -n 4 127.0.0.1 >nul & start \"\" \"";
+	command_line += module_file;
+	command_line += L"\"\"";
+
+	// CREATE_NO_WINDOW gives cmd a hidden console that ping shares. It must not be combined
+	// with DETACHED_PROCESS: Windows then ignores CREATE_NO_WINDOW, and ping, having no console
+	// to inherit, opens a visible one of its own.
+	STARTUPINFOW startup_info = { sizeof(STARTUPINFOW) };
+	startup_info.dwFlags = STARTF_USESHOWWINDOW;
+	startup_info.wShowWindow = SW_HIDE;
+	PROCESS_INFORMATION process_info = { 0 };
+	if (CreateProcessW(NULL, command_line.data(), NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &startup_info, &process_info))
+	{
+		CloseHandle(process_info.hThread);
+		CloseHandle(process_info.hProcess);
+		controller.logMessage("Relaunching\n");
+		return true;
+	}
+
+	controller.logMessage("Relaunch failed\n");
+	return false;
+}
+
+void FxController::restartApplication()
+{
+	autoSaveModifiedPreset();
+
+	if (launchNewInstance())
+	{
+		// Close open modal dialogs (e.g. Settings) first; their deletion is queued before the
+		// quit below, so they are gone before shutdown() tears down the windows.
+		if (auto* modal_manager = ModalComponentManager::getInstanceWithoutCreating())
+		{
+			modal_manager->cancelAllModalComponents();
+		}
+
+		MessageManager::callAsync([]()
+		{
+			JUCEApplication::getInstance()->systemRequestedQuit();
+		});
 	}
 }
 
