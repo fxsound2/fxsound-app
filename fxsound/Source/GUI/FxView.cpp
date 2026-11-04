@@ -23,9 +23,7 @@ FxView::FxView() : undo_button_("presetUndoButton", DrawableButton::ButtonStyle:
 {
 	FxModel::getModel().addListener(this);
 
-	undo_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButton), FXIMAGESIZE(RestoreDefaultsButton));
-	undo_hover_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButtonHover), FXIMAGESIZE(RestoreDefaultsButtonHover));
-	undo_button_.setImages(undo_image_.get(), undo_hover_image_.get());
+	setUndoButtonImages();
 	undo_button_.setMouseCursor(MouseCursor::PointingHandCursor);
 	undo_button_.setWantsKeyboardFocus(true);
 	undo_button_.setTooltip(TRANS("Undo Preset Changes"));
@@ -84,6 +82,19 @@ void FxView::showErrorNotification(bool show)
 void FxView::updatePresetButton()
 {
 	preset_list_.setButton(FxModel::getModel().isPresetModified() ? &undo_button_ : nullptr);
+}
+
+void FxView::setUndoButtonImages()
+{
+	undo_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButton), FXIMAGESIZE(RestoreDefaultsButton));
+	undo_hover_image_ = Drawable::createFromImageData(FXIMAGE(RestoreDefaultsButtonHover), FXIMAGESIZE(RestoreDefaultsButtonHover));
+	undo_button_.setImages(undo_image_.get(), undo_hover_image_.get());
+}
+
+void FxView::lookAndFeelChanged()
+{
+	// Undo button may not be attached to the preset list, so reload its theme images here
+	setUndoButtonImages();
 }
 
 void FxView::comboBoxChanged(ComboBox* combobox)

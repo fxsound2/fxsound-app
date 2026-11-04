@@ -47,7 +47,10 @@ protected:
 	void mouseEnter(const MouseEvent&) override;
 	void mouseExit(const MouseEvent&) override;
 
+	void lookAndFeelChanged() override;
+
 	void updatePresetButton();
+	void setUndoButtonImages();
 
 	DrawableButton undo_button_;
 	std::unique_ptr<Drawable> undo_image_;

@@ -103,25 +103,18 @@ private:
     static constexpr int ROTARY_SLIDER_HEIGHT = 36;
 	static constexpr int X_MARGIN = 16;
 	static constexpr int Y_MARGIN = 8;
-    static constexpr int BUTTON_WIDTH = 18;
-    static constexpr int BUTTON_HEIGHT = 18;
-    static constexpr int BUTTON_MARGIN = 4;
 
 	static constexpr float MAX_GAIN = 12.0f;
 
 	void resized() override;
 	void paint(Graphics& g) override;
 
-    void restoreDefaults();
     void updateTooltips(int num_bands);
 
 	std::vector<std::unique_ptr<Label>> labels_;
     std::vector<std::unique_ptr<FxEqSlider>> band_boosts_;
     std::vector<std::unique_ptr<FxBandCenterFreqSlider>> center_frequencies_;
     std::vector<float> band_gain_values_;
-
-    std::unique_ptr<Drawable> restore_defaults_image_;
-    std::unique_ptr<Drawable> restore_defaults_hover_image_;
 
     bool highlight_mode_;
 
