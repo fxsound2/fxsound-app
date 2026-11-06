@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "operatingSystem.h"
 
 #define DEF_GLOBAL
-#include "u_reg.h"
+#include "U_reg.h"
 
 /*
  * FUNCTION: regReadRegisteredOwner()
@@ -67,9 +67,9 @@ int PT_DECLSPEC regReadRegisteredOwner_Wide(wchar_t *wcp_reg_owner, int i_length
 	int is_wow64;
 	REGSAM samDesired;
 
-	swprintf(wcp_reg_owner, L"%s", REG_REGISTERED_OWNER_DEFAULT_VALUE_WIDE);
+	swprintf(wcp_reg_owner, L"%ls", REG_REGISTERED_OWNER_DEFAULT_VALUE_WIDE);
 
-	swprintf(wcp_current_version_path, L"%s", REG_WIN_NT_CURRENT_VERSION_PATH_WIDE);
+	swprintf(wcp_current_version_path, L"%ls", REG_WIN_NT_CURRENT_VERSION_PATH_WIDE);
 
 	/* 
 	 * Check if this is a WOW64 process (32bit app running on a 64bit machine).  If so, we

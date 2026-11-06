@@ -584,8 +584,8 @@ int PT_DECLSPEC sndDevicesRecordingSetTmpFolder(PT_HANDLE *hp_sndDevices, wchar_
 		return(NOT_OKAY);
 
 	// Delete any existing "partial" pre-encrypted files from threads that went dead for some reason.
-	swprintf(partialEncrypted,   L"%s\\*.%s", cast_handle->recordedFilePath, SND_DEVICES_RECORD_CACHE_PRE_ENCODED_PARTIAL_FILES_ENCRYPTED_EXTENSION);
-	swprintf(partialUnEncrypted, L"%s\\*.%s", cast_handle->recordedFilePath, SND_DEVICES_RECORD_CACHE_PRE_ENCODED_PARTIAL_FILES_UNENCRYPTED_EXTENSION);
+	swprintf(partialEncrypted,   L"%ls\\*.%ls", cast_handle->recordedFilePath, SND_DEVICES_RECORD_CACHE_PRE_ENCODED_PARTIAL_FILES_ENCRYPTED_EXTENSION);
+	swprintf(partialUnEncrypted, L"%ls\\*.%ls", cast_handle->recordedFilePath, SND_DEVICES_RECORD_CACHE_PRE_ENCODED_PARTIAL_FILES_UNENCRYPTED_EXTENSION);
 
 	if( fileRemoveWithWildcard_Wide(partialEncrypted,   cast_handle->slout_hdl) != OKAY )
 		return(NOT_OKAY);
@@ -626,8 +626,8 @@ int PT_DECLSPEC sndDevicesSetRecordPrecision(PT_HANDLE *hp_sndDevices, int i_Bit
 	// If either precision setting is changed, delete all existing pre-encoded files.
 	if(b_PrecisionChangedFlag)
 	{
-		swprintf(preEncodedEncryptedFiles,   L"%s\\*.%s", cast_handle->recordedFilePath, SND_DEVICES_RECORD_CACHE_PRE_ENCODED_FINAL_FILES_ENCRYPTED_EXTENSION);
-		swprintf(preEncodedUnEncryptedFiles, L"%s\\*.%s", cast_handle->recordedFilePath, SND_DEVICES_RECORD_CACHE_PRE_ENCODED_FINAL_FILES_UNENCRYPTED_EXTENSION);
+		swprintf(preEncodedEncryptedFiles,   L"%ls\\*.%ls", cast_handle->recordedFilePath, SND_DEVICES_RECORD_CACHE_PRE_ENCODED_FINAL_FILES_ENCRYPTED_EXTENSION);
+		swprintf(preEncodedUnEncryptedFiles, L"%ls\\*.%ls", cast_handle->recordedFilePath, SND_DEVICES_RECORD_CACHE_PRE_ENCODED_FINAL_FILES_UNENCRYPTED_EXTENSION);
 
 		if( fileRemoveWithWildcard_Wide(preEncodedEncryptedFiles,   cast_handle->slout_hdl) != OKAY )
 			return(NOT_OKAY);

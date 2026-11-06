@@ -139,7 +139,7 @@ int PT_DECLSPEC sndDevicesGetID(PT_HANDLE *hp_sndDevices, int i_deviceType, wcha
 
 	if ((cast_handle->i_trace_on) && (cast_handle->slout_hdl))
 	{
-		swprintf(cast_handle->wcp_msg1, L"sndDevicesGetID():: Result: %i ID %s", *ip_resultFlag, wcp_ID);
+		swprintf(cast_handle->wcp_msg1, L"sndDevicesGetID():: Result: %i ID %ls", *ip_resultFlag, wcp_ID);
 		cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 		swprintf(cast_handle->wcp_msg1, L"sndDevicesGetID():: Returns OKAY");
 		cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);

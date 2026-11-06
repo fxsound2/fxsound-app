@@ -19,8 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <windows.h>
 #include "slout.h"
-#include "file.h"
-#include "u_file.h"
+#include "File.h"
+#include "U_FILE.H"
 #include "pt_defs.h"
 #include "pstr.h"
 /*

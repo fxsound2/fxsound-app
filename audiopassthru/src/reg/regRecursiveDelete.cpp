@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "pt_defs.h"
 #include "reg.h"
 
-#include "u_reg.h"
+#include "U_reg.h"
 
 /*
  * FUNCTION: regRecursiveDeleteFolder_Wide()

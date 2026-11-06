@@ -112,3 +112,12 @@ void AudioPassthru::restoreDefaultPlaybackDevice()
 {
     data_->restoreDefaultPlaybackDevice();
 }
+
+void AudioPassthru::setPower(bool on)
+{
+#ifndef _WIN32
+    (void)on;
+#else
+    if (!on) data_->restoreDefaultPlaybackDevice();
+#endif
+}

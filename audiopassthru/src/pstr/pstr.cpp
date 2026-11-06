@@ -15,6 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "codedefs.h"
 
 /* Standard includes */
@@ -413,7 +414,7 @@ int PT_DECLSPEC pstrRemovePrefixFromLine_Wide(wchar_t *wcp_with_prefix, wchar_t 
    with_prefix_len = (int)wcslen(wcp_with_prefix);
 	prefix_len = (int)wcslen(wcp_prefix);
    
-   /* Make sure the string is long enough to hold prefix */
+   /* Make sure the string is pt_long enough to hold prefix */
 	if (with_prefix_len <= prefix_len)
       return(NOT_OKAY);
 
@@ -864,7 +865,7 @@ int PT_DECLSPEC pstrRemoveAllSpaces_Wide(wchar_t *wcp_string)
    new_string[new_index] = L'\0';
 
 	if (wcslen(new_string) > 0)
-	   swprintf(wcp_string, L"%s", new_string);
+	   swprintf(wcp_string, L"%ls", new_string);
 	else
 		wcp_string[0] = L'\0';
 
@@ -924,7 +925,7 @@ int PT_DECLSPEC pstrRemoveAllLeadingSpaces_Wide(wchar_t *wcp_string)
    new_string[new_index] = L'\0';
 
 	if (wcslen(new_string) > 0)
-	   swprintf(wcp_string, L"%s", new_string);
+	   swprintf(wcp_string, L"%ls", new_string);
 	else
 		wcp_string[0] = L'\0';
 
@@ -1028,7 +1029,7 @@ int PT_DECLSPEC pstrMakeNoDoublesBackSlashes_Wide(wchar_t *wcp_string)
    new_string[new_index] = L'\0';
 
 	if (wcslen(new_string) > 0)
-	   swprintf(wcp_string, L"%s", new_string);
+	   swprintf(wcp_string, L"%ls", new_string);
 	else
 		wcp_string[0] = L'\0';
 
@@ -1412,7 +1413,7 @@ int PT_DECLSPEC pstrCheckStartsWithMatch_Wide(wchar_t *wcp_main_string, wchar_t 
 	length_main = (int)wcslen(wcp_main_string);
 	length_match = (int)wcslen(wcp_match_string);
 
-	/* Make sure the main string is at least long enough to contain match string */
+	/* Make sure the main string is at least pt_long enough to contain match string */
 	if (length_main < length_match)
 		return(OKAY);
 
@@ -1485,7 +1486,7 @@ int PT_DECLSPEC pstrCheckEndsWithMatch_Wide(wchar_t *wcp_main_string, wchar_t *w
 	length_main = (int)wcslen(wcp_main_string);
 	length_match = (int)wcslen(wcp_match_string);
 
-	/* Make sure the main string is at least long enough to contain match string */
+	/* Make sure the main string is at least pt_long enough to contain match string */
 	if (length_main < length_match)
 		return(OKAY);
 

@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* 5/20/13 - To allow Android/Linux builds, moved this windows specific include file down inside WIN32 block below
 #include <crtdbg.h> */
 
-#ifndef __ANDROID__
+#if defined(_WIN32) && !defined(__ANDROID__)
 #include <crtdbg.h>
 #include <windows.h>
 #endif //WIN32
@@ -95,7 +95,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define OKAY 0
 #define NOT_OKAY_NO_BREAK 1 // Use this instead of NOT_OKAY when passed as parameter or assigned to a variable.
 
-#if defined( _DEBUG ) && !defined( __ANDROID__ )
+#if defined( _DEBUG ) && defined(_WIN32) && !defined( __ANDROID__ )
 	#ifdef UNICODE
 		static int ptDebugNotOkay(wchar_t *wcp_file, wchar_t *wcp_line)
 		{
@@ -118,7 +118,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		#define NOT_OKAY ptDebugNotOkay(__FILE__, PT_LINE_STRING_CHAR)
 	#endif //UNICODE
 
-#elif !defined( __ANDROID__ ) //NOT DEBUG && WIN32
+#elif defined(_WIN32) && !defined( __ANDROID__ ) //NOT DEBUG && WIN32
 	#ifdef UNICODE
 		static int ptReleaseNotOkay(wchar_t *wcp_file, wchar_t *wcp_line)
 		{
