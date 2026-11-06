@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* Standard includes */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -35,9 +36,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *   of the previous sample pt. 
  */
 int PT_DECLSPEC realSampleForceLegalValues_ArrayOnly(realtype *rp_samples, 
-													              long l_num_sample_pts)
+													              pt_long l_num_sample_pts)
 {
-   long l_sample_pt_index;
+   pt_long l_sample_pt_index;
    realtype r_previous_value;
 
 	if (rp_samples == NULL)

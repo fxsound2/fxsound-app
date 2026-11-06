@@ -15,6 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "u_DfxDsp.h"
 #include "reg.h"
 
@@ -27,14 +28,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /*
 * Modeled after dfxg_WriteRegistrySessionLongValue() in dfxgSession.cpp.
 */
-int DfxDspPrivate::writeRegistrySessionLongValue(long l_value, wchar_t *wcp_key_name)
+int DfxDspPrivate::writeRegistrySessionLongValue(pt_long l_value, wchar_t *wcp_key_name)
 {
 	wchar_t wcp_key_value[DFXG_REGISTRY_BUFFER_LENGTH];
 	wchar_t wcp_full_key_path[PT_MAX_PATH_STRLEN];
 
 	if (vendor_specific_.vendor_code != 0)
 	{
-		swprintf(wcp_full_key_path, PT_MAX_PATH_STRLEN, L"%s\\%s\\%d\\%d\\%s\\%s",
+		swprintf(wcp_full_key_path, PT_MAX_PATH_STRLEN, L"%ls\\%ls\\%d\\%d\\%ls\\%ls",
 			DFXG_REGISTRY_TOP_WIDE,
 			product_specific_.wcp_registry_product_name,
 			product_specific_.major_version,

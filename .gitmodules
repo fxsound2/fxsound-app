@@ -2,3 +2,6 @@
 	path = Resources
 	url = https://github.com/fxsound2/Resources.git
 	branch = main
+[submodule "linux/third_party/JUCE"]
+	path = linux/third_party/JUCE
+	url = https://github.com/juce-framework/JUCE.git

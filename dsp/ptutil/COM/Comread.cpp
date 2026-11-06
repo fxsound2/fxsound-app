@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* Standard includes */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -68,7 +69,7 @@ int PT_DECLSPEC comIntRead(PT_HANDLE *hp_com, int *ip_value)
     
 #ifdef DSPFX1
 	{
-		long tmp_val;
+		pt_long tmp_val;
 		if( comHrdwrGetChar(cast_handle->board_address, &tmp_val) != OKAY )
 		 	return(NOT_OKAY);
 		*ip_value = (int) tmp_val;
@@ -87,10 +88,10 @@ int PT_DECLSPEC comIntRead(PT_HANDLE *hp_com, int *ip_value)
 /*
  * FUNCTION: comLongIntRead()
  * DESCRIPTION:
- * Reads the long integer value from DSP. Values are read 
+ * Reads the pt_long integer value from DSP. Values are read 
  * serially from a stream, and are thus order dependent.
  */
-int PT_DECLSPEC comLongIntRead(PT_HANDLE *hp_com, long *lp_value)
+int PT_DECLSPEC comLongIntRead(PT_HANDLE *hp_com, pt_long *lp_value)
 {
 	struct comHdlType *cast_handle;
 
@@ -141,7 +142,7 @@ int PT_DECLSPEC comRealRead(PT_HANDLE *hp_com, realtype *rp_value)
     }
     
 #ifdef DSPFX1
-	if( comHrdwrGetChar(cast_handle->board_address, (long *)rp_value) != OKAY )
+	if( comHrdwrGetChar(cast_handle->board_address, (pt_long *)rp_value) != OKAY )
 	 	return(NOT_OKAY);
 #endif
 #ifdef DSPR_TIGER32
@@ -162,7 +163,7 @@ int PT_DECLSPEC comRealRead(PT_HANDLE *hp_com, realtype *rp_value)
  *  same order that the dsp code wrote them.
  *
  */
-int PT_DECLSPEC comReadMeter(PT_HANDLE *hp_com, int i_wait_for_value, long *lp_meter_value, int *ip_got_value)
+int PT_DECLSPEC comReadMeter(PT_HANDLE *hp_com, int i_wait_for_value, pt_long *lp_meter_value, int *ip_got_value)
 {
 	struct comHdlType *cast_handle;
 
@@ -189,7 +190,7 @@ int PT_DECLSPEC comReadMeter(PT_HANDLE *hp_com, int i_wait_for_value, long *lp_m
 	 * NOTES- From dspfx1 card with Crystal 16 bit part,
 	 * MAX POS is  2147418122 ( close to ? 32767 << 16) while
 	 * MAX NEG is -2147483648 (-32768 << 16) (also 0x80000000).
-	 * Note that limits.h shows long is +/- 2147483647  .
+	 * Note that limits.h shows pt_long is +/- 2147483647  .
 	 * Also note that labs fails for labs( -2147483648 ).
 	 */
  	if( i_wait_for_value )
@@ -211,7 +212,7 @@ int PT_DECLSPEC comReadMeter(PT_HANDLE *hp_com, int i_wait_for_value, long *lp_m
 		 */
 		/*
 		if( hrdwrReadXferRegIfFullAndNotBusy(cast_handle->board_address, (short FAR *)&busy, 
-		                           (long FAR *)lp_meter_value, 
+		                           (pt_long FAR *)lp_meter_value, 
 		                           (short FAR *)&full) != OKAY)
 			return(NOT_OKAY);
 		*ip_got_value = full;
@@ -248,7 +249,7 @@ int PT_DECLSPEC comReadMeter(PT_HANDLE *hp_com, int i_wait_for_value, long *lp_m
  *  same order that the dsp code wrote them.
  *
  */
-int PT_DECLSPEC comReadStatus(PT_HANDLE *hp_com, int i_wait_for_value, long *lp_status_value, int *ip_got_value)
+int PT_DECLSPEC comReadStatus(PT_HANDLE *hp_com, int i_wait_for_value, pt_long *lp_status_value, int *ip_got_value)
 {
 	struct comHdlType *cast_handle;
 
@@ -289,7 +290,7 @@ int PT_DECLSPEC comReadStatus(PT_HANDLE *hp_com, int i_wait_for_value, long *lp_
 		 */
 		/*
 		if( hrdwrReadXferRegIfFullAndNotBusy(cast_handle->board_address, (short FAR *)&busy,
-		                           (long FAR *)lp_status_value,
+		                           (pt_long FAR *)lp_status_value,
 								   (short FAR *)&full) != OKAY)
 				return(NOT_OKAY);
 		 */

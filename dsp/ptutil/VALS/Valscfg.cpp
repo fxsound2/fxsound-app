@@ -15,6 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "codedefs.h"
 
 /* Standard includes */
@@ -27,11 +28,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <time.h>
 
 #include "slout.h"
-#include "file.h"
+#include "File.h"
 #include "mry.h"
 #include "vals.h"
 #include "pstr.h"
-#include "u_vals.h"
+#include "U_vals.h"
 
 #define LINE_LENGTH 128
 
@@ -69,7 +70,7 @@ int PT_DECLSPEC valsCfgRead(PT_HANDLE **hpp_vals_cfg, wchar_t *wcp_file_path,
 		return(NOT_OKAY);
 
     /* Store the filepath */
-    swprintf(cast_handle->wcp_filepath, L"%s", wcp_file_path);
+    swprintf(cast_handle->wcp_filepath, L"%ls", wcp_file_path);
 
 	/* Skip past the first line */
 	fgetws(wcp_str, LINE_LENGTH, stream);
@@ -86,7 +87,7 @@ int PT_DECLSPEC valsCfgRead(PT_HANDLE **hpp_vals_cfg, wchar_t *wcp_file_path,
     if (title_length < 1)
        return(NOT_OKAY);
 	wcp_str[title_length - 1] = L'\0';
-	swprintf((cast_handle->wcp_title), L"%s", wcp_str);
+	swprintf((cast_handle->wcp_title), L"%ls", wcp_str);
 
 	/* Get the number of elements */
 	fgetws(wcp_str, LINE_LENGTH, stream);
@@ -161,7 +162,7 @@ int PT_DECLSPEC valsCfgWrite(PT_HANDLE *hp_vals_cfg)
     
     fwprintf(stream, L"1.0: Version\n");
     
-    fwprintf(stream, L"%s\n", cast_handle->wcp_title);
+    fwprintf(stream, L"%ls\n", cast_handle->wcp_title);
     
     fwprintf(stream, L"%d: Number of Elements (1,2,4,8)\n", cast_handle->num_elements);
     
@@ -215,7 +216,7 @@ int PT_DECLSPEC valsCfgCheckFileType(wchar_t *wcp_file_path, int *ip_proper_type
 		return(OKAY);
 	}
 
-	swscanf(wcp_line_str, L"%s\n", wcp_type_str);
+	swscanf(wcp_line_str, L"%ls\n", wcp_type_str);
 
 	if (wcslen(wcp_type_str) <= 0)
 	{
@@ -251,7 +252,7 @@ int PT_DECLSPEC valsCfgGetTitle(PT_HANDLE *hp_vals_cfg, wchar_t *wcp_title)
 	if (wcp_title == NULL)
 	   return(NOT_OKAY);
 	   
-	swprintf(wcp_title, L"%s", cast_handle->wcp_title);
+	swprintf(wcp_title, L"%ls", cast_handle->wcp_title);
 
 	return(OKAY);
 }
@@ -356,7 +357,7 @@ int PT_DECLSPEC valsCfgGetMinUserPreset(PT_HANDLE *hp_vals_cfg, int *ip_min_user
  * DESCRIPTION:
  *  Pass back the time when the last preset was saved. (Seconds since 1/1/70)
  */
-int PT_DECLSPEC valsCfgGetPresetSaveTime(PT_HANDLE *hp_vals_cfg, long *lp_preset_save_time)
+int PT_DECLSPEC valsCfgGetPresetSaveTime(PT_HANDLE *hp_vals_cfg, pt_long *lp_preset_save_time)
 {
 	struct valsCfgHdlType *cast_handle;
 
@@ -470,7 +471,7 @@ int PT_DECLSPEC valsCfgSetMinUserPreset(PT_HANDLE *hp_vals_cfg, int i_min_user_p
  * DESCRIPTION:
  *   Sets the time that the last preset was saved. (Seconds since 1/1/70).
  */
-int PT_DECLSPEC valsCfgSetPresetSaveTime(PT_HANDLE *hp_vals_cfg, long l_preset_save_time)
+int PT_DECLSPEC valsCfgSetPresetSaveTime(PT_HANDLE *hp_vals_cfg, pt_long l_preset_save_time)
 {
 	struct valsCfgHdlType *cast_handle;
 

@@ -1,3 +1,4 @@
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
@@ -214,54 +215,54 @@ struct dspPlayStructType
 {
 	/* Parameters common to all dsp functions */
 	/* Note- must occupy same 32 word locations as defines in Boardrv1.h */
-	long pc_to_dsp_flags;
-	long dsp_to_pc_flags;
-	long dsp_number_of_elements;
+	pt_long pc_to_dsp_flags;
+	pt_long dsp_to_pc_flags;
+	pt_long dsp_number_of_elements;
 	realtype dsp_sampling_freq;
-	long stereo_in_flag;
-	long dsp_mute_in_flag;
-	long unassigned6;
-	long unassigned7;
-	long unassigned8;
-	long unassigned9;
+	pt_long stereo_in_flag;
+	pt_long dsp_mute_in_flag;
+	pt_long unassigned6;
+	pt_long unassigned7;
+	pt_long unassigned8;
+	pt_long unassigned9;
 	realtype dry_gain;
 	realtype wet_gain;
 	realtype master_gain;
-	long dsp_dma_in_transfer;
-	long unassigned14;
-	long unassigned15;
-	long unassigned16;
-	long unassigned17;
-	long unassigned18;
-	long unassigned19;
-	long unassigned20; 
-	long unassigned21;
-	long unassigned22;
-	long unassigned23;
-	long unassigned24;
-	long unassigned25;
-	long unassigned26;
-	long unassigned27;
-	long unassigned28;
-	long unassigned29;
-	long unassigned30;
-	long unassigned31;
-	long unassigned32;
-	long unassigned33; /* End of currently assigned Aural Activator parameters/states */
-	long unassigned34; /* Room for 2 more if needed */
-	long unassigned35;
+	pt_long dsp_dma_in_transfer;
+	pt_long unassigned14;
+	pt_long unassigned15;
+	pt_long unassigned16;
+	pt_long unassigned17;
+	pt_long unassigned18;
+	pt_long unassigned19;
+	pt_long unassigned20; 
+	pt_long unassigned21;
+	pt_long unassigned22;
+	pt_long unassigned23;
+	pt_long unassigned24;
+	pt_long unassigned25;
+	pt_long unassigned26;
+	pt_long unassigned27;
+	pt_long unassigned28;
+	pt_long unassigned29;
+	pt_long unassigned30;
+	pt_long unassigned31;
+	pt_long unassigned32;
+	pt_long unassigned33; /* End of currently assigned Aural Activator parameters/states */
+	pt_long unassigned34; /* Room for 2 more if needed */
+	pt_long unassigned35;
 
 	/* Start play specific parameters, above activator parameters */
 	/* Note- algorithm specific parameters must occupy same 32 word locations
 	 * as defines below.
 	 */
-	long bypass_on;
-	long activator_on;
-	long ambience_on;
-	long widener_on;
-	long bassboost_on;
-	long headphone_on;
-	long reset_demo_count;
+	pt_long bypass_on;
+	pt_long activator_on;
+	pt_long ambience_on;
+	pt_long widener_on;
+	pt_long bassboost_on;
+	pt_long headphone_on;
+	pt_long reset_demo_count;
 
 	/* Bass boost coeffs */
 	realtype b0;
@@ -290,17 +291,17 @@ struct dspPlayStructType
 	realtype a2_hp;
     */
 
-	unsigned long vocal_elim_val;
-	long vocal_elim_on;
-	long vocal_mode;
+	pt_ulong vocal_elim_val;
+	pt_long vocal_elim_on;
+	pt_long vocal_mode;
 
 	/* Play internal state parameters */
-	long bypass_mode;
-	unsigned long sample_count;
-	unsigned long max_sample_count_process;
-	unsigned long max_sample_count_demo;
-	unsigned long last_vocal_val;
-	long last_mode;
+	pt_long bypass_mode;
+	pt_ulong sample_count;
+	pt_ulong max_sample_count_process;
+	pt_ulong max_sample_count_demo;
+	pt_ulong last_vocal_val;
+	pt_long last_mode;
 
 	/* Play algorithm state variables */
 	/* The filter coeffs will be set during initialization, not from parameter changes */
@@ -341,8 +342,8 @@ struct dspPlayStructType
 	 * Note that the delay_lines param must be the last parameter since
 	 * there will be an array of data written at that address space.
 	 */
-	unsigned long head_delay;
-	unsigned long delay_line_index;
+	pt_ulong head_delay;
+	pt_ulong delay_line_index;
 	realtype delay_lines;
 };
 

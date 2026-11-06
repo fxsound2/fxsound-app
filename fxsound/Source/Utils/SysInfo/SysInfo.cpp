@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "SysInfo.h"
 
+#if JUCE_WINDOWS
+
 void SysInfo::enumAudioOutputs(StringArray& audioOutputNames)
 {
 	HRESULT hRes = S_OK;
@@ -139,3 +141,29 @@ bool SysInfo::isRemoteSession()
 {
 	return GetSystemMetrics(SM_REMOTESESSION) != FALSE;
 }
+
+#else  // Linux (FxSound port): no MMDeviceEnumerator/SCM/SM_REMOTESESSION.
+
+#include "os_posix.h"
+#include "sndDevices_pw.h"
+
+void SysInfo::enumAudioOutputs(StringArray& audioOutputNames)
+{
+	audioOutputNames.clear();
+
+	for (const auto& sink : fxsound_linux::pwListSinks())
+		audioOutputNames.add(String::fromUTF8(sink.description.c_str()));
+}
+
+bool SysInfo::canSupportHotkeys()
+{
+	// Linux: Global shortcuts supported via XDG Desktop Portal, D-Bus, and CLI
+	return true;
+}
+
+bool SysInfo::isRemoteSession()
+{
+	return fxsound_linux::isRemoteSession();
+}
+
+#endif

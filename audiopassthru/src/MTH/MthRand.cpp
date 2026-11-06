@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Standard includes */
 #ifndef __ANDROID__
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <windows.h>
 #include <winbase.h>
 #endif
@@ -72,9 +73,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		a * a <= modulus
 		[a*x/a*q]-[a*x/modulus] <= 1
 			(for only one addition of modulus below) */
-int PT_DECLSPEC mthGenRandomLongFromSeed(long init_rand, long *value)
+int PT_DECLSPEC mthGenRandomLongFromSeed(pt_long init_rand, pt_long *value)
 {
-	long k, residue ;
+	pt_long k, residue ;
 
 	k = init_rand / Q ;
 	residue = MULT * (init_rand - Q * k) - R * k ;
@@ -112,13 +113,13 @@ int PT_DECLSPEC mthGenerateRandomInt(int i_max_val, int *ip_random_val)
  * FUNCTION: mthGenerateRandomUnsignedLong()
  * DESCRIPTION:
  *
- *   Generates and returns a random unsigned long between the specified min and max val.
+ *   Generates and returns a random pt_ulong between the specified min and max val.
  *   This version is "seedless", but is based on current time,
  *   so it must not be called very often or many times in a row.
  */
-int PT_DECLSPEC mthGenerateRandomUnsignedLong(unsigned long ul_min_val,
-								  unsigned long ul_max_val,
-								  unsigned long *ulp_random_val)
+int PT_DECLSPEC mthGenerateRandomUnsignedLong(pt_ulong ul_min_val,
+								  pt_ulong ul_max_val,
+								  pt_ulong *ulp_random_val)
 {
 #ifdef WIN32
 	__int64 perf_count;
@@ -135,7 +136,7 @@ int PT_DECLSPEC mthGenerateRandomUnsignedLong(unsigned long ul_min_val,
 	if( perf_count == 0 )
 		perf_count = (__int64)54321;
 
-	*ulp_random_val = (unsigned long)((__int64)ul_min_val + (perf_count % diff));
+	*ulp_random_val = (pt_ulong)((__int64)ul_min_val + (perf_count % diff));
 
 #endif /* WIN32 */
 	

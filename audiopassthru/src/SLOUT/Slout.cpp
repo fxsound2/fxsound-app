@@ -15,11 +15,13 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "codedefs.h"
 
 /* Standard includes */
 #include <stdlib.h> 
 #include <stdio.h>
+#include <windows.h> /* Linux: compat shim for swprintf 2-arg overload (Phase 5); Windows: real SDK, harmless. */
 
 #include "slout.h"
  
@@ -27,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * FUNCTION: sloutDisplayFileAndLine()
  * DESCRIPTION:
  */
-int sloutDisplayFileAndLine(char *cp_filename, long lp_line_num)
+int sloutDisplayFileAndLine(char *cp_filename, pt_long lp_line_num)
 {
 	return(NOT_OKAY);
 }
@@ -122,7 +124,7 @@ int CSlout::Display_Wide(int i_linenum, wchar_t *wcp_msg)
    return(OKAY);      
 }
 
-#if defined( WIN32 ) // Wide char functions only supported in WIN32 builds.
+#if defined( WIN32 ) || defined( _WIN32 ) || defined( __linux__ ) // Wide char logging needed on Linux too (port).
 
 /*
  * FUNCTION: Error_Wide()
@@ -132,12 +134,12 @@ int CSlout::Error_Wide(int i_linetype, wchar_t *wcp_msg)
 {
    if (i_linetype == FIRST_LINE)
    {
-      swprintf(m_wcp_msg, L"Error: %s", wcp_msg);
+      swprintf(m_wcp_msg, L"Error: %ls", wcp_msg);
       m_linenum = 1;
    }
    else
    {
-      swprintf(m_wcp_msg, L"   %s", wcp_msg);
+      swprintf(m_wcp_msg, L"   %ls", wcp_msg);
       m_linenum++;
    }
    
@@ -154,12 +156,12 @@ int CSlout::Warning_Wide(int i_linetype, wchar_t *wcp_msg)
 {
    if (i_linetype == FIRST_LINE)
    {
-      swprintf(m_wcp_msg, L"Warning: %s", wcp_msg);
+      swprintf(m_wcp_msg, L"Warning: %ls", wcp_msg);
       m_linenum = 1;
    }
    else
    {
-      swprintf(m_wcp_msg, L"   %s", wcp_msg);
+      swprintf(m_wcp_msg, L"   %ls", wcp_msg);
       m_linenum++;
    }
    
@@ -179,7 +181,7 @@ int CSlout::Message_Wide(int i_linetype, wchar_t *wcp_msg)
    else 
       m_linenum++;
    
-   swprintf(m_wcp_msg, L"%s", wcp_msg);
+   swprintf(m_wcp_msg, L"%ls", wcp_msg);
    Display_Wide(m_linenum, m_wcp_msg);
      
    return(OKAY);      

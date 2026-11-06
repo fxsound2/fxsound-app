@@ -1,3 +1,4 @@
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 /* (C) COPYRIGHT 1994-1997 Power Technology. All Rights Reserved.
  * This document and file contain highly confidential information
  * which is not to be disclosed or in any other way retransmitted
@@ -48,21 +49,21 @@ int PT_DECLSPEC mthIsHex(char *, int *);
 int PT_DECLSPEC mthIsHex_Wide(wchar_t *, int *);
 int PT_DECLSPEC mthSearchForClosestValueInRealArray(realtype, realtype *, int, int *);
 int PT_DECLSPEC mthRoundRealToInt(realtype, int *);
-int PT_DECLSPEC mthCalcIterativeAverage(realtype, realtype, long, realtype *);
+int PT_DECLSPEC mthCalcIterativeAverage(realtype, realtype, pt_long, realtype *);
 realtype PT_DECLSPEC mthFastSqrt(realtype r_x);
 
 /* mthRand.cpp */
-int PT_DECLSPEC mthGenRandomLongFromSeed(long init_rand, long *value);
+int PT_DECLSPEC mthGenRandomLongFromSeed(pt_long init_rand, pt_long *value);
 int PT_DECLSPEC mthGenerateRandomInt(int i_max_val, int *ip_random_val);
-int PT_DECLSPEC mthGenerateRandomUnsignedLong(unsigned long, unsigned long, unsigned long *);
+int PT_DECLSPEC mthGenerateRandomUnsignedLong(pt_ulong, pt_ulong, pt_ulong *);
 
 /* mthfreq.cpp */
 int PT_DECLSPEC mthMidiOctaveFreqs( realtype *, int );
 int PT_DECLSPEC mthMidiOctaveFreqsPara( realtype *freqs, int num_pts );
 
 /* mthcrypt.cpp */
-int PT_DECLSPEC mthEncryptLong(unsigned long ul_key, long l_inval, long *lp_encrypted);
-int PT_DECLSPEC mthDecryptLong(unsigned long ul_key, long l_inval, long *lp_decrypted);
+int PT_DECLSPEC mthEncryptLong(pt_ulong ul_key, pt_long l_inval, pt_long *lp_encrypted);
+int PT_DECLSPEC mthDecryptLong(pt_ulong ul_key, pt_long l_inval, pt_long *lp_decrypted);
 
 /* mthStat.cpp */
 int PT_DECLSPEC mthGenerateStatistics( realtype *rp_values, int i_num_vals, realtype *rp_average,

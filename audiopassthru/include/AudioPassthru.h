@@ -22,15 +22,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _AUDIOPASSTHRU_H_
 #define _AUDIOPASSTHRU_H_ 
 
-#ifndef __ANDROID__
+#if defined(_WIN32) && !defined(__ANDROID__)
 #include <Windows.h>
-#endif //WIN32
 #include <Mmdeviceapi.h>
+#endif
 #include <vector> 
 #include "DfxDsp.h"
 
 struct SoundDevice {
+#ifdef _WIN32
 	IMMDevice *pAllDevices = NULL; // Object pointers for each device.
+#else
+	void *pAllDevices = NULL; // Linux: PipeWire node, no WASAPI (see linux/sndDevices_pw.h).
+#endif
 	bool isCaptureDevice = false;
 	bool isPlaybackDevice = false;
 	bool isTargetedRealPlaybackDevice = false;
@@ -42,7 +46,11 @@ struct SoundDevice {
 
 	std::wstring pwszID; // For the GUID ID strings for each device, all devices combined.
 	std::wstring pwszIDRealDevices; // For the GUID ID strings for each real playback device.
+#ifdef _WIN32
 	WCHAR pwszIDPreviousRealDevices[512]; // To detect when a new devices is added.
+#else
+	wchar_t pwszIDPreviousRealDevices[512];
+#endif
 
 	std::wstring deviceFriendlyName;  // Friendly name, ie "DFX Audio Enhancer 10.5", all devices.
 	std::wstring deviceDescription;  // Descriptive name, ie "Speakers", all devices.
@@ -75,6 +83,7 @@ public:
     bool isPlaybackDeviceAvailable();
 	bool checkDeviceChanges();
 	void restoreDefaultPlaybackDevice();
+	void setPower(bool on);
 
 private:
 	AudioPassthruPrivate *data_;

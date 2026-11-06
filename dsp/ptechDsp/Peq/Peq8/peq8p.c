@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DSPSOFT_TARGET
 #define DSP_TARGET
 #endif
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "peq_num.h"  /* Sets number of peq elements */
 
 /* Standard includes */
@@ -67,7 +68,7 @@ void main(int argc, char *argv[])
 
 /* Only build init function in 32 bit files (same for both) */
 #if defined(DSPSOFT_32_BIT)
-DSP_FUNC_DEF int DSPS_PEQ_INIT(float *fp_params, float *fp_memory, long l_memsize, float *fp_state, int i_init_flag, float r_samp_freq)
+DSP_FUNC_DEF int DSPS_PEQ_INIT(float *fp_params, float *fp_memory, pt_long l_memsize, float *fp_state, int i_init_flag, float r_samp_freq)
 {
 	float *COMM_MEM_OFFSET = fp_params;
 	float *MEMBANK0_START = fp_memory;
@@ -101,7 +102,7 @@ DSP_FUNC_DEF int DSPS_PEQ_INIT(float *fp_params, float *fp_memory, long l_memsiz
 		*(volatile float *)(DSP_PEQ_LEFT_GAIN_FILT) = 0.0;
 		*(volatile float *)(DSP_PEQ_RIGHT_GAIN_FILT) = 0.0;
 		*(volatile float *)(DSP_PEQ_DRY_GAIN_FILT) = 0.0;
-		*(volatile long *)(DSP_PEQ_SHELFS_ON) = 0;		
+		*(volatile pt_long *)(DSP_PEQ_SHELFS_ON) = 0;		
 	}
 
 	if( i_init_flag & DSPS_INIT_MEMORY )
@@ -130,7 +131,7 @@ DSP_FUNC_DEF int DSPS_PEQ_INIT(float *fp_params, float *fp_memory, long l_memsiz
 #endif /* DSPSOFT_32_BIT */
  	
 #ifdef DSPSOFT_TARGET
-DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
+DSP_FUNC_DEF void DSPS_PEQ_PROCESS(pt_long *lp_data, int l_length,
 								 float *fp_params, float *fp_memory, float *fp_state,
 								 struct hardwareMeterValType *sp_meters,
 								 int DSP_data_type)
@@ -142,8 +143,8 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 	 */
 	/* NO STATE VARS FOR PEQ */
 
-	long transfer_state = 0; /* For sending out meter values */
-	long status = 0;         /* For sending run time status to PC */
+	pt_long transfer_state = 0; /* For sending out meter values */
+	pt_long status = 0;         /* For sending run time status to PC */
 
 	/* All the vars below are from DMA_LOCAL_DECLARATIONS.
 	 * They are declared there as statics, but don't need to be
@@ -157,8 +158,8 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 	/* All the vars below are from DMA_GLOBAL_DECLARATIONS.
 	 * They are declared there as statics, but don't need to be
 	 */
-	long *read_in_buf;
-	long *read_out_buf;
+	pt_long *read_in_buf;
+	pt_long *read_out_buf;
 
 	int i;
 
@@ -215,8 +216,8 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 #define COEFF_SKIP 4 /* Used to increment over unused coeffs, states */
 #define STATE_SKIP 2
 
-		/* if( *(volatile long *)(DSP_PEQ_SHELFS_ON) ) NO LONGER USED */
-		if( *(volatile long *)(DSP_SECTION_STATUS + 0) )
+		/* if( *(volatile pt_long *)(DSP_PEQ_SHELFS_ON) ) NO LONGER USED */
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 0) )
 		{
 			/* First 2 shelfs get normal, rest get para macro */
 			kerSosFiltDirectForm2TransExtState( in1, coeffs, state, outa);
@@ -229,7 +230,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 			outa = in1;
 		}
 
-		if( *(volatile long *)(DSP_SECTION_STATUS + 1) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 1) )
 		{
 			/* First 2 shelfs get normal, rest get para macro */
 			kerSosFiltDirectForm2TransExtState(outa, coeffs, state, outb);
@@ -243,7 +244,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 		}
 
 		/* Now do parametric sections */
-		if( *(volatile long *)(DSP_SECTION_STATUS + 2) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 2) )
 		{
 			kerSosFiltDirectForm2TransParaExtState(outb, coeffs, state, outa);
 		}
@@ -260,7 +261,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 		state  += STATE_SKIP * 7;
 		#endif
 		#if defined(ELEM2)
-		if( *(volatile long *)(DSP_SECTION_STATUS + 3) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 3) )
 		{
 			kerSosFiltDirectForm2TransParaExtState(outa, coeffs, state, outb);
 		}
@@ -278,7 +279,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 		#endif
 		#endif
 		#if defined(ELEM3)
-		if( *(volatile long *)(DSP_SECTION_STATUS + 4) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 4) )
 		{
 			kerSosFiltDirectForm2TransParaExtState(outb, coeffs, state, outa);
 		}
@@ -296,7 +297,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 		#endif
 		#endif
 		#if defined(ELEM4)
-		if( *(volatile long *)(DSP_SECTION_STATUS + 5) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 5) )
 		{
 		    kerSosFiltDirectForm2TransParaExtState(outa, coeffs, state, outb);
 		}
@@ -314,7 +315,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 		#endif
 		#endif
 		#if defined(ELEM5)
-		if( *(volatile long *)(DSP_SECTION_STATUS + 6) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 6) )
 		{
 			kerSosFiltDirectForm2TransParaExtState(outb, coeffs, state, outa);
 		}
@@ -336,7 +337,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
         dutilGet2ndAESInputOutput(in_meter1, in_meter2, out_meter1, out_meter2);
 
 		#if defined(ELEM6)
-		if( *(volatile long *)(DSP_SECTION_STATUS + 7) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 7) )
 		{
 			kerSosFiltDirectForm2TransParaExtState(outa, coeffs, state, outb);
 		}
@@ -354,7 +355,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 		#endif
 		#endif
 		#if defined(ELEM7)
-		if( *(volatile long *)(DSP_SECTION_STATUS + 8) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 8) )
 		{
 			kerSosFiltDirectForm2TransParaExtState(outb, coeffs, state, outa);
 		}
@@ -372,7 +373,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 		#endif
 		#endif
 		#if defined(ELEM8)
-		if( *(volatile long *)(DSP_SECTION_STATUS + 9) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 9) )
 		{
 			kerSosFiltDirectForm2TransParaExtState(outa, coeffs, state, out1);
 		}
@@ -387,12 +388,12 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 	  }
 	  
 	  /* Only do right channel if stereo input. */
-	  if( *(volatile long *)(DSP_STEREO_IN_FLAG) )
+	  if( *(volatile pt_long *)(DSP_STEREO_IN_FLAG) )
 	  {	  
 	    realtype outa, outb;
 	    
-		/* if( *(volatile long *)(DSP_PEQ_SHELFS_ON) ) NO LONGER USED */
-		if( *(volatile long *)(DSP_SECTION_STATUS + 10) )
+		/* if( *(volatile pt_long *)(DSP_PEQ_SHELFS_ON) ) NO LONGER USED */
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 10) )
 		{
 			/* First 2 shelfs get normal, rest get para macro */
 			kerSosFiltDirectForm2TransExtState( in2, coeffs, state, outa);
@@ -405,7 +406,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 			outa = in2;
 		}
 
-		if( *(volatile long *)(DSP_SECTION_STATUS + 11) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 11) )
 		{
 			/* First 2 shelfs get normal, rest get para macro */
 			kerSosFiltDirectForm2TransExtState(outa, coeffs, state, outb);
@@ -419,7 +420,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 		}
 
 		/* Now do parametric sections */
-		if( *(volatile long *)(DSP_SECTION_STATUS + 12) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 12) )
 		{
 			kerSosFiltDirectForm2TransParaExtState(outb, coeffs, state, outa);
 		}
@@ -434,7 +435,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 		out2 = outa;
 		#endif
 		#if defined(ELEM2)
-		if( *(volatile long *)(DSP_SECTION_STATUS + 13) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 13) )
 		{
 			kerSosFiltDirectForm2TransParaExtState(outa, coeffs, state, outb);
 		}
@@ -450,7 +451,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 		#endif
 		#endif
 		#if defined(ELEM3)
-		if( *(volatile long *)(DSP_SECTION_STATUS + 14) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 14) )
 		{
 			kerSosFiltDirectForm2TransParaExtState(outb, coeffs, state, outa);
 		}
@@ -466,7 +467,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 		#endif
 		#endif
 		#if defined(ELEM4)
-		if( *(volatile long *)(DSP_SECTION_STATUS + 15) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 15) )
 		{
 			kerSosFiltDirectForm2TransParaExtState(outa, coeffs, state, outb);
 		}
@@ -482,7 +483,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 		#endif
 		#endif
 		#if defined(ELEM5)
-		if( *(volatile long *)(DSP_SECTION_STATUS + 16) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 16) )
 		{
 			kerSosFiltDirectForm2TransParaExtState(outb, coeffs, state, outa);
 		}
@@ -498,7 +499,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 		#endif
 		#endif
 		#if defined(ELEM6)
-		if( *(volatile long *)(DSP_SECTION_STATUS + 17) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 17) )
 		{
 			kerSosFiltDirectForm2TransParaExtState(outa, coeffs, state, outb);
 		}
@@ -514,7 +515,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 		#endif
 		#endif
 		#if defined(ELEM7)
-		if( *(volatile long *)(DSP_SECTION_STATUS + 18) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 18) )
 		{
 			kerSosFiltDirectForm2TransParaExtState(outb, coeffs, state, outa);
 		}
@@ -530,7 +531,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 		#endif
 		#endif
 		#if defined(ELEM8)
-		if( *(volatile long *)(DSP_SECTION_STATUS + 19) )
+		if( *(volatile pt_long *)(DSP_SECTION_STATUS + 19) )
 		{
 			kerSosFiltDirectForm2TransParaExtState(outa, coeffs, state, out2);
 		}
@@ -570,7 +571,7 @@ DSP_FUNC_DEF void DSPS_PEQ_PROCESS(long *lp_data, int l_length,
 	}
 
 	/* Write averaged meter data temporarily writing as a float.
-	 * Will be converted to long and factored in calling function.
+	 * Will be converted to pt_long and factored in calling function.
 	 */
 	write_meter_average();
 } 

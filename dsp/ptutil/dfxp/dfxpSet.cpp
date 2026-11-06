@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* dfxpSet.cpp */
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "codedefs.h"
 
 #include <windows.h>
@@ -441,7 +442,7 @@ int dfxpSetDfxTunedTrackPlaying(PT_HANDLE *hp_dfxp, int i_dfx_tuned_track_playin
  * DESCRIPTION:
  *   Set the total audio processed time to the given value
  */
-int dfxpSetTotalAudioProcessedTime(PT_HANDLE *hp_dfxp, unsigned long ul_msec_audio_processed_time)
+int dfxpSetTotalAudioProcessedTime(PT_HANDLE *hp_dfxp, pt_ulong ul_msec_audio_processed_time)
 {
 	struct dfxpHdlType *cast_handle;
 

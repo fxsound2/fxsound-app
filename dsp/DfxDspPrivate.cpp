@@ -18,17 +18,18 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "u_DfxDsp.h"
 #include "codedefs.h"
 #include "DfxSdk.h"
 #include "dfxp.h"
-#include "prelst.h"
-#include "file.h"
+#include "Prelst.h"
+#include "File.h"
 #include "qnt.h"
 #include <string>
 
 #include "BinauralSyn.h"
-#include "ptutil\dfxp\u_dfxp.h"
+#include "ptutil/dfxp/u_dfxp.h"
 #include "com.h"
 #include "dfxSharedUtil.h"
 #include "GraphicEq.h"
@@ -53,12 +54,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 DfxDspPrivate::DfxDspPrivate()
 {
 	dfxp_handle_ = NULL;
+	preset_list_handle_ = NULL;
 	slout1_ = NULL;
 	midi_to_rval_qnt_handle_ = NULL;
 	rval_to_midi_qnt_handle_ = NULL;
 
-	swprintf(product_specific_.wcp_registry_product_name, PT_MAX_GENERIC_STRLEN, L"%s", DFXG_REGISTRY_DFX_PRODUCT_NAME_WIDE);
-	swprintf(product_specific_.wcp_displayed_product_name, PT_MAX_GENERIC_STRLEN, L"%s", DFXG_DISPLAYED_DFX_PRODUCT_NAME_WIDE);
+	swprintf(product_specific_.wcp_registry_product_name, PT_MAX_GENERIC_STRLEN, L"%ls", DFXG_REGISTRY_DFX_PRODUCT_NAME_WIDE);
+	swprintf(product_specific_.wcp_displayed_product_name, PT_MAX_GENERIC_STRLEN, L"%ls", DFXG_DISPLAYED_DFX_PRODUCT_NAME_WIDE);
 	product_specific_.full_version = static_cast<float>(13.028);
 	product_specific_.major_version = static_cast<int>(13.028);
 	vendor_specific_.vendor_code = DFXP_VENDOR_CODE_UNIVERSAL;
@@ -74,7 +76,9 @@ DfxDspPrivate::DfxDspPrivate()
 		IS_FALSE, slout1_) != OKAY)
 	{
 		//return(NOT_OKAY);
+#ifdef _WIN32
 		MessageBox(NULL, L"TTEST", L"TEST", MB_OK);
+#endif
 	}
 
 	// Make sure the vocal reduction is turned off 
@@ -304,9 +308,9 @@ void DfxDspPrivate::setEffectValue(DfxDsp::Effect effect, float value)
 	dfxpSetKnobValue(dfxp_handle_, knob, (realtype)value / (realtype)10.0, false);
 }
 
-unsigned long DfxDspPrivate::getTotalAudioProcessedTime()
+pt_ulong DfxDspPrivate::getTotalAudioProcessedTime()
 {
-	unsigned long value;
+	pt_ulong value;
 
 	dfxpGetTotalAudioProcessedTime(dfxp_handle_, &value);
 

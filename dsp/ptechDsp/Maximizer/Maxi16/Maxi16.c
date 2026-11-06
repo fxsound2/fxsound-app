@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DSPSOFT_TARGET
 #define DSP_TARGET
 #endif
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "Maxi_num.h"  /* Sets bit precision */
 
 /* Standard includes */
@@ -69,7 +70,7 @@ void main(int argc, char *argv[])
 
 /* Only build init function in 32 bit files (same for both) */
 #if defined(DSPSOFT_32_BIT)
-DSP_FUNC_DEF int DSPS_MAXI_INIT(float *fp_params, float *fp_memory, long l_memsize, float *fp_state, int i_init_flag, float r_samp_freq)
+DSP_FUNC_DEF int DSPS_MAXI_INIT(float *fp_params, float *fp_memory, pt_long l_memsize, float *fp_state, int i_init_flag, float r_samp_freq)
 {
 	float *COMM_MEM_OFFSET = fp_params;
 	float *MEMBANK0_START = fp_memory;
@@ -78,7 +79,7 @@ DSP_FUNC_DEF int DSPS_MAXI_INIT(float *fp_params, float *fp_memory, long l_memsi
 	 * stored back at end of buffer processing
 	 */
 
-	long i;
+	pt_long i;
 	struct dspMaxiStructType *s = (struct dspMaxiStructType *)(COMM_MEM_OFFSET);
  
 	if( i_init_flag & DSPS_INIT_PARAMS )
@@ -162,7 +163,7 @@ DSP_FUNC_DEF int DSPS_MAXI_INIT(float *fp_params, float *fp_memory, long l_memsi
 		{
 			/*
 			float **fpp = (float **)&(fp_state[0]);
-			long *lpp  =  (long *)&(fp_state[0]);
+			pt_long *lpp  =  (pt_long *)&(fp_state[0]);
 			fpp[0] = ptr0;
 			*/
 		}
@@ -185,7 +186,7 @@ DSP_FUNC_DEF int DSPS_MAXI_INIT(float *fp_params, float *fp_memory, long l_memsi
 #endif /* DSPSOFT_32_BIT */
 
 #ifdef DSPSOFT_TARGET
-DSP_FUNC_DEF void DSPS_MAXI_PROCESS(long *lp_data, int l_length,
+DSP_FUNC_DEF void DSPS_MAXI_PROCESS(pt_long *lp_data, int l_length,
 								   float *fp_params, float *fp_memory, float *fp_state,
 								   struct hardwareMeterValType *sp_meters,
 								   int DSP_data_type)
@@ -198,12 +199,12 @@ DSP_FUNC_DEF void DSPS_MAXI_PROCESS(long *lp_data, int l_length,
 	 */
 	/*
 	float **fpp = (float **)&(fp_state[0]);
-	long *lpp  =  (long *)&(fp_state[0]);
+	pt_long *lpp  =  (pt_long *)&(fp_state[0]);
 	float *ptr0 = fpp[0];
 	*/
 
-	long transfer_state = 0; /* For sending out meter values */
-	long status = 0;         /* For sending run time status to PC */
+	pt_long transfer_state = 0; /* For sending out meter values */
+	pt_long status = 0;         /* For sending run time status to PC */
 
 	/* All the vars below are from DMA_LOCAL_DECLARATIONS.
 	 * They are declared there as statics, but don't need to be
@@ -217,8 +218,8 @@ DSP_FUNC_DEF void DSPS_MAXI_PROCESS(long *lp_data, int l_length,
 	/* All the vars below are from DMA_GLOBAL_DECLARATIONS.
 	 * They are declared there as statics, but don't need to be
 	 */
-	long *read_in_buf;
-	long *read_out_buf;
+	pt_long *read_in_buf;
+	pt_long *read_out_buf;
 
 	int i;
 	struct dspMaxiStructType *s = (struct dspMaxiStructType *)(COMM_MEM_OFFSET);
@@ -238,8 +239,8 @@ DSP_FUNC_DEF void DSPS_MAXI_PROCESS(long *lp_data, int l_length,
 	{
 		float out1, out2;
 		float in1, in2;
-		volatile long in_count = 0;
-		volatile long out_count = 0;
+		volatile pt_long in_count = 0;
+		volatile pt_long out_count = 0;
 		float dly_l_out, dly_r_out;
 		float new_abs_l, new_abs_r;
 		float in_sqr;
@@ -482,7 +483,7 @@ DSP_FUNC_DEF void DSPS_MAXI_PROCESS(long *lp_data, int l_length,
 
 		if( s->quantize_on_flag )
 		{
-			static unsigned long seed = MAXIMIZE_NOISE_SEED;
+			static pt_ulong seed = MAXIMIZE_NOISE_SEED;
 			realtype dither1, dither2;
 
 			switch (s->dither_type)
@@ -598,7 +599,7 @@ DSP_FUNC_DEF void DSPS_MAXI_PROCESS(long *lp_data, int l_length,
 	}
 
 	/* Write averaged meter data temporarily writing as a float.
-	 * Will be converted to long and factored in calling function.
+	 * Will be converted to pt_long and factored in calling function.
 	 */
 	write_meter_average();
 
@@ -620,7 +621,7 @@ DSP_FUNC_DEF void DSPS_MAXI_PROCESS(long *lp_data, int l_length,
 	{
 		/*
 		float **fpp = (float **)&(fp_state[0]);
-		long *lpp  =  (long *)&(fp_state[0]);
+		pt_long *lpp  =  (pt_long *)&(fp_state[0]);
 		fpp[0] = ptr0;
 		*/
 	}

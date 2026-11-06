@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* Standard includes */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -31,11 +32,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * FUNCTION: qntRToLInit()
  * DESCRIPTION:
  *  Allocates and initializes the passed qnt handle, for
- *  real to long calcutlations.
+ *  real to pt_long calcutlations.
  */
 int PT_DECLSPEC qntRToLInit(PT_HANDLE **hpp_qnt, CSlout *hp_slout,
 					 realtype r_input_min, realtype r_input_max,
-					 long l_output_min, long l_output_max,
+					 pt_long l_output_min, pt_long l_output_max,
 					 int i_output_quantized, int i_num_output_levels)
 {
 	struct qntHdlType *cast_handle;
@@ -72,9 +73,9 @@ int PT_DECLSPEC qntRToLInit(PT_HANDLE **hpp_qnt, CSlout *hp_slout,
 /*
  * FUNCTION: qntRToLCalc()
  * DESCRIPTION:
- *  Calculates the long output based on the passed real input.
+ *  Calculates the pt_long output based on the passed real input.
  */
-int PT_DECLSPEC qntRToLCalc(PT_HANDLE *hp_qnt, realtype r_input, long *lp_output)
+int PT_DECLSPEC qntRToLCalc(PT_HANDLE *hp_qnt, realtype r_input, pt_long *lp_output)
 {
 	struct qntHdlType *cast_handle;
 
@@ -86,7 +87,7 @@ int PT_DECLSPEC qntRToLCalc(PT_HANDLE *hp_qnt, realtype r_input, long *lp_output
 	if (cast_handle->in_out_mode != QNT_REAL_TO_LONG)
 		return(NOT_OKAY);
 
-	*lp_output = (long) ((r_input - cast_handle->r_input_min) *
+	*lp_output = (pt_long) ((r_input - cast_handle->r_input_min) *
        cast_handle->r_scale + cast_handle->l_output_min + (realtype) 0.5);
 
 	return(OKAY);
@@ -95,9 +96,9 @@ int PT_DECLSPEC qntRToLCalc(PT_HANDLE *hp_qnt, realtype r_input, long *lp_output
 /*
  * FUNCTION: qntRToLCalcFromOut()
  * DESCRIPTION:
- *  Calculates the real input based on the passed long output.
+ *  Calculates the real input based on the passed pt_long output.
  */
-int PT_DECLSPEC qntRToLCalcFromOut(PT_HANDLE *hp_qnt, long l_output, realtype *rp_input)
+int PT_DECLSPEC qntRToLCalcFromOut(PT_HANDLE *hp_qnt, pt_long l_output, realtype *rp_input)
 {
 	struct qntHdlType *cast_handle;
 

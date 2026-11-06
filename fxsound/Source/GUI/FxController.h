@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include <JuceHeader.h>
+#include <cstdint>
 #include "FxModel.h"
 #include "FxTheme.h"
 #include "FxAudioControls.h"
@@ -29,7 +30,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Source/Utils/Settings/DeviceConfig.h"
 #include "AudioPassthru.h"
 #include "DfxDsp.h"
+#if JUCE_WINDOWS
 #include <wtsapi32.h>
+#else
+#include "../linux/message_window_posix.h"  /* Linux: no-op message window/session hooks */
+#endif
 
 using namespace FxSound;
 
@@ -177,6 +182,7 @@ public:
 	FxSound::Settings& getSettings() { return settings_; }
 
 private:
+#if JUCE_WINDOWS
 	class MessageWindow
 	{
 	public:
@@ -215,16 +221,32 @@ private:
 
 		LPCWSTR getClassNameFromAtom() noexcept { return (LPCWSTR)(pointer_sized_uint)atom_; }
 	};
+#else
+	/* Linux (FxSound port): no message-only window — hotkeys/session events are
+	 * no-ops for v1 (KDE shortcuts call the CLI instead; see DECKTOP.md). */
+	class MessageWindow
+	{
+	public:
+		MessageWindow() {}
+		inline void* getHandle() const noexcept { return nullptr; }
+	private:
+		void* hwnd_ = nullptr;
+	};
+#endif
 
+#if JUCE_WINDOWS
 	static constexpr UINT CMD_ON_OFF = 1001;
 	static constexpr UINT CMD_OPEN_CLOSE = 1002;
 	static constexpr UINT CMD_NEXT_PRESET = 1003;
 	static constexpr UINT CMD_PREVIOUS_PRESET = 1004;
 	static constexpr UINT CMD_NEXT_OUTPUT = 1005;
+#endif
 
 	FxController();
 
+#if JUCE_WINDOWS
 	static LRESULT CALLBACK eventCallback(HWND hwnd, const UINT message, const WPARAM w_param, const LPARAM l_param);
+#endif
 	void timerCallback() override;
 	void onSoundDeviceChange(bool processing) override;
 	void onSystemSuspend();
@@ -233,6 +255,7 @@ private:
     void initOutputs(std::vector<SoundDevice>& sound_devices);
 	void updateOutputs(std::vector<SoundDevice>& sound_devices);
     void selectProcessingOutput(std::vector<SoundDevice>& sound_devices);
+	void syncPlaybackAvailability();
     void syncOutputWithSystemDefault(std::vector<SoundDevice>& sound_devices);
 
 	void sortByDeviceConfigPriority(std::vector<SoundDevice>& devices);
@@ -249,13 +272,19 @@ private:
 
     String FormatString(const String& format, const String& arg);
 
+#if JUCE_WINDOWS
 	typedef HPOWERNOTIFY(WINAPI* RegisterSuspendResumeNotificationFunc)(HANDLE, DWORD);
 	typedef BOOL(WINAPI* UnregisterSuspendResumeNotificationFunc)(HPOWERNOTIFY);
+#endif
 
+#if JUCE_WINDOWS
 	MessageWindow message_window_;
+#endif
 	bool hotkeys_registered_;
+#if JUCE_WINDOWS
 	HPOWERNOTIFY powerNotify_;
 	UnregisterSuspendResumeNotificationFunc unregister_suspend_resume_notification_;
+#endif
 
 	FxMainWindow* main_window_;
 	FxSystemTrayView* system_tray_view_;
@@ -291,7 +320,11 @@ private:
 	bool survey_tip_;
 	int max_user_presets_;
 
+#if JUCE_WINDOWS
 	DWORD session_id_;
+#else
+	uint32_t session_id_;  // Linux: no WTS sessions; stays 0
+#endif
 
 	CriticalSection lock_;
 	CriticalSection save_lock_;

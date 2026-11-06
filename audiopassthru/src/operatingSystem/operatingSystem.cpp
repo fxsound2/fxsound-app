@@ -177,7 +177,7 @@ int PT_DECLSPEC operatingSystemGetDiskInfo(wchar_t *wcp_directory, unsigned __in
 	{
 		if (hp_slout != NULL)
 		{
-		   swprintf(wcp_file_msg, L"            operatingSystemGetDiskInfo: GetDiskFreeSpaceEx() fails on %s drive", wcp_drive_letter);
+		   swprintf(wcp_file_msg, L"            operatingSystemGetDiskInfo: GetDiskFreeSpaceEx() fails on %ls drive", wcp_drive_letter);
 		   hp_slout->Message_Wide(FIRST_LINE, wcp_file_msg);
 		}
 		return(NOT_OKAY);

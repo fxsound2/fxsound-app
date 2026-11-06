@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* dfxpComm.cpp */
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "codedefs.h"
 
 #include <windows.h>
@@ -34,9 +35,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "midi.h"
 #include "filt.h"
 
-#include "C_Play.h"
-#include "C_aural.h"
-#include "C_dsps.h"
+#include "c_play.h"
+#include "c_aural.h"
+#include "c_dsps.h"
 #include "c_lex.h"
 #include "c_max.h"
 #include "c_aural.h"
@@ -68,7 +69,7 @@ int dfxp_CommunicateInit(PT_HANDLE *hp_dfxp)
 	   int softdsp_mode;
 	   int board_address;
 	   int processor_num;
-	   long base_address;
+	   pt_long base_address;
 	   char cp_dsp_dirpath[64];
 	   int num_cards_configured;
 	} obsolete;
@@ -1164,7 +1165,7 @@ int dfxp_CommunicateFixedQnts_Delay(PT_HANDLE *hp_dfxp)
 	if (cast_handle == NULL)
 		return(OKAY);
 
-	long dsp_total_dly; 
+	pt_long dsp_total_dly; 
 	int i;
 	realtype r_total_delay[DSP_MAX_NUM_OF_DELAY_ELEMENTS];
 	realtype r_pan_setting[DSP_MAX_NUM_OF_DELAY_ELEMENTS];
@@ -1566,8 +1567,8 @@ int dfxp_WidCommunicateDispersion(PT_HANDLE *hp_dfxp)
 		return(OKAY);
 
 	int pc_dispersion;
-	long dsp_dispersion_left;
-	long dsp_dispersion_right;
+	pt_long dsp_dispersion_left;
+	pt_long dsp_dispersion_right;
 
    pc_dispersion = DSP_PLAY_WID_DISPERSION_MIDI;
 
@@ -1579,7 +1580,7 @@ int dfxp_WidCommunicateDispersion(PT_HANDLE *hp_dfxp)
 	/* Calculate the left dispersion value that should be sent to the dsp card.
 	 * This is factored down from the right value.
 	 */
-	dsp_dispersion_left = (long)(dsp_dispersion_right * (realtype)DSP_WID_LEFT_RIGHT_DISPERSION_FACTOR);
+	dsp_dispersion_left = (pt_long)(dsp_dispersion_right * (realtype)DSP_WID_LEFT_RIGHT_DISPERSION_FACTOR);
 
 	/* Write both values */
 	// Widener is only active in front and rear dsp processors.

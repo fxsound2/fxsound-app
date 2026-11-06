@@ -17,6 +17,7 @@
 mono_crash.*
 
 # Build results
+build/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
@@ -356,4 +357,13 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# Linux test & diagnostic dumps
+spike_out/
+soak_out/
+_CPack_Packages/
+*.rpm
+*.deb
+*.AppImage
+
 

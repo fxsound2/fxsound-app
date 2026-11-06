@@ -651,7 +651,7 @@ int AudioPassthruPrivate::setTargetedRealPlaybackDevice(const std::wstring sound
 	wchar_t wcp_new_targeted_real_playback_guid[PT_MAX_GENERIC_STRLEN];
 	
 	/* Set the guid of the newly selected playback device */
-	swprintf(wcp_new_targeted_real_playback_guid, PT_MAX_GENERIC_STRLEN, L"%s", sound_device_guid.c_str());
+	swprintf(wcp_new_targeted_real_playback_guid, PT_MAX_GENERIC_STRLEN, L"%ls", sound_device_guid.c_str());
 
 	/* Set the newly targeted playback device as the default.  It will then automatically become the targeted device */
 	if (sndDevicesSetDeviceType(hp_sndDevices_, SND_DEVICES_DEFAULT, wcp_new_targeted_real_playback_guid, &i_resultFlag) != OKAY)

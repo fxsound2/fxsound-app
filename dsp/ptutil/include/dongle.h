@@ -14,11 +14,12 @@
 #ifndef _DONGLE_H_
 #define _DONGLE_H_
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "slout.h" 
 
 /* dongle.cpp */
 int PT_DECLSPEC dongleCheckValid(int *, CSlout *);
-int PT_DECLSPEC dongleWriteMemory(int, unsigned long, CSlout *hp_slout);
-int PT_DECLSPEC dongleReadMemory(int, unsigned long *, CSlout *hp_slout);
+int PT_DECLSPEC dongleWriteMemory(int, pt_ulong, CSlout *hp_slout);
+int PT_DECLSPEC dongleReadMemory(int, pt_ulong *, CSlout *hp_slout);
 
 #endif //_DONGLE_H_

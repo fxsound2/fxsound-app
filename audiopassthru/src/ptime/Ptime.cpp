@@ -15,6 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "codedefs.h"
 
 /* Standard includes */
@@ -29,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <time.h>
 
 #include "slout.h"
-#include "Ptime.h"
+#include "ptime.h"
 #include "mth.h"
 #include "pt_defs.h"
 #include "pstr.h"
@@ -42,13 +43,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Passes back the time in seconds since 1/1/70.
  */
-int PT_DECLSPEC ptimeGetTime(long *lp_seconds)
+int PT_DECLSPEC ptimeGetTime(pt_long *lp_seconds)
 {
 	time_t secs;
 
 	time(&secs);
 	
-	*lp_seconds = (long)secs;
+	*lp_seconds = (pt_long)secs;
 	
 	return(OKAY);
 }
@@ -59,9 +60,9 @@ int PT_DECLSPEC ptimeGetTime(long *lp_seconds)
  *
  * Based on the passed unix time, passes back if it is from today.
  */
-int PT_DECLSPEC ptimeCheckIfTimeIsToday(long l_check_time, bool *bp_is_today)
+int PT_DECLSPEC ptimeCheckIfTimeIsToday(pt_long l_check_time, bool *bp_is_today)
 {
-	long l_current_time;
+	pt_long l_current_time;
 	SYSTEMTIME st_current_time;
 	SYSTEMTIME st_check_time;
 	SYSTEMTIME local_st_current_time;
@@ -104,7 +105,7 @@ int PT_DECLSPEC ptimeCheckIfTimeIsToday(long l_check_time, bool *bp_is_today)
  * Passes back the number of complete days since the 
  * time of the passed in second count.
  */
-int PT_DECLSPEC ptimeGetElapsedDays(long l_seconds, int *ip_elapsed_days)
+int PT_DECLSPEC ptimeGetElapsedDays(pt_long l_seconds, int *ip_elapsed_days)
 {
 	time_t secs;
 
@@ -122,9 +123,9 @@ int PT_DECLSPEC ptimeGetElapsedDays(long l_seconds, int *ip_elapsed_days)
  * Passes back if the first time is less than the second time (yet
  * accounts for daylight savings.
  */
-int PT_DECLSPEC ptimeCheckTimeWentForwared(long l_time1, long l_time2, int *ip_time_went_forward)
+int PT_DECLSPEC ptimeCheckTimeWentForwared(pt_long l_time1, pt_long l_time2, int *ip_time_went_forward)
 {
-   long time1_back_1_hour;
+   pt_long time1_back_1_hour;
 
    *ip_time_went_forward = IS_FALSE;
 
@@ -434,7 +435,7 @@ int PT_DECLSPEC ptimeUnixTimeToSystemTime(time_t t, LPSYSTEMTIME pst)
  * Convert the passed unix time to a formatted string for display.  Optionally, it can hide the date portion of the 
  * string if the date is the same as the current day's.
  */
-int PT_DECLSPEC ptimeUnixTimeToFormattedString(long l_timestamp, 
+int PT_DECLSPEC ptimeUnixTimeToFormattedString(pt_long l_timestamp, 
 															  bool b_hide_todays_date, 
 															  bool b_only_use_legal_filename_chars,
 															  wchar_t *wcp_word_today_translation,
@@ -487,9 +488,9 @@ int PT_DECLSPEC ptimeUnixTimeToFormattedString(long l_timestamp,
 	}
 
 	if (b_display_date)
-		swprintf(wcp_formatted_datetime, L"%s - %s", wcp_time, wcp_date);
+		swprintf(wcp_formatted_datetime, L"%ls - %ls", wcp_time, wcp_date);
 	else
-		swprintf(wcp_formatted_datetime, L"%s - %s", wcp_time, wcp_word_today_translation);
+		swprintf(wcp_formatted_datetime, L"%ls - %ls", wcp_time, wcp_word_today_translation);
 
 	return(OKAY);
 }
@@ -521,7 +522,7 @@ int PT_DECLSPEC ptimeFILETIMEToFormattedString(FILETIME* pft_timestamp, wchar_t 
 	GetDateFormatW(LOCALE_SYSTEM_DEFAULT, LOCALE_NOUSEROVERRIDE , &local_st, NULL, wcp_date, PT_MAX_GENERIC_STRLEN);
 	GetTimeFormatW(LOCALE_SYSTEM_DEFAULT, LOCALE_NOUSEROVERRIDE , &local_st, NULL, wcp_time, PT_MAX_GENERIC_STRLEN);
 
-	swprintf(wcp_formatted_datetime, L"%s %s", wcp_date, wcp_time);
+	swprintf(wcp_formatted_datetime, L"%ls %ls", wcp_date, wcp_time);
 
 	return(OKAY);
 }

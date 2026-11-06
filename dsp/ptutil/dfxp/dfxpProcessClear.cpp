@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "spectrum.h"
 #include "com.h"
 #include "DfxSdk.h"
-#include "file.h"
+#include "File.h"
 
 extern "C" {
 #include "comSftwr.h"

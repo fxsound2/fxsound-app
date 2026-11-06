@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <JuceHeader.h>
+#if JUCE_WINDOWS
 #include <comdef.h>
 #include "GUI/FxSystemTrayView.h"
 #include "GUI/FxController.h"
@@ -33,13 +34,31 @@ extern "C" {
 
     __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 0;
 }
+#else
+#include "GUI/FxSystemTrayView.h"
+#include "GUI/FxController.h"
+#include "GUI/FxTheme.h"
+#include "GUI/FxMainWindow.h"
+#include "AudioPassthru.h"
+#include "crash_posix.h"  /* Linux: SystemStats crash handler + backtrace (Phase 8) */
+#include "single_instance_posix.h"  /* JUCE 6 Linux broadcastMessage is a stub (Phase 8) */
+#include <functional>
+#include <iostream>
+#endif
 
 //==============================================================================
 class FxSoundApplication : public JUCEApplication
 {
 public:
     //==============================================================================
-    FxSoundApplication() { }
+    FxSoundApplication()
+    {
+        // JUCE 6 Linux broadcastMessage is a stub: the second process never gets
+        // initialise(); capture the command line here and forward it in shutdown().
+#if ! JUCE_WINDOWS
+        pending_commandline_ = getCommandLineParameters();
+#endif
+    }
 
     const String getApplicationName() override       { return ProjectInfo::projectName; }
     const String getApplicationVersion() override    { return ProjectInfo::versionString; }
@@ -49,8 +68,84 @@ public:
     void initialise (const String& commandline) override
     {
         // This method is where you should put your application's initialisation code..
+        initialised_ = true;
+
         try
         {
+#if ! JUCE_WINDOWS
+            if (commandline.contains("--help") || commandline.contains("-h"))
+            {
+                std::cout << "FxSound - Audio enhancer and equalizer (Linux port)\n"
+                          << "Usage: FxSound [options]\n\n"
+                          << "Options:\n"
+                          << "  --power=<0|1>         Turn audio processing on (1) or off (0)\n"
+                          << "  --preset=<name>       Select active preset\n"
+                          << "  --output=<device>     Select audio output device\n"
+                          << "  --status              Print current status as JSON\n"
+                          << "  --scale=<factor>      Set UI scale (0.5 to 3.0)\n"
+                          << "  --run_minimized       Start minimized to system tray\n"
+                          << "  --version, -v         Display version information\n"
+                          << "  --help, -h            Show this help message\n";
+                quit();
+                return;
+            }
+            if (commandline.contains("--version") || commandline.contains("-v"))
+            {
+                std::cout << ProjectInfo::projectName << " " << ProjectInfo::versionString << "\n";
+                quit();
+                return;
+            }
+
+            // UI scale (Linux): default 1.0 (small window). Override order:
+            //   FXSOUND_SCALE env > --scale=<f> CLI > persisted "ui_scale" setting.
+            // Takes effect at launch (before windows are created); --scale persists
+            // for subsequent launches. JUCE gradients under fractional transforms
+            // render striped, so avoid auto-deriving from Xft.dpi.
+            {
+                auto& controller = FxController::getInstance();
+                float scale = (float) controller.getSettings().getDouble("ui_scale");
+                if (scale <= 0.5f || scale > 3.0f) scale = 1.0f;
+
+                if (commandline.contains("--scale="))
+                    scale = commandline.fromFirstOccurrenceOf("--scale=", false, false)
+                                .upToFirstOccurrenceOf(" ", false, false).getFloatValue();
+
+                if (const char* env = getenv("FXSOUND_SCALE"))
+                {
+                    auto env_scale = String::fromUTF8(env).getFloatValue();
+                    if (env_scale > 0.0f) scale = env_scale;
+                }
+
+                scale = jlimit (0.5f, 3.0f, scale);
+                Desktop::getInstance().setGlobalScaleFactor(scale);
+                controller.getSettings().setDouble("ui_scale", scale);
+            }
+#endif
+#if ! JUCE_WINDOWS
+            // Primary: serve CLI commands for second instances over a UNIX socket
+            // (JUCE 6 Linux broadcastMessage is unimplemented).
+            fxsound_linux::installQuitFlagSignals();
+            quit_watch_timer_ = std::make_unique<QuitWatchTimer>();
+            quit_watch_timer_->startTimer(200);  // poll quit flag; clean quit on SIGTERM/SIGHUP/SIGINT
+            fxsound_linux::startServer([](const std::string& cmd, std::function<void()> done) {
+                juce::MessageManager::callAsync([cmd, done] {
+                    if (juce::String(cmd).trim().isEmpty())
+                    {
+                        // Bare relaunch with no arguments = "open the app":
+                        // show + raise the window (e.g. when it was started
+                        // hidden via --run_minimized autostart).
+                        FxController::getInstance().showMainWindow();
+                    }
+                    else
+                    {
+                        FxController::getInstance().applyConfig(cmd);
+                    }
+                    done();
+                });
+            });
+#endif
+
+#if JUCE_WINDOWS
             SetUnhandledExceptionFilter(unhandledExceptionFilter);
 
             HRESULT hRes = CoInitializeEx(0, COINIT_MULTITHREADED);
@@ -59,6 +154,9 @@ public:
                 CoInitializeSecurity(NULL, -1, NULL, NULL, RPC_C_AUTHN_LEVEL_DEFAULT,
                     RPC_C_IMP_LEVEL_IMPERSONATE, NULL, EOAC_NONE, NULL);
             }
+#else
+            fxsound_linux::installCrashHandler();
+#endif
             
             LookAndFeel::setDefaultLookAndFeel(&theme_);
 
@@ -77,7 +175,11 @@ public:
             auto& controller = FxController::getInstance();
             controller.logMessage(String::formatted("std::exception: %s\n", e.what()));
 
+#if JUCE_WINDOWS
             CaptureAndLogCallStack();
+#else
+            fxsound_linux::logBacktrace();
+#endif
 
             quit();
         }
@@ -86,7 +188,11 @@ public:
             auto& controller = FxController::getInstance();
             controller.logMessage("Unknown exception\n");
 
+#if JUCE_WINDOWS
             CaptureAndLogCallStack();
+#else
+            fxsound_linux::logBacktrace();
+#endif
 
             quit();
         }
@@ -94,6 +200,16 @@ public:
 
     void shutdown() override
     {
+#if ! JUCE_WINDOWS
+        if (! initialised_)
+        {
+            // Second instance: JUCE failed to forward (its Linux broadcast is a
+            // stub); deliver the command line to the primary ourselves.
+            fxsound_linux::forwardIfRunning(pending_commandline_.toStdString());
+            return;
+        }
+#endif
+
         if (main_window_.get() != nullptr)
         {
             FxController::getInstance().autoSaveModifiedPreset();
@@ -101,6 +217,7 @@ public:
 
             audio_passthru_.reset();
 
+#if JUCE_WINDOWS
             // UIA holds COM references to AccessibilityNativeHandle objects for
             // desktop-resident components. Call UiaDisconnectAllProviders to
             // synchronously release those references before the components are
@@ -112,6 +229,7 @@ public:
                 if (auto fn = (UiaDisconnectAllProvidersFunc)GetProcAddress(hUia, "UiaDisconnectAllProviders"))
                     fn();
             }
+#endif
 
             system_tray_view_.reset();
 
@@ -121,7 +239,12 @@ public:
         LocalisedStrings::setCurrentMappings(nullptr);
         LookAndFeel::setDefaultLookAndFeel(nullptr);
 
+#if ! JUCE_WINDOWS
+        quit_watch_timer_.reset();
+        fxsound_linux::stopServer();
+#else
         CoUninitialize();
+#endif
     }
 
     //==============================================================================
@@ -140,6 +263,24 @@ public:
 
 private:
     FxTheme theme_;
+#if ! JUCE_WINDOWS
+    bool initialised_ = false;
+    String pending_commandline_;
+
+    // Turns SIGTERM/SIGHUP/SIGINT into a clean JUCE quit (settings saved, sink
+    // removed, CLI socket cleaned) instead of a hard kill that leaks them.
+    class QuitWatchTimer : public Timer
+    {
+    public:
+        void timerCallback() override
+        {
+            if (fxsound_linux::quitFlagConsumed())
+                JUCEApplication::getInstance()->systemRequestedQuit();
+        }
+    };
+    std::unique_ptr<QuitWatchTimer> quit_watch_timer_;
+#endif
+#if JUCE_WINDOWS
     static constexpr int MAX_FRAMES = 64;
 
     static LONG WINAPI unhandledExceptionFilter(EXCEPTION_POINTERS* exception_info)
@@ -304,9 +445,11 @@ private:
 
         controller.logMessage(stacktrace_info);
     }
+#endif // JUCE_WINDOWS
 
     void setWorkingDirectory()
     {
+#if JUCE_WINDOWS
         wchar_t module_file[MAX_PATH];
         DWORD length = GetModuleFileName(NULL, module_file, MAX_PATH);
         if (length > 0)
@@ -318,6 +461,11 @@ private:
                 SetCurrentDirectory(path.substr(0, pos).c_str());
             }
         }
+#else
+        // Linux: exe-adjacent Factsoft fallback relies on CWD == exe dir.
+        File::getSpecialLocation(File::currentExecutableFile)
+            .getParentDirectory().setAsCurrentWorkingDirectory();
+#endif
     };
 
     std::unique_ptr<FxMainWindow> main_window_;

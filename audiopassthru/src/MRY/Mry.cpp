@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mry.h"
 
 #define DEF_GLOBAL
-#include "u_mry.h"
+#include "U_MRY.H"
 
 /*
  * FUNCTION: mryFreeUpStringArray()

@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "reg.h"
 #include "pstr.h"
 
-#include "u_reg.h"
+#include "U_reg.h"
 
 /*
  * FUNCTION: regCreateKeyWithKeyname_Dword_Wide()

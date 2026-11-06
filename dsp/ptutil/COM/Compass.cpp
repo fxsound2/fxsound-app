@@ -15,6 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <stdio.h> 
 #include "codedefs.h"
 #include "pt_defs.h"
@@ -37,7 +38,7 @@ int com_CalcPassAddress(PT_HANDLE *, int, int, int, short unsigned *);
  *   NOTE - modified to only read from card, no longer supports dongle.
  */
 int PT_DECLSPEC comReadPassword(PT_HANDLE *hp_com, int i_password_type, 
-					unsigned long *ulp_password)
+					pt_ulong *ulp_password)
 {
    struct comHdlType *cast_handle;
    short unsigned address;
@@ -90,7 +91,7 @@ int PT_DECLSPEC comReadPassword(PT_HANDLE *hp_com, int i_password_type,
  *   NOTE - modified to only read from card, no longer supports dongle.
  */
 int PT_DECLSPEC comWritePassword(PT_HANDLE *hp_com, int i_password_type,
-					 unsigned long ul_password)
+					 pt_ulong ul_password)
 {
 	struct comHdlType *cast_handle;
 	short unsigned address;
@@ -143,7 +144,7 @@ int PT_DECLSPEC comWritePassword(PT_HANDLE *hp_com, int i_password_type,
  *   NOTE - modified to only read from card, no longer supports dongle.
  */
 int com_ReadSerialNum(PT_HANDLE *hp_com, int i_force_from_card, 
-					 unsigned long *ulp_serial_num)
+					 pt_ulong *ulp_serial_num)
 {
    struct comHdlType *cast_handle;
    short unsigned address;
@@ -194,7 +195,7 @@ int com_ReadSerialNum(PT_HANDLE *hp_com, int i_force_from_card,
  *   NOTE - modified to only read from card, no longer supports dongle.
  */
 int PT_DECLSPEC comWriteSerialNum(PT_HANDLE *hp_com, int i_force_to_card, 
-					 unsigned long ul_serial_num)
+					 pt_ulong ul_serial_num)
 {
    struct comHdlType *cast_handle;
    short unsigned address;

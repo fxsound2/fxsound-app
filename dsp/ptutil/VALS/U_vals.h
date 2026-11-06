@@ -18,7 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _U_VALS_H_
 #define _U_VALS_H_
 
-#include <Windows.h>
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
+#include <windows.h>
 #include "codedefs.h"  
 #include "slout.h"
 #include "pt_defs.h"
@@ -37,7 +38,7 @@ struct valsMaxElementData {
 	int calc_flag;      /* Whether or not to caluclate max on set */
 	int abs_flag;       /* Whether of not to base max on absolute value */
 	int value;          /* The max value */
-	long sum_scale_val; /* Scaled compare value for sum1and4 case */
+	pt_long sum_scale_val; /* Scaled compare value for sum1and4 case */
 	int index;          /* The element index which has max value */
 };
 
@@ -109,9 +110,9 @@ struct valsCfgHdlType {
 	int stereo_input_mode;  /* IS_TRUE, or IS_FALSE */
 	int stereo_output_mode;  /* IS_TRUE, or IS_FALSE */
 	int default_preset;
-	long total_samples;
+	pt_long total_samples;
 	int min_user_preset;
-   long preset_save_time;  /* Number of seconds since 1/1/70 that a preset was saved */
+   pt_long preset_save_time;  /* Number of seconds since 1/1/70 that a preset was saved */
 };
 
 /* Local function definitions */

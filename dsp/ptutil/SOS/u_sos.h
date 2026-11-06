@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _U_SOS_H_
 #define _U_SOS_H_
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP long (see ptLong.h) */
 #include "slout.h"
 
 #define SOS_FLOAT_BIAS 1.0e-30 // Was 1.0e-5 Thru 7/11/15, then changed to 1.0e-30 values that was being used in Hyperbass.
@@ -95,7 +96,7 @@ struct sosHdlType {
    realtype volume_leveling_tone_lp_state[8][3]; /* Lowpass states used to estimate muffled vs clear balance */
    realtype volume_leveling_tonality_score; /* -1.0 muffled ... +1.0 clear */
    realtype volume_leveling_headroom_score; /* +1.0 ceiling pressure ... -1.0 comfortable headroom */
-   realtype volume_leveling_quiet_duration_seconds; /* How long the leveled output has continuously stayed in the very quiet region */
+   realtype volume_leveling_quiet_duration_seconds; /* How pt_long the leveled output has continuously stayed in the very quiet region */
    realtype volume_leveling_quiet_gain_floor; /* Retained gain floor after quiet boost has made the output audible */
    realtype volume_leveling_quiet_peak_history[SOS_VOLUME_LEVELING_PEAK_WINDOW_SIZE]; /* One-second output peak buckets used for the 30-second headroom window */
    realtype volume_leveling_quiet_peak_bucket_max; /* Peak accumulated in the current partial one-second bucket */

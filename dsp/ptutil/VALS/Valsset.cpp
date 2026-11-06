@@ -15,6 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "codedefs.h"
 
 /* Standard includes */
@@ -29,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "slout.h"
 #include "mry.h"
 #include "vals.h"
-#include "u_vals.h"  
+#include "U_vals.h"  
 #include "GraphicEq.h"
  
 /*
@@ -83,7 +84,7 @@ int PT_DECLSPEC valsSetComment(PT_HANDLE *hp_vals, wchar_t *wcp_comment)
 		return(NOT_OKAY);
 
 	/* Set the string */
-	swprintf(cast_handle->wcp_comment, L"%s", wcp_comment);
+	swprintf(cast_handle->wcp_comment, L"%ls", wcp_comment);
 
 	return(OKAY);
 }
@@ -294,10 +295,10 @@ int vals_CalcNewMax(PT_HANDLE *hp_vals, int i_param_num, int i_element_num)
 int vals_CalcNewMaxSum1and4(PT_HANDLE *hp_vals, int i_element_num)
 {
 	struct valsHdlType *cast_handle;
-	long new_sum;
-    long new_abs_sum;
-    long max_sum;
-    long max_abs_sum;
+	pt_long new_sum;
+    pt_long new_abs_sum;
+    pt_long max_sum;
+    pt_long max_abs_sum;
 	int index;
     int store_new_max;
     
@@ -320,7 +321,7 @@ int vals_CalcNewMaxSum1and4(PT_HANDLE *hp_vals, int i_element_num)
 	 */
 	if (i_element_num != -1)
 	{
-	   new_sum = (long)(((cast_handle->factor_1_to_4) * 
+	   new_sum = (pt_long)(((cast_handle->factor_1_to_4) * 
 	                     (cast_handle->element_params)[i_element_num][1]) +
 	                     (cast_handle->element_params)[i_element_num][4]);
 	   max_sum = cast_handle->maxSum1_4.sum_scale_val;
@@ -355,7 +356,7 @@ int vals_CalcNewMaxSum1and4(PT_HANDLE *hp_vals, int i_element_num)
 	
 	for (index = 0; index < cast_handle->total_num_elements; index++)
 	{
-	   new_sum = (long)(((cast_handle->factor_1_to_4) *
+	   new_sum = (pt_long)(((cast_handle->factor_1_to_4) *
 	                     (cast_handle->element_params)[index][1]) +
 	                     (cast_handle->element_params)[index][4]);
 
@@ -471,7 +472,7 @@ int PT_DECLSPEC valsSetAppDependentString(PT_HANDLE *hp_vals, int i_index, wchar
 		return(NOT_OKAY);
 
 	/* Set the string */
-	swprintf(cast_handle->app_depend.wcpp_strings[i_index], L"%s", wcp_string);
+	swprintf(cast_handle->app_depend.wcpp_strings[i_index], L"%ls", wcp_string);
 
 	return(OKAY);
 }

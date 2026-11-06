@@ -53,20 +53,20 @@ int sndDevicesWriteToRegistry(PT_HANDLE *hp_sndDevices, int i_hkeySection, wchar
 	/* Construct registry fullpath to key, no version number if REG_LOCAL_MACHINE */
 	if( i_hkeySection == REG_CURRENT_USER )
 	{
-	swprintf(wcp_full_key_path, L"%s\\%s\\%d\\%d\\%s\\%s", 
+	swprintf(wcp_full_key_path, L"%ls\\%ls\\%d\\%d\\%ls\\%ls", 
 		DFXP_REGISTRY_TOP_WIDE, DFXG_REGISTRY_DFX_PRODUCT_NAME_WIDE, (int)DFX_VERSION, 
 		DFXP_VENDOR_CODE_UNIVERSAL, SND_DEVICES_REGISTRY_DEVICES_WIDE, wcp_ValueName);
 	}
 	else if( i_hkeySection == REG_LOCAL_MACHINE )
 	{
-	swprintf(wcp_full_key_path, L"%s\\%s\\%d\\%s\\%s", 
+	swprintf(wcp_full_key_path, L"%ls\\%ls\\%d\\%ls\\%ls", 
 		DFXP_REGISTRY_TOP_WIDE, DFXG_REGISTRY_DFX_PRODUCT_NAME_WIDE, 
 		DFXP_VENDOR_CODE_UNIVERSAL, SND_DEVICES_REGISTRY_DEVICES_WIDE, wcp_ValueName);
 	}
 	else
 		return(NOT_OKAY);
 
-	swprintf(wcp_key_value, L"%s", wcp_guid);
+	swprintf(wcp_key_value, L"%ls", wcp_guid);
 
 	if (regCreateKey_Wide(i_hkeySection, wcp_full_key_path, wcp_key_value) != OKAY)
 		return(NOT_OKAY);
@@ -95,13 +95,13 @@ int sndDeviceReadFromRegistry(PT_HANDLE *hp_sndDevices, int i_hkeySection, wchar
 	/* Construct registry fullpath to key, no version number if REG_LOCAL_MACHINE */
 	if( i_hkeySection == REG_CURRENT_USER )
 	{
-	swprintf(wcp_full_key_path, L"%s\\%s\\%d\\%d\\%s\\%s", 
+	swprintf(wcp_full_key_path, L"%ls\\%ls\\%d\\%d\\%ls\\%ls", 
 		DFXP_REGISTRY_TOP_WIDE, DFXG_REGISTRY_DFX_PRODUCT_NAME_WIDE, (int)DFX_VERSION, 
 		DFXP_VENDOR_CODE_UNIVERSAL, SND_DEVICES_REGISTRY_DEVICES_WIDE, wcp_ValueName);
 	}
 	else if( i_hkeySection == REG_LOCAL_MACHINE )
 	{
-	swprintf(wcp_full_key_path, L"%s\\%s\\%d\\%s\\%s", 
+	swprintf(wcp_full_key_path, L"%ls\\%ls\\%d\\%ls\\%ls", 
 		DFXP_REGISTRY_TOP_WIDE, DFXG_REGISTRY_DFX_PRODUCT_NAME_WIDE, 
 		DFXP_VENDOR_CODE_UNIVERSAL, SND_DEVICES_REGISTRY_DEVICES_WIDE, wcp_ValueName);
 	}
@@ -117,7 +117,7 @@ int sndDeviceReadFromRegistry(PT_HANDLE *hp_sndDevices, int i_hkeySection, wchar
 	{
 		if (wcslen(wcp_key_value) > 0)
 		{
-			swprintf(wcp_guid, L"%s", wcp_key_value);
+			swprintf(wcp_guid, L"%ls", wcp_key_value);
 			use_default = IS_FALSE;
 		}
 	}

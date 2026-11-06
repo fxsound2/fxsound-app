@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* Standard includes */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <dos.h>
 #include <conio.h>
 #include <math.h>
@@ -24,8 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "codedefs.h"
 #include "slout.h"
-#include "pwav.h"
-#include "u_pwav.h"
+#include "Pwav.h"
+#include "U_pwav.h"
 
 /*
  * FUNCTION: pwavCheckIfLegalSampFreq()
@@ -33,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *   Sets up and reads from the input.
  *
  */
-int PT_DECLSPEC pwavCheckIfLegalSampFreq(long l_samp_freq, int *ip_legal_samp_freq)
+int PT_DECLSPEC pwavCheckIfLegalSampFreq(pt_long l_samp_freq, int *ip_legal_samp_freq)
 {
 	*ip_legal_samp_freq = IS_FALSE;
 
