@@ -1,3 +1,4 @@
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
@@ -61,26 +62,26 @@ struct dspMaxiStructType
 {
 	/* Parameters common to all dsp functions */
 	/* Note- must occupy same 32 word locations as defines in Boardrv1.h */
-	long pc_to_dsp_flags;
-	long dsp_to_pc_flags;
-	long dsp_number_of_elements;
+	pt_long pc_to_dsp_flags;
+	pt_long dsp_to_pc_flags;
+	pt_long dsp_number_of_elements;
 	realtype dsp_sampling_freq;
-	long stereo_in_flag;
-	long dsp_mute_in_flag;
-	long unassigned6;
-	long unassigned7;
-	long unassigned8;
-	long unassigned9;
+	pt_long stereo_in_flag;
+	pt_long dsp_mute_in_flag;
+	pt_long unassigned6;
+	pt_long unassigned7;
+	pt_long unassigned8;
+	pt_long unassigned9;
 	realtype dry_gain;
 	realtype wet_gain;
 	realtype master_gain;
-	long dsp_dma_in_transfer;
-	long unassigned14;
-	long unassigned15;
-	long unassigned16;
-	long unassigned17;
-	long unassigned18;
-	long unassigned19;
+	pt_long dsp_dma_in_transfer;
+	pt_long unassigned14;
+	pt_long unassigned15;
+	pt_long unassigned16;
+	pt_long unassigned17;
+	pt_long unassigned18;
+	pt_long unassigned19;
 
 	/* Note- algorithm specific parameters must occupy same 32 word locations
 	 * as defines below.
@@ -90,8 +91,8 @@ struct dspMaxiStructType
 	realtype gain_boost;
 	realtype max_output;
 	realtype release_time_beta; /* To be replaced by quant funct that sends delay instead */
-	long num_quant_bits;
-	long dither_type;
+	pt_long num_quant_bits;
+	pt_long dither_type;
 	int max_delay;
 	int quantize_on_flag;
 	/* Added for auto mode, the max desired boosted output level */

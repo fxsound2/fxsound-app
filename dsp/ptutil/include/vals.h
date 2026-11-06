@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _VALS_H_
 #define _VALS_H_
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "slout.h"
 
 #define VALS_NUM_MAIN_PARAMS    6
@@ -49,13 +50,13 @@ int PT_DECLSPEC valsCfgGetStereoInputMode(PT_HANDLE *, int *);
 int PT_DECLSPEC valsCfgGetStereoOutputMode(PT_HANDLE *, int *);
 int PT_DECLSPEC valsCfgGetDefaultPreset(PT_HANDLE *, int *); 
 int PT_DECLSPEC valsCfgGetMinUserPreset(PT_HANDLE *, int *);
-int PT_DECLSPEC valsCfgGetPresetSaveTime(PT_HANDLE *, long *);
+int PT_DECLSPEC valsCfgGetPresetSaveTime(PT_HANDLE *, pt_long *);
 int PT_DECLSPEC valsCfgSetNumElements(PT_HANDLE *, int);
 int PT_DECLSPEC valsCfgSetStereoInputMode(PT_HANDLE *, int);  
 int PT_DECLSPEC valsCfgSetStereoOutputMode(PT_HANDLE *, int);
 int PT_DECLSPEC valsCfgSetDefaultPreset(PT_HANDLE *, int); 
 int PT_DECLSPEC valsCfgSetMinUserPreset(PT_HANDLE *, int);
-int PT_DECLSPEC valsCfgSetPresetSaveTime(PT_HANDLE *, long);
+int PT_DECLSPEC valsCfgSetPresetSaveTime(PT_HANDLE *, pt_long);
 int PT_DECLSPEC valsCfgFreeUp(PT_HANDLE **);
 
 /* valsSet.c */ 

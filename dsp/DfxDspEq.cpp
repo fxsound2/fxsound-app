@@ -18,6 +18,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "codedefs.h"
 #include "pt_defs.h"
 #include "u_DfxDsp.h"
@@ -266,7 +267,7 @@ int DfxDspPrivate::eqSetProcessingOn(int i_storage_type, int i_on)
 	if ((i_storage_type == DFXP_STORAGE_TYPE_REGISTRY) ||
 		(i_storage_type == DFXP_STORAGE_TYPE_ALL))
 	{
-		swprintf(wcp_full_key_path, L"%s\\%s\\%d\\%d\\%s\\%s\\%s",
+		swprintf(wcp_full_key_path, L"%ls\\%ls\\%d\\%d\\%ls\\%ls\\%ls",
 			DFXP_REGISTRY_TOP_WIDE,
 			product_specific_.wcp_registry_product_name,
 			product_specific_.major_version,
@@ -303,7 +304,7 @@ int DfxDspPrivate::eqGetProcessingOn(int i_storage_type, int *ip_on)
 		return(OKAY);
 	}
 
-	swprintf(wcp_full_key_path, L"%s\\%s\\%d\\%d\\%s\\%s\\%s",
+	swprintf(wcp_full_key_path, L"%ls\\%ls\\%d\\%d\\%ls\\%ls\\%ls",
 		DFXP_REGISTRY_TOP_WIDE,
 		product_specific_.wcp_registry_product_name,
 		product_specific_.major_version,
@@ -313,7 +314,7 @@ int DfxDspPrivate::eqGetProcessingOn(int i_storage_type, int *ip_on)
 		DFXP_REGISTRY_EQ_ON_WIDE);
 
 	if (regReadKey_Wide(REG_CURRENT_USER, wcp_full_key_path, &key_exists, wcp_key_value,
-		(unsigned long)DFXP_REGISTRY_BUFFER_LENGTH) != OKAY)
+		(pt_ulong)DFXP_REGISTRY_BUFFER_LENGTH) != OKAY)
 		return(NOT_OKAY);
 
 	use_default = IS_TRUE;

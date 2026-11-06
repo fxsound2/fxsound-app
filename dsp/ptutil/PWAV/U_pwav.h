@@ -19,11 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _U_PWAV_H_
 
 #ifndef __ANDROID__
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <windows.h>  
 #include <mmsystem.h> 
 #endif //WIN32
 
-#include "pwav.h"
+#include "Pwav.h"
 #include "slout.h" 
 
 /* Largest possible size of wave buffers, used for allocation.
@@ -55,7 +56,7 @@ struct pwavHdlType {
    char msg1[1024]; /* String for messages */
 
    HWND master_hwnd;
-   long buffer_length_samples;
+   pt_long buffer_length_samples;
    
    int input_num_channels;  /* Number of channels of input file */
    int output_num_channels; /* Number of channels of output file */
@@ -72,7 +73,7 @@ struct pwavHdlType {
    WAVEFORMATEX *pFormatOut;
 
    DWORD dwDataSize; /* Number of bytes of data in file */
-   long bytes_left_to_read; /* Number of bytes left to read */    
+   pt_long bytes_left_to_read; /* Number of bytes left to read */    
 
    WORD wBlockSizeIn;  /* Number of bytes per sample taking mono/stereo into account */
    WORD wBlockSizeOut; /* For example, 16 bit mono -> 2, 24 bit stereo -> 6 */

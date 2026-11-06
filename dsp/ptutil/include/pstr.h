@@ -35,7 +35,7 @@
 #define PSTR_COMPARE_FIRST_STRING_LOWER	    -1
 #define PSTR_COMPARE_FIRST_STRING_HIGHER	1
 
-#include <Windows.h>
+#include <windows.h>
 
 /* pstr.cpp */
 int PT_DECLSPEC pstrCalcLocationOfCharInStr(char *, char, int *, int *);

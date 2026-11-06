@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _DFX_DSP_H_
 #define _DFX_DSP_H_
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <string>
 
 struct DfxPreset {
@@ -68,7 +69,7 @@ public:
 	float getEffectValue(Effect effect);
 	void setEffectValue(Effect effect, float value);
 	DfxPreset getPresetInfo(std::wstring preset_file_full_path);
-	unsigned long getTotalAudioProcessedTime();
+	pt_ulong getTotalAudioProcessedTime();
 	void resetTotalAudioProcessedTime();
     void getSpectrumBandValues(float* rp_band_values, int i_array_size);
 

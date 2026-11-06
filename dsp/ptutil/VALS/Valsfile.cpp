@@ -15,6 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "codedefs.h"
 
 /* Standard includes */
@@ -27,12 +28,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <time.h>
 
 #include "slout.h"
-#include "file.h"
+#include "File.h"
 #include "mry.h"
 #include "vals.h"
 #include "pstr.h"
 #include "pt_defs.h"
-#include "u_vals.h"
+#include "U_vals.h"
 #include "GraphicEq.h"
 
 #define LINE_LENGTH 128
@@ -66,7 +67,7 @@ int PT_DECLSPEC valsSave(PT_HANDLE *hp_vals, wchar_t *wcp_dir_path, wchar_t *wcp
 		return(NOT_OKAY);
 
 	/* Construct the fullpath */
-	swprintf(fullpath_str, L"%s\\%s", wcp_dir_path, wcp_filename);
+	swprintf(fullpath_str, L"%ls\\%ls", wcp_dir_path, wcp_filename);
 
 	/* Open the file for writing */
 	stream = fileOpen_Wide(fullpath_str, L"w", cast_handle->slout_hdl);
@@ -155,7 +156,7 @@ int PT_DECLSPEC valsSave(PT_HANDLE *hp_vals, wchar_t *wcp_dir_path, wchar_t *wcp
        if (cast_handle->app_depend.wcpp_strings[index] == NULL)
           fwprintf(stream, L"\n");
        else
-          fwprintf(stream, L"%s\n", cast_handle->app_depend.wcpp_strings[index]);
+          fwprintf(stream, L"%ls\n", cast_handle->app_depend.wcpp_strings[index]);
     }				
 
 	/* Write the Graphic EQ settings */
@@ -202,7 +203,7 @@ int PT_DECLSPEC valsCalcDateStrings(wchar_t *wcp_filename, wchar_t *wcp_formatte
 {
 	time_t time_structure;
 	struct tm *tm_struct_ptr;
-	long seconds;
+	pt_long seconds;
 	wchar_t wcp_short_sec_str[8];
 	wchar_t wcp_sec_str[8];
 	wchar_t wcp_date_str[8];
@@ -218,9 +219,9 @@ int PT_DECLSPEC valsCalcDateStrings(wchar_t *wcp_filename, wchar_t *wcp_formatte
 		return(NOT_OKAY);
 
 	/* Calculate number of seconds since midnight */
-	seconds = (long)(tm_struct_ptr->tm_hour * 3600L) +
-				 (long)(tm_struct_ptr->tm_min * 60L) +
-				 (long)(tm_struct_ptr->tm_sec);
+	seconds = (pt_long)(tm_struct_ptr->tm_hour * 3600L) +
+				 (pt_long)(tm_struct_ptr->tm_min * 60L) +
+				 (pt_long)(tm_struct_ptr->tm_sec);
 
 	if (wcsftime(wcp_date_str, 16, L"%m%d%y", tm_struct_ptr) == 0)
 		return(NOT_OKAY);
@@ -253,7 +254,7 @@ int PT_DECLSPEC valsCalcDateStrings(wchar_t *wcp_filename, wchar_t *wcp_formatte
 	else if (length == 0)
 		swprintf(wcp_sec_str, L"00.000");
 
-	swprintf(wcp_filename, L"%s%s", wcp_date_str, wcp_sec_str);
+	swprintf(wcp_filename, L"%ls%ls", wcp_date_str, wcp_sec_str);
 
 	return(OKAY);
 }
@@ -299,7 +300,7 @@ int PT_DECLSPEC valsRead(wchar_t *wcp_file_path, int i_trace_mode, CSlout *hp_sl
 
 	if (cast_handle->i_trace_mode)
 	{
-		swprintf(cast_handle->wcp_msg1, L"valsRead(): Entered, wcp_file_path = %s", wcp_file_path);
+		swprintf(cast_handle->wcp_msg1, L"valsRead(): Entered, wcp_file_path = %ls", wcp_file_path);
 		(cast_handle->slout_hdl)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 	}
 
@@ -317,12 +318,20 @@ int PT_DECLSPEC valsRead(wchar_t *wcp_file_path, int i_trace_mode, CSlout *hp_sl
 
 	/* Get the Comment. The Comment can be Unicode encoded in UTF-8 so we can support
 	   international Preset names. */
+#ifdef _WIN32
 	fgets(cp_str_utf8, LINE_LENGTH, stream);
 	if (pstrCovertUTF8StringToWideCharString_WithAlloc(cp_str_utf8, &wcp_utf8_comment, &wcp_utf8_comment_length) != OKAY)
 		return(NOT_OKAY);
-	swprintf(wcp_str, L"%s", wcp_utf8_comment);
+	swprintf(wcp_str, L"%ls", wcp_utf8_comment);
 	free(wcp_utf8_comment);
 	wcp_utf8_comment = NULL;
+#else
+	// Linux: stream is wide-oriented after fgetws above; fgets (narrow) is
+	// undefined after wide I/O (glibc returns garbage). Use fgetws directly.
+	// .fac comments are ASCII ("General") in factory presets; UTF-8 i18n names
+	// need LC_CTYPE=UTF-8 (set by app/dsp_cli via setlocale, Phase 8).
+	fgetws(wcp_str, LINE_LENGTH, stream);
+#endif
 
 	str_length = (int)wcslen(wcp_str);
 	if (str_length > 0)
@@ -337,7 +346,7 @@ int PT_DECLSPEC valsRead(wchar_t *wcp_file_path, int i_trace_mode, CSlout *hp_sl
 			fclose(stream);
 			return(NOT_OKAY);
 		}
-		swprintf(cast_handle->wcp_comment, L"%s", wcp_str);
+		swprintf(cast_handle->wcp_comment, L"%ls", wcp_str);
 	}
 	else
 		cast_handle->wcp_comment = NULL;
@@ -543,7 +552,7 @@ int PT_DECLSPEC valsCheckFileType(wchar_t *wcp_file_path, int *ip_proper_type, C
 		return(OKAY);
 	}
 
-	swscanf(wcp_line_str, L"%s\n", wcp_type_str);
+	swscanf(wcp_line_str, L"%ls\n", wcp_type_str);
 
 	if (wcslen(wcp_type_str) <= 0)
 	{

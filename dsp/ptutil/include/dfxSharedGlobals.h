@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _DFX_SHARED_GLOBALS_H_
 #define _DFX_SHARED_GLOBALS_H_
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "codedefs.h"
 #include "dfxpdefs.h"
 #include "pt_defs.h"
@@ -28,7 +29,7 @@ struct dfxSharedGlobalsType
 	// in dfxShared.cpp . If the initializations are not set correctly the variables will not be created.
 
 	realtype rp_meter_vals[DFXP_SPECTRUM_NUM_BANDS];
-	unsigned long ul_msecs_processed; 
+	pt_ulong ul_msecs_processed; 
 };
 
 #endif //_DFX_SHARED_GLOBALS_H_

@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Standard includes */
 #ifdef WIN32
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <windows.h>
 #include <winbase.h>
 #endif
@@ -72,7 +73,7 @@ int com_SendIoInfo(PT_HANDLE *);
  *  execuable..
  */
 int PT_DECLSPEC comInit(PT_HANDLE **hpp_com, int i_softdsp, int i_board_address, 
-			int i_processor_num, long l_base_address, char *cp_exe_dirpath, 
+			int i_processor_num, pt_long l_base_address, char *cp_exe_dirpath, 
 			int i_num_cards_configured, CSlout *hp_slout)
 {
 	struct comHdlType *cast_handle;
@@ -156,7 +157,7 @@ int PT_DECLSPEC comInit(PT_HANDLE **hpp_com, int i_softdsp, int i_board_address,
  * DESCRIPTION:
  *   Stores the passed buffer_size..
  */
-int PT_DECLSPEC comSetBufferSize(PT_HANDLE *hp_com, long l_buffer_size)
+int PT_DECLSPEC comSetBufferSize(PT_HANDLE *hp_com, pt_long l_buffer_size)
 {
    struct comHdlType *cast_handle;
 

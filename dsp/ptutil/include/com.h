@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _COM_H_
 #define _COM_H_
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "codedefs.h"
 #include "pt_defs.h"
 #include "slout.h"
@@ -64,7 +65,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define COM_NO_SERIAL_NUMBER -1L
 
 /* com.cpp */
-int PT_DECLSPEC comInit(PT_HANDLE **, int, int, int, long, char *, int, CSlout *);
+int PT_DECLSPEC comInit(PT_HANDLE **, int, int, int, pt_long, char *, int, CSlout *);
 int PT_DECLSPEC comLoadAndRun(PT_HANDLE *, char *, char *, realtype, int, int, int, 
                   realtype *, int *, int *);
 int PT_DECLSPEC comSoftDspLoadAndRun(PT_HANDLE *, char *, realtype, int, short, int);
@@ -76,44 +77,44 @@ int PT_DECLSPEC comTurnOff(PT_HANDLE *);
 int PT_DECLSPEC comTurnOn(PT_HANDLE *);
 int PT_DECLSPEC comSetDebugMode(PT_HANDLE *, int, CSlout *);  
 int PT_DECLSPEC comIsLegalSampFreq(realtype, int, int *); 
-int PT_DECLSPEC comSetBufferSize(PT_HANDLE*, long); 
+int PT_DECLSPEC comSetBufferSize(PT_HANDLE*, pt_long); 
 int PT_DECLSPEC comCheckCardExists(int, int *);
 
 /* comGet.cpp */
 int PT_DECLSPEC comGetCardExists(PT_HANDLE *, int *); 
 int PT_DECLSPEC comGetDongleExists(PT_HANDLE *, int *); 
 int PT_DECLSPEC comGetAesExists(PT_HANDLE *, int *);  
-int PT_DECLSPEC comGetSerialNum(PT_HANDLE *, unsigned long *);
-int PT_DECLSPEC comGetMainNumSamples(PT_HANDLE *, long *);
-int PT_DECLSPEC comGetExpandedNumSamples(PT_HANDLE *, long *);
+int PT_DECLSPEC comGetSerialNum(PT_HANDLE *, pt_ulong *);
+int PT_DECLSPEC comGetMainNumSamples(PT_HANDLE *, pt_long *);
+int PT_DECLSPEC comGetExpandedNumSamples(PT_HANDLE *, pt_long *);
 int PT_DECLSPEC comGetHasBeenCracked(PT_HANDLE *, int, int *);
 int PT_DECLSPEC comGetProcessorIndex(PT_HANDLE *, int *);
 
 /* comPass.cpp */
-int PT_DECLSPEC comReadPassword(PT_HANDLE *, int, unsigned long *);
-int PT_DECLSPEC comWritePassword(PT_HANDLE *, int, unsigned long);
-int PT_DECLSPEC comWriteSerialNum(PT_HANDLE *, int, unsigned long);
+int PT_DECLSPEC comReadPassword(PT_HANDLE *, int, pt_ulong *);
+int PT_DECLSPEC comWritePassword(PT_HANDLE *, int, pt_ulong);
+int PT_DECLSPEC comWriteSerialNum(PT_HANDLE *, int, pt_ulong);
 
 /* comRead.cpp */
 int PT_DECLSPEC comIntRead(PT_HANDLE *,  int *);
-int PT_DECLSPEC comLongIntRead(PT_HANDLE *, long *);
+int PT_DECLSPEC comLongIntRead(PT_HANDLE *, pt_long *);
 int PT_DECLSPEC comRealRead(PT_HANDLE *, realtype *);
-int PT_DECLSPEC comReadMeter(PT_HANDLE *, int, long *, int *);
-int PT_DECLSPEC comReadStatus(PT_HANDLE *, int, long *, int *);
+int PT_DECLSPEC comReadMeter(PT_HANDLE *, int, pt_long *, int *);
+int PT_DECLSPEC comReadStatus(PT_HANDLE *, int, pt_long *, int *);
 
 /* comWrite.cpp */
-int PT_DECLSPEC comIntWrite(PT_HANDLE *, long, int);
-int PT_DECLSPEC comLongIntWrite(PT_HANDLE *, long, long);
-int PT_DECLSPEC comRealWrite(PT_HANDLE *, long, realtype);
+int PT_DECLSPEC comIntWrite(PT_HANDLE *, pt_long, int);
+int PT_DECLSPEC comLongIntWrite(PT_HANDLE *, pt_long, pt_long);
+int PT_DECLSPEC comRealWrite(PT_HANDLE *, pt_long, realtype);
 int PT_DECLSPEC comSetDemoMode(PT_HANDLE *, int);
 
 /* comEprom.cpp */
-int PT_DECLSPEC comEepromUnsignedLongRead(PT_HANDLE *, short unsigned, unsigned long *);
-int PT_DECLSPEC comEepromUnsignedLongWrite(PT_HANDLE *, short unsigned, unsigned long);
+int PT_DECLSPEC comEepromUnsignedLongRead(PT_HANDLE *, short unsigned, pt_ulong *);
+int PT_DECLSPEC comEepromUnsignedLongWrite(PT_HANDLE *, short unsigned, pt_ulong);
 
 /* comWave.cpp */
-int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *, long *, realtype *, long, int, int, int, int);
-int PT_DECLSPEC comProcessBuffer(PT_HANDLE *hp_com, long *lp_data, long l_length, 
+int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *, pt_long *, realtype *, pt_long, int, int, int, int);
+int PT_DECLSPEC comProcessBuffer(PT_HANDLE *hp_com, pt_long *lp_data, pt_long l_length, 
                          int i_stereo_in_mode, int i_stereo_out_mode,
 								 int i_buffer_type);
 
@@ -128,11 +129,11 @@ int PT_DECLSPEC comAllocDspMem(PT_HANDLE *hp_com);
 int PT_DECLSPEC comFreeDspMem(PT_HANDLE *hp_com);
 
 /* comDspRun.cpp */
-int PT_DECLSPEC comWriteParam(PT_HANDLE *hp_com, long l_offset, long l_val);
-int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, long *lp_data, long l_length, 
+int PT_DECLSPEC comWriteParam(PT_HANDLE *hp_com, pt_long l_offset, pt_long l_val);
+int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, pt_long *lp_data, pt_long l_length, 
                          int i_stereo_in_mode, int i_stereo_out_mode, 
 								 int i_buffer_type);
-int PT_DECLSPEC comProcessActiveBuffer(PT_HANDLE *hp_com, short *sp_data, long l_length, 
+int PT_DECLSPEC comProcessActiveBuffer(PT_HANDLE *hp_com, short *sp_data, pt_long l_length, 
                          int i_stereo_in_mode, int i_stereo_out_mode, int i_buffer_type);
 int PT_DECLSPEC comGetReCuePendingHdl(PT_HANDLE *hp_com, int *ip_recue_pending_flag);
 int PT_DECLSPEC comSetReCuePendingHdl(PT_HANDLE *hp_com, int i_recue_pending_flag);

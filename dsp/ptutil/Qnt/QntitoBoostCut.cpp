@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* Standard includes */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -167,7 +168,7 @@ int PT_DECLSPEC qntIToBoostCutInit(PT_HANDLE **hpp_qnt, CSlout *hp_slout,
 /*
  * FUNCTION: qntIToBoostCutCalc()
  * DESCRIPTION:
- *  Calculates the long output based on the passed integer input.
+ *  Calculates the pt_long output based on the passed integer input.
  */
 int PT_DECLSPEC qntIToBoostCutCalc(PT_HANDLE *hp_qnt, int i_input,
 											  struct filt2ndOrderBoostCutShelfFilterType *sp_filt)

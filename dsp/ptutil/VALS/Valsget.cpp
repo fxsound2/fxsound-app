@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "codedefs.h"
 #include "slout.h"
 #include "vals.h"
-#include "u_vals.h"
+#include "U_vals.h"
 
 /*
  * FUNCTION: valsGetFileVersion()
