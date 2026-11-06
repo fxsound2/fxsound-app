@@ -249,7 +249,7 @@ void FxHotkeyEditor::setKeyText()
 	{
 		if ((vk_ >= 0x30 && vk_ <= 0x39) || (vk_ >= 'A' && vk_ <= 'Z'))
 		{
-			key_text_ += static_cast<WCHAR>(vk_);
+			key_text_ += static_cast<juce_wchar>(vk_);
 		}
 	}
 

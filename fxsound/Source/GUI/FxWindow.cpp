@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <JuceHeader.h>
 #include "FxWindow.h"
+#include "FxModel.h"
 
 //==============================================================================
 FxWindow::FxWindow(String name) : title_bar_(name), content_(nullptr)
@@ -80,6 +81,11 @@ void FxWindow::setContent(Component* content)
 	{
 		setSize(content_->getWidth() + shadow_width_*2, content_->getHeight() + title_bar_.getHeight() + FxTheme::WINDOW_CORNER_RADIUS + shadow_width_*2);
 	}
+}
+
+void FxWindow::setLogoHighlighted(bool highlighted, bool animate)
+{
+	title_bar_.setLogoHighlighted(highlighted, animate);
 }
 
 void FxWindow::startLogoAnimation()
@@ -176,9 +182,12 @@ FxWindow::TitleBar::TitleBar(String name)
 	addChildComponent(title_);
 
 	updateLogo();
-	if (animation_icon_.get() != nullptr)
+	if (animation_icon_.get() != nullptr && icon_.get() != nullptr)
 	{
-		animation_icon_->setAlpha(0.0f);
+		// Default to highlighted brand logo (red in dark theme, blue in light theme).
+		// If power is explicitly off in settings, setPowerState() will dim it.
+		icon_->setAlpha(0.0f);
+		animation_icon_->setAlpha(1.0f);
 	}
 
 	setFocusContainer(true);
@@ -190,21 +199,46 @@ FxWindow::TitleBar::TitleBar(String name)
 	close_button_.addListener(this);
 }
 
+void FxWindow::TitleBar::setLogoHighlighted(bool highlighted, bool animate)
+{
+	if (animation_icon_.get() != nullptr && icon_.get() != nullptr)
+	{
+		if (animate)
+		{
+			if (highlighted)
+			{
+				Desktop::getInstance().getAnimator().fadeOut(icon_.get(), 600);
+				Desktop::getInstance().getAnimator().fadeIn(animation_icon_.get(), 600);
+			}
+			else
+			{
+				Desktop::getInstance().getAnimator().fadeOut(animation_icon_.get(), 600);
+				Desktop::getInstance().getAnimator().fadeIn(icon_.get(), 600);
+			}
+		}
+		else
+		{
+			if (highlighted)
+			{
+				icon_->setAlpha(0.0f);
+				animation_icon_->setAlpha(1.0f);
+			}
+			else
+			{
+				icon_->setAlpha(1.0f);
+				animation_icon_->setAlpha(0.0f);
+			}
+		}
+	}
+}
+
 void FxWindow::TitleBar::startLogoAnimation()
 {
-	if (animation_icon_.get() != nullptr)
-	{
-		Desktop::getInstance().getAnimator().fadeOut(icon_.get(), 600);
-		Desktop::getInstance().getAnimator().fadeIn(animation_icon_.get(), 600);
-	}
+	setLogoHighlighted(true, true);
 }
 void FxWindow::TitleBar::stopLogoAnimation()
 {
-	if (animation_icon_.get() != nullptr)
-	{
-		Desktop::getInstance().getAnimator().fadeOut(animation_icon_.get(), 600);
-		Desktop::getInstance().getAnimator().fadeIn(icon_.get(), 600);
-	}
+	setLogoHighlighted(false, true);
 }
 
 void FxWindow::TitleBar::addToolbarButton(Button* toolbarButton, bool right_aligned)
@@ -216,7 +250,7 @@ void FxWindow::TitleBar::addToolbarButton(Button* toolbarButton, bool right_alig
 		// On repaint, the translated button text is updated
 		if (TextButton* text_button = dynamic_cast<TextButton*>(toolbarButton))
 		{
-			auto& text = text_button->getName();
+			auto text = text_button->getName();
 			if (text.isNotEmpty())
 			{
 				text_button->setButtonText(TRANS(text));
@@ -249,7 +283,7 @@ void FxWindow::TitleBar::paint(Graphics& g)
 
 		if (TextButton* text_button = dynamic_cast<TextButton*>(button))
 		{
-			auto& text = text_button->getName();
+			auto text = text_button->getName();
 			if (text.isNotEmpty())
 			{
 				text_button->setButtonText(TRANS(text));

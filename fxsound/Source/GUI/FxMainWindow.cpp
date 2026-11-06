@@ -251,6 +251,7 @@ void FxMainWindow::show()
 	toFront(true);
 
 	// Bring window to the top
+#if JUCE_WINDOWS
 	auto* peer = getPeer();
 	if (peer)
 	{
@@ -261,6 +262,11 @@ void FxMainWindow::show()
 		SetForegroundWindow(hwnd); // Bring to front
 		SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 	}
+#else
+	if (auto* peer = getPeer())
+		peer->setMinimised(false);
+	toFront(true);
+#endif
 }
 
 void FxMainWindow::showLiteView()
@@ -366,6 +372,7 @@ void FxMainWindow::setResizeImage()
 
 void FxMainWindow::setIcon(bool power, bool processing)
 {
+#if JUCE_WINDOWS
 	HINSTANCE hInst = GetModuleHandle(NULL);
 	HWND hWnd = (HWND)getWindowHandle();
 
@@ -400,6 +407,16 @@ void FxMainWindow::setIcon(bool power, bool processing)
 	{
 		DestroyIcon(curr_icon);
 	}
+#else
+	// Linux: Use the official brand icon (white equalizer bars on black squircle background)
+	// matching the application's desktop icon (fxsound_large.png).
+	Image icon_image = PNGImageFormat::loadFrom(BinaryData::fxsound_large_png, BinaryData::fxsound_large_pngSize);
+	if (icon_image.isValid())
+	{
+		if (auto* peer = getPeer())
+			peer->setIcon(icon_image);
+	}
+#endif
 }
 
 void FxMainWindow::enablePowerButton(bool enable)
@@ -433,6 +450,7 @@ bool FxMainWindow::keyPressed(const KeyPress& key)
 
 void FxMainWindow::visibilityChanged()
 {
+#if JUCE_WINDOWS
 	auto* peer = getPeer();
 	if (peer)
 	{
@@ -443,6 +461,9 @@ void FxMainWindow::visibilityChanged()
 			SetWindowLong(hwnd, GWL_STYLE, style | WS_MINIMIZEBOX);
 		}
 	}
+#else
+	ignoreUnused(getPeer()); // Linux: window decorations are the WM's business
+#endif
 }
 
 void FxMainWindow::showMenu()
@@ -580,7 +601,12 @@ void FxMainWindow::buttonClicked(Button* button)
 	{
 		if (isOnDesktop())
 		{
+#if JUCE_WINDOWS
 			ShowWindow((HWND)getWindowHandle(), SW_MINIMIZE);
+#else
+			if (auto* peer = getPeer())
+				peer->setMinimised(true);
+#endif
 		}
 	}
 }
@@ -612,7 +638,7 @@ void FxMainWindow::userTriedToCloseWindow()
 
 void FxMainWindow::closeButtonPressed()
 {
-	FxController::getInstance().hideMainWindow();
+	userTriedToCloseWindow();
 }
 
 void FxMainWindow::moved()

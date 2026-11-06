@@ -78,14 +78,20 @@ void FxView::showErrorNotification(bool show)
 
 void FxView::comboBoxChanged(ComboBox* combobox)
 {
-	auto index = combobox->getSelectedItemIndex();
-	if (index >= 0 && index < combobox->getNumItems())
+	if (combobox == &preset_list_)
 	{
-		if (combobox == &preset_list_)
+		// Use getSelectedId() - 1 instead of getSelectedItemIndex() because
+		// a separator item exists between factory and user presets.
+		auto id = combobox->getSelectedId();
+		if (id > 0)
 		{
-			FxController::getInstance().setPreset(index);
+			FxController::getInstance().setPreset(id - 1);
 		}
-		else if (combobox == &endpoint_list_)
+	}
+	else if (combobox == &endpoint_list_)
+	{
+		auto index = combobox->getSelectedItemIndex();
+		if (index >= 0 && index < combobox->getNumItems())
 		{
 			FxController::getInstance().setOutput(index, false);
 		}
@@ -116,12 +122,13 @@ void FxView::modelChanged(FxModel::Event model_event)
 	{
 		endpoint_list_.setSelectedId(FxModel::getModel().getSelectedOutputIndex() + 1, NotificationType::dontSendNotification);
 
-        if (endpoint_list_.getError())
+        if (endpoint_list_.getError() && !FxController::getInstance().isPlaybackDeviceAvailable())
         {
             showErrorNotification(true);
         }
         else
         {
+            endpoint_list_.setError(false);
             showErrorNotification(false);
         }
 	}
@@ -204,12 +211,16 @@ void FxView::mouseEnter(const MouseEvent&)
 	preset_list_.highlightText(preset_list_.isMouseOver(true));
 	endpoint_list_.highlightText(endpoint_list_.isMouseOver(true));
 
-    if (endpoint_list_.getError() && (endpoint_list_.isMouseOver(true) || error_notification_.isMouseOver(true)))
+    if (endpoint_list_.getError() && !FxController::getInstance().isPlaybackDeviceAvailable() && (endpoint_list_.isMouseOver(true) || error_notification_.isMouseOver(true)))
     {   
         showErrorNotification(true);
     }
     else 
     {
+        if (FxController::getInstance().isPlaybackDeviceAvailable())
+        {
+            endpoint_list_.setError(false);
+        }
         showErrorNotification(false);
     }
 }
@@ -218,4 +229,23 @@ void FxView::mouseExit(const MouseEvent&)
 {
 	preset_list_.highlightText(preset_list_.isMouseOver(true));
 	endpoint_list_.highlightText(endpoint_list_.isMouseOver(true));
+	if (!endpoint_list_.isMouseOver(true) && !error_notification_.isMouseOver(true))
+	{
+		showErrorNotification(false);
+	}
+}
+
+void FxView::mouseMove(const MouseEvent&)
+{
+	if (FxController::getInstance().isPlaybackDeviceAvailable())
+	{
+		if (endpoint_list_.getError())
+		{
+			endpoint_list_.setError(false);
+		}
+		if (error_notification_.isVisible())
+		{
+			showErrorNotification(false);
+		}
+	}
 }

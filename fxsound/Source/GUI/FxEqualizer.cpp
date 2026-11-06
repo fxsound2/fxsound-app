@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxEqualizer.h"
 #include "FxController.h"
 #include "FxTheme.h"
+#include <cmath>
 
 FxEqualizer::FxEqualizer()
 {
@@ -42,6 +43,8 @@ FxEqualizer::FxEqualizer()
         center_frequencies_[i].reset(new FxBandCenterFreqSlider(i, *labels_[i]));
        
         labels_[i]->setJustificationType(Justification::centredTop);
+        labels_[i]->setBorderSize(BorderSize<int>(0, 0, 0, 0));
+        labels_[i]->setMinimumHorizontalScale(0.80f);
         addAndMakeVisible(labels_[i].get());
 
         band_boosts_[i]->setSliderStyle(Slider::LinearVertical);
@@ -92,6 +95,8 @@ void FxEqualizer::reinit(int num_bands)
         center_frequencies_[i].reset(new FxBandCenterFreqSlider(i, *labels_[i]));
         
         labels_[i]->setJustificationType(Justification::centredTop);
+        labels_[i]->setBorderSize(BorderSize<int>(0, 0, 0, 0));
+        labels_[i]->setMinimumHorizontalScale(0.80f);
         addAndMakeVisible(labels_[i].get());
 
         band_boosts_[i]->setSliderStyle(Slider::LinearVertical);
@@ -113,11 +118,12 @@ void FxEqualizer::reinit(int num_bands)
 
     update();
     showValues(true);
+    repaint();
 }
 
 void FxEqualizer::sliderValueChanged(Slider* slider)
 {
-
+    repaint();
 }
 
 void FxEqualizer::sliderDragStarted(Slider* slider)
@@ -146,6 +152,8 @@ void FxEqualizer::sliderDragStarted(Slider* slider)
             }
         }
     }
+
+    repaint();
 }
 
 void FxEqualizer::sliderDragEnded(Slider* slider)
@@ -167,6 +175,8 @@ void FxEqualizer::sliderDragEnded(Slider* slider)
             }
         }
     }
+
+    repaint();
 }
 
 void FxEqualizer::timerCallback()
@@ -207,13 +217,22 @@ void FxEqualizer::timerCallback()
     {
         stopTimer();
     }
+
+    repaint();
 }
 
 void FxEqualizer::update()
 {
     auto& controller = FxController::getInstance();
+    int num_bands = controller.getNumEqBands();
 
-    for (auto i = 0; i<band_boosts_.size() && i<controller.getNumEqBands(); i++)
+    if (num_bands != labels_.size())
+    {
+        reinit(num_bands);
+        return;
+    }
+
+    for (auto i = 0; i < band_boosts_.size() && i < num_bands; i++)
     {
         auto value = controller.getEqBandBoostCut(i);
         if (value >= -MAX_GAIN && value <= MAX_GAIN)
@@ -224,6 +243,8 @@ void FxEqualizer::update()
         auto freq = controller.getEqBandFrequency(i);
         center_frequencies_[i]->setFrequency(freq);
     }
+
+    repaint();
 }
 
 void FxEqualizer::showValues(bool show)
@@ -242,7 +263,7 @@ void FxEqualizer::resized()
 
     if (num_bands != labels_.size())
     {
-		repaint();
+        reinit(num_bands);
         return;
     }
 
@@ -251,12 +272,9 @@ void FxEqualizer::resized()
     int x = X_MARGIN;
     int width = (bounds.getWidth() - X_MARGIN*2) / labels_.size();
     int rotary_width = jmin(ROTARY_SLIDER_HEIGHT, width);
+    int slider_width = jmin(width, FxTheme::SLIDER_THUMB_RADIUS * 4);
 
-    bool show_center_frequencies = true;
-    if (labels_.size() > 10)
-    {
-        show_center_frequencies = false;
-    }
+    bool show_center_frequencies = (labels_.size() <= 10);
 
     auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
     for (auto i=0; i<labels_.size(); i++)
@@ -264,16 +282,26 @@ void FxEqualizer::resized()
         center_frequencies_[i]->setVisible(show_center_frequencies);
         if (show_center_frequencies)
         {
-            labels_[i]->setFont(theme.getNormalFont().withHeight(LABEL_HEIGHT));
-            band_boosts_[i]->setBounds(x + (width - FxTheme::SLIDER_THUMB_RADIUS * 4) / 2, Y_MARGIN, FxTheme::SLIDER_THUMB_RADIUS * 4, SLIDER_HEIGHT );
+            labels_[i]->setFont(theme.getNormalFont().withHeight((float)LABEL_HEIGHT));
+            labels_[i]->setBorderSize(BorderSize<int>(0, 0, 0, 0));
+            labels_[i]->setMinimumHorizontalScale(0.80f);
+
+            band_boosts_[i]->setBounds(x + (width - slider_width) / 2, Y_MARGIN, slider_width, SLIDER_HEIGHT);
             labels_[i]->setBounds(x, band_boosts_[i]->getBottom() + 6, width, LABEL_HEIGHT);
             center_frequencies_[i]->setBounds(x + (width - rotary_width) / 2, labels_[i]->getBottom() + 4, rotary_width, rotary_width);
         }
         else
         {
-            labels_[i]->setFont(theme.getNormalFont().withHeight(SMALL_FONT));
-            band_boosts_[i]->setBounds(x + (width - FxTheme::SLIDER_THUMB_RADIUS * 4) / 2, Y_MARGIN, FxTheme::SLIDER_THUMB_RADIUS * 4, SLIDER_HEIGHT + ROTARY_SLIDER_HEIGHT);
-            labels_[i]->setBounds(x, band_boosts_[i]->getBottom() + 6, width, LABEL_HEIGHT*2);
+            float font_size = (labels_.size() >= 31) ? 9.0f : ((labels_.size() >= 15) ? 10.0f : (float)LABEL_HEIGHT);
+            int label_width = (labels_.size() >= 31) ? (width + 8) : ((labels_.size() >= 15) ? (width + 4) : width);
+
+            labels_[i]->setFont(theme.getNormalFont().withHeight(font_size));
+            labels_[i]->setBorderSize(BorderSize<int>(0, 0, 0, 0));
+            labels_[i]->setMinimumHorizontalScale(0.80f);
+
+            band_boosts_[i]->setBounds(x + (width - slider_width) / 2, Y_MARGIN, slider_width, SLIDER_HEIGHT + ROTARY_SLIDER_HEIGHT);
+            int label_x = x + (width - label_width) / 2;
+            labels_[i]->setBounds(label_x, band_boosts_[i]->getBottom() + 4, label_width, LABEL_HEIGHT * 2 + 2);
         }
                
         x += width;
@@ -388,7 +416,9 @@ void FxEqualizer::paint(Graphics& g)
     }
     path.closeSubPath();
 
-    auto gradient = ColourGradient(gradient_colour_1, 0, band_boosts_[1]->getY(), gradient_colour_2, 0, band_boosts_[1]->getBottom(), false);
+    float y_start = band_boosts_.empty() ? (float)Y_MARGIN : (float)band_boosts_[0]->getY();
+    float y_end = band_boosts_.empty() ? (float)HEIGHT : (float)band_boosts_[0]->getBottom();
+    auto gradient = ColourGradient(gradient_colour_1, 0, y_start, gradient_colour_2, 0, y_end, false);
     g.setFillType(FillType(gradient));
     g.fillPath(path);
 }
@@ -404,6 +434,8 @@ FxEqualizer::FxEqSlider::FxEqSlider(int band, float max_gain)
     gain_label_.setFont(theme.getNormalFont().withHeight(LABEL_HEIGHT));
     gain_label_.setJustificationType(Justification::centred);
     gain_label_.setInterceptsMouseClicks(false, false);
+    gain_label_.setBorderSize(BorderSize<int>(0, 0, 0, 0));
+    gain_label_.setMinimumHorizontalScale(0.70f);
     addChildComponent(gain_label_);
 
     setWantsKeyboardFocus(true);
@@ -413,11 +445,17 @@ void FxEqualizer::FxEqSlider::setGainValue(float value)
 {
     setValue(value, NotificationType::dontSendNotification);
 
-    auto text = String::formatted(value == 0.0 ? "%.0f" : "%+.0f", value);
+    int rounded_dB = juce::roundToInt(value);
+    auto text = (rounded_dB == 0) ? String("0") : String::formatted("%+d", rounded_dB);
     gain_label_.setText(text, NotificationType::dontSendNotification);
 
-    auto y = getPositionOfValue(value) - (FxTheme::SLIDER_THUMB_RADIUS *3);
-    gain_label_.setBounds(gain_label_.getBounds().withY(y));
+    auto y = jmax(0, (int)getPositionOfValue(value) - (FxTheme::SLIDER_THUMB_RADIUS * 3));
+    gain_label_.setBounds(0, y, getWidth(), LABEL_HEIGHT);
+
+    if (auto* parent = getParentComponent())
+    {
+        parent->repaint();
+    }
 }
 
 void FxEqualizer::FxEqSlider::showValue(bool show)
@@ -440,7 +478,12 @@ void FxEqualizer::FxEqSlider::enablementChanged()
 void FxEqualizer::FxEqSlider::resized()
 {
     Slider::resized();
-    gain_label_.setBounds(gain_label_.getX(), gain_label_.getY(), getWidth(), LABEL_HEIGHT);
+    auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
+    float font_size = (getWidth() < 30) ? 10.0f : (float)LABEL_HEIGHT;
+    gain_label_.setFont(theme.getNormalFont().withHeight(font_size));
+    gain_label_.setBorderSize(BorderSize<int>(0, 0, 0, 0));
+    gain_label_.setMinimumHorizontalScale(0.70f);
+    gain_label_.setBounds(0, gain_label_.getY(), getWidth(), LABEL_HEIGHT);
 }
 
 void FxEqualizer::FxEqSlider::valueChanged()
@@ -450,11 +493,17 @@ void FxEqualizer::FxEqSlider::valueChanged()
     {
         FxController::getInstance().setEqBandBoostCut(band_, value);
 
-        auto text = String::formatted(value == 0.0 ? "%.0f" : "%+.0f", value);
+        int rounded_dB = juce::roundToInt(value);
+        auto text = (rounded_dB == 0) ? String("0") : String::formatted("%+d", rounded_dB);
         gain_label_.setText(text, NotificationType::dontSendNotification);
 
-        auto y = getPositionOfValue(value) - (FxTheme::SLIDER_THUMB_RADIUS*3);
-        gain_label_.setBounds(gain_label_.getBounds().withY(y));
+        auto y = jmax(0, (int)getPositionOfValue(value) - (FxTheme::SLIDER_THUMB_RADIUS * 3));
+        gain_label_.setBounds(0, y, getWidth(), LABEL_HEIGHT);
+    }
+
+    if (auto* parent = getParentComponent())
+    {
+        parent->repaint();
     }
 }
 
@@ -514,28 +563,64 @@ void FxEqualizer::FxBandCenterFreqSlider::setFrequency(float value)
         // ------------------------------------------------------ SET TEXT for bands >= 15
         if (nBands >= 15)
         {
-            if (value >= 10000)
+            if (value >= 1000.0f)
             {
-                text = String::formatted("%.0f\nkHz", value / 1000.0f);
-            }
-            else if (value >= 1000)
-            {
-                text = String::formatted("%.1f\nkHz", value / 1000.0f);
+                float khz = value / 1000.0f;
+                float rounded_khz = std::round(khz);
+                if (std::abs(khz - rounded_khz) < 0.01f)
+                {
+                    text = String::formatted("%d\nkHz", (int)rounded_khz);
+                }
+                else if (std::abs(khz * 10.0f - std::round(khz * 10.0f)) < 0.05f)
+                {
+                    text = String::formatted("%.1f\nkHz", khz);
+                }
+                else
+                {
+                    text = String::formatted("%.2f\nkHz", khz);
+                }
             }
             else
             {
-                text = String::formatted("%.0f\nHz", value);
+                if (std::abs(value - std::round(value)) < 0.01f)
+                {
+                    text = String::formatted("%d\nHz", (int)std::round(value));
+                }
+                else
+                {
+                    text = String::formatted("%.1f\nHz", value);
+                }
             }            
         }
         else
         {
-            if (value > 1000)
+            if (value >= 1000.0f)
             {
-                text = String::formatted("%.2f kHz", value / 1000.0f);
+                float khz = value / 1000.0f;
+                float rounded_khz = std::round(khz);
+                if (std::abs(khz - rounded_khz) < 0.01f)
+                {
+                    text = String::formatted("%d kHz", (int)rounded_khz);
+                }
+                else if (std::abs(khz * 10.0f - std::round(khz * 10.0f)) < 0.05f)
+                {
+                    text = String::formatted("%.1f kHz", khz);
+                }
+                else
+                {
+                    text = String::formatted("%.2f kHz", khz);
+                }
             }
             else
             {
-                text = String::formatted("%.0f Hz", value);
+                if (std::abs(value - std::round(value)) < 0.01f)
+                {
+                    text = String::formatted("%d Hz", (int)std::round(value));
+                }
+                else
+                {
+                    text = String::formatted("%.1f Hz", value);
+                }
             }
         }
 
