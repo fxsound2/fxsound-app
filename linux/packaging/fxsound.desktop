@@ -1,0 +1,25 @@
+[Desktop Entry]
+Name=FxSound
+GenericName=Audio Enhancer
+Comment=High-fidelity audio enhancer, equalizer, and effects processing for Linux via PipeWire
+Exec=FxSound %U
+Icon=fxsound
+Terminal=false
+Type=Application
+Categories=AudioVideo;Audio;Mixer;Player;
+Keywords=audio;equalizer;dsp;sound;enhancer;pipewire;fxsound;
+StartupNotify=true
+StartupWMClass=FxSound
+Actions=TogglePower;NextPreset;PrevPreset;
+
+[Desktop Action TogglePower]
+Name=Toggle Power
+Exec=FxSound --toggle-power
+
+[Desktop Action NextPreset]
+Name=Next Preset
+Exec=FxSound --next-preset
+
+[Desktop Action PrevPreset]
+Name=Previous Preset
+Exec=FxSound --previous-preset

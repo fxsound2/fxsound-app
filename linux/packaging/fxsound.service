@@ -1,0 +1,14 @@
+[Unit]
+Description=FxSound Audio Enhancer (User Daemon)
+Documentation=https://github.com/pourih/fxsound-linux
+PartOf=pipewire.service
+After=pipewire.service wireplumber.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/FxSound --run_minimized
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
