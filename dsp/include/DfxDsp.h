@@ -36,6 +36,34 @@ class DfxDsp
 {
 public:
 	enum Effect { Fidelity = 0, Ambience = 1, Surround = 2, DynamicBoost = 3, Bass = 4, NumEffects = 5 };
+	// Filter preview ("hear what's removed") flags. A preview selection is either any combination of the individual
+	// filters (their removed signals are summed) or PreviewAll alone: every filter whose own switch is on.
+	enum FilterPreview { PreviewNone = 0, PreviewLowCut = 1, PreviewHighCut = 2, PreviewMonoBass = 4, PreviewAll = 8 };
+	// The selection after pressing one preview button: PreviewAll replaces any individual selection (or releases
+	// itself); an individual button releases PreviewAll and starts from itself, otherwise it toggles on its own.
+	static constexpr int toggledFilterPreview(int selection, FilterPreview pressed)
+	{
+		return (pressed == PreviewAll) ? ((selection == PreviewAll) ? PreviewNone : PreviewAll) :
+			((selection & PreviewAll) ? pressed : (selection ^ pressed));
+	}
+	static constexpr int CUT_SLOPES_DB[] = { 6, 12, 18, 24, 36, 48 };
+	static constexpr int CUT_NUM_SLOPES = static_cast<int>(sizeof(CUT_SLOPES_DB) / sizeof(CUT_SLOPES_DB[0]));
+	// The default low and high cut slope (the Filters page's slope dropdown picks one of CUT_SLOPES_DB).
+	static constexpr int CUT_DEFAULT_SLOPE_DB = 48;
+	static constexpr float CUT_Q = 0.71f;
+	static constexpr int LOW_CUT_MIN_CUTOFF_HZ = 0;
+	static constexpr int LOW_CUT_MAX_CUTOFF_HZ = 200;
+	static constexpr int LOW_CUT_DEFAULT_CUTOFF_HZ = 20;
+	static constexpr int HIGH_CUT_MIN_CUTOFF_HZ = 14000;
+	static constexpr int HIGH_CUT_MAX_CUTOFF_HZ = 20000;
+	static constexpr int HIGH_CUT_STEP_HZ = 100;
+	// One step above the highest cutoff: the slider's end position, where the high cut is Off. A saved cutoff above
+	// HIGH_CUT_MAX_CUTOFF_HZ (e.g. an older Off value) is read as Off.
+	static constexpr int HIGH_CUT_OFF_HZ = HIGH_CUT_MAX_CUTOFF_HZ + HIGH_CUT_STEP_HZ;
+	static constexpr int HIGH_CUT_DEFAULT_CUTOFF_HZ = HIGH_CUT_OFF_HZ;
+	static constexpr int MONO_BASS_MIN_CUTOFF_HZ = 0;
+	static constexpr int MONO_BASS_MAX_CUTOFF_HZ = 150;
+	static constexpr int MONO_BASS_DEFAULT_CUTOFF_HZ = 125;
 
 	DfxDsp();
 	~DfxDsp();
@@ -47,6 +75,27 @@ public:
 	int exportPreset(std::wstring preset_source_file_full_path, std::wstring preset_name, std::wstring preset_export_path);
 	void eqOn(bool on);
 	int getNumEqBands();
+	void filtersOn(bool on);
+	bool isFiltersOn();
+	void setCutSlope(int db_per_octave);
+	int getCutSlope();
+	void lowCutOn(bool on);
+	bool isLowCutOn();
+	void setLowCutCutoff(float hz);
+	float getLowCutCutoff();
+	void highCutOn(bool on);
+	bool isHighCutOn();
+	void setHighCutCutoff(float hz);
+	float getHighCutCutoff();
+	void monoBassOn(bool on);
+	bool isMonoBassOn();
+	void setMonoBassCutoff(float hz);
+	float getMonoBassCutoff();
+	// True when every flag in preview_flags can be previewed (PreviewNone always can).
+	bool isFilterPreviewAvailable(int preview_flags);
+	// Sets the preview selection; unavailable flags are dropped, PreviewAll with other flags means PreviewAll.
+	void setFilterPreview(int preview_flags);
+	int getFilterPreview();
 	float getBalance();
 	void setBalance(float gain_db);
 	float getNormalization();

@@ -759,6 +759,15 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 			path.createDirectory();
 		}
 
+		setCutSlope(settings_.getInt("cut_slope_db", DfxDsp::CUT_DEFAULT_SLOPE_DB));
+		setLowCutCutoff(settings_.getInt("low_cut_cutoff_hz", DfxDsp::LOW_CUT_DEFAULT_CUTOFF_HZ));
+		setHighCutCutoff(settings_.getInt("high_cut_cutoff_hz", DfxDsp::HIGH_CUT_DEFAULT_CUTOFF_HZ));
+		setMonoBassCutoff(settings_.getInt("mono_bass_cutoff_hz", DfxDsp::MONO_BASS_DEFAULT_CUTOFF_HZ));
+		setLowCutOn(settings_.getBool("low_cut_on", true));
+		setHighCutOn(settings_.getBool("high_cut_on", true));
+		setMonoBassOn(settings_.getBool("mono_bass_on", false));
+		setFiltersOn(settings_.getBool("filters_on", false));
+
 		setPowerState(settings_.getBool("power"));
 
 		initPresets();
@@ -905,6 +914,8 @@ void FxController::showView()
 
 void FxController::switchView()
 {
+	stopFilterPreview();
+
 	if (view_ == ViewType::Pro)
 	{
 		view_ = ViewType::Lite;
@@ -926,6 +937,8 @@ ViewType FxController::getCurrentView()
 
 void FxController::hideMainWindow()
 {
+	stopFilterPreview();
+
 	if (main_window_->isOnDesktop())
 	{
 		main_window_->removeFromDesktop();
@@ -1881,6 +1894,7 @@ void FxController::powerOn(bool on)
 	else
 	{
 		dfx_dsp_.powerOn(false);
+		stopFilterPreview();
 
 		{
 			ScopedLock auto_lock(lock_);
@@ -2855,6 +2869,162 @@ void FxController::setAlwaysOnTop(bool always_on_top)
 	always_on_top_ = always_on_top;
 	settings_.setBool("always_on_top", always_on_top);
 	main_window_->setAlwaysOnTop(always_on_top);
+}
+
+// Filter setters below must only be called on the GUI/message thread (DfxDsp filter setters are not concurrency-safe).
+bool FxController::isFiltersOn()
+{
+	return dfx_dsp_.isFiltersOn();
+}
+
+void FxController::setFiltersOn(bool on)
+{
+	auto before = dfx_dsp_.getFilterPreview();
+	dfx_dsp_.filtersOn(on);
+	settings_.setBool("filters_on", on);
+	notifyIfPreviewChanged(before);
+}
+
+bool FxController::isLowCutOn()
+{
+	return dfx_dsp_.isLowCutOn();
+}
+
+void FxController::setLowCutOn(bool on)
+{
+	auto before = dfx_dsp_.getFilterPreview();
+	dfx_dsp_.lowCutOn(on);
+	settings_.setBool("low_cut_on", on);
+	notifyIfPreviewChanged(before);
+}
+
+int FxController::getLowCutCutoff()
+{
+	return static_cast<int>(dfx_dsp_.getLowCutCutoff() + 0.5f);
+}
+
+void FxController::setLowCutCutoff(int cutoff_hz)
+{
+	auto before = dfx_dsp_.getFilterPreview();
+	dfx_dsp_.setLowCutCutoff(static_cast<float>(cutoff_hz));
+	settings_.setInt("low_cut_cutoff_hz", getLowCutCutoff());
+	notifyIfPreviewChanged(before);
+}
+
+bool FxController::isHighCutOn()
+{
+	return dfx_dsp_.isHighCutOn();
+}
+
+void FxController::setHighCutOn(bool on)
+{
+	auto before = dfx_dsp_.getFilterPreview();
+	dfx_dsp_.highCutOn(on);
+	settings_.setBool("high_cut_on", on);
+	notifyIfPreviewChanged(before);
+}
+
+int FxController::getCutSlope()
+{
+	return dfx_dsp_.getCutSlope();
+}
+
+void FxController::setCutSlope(int slope_db)
+{
+	dfx_dsp_.setCutSlope(slope_db);
+	settings_.setInt("cut_slope_db", getCutSlope());
+}
+
+int FxController::getHighCutCutoff()
+{
+	return static_cast<int>(dfx_dsp_.getHighCutCutoff() + 0.5f);
+}
+
+void FxController::setHighCutCutoff(int cutoff_hz)
+{
+	auto before = dfx_dsp_.getFilterPreview();
+	dfx_dsp_.setHighCutCutoff(static_cast<float>(cutoff_hz));
+	settings_.setInt("high_cut_cutoff_hz", getHighCutCutoff());
+	notifyIfPreviewChanged(before);
+}
+
+bool FxController::isMonoBassOn()
+{
+	return dfx_dsp_.isMonoBassOn();
+}
+
+void FxController::setMonoBassOn(bool on)
+{
+	auto before = dfx_dsp_.getFilterPreview();
+	dfx_dsp_.monoBassOn(on);
+	settings_.setBool("mono_bass_on", on);
+	notifyIfPreviewChanged(before);
+}
+
+int FxController::getMonoBassCutoff()
+{
+	return static_cast<int>(dfx_dsp_.getMonoBassCutoff() + 0.5f);
+}
+
+void FxController::setMonoBassCutoff(int cutoff_hz)
+{
+	auto before = dfx_dsp_.getFilterPreview();
+	dfx_dsp_.setMonoBassCutoff(static_cast<float>(cutoff_hz));
+	settings_.setInt("mono_bass_cutoff_hz", getMonoBassCutoff());
+	notifyIfPreviewChanged(before);
+}
+
+int FxController::getFilterPreview()
+{
+	return dfx_dsp_.getFilterPreview();
+}
+
+void FxController::setFilterPreview(int preview_flags)
+{
+	auto before = dfx_dsp_.getFilterPreview();
+	dfx_dsp_.setFilterPreview(preview_flags);
+	notifyIfPreviewChanged(before);
+}
+
+bool FxController::isFilterPreviewAvailable(int preview_flags)
+{
+	return dfx_dsp_.isFilterPreviewAvailable(preview_flags);
+}
+
+void FxController::stopFilterPreview()
+{
+	// May be reached from audio passthru device-change callbacks (onSoundDeviceChange -> powerOn(false)),
+	// which can run on a driver/notification thread. DfxDsp filter setters and listener notification
+	// are message-thread only, so marshal when called from any other thread.
+	if (!MessageManager::existsAndIsCurrentThread())
+	{
+		MessageManager::callAsync([this]() { setFilterPreview(DfxDsp::PreviewNone); });
+		return;
+	}
+
+	setFilterPreview(DfxDsp::PreviewNone);
+}
+
+void FxController::restoreFilterDefaults()
+{
+	auto before = dfx_dsp_.getFilterPreview();
+	dfx_dsp_.setFilterPreview(DfxDsp::PreviewNone);
+	setCutSlope(DfxDsp::CUT_DEFAULT_SLOPE_DB);
+	setLowCutCutoff(DfxDsp::LOW_CUT_DEFAULT_CUTOFF_HZ);
+	setLowCutOn(true);
+	setHighCutCutoff(DfxDsp::HIGH_CUT_OFF_HZ);
+	setHighCutOn(true);
+	setMonoBassCutoff(DfxDsp::MONO_BASS_DEFAULT_CUTOFF_HZ);
+	setMonoBassOn(false);
+	notifyIfPreviewChanged(before);
+}
+
+void FxController::notifyIfPreviewChanged(int before)
+{
+	if (dfx_dsp_.getFilterPreview() != before)
+	{
+		FxModel::getModel().notifyListeners();
+	}
 }
 
 bool FxController::isLaunchOnStartup()
