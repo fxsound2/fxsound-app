@@ -129,7 +129,9 @@ int PT_DECLSPEC valsCfgRead(PT_HANDLE **hpp_vals_cfg, wchar_t *wcp_file_path,
 	
 	/* Get the time of last preset save */
 	fgetws(wcp_str, LINE_LENGTH, stream);
-	swscanf(wcp_str, L"%ld\n", &(cast_handle->preset_save_time));   	 	  	  
+	long l_preset_save_time = 0;
+	swscanf(wcp_str, L"%ld\n", &l_preset_save_time);
+	cast_handle->preset_save_time = (pt_long)l_preset_save_time;   	 	  	  
 
 	fclose(stream);
 
