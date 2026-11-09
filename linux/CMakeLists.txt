@@ -177,12 +177,6 @@ if(TARGET FxSound)
   if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/packaging/com.fxsound.FxSound.metainfo.xml)
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/packaging/com.fxsound.FxSound.metainfo.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo)
   endif()
-  if(EXISTS ${REPO_ROOT}/fxsound/Images/logo-red.svg)
-    install(FILES ${REPO_ROOT}/fxsound/Images/logo-red.svg
-      DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps
-      RENAME fxsound.svg
-    )
-  endif()
   if(EXISTS ${REPO_ROOT}/fxsound/Images/fxsound.png)
     install(FILES ${REPO_ROOT}/fxsound/Images/fxsound.png
       DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/48x48/apps
