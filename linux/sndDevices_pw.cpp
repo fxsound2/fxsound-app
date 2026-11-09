@@ -169,6 +169,7 @@ struct SinkInfo {
   std::string nodeName;
   std::string description;
   uint32_t nodeId = 0;
+  bool isVirtual = false;
 };
 
 struct PwState {
@@ -286,15 +287,19 @@ void registryGlobal(void*, uint32_t id, uint32_t, const char* type, uint32_t, co
     const char* nodeName = props ? spa_dict_lookup(props, PW_KEY_NODE_NAME) : nullptr;
     if (mediaClass && strcmp(mediaClass, "Audio/Sink") == 0 && nodeName) {
       const char* desc = spa_dict_lookup(props, PW_KEY_NODE_DESCRIPTION);
+      const char* devId = spa_dict_lookup(props, PW_KEY_DEVICE_ID);
+      const char* nodeVirt = spa_dict_lookup(props, PW_KEY_NODE_VIRTUAL);
+
       SinkInfo s;
       s.nodeName = nodeName;
       s.description = desc ? desc : nodeName;
       s.nodeId = id;
+      s.isVirtual = (devId == nullptr) || (nodeVirt && (strcmp(nodeVirt, "true") == 0 || strcmp(nodeVirt, "1") == 0));
       bool isFx = (s.nodeName == kFxNodeName);
       g.sinks[id] = s;
       if (isFx) g.fxsoundNodeId = id;
       if (g_verbose)
-        printf("[pw] sink added id=%u name=%s (%s)%s\n", id, s.nodeName.c_str(), s.description.c_str(), isFx ? " [fxsound]" : "");
+        printf("[pw] sink added id=%u name=%s (%s)%s%s\n", id, s.nodeName.c_str(), s.description.c_str(), isFx ? " [fxsound]" : "", s.isVirtual ? " [virtual]" : "");
       if (!isFx && g.realNodeName == s.nodeName && g.playStream == nullptr && g.coreConnected.load()) {
         makePlaybackStream();
       }
@@ -879,16 +884,42 @@ bool pwStartup(const std::string& prevSink, int /*bufferMs*/) {
   }
   if (!g.fxsoundNodeId) { pw_thread_loop_unlock(g.loop); return false; }
 
-  // record previous default: if the saved one is missing or stale, adopt active default
-  if (g.prevSink.empty() || !findSinkByNodeName(g.prevSink)) {
-    g.prevSink = g.defaultSinkName.empty() ? currentDefaultFromWpctl() : g.defaultSinkName;
-    if (g.prevSink == kFxNodeName) g.prevSink = "";
+  // record previous default: if the saved one is missing, stale, or virtual, adopt active default (if non-virtual)
+  SinkInfo* prevSinkInfo = findSinkByNodeName(g.prevSink);
+  if (!prevSinkInfo || prevSinkInfo->isVirtual || g.prevSink == kFxNodeName) {
+    std::string def = g.defaultSinkName.empty() ? currentDefaultFromWpctl() : g.defaultSinkName;
+    SinkInfo* defSink = findSinkByNodeName(def);
+    if (defSink && !defSink->isVirtual && def != kFxNodeName) {
+      g.prevSink = def;
+    } else {
+      g.prevSink.clear();
+      for (auto& entry : g.sinks) {
+        if (entry.second.nodeName != kFxNodeName && !entry.second.isVirtual) {
+          g.prevSink = entry.second.nodeName;
+          break;
+        }
+      }
+    }
   }
   if (!g.prevSink.empty()) writePrevSinkFile(g.prevSink);
   g.realNodeName = g.prevSink;
-  if (g.realNodeName.empty() || !findSinkByNodeName(g.realNodeName)) {
-    for (auto& entry : g.sinks)
-      if (entry.second.nodeName != kFxNodeName) { g.realNodeName = entry.second.nodeName; break; }
+  SinkInfo* realSinkInfo = findSinkByNodeName(g.realNodeName);
+  if (!realSinkInfo || realSinkInfo->isVirtual || g.realNodeName == kFxNodeName) {
+    g.realNodeName.clear();
+    for (auto& entry : g.sinks) {
+      if (entry.second.nodeName != kFxNodeName && !entry.second.isVirtual) {
+        g.realNodeName = entry.second.nodeName;
+        break;
+      }
+    }
+    if (g.realNodeName.empty()) {
+      for (auto& entry : g.sinks) {
+        if (entry.second.nodeName != kFxNodeName) {
+          g.realNodeName = entry.second.nodeName;
+          break;
+        }
+      }
+    }
   }
 
   // bind fxsound node for volume events
@@ -1051,7 +1082,12 @@ bool pwRestorePrevious(const std::string& prevSink, bool currentIsFxsound) {
   }
   if (target.empty() || target == kFxNodeName) {
     for (auto& entry : g.sinks) {
-      if (entry.second.nodeName != kFxNodeName) { target = entry.second.nodeName; break; }
+      if (entry.second.nodeName != kFxNodeName && !entry.second.isVirtual) { target = entry.second.nodeName; break; }
+    }
+    if (target.empty() || target == kFxNodeName) {
+      for (auto& entry : g.sinks) {
+        if (entry.second.nodeName != kFxNodeName) { target = entry.second.nodeName; break; }
+      }
     }
   }
   pw_thread_loop_lock(g.loop);
