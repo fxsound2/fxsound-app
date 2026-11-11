@@ -312,7 +312,10 @@ void FxController::initConfig(const String& commandline)
 		// (JUCE global scale must be set before windows are created).
 		auto scale = arg_list.getValueForOption("--scale").getFloatValue();
 		if (scale >= 0.5f && scale <= 3.0f)
+		{
 			settings_.setDouble("ui_scale", scale);
+			settings_.setInt("ui_scale_explicit", 1);
+		}
 	}
 
 	if (output_device.isNotEmpty())
@@ -520,7 +523,10 @@ void FxController::applyConfig(const String& commandline)
 		// (JUCE global scale must be set before windows are created).
 		auto scale = arg_list.getValueForOption("--scale").getFloatValue();
 		if (scale >= 0.5f && scale <= 3.0f)
+		{
 			settings_.setDouble("ui_scale", scale);
+			settings_.setInt("ui_scale_explicit", 1);
+		}
 	}
 
 	if (output_device.isNotEmpty())

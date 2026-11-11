@@ -42,6 +42,7 @@ extern "C" {
 #include "AudioPassthru.h"
 #include "crash_posix.h"  /* Linux: SystemStats crash handler + backtrace (Phase 8) */
 #include "single_instance_posix.h"  /* JUCE 6 Linux broadcastMessage is a stub (Phase 8) */
+#include "desktop_scale.h"
 #include <functional>
 #include <iostream>
 #endif
@@ -96,29 +97,42 @@ public:
                 return;
             }
 
-            // UI scale (Linux): default 1.0 (small window). Override order:
-            //   FXSOUND_SCALE env > --scale=<f> CLI > persisted "ui_scale" setting.
-            // Takes effect at launch (before windows are created); --scale persists
-            // for subsequent launches. JUCE gradients under fractional transforms
-            // render striped, so avoid auto-deriving from Xft.dpi.
+            // UI scale (Linux): auto-detect from desktop DPI (KDE/GNOME/X11),
+            // with manual override order: FXSOUND_SCALE env > --scale=<f> CLI > persisted explicit setting.
             {
                 auto& controller = FxController::getInstance();
-                float scale = (float) controller.getSettings().getDouble("ui_scale");
-                if (scale <= 0.5f || scale > 3.0f) scale = 1.0f;
+                float scale = 1.0f;
+                bool scaleExplicit = false;
 
                 if (commandline.contains("--scale="))
+                {
                     scale = commandline.fromFirstOccurrenceOf("--scale=", false, false)
                                 .upToFirstOccurrenceOf(" ", false, false).getFloatValue();
-
-                if (const char* env = getenv("FXSOUND_SCALE"))
+                    scaleExplicit = true;
+                }
+                else if (const char* env = getenv("FXSOUND_SCALE"))
                 {
-                    auto env_scale = String::fromUTF8(env).getFloatValue();
-                    if (env_scale > 0.0f) scale = env_scale;
+                    scale = String::fromUTF8(env).getFloatValue();
+                    scaleExplicit = true;
+                }
+                else if (controller.getSettings().getInt("ui_scale_explicit") == 1)
+                {
+                    scale = (float) controller.getSettings().getDouble("ui_scale");
+                    scaleExplicit = true;
+                }
+
+                if (!scaleExplicit || scale <= 0.0f)
+                {
+                    scale = detectLinuxDesktopScale();
                 }
 
                 scale = jlimit (0.5f, 3.0f, scale);
                 Desktop::getInstance().setGlobalScaleFactor(scale);
-                controller.getSettings().setDouble("ui_scale", scale);
+                if (scaleExplicit)
+                {
+                    controller.getSettings().setDouble("ui_scale", scale);
+                    controller.getSettings().setInt("ui_scale_explicit", 1);
+                }
             }
 #endif
 #if ! JUCE_WINDOWS

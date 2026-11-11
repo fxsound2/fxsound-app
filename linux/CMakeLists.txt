@@ -133,6 +133,7 @@ if(EXISTS ${JUCE_DIR}/CMakeLists.txt)
     ${CMAKE_CURRENT_SOURCE_DIR}/autostart_posix.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/notify_posix.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tray_sni.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/desktop_scale.cpp
   )
   target_include_directories(FxSound PRIVATE
     ${REPO_ROOT}/fxsound/Source ${REPO_ROOT}/fxsound/Source/GUI
