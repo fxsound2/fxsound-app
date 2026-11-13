@@ -64,6 +64,8 @@ private:
 	int sndDeviceHandleToSoundDevices(bool active_devices = true);
 	static void onDeviceChange() noexcept;
     void signalCaptureStop() noexcept;
+    DWORD captureAndPlay();
+    void applyDsp(float* pcm, int frames, const WAVEFORMATEX& format, bool measureLimiter);
     bool stopping_ = false; // Owner thread; prevents restart once shutdown begins.
 
 	PT_HANDLE *hp_sndDevices_;

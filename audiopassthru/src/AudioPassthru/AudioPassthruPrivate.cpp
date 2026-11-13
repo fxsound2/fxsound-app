@@ -493,122 +493,62 @@ int AudioPassthruPrivate::processTimer()
 */
 DWORD AudioPassthruPrivate::threadWorker(void)
 {
-	std::uint64_t analysis_sample_position = 0;
-	float *fp_buffer;
-	int numSampleSets;
-	WAVEFORMATEX *pwfx;
-	int i_check_for_duplicate_buffers;
-	int i_valid_bits;
-	int resultFlag;
-	DWORD setReturn;
+    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+    if (sndDevicesStartStopCapture(hp_sndDevices_, SND_DEVICES_START_CAPTURE) != OKAY)
+        return NOT_OKAY;
 
-	// Raise the priority of this tread to improve performance. GetCurrentThread() is a call that
-	// returns the current thread ID from within the thread itself.
-	// A return of 0 means set failed. Not sure what option to use, MS doc is confusing, THREAD_PRIORITY_HIGHEST is another option.
-	setReturn = SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+    const DWORD result = captureAndPlay();
+    // This worker owns the WASAPI stop calls, including capture/playback errors.
+    const int stopResult = sndDevicesStartStopCapture(hp_sndDevices_, SND_DEVICES_STOP_CAPTURE);
+    return stopResult == OKAY ? result : NOT_OKAY;
+}
 
-	// Start capture.
-	if (sndDevicesStartStopCapture(hp_sndDevices_, SND_DEVICES_START_CAPTURE) != OKAY)
-		return(NOT_OKAY);
+DWORD AudioPassthruPrivate::captureAndPlay()
+{
+    std::uint64_t samplePosition = 0;
+    while (!i_kill_processing_thread_)
+    {
+        float* pcm = nullptr;
+        int frames = 0;
+        WAVEFORMATEX* format = nullptr;
+        int status = SND_DEVICES_CAPTURE_PLAYBACK_SUCCESS;
+        if (sndDevicesDoCapture(hp_sndDevices_, &pcm, &frames, &format, &status) != OKAY)
+            return NOT_OKAY;
+        if (status != SND_DEVICES_CAPTURE_PLAYBACK_SUCCESS || i_kill_processing_thread_)
+            break;
 
-	/*
-	* Keep looping until a goto statement is reached to kill the thread
-	* Also, constantly check to see the kill_thread flag has been set from the outside.
-	*/
-	while (1)
-	{
-		/* Check if thread has been signaled to end */
-		if (i_kill_processing_thread_)
-			goto KillProcessingThread;
-
-		// Does the data capture and returns a pointer to the data and signal info to be used for in place audio processing.
-		// NOT_OKAY is only returned for catastrophic errors but if resultFlag != SND_DEVICES_CAPTURE_PLAYBACK_SUCCESS
-		// then typically a change in a device property has caused the capture or playback operation to fail, in this
-		// case we need to exit this thread so a reinitialization can be done.
-		if (sndDevicesDoCapture(hp_sndDevices_, &fp_buffer, &numSampleSets, &pwfx, &resultFlag) != OKAY)
-			return(NOT_OKAY);
-
-		// A non-successful flag will typically be due to a change in the playback devices properties.
-		if (resultFlag != SND_DEVICES_CAPTURE_PLAYBACK_SUCCESS)
-			goto KillProcessingThread;
-
-		/* Check if thread has been signaled to end */
-		if (i_kill_processing_thread_)
-			goto KillProcessingThread;
-
-		const bool muted = isMuted();
-		if (numSampleSets > 0)
-		{
+        const bool muted = isMuted();
+        if (frames > 0)
+        {
             auto* callback = muted ? nullptr : s_callback_.load(std::memory_order_acquire);
             const auto input = callback ? callback->beginAudioBlock() : AudioPassthruCallback::AnalysisInput{};
-			/* Set additional processing settings */
-			i_valid_bits = pwfx->wBitsPerSample;
-			i_check_for_duplicate_buffers = IS_FALSE;
+            applyDsp(pcm, frames, *format, !muted);
 
-			/* Make sure processing module has the current format settings */
-			//if (dfxpUniversalSetSignalFormat(cast_handle->dfxp_hdl, pwfx->wBitsPerSample, pwfx->nChannels, pwfx->nSamplesPerSec, i_valid_bits) != OKAY)
-				//return(NOT_OKAY);
-			if (p_dfx_dsp_->setSignalFormat(pwfx->wBitsPerSample, pwfx->nChannels, pwfx->nSamplesPerSec, i_valid_bits) != OKAY)
-			{
-				// In Release build, initially setSignalFormat() will return NOT OKAY so execution will hit here and throws up message box due to return NOT_OAKY.
-				// However, it doesn't happen in Debug build. Workaround is just comment out return(NOT_OKAY) so it won't throw up message boxes in Release build
-				// and eventually it will start to return OKAY.
-				//return(NOT_OKAY);
-			}
-				
-			
-
-			// 2016-08-25: Workaround for crashing when playback device has only one channel (mono). For example, a Bleutooth headset is mono. When such
-			// device is selected as the playback device, we do not apply DFX/DSP processing to the buffer for now. Otherwise it will crash.
-			// NOTE: There will also be no sound with a mono playback device until we add code to fill mono playback buffer in sndDevicesDoCapture.cpp, line 279.
-			if (pwfx->nChannels != 1 || (pwfx->nChannels == 1 && !SND_DEVICES_MONO_BUG_DO_NOT_PROCESS))
-			{
-				// Apply DFX processing here using data and format vars above. Format will always be 32 bit floating point.
-			//	if (dfxpUniversalModifySamples(cast_handle->dfxp_hdl, (short int *)fp_buffer, (short int *)fp_buffer, numSampleSets, i_check_for_duplicate_buffers) != OKAY)
-				//	return(NOT_OKAY);
-				p_dfx_dsp_->processAudio((short int *)fp_buffer, (short int *)fp_buffer, numSampleSets,
-                                        i_check_for_duplicate_buffers, !muted);
-			}
-
+            // Borrow the post-DSP PCM before output conversion. The callback uses
+            // the generation taken before DSP so a stale attack cannot reach the bars.
             if (callback != nullptr && !isMuted())
-                callback->onAudioBlock(fp_buffer, numSampleSets, pwfx->nChannels,
-                                       pwfx->nSamplesPerSec, analysis_sample_position, input);
-            analysis_sample_position += static_cast<std::uint64_t>(numSampleSets);
+                callback->onAudioBlock(pcm, frames, format->nChannels, format->nSamplesPerSec, samplePosition, input);
+            samplePosition += static_cast<std::uint64_t>(frames);
+        }
+        if (i_kill_processing_thread_) break;
 
-			/* Check if thread has been signaled to end */
-			if (i_kill_processing_thread_)
-				goto KillProcessingThread;
+        // Playback may still have data queued even when capture returns no frames.
+        if (!muted && !isMuted() && sndDevicesDoPlayback(hp_sndDevices_, &status) != OKAY)
+            return NOT_OKAY;
+        if (status != SND_DEVICES_CAPTURE_PLAYBACK_SUCCESS) break;
+    }
+    return OKAY;
+}
 
-			/* A non-successful flag will typically be due to a change in the playback devices properties. */
-			if (resultFlag != SND_DEVICES_CAPTURE_PLAYBACK_SUCCESS)
-				goto KillProcessingThread;
-		}
+void AudioPassthruPrivate::applyDsp(float* pcm, int frames, const WAVEFORMATEX& format, bool measureLimiter)
+{
+    // The existing startup path retries format setup on subsequent audio blocks.
+    p_dfx_dsp_->setSignalFormat(format.wBitsPerSample, format.nChannels, format.nSamplesPerSec,
+                               format.wBitsPerSample);
+    if (format.nChannels == 1 && SND_DEVICES_MONO_BUG_DO_NOT_PROCESS) return;
 
-		/*
-		* Plays processed buffer.
-		* NOTE: This needs to outside of the if block so that unplayed buffers can still be played.
-		*       It is okay to call this even when all buffers have already been played.
-		*/
-		if (!muted && !isMuted())
-		{
-			if (sndDevicesDoPlayback(hp_sndDevices_, &resultFlag) != OKAY)
-				return(NOT_OKAY);
-		}
-		
-
-		/* Make sure the playback succeeded */
-		if (resultFlag != SND_DEVICES_CAPTURE_PLAYBACK_SUCCESS)
-			goto KillProcessingThread;
-	}
-
-KillProcessingThread:
-
-	// Stop capture.
-	if (sndDevicesStartStopCapture(hp_sndDevices_, SND_DEVICES_STOP_CAPTURE) != OKAY)
-		return(NOT_OKAY);
-
-	/* Simply returning from this function stops the thread */
-	return(OKAY);
+    auto* samples = reinterpret_cast<short int*>(pcm);
+    p_dfx_dsp_->processAudio(samples, samples, frames, IS_FALSE, measureLimiter);
 }
 
 /*

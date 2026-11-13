@@ -201,6 +201,15 @@ void AudioAnalyzer::transform(std::vector<std::complex<float>>& data) const noex
 
 void AudioAnalyzer::emit(SpectrumSink& sink)
 {
+    computeChannelSpectra();
+    projectSpectrumToBands();
+    updateDisplayBarLevels();
+    frame_.firstSample = expectedSample_ - static_cast<std::uint64_t>(config_.fftSize);
+    sink.onSpectrum(frame_);
+}
+
+void AudioAnalyzer::computeChannelSpectra()
+{
     const int n = config_.fftSize;
     for (int i = 0; i < n; ++i)
     {
@@ -217,6 +226,10 @@ void AudioAnalyzer::emit(SpectrumSink& sink)
         frame_.right[k] = fftRight_[k] * scale;
         frame_.power[k] = 0.5f * (std::norm(frame_.left[k]) + std::norm(frame_.right[k]));
     }
+}
+
+void AudioAnalyzer::projectSpectrumToBands()
+{
     // The same precomputed smooth projection is used for every band and channel.
     // Keep mean power as a separate measurement; HighRes uses the fourth amplitude
     // moment to emphasize strong bins without hard peak picking.
@@ -247,6 +260,12 @@ void AudioAnalyzer::emit(SpectrumSink& sink)
         frame_.bandLevelLeft[b] = level(leftFourth);
         frame_.bandLevelRight[b] = level(rightFourth);
     }
+}
+
+void AudioAnalyzer::updateDisplayBarLevels()
+{
+    // These are the displayed heights: left above the center line, right below.
+    // Dynamics keep attacks visible as the spectrum falls.
     // Read the complete current frame before enhancing either channel. Keep the
     // raw projection for numerical consumers; only HighRes bars are enhanced.
     const auto enhancedLeft = enhanceSpectralContrast(frame_.bandLevelLeft);
@@ -257,7 +276,5 @@ void AudioAnalyzer::emit(SpectrumSink& sink)
         frame_.barLeft[b] = bars.left;
         frame_.barRight[b] = bars.right;
     }
-    frame_.firstSample = expectedSample_ - static_cast<std::uint64_t>(n);
-    sink.onSpectrum(frame_);
 }
 }

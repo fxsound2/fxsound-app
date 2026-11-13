@@ -177,13 +177,38 @@ void AnalysisStream::onSpectrum(const SpectrumFrame& frame)
     publishedAt_ = std::chrono::steady_clock::now();
 }
 
+void AnalysisStream::processQueuedBlock(const Block& block)
+{
+    AnalysisResult result = AnalysisResult::ok;
+    const bool reconfigure = processingRevision_ != block.revision
+        || analyzer_.config().sampleRate != block.sampleRate || analyzer_.config().channels != block.channels;
+    if (reconfigure || (haveInput_ && block.first != nextInput_))
+    {
+        // Detect gaps from input positions, even a backward seek whose
+        // next FFT window would happen to look consecutive. Hide the old
+        // result immediately while the replacement window fills.
+        std::lock_guard<std::mutex> guard(snapshotMutex_);
+        publishedRevision_ = 0;
+        barPeaks_.reset();
+    }
+    if (reconfigure)
+    {
+        result = analyzer_.prepare({static_cast<double>(block.sampleRate), block.channels});
+        processingRevision_ = block.revision;
+    }
+    haveInput_ = true;
+    nextInput_ = block.first + static_cast<std::uint64_t>(block.frames);
+    if (result == AnalysisResult::ok)
+        result = analyzer_.processBlock(block.pcm.data(), block.frames, block.first, *this);
+    result_.store(result);
+    if (result != AnalysisResult::ok) invalidate();
+}
+
 void AnalysisStream::run() noexcept
 {
     // Exception boundary for allocation failures in preparation / snapshot copies.
     try
     {
-        bool haveInput = false;
-        std::uint64_t nextInput = 0;
         while (!stopping_.load(std::memory_order_acquire))
         {
             const unsigned read = read_.load(std::memory_order_relaxed);
@@ -199,29 +224,7 @@ void AnalysisStream::run() noexcept
             const auto& block = queue_[read];
             if (enabled() && block.revision == revision_.load(std::memory_order_acquire))
             {
-                AnalysisResult result = AnalysisResult::ok;
-                const bool reconfigure = processingRevision_ != block.revision
-                    || analyzer_.config().sampleRate != block.sampleRate || analyzer_.config().channels != block.channels;
-                if (reconfigure || (haveInput && block.first != nextInput))
-                {
-                    // Detect gaps from input positions, even a backward seek whose
-                    // next FFT window would happen to look consecutive. Hide the old
-                    // result immediately while the replacement window fills.
-                    std::lock_guard<std::mutex> guard(snapshotMutex_);
-                    publishedRevision_ = 0;
-                    barPeaks_.reset();
-                }
-                if (reconfigure)
-                {
-                    result = analyzer_.prepare({static_cast<double>(block.sampleRate), block.channels});
-                    processingRevision_ = block.revision;
-                }
-                haveInput = true;
-                nextInput = block.first + static_cast<std::uint64_t>(block.frames);
-                if (result == AnalysisResult::ok)
-                    result = analyzer_.processBlock(block.pcm.data(), block.frames, block.first, *this);
-                result_.store(result);
-                if (result != AnalysisResult::ok) invalidate();
+                processQueuedBlock(block);
             }
             read_.store((read + 1) % capacity, std::memory_order_release);
         }

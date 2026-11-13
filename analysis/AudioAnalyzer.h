@@ -103,6 +103,9 @@ private:
     };
     void transform(std::vector<std::complex<float>>& data) const noexcept;
     void emit(SpectrumSink& sink);
+    void computeChannelSpectra();
+    void projectSpectrumToBands();
+    void updateDisplayBarLevels();
     AnalyzerConfig config_;
     bool prepared_ = false;
     bool havePosition_ = false;

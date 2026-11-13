@@ -75,6 +75,7 @@ private:
         std::uint64_t first = 0, revision = 0;
     };
     void run() noexcept;
+    void processQueuedBlock(const Block& block);
     void fail(const char* message) noexcept;
     void onSpectrum(const SpectrumFrame& frame) override;
     std::unique_ptr<Block[]> queue_;
@@ -89,6 +90,8 @@ private:
     std::atomic<AnalysisResult> result_{AnalysisResult::ok};
     AudioAnalyzer analyzer_;
     std::uint64_t processingRevision_ = 0, publishedRevision_ = 0;
+    std::uint64_t nextInput_ = 0;
+    bool haveInput_ = false;
     std::mutex snapshotMutex_;
     SpectrumFrame snapshot_;
     BarPeakAccumulator barPeaks_;
