@@ -71,7 +71,7 @@ int PT_DECLSPEC pstrCalcFilenameFromFullpath(char *cp_fullpath, char *cp_filenam
 		return(NOT_OKAY);
 	}
 
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_filename, cp_filename, strlen(cp_fullpath) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_filename, cp_filename, static_cast<int>(strlen(cp_fullpath) + 1)) != OKAY)
 	{
 		free(wcp_fullpath);
 		free(wcp_filename);
@@ -194,7 +194,7 @@ int PT_DECLSPEC pstrCalcLibraryFromFullpath(char *cp_fullpath, char *cp_library,
 		return(NOT_OKAY);
 	}
 
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_library, cp_library, strlen(cp_fullpath) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_library, cp_library, static_cast<int>(strlen(cp_fullpath) + 1)) != OKAY)
 	{
 		free(wcp_fullpath);
 		free(wcp_library);
@@ -331,7 +331,7 @@ int PT_DECLSPEC pstrCalcUserComponentDirnameFromFullpath(char *cp_fullpath, char
 		return(NOT_OKAY);
 	}
 	
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_ulf_type, cp_ulf_type, strlen(cp_fullpath) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_ulf_type, cp_ulf_type, static_cast<int>(strlen(cp_fullpath) + 1)) != OKAY)
 	{
 		free(wcp_fullpath);
 		free(wcp_ulf_type);
@@ -472,7 +472,7 @@ int PT_DECLSPEC pstrCalcUserFromFullpath(char *cp_fullpath, char *cp_user, int *
 		return(NOT_OKAY);
 	}
 	
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_user, cp_user, strlen(cp_fullpath) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_user, cp_user, static_cast<int>(strlen(cp_fullpath) + 1)) != OKAY)
 	{
 		free(wcp_fullpath);
 		free(wcp_user);
@@ -635,14 +635,14 @@ int PT_DECLSPEC pstrSplitLibrarySlashFilenameSpecification(char *cp_fullstring,
 		return(NOT_OKAY);
 	}
 
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_library, cp_library, strlen(cp_fullstring) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_library, cp_library, static_cast<int>(strlen(cp_fullstring) + 1)) != OKAY)
 	{
 		free(wcp_fullstring);
 		free(wcp_library);
 		free(wcp_filename);
 		return(NOT_OKAY);
 	}
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_filename, cp_filename, strlen(cp_fullstring) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_filename, cp_filename, static_cast<int>(strlen(cp_fullstring) + 1)) != OKAY)
 	{
 		free(wcp_fullstring);
 		free(wcp_library);
@@ -763,7 +763,7 @@ int PT_DECLSPEC pstrSplitUserLibraryFilenameSpecification(char *cp_fullstring,
 		return(NOT_OKAY);
 	}
 	
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_user, cp_user, strlen(cp_fullstring) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_user, cp_user, static_cast<int>(strlen(cp_fullstring) + 1)) != OKAY)
 	{
 		free(wcp_fullstring);
 		free(wcp_user);
@@ -771,7 +771,7 @@ int PT_DECLSPEC pstrSplitUserLibraryFilenameSpecification(char *cp_fullstring,
 		free(wcp_filename);
 		return(NOT_OKAY);
 	}
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_library, cp_library, strlen(cp_fullstring) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_library, cp_library, static_cast<int>(strlen(cp_fullstring) + 1)) != OKAY)
 	{
 		free(wcp_fullstring);
 		free(wcp_user);
@@ -779,7 +779,7 @@ int PT_DECLSPEC pstrSplitUserLibraryFilenameSpecification(char *cp_fullstring,
 		free(wcp_filename);
 		return(NOT_OKAY);
 	}
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_filename, cp_filename, strlen(cp_fullstring) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_filename, cp_filename, static_cast<int>(strlen(cp_fullstring) + 1)) != OKAY)
 	{
 		free(wcp_fullstring);
 		free(wcp_user);
@@ -887,7 +887,7 @@ int PT_DECLSPEC pstrCalcParentFolderFullpath(char *cp_orig_fullpath, char *cp_pa
 		return(NOT_OKAY);
 	}
 	
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_parent_fullpath, cp_parent_fullpath, strlen(cp_orig_fullpath) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_parent_fullpath, cp_parent_fullpath, static_cast<int>(strlen(cp_orig_fullpath) + 1)) != OKAY)
 	{
 		free(wcp_orig_fullpath);
 		free(wcp_parent_fullpath);

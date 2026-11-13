@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define FXMESSAGE_H
 
 #include <JuceHeader.h>
+#include <functional>
 #include "FxWindow.h"
 #include "FxHyperlink.h"
 #include "FxTheme.h"
@@ -96,29 +97,28 @@ public:
     // SINGLE, COMPLETE VERSION OF showMessage
     // All parameters after 'message' have default values.
     // This eliminates ambiguity because there's only one way to call it with fewer arguments.
-    static bool showMessage(String message, Style style = Style::YesNo, int x = -1, int y = -1)
+    static void showMessage(String message, Style style = Style::YesNo,
+                            std::function<void (bool)> callback = nullptr, int x = -1, int y = -1)
     {
         // Construct the FxConfirmationMessage object with the provided values.
-        FxConfirmationMessage confirmation_message(message, style, x, y);
+        auto* confirmation_message = new FxConfirmationMessage(message, style, x, y);
 
         // If x and y values are -1 (default), then center the window.
         if (x == -1 || y == -1) {
-            confirmation_message.centreWithSize(confirmation_message.getWidth(), confirmation_message.getHeight());
+            confirmation_message->centreWithSize(confirmation_message->getWidth(), confirmation_message->getHeight());
         }
 
-        confirmation_message.runModalLoop();
-        if (confirmation_message.style_ == Style::YesNo)
+        // Only 'callback' is captured here - never confirmation_message or anything from this function's
+        // stack. deleteWhenDismissed=true means confirmation_message is deleted BEFORE this runs, and
+        // showMessage() has already returned by the time the user answers, so the Yes/No result is
+        // encoded directly into the exitModalState() value instead (see buttonClicked() below).
+        confirmation_message->enterModalState(true, ModalCallbackFunction::create([callback](int result)
         {
-            if (confirmation_message.message_content_.isYesClicked())
+            if (callback)
             {
-                return true;
+                callback(result != 0);
             }
-            return false;
-        }
-        else // Style::OK
-        {
-            return true;
-        }
+        }), true);
     }
 
 private:
@@ -221,8 +221,9 @@ private:
                 yes_clicked_ = true;
             }
 
-            Component::getParentComponent()->exitModalState(0);
-            Component::getParentComponent()->removeFromDesktop();
+            auto* parent = Component::getParentComponent();
+            parent->exitModalState(button == &no_button_ ? 0 : 1); // encode the answer in the exit value itself
+            parent->removeFromDesktop();
         }
 
         Label message_;

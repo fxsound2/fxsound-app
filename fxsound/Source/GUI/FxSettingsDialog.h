@@ -143,10 +143,12 @@ private:
 		static constexpr int LANGUAGE_LIST_HEIGHT = 30;
 
         void setText();
+		void onGpuRenderToggled();
 
         ToggleButton launch_toggle_;
         ToggleButton hide_help_tips_toggle_;
 		ToggleButton hide_notifications_toggle_;
+		ToggleButton gpu_render_toggle_;
 		ToggleButton hotkeys_toggle_;
 		OwnedArray<FxHotkeyLabel> hotkey_labels_;
 		FxLanguage language_switch_;

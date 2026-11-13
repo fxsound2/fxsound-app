@@ -33,6 +33,8 @@ FxSystemTrayView::FxSystemTrayView()
 
     addToDesktop(0);
 
+    FxController::getInstance().setRenderingEngine(*this);
+
     HWND hWnd = (HWND)getWindowHandle();
 
     SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
@@ -42,6 +44,8 @@ FxSystemTrayView::FxSystemTrayView()
     taskbar_created_message_ = RegisterWindowMessage(TEXT("TaskbarCreated"));
 
     addIcon();
+
+    setAccessible(false);
 }
 
 FxSystemTrayView::~FxSystemTrayView()
@@ -259,16 +263,18 @@ void FxSystemTrayView::showContextMenu()
     };
 
     auto settingsClicked = []() {
-        FxSettingsDialog settings_dialog;
-        settings_dialog.runModalLoop();
-        FxController::getInstance().refreshOutputList();
+        auto* settings_dialog = new FxSettingsDialog();
+        settings_dialog->enterModalState(true, ModalCallbackFunction::create([](int)
+            {
+                FxController::getInstance().refreshOutputList();
+            }), true);
     };
 
-    auto darkModeClicked = [this]() {
+    auto darkModeClicked = []() {
         FxController::getInstance().setThemeMode(FxThemeMode::Dark);
         };
 
-    auto lightModeClicked = [this]() {
+    auto lightModeClicked = []() {
         FxController::getInstance().setThemeMode(FxThemeMode::Light);
         };
 
@@ -326,7 +332,10 @@ void FxSystemTrayView::showContextMenu()
     SetFocus(hWnd);
     SetForegroundWindow(hWnd);
 
-    context_menu.show();
+    context_menu.showMenuAsync(PopupMenu::Options()
+        .withTargetComponent(this)
+        .withMousePosition()
+        .withDeletionCheck(*this));
 }
 
 void FxSystemTrayView::addOutputDeviceMenu(PopupMenu* context_menu)
@@ -335,7 +344,7 @@ void FxSystemTrayView::addOutputDeviceMenu(PopupMenu* context_menu)
     PopupMenu* menu;
 
     auto output_devices = FxModel::getModel().getOutputDevices();
-    int num_outputs = output_devices.size();
+    auto num_outputs = output_devices.size();
     if (num_outputs > 5)
     {
         menu = &output_menu;

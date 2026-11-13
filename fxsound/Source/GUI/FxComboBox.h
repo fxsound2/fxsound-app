@@ -34,9 +34,12 @@ public:
 	void highlightText(bool highlight);
     bool getError();
     void setError(bool enable);
+    void setButton(DrawableButton* button);
+    DrawableButton* getButton() const;
 
 private:
     bool error_;
+    DrawableButton* button_;
 
     void showPopup() override;
 

@@ -29,8 +29,8 @@ private:
 	static constexpr int HOTKEY_EDITOR_HEIGHT = 20;
 
 	bool keyPressed(const KeyPress& key) override;
-	void focusGained(FocusChangeType cause) override;
-	void focusLost(FocusChangeType cause) override;
+	void focusGained(FocusChangeType) override;
+	void focusLost(FocusChangeType) override;
 	void paint(juce::Graphics& g) override;
 
 	void setKeyText();

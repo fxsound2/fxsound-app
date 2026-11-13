@@ -112,7 +112,7 @@ void FxProView::paint(Graphics& g)
 	g.fillAll();
 
 	g.setFillType(FillType(Colour(FXCOLOR(PanelBackground)).withAlpha(0.2f)));
-	g.fillRoundedRectangle(20, 16, 1000, 347+visualizer_offset, 8);
+	g.fillRoundedRectangle(20.0f, 16.0f, 1000.0f, static_cast<float>(347+visualizer_offset), 8.0f);
 
     auto enable_controls = FxModel::getModel().getPowerState();
 

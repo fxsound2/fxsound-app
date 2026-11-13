@@ -142,7 +142,7 @@ int PT_DECLSPEC GraphicEqGetBandFrequencyRange(PT_HANDLE *hp_GraphicEq, int i_ba
 
             d_factor = pow(d_ratio, d_power);
 
-            *fp_min_freq = round((realtype)(cast_handle->min_band_freq * d_factor));
+            *fp_min_freq = roundf((realtype)(cast_handle->min_band_freq * d_factor));
             if (*fp_min_freq < 1000)
                 (*fp_min_freq)++;
             else
@@ -160,7 +160,7 @@ int PT_DECLSPEC GraphicEqGetBandFrequencyRange(PT_HANDLE *hp_GraphicEq, int i_ba
 
             d_factor = pow(d_ratio, d_power);
 
-            *fp_max_freq = round((realtype)(cast_handle->min_band_freq * d_factor));
+            *fp_max_freq = roundf((realtype)(cast_handle->min_band_freq * d_factor));
         }
     }
 

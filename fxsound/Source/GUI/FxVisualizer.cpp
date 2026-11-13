@@ -140,12 +140,12 @@ void FxVisualizer::paint(Graphics& g)
     // ------------------------------------------------------ SPECTRUM AREA - LEFT AND SIZE 
     Path barsPath;
 
-    float x = 27;
-    float dx = 9.1;
+    float x = 27.0f;
+    float dx = 9.1f;
 
     for (auto i = 0; i < FxController::NUM_SPECTRUM_BANDS * NUM_BARS; i++)
     {
-        float band_value = band_graph_[i] == 0.0 ? 0.01 : band_graph_[i];
+        float band_value = band_graph_[i] == 0.0f ? 0.01f : band_graph_[i];
         float height = band_value * 100.0f;
 
         barsPath.addRectangle(x, bounds.getHeight() / 2.0f - height / 2.0f, 4.0f, height);

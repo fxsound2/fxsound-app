@@ -71,7 +71,7 @@ void FxSettingsDialog::SettingsButton::paint(Graphics& g)
 	auto w = bounds.getWidth() - bounds.getHeight() + 5;
 
 	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
-	g.setFont(theme.getNormalFont());
+	g.setFont(theme.getNormalFont().withHeight(15.0f));
 	g.drawText(TRANS(getName()), juce::Rectangle<int>(bounds.getHeight()+5, 0, w, bounds.getHeight()), Justification::centredLeft);
 }
 
@@ -187,7 +187,7 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 	prioritize_new_output_toggle_(TRANS("Prioritize new output devices")),
 	reset_presets_button_(TRANS("Reset presets to factory defaults"))
 {
-	setFocusContainer(true);
+	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
 
 	output_preference_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	output_preference_title_.setJustificationType(Justification::centredLeft);
@@ -251,10 +251,10 @@ void FxSettingsDialog::AudioSettingsPane::resized()
     y = output_preference_.getBottom() + 10;
     prioritize_new_output_toggle_.setBounds(X_MARGIN, y, width, TOGGLE_BUTTON_HEIGHT);
 
-	auto group_x = output_preference_title_.getX() - GROUP_MARGIN;
-	auto group_y = output_preference_title_.getY() - GROUP_MARGIN;
-	auto group_width = output_preference_.getRight() - group_x + GROUP_MARGIN;
-	auto group_height = prioritize_new_output_toggle_.getBottom() - group_y + GROUP_MARGIN;
+	auto group_x = static_cast<float>(output_preference_title_.getX() - GROUP_MARGIN);
+	auto group_y = static_cast<float>(output_preference_title_.getY() - GROUP_MARGIN);
+	auto group_width = static_cast<float>(output_preference_.getRight() - group_x + GROUP_MARGIN);
+	auto group_height = static_cast<float>(prioritize_new_output_toggle_.getBottom() - group_y + GROUP_MARGIN);
 	output_preference_bounds_ = juce::Rectangle<float>(group_x, group_y, group_width, group_height);
 
 	y = prioritize_new_output_toggle_.getBottom() + 30;
@@ -277,7 +277,7 @@ void FxSettingsDialog::AudioSettingsPane::setText()
 {
 	auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
 
-	output_preference_title_.setFont(theme.getNormalFont());
+	output_preference_title_.setFont(theme.getNormalFont().withHeight(15.0f));
 	output_preference_title_.setText(TRANS("Output Device Preference"), NotificationType::dontSendNotification);
 
 	prioritize_new_output_toggle_.setButtonText(TRANS("Prioritize new output devices"));
@@ -337,13 +337,14 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	launch_toggle_(TRANS("Launch on system startup")),
 	hide_help_tips_toggle_(TRANS("Hide help tips for audio controls")),
 	hide_notifications_toggle_(TRANS("Hide notifications")),
+	gpu_render_toggle_(TRANS("Use hardware-accelerated graphics")),
 	hotkeys_toggle_(TRANS("Disable keyboard shortcuts"))
 {
 	StringArray hotKeySettingsKeys = { FxController::HK_CMD_ON_OFF, FxController::HK_CMD_OPEN_CLOSE, FxController::HK_CMD_NEXT_PRESET, FxController::HK_CMD_PREVIOUS_PRESET, FxController::HK_CMD_NEXT_OUTPUT };
 	StringArray hotkey_names = { "Turn FxSound On/Off", "Open/Close FxSound",
 								   "Use Next Preset", "Use Previous Preset", "Change Playback Device"};
 
-	setFocusContainer(true);
+	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
 
 	launch_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
 	launch_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
@@ -358,6 +359,10 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	hide_notifications_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	hide_notifications_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	hide_notifications_toggle_.setWantsKeyboardFocus(true);
+	gpu_render_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
+	gpu_render_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	gpu_render_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	gpu_render_toggle_.setWantsKeyboardFocus(true);
 	hotkeys_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
 	hotkeys_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	hotkeys_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
@@ -399,6 +404,12 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	hide_notifications_toggle_.setToggleState(FxController::getInstance().isNotificationsHidden(), NotificationType::dontSendNotification);
 	hide_notifications_toggle_.onClick = [this]() { FxController::getInstance().setNotificationsHidden(hide_notifications_toggle_.getToggleState()); };
 
+	gpu_render_toggle_.setToggleState(FxController::getInstance().isGpuRenderingEnabled(), NotificationType::dontSendNotification);
+	gpu_render_toggle_.onClick = [this]() { onGpuRenderToggled(); };
+
+	language_switch_.setSelectedLanguage(FxController::getInstance().getLanguage());
+	language_switch_.onLanguageChanged = [](String language_code) { FxController::getInstance().setLanguage(language_code); };
+
 	auto os = SystemStats::getOperatingSystemType();
 	if (os == SystemStats::OperatingSystemType::Windows7)
 	{
@@ -407,6 +418,10 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	
 	addAndMakeVisible(&hide_help_tips_toggle_);
 	addAndMakeVisible(&hide_notifications_toggle_);
+	if (FxController::canSupportGpuRendering())
+	{
+		addAndMakeVisible(&gpu_render_toggle_);
+	}
 	addAndMakeVisible(&hotkeys_toggle_);
 	addAndMakeVisible(&language_switch_);
 
@@ -437,6 +452,12 @@ void FxSettingsDialog::GeneralSettingsPane::resized()
 	hide_notifications_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 
     y = hide_notifications_toggle_.getBottom() + 10;
+	if (gpu_render_toggle_.isVisible())
+	{
+		gpu_render_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
+		y = gpu_render_toggle_.getBottom() + 10;
+	}
+
 	hotkeys_toggle_.setBounds(X_MARGIN, y, getWidth()-X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 
 	y = hotkeys_toggle_.getBottom() + 5;
@@ -458,14 +479,40 @@ void FxSettingsDialog::GeneralSettingsPane::paint(Graphics& g)
 
 void FxSettingsDialog::GeneralSettingsPane::setText()
 {
-    auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
-
-    int height = FxSettingsDialog::SettingsComponent::HEIGHT;
     launch_toggle_.setButtonText(TRANS("Launch on system startup"));
     hide_help_tips_toggle_.setButtonText(TRANS("Hide help tips for audio controls"));
 	hide_notifications_toggle_.setButtonText(TRANS("Hide notifications"));
+	gpu_render_toggle_.setButtonText(TRANS("Use hardware-accelerated graphics"));
 
     hotkeys_toggle_.setButtonText(TRANS("Disable keyboard shortcuts"));
+}
+
+void FxSettingsDialog::GeneralSettingsPane::onGpuRenderToggled()
+{
+	auto& controller = FxController::getInstance();
+	bool enable = gpu_render_toggle_.getToggleState();
+
+	controller.setGpuRenderingEnabled(enable);
+
+	// Switching back to the engine already running needs no restart.
+	if (enable == controller.isGpuRenderingActive())
+	{
+		return;
+	}
+
+	AlertWindow::showOkCancelBox(AlertWindow::NoIcon,
+		JUCEApplication::getInstance()->getApplicationName(),
+		TRANS("FxSound needs to restart to apply this change. Restart now?"),
+		TRANS("Restart now"),
+		TRANS("Later"),
+		nullptr,
+		ModalCallbackFunction::create([](int result)
+		{
+			if (result != 0)
+			{
+				FxController::getInstance().restartApplication();
+			}
+		}));
 }
 
 FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), auto_updates_toggle_(TRANS("Automatic updates"))

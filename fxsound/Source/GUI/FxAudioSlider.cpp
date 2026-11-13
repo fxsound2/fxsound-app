@@ -32,7 +32,7 @@ FxAudioSlider::FxAudioSlider(String label_format, float default_value) : default
 
 	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
 
-	value_label_.setFont(theme.getNormalFont().withHeight(12.0f));
+	value_label_.setFont(theme.getSmallFont().withHeight(11.0f));
 	value_label_.setJustificationType(Justification::centredLeft);
 	addAndMakeVisible(value_label_);
 
@@ -73,10 +73,15 @@ bool FxAudioSlider::keyPressed(const KeyPress& key)
 
 void FxAudioSlider::mouseDown(const juce::MouseEvent& event)
 {
-	// Check if right mouse button is pressed
-	if (event.mods.isRightButtonDown())
+	// Check if right mouse button is pressed, or this is a double-click
+	if (event.mods.isRightButtonDown() || event.getNumberOfClicks() >= 2)
 	{
-		// Reset the slider to 0
+		// Reset the slider to its default value. Handled here (rather than in
+		// mouseDoubleClick) and returning without calling the base class so the
+		// base Slider never starts its own drag-tracking - otherwise the drag
+		// started by this same mouseDown gets finalized on mouseUp using the
+		// pre-reset value, silently undoing the reset performed in between by
+		// mouseDoubleClick.
 		setValue(default_value_, NotificationType::sendNotification);
 	}
 	else
@@ -96,6 +101,6 @@ void FxAudioSlider::updateLabel()
 
 	// Position label based on slider thumb position
 	auto pos = getPositionOfValue(value);
-	auto x = pos + FxTheme::SLIDER_THUMB_RADIUS / 2 + 1;
+	auto x = static_cast<int>(pos) + FxTheme::SLIDER_THUMB_RADIUS / 2 + 1;
 	value_label_.setBounds(x, (getHeight() - LABEL_HEIGHT) / 2, LABEL_WIDTH, LABEL_HEIGHT);
 }

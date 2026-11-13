@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxMainWindow.h"
 #include "FxSystemTrayView.h"
 #include "FxMessage.h"
+#include "FxLanguage.h"
 #include "../Utils/SysInfo/SysInfo.h"
 #include <iostream>
 #include <cstdio>
@@ -132,11 +133,13 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 	hotkeys_registered_ = false;
 	output_changed_ = false;
 	playback_device_available_ = true;
+	system_sleeping_ = false;
 	powerNotify_ = nullptr;
 	unregister_suspend_resume_notification_ = nullptr;
 
 	device_count_ = 0;
 	output_device_name_ = L"";
+	clearOutputRestore();
 
 	audio_process_time_ = 0;
 	audio_process_on_counter_ = 0;
@@ -169,6 +172,8 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 	{
 		logMessage(String("ARM64"));
 	}
+
+    gpu_render_ = settings_.getBool("gpu_render") && canSupportGpuRendering();
 
 	auto view = settings_.getInt("view");
 	if (view <= 0 || view > 2)
@@ -233,6 +238,12 @@ void FxController::initConfig(const String& commandline)
 	auto mastergain = arg_list.getValueForOption("--master_gain");
 	auto volume_leveling = arg_list.getValueForOption("--volume_leveling");
 
+    // Forces GPU rendering for this session only; the saved preference is not changed.
+    if (arg_list.containsOption("--gpu") && canSupportGpuRendering())
+    {
+        gpu_render_ = true;
+    }
+
 	if (arg_list.containsOption("--run_minimized"))
 	{
 		settings_.setBool("run_minimized", true);
@@ -295,7 +306,7 @@ void FxController::initConfig(const String& commandline)
 	float vl = 0;
 	if (volume_leveling.isEmpty())
 	{
-		vl = settings_.getDouble("volume_leveling");
+		vl = static_cast<float>(settings_.getDouble("volume_leveling"));
 	}
 	else
 	{
@@ -307,7 +318,7 @@ void FxController::initConfig(const String& commandline)
 	float bl = 0;
 	if (balance == "")
 	{
-		bl = settings_.getDouble("balance");
+		bl = static_cast<float>(settings_.getDouble("balance"));
 	}
 	else
 	{
@@ -319,7 +330,7 @@ void FxController::initConfig(const String& commandline)
 	float fq = 0;
 	if (filterq == "")
 	{
-		fq = settings_.getDouble("filter_q");
+		fq = static_cast<float>(settings_.getDouble("filter_q"));
 	}
 	else
 	{
@@ -331,7 +342,7 @@ void FxController::initConfig(const String& commandline)
 	float mg = 0;
 	if (mastergain == "")
 	{
-		mg = settings_.getDouble("master_gain");
+		mg = static_cast<float>(settings_.getDouble("master_gain"));
 	}
 	else
 	{
@@ -704,9 +715,12 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		if (audio_passthru_->init() != 0)
 		{
 			String message(TRANS("Error in system audio configuration. Unable to run FxSound"));
-			AlertWindow::showMessageBox(AlertWindow::AlertIconType::WarningIcon, JUCEApplication::getInstance()->getApplicationName(), message, TRANS("OK"));
+			AlertWindow::showMessageBoxAsync(AlertWindow::AlertIconType::WarningIcon, JUCEApplication::getInstance()->getApplicationName(), message, TRANS("OK"), nullptr,
+				ModalCallbackFunction::create([] (int)
+				{
+					JUCEApplication::getInstance()->systemRequestedQuit();
+				}));
 
-			JUCEApplication::getInstance()->systemRequestedQuit();
 			return;
 		}
 
@@ -729,9 +743,11 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		if (!dfx_enabled_ && !SysInfo::isRemoteSession())
 		{
 			main_window_->removeFromDesktop();
-			FxDeviceErrorMessage error_message;
-			error_message.runModalLoop();
-			JUCEApplication::getInstance()->systemRequestedQuit();
+			auto* error_message = new FxDeviceErrorMessage();
+			error_message->enterModalState(true, ModalCallbackFunction::create([](int)
+			{
+				JUCEApplication::getInstance()->systemRequestedQuit();
+			}), true);
 			return;
 		}
 
@@ -938,16 +954,16 @@ void FxController::showMainWindow()
 
 		if (survey_tip_)
 		{
-			uint32_t survey_timer = settings_.getInt("survey_timer");
+			int survey_timer = settings_.getInt("survey_timer");
 			if (survey_timer == 0)
 			{
-				survey_timer = std::time(nullptr) + (7 * (24 * 60 * 60));
+				survey_timer = static_cast<int>(std::time(nullptr) + (7 * (24 * 60 * 60)));
 				settings_.setInt("survey_timer", survey_timer);
 			}
 			else
 			{
-				uint32_t current_time = std::time(nullptr);
-				if (current_time > survey_timer)
+				uint64_t current_time = std::time(nullptr);
+				if ((int)current_time > survey_timer)
 				{
 					survey_tip_ = false;
 					settings_.setBool("survey_displayed", true);
@@ -1187,6 +1203,12 @@ void FxController::setOutput(int output, bool notify)
 
 	if (output < output_devices.size())
 	{
+		// Explicit user selection overrides any pending restore after sleep.
+		{
+			ScopedLock auto_lock(lock_);
+			clearOutputRestore();
+			system_sleeping_ = false;
+		}
 		setOutput(output_devices[output].pwszID.c_str(), notify);
 	}
 }
@@ -1381,7 +1403,7 @@ void FxController::resetPresets()
 	FxModel::getModel().pushMessage(TRANS("Presets are restored to factory defaults"));
 }
 
-bool FxController::exportPresets(const Array< FxModel::Preset>& presets)
+void FxController::exportPresets(const Array< FxModel::Preset>& presets, std::function<void (bool)> onComplete)
 {
 	auto path_name = File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory).getFullPathName()) + L"FxSound\\Presets\\Export\\";
 
@@ -1391,29 +1413,58 @@ bool FxController::exportPresets(const Array< FxModel::Preset>& presets)
 		path.createDirectory();
 	}
 
-	bool exported = false;
+	auto export_path = path.getFullPathName();
 
-	for (auto preset : presets)
+	// Walk the presets one at a time instead of a blocking for-loop: FxConfirmationMessage::showMessage()
+	// is asynchronous now, so each preset only moves on to the next once the user has answered (or once
+	// it is exported outright, when no overwrite confirmation is needed).
+	auto presets_to_process = std::make_shared<Array<FxModel::Preset>>(presets);
+	auto index = std::make_shared<int>(0);
+	auto exported = std::make_shared<bool>(false);
+
+	auto processNext = std::make_shared<std::function<void()>>();
+	*processNext = [this, presets_to_process, index, exported, path_name, export_path, processNext, onComplete]()
 	{
-		bool skip = false;
+		if (*index >= presets_to_process->size())
+		{
+			onComplete(*exported);
+			*processNext = nullptr;
+			return;
+		}
 
+		auto preset = (*presets_to_process)[(*index)++];
 		auto preset_file = File(path_name + preset.name + ".fac");
+
+		auto doExport = [this, preset, export_path, exported, processNext]()
+		{
+			dfx_dsp_.exportPreset(preset.path.toWideCharPointer(), preset.name.toWideCharPointer(), export_path.toWideCharPointer());
+			*exported = true;
+			(*processNext)();
+		};
+
 		if (preset_file.exists())
 		{
-			if (!FxConfirmationMessage::showMessage(FormatString(TRANS("Preset file %s already exists in the export path, do you want to overwrite the preset file?"), preset.name)))
-			{
-				skip = true;
-			}
+			FxConfirmationMessage::showMessage(FormatString(TRANS("Preset file %s already exists in the export path, do you want to overwrite the preset file?"), preset.name),
+				FxConfirmationMessage::Style::YesNo,
+				[doExport, processNext](bool overwrite)
+				{
+					if (overwrite)
+					{
+						doExport();
+					}
+					else
+					{
+						(*processNext)();
+					}
+				});
 		}
-
-		if (!skip)
+		else
 		{
-			dfx_dsp_.exportPreset(preset.path.toWideCharPointer(), preset.name.toWideCharPointer(), path.getFullPathName().toWideCharPointer());
-			exported = true;
+			doExport();
 		}
-	}
+	};
 
-	return exported;
+	(*processNext)();
 }
 
 bool FxController::importPresets(const Array<File>& preset_files, StringArray& imported_presets, StringArray& skipped_presets)
@@ -1604,8 +1655,81 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 		}
 	}
 
+	auto previous_output_name = getOutputName();
+
+	// HDMI output handling around sleep. The HDMI removal is notified before the system suspend, so
+	// the failover is held (hdmi_reconnect_pending_) until HDMI_FAILOVER_INTERVAL ticks pass:
+	//  - HDMI reconnects in time (including after sleep): it is selected again.
+	//  - Not in time: physical disconnect, fail over as per the preferred output logic.
+	const SoundDevice* lost_hdmi = nullptr;
+	// Only the HDMI that was the selected output is restored.
+	if (failover_output_name_.isNotEmpty() && failover_output_name_ == previous_output_name)
+	{
+		for (auto& output_device : active_output_devices_)
+		{
+			if (output_device.deviceFormFactor == L"HDMI" &&
+				failover_output_name_ == output_device.deviceFriendlyName.c_str())
+			{
+				lost_hdmi = &output_device;
+				break;
+			}
+		}
+	}
+
+	if (hdmi_reconnect_pending_)
+	{
+		if (hdmi_failover_counter_ >= HDMI_FAILOVER_INTERVAL)
+		{
+			clearOutputRestore();
+		}
+		else if (lost_hdmi != nullptr)
+		{
+			preferred_device = *lost_hdmi;
+			clearOutputRestore();
+		}
+	}
+	else if (previous_output_name.isNotEmpty())
+	{
+		bool previous_still_active = false;
+		for (auto& output_device : active_output_devices_)
+		{
+			if (previous_output_name == output_device.deviceFriendlyName.c_str())
+			{
+				previous_still_active = true;
+				break;
+			}
+		}
+
+		if (!previous_still_active)
+		{
+			for (auto& prev_device : prev_active_devices)
+			{
+				if (prev_device.deviceFormFactor == L"HDMI" &&
+					previous_output_name == prev_device.deviceFriendlyName.c_str())
+				{
+					failover_output_name_ = previous_output_name;
+					hdmi_failover_counter_ = 0;
+					hdmi_reconnect_pending_ = true;
+					break;
+				}
+			}
+		}
+	}
+
 	// Initialize the model to update the output devices in the UI.
 	FxModel::getModel().initOutputs(active_output_devices_);
+
+	// Waiting for the lost HDMI output to reconnect: stay muted and keep the current selection.
+	// timerCallback() fails over when the wait ends.
+	if (hdmi_reconnect_pending_)
+	{
+		if (FxModel::getModel().getPowerState())
+		{
+			audio_passthru_->mute(true);
+		}
+		return;
+	}
+
 	// Set the output to select the new output and update the UI.
 	// If the output has not changed, still output has to be set to update the UI.
 	setOutput(preferred_device.pwszID.c_str());
@@ -1614,13 +1738,6 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 // Handled when FxSound processing is on
 void FxController::selectProcessingOutput(std::vector<SoundDevice>& sound_devices)
 {
-	auto available = audio_passthru_->isPlaybackDeviceAvailable();
-	if (available != playback_device_available_)
-	{
-		playback_device_available_ = available;
-		FxModel::getModel().notifyOutputError();
-	}
-
 	// New device is added or removed, so update the output device list and select a preferred output device based on the updated device list.
 	if (sound_devices.size() != device_count_)
 	{
@@ -1633,32 +1750,58 @@ void FxController::selectProcessingOutput(std::vector<SoundDevice>& sound_device
 			if (!SysInfo::isRemoteSession())
 			{
 				main_window_->removeFromDesktop();
-				FxDeviceErrorMessage error_message;
-				error_message.runModalLoop();
-				JUCEApplication::getInstance()->systemRequestedQuit();
+                auto* error_message = new FxDeviceErrorMessage();
+                error_message->enterModalState(true, ModalCallbackFunction::create([](int)
+                {
+                    JUCEApplication::getInstance()->systemRequestedQuit();
+                }), true);
 				return;
 			}
 		}
 	}
 	else
 	{
-		for (auto sound_device : sound_devices)
+		if (!hdmi_reconnect_pending_)
 		{
-			// If the selected output device is different from the output device selected in application UI, update the application UI.
-			if (sound_device.isRealDevice && sound_device.isTargetedRealPlaybackDevice && getOutputName() != sound_device.deviceFriendlyName.c_str())
+			for (auto sound_device : sound_devices)
 			{
-				setOutputName(sound_device.deviceFriendlyName.c_str());
-				FxModel::getModel().setSelectedOutput(sound_device);
-
-				auto device_config = DeviceConfig::getDeviceConfig(settings_, getOutputName());
-				if (device_config.preset.isNotEmpty())
+				// If the selected output device is different from the output device selected in application UI, update the application UI.
+				if (sound_device.isRealDevice && sound_device.isTargetedRealPlaybackDevice && getOutputName() != sound_device.deviceFriendlyName.c_str())
 				{
-					setPreset(device_config.preset, false);
-				}
+					setOutputName(sound_device.deviceFriendlyName.c_str());
+					FxModel::getModel().setSelectedOutput(sound_device);
 
-				break;
+					auto device_config = DeviceConfig::getDeviceConfig(settings_, getOutputName());
+					if (device_config.preset.isNotEmpty())
+					{
+						setPreset(device_config.preset, false);
+					}
+
+					break;
+				}
 			}
 		}
+	}
+
+	// Sync after the outputs are updated, as the HDMI wait (if any) may have just ended.
+	syncPlaybackAvailability();
+}
+
+// Notify the UI when the playback device availability changes (available <-> unavailable).
+// Skipped while waiting for the HDMI output to reconnect, so no error is shown meanwhile; the
+// state is synced again after the wait ends.
+void FxController::syncPlaybackAvailability()
+{
+	if (hdmi_reconnect_pending_)
+	{
+		return;
+	}
+
+	auto available = audio_passthru_->isPlaybackDeviceAvailable();
+	if (available != playback_device_available_)
+	{
+		playback_device_available_ = available;
+		FxModel::getModel().notifyOutputError();
 	}
 }
 
@@ -1738,6 +1881,16 @@ void FxController::powerOn(bool on)
 	else
 	{
 		dfx_dsp_.powerOn(false);
+
+		{
+			ScopedLock auto_lock(lock_);
+
+			if (hdmi_reconnect_pending_)
+			{
+				audio_passthru_->mute(false);
+				clearOutputRestore();
+			}
+		}
 
 		if (isTimerRunning())
 		{
@@ -1879,6 +2032,16 @@ void FxController::getEqBandFrequencyRange(int band_num, float* min_freq, float*
 		*min_freq = 0;
 		*max_freq = 0;
 	}
+}
+
+bool FxController::getDefaultEqBandFrequency(int band_num, float* freq)
+{
+	if (band_num < getNumEqBands())
+	{
+		return dfx_dsp_.getDefaultEqBandFrequency(band_num, freq);
+	}
+
+	return false;
 }
 
 float FxController::getEqBandBoostCut(int band_num)
@@ -2058,7 +2221,35 @@ void FxController::timerCallback()
 		return;
 	}
 
+	{
+		// No suspend followed the HDMI removal (physical disconnect), or HDMI did not return within
+		// the wait after wake: continue on the available output as per preference.
+		ScopedLock auto_lock(lock_);
+		// The timer keeps running for a few seconds after the suspend notification, before the system
+		// actually sleeps. Don't count that time; the wait starts again on resume.
+		if (!system_sleeping_ && (hdmi_reconnect_pending_ && ++hdmi_failover_counter_ >= HDMI_FAILOVER_INTERVAL))
+		{
+			clearOutputRestore();
+			auto sound_devices = audio_passthru_->getSoundDevices(true);
+			updateOutputs(sound_devices);
+
+			// The hold in updateOutputs() muted the audio; make sure it is unmuted once the wait is over
+			// and an output is available (setOutput() keeps it muted when no output is available).
+			if (FxModel::getModel().getPowerState() && !active_output_devices_.empty())
+			{
+				audio_passthru_->mute(false);
+			}
+		}
+	}
+
 	audio_passthru_->processTimer();
+	{
+		// Sample after processTimer(), once any device reinit has set the availability. This also covers
+		// the HDMI wait ending through the timer, where selectProcessingOutput() may not be called.
+		ScopedLock auto_lock(lock_);
+		syncPlaybackAvailability();
+	}
+
 	auto total_audio_process_time = dfx_dsp_.getTotalAudioProcessedTime();
 	if (audio_process_time_ != total_audio_process_time)
 	{
@@ -2144,6 +2335,14 @@ void FxController::onSoundDeviceChange(bool processing)
 
 void FxController::onSystemSuspend()
 {
+	{
+		ScopedLock auto_lock(lock_);
+
+		hdmi_failover_counter_ = 0;
+
+		system_sleeping_ = true;
+	}
+
 	if (FxModel::getModel().getPowerState())
 	{
 		audio_passthru_->mute(true);
@@ -2152,12 +2351,24 @@ void FxController::onSystemSuspend()
 
 void FxController::onSystemResume()
 {
-	if (FxModel::getModel().getPowerState())
+	ScopedLock auto_lock(lock_);
+
+	hdmi_failover_counter_ = 0;
+
+	system_sleeping_ = false;
+
+	if (!hdmi_reconnect_pending_ && FxModel::getModel().getPowerState())
 	{
 		audio_passthru_->mute(false);
 	}
 }
 
+void FxController::clearOutputRestore()
+{
+	failover_output_name_ = String();
+	hdmi_failover_counter_ = 0;
+	hdmi_reconnect_pending_ = false;
+}
 
 void FxController::enableHotkeys(bool enable)
 {
@@ -2339,121 +2550,10 @@ void FxController::setLanguage(String language_code)
 
 	LocalisedStrings::setCurrentMappings(nullptr);
 
-	if (language_.startsWithIgnoreCase("ko"))
+	auto& language_info = FxLanguage::find(language_);
+	if (language_info.translation_data != nullptr && language_info.translation_data_size != 0)
 	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ko_txt, BinaryData::FxSound_ko_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("vi"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_vi_txt, BinaryData::FxSound_vi_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("id"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_id_txt, BinaryData::FxSound_id_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("pt-br"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ptbr_txt, BinaryData::FxSound_ptbr_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("pt"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_pt_txt, BinaryData::FxSound_pt_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("es"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_es_txt, BinaryData::FxSound_es_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("zh-CN"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_zhCN_txt, BinaryData::FxSound_zhCN_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("zh-TW"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_zhTW_txt, BinaryData::FxSound_zhTW_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("fr"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_fr_txt, BinaryData::FxSound_fr_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("sv"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_sv_txt, BinaryData::FxSound_sv_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("it"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_it_txt, BinaryData::FxSound_it_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ru"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ru_txt, BinaryData::FxSound_ru_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ro"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ro_txt, BinaryData::FxSound_ro_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("tr"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_tr_txt, BinaryData::FxSound_tr_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("pl"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_pl_txt, BinaryData::FxSound_pl_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("de"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_de_txt, BinaryData::FxSound_de_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("hu"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::fxsound_hu_txt, BinaryData::fxsound_hu_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("th"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_th_txt, BinaryData::FxSound_th_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("nl"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_nl_txt, BinaryData::FxSound_nl_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ja"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ja_txt, BinaryData::FxSound_ja_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ar"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ar_txt, BinaryData::FxSound_ar_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("hr"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_hr_txt, BinaryData::FxSound_hr_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ba"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ba_txt, BinaryData::FxSound_ba_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("fa"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_fa_txt, BinaryData::FxSound_fa_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("ua"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_ua_txt, BinaryData::FxSound_ua_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("no"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_no_txt, BinaryData::FxSound_no_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("sl"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_sl_txt, BinaryData::FxSound_sl_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("fi"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_fi_txt, BinaryData::FxSound_fi_txtSize), false));
-	}
-	else if (language_.startsWithIgnoreCase("cs"))
-	{
-		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(BinaryData::FxSound_cs_txt, BinaryData::FxSound_cs_txtSize), false));
+		LocalisedStrings::setCurrentMappings(new LocalisedStrings(String::createStringFromData(language_info.translation_data, language_info.translation_data_size), false));
 	}
 
 	auto* theme = dynamic_cast<FxTheme*>(&LookAndFeel::getDefaultLookAndFeel());
@@ -2462,135 +2562,20 @@ void FxController::setLanguage(String language_code)
 		theme->loadFont(language_);
 	}
 
-	if (main_window_ != nullptr)
+	// Other top-level windows (e.g. the Settings dialog) aren't children of
+	// main_window_, so they don't hear about a language change unless we
+	// tell them directly. Scoped to FxWindow-derived windows (dialogs) only,
+	// so transient overlays like notifications and the tray icon view -
+	// which don't show translated/language-dependent text - aren't
+	// needlessly repainted on every language switch.
+	auto& desktop = Desktop::getInstance();
+	for (int i = 0; i < desktop.getNumComponents(); i++)
 	{
-		main_window_->sendLookAndFeelChange();
+		if (auto* window = dynamic_cast<FxWindow*>(desktop.getComponent(i)))
+		{
+			window->sendLookAndFeelChange();
+		}
 	}
-}
-
-String FxController::getLanguageName(String language_code) const
-{
-	if (language_code.startsWithIgnoreCase("en"))
-	{
-		return "English";
-	}
-	else if (language_code.startsWithIgnoreCase("ko"))
-	{
-		return L"\ud55c\uad6d\uc5b4";
-	}
-	else if (language_code.startsWithIgnoreCase("vi"))
-	{
-		return L"Ti\u1ebfng Vi\u1ec7t";
-	}
-	else if (language_code.startsWithIgnoreCase("id"))
-	{
-		return L"bahasa Indonesia";
-	}
-	else if (language_code.startsWithIgnoreCase("pt-br"))
-	{
-		return L"portugu\u00eas brasileiro";
-	}
-	else if (language_code.startsWithIgnoreCase("pt"))
-	{
-		return L"Portugu\u00eas";
-	}
-	else if (language_code.startsWithIgnoreCase("es"))
-	{
-		return L"Espa\u00f1ol";
-	}
-	else if (language_code.startsWithIgnoreCase("zh-CN"))
-	{
-		return L"\u7b80\u4f53\u4e2d\u6587";
-	}
-	else if (language_code.startsWithIgnoreCase("zh-TW"))
-	{
-		return L"\u7e41\u9ad4\u4e2d\u6587";
-	}
-	else if (language_code.startsWithIgnoreCase("sv"))
-	{
-		return L"svenska";
-	}
-	else if (language_code.startsWithIgnoreCase("fr"))
-	{
-		return L"fran\u00e7ais";
-	}
-	else if (language_code.startsWithIgnoreCase("it"))
-	{
-		return L"Italiano";
-	}
-	else if (language_code.startsWithIgnoreCase("ru"))
-	{
-		return L"\u0440\u0443\u0441\u0441\u043a\u0438\u0439";
-	}
-	else if (language_code.startsWithIgnoreCase("ro"))
-	{
-		return L"Rom\u00e2n\u0103";
-	}
-	else if (language_code.startsWithIgnoreCase("tr")) {
-		return L"T\u00fcrk";
-	}
-	else if (language_code.startsWithIgnoreCase("pl"))
-	{
-		return L"Polski";
-	}
-	else if (language_code.startsWithIgnoreCase("de"))
-	{
-		return L"Deutsch";
-	}
-	else if (language_code.startsWithIgnoreCase("hu"))
-	{
-		return L"Magyar";
-	}
-	else if (language_code.startsWithIgnoreCase("th"))
-	{
-		return L"\u0e41\u0e1a\u0e1a\u0e44\u0e17\u0e22";
-	}
-	else if (language_code.startsWithIgnoreCase("nl"))
-	{
-		return L"Nederlands";
-	}
-	else if (language_code.startsWithIgnoreCase("ja"))
-	{
-		return L"\u65e5\u672c\u8a9e";
-	}
-	else if (language_code.startsWithIgnoreCase("ar"))
-	{
-		return L"\u0627\u0644\u0639\u0631\u0628\u064a\u0629";
-	}
-	else if (language_code.startsWithIgnoreCase("hr"))
-	{
-		return L"hrvatski";
-	}
-	else if (language_code.startsWithIgnoreCase("ba"))
-	{
-		return L"bosanski";
-	}
-	else if (language_code.startsWithIgnoreCase("fa"))
-	{
-		return L"\u0641\u0627\u0631\u0633\u06cc";
-	}
-	else if (language_code.startsWithIgnoreCase("ua"))
-	{
-		return L"\u0443\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430";
-	}
-	else if (language_code.startsWithIgnoreCase("no"))
-	{
-		return L"Norsk";
-	}
-	else if (language_code.startsWithIgnoreCase("sl"))
-	{
-		return L"Sloven\u0161\u010dina";
-	}
-	else if (language_code.startsWithIgnoreCase("fi"))
-	{
-		return L"Suomi";
-	}
-	else if (language_code.startsWithIgnoreCase("cs"))
-	{
-		return L"\u010cesky";
-    }
-
-	return "English";
 }
 
 int FxController::getMaxUserPresets() const
@@ -2636,6 +2621,92 @@ void FxController::getWindowPosition(int& x, int& y)
 {
 	x = settings_.getInt("window_x", 0);
 	y = settings_.getInt("window_y", 0);
+}
+
+void FxController::setRenderingEngine(juce::Component& component)
+{
+	if (auto* peer = component.getPeer())
+	{
+		// Engine index 0 is GDI (software), 1 is Direct2D.
+		peer->setCurrentRenderingEngine(gpu_render_ ? 1 : 0);
+	}
+}
+
+bool FxController::isGpuRenderingEnabled()
+{
+	return settings_.getBool("gpu_render");
+}
+
+void FxController::setGpuRenderingEnabled(bool enable)
+{
+	settings_.setBool("gpu_render", enable);
+}
+
+bool FxController::isGpuRenderingActive() const
+{
+	return gpu_render_;
+}
+
+bool FxController::canSupportGpuRendering()
+{
+	return juce::SystemStats::getOperatingSystemType() > juce::SystemStats::Windows7;
+}
+
+bool FxController::launchNewInstance()
+{
+	auto& controller = getInstance();
+
+	wchar_t module_file[MAX_PATH];
+	DWORD length = GetModuleFileNameW(NULL, module_file, MAX_PATH);
+	if (length == 0 || length >= MAX_PATH)
+	{
+		controller.logMessage("Relaunch failed: module path unavailable\n");
+		return false;
+	}
+
+	// A hidden helper waits ~3 seconds before starting the exe, because the single instance
+	// check would otherwise see this process while it is still exiting.
+	std::wstring command_line = L"cmd.exe /c \"ping -n 4 127.0.0.1 >nul & start \"\" \"";
+	command_line += module_file;
+	command_line += L"\"\"";
+
+	// CREATE_NO_WINDOW gives cmd a hidden console that ping shares. It must not be combined
+	// with DETACHED_PROCESS: Windows then ignores CREATE_NO_WINDOW, and ping, having no console
+	// to inherit, opens a visible one of its own.
+	STARTUPINFOW startup_info = { sizeof(STARTUPINFOW) };
+	startup_info.dwFlags = STARTF_USESHOWWINDOW;
+	startup_info.wShowWindow = SW_HIDE;
+	PROCESS_INFORMATION process_info = { 0 };
+	if (CreateProcessW(NULL, command_line.data(), NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &startup_info, &process_info))
+	{
+		CloseHandle(process_info.hThread);
+		CloseHandle(process_info.hProcess);
+		controller.logMessage("Relaunching\n");
+		return true;
+	}
+
+	controller.logMessage("Relaunch failed\n");
+	return false;
+}
+
+void FxController::restartApplication()
+{
+	autoSaveModifiedPreset();
+
+	if (launchNewInstance())
+	{
+		// Close open modal dialogs (e.g. Settings) first; their deletion is queued before the
+		// quit below, so they are gone before shutdown() tears down the windows.
+		if (auto* modal_manager = ModalComponentManager::getInstanceWithoutCreating())
+		{
+			modal_manager->cancelAllModalComponents();
+		}
+
+		MessageManager::callAsync([]()
+		{
+			JUCEApplication::getInstance()->systemRequestedQuit();
+		});
+	}
 }
 
 juce::Array<DeviceConfig> FxController::getDeviceConfigs()
@@ -2899,7 +2970,7 @@ void FxController::getSpectrumBandValues(Array<float>& band_values)
 		}
 		else
 		{
-			band_values.set(i, 0.01);
+			band_values.set(i, 0.01f);
 		}
 	}
 }

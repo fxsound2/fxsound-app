@@ -30,6 +30,7 @@ public:
 	FxWindow(String name = "");
 	~FxWindow();
 
+	void addToDesktop(int window_style_flags, void* native_window_to_attach_to = nullptr) override;
 	void setContent(Component* content);
 	virtual void closeButtonPressed() = 0;
 

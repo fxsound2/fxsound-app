@@ -168,7 +168,7 @@ int PT_DECLSPEC pstrConstructSubstring(char *cp_main_str, int i_start_index,
 		return(NOT_OKAY);
 	}
 	
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_sub_str, cp_sub_str, strlen(cp_main_str) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_sub_str, cp_sub_str, static_cast<int>(strlen(cp_main_str) + 1)) != OKAY)
 	{
 		free(wcp_main_str);
 		free(wcp_sub_str);
@@ -280,7 +280,7 @@ int PT_DECLSPEC pstrToUpper(char *cp_original_str, char *cp_upper_str)
 		return(NOT_OKAY);
 	}
 
-	if (pstrConvertWideCharStringToAnsiCharString(wcp_upper_str, cp_upper_str, strlen(cp_original_str) + 1) != OKAY)
+	if (pstrConvertWideCharStringToAnsiCharString(wcp_upper_str, cp_upper_str, static_cast<int>(strlen(cp_original_str) + 1)) != OKAY)
 	{
 		free(wcp_original_str);
 		free(wcp_upper_str);
@@ -369,7 +369,7 @@ int PT_DECLSPEC pstrRemovePrefixFromLine(char *cp_with_prefix, char *cp_prefix,
 		return(NOT_OKAY);
 	}
 	
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_without_prefix, cp_without_prefix, strlen(cp_with_prefix) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_without_prefix, cp_without_prefix, static_cast<int>(strlen(cp_with_prefix) + 1)) != OKAY)
 	{
 		free(wcp_with_prefix);
 		free(wcp_prefix);
@@ -483,7 +483,7 @@ int PT_DECLSPEC pstrRemovePostfixFromLine(char *cp_with_postfix, char *cp_postfi
 		return(NOT_OKAY);
 	}
 
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_without_postfix, cp_without_postfix, strlen(cp_with_postfix) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_without_postfix, cp_without_postfix, static_cast<int>(strlen(cp_with_postfix) + 1)) != OKAY)
 	{
 		free(wcp_with_postfix);
 		free(wcp_postfix);
@@ -578,7 +578,7 @@ int PT_DECLSPEC pstrReplaceCharOccurances(char *cp_string, char c_old_char,
 		return(NOT_OKAY);
 	}
 	
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_string, cp_string, strlen(cp_string) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_string, cp_string, static_cast<int>(strlen(cp_string) + 1)) != OKAY)
 	{
 		free(wcp_string);
 		return(NOT_OKAY);
@@ -638,7 +638,7 @@ int PT_DECLSPEC pstrRemoveCharOccurances(char *cp_string, char c_char_to_remove)
 		return(NOT_OKAY);
 	}
 	
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_string, cp_string, strlen(cp_string) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_string, cp_string, static_cast<int>(strlen(cp_string) + 1)) != OKAY)
 	{
 		free(wcp_string);
 		return(NOT_OKAY);
@@ -820,7 +820,7 @@ int PT_DECLSPEC pstrRemoveAllSpaces(char *cp_string)
 		return(NOT_OKAY);
 	}
 
-	if (pstrConvertWideCharStringToAnsiCharString(wcp_string, cp_string, strlen(cp_string) + 1) != OKAY)
+	if (pstrConvertWideCharStringToAnsiCharString(wcp_string, cp_string, static_cast<int>(strlen(cp_string) + 1)) != OKAY)
 	{
 		free(wcp_string);
 		return(NOT_OKAY);
@@ -959,7 +959,7 @@ int PT_DECLSPEC pstrMakeNoDoublesBackSlashes(char *cp_string)
 		return(NOT_OKAY);
 	}
 	
-	if (pstrConvertWideCharStringToAnsiCharString(wcp_string, cp_string, strlen(cp_string) + 1) != OKAY)
+	if (pstrConvertWideCharStringToAnsiCharString(wcp_string, cp_string, static_cast<int>(strlen(cp_string) + 1)) != OKAY)
 	{
 		free(wcp_string);
 		return(NOT_OKAY);
@@ -1057,7 +1057,7 @@ int PT_DECLSPEC pstrRemoveTrailingBackslash(char *cp_string)
 		return(NOT_OKAY);
 	}
 	
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_string, cp_string, strlen(cp_string) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_string, cp_string, static_cast<int>(strlen(cp_string) + 1)) != OKAY)
 	{
 		free(wcp_string);
    		return(NOT_OKAY);
@@ -1116,7 +1116,7 @@ int PT_DECLSPEC pstrRemoveTrailingForwardSlash(char *cp_string)
 		return(NOT_OKAY);
 	}
 	
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_string, cp_string, strlen(cp_string) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_string, cp_string, static_cast<int>(strlen(cp_string) + 1)) != OKAY)
 	{
 		free(wcp_string);
    		return(NOT_OKAY);
@@ -1306,7 +1306,7 @@ int PT_DECLSPEC pstrRemoveTrailingSpaces(char *cp_string)
 		return(NOT_OKAY);
 	}
 	
-	if(pstrConvertWideCharStringToAnsiCharString(wcp_string, cp_string, strlen(cp_string) + 1) != OKAY)
+	if(pstrConvertWideCharStringToAnsiCharString(wcp_string, cp_string, static_cast<int>(strlen(cp_string) + 1)) != OKAY)
 	{
 		free(wcp_string);
    		return(NOT_OKAY);
@@ -1656,7 +1656,7 @@ int PT_DECLSPEC pstrRemoveIndexBasedSubset_WithAllocation(wchar_t * wcp_original
 	*ip_result_string_length = 0;
 
 	/* Make sure the index values passed are legal */
-	i_original_string_strlen = wcslen(wcp_original_string);
+	i_original_string_strlen = static_cast<int>(wcslen(wcp_original_string));
 	if ((i_start_index < 0) || (i_start_index >= i_original_string_strlen))
 		return(NOT_OKAY);
 	if ((i_end_index < 0) || (i_end_index >= i_original_string_strlen))
@@ -1725,7 +1725,7 @@ int PT_DECLSPEC pstrRemoveIndexBasedSubset_WithAllocation(wchar_t * wcp_original
 	free(wcp_first_half_string);
 	free(wcp_second_half_string);
 
-	*ip_result_string_length = wcslen(*wcpp_result_string);
+	*ip_result_string_length = static_cast<int>(wcslen(*wcpp_result_string));
 
 	return(OKAY);
 }
@@ -1759,7 +1759,7 @@ int PT_DECLSPEC pstrInsertIndexBasedSubset_WithAllocation(wchar_t * wcp_original
 	*ip_result_string_length = 0;
 
 	/* Make sure the index values passed are legal */
-	i_original_string_strlen = wcslen(wcp_original_string);
+	i_original_string_strlen = static_cast<int>(wcslen(wcp_original_string));
 	if (i_start_index < 0)
 		return(NOT_OKAY);
 
@@ -1777,7 +1777,7 @@ int PT_DECLSPEC pstrInsertIndexBasedSubset_WithAllocation(wchar_t * wcp_original
 			return(NOT_OKAY);
 		}
 
-		*ip_result_string_length = wcslen(*wcpp_result_string);
+		*ip_result_string_length = static_cast<int>(wcslen(*wcpp_result_string));
 
 		return(OKAY);
 	}
@@ -1851,7 +1851,7 @@ int PT_DECLSPEC pstrInsertIndexBasedSubset_WithAllocation(wchar_t * wcp_original
 	free(wcp_first_half_string);
 	free(wcp_second_half_string);
 
-	*ip_result_string_length = wcslen(*wcpp_result_string);
+	*ip_result_string_length = static_cast<int>(wcslen(*wcpp_result_string));
 
 	return(OKAY);
 }
@@ -1873,7 +1873,7 @@ int PT_DECLSPEC pstrReverse_Wide(wchar_t *wcp_original_str, wchar_t *wcp_reverse
 	if (wcp_reversed_str == NULL)
 		return(NOT_OKAY);
 
-	length_original = wcslen(wcp_original_str);
+	length_original = static_cast<int>(wcslen(wcp_original_str));
 
 	if (length_original == 0)
 		return(OKAY);
@@ -1911,7 +1911,7 @@ int PT_DECLSPEC pstrTruncate_Wide(wchar_t *wcp_original_string, wchar_t *wcp_tru
 		return(NOT_OKAY);
 
 	/* Get the original string length */
-	i_orig_length = wcslen(wcp_original_string);
+	i_orig_length = static_cast<int>(wcslen(wcp_original_string));
 
 	/* Check if no truncation is needed */
 	if (i_truncated_length >= i_orig_length)

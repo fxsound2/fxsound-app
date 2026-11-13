@@ -48,8 +48,8 @@ void FxMessage::closeButtonPressed()
 
 void FxMessage::showMessage(String message, const std::pair<String, String>& link)
 {
-	FxMessage message_window(message, link);
-	message_window.runModalLoop();
+	auto* message_window = new FxMessage(message, link);
+	message_window->enterModalState(true, nullptr, true);
 }
 
 FxMessage::MessageComponent::MessageComponent(String message, const std::pair<String, String>& link)

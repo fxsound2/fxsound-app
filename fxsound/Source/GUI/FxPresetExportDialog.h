@@ -78,7 +78,6 @@ private:
         ListBox preset_list_;
         PresetExportProgress preset_export_progress_;
         TextButton export_button_;
-        Font font_;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PresetExportComponent)
     };
