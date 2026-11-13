@@ -178,12 +178,12 @@ void DfxDspPrivate::processTimer()
 	}
 }
 
-int DfxDspPrivate::processAudio(short int *si_input_samples, short int *si_output_samples, int i_num_sample_sets, int i_check_for_duplicate_buffers, bool measureLimiter)
+int DfxDspPrivate::processAudio(short int *si_input_samples, short int *si_output_samples, int i_num_sample_sets,
+                                int i_check_for_duplicate_buffers, bool measureLimiter, fxdsp::LimiterActivity::Generation generation)
 {
 	processTimer();
 	// Apply DFX processing here using data and format vars above. Format will always be 32 bit floating point.
 	const auto handle = (struct dfxpHdlType *)dfxp_handle_;
-	const auto generation = limiter_activity_.generation();
 	float left = 0.0f, right = 0.0f;
 	const int result = dfxpUniversalModifySamples(dfxp_handle_, si_input_samples, si_output_samples,
 		i_num_sample_sets, i_check_for_duplicate_buffers);

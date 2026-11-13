@@ -128,10 +128,12 @@ public:
 	void setEqBandBoostCut(int band_num, float boost);
     void getSpectrumBandValues(Array<float>& band_values);
     void setAnalysisEnabled(bool enabled);
+    void beginAudioShutdown();
     void detachAudioPassthru();
     void muteOutput(bool muted);
     bool canAnalyzeOutput() const noexcept;
     bool isOutputMuted() const noexcept;
+    std::uint64_t outputObservationGeneration() const noexcept { return output_observation_generation_; }
     bool getAnalyzedSpectrumBands(fxanalysis::BarSnapshot& bars);
     void discardAnalyzedSpectrumPeaks();
     fxanalysis::ClipEvents consumeOutputClipEvents() noexcept;
@@ -291,6 +293,8 @@ private:
 	FxMainWindow* main_window_;
 	FxSystemTrayView* system_tray_view_;
 	AudioPassthru* audio_passthru_;
+    bool audio_shutdown_requested_ = false;
+    std::uint64_t output_observation_generation_ = 0;
 	DfxDsp dfx_dsp_;
     fxanalysis::AnalysisStream analysis_stream_;
     fxanalysis::AnalysisResult analysis_reported_result_ = fxanalysis::AnalysisResult::ok;

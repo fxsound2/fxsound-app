@@ -1126,6 +1126,7 @@ bool FxController::setPreset(int selected_index, bool notify)
 
 void FxController::setOutput(const String output_device_id, bool notify)
 {
+    if (audio_shutdown_requested_) return;
 	std::vector<SoundDevice> sound_devices = audio_passthru_->getSoundDevices();
 
 	bool output_found = false;
@@ -1203,6 +1204,7 @@ void FxController::setOutput(const String output_device_id, bool notify)
 
 void FxController::setOutput(int output, bool notify)
 {
+    if (audio_shutdown_requested_) return;
 	auto output_devices = FxModel::getModel().getOutputDevices();
 
 	if (output < output_devices.size())
@@ -1873,6 +1875,7 @@ void FxController::sortByDeviceConfigPriority(std::vector<SoundDevice>& devices)
 
 void FxController::powerOn(bool on)
 {
+    if (audio_shutdown_requested_) return;
 	if (on)
 	{
 		dfx_dsp_.powerOn(true);
@@ -2084,6 +2087,8 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 {
 	static auto os = SystemStats::getOperatingSystemType();
 	FxController* controller = (FxController*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+    if (controller != nullptr && controller->audio_shutdown_requested_)
+        return DefWindowProc(hwnd, message, w_param, l_param);
 
 	switch (message)
 	{
@@ -2323,7 +2328,8 @@ void FxController::timerCallback()
 
 void FxController::onSoundDeviceChange(bool processing)
 {
-    if (audio_passthru_ == nullptr) return;
+    if (audio_passthru_ == nullptr || audio_shutdown_requested_) return;
+    ++output_observation_generation_;
     analysis_stream_.resetInput();
     dfx_dsp_.discardLimiterActivity();
 	if (session_id_ != WTSGetActiveConsoleSessionId())
@@ -3020,6 +3026,12 @@ fxdsp::LimiterLevels FxController::consumeLimiterActivity() noexcept
     return dfx_dsp_.consumeLimiterActivity();
 }
 
+void FxController::beginAudioShutdown()
+{
+    audio_shutdown_requested_ = true;
+    stopTimer();
+}
+
 void FxController::detachAudioPassthru()
 {
     if (audio_passthru_ != nullptr)
@@ -3051,7 +3063,8 @@ void FxController::setAnalysisEnabled(bool enabled)
 
 void FxController::muteOutput(bool muted)
 {
-    if (audio_passthru_ == nullptr || audio_passthru_->isMuted() == muted) return;
+    if (audio_passthru_ == nullptr || audio_shutdown_requested_ || audio_passthru_->isMuted() == muted) return;
+    ++output_observation_generation_;
     if (muted) audio_passthru_->mute(true);
     analysis_stream_.resetInput();
     dfx_dsp_.discardLimiterActivity();

@@ -84,6 +84,7 @@ private:
     bool showing_highres_ = false;
     bool analysis_requested_ = false;
     bool was_muted_ = true;
+    std::uint64_t output_observation_generation_ = 0;
     bool output_supported_ = true;
     int tooltip_left_ = -1;
     int tooltip_right_ = -1;

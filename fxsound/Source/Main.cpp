@@ -35,7 +35,7 @@ extern "C" {
 }
 
 //==============================================================================
-class FxSoundApplication : public JUCEApplication
+class FxSoundApplication : public JUCEApplication, private Timer
 {
 public:
     //==============================================================================
@@ -95,14 +95,17 @@ public:
 
     void shutdown() override
     {
-        if (main_window_.get() != nullptr)
+        stopTimer();
+        auto& controller = FxController::getInstance();
+        if (main_window_ != nullptr)
+            controller.autoSaveModifiedPreset();
+
+        controller.beginAudioShutdown();
+        controller.detachAudioPassthru();
+        audio_passthru_.reset();
+
+        if (main_window_ != nullptr)
         {
-            FxController::getInstance().autoSaveModifiedPreset();
-            FxController::getInstance().stopTimer();
-
-            FxController::getInstance().detachAudioPassthru();
-            audio_passthru_.reset();
-
             // UIA holds COM references to AccessibilityNativeHandle objects for
             // desktop-resident components. Release those references before the
             // components are destroyed, so their COM refcounts reach zero in the
@@ -140,12 +143,14 @@ public:
             return;
         }
 
-        auto& controller = FxController::getInstance();
-        controller.stopTimer();
+        audio_stop_started_ = GetTickCount64() + 1;
+        FxController::getInstance().beginAudioShutdown();
+        if (main_window_ != nullptr) main_window_->setEnabled(false);
         audio_passthru_->setDeviceNotificationWindow(nullptr);
         audio_passthru_->requestStop();
-        audio_stop_started_ = GetTickCount64() + 1;
-        checkAudioStopped();
+        // Keep the message thread pumping while WASAPI releases its resources.
+        startTimer(50);
+        timerCallback();
     }
 
     void anotherInstanceStarted (const String& commandline) override
@@ -155,12 +160,13 @@ public:
     }
 
 private:
-    void checkAudioStopped()
+    void timerCallback() override
     {
         DWORD error = ERROR_SUCCESS;
         const DWORD status = audio_passthru_->pollStopped(error);
         if (status == WAIT_OBJECT_0)
         {
+            stopTimer();
             quit();
             return;
         }
@@ -171,8 +177,6 @@ private:
                 ? "FxSound: audio shutdown wait failed, error " + String(error)
                 : "FxSound: still waiting for the audio device to stop");
         }
-        // Keep the UI responsive and keep the DSP and passthru alive until the thread exits.
-        Timer::callAfterDelay(50, [this] { checkAudioStopped(); });
     }
 
     ULONGLONG audio_stop_started_ = 0;

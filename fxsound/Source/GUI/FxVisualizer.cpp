@@ -317,7 +317,12 @@ void FxVisualizer::updateAnalysisState()
             : TRANS("HighRes supports mono and stereo. Showing the classic spectrum."));
     }
 
-    if (highres == showing_highres_ && muted == was_muted_ && requested == analysis_requested_) return;
+    const auto outputGeneration = controller.outputObservationGeneration();
+    if (highres == showing_highres_ && muted == was_muted_ && requested == analysis_requested_
+        && outputGeneration == output_observation_generation_) return;
+    // An endpoint change can leave the channel count unchanged. Clear the old
+    // bar peaks and indicator holds even when HighRes remains selected.
+    output_observation_generation_ = outputGeneration;
     analysis_requested_ = requested;
     showing_highres_ = highres;
     was_muted_ = muted;

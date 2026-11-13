@@ -103,7 +103,19 @@ int DfxDsp::setSignalFormat(int i_bps, int i_nch, int i_srate, int i_valid_bits)
 	}
 }
 
+fxdsp::LimiterActivity::Generation DfxDsp::limiterGeneration() const noexcept
+{
+    return data_->limiter_activity_.generation();
+}
+
 int DfxDsp::processAudio(short int *si_input_samples, short int *si_output_samples, int i_num_sample_sets, int i_check_for_duplicate_buffers, bool measureLimiter)
+{
+    return processAudio(si_input_samples, si_output_samples, i_num_sample_sets, i_check_for_duplicate_buffers,
+                        measureLimiter, limiterGeneration());
+}
+
+int DfxDsp::processAudio(short int *si_input_samples, short int *si_output_samples, int i_num_sample_sets,
+                         int i_check_for_duplicate_buffers, bool measureLimiter, fxdsp::LimiterActivity::Generation generation)
 {
 	if (data_->being_destroyed_)
 	{
@@ -111,7 +123,7 @@ int DfxDsp::processAudio(short int *si_input_samples, short int *si_output_sampl
 	}
 	else
 	{
-		return data_->processAudio(si_input_samples, si_output_samples, i_num_sample_sets, i_check_for_duplicate_buffers, measureLimiter);
+		return data_->processAudio(si_input_samples, si_output_samples, i_num_sample_sets, i_check_for_duplicate_buffers, measureLimiter, generation);
 	}
 }
 

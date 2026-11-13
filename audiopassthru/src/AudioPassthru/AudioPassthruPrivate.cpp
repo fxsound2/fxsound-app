@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sndDevices.h"
 
 #define DFXG_SND_SERVER_KILL_THREAD_TIMEOUT_MSECS		  3000
-#define DFXG_SND_SERVER_KILL_THREAD_WAIT_PER_LOOP_MSECS   50
 #define DFXG_TRUNCATED_DRIVER_TEXT_LENGTH			      50
 
 // See https://stackoverflow.com/questions/6472948/converting-member-function-pointer-to-timerproc
@@ -55,7 +54,7 @@ AudioPassthruPrivate::~AudioPassthruPrivate()
 	int i_result_flag;
 	setDeviceNotificationWindow(nullptr);
 	registerCallback(nullptr);
-	if (hp_sndDevices_ == NULL)
+	if (!initialization_started_)
 		return;
 
 	DWORD error = ERROR_SUCCESS;
@@ -72,7 +71,7 @@ AudioPassthruPrivate::~AudioPassthruPrivate()
 
 	/* Change the default soundcard to not be the DFX virtual one but instead the proper real one */
 	if (sndDevicesRestoreDefaultDevice(hp_sndDevices_, &i_result_flag) != OKAY)
-		return;
+        OutputDebugStringW(L"FxSound: could not restore the default audio device\n");
 
 	/*
 	* Disable the virtual soundcard
@@ -86,7 +85,7 @@ AudioPassthruPrivate::~AudioPassthruPrivate()
 
 	/* Free the data allocated inside the sndDevices_hdl (NOTE: Does not free up structure) */
 	if (sndDevicesFree(hp_sndDevices_) != OKAY)
-		return;
+        OutputDebugStringW(L"FxSound: could not release all audio devices\n");
 
 	hp_sndDevices_ = NULL;
 }
@@ -95,6 +94,7 @@ int AudioPassthruPrivate::init()
 {
 	int status_flag;
 	
+    initialization_started_ = true;
 	/* Initialize the handle */
 	if (sndDevicesInit(this->hp_sndDevices_, NULL, SND_DEVICES_INIT_FOR_PROCESSING, debug_, &status_flag) != OKAY)
 		return(NOT_OKAY);
@@ -517,30 +517,35 @@ DWORD AudioPassthruPrivate::captureAndPlay()
         if (status != SND_DEVICES_CAPTURE_PLAYBACK_SUCCESS || i_kill_processing_thread_)
             break;
 
-        const bool muted = isMuted();
+        // Take the limiter and mute generations before any block processing.
+        const auto limiterGeneration = p_dfx_dsp_->limiterGeneration();
+        const auto muteState = mute_state_.load(std::memory_order_acquire);
+        const bool muted = (muteState & mutedBit) != 0;
         if (frames > 0)
         {
             auto* callback = muted ? nullptr : s_callback_.load(std::memory_order_acquire);
             const auto input = callback ? callback->beginAudioBlock() : AudioPassthruCallback::AnalysisInput{};
-            applyDsp(pcm, frames, *format, !muted);
+            applyDsp(pcm, frames, *format, !muted, limiterGeneration);
 
             // Borrow the post-DSP PCM before output conversion. The callback uses
             // the generation taken before DSP so a stale attack cannot reach the bars.
-            if (callback != nullptr && !isMuted())
+            if (callback != nullptr && mute_state_.load(std::memory_order_acquire) == muteState)
                 callback->onAudioBlock(pcm, frames, format->nChannels, format->nSamplesPerSec, samplePosition, input);
             samplePosition += static_cast<std::uint64_t>(frames);
         }
         if (i_kill_processing_thread_) break;
 
         // Playback may still have data queued even when capture returns no frames.
-        if (!muted && !isMuted() && sndDevicesDoPlayback(hp_sndDevices_, &status) != OKAY)
+        if (!muted && mute_state_.load(std::memory_order_acquire) == muteState
+            && sndDevicesDoPlayback(hp_sndDevices_, &status) != OKAY)
             return NOT_OKAY;
         if (status != SND_DEVICES_CAPTURE_PLAYBACK_SUCCESS) break;
     }
     return OKAY;
 }
 
-void AudioPassthruPrivate::applyDsp(float* pcm, int frames, const WAVEFORMATEX& format, bool measureLimiter)
+void AudioPassthruPrivate::applyDsp(float* pcm, int frames, const WAVEFORMATEX& format, bool measureLimiter,
+                                    std::uint64_t limiterGeneration)
 {
     // The existing startup path retries format setup on subsequent audio blocks.
     p_dfx_dsp_->setSignalFormat(format.wBitsPerSample, format.nChannels, format.nSamplesPerSec,
@@ -548,7 +553,7 @@ void AudioPassthruPrivate::applyDsp(float* pcm, int frames, const WAVEFORMATEX& 
     if (format.nChannels == 1 && SND_DEVICES_MONO_BUG_DO_NOT_PROCESS) return;
 
     auto* samples = reinterpret_cast<short int*>(pcm);
-    p_dfx_dsp_->processAudio(samples, samples, frames, IS_FALSE, measureLimiter);
+    p_dfx_dsp_->processAudio(samples, samples, frames, IS_FALSE, measureLimiter, limiterGeneration);
 }
 
 /*
@@ -557,11 +562,14 @@ void AudioPassthruPrivate::applyDsp(float* pcm, int frames, const WAVEFORMATEX& 
 */
 DWORD WINAPI AudioPassthruPrivate::processingThread(LPVOID lpParam)
 {
-	// Make sure COM is initialized
-	HRESULT hr;
-	hr = CoInitialize(NULL);
+    const HRESULT initialized = CoInitialize(nullptr);
+    if (FAILED(initialized))
+    {
+        OutputDebugStringW(L"FxSound: COM initialization failed on the audio thread\n");
+        return NOT_OKAY;
+    }
 
-	AudioPassthruPrivate * callerClass = (AudioPassthruPrivate*)lpParam;
+    auto* callerClass = static_cast<AudioPassthruPrivate*>(lpParam);
 	auto ret = callerClass->threadWorker();
 
 	CoUninitialize();
@@ -571,7 +579,10 @@ DWORD WINAPI AudioPassthruPrivate::processingThread(LPVOID lpParam)
 
 void AudioPassthruPrivate::mute(bool mute)
 {
-	mute_.store(mute, std::memory_order_relaxed);
+	const auto previous = mute_state_.load(std::memory_order_relaxed);
+    const unsigned bit = mute ? mutedBit : 0;
+    if ((previous & mutedBit) != bit)
+        mute_state_.store((previous + 2) ^ mutedBit, std::memory_order_release);
 }
 
 void AudioPassthruPrivate::registerCallback(AudioPassthruCallback* callback)
