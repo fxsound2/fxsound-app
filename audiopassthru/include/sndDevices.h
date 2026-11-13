@@ -211,7 +211,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 cast_handle->function_status = status; \
 if((cast_handle->i_trace_on) && (cast_handle->slout_hdl)) \
 { \
-	swprintf(cast_handle->wcp_msg1, PT_MAX_GENERIC_STRLEN, L"File %s, Line %d :: sndDevices Error Code: %d ", SND_DEVICES_WFILE, __LINE__, cast_handle->function_status); \
+	swprintf(cast_handle->wcp_msg1, PT_MAX_GENERIC_STRLEN, L"File %ls, Line %d :: sndDevices Error Code: %d ", SND_DEVICES_WFILE, __LINE__, cast_handle->function_status); \
 	cast_handle->slout_hdl->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1); \
  } \
 return(OKAY);}

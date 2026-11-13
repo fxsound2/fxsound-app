@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _DFX_SDK_H_
 
 // BEGIN TIME TRIAL CODE
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "dynamic_build_defines.h"
 // END TIME TRIAL CODE
 
@@ -144,7 +145,7 @@ typedef int DFX_SDK_HANDLE;
 #ifdef __cplusplus
 extern "C" {
 #endif
-int dfxgInit(PT_HANDLE **, HWND, HINSTANCE, int, int, int, wchar_t *, wchar_t *, int, int, int, int, int, int, long, int, long, int, PT_HANDLE *, int *);
+int dfxgInit(PT_HANDLE **, HWND, HINSTANCE, int, int, int, wchar_t *, wchar_t *, int, int, int, int, int, int, pt_long, int, pt_long, int, PT_HANDLE *, int *);
 int dfxgGetDfxHwnd(PT_HANDLE *, HWND *);
 int dfxgGetDfxpHandle(PT_HANDLE *, PT_HANDLE **);
 int dfxgSetParentWindow(PT_HANDLE *, HWND);

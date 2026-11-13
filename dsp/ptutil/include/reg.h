@@ -14,6 +14,7 @@
 #ifndef _REG_H_
 #define _REG_H_
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "slout.h" 
 
 /* Different types of root registry classes */
@@ -38,15 +39,15 @@ int PT_DECLSPEC regRemoveKey(int, char *);
 int PT_DECLSPEC regRemoveKey_Wide(int, wchar_t *);
 int PT_DECLSPEC regCreateKey(int, char *, char *);
 int PT_DECLSPEC regCreateKey_Wide(int, wchar_t *, wchar_t *);
-int PT_DECLSPEC regReadKey(int, char *, int *, char *, unsigned long);
-int PT_DECLSPEC regReadKey_Wide(int, wchar_t *, int *, wchar_t *, unsigned long);
+int PT_DECLSPEC regReadKey(int, char *, int *, char *, pt_ulong);
+int PT_DECLSPEC regReadKey_Wide(int, wchar_t *, int *, wchar_t *, pt_ulong);
 int PT_DECLSPEC regCreateKeyTest_Wide(int, wchar_t *, wchar_t *, int *);
 
 /* regWithKeyname.cpp */
-int PT_DECLSPEC regCreateKeyWithKeyname_Dword_Wide(int, wchar_t *, wchar_t *, unsigned long);
+int PT_DECLSPEC regCreateKeyWithKeyname_Dword_Wide(int, wchar_t *, wchar_t *, pt_ulong);
 int PT_DECLSPEC regCreateKeyWithKeyname_String_Wide(int, wchar_t *, wchar_t *, wchar_t *);
-int PT_DECLSPEC regReadKeyWithKeyname_String_Wide(int, wchar_t *, wchar_t *, int *, wchar_t *, unsigned long);
-int PT_DECLSPEC regReadKeyWithKeyname_Dword_Wide(int, wchar_t *, wchar_t *, int *, unsigned long *);
+int PT_DECLSPEC regReadKeyWithKeyname_String_Wide(int, wchar_t *, wchar_t *, int *, wchar_t *, pt_ulong);
+int PT_DECLSPEC regReadKeyWithKeyname_Dword_Wide(int, wchar_t *, wchar_t *, int *, pt_ulong *);
 
 /* regRecursiveDelete.cpp */
 int PT_DECLSPEC regRecursiveDeleteFolder_Wide(int, wchar_t *);

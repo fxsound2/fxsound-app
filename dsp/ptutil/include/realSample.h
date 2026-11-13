@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _REALSAMPLE_H_
 #define _REALSAMPLE_H_
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "slout.h"  
 #include "codedefs.h"
 
@@ -25,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define REAL_SAMPLE_LEGAL_VALUE_MAX  100.0
 
 /* realSample.cpp */
-int PT_DECLSPEC realSampleNew(PT_HANDLE **, long, int, int, CSlout *);
+int PT_DECLSPEC realSampleNew(PT_HANDLE **, pt_long, int, int, CSlout *);
 int PT_DECLSPEC realSampleFreeUp(PT_HANDLE **);
 
 /* realSampleCreateFromIntSample.cpp */
@@ -35,18 +36,18 @@ int PT_DECLSPEC realSampleCreateFromIntSampleHdl(PT_HANDLE **, PT_HANDLE *, CSlo
 int PT_DECLSPEC realSampleCopy(PT_HANDLE *, PT_HANDLE **);
 
 /* realSampleForceLegalValues.cpp */
-int PT_DECLSPEC realSampleForceLegalValues_ArrayOnly(realtype *, long);
+int PT_DECLSPEC realSampleForceLegalValues_ArrayOnly(realtype *, pt_long);
 
 /* realSampleGet.cpp */
-int PT_DECLSPEC realSampleGetAttributes(PT_HANDLE *, int *, long *);
-int PT_DECLSPEC realSampleGetSampleSegment(PT_HANDLE *, realtype **, long *);
+int PT_DECLSPEC realSampleGetAttributes(PT_HANDLE *, int *, pt_long *);
+int PT_DECLSPEC realSampleGetSampleSegment(PT_HANDLE *, realtype **, pt_long *);
 
 /* realSampleSet.cpp */
-int PT_DECLSPEC realSampleSetAttributes(PT_HANDLE *, int, long);
+int PT_DECLSPEC realSampleSetAttributes(PT_HANDLE *, int, pt_long);
 int PT_DECLSPEC realSampleClear(PT_HANDLE *);
 
 /* realSampleResize.cpp */
-int PT_DECLSPEC realSampleResize(PT_HANDLE *, long);
+int PT_DECLSPEC realSampleResize(PT_HANDLE *, pt_long);
 
 /* realSampleMix.cpp */
 int PT_DECLSPEC realSampleScale(PT_HANDLE *hp_realSample, realtype r_scale_factor);
@@ -59,7 +60,7 @@ int PT_DECLSPEC realSampleScale_NoHandle(realtype *, int, realtype);
 int PT_DECLSPEC realSampleSum_NoHandle(realtype *, int, realtype *, int);
 
 /* realSampleConvertRate.cpp */
-int PT_DECLSPEC realSampleConvertRate(PT_HANDLE *, long);
+int PT_DECLSPEC realSampleConvertRate(PT_HANDLE *, pt_long);
 
 /* realSampleSpecialRemix.cpp */
 int PT_DECLSPEC realSampleSpecialRemixScaleOriginal_NoHandle(realtype *, int, realtype, realtype);

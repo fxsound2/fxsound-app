@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* Standard includes */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -32,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "slout.h"
 
 // String related mth functions only built in WIN32 builds.
-#if defined( WIN32 )
+#if defined( WIN32 ) || defined( _WIN32 ) || defined( __linux__ )
 #include "pstr.h"
 #endif //WIN32
 
@@ -243,7 +244,7 @@ void PT_DECLSPEC mthCalcQuantDelta(realtype r_range_min, realtype r_range_max, i
 realtype PT_DECLSPEC mthCalcRoundedValue(realtype r_input_value, realtype r_delta, 
 							 realtype r_output_min, realtype r_output_max)
 {                      
-       long l_tmp;
+       pt_long l_tmp;
        realtype r_tmp;
        r_tmp = (realtype)(r_input_value / r_delta);
        /* Compensate for truncation offset (different for pos and neg) */
@@ -251,7 +252,7 @@ realtype PT_DECLSPEC mthCalcRoundedValue(realtype r_input_value, realtype r_delt
          	r_tmp += (realtype)0.5;
        else
            	r_tmp -= (realtype)0.5;
-       l_tmp = (long)r_tmp;
+       l_tmp = (pt_long)r_tmp;
        
        r_tmp = (realtype)(l_tmp * r_delta);
        
@@ -370,7 +371,7 @@ int PT_DECLSPEC mthRoundRealToInt(realtype r_input_value, int *ip_output_value)
  */
 int PT_DECLSPEC mthCalcIterativeAverage(realtype r_average_to_date, 
 													 realtype r_new_data_value,
-													 long l_total_number_of_data_values,
+													 pt_long l_total_number_of_data_values,
 													 realtype *rp_new_average)
 {
 	double new_val;
@@ -424,7 +425,7 @@ realtype PT_DECLSPEC mthFastSqrt(realtype r_x)
         return u.x;
 }
 
-#if defined( WIN32 ) // String functions are only built in WIN32 builds.
+#if defined( WIN32 ) || defined( _WIN32 ) || defined( __linux__ ) // String functions (+ Linux port).
 
 /*
  * FUNCTION: mthRotN()
@@ -507,7 +508,7 @@ int PT_DECLSPEC mthIsLong(char *cp_string, int *ip_is_long)
  * FUNCTION: mthIsLong_Wide()
  * DESCRIPTION:
  *
- * Pass back if the passed string is a long int. 
+ * Pass back if the passed string is a pt_long int. 
  */
 int PT_DECLSPEC mthIsLong_Wide(wchar_t *wcp_string, int *ip_is_long)
 {

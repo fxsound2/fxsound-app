@@ -15,6 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP long (see ptLong.h) */
 #include "codedefs.h"
 
 /* Standard includes */
@@ -28,8 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "slout.h"
 #include "mry.h"
-#include "pwav.h"
-#include "u_pwav.h"
+#include "Pwav.h"
+#include "U_pwav.h"
 #include "demodef.h"
 
 /*
@@ -47,7 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 int PT_DECLSPEC pwavNew(PT_HANDLE **hpp_pwav, CSlout *hp_slout, 
-            long l_buffer_length_samples, DWORD master_hwnd,
+            pt_long l_buffer_length_samples, DWORD master_hwnd,
             int i_num_buffers)
 {
    struct pwavHdlType *cast_handle;  
@@ -184,7 +185,7 @@ int pwav_AllocateBuffers(PT_HANDLE *hp_pwav)
  *   Changes the number of buffer and the buffer length.
  *
  */
-int PT_DECLSPEC pwavResetBufferSize(PT_HANDLE *hp_pwav, long l_buffer_length_samples, 
+int PT_DECLSPEC pwavResetBufferSize(PT_HANDLE *hp_pwav, pt_long l_buffer_length_samples, 
 						int i_num_buffers)
 {
    struct pwavHdlType *cast_handle;
@@ -234,8 +235,8 @@ int PT_DECLSPEC pwavResetBufferSize(PT_HANDLE *hp_pwav, long l_buffer_length_sam
 int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav, 
 						 wchar_t *wcp_filepath_in, wchar_t *wcp_filepath_out,
                    int i_num_channels_out, int i_waveout_dev, 
-                   int *ip_num_channels_in, long *lp_size_samples, 
-                   long *lp_samples_per_sec, int *ip_bits_per_sample)
+                   int *ip_num_channels_in, pt_long *lp_size_samples, 
+                   pt_long *lp_samples_per_sec, int *ip_bits_per_sample)
 {
    struct pwavHdlType *cast_handle;
    HANDLE hFormatIn;
@@ -367,7 +368,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
    /* Set the pass back format info */
    cast_handle->input_num_channels = (int)((cast_handle->pFormatIn)->nChannels);      
    *ip_num_channels_in = cast_handle->input_num_channels;   
-   *lp_samples_per_sec = (long)((cast_handle->pFormatIn)->nSamplesPerSec); 
+   *lp_samples_per_sec = (pt_long)((cast_handle->pFormatIn)->nSamplesPerSec); 
    
    /* Store number of output channels */
    cast_handle->output_num_channels = i_num_channels_out;
@@ -426,7 +427,7 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
    }
 
    /* Set the pass back size */
-   cast_handle->bytes_left_to_read = (long)(cast_handle->dwDataSize);
+   cast_handle->bytes_left_to_read = (pt_long)(cast_handle->dwDataSize);
    *lp_size_samples = cast_handle->bytes_left_to_read / cast_handle->wBlockSizeIn;
       
    /* Create the output file RIFF chunk of form type wave */  
@@ -565,13 +566,13 @@ int PT_DECLSPEC pwavReadHeader(PT_HANDLE *hp_pwav,
  *   It also passes back the total number of samples left to read.
  */
 int PT_DECLSPEC pwavReadNextBuffer(PT_HANDLE *hp_pwav, int i_buffer_num,
-                       long **lpp_buffer_data, long *lp_buffer_length_samples,
-                       long *lp_samples_left, int i_first_time, int i_prepare_header)
+                       pt_long **lpp_buffer_data, pt_long *lp_buffer_length_samples,
+                       pt_long *lp_samples_left, int i_first_time, int i_prepare_header)
 {
    struct pwavHdlType *cast_handle;
-   long num_bytes_to_read;
-   long read_buffer_length_bytes;
-   long read_return_bytes;
+   pt_long num_bytes_to_read;
+   pt_long read_buffer_length_bytes;
+   pt_long read_return_bytes;
    
    cast_handle = (struct pwavHdlType *)(hp_pwav);
 
@@ -596,7 +597,7 @@ int PT_DECLSPEC pwavReadNextBuffer(PT_HANDLE *hp_pwav, int i_buffer_num,
    /* Read the waveform data subchunk */
    if (num_bytes_to_read == 0)
    {
-      *lp_buffer_length_samples = (long)0L;
+      *lp_buffer_length_samples = (pt_long)0L;
       *lpp_buffer_data = NULL;      
    }
    else
@@ -609,10 +610,10 @@ int PT_DECLSPEC pwavReadNextBuffer(PT_HANDLE *hp_pwav, int i_buffer_num,
 		 (cast_handle->headerFlagsOut)[i_buffer_num] = IS_FALSE;
       }
       read_return_bytes = 
-          (long)(mmioRead(cast_handle->hmmio_in, 
+          (pt_long)(mmioRead(cast_handle->hmmio_in, 
                          (HPSTR)(cast_handle->lpDataOut[i_buffer_num]), 
                          num_bytes_to_read));
-      *lpp_buffer_data = (long *)(cast_handle->lpDataOut[i_buffer_num]);
+      *lpp_buffer_data = (pt_long *)(cast_handle->lpDataOut[i_buffer_num]);
    }
   
    *lp_buffer_length_samples = num_bytes_to_read / cast_handle->wBlockSizeIn;
@@ -662,7 +663,7 @@ int PT_DECLSPEC pwavReadNextBuffer(PT_HANDLE *hp_pwav, int i_buffer_num,
  */
 int PT_DECLSPEC pwavGetBuffer(PT_HANDLE *hp_pwav, 
                   int i_buffer_num, 
-                  long **lpp_buffer_data)
+                  pt_long **lpp_buffer_data)
                        
 {
    struct pwavHdlType *cast_handle;
@@ -672,7 +673,7 @@ int PT_DECLSPEC pwavGetBuffer(PT_HANDLE *hp_pwav,
    if (cast_handle == NULL)
       return(NOT_OKAY);
 
-   *lpp_buffer_data = (long *)(cast_handle->lpDataOut[i_buffer_num]); 
+   *lpp_buffer_data = (pt_long *)(cast_handle->lpDataOut[i_buffer_num]); 
    
    return(OKAY);
 }      
@@ -725,11 +726,11 @@ int PT_DECLSPEC pwavGetDoneReading(PT_HANDLE *hp_pwav, int *ip_done)
  * DESCRIPTION:
  *   Play the passed buffer for the passed length.
  */
-int PT_DECLSPEC pwavPlayBuffer(PT_HANDLE *hp_pwav, int i_buffer_num, long l_length_samples)
+int PT_DECLSPEC pwavPlayBuffer(PT_HANDLE *hp_pwav, int i_buffer_num, pt_long l_length_samples)
 {
    struct pwavHdlType *cast_handle;
    WORD wResult;
-   long length_bytes;
+   pt_long length_bytes;
   
    cast_handle = (struct pwavHdlType *)(hp_pwav);
 
@@ -744,7 +745,7 @@ int PT_DECLSPEC pwavPlayBuffer(PT_HANDLE *hp_pwav, int i_buffer_num, long l_leng
    if (cast_handle->save_mode)
    {
       mmioWrite(cast_handle->hmmio_out, (HPSTR)cast_handle->lpDataOut[i_buffer_num], 
-               (long)length_bytes);
+               (pt_long)length_bytes);
    } 
      
 	/* For debugging

@@ -18,6 +18,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "DfxDsp.h"
 #include "u_DfxDsp.h"
 
@@ -82,7 +83,7 @@ DfxPreset DfxDsp::getPresetInfo(std::wstring preset_file_full_path)
 	return data_->getPresetInfo(preset_file_full_path);
 }
 
-unsigned long DfxDsp::getTotalAudioProcessedTime()
+pt_ulong DfxDsp::getTotalAudioProcessedTime()
 {
 	return data_->getTotalAudioProcessedTime();
 }

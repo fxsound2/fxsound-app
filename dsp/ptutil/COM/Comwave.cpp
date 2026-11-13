@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Standard includes */
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "codedefs.h"
 
 #include <stdio.h> 
@@ -47,7 +48,7 @@ extern "C"
 #include "comSftwr.h"
 }
 
-#include "pwav.h"
+#include "Pwav.h"
 #include "com.h"
 #include "u_com.h"
 
@@ -57,7 +58,7 @@ extern "C"
  *  Process the passed buffer.
  *
  */
-int PT_DECLSPEC comProcessBuffer(PT_HANDLE *hp_com, long *lp_data, long l_length, 
+int PT_DECLSPEC comProcessBuffer(PT_HANDLE *hp_com, pt_long *lp_data, pt_long l_length, 
                          int i_stereo_in_mode, int i_stereo_out_mode,
 								 int i_buffer_type)
 {
@@ -86,13 +87,13 @@ int PT_DECLSPEC comProcessBuffer(PT_HANDLE *hp_com, long *lp_data, long l_length
  *  before processing and then upsample it after processing.
  *
  */
-int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, long *lp_data, float *rp_float, long l_length, 
+int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, pt_long *lp_data, float *rp_float, pt_long l_length, 
                          int i_stereo_in_mode, int i_stereo_out_mode, int i_down_sample_ratio,
 								 int i_format_flag)
 {
    /* l_length comes in with the buffer size in sample sets */
    struct comHdlType *cast_handle;
-	long *l_ptr;
+	pt_long *l_ptr;
 	float *f_ptr;
 	int leftover_samples;
 	int num_down_sample_sets;
@@ -111,7 +112,7 @@ int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, long *lp_data, float *rp
 		if (pwav24BitToFloat((char *)lp_data, rp_float, l_length, i_stereo_in_mode) != OKAY)
 			return(NOT_OKAY);
 
-		l_ptr = (long *)rp_float;
+		l_ptr = (pt_long *)rp_float;
 	}
 	else
 		l_ptr = lp_data;

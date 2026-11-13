@@ -15,6 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "codedefs.h"
 #include "slout.h" 
 
@@ -112,10 +113,10 @@ int PT_DECLSPEC qntIToRdBCalcInit(PT_HANDLE **, PT_HANDLE *, CSlout *, realtype)
 int PT_DECLSPEC qntIToRTimeConstantBeta(PT_HANDLE **hpp_beta_qnt, PT_HANDLE *hp_time_constant_qnt, CSlout *hp_slout,
 													 realtype r_sampling_freq);
 /* qntIToL.c */
-int PT_DECLSPEC qntIToLInit(PT_HANDLE **, CSlout *, int, int, long, long,
+int PT_DECLSPEC qntIToLInit(PT_HANDLE **, CSlout *, int, int, pt_long, pt_long,
 					 int, int, int);
-int PT_DECLSPEC qntIToLInitTrackIToR(PT_HANDLE **, PT_HANDLE *, CSlout *, long, long);
-int PT_DECLSPEC qntIToLCalc(PT_HANDLE *hp_qnt, int, long *);
+int PT_DECLSPEC qntIToLInitTrackIToR(PT_HANDLE **, PT_HANDLE *, CSlout *, pt_long, pt_long);
+int PT_DECLSPEC qntIToLCalc(PT_HANDLE *hp_qnt, int, pt_long *);
 
 /* qntRToI.c */
 int PT_DECLSPEC qntRToIInit(PT_HANDLE **, CSlout *, realtype, realtype, int, int, int, int, int);
@@ -123,9 +124,9 @@ int PT_DECLSPEC qntRToICalc(PT_HANDLE *hp_qnt, realtype, int *);
 int PT_DECLSPEC qntRToICalcFromOut(PT_HANDLE *hp_qnt, int, realtype *);
 
 /* qntRToL.c */
-int PT_DECLSPEC qntRToLInit(PT_HANDLE **, CSlout *, realtype, realtype, long, long, int, int);
-int PT_DECLSPEC qntRToLCalc(PT_HANDLE *hp_qnt, realtype, long *);
-int PT_DECLSPEC qntRToLCalcFromOut(PT_HANDLE *hp_qnt, long, realtype *);
+int PT_DECLSPEC qntRToLInit(PT_HANDLE **, CSlout *, realtype, realtype, pt_long, pt_long, int, int);
+int PT_DECLSPEC qntRToLCalc(PT_HANDLE *hp_qnt, realtype, pt_long *);
+int PT_DECLSPEC qntRToLCalcFromOut(PT_HANDLE *hp_qnt, pt_long, realtype *);
 
 /* qntRToR.c */
 int PT_DECLSPEC qntRToRInit(PT_HANDLE **, CSlout *, realtype, realtype, realtype, realtype,

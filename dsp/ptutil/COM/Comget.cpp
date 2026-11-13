@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Standard includes */
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <stdio.h> 
 #include "codedefs.h"
 
@@ -106,7 +107,7 @@ int PT_DECLSPEC comGetAesExists(PT_HANDLE *hp_com, int *ip_aes_exists)
  *   serial number came from the hardware card.
  *
  */
-int PT_DECLSPEC comGetSerialNum(PT_HANDLE *hp_com, unsigned long *ulp_serial_num)
+int PT_DECLSPEC comGetSerialNum(PT_HANDLE *hp_com, pt_ulong *ulp_serial_num)
 {
    struct comHdlType *cast_handle;
 
@@ -127,7 +128,7 @@ int PT_DECLSPEC comGetSerialNum(PT_HANDLE *hp_com, unsigned long *ulp_serial_num
  *   Pass back the number of memory samples on the main card.
  *
  */
-int PT_DECLSPEC comGetMainNumSamples(PT_HANDLE *hp_com, long *lp_main_num_samples)
+int PT_DECLSPEC comGetMainNumSamples(PT_HANDLE *hp_com, pt_long *lp_main_num_samples)
 {
    struct comHdlType *cast_handle;
 
@@ -148,7 +149,7 @@ int PT_DECLSPEC comGetMainNumSamples(PT_HANDLE *hp_com, long *lp_main_num_sample
  *   Pass back the number of memory samples on the expansion card.
  *
  */
-int PT_DECLSPEC comGetExpandedNumSamples(PT_HANDLE *hp_com, long *lp_expanded_num_samples)
+int PT_DECLSPEC comGetExpandedNumSamples(PT_HANDLE *hp_com, pt_long *lp_expanded_num_samples)
 {
    struct comHdlType *cast_handle;
 

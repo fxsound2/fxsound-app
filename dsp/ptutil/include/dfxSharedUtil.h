@@ -1,3 +1,4 @@
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 /*
 FxSound
 Copyright (C) 2025  FxSound LLC
@@ -25,7 +26,7 @@ int PT_DECLSPEC dfxSharedUtilInit(PT_HANDLE **, int, CSlout *);
 int PT_DECLSPEC dfxSharedUtilFreeUp(PT_HANDLE **);
 int PT_DECLSPEC dfxSharedUtilSetSpectrumValues(PT_HANDLE *, realtype *, int);
 int PT_DECLSPEC dfxSharedUtilGetSpectrumValues(PT_HANDLE *, realtype *, int);
-int PT_DECLSPEC dfxSharedUtilSetTotalProcessedTime(PT_HANDLE *, unsigned long);
-int PT_DECLSPEC dfxSharedUtilGetTotalProcessedTime(PT_HANDLE *, unsigned long *);
+int PT_DECLSPEC dfxSharedUtilSetTotalProcessedTime(PT_HANDLE *, pt_ulong);
+int PT_DECLSPEC dfxSharedUtilGetTotalProcessedTime(PT_HANDLE *, pt_ulong *);
 
 #endif // _DFX_SHARED_UTIL_H_

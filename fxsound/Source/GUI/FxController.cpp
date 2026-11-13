@@ -26,6 +26,43 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Utils/SysInfo/SysInfo.h"
 #include <iostream>
 #include <cstdio>
+#if !JUCE_WINDOWS
+#include "autostart_posix.h"  /* Linux: ~/.config/autostart desktop entry (Phase 9) */
+#include "paths_posix.h"    /* XDG preset dirs (Phase 8) */
+#include "os_posix.h"
+#endif
+
+// Preset folder resolution (Phase 8 paths, see docs/linux-port/APP_LAYER.md §4).
+// Windows keeps %APPDATA%\FxSound literal paths; Linux uses XDG dirs
+// (linux/paths_posix.cpp: user/factory under ~/.local/share + /usr/share).
+static String getUserPresetDirPath()
+{
+#if JUCE_WINDOWS
+	return File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userApplicationDataDirectory).getFullPathName()) + L"FxSound\\Presets";
+#else
+	return String::fromUTF8(fxsound_linux::userPresetDir().c_str());
+#endif
+}
+
+static String getFactoryPresetDirPath()
+{
+#if JUCE_WINDOWS
+	return File::addTrailingSeparator(File::getCurrentWorkingDirectory().getFullPathName()) + L"Factsoft";
+#else
+	auto exe_dir = File::getSpecialLocation(File::currentExecutableFile).getParentDirectory();
+	return String::fromUTF8(fxsound_linux::factoryPresetDir(exe_dir.getFullPathName().toStdString()).c_str());
+#endif
+}
+
+static String getExportPresetDirPath()
+{
+	auto docs = File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory).getFullPathName());
+#if JUCE_WINDOWS
+	return docs + L"FxSound\\Presets\\Export\\";
+#else
+	return docs + "FxSound/Presets/Export/";
+#endif
+}
 
 class FxDeviceErrorMessage : public FxWindow
 {
@@ -123,7 +160,11 @@ private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxDeviceErrorMessage)
 };
 
+#if JUCE_WINDOWS
 FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)eventCallback)
+#else
+FxController::FxController()
+#endif
 {
 	dfx_enabled_ = true;
 	authenticated_ = true;
@@ -132,8 +173,10 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 	hotkeys_registered_ = false;
 	output_changed_ = false;
 	playback_device_available_ = true;
+#if JUCE_WINDOWS
 	powerNotify_ = nullptr;
 	unregister_suspend_resume_notification_ = nullptr;
+#endif
 
 	device_count_ = 0;
 	output_device_name_ = L"";
@@ -155,6 +198,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 	logMessage("v" + JUCEApplication::getInstance()->getApplicationVersion());
 	logMessage(SystemStats::getOperatingSystemName());
 
+#if JUCE_WINDOWS
 	SYSTEM_INFO sys_info;
 	GetNativeSystemInfo(&sys_info);
 	if (sys_info.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL)
@@ -169,6 +213,9 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 	{
 		logMessage(String("ARM64"));
 	}
+#else
+	logMessage(String("Linux ") + String::fromUTF8(fxsound_linux::cpuArch().c_str()));
+#endif
 
 	auto view = settings_.getInt("view");
 	if (view <= 0 || view > 2)
@@ -198,22 +245,30 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 		max_user_presets_ = 120;
 	}
 
+#if JUCE_WINDOWS
 	SetWindowLongPtr(message_window_.getHandle(), GWLP_USERDATA, (LONG_PTR)this);
 
 	session_id_ = 0;
 	ProcessIdToSessionId(GetCurrentProcessId(), &session_id_);
 	WTSRegisterSessionNotification(message_window_.getHandle(), NOTIFY_FOR_THIS_SESSION);
+#else
+	session_id_ = 0;
+#endif
 }
 
 FxController::~FxController()
 {
+#if JUCE_WINDOWS
 	if (powerNotify_ != nullptr && unregister_suspend_resume_notification_ != nullptr)
 	{
 		unregister_suspend_resume_notification_(powerNotify_);
 		powerNotify_ = nullptr;
 	}
+#endif
 	stopTimer();
+#if JUCE_WINDOWS
 	WTSUnRegisterSessionNotification(message_window_.getHandle());
+#endif
 	unregisterHotkeys();
 }
 
@@ -249,6 +304,18 @@ void FxController::initConfig(const String& commandline)
 	if (preset.isNotEmpty())
 	{
 		settings_.setString("preset", preset);
+	}
+
+	if (arg_list.containsOption("--scale"))
+	{
+		// Persisted for the NEXT launch; the UI scale cannot change at runtime
+		// (JUCE global scale must be set before windows are created).
+		auto scale = arg_list.getValueForOption("--scale").getFloatValue();
+		if (scale >= 0.5f && scale <= 3.0f)
+		{
+			settings_.setDouble("ui_scale", scale);
+			settings_.setInt("ui_scale_explicit", 1);
+		}
 	}
 
 	if (output_device.isNotEmpty())
@@ -351,6 +418,8 @@ void FxController::applyConfig(const String& commandline)
 		return;
 	}
 
+
+
 	auto power_state = arg_list.getValueForOption("--power");
 	auto view = arg_list.getValueForOption("--view");
 	auto output_device = arg_list.getValueForOption("--output").unquoted();
@@ -445,6 +514,18 @@ void FxController::applyConfig(const String& commandline)
 			{
 				deletePreset();
 			}
+		}
+	}
+
+	if (arg_list.containsOption("--scale"))
+	{
+		// Persisted for the NEXT launch; the UI scale cannot change at runtime
+		// (JUCE global scale must be set before windows are created).
+		auto scale = arg_list.getValueForOption("--scale").getFloatValue();
+		if (scale >= 0.5f && scale <= 3.0f)
+		{
+			settings_.setDouble("ui_scale", scale);
+			settings_.setInt("ui_scale_explicit", 1);
 		}
 	}
 
@@ -681,6 +762,7 @@ void FxController::printStatus()
 	// (already-running) instance's own parent console - i.e. whichever
 	// console FxSound.exe was originally launched from - not the console of
 	// the process that just forwarded this command.
+#if JUCE_WINDOWS
 	if (AttachConsole(ATTACH_PARENT_PROCESS))
 	{
 		FILE* fp = nullptr;
@@ -691,6 +773,12 @@ void FxController::printStatus()
 
 		FreeConsole();
 	}
+#else
+	// Linux: the running instance was typically started from a systemd user
+	// session or desktop file; still write stdout (journal/desktop capture).
+	std::cout << json_text << std::endl;
+	std::cout.flush();
+#endif
 }
 
 void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray_view, AudioPassthru* audio_passthru)
@@ -704,8 +792,13 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		if (audio_passthru_->init() != 0)
 		{
 			String message(TRANS("Error in system audio configuration. Unable to run FxSound"));
+#if ! JUCE_WINDOWS
+			std::cerr << "FxSound: Error in system audio configuration. Unable to run FxSound.\n";
+			if (Desktop::getInstance().getDisplays().getPrimaryDisplay() != nullptr)
+				AlertWindow::showMessageBox(AlertWindow::AlertIconType::WarningIcon, JUCEApplication::getInstance()->getApplicationName(), message, TRANS("OK"));
+#else
 			AlertWindow::showMessageBox(AlertWindow::AlertIconType::WarningIcon, JUCEApplication::getInstance()->getApplicationName(), message, TRANS("OK"));
-
+#endif
 			JUCEApplication::getInstance()->systemRequestedQuit();
 			return;
 		}
@@ -714,7 +807,9 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		auto prev_version = settings_.getString("version");
 		if (prev_version != app_version)
 		{
+#if JUCE_WINDOWS
 			RegDeleteTree(HKEY_CURRENT_USER, L"Software\\DFX");
+#endif
 
 			FxModel::getModel().pushMessage(" ", { TRANS("Click here to see what's new on this version!"), "https://www.fxsound.com/changelog" });
 
@@ -737,7 +832,7 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 
 		audio_passthru_->registerCallback(this);
 
-		auto path = File(File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userApplicationDataDirectory).getFullPathName()) + L"FxSound\\Presets");
+		auto path = File(getUserPresetDirPath());
 		if (!path.exists())
 		{
 			path.createDirectory();
@@ -784,6 +879,7 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		main_window_->setIcon(power, false);
 		system_tray_view_->setStatus(power, false);
 
+#if JUCE_WINDOWS
 		HMODULE user32_module = GetModuleHandleW(L"user32.dll");
 		if (user32_module != nullptr)
 		{
@@ -797,18 +893,27 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 				powerNotify_ = register_suspend_resume_notification(message_window_.getHandle(), DEVICE_NOTIFY_WINDOW_HANDLE);
 			}
 		}
+#endif
 	}
 }
 
 String FxController::getAutoSavePath() const
 {
+#if JUCE_WINDOWS
 	auto data_dir = File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userApplicationDataDirectory).getFullPathName());
 	return data_dir + L"FxSound\\AutoSave";
+#else
+	return String::fromUTF8(fxsound_linux::autoSaveDir().c_str());
+#endif
 }
 
 String FxController::getAutoSavePresetPath(const String& preset_name) const
 {
-	return getAutoSavePath() + L"\\" + preset_name + ".fac";
+#if JUCE_WINDOWS
+	return getAutoSavePath() + L"\\" + preset_name + L".fac";
+#else
+	return getAutoSavePath() + preset_name + ".fac";
+#endif
 }
 
 void FxController::autoSavePreset(int preset_index)
@@ -841,8 +946,7 @@ void FxController::deleteAutoSavedPreset(const String& preset_name)
 void FxController::initPresets()
 {
 	Array<FxModel::Preset> presets;
-	auto working_dir = File::getCurrentWorkingDirectory();
-	FileSearchPath preset_search_path(File::addTrailingSeparator(working_dir.getFullPathName()) + L"Factsoft");
+	FileSearchPath preset_search_path(getFactoryPresetDirPath());
 	auto app_preset_paths = preset_search_path.findChildFiles(File::findFiles, false, "*.fac");
 	for (auto path : app_preset_paths)
 	{
@@ -853,8 +957,7 @@ void FxController::initPresets()
 		}
 	}
 
-	auto data_dir = File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userApplicationDataDirectory).getFullPathName());
-	FileSearchPath user_preset_search_path(data_dir + L"FxSound\\Presets");
+	FileSearchPath user_preset_search_path(getUserPresetDirPath());
 	auto user_preset_paths = user_preset_search_path.findChildFiles(File::findFiles, false, "*.fac");
 	for (auto path : user_preset_paths)
 	{
@@ -917,6 +1020,7 @@ void FxController::hideMainWindow()
 		settings_.setBool("run_minimized", true);
 	}
 
+#if JUCE_WINDOWS
 	if (minimize_tip_)
 	{
 		minimize_tip_ = false;
@@ -924,6 +1028,7 @@ void FxController::hideMainWindow()
 			FxModel::getModel().pushMessage(TRANS("FxSound in system tray\r\nClick FxSound icon to reopen"));
 			});
 	}
+#endif
 }
 
 void FxController::showMainWindow()
@@ -1015,6 +1120,7 @@ void FxController::setPowerState(bool power_state)
 
 		system_tray_view_->setStatus(false, false);
 		main_window_->setIcon(false, false);
+		main_window_->setLogoHighlighted(false, isTimerRunning());
 		
 		return;
     }
@@ -1027,6 +1133,7 @@ void FxController::setPowerState(bool power_state)
 
 	system_tray_view_->setStatus(power_state, audio_process_on_);
 	main_window_->setIcon(power_state, audio_process_on_);
+	main_window_->setLogoHighlighted(power_state, isTimerRunning());
 }
 
 bool FxController::setPreset(const String& preset_name, bool notify)
@@ -1176,6 +1283,7 @@ void FxController::setOutput(const String output_device_id, bool notify)
 			powerOn(true);
 			audio_passthru_->mute(false);
 		}
+		syncPlaybackAvailability();
 	}
 
 	system_tray_view_->setStatus(FxModel::getModel().getPowerState(), isAudioProcessing());
@@ -1193,7 +1301,7 @@ void FxController::setOutput(int output, bool notify)
 
 bool FxController::isPlaybackDeviceAvailable()
 {
-	return playback_device_available_;
+	return playback_device_available_ || audio_process_on_;
 }
 
 void FxController::checkDeviceChanges()
@@ -1212,7 +1320,7 @@ void FxController::savePreset(const String& preset_name)
 
 	if (preset_name.isEmpty())
 	{
-		auto path = File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userApplicationDataDirectory).getFullPathName()) + L"FxSound\\Presets";
+		auto path = getUserPresetDirPath();
 		dfx_dsp_.savePreset(preset.name.toWideCharPointer(), path.toWideCharPointer());
 
 		deleteAutoSavedPreset(preset.name);
@@ -1222,7 +1330,7 @@ void FxController::savePreset(const String& preset_name)
 	}
 	else
 	{
-		auto path = File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userApplicationDataDirectory).getFullPathName()) + L"FxSound\\Presets";
+		auto path = getUserPresetDirPath();
 		dfx_dsp_.savePreset(preset_name.toWideCharPointer(), path.toWideCharPointer());
 
 		deleteAutoSavedPreset(preset.name);
@@ -1253,9 +1361,10 @@ void FxController::renamePreset(const String& new_name)
 	if (preset.name == new_name) return;
 	if (preset.type == FxModel::PresetType::UserPreset)
 	{
-		auto path = File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userApplicationDataDirectory).getFullPathName()) + L"FxSound\\Presets";
+		auto path = getUserPresetDirPath();
 		dfx_dsp_.savePreset(new_name.toWideCharPointer(), path.toWideCharPointer());
 
+#if JUCE_WINDOWS
 		wchar_t old_path[MAX_PATH] = {};
 		wcscpy_s(old_path, preset.path.toWideCharPointer());
 		if (preset.path.length() + 1 < MAX_PATH)
@@ -1265,6 +1374,9 @@ void FxController::renamePreset(const String& new_name)
 		SHFILEOPSTRUCT file_op = { NULL, FO_DELETE, old_path, L"",
 								   FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT, FALSE, 0, L"" };
 		SHFileOperation(&file_op);
+#else
+		File(preset.path).moveToTrash();  // recycle-bin semantics, no shell
+#endif
 
 		initPresets();
 
@@ -1286,6 +1398,7 @@ void FxController::deletePreset()
 	{
 		deleteAutoSavedPreset(preset.name);
 
+#if JUCE_WINDOWS
 		wchar_t path[MAX_PATH] = {};
 
 		wcscpy_s(path, preset.path.toWideCharPointer());
@@ -1297,6 +1410,9 @@ void FxController::deletePreset()
 		SHFILEOPSTRUCT file_op = { NULL, FO_DELETE, path, L"",
 								   FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT, FALSE, 0, L"" };
 		SHFileOperation(&file_op);
+#else
+		File(preset.path).moveToTrash();
+#endif
 
 		initPresets();
 
@@ -1352,6 +1468,7 @@ void FxController::resetPresets()
 
 		if (preset.type == FxModel::PresetType::UserPreset)
 		{
+#if JUCE_WINDOWS
 			wchar_t path[MAX_PATH] = {};
 
 			wcscpy_s(path, preset.path.toWideCharPointer());
@@ -1363,6 +1480,9 @@ void FxController::resetPresets()
 			SHFILEOPSTRUCT file_op = { NULL, FO_DELETE, path, L"",
 									   FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT, FALSE, 0, L"" };
 			SHFileOperation(&file_op);
+#else
+			File(preset.path).moveToTrash();
+#endif
 		}
 	}
 
@@ -1383,7 +1503,7 @@ void FxController::resetPresets()
 
 bool FxController::exportPresets(const Array< FxModel::Preset>& presets)
 {
-	auto path_name = File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory).getFullPathName()) + L"FxSound\\Presets\\Export\\";
+	auto path_name = getExportPresetDirPath();
 
 	File path(path_name);
 	if (!path.exists())
@@ -1418,7 +1538,7 @@ bool FxController::exportPresets(const Array< FxModel::Preset>& presets)
 
 bool FxController::importPresets(const Array<File>& preset_files, StringArray& imported_presets, StringArray& skipped_presets)
 {
-	auto path_name = File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userApplicationDataDirectory).getFullPathName()) + L"FxSound\\Presets";
+	auto path_name = getUserPresetDirPath();
 	File path(path_name);
 	if (!path.exists())
 	{
@@ -1432,7 +1552,11 @@ bool FxController::importPresets(const Array<File>& preset_files, StringArray& i
 		auto preset_info = dfx_dsp_.getPresetInfo(preset_file.getFullPathName().toWideCharPointer());
 		if (model.isPresetNameValid(preset_info.name.c_str()))
 		{
+			#if JUCE_WINDOWS
 			File import_file(path_name + "\\" + preset_info.name.c_str() + ".fac");
+#else
+			File import_file(path_name + preset_info.name.c_str() + ".fac");
+#endif
 			if (preset_file.copyFileTo(import_file))
 			{
 				imported_presets.add(preset_info.name.c_str());
@@ -1614,15 +1738,24 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 // Handled when FxSound processing is on
 void FxController::selectProcessingOutput(std::vector<SoundDevice>& sound_devices)
 {
-	auto available = audio_passthru_->isPlaybackDeviceAvailable();
-	if (available != playback_device_available_)
+	syncPlaybackAvailability();
+
+	bool devices_changed = (sound_devices.size() != device_count_);
+	if (!devices_changed)
 	{
-		playback_device_available_ = available;
-		FxModel::getModel().notifyOutputError();
+		for (size_t i = 0; i < sound_devices.size() && i < active_output_devices_.size(); ++i)
+		{
+			if (sound_devices[i].pwszID != active_output_devices_[i].pwszID ||
+			    sound_devices[i].deviceFriendlyName != active_output_devices_[i].deviceFriendlyName)
+			{
+				devices_changed = true;
+				break;
+			}
+		}
 	}
 
 	// New device is added or removed, so update the output device list and select a preferred output device based on the updated device list.
-	if (sound_devices.size() != device_count_)
+	if (devices_changed)
 	{
 		updateOutputs(sound_devices);
 		device_count_ = (uint32_t)sound_devices.size();
@@ -1659,6 +1792,16 @@ void FxController::selectProcessingOutput(std::vector<SoundDevice>& sound_device
 				break;
 			}
 		}
+	}
+}
+
+void FxController::syncPlaybackAvailability()
+{
+	auto available = audio_passthru_->isPlaybackDeviceAvailable() || audio_process_on_;
+	if (available != playback_device_available_)
+	{
+		playback_device_available_ = available;
+		FxModel::getModel().notifyOutputError();
 	}
 }
 
@@ -1728,6 +1871,7 @@ void FxController::powerOn(bool on)
 {
 	if (on)
 	{
+		audio_passthru_->setPower(true);
 		dfx_dsp_.powerOn(true);
 
 		if (!isTimerRunning())
@@ -1744,7 +1888,7 @@ void FxController::powerOn(bool on)
 			stopTimer();
 		}
 
-		audio_passthru_->restoreDefaultPlaybackDevice();
+		audio_passthru_->setPower(false);
 	}
 }
 
@@ -1779,6 +1923,10 @@ void FxController::setNumEqBands(int num_bands)
 {
 	dfx_dsp_.setNumBands(num_bands);
 	settings_.setInt("num_bands", num_bands);
+	if (main_window_ != nullptr)
+	{
+		main_window_->update();
+	}
 }
 
 float FxController::getVolumeLeveling()
@@ -1913,6 +2061,7 @@ void FxController::setEqBandBoostCut(int band_num, float boost)
 	}
 }
 
+#if JUCE_WINDOWS
 LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, const WPARAM w_param, const LPARAM l_param)
 {
 	static auto os = SystemStats::getOperatingSystemType();
@@ -2048,6 +2197,7 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 
 	return DefWindowProc(hwnd, message, w_param, l_param);
 }
+#endif  /* JUCE_WINDOWS — Linux: no message window; portable CLI covers preset/power */
 
 void FxController::timerCallback()
 {
@@ -2059,6 +2209,7 @@ void FxController::timerCallback()
 	}
 
 	audio_passthru_->processTimer();
+	syncPlaybackAvailability();
 	auto total_audio_process_time = dfx_dsp_.getTotalAudioProcessedTime();
 	if (audio_process_time_ != total_audio_process_time)
 	{
@@ -2078,24 +2229,32 @@ void FxController::timerCallback()
 		audio_process_on_ = true;
 		system_tray_view_->setStatus(power, true);
 		main_window_->setIcon(power, true);
-		main_window_->startLogoAnimation();
+		if (power)
+		{
+			main_window_->setLogoHighlighted(true, true);
+		}
 		if (view_ == ViewType::Pro)
 		{
 			main_window_->showProView();
 			main_window_->startVisualizer();
 		}
+		syncPlaybackAvailability();
 	}
 	if (audio_process_off_counter_ == 5 && audio_process_on_)
 	{
 		audio_process_on_ = false;
 		system_tray_view_->setStatus(power, false);
 		main_window_->setIcon(power, false);
-		main_window_->stopLogoAnimation();
+		if (!power)
+		{
+			main_window_->setLogoHighlighted(false, true);
+		}
 		if (view_ == ViewType::Pro)
 		{
 			main_window_->showProView();
 			main_window_->pauseVisualizer();
 		}
+		syncPlaybackAvailability();
 	}
 
 	// Auto-save modified preset once per minute if there are unsaved changes
@@ -2118,26 +2277,24 @@ void FxController::timerCallback()
 
 void FxController::onSoundDeviceChange(bool processing)
 {
+	(void)processing;
+#if JUCE_WINDOWS
 	if (session_id_ != WTSGetActiveConsoleSessionId())
 		return; // Ignore device changes on another user session
+#endif
 
 	ScopedLock auto_lock(lock_);
 
+	output_devices_ = audio_passthru_->getSoundDevices(false);
+	DeviceConfig::updateDeviceConfigs(settings_, output_devices_);
+	auto sound_devices = audio_passthru_->getSoundDevices(true);
+
 	if (isTimerRunning())
 	{
-		if (processing)
-		{
-			output_devices_ = audio_passthru_->getSoundDevices(false);
-			DeviceConfig::updateDeviceConfigs(settings_, output_devices_);
-			auto sound_devices = audio_passthru_->getSoundDevices(true);
-			selectProcessingOutput(sound_devices);
-		}
+		selectProcessingOutput(sound_devices);
 	}
 	else
 	{
-		output_devices_ = audio_passthru_->getSoundDevices(false);
-		DeviceConfig::updateDeviceConfigs(settings_, output_devices_);
-		auto sound_devices = audio_passthru_->getSoundDevices(true);
 		syncOutputWithSystemDefault(sound_devices);
 	}
 }
@@ -2216,6 +2373,7 @@ bool FxController::setHotkey(const String& command, int new_mod, int new_vk)
 		code = 0;
 	}
 
+#if JUCE_WINDOWS
 	int hk_id = 0;
 
 	if (command == HK_CMD_ON_OFF)
@@ -2266,6 +2424,12 @@ bool FxController::setHotkey(const String& command, int new_mod, int new_vk)
 	}
 
 	return false;
+#else
+	// Linux: no RegisterHotKey; persist the packed code so settings round-trip
+	// (hotkey support itself is gated off by SysInfo::canSupportHotkeys()).
+	settings_.setInt(command, code);
+	return code != 0;
+#endif
 }
 
 bool FxController::isValidHotkey(int mod, int vk)
@@ -2274,7 +2438,7 @@ bool FxController::isValidHotkey(int mod, int vk)
 	{
 		return false;
 	}
-
+#if JUCE_WINDOWS
 	HKL hkl = GetKeyboardLayout(0);
 	BYTE kbd_state[256] = { 0 };
 	kbd_state[VK_CONTROL] = 0x80;
@@ -2297,6 +2461,16 @@ bool FxController::isValidHotkey(int mod, int vk)
 	}
 
 	return true;
+#else
+	// Linux: ToUnicodeEx unavailable; accept the Ctrl+Alt/Shift + 0-9/A-Z shape
+	// (getHotkey enforces the same pattern on read-back).
+	if (mod == (MOD_CONTROL | MOD_ALT) || mod == (MOD_CONTROL | MOD_SHIFT))
+	{
+		return (vk >= 0x30 && vk <= 0x39) || (vk >= 'A' && vk <= 'Z');
+	}
+
+	return false;
+#endif
 }
 
 bool FxController::isHelpTooltipsHidden()
@@ -2788,6 +2962,7 @@ void FxController::setAlwaysOnTop(bool always_on_top)
 
 bool FxController::isLaunchOnStartup()
 {
+#if JUCE_WINDOWS
 	HKEY hkey;
 	RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_QUERY_VALUE, &hkey);
 	DWORD type;
@@ -2796,10 +2971,14 @@ bool FxController::isLaunchOnStartup()
 	RegCloseKey(hkey);
 
 	return size > 0;
+#else
+	return fxsound_linux::isLaunchOnStartup();
+#endif
 }
 
 void FxController::setLaunchOnStartup(bool launch_on_startup)
 {
+#if JUCE_WINDOWS
 	wchar_t szPath[MAX_PATH];
 	GetModuleFileName(NULL, szPath, MAX_PATH);
 	HKEY hkey;
@@ -2815,10 +2994,14 @@ void FxController::setLaunchOnStartup(bool launch_on_startup)
 	}
 
 	RegCloseKey(hkey);
+#else
+	fxsound_linux::setLaunchOnStartup(launch_on_startup);
+#endif
 }
 
 void FxController::registerHotkeys()
 {
+#if JUCE_WINDOWS
 	if (!hotkeys_registered_)
 	{
 		int mod;
@@ -2869,10 +3052,16 @@ void FxController::registerHotkeys()
 
 		hotkeys_registered_ = true;
 	}
+#else
+	// Linux: no global RegisterHotKey in v1 (see docs/linux-port/DESKTOP.md —
+	// KDE global shortcuts call `fxsound --power=...` via single-instance forward).
+	hotkeys_registered_ = false;
+#endif
 }
 
 void FxController::unregisterHotkeys()
 {
+#if JUCE_WINDOWS
 	if (hotkeys_registered_)
 	{
 		::UnregisterHotKey(message_window_.getHandle(), CMD_ON_OFF);
@@ -2882,6 +3071,7 @@ void FxController::unregisterHotkeys()
 		::UnregisterHotKey(message_window_.getHandle(), CMD_NEXT_OUTPUT);
 		hotkeys_registered_ = false;
 	}
+#endif
 }
 
 void FxController::getSpectrumBandValues(Array<float>& band_values)
@@ -2906,9 +3096,15 @@ void FxController::getSpectrumBandValues(Array<float>& band_values)
 
 String FxController::FormatString(const String& format, const String& arg)
 {
+#if JUCE_WINDOWS
 	wchar_t buffer[1024];
 
 	swprintf_s(buffer, format.toWideCharPointer(), arg.toWideCharPointer());
 
 	return String(buffer);
+#else
+	// Translated formats use a single %s placeholder; substitute directly so
+	// wide-printf %s semantics (MSVC) vs %ls (glibc) don't matter.
+	return format.replace("%s", arg);
+#endif
 }

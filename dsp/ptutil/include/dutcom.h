@@ -1,3 +1,4 @@
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 /* (C) COPYRIGHT 1994-1997 Power Technology. All Rights Reserved.
  * This document and file contain highly confidential information
  * which is not to be disclosed or in any other way retransmitted
@@ -38,7 +39,7 @@
  */
 #if (defined(DUIO_B) | defined(DUIO_BA) | defined(DUIO_BD))
 #define load_parameter() \
-if( (*(volatile long *)(DSP_DMA_IN_TRANSFER)) == 0 ) \
+if( (*(volatile pt_long *)(DSP_DMA_IN_TRANSFER)) == 0 ) \
 { \
 	if( address_valid_flag_MACRO ) \
 	{ \
@@ -52,8 +53,8 @@ if( (*(volatile long *)(DSP_DMA_IN_TRANSFER)) == 0 ) \
 #elif (defined(DUIO_A) | defined(DUIO_D))
 #define load_parameter() \
 { \
-	static long parm_address_MACRO; \
-	static long address_valid_flag_MACRO = 0; \
+	static pt_long parm_address_MACRO; \
+	static pt_long address_valid_flag_MACRO = 0; \
 	if( address_valid_flag_MACRO ) \
 	{ \
 		load_mem_value(parm_address_MACRO, address_valid_flag_MACRO); \
@@ -89,9 +90,9 @@ volatile unsigned iflg;
 	asm("	STI	IOF,@_iflg"); \
 	if ( ! (iflg & 0x08) ) \
 	{ \
-		long parm_MACRO; \
+		pt_long parm_MACRO; \
 		parm_MACRO = io_adr->xfr_reg; \
-		*(volatile long *)parm_address = parm_MACRO; \
+		*(volatile pt_long *)parm_address = parm_MACRO; \
 		address_flag = 0; \
 	} \
 }
@@ -115,9 +116,9 @@ volatile unsigned iflg;
 { \
 	if( !(io_adr->comd_stat & 0x40) ) \
 	{ \
-		long parm_MACRO; \
+		pt_long parm_MACRO; \
 		parm_MACRO = io_adr->xfr_reg; \
-		*(volatile long *)parm_address = parm_MACRO; \
+		*(volatile pt_long *)parm_address = parm_MACRO; \
 		address_flag = 0; \
 	} \
 }
@@ -227,7 +228,7 @@ volatile unsigned iflg;
 
 /* For sending back averaged meter data in PC case.
  * Writes averaged meter data temporarily as a float.
- * Will be converted to long and factored in calling function.
+ * Will be converted to pt_long and factored in calling function.
  */
 #if defined(DSPSOFT_TARGET) & (PT_DSP_BUILD == PT_DSP_DSPFX)
 #define write_meter_average() \

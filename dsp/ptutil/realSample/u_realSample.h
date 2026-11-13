@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Sets the mix point at which the original signal starts to lower in volume */
 #define REALSAMPLE_SPECIAL_MIX_BREAKPOINT 0.5
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP long (see ptLong.h) */
 #include "slout.h"
 #include "realSample.h"
 
@@ -32,10 +33,10 @@ struct realSampleHdlType {
 
 	/* Attributes */
 	int num_channels;
-	long samples_per_sec;
+	pt_long samples_per_sec;
 
 	/* Samples info */
-	long num_samples;
+	pt_long num_samples;
 	realtype *rp_samples;
 };
 

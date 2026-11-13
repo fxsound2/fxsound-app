@@ -18,6 +18,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #pragma once
 #include <string>
 #include "AudioPassthru.h"
@@ -57,7 +58,7 @@ struct dfxg_vendor_specific_info_type {
 	int allow_close;
 	int i_freemium_version;
 	int display_close_dialog;
-	long splash_display_frequency_secs;
+	pt_long splash_display_frequency_secs;
 	int remix_capabilities;
 	int standalone_mode;
 	int allow_recording;
@@ -109,7 +110,7 @@ public:
 	float getEffectValue(DfxDsp::Effect effect);
 	void setEffectValue(DfxDsp::Effect effect, float value);
 	DfxPreset getPresetInfo(std::wstring preset_file_full_path);
-	unsigned long getTotalAudioProcessedTime();
+	pt_ulong getTotalAudioProcessedTime();
 	void resetTotalAudioProcessedTime();
     void getSpectrumBandValues(float* rp_band_values, int i_array_size);
 
@@ -125,19 +126,19 @@ private:
 	int dfxpFreeAll();
 
 	// DfxDspRegistry.cpp
-	int writeRegistrySessionLongValue(long l_value, wchar_t *wcp_key_name);
+	int writeRegistrySessionLongValue(pt_long l_value, wchar_t *wcp_key_name);
 
 	// DfxDspEq.cpp
 	int eqSetProcessingOn(int i_storage_type, int i_on);
 	int eqGetProcessingOn(int i_storage_type, int *ip_on);
 
 	// Handles
-	int *dfxp_handle_;
-	int *preset_list_handle_;
-	int *midi_to_rval_qnt_handle_; // Midi to Real Value
-	int *rval_to_midi_qnt_handle_; // and visa versa QNT handles
+	int *dfxp_handle_ = nullptr;
+	int *preset_list_handle_ = nullptr;
+	int *midi_to_rval_qnt_handle_ = nullptr; // Midi to Real Value
+	int *rval_to_midi_qnt_handle_ = nullptr; // and visa versa QNT handles
 
-	CDerivedSlout1 *slout1_;
+	CDerivedSlout1 *slout1_ = nullptr;
 
 	// Section specific information
 	struct dfxg_section_type fidelity_;

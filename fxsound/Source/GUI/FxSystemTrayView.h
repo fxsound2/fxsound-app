@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxNotification.h"
 #include "FxSettingsDialog.h"
 
+#if JUCE_WINDOWS
+
 //==============================================================================
 /*
 */
@@ -65,5 +67,58 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxSystemTrayView)
 };
+
+#else
+// Linux (FxSound port): v1 ships without a tray icon (Shell_NotifyIcon is
+// Windows-only). Same public interface so Main.cpp/FxController compile
+// unchanged; model notifications go to org.freedesktop.Notifications
+// (linux/notify_posix.cpp); SNI tray may come in v1.1 via linux/tray_sni.cpp.
+#include "notify_posix.h"
+#include "tray_sni.h"
+
+class FxSystemTrayView : public Component, public FxModel::Listener
+{
+public:
+	FxSystemTrayView()
+	{
+		fxsound_linux::traySniStart();
+	}
+	~FxSystemTrayView() override
+	{
+		fxsound_linux::traySniStop();
+	}
+
+	void modelChanged(FxModel::Event model_event) override
+	{
+		if (model_event != FxModel::Event::Notification || FxController::getInstance().isNotificationsHidden())
+			return;
+
+		String message;
+		std::pair<String, String> link;
+		FxModel::getModel().popMessage(message, link);
+		if (message.isNotEmpty())
+			fxsound_linux::notify(message.toStdString(), link.first.toStdString());
+	}
+	void setStatus(bool power, bool processing)
+	{
+		int cur = FxModel::getModel().getSelectedPreset();
+		std::string preset_name;
+		if (cur >= 0 && cur < FxModel::getModel().getPresetCount())
+			preset_name = FxModel::getModel().getPreset(cur).name.toStdString();
+		fxsound_linux::traySniSetStatus(power, processing, preset_name);
+	}
+	Point<int> getSystemTrayWindowPosition(int width, int height)
+	{
+		// Centre the lite view on the primary display.
+		auto* primary = Desktop::getInstance().getDisplays().getPrimaryDisplay();
+		if (!primary) return Point<int>(0, 0);
+		auto area = primary->userArea;
+		return Point<int>(area.getCentreX() - width / 2, area.getCentreY() - height / 2);
+	}
+
+private:
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxSystemTrayView)
+};
+#endif
 
 #endif

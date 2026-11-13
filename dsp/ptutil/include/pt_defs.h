@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _PT_DEFS_H_
 
 #ifndef __ANDROID__
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <windows.h>
 #endif //WIN32
 
@@ -43,11 +44,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 struct hardwareMeterValType
 {
 	int  values_are_new;
-	long left_in;
-	long right_in;
-	long left_out;
-	long right_out;
-	long dsp_status;
+	pt_long left_in;
+	pt_long right_in;
+	pt_long left_out;
+	pt_long right_out;
+	pt_long dsp_status;
 	float aux_vals[8]; /* For addition info transfer */
 };
 

@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _PTIME_H_
 #define _PTIME_H_
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <windows.h>
 
 #include "time.h"
@@ -38,9 +39,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PTIME_YEAR_COUNT (PTIME_DAY_COUNT * 365)
 
 /* ptime.cpp */
-int PT_DECLSPEC ptimeGetTime(long *);
-int PT_DECLSPEC ptimeGetElapsedDays(long, int *);
-int PT_DECLSPEC ptimeCheckTimeWentForwared(long, long, int *);
+int PT_DECLSPEC ptimeGetTime(pt_long *);
+int PT_DECLSPEC ptimeGetElapsedDays(pt_long, int *);
+int PT_DECLSPEC ptimeCheckTimeWentForwared(pt_long, pt_long, int *);
 int PT_DECLSPEC ptimeGetDateStr(wchar_t *, int);
 int PT_DECLSPEC ptimeGetDateAndTimeStr(wchar_t *);
 int PT_DECLSPEC ptimeGetTimeStr(wchar_t *);
@@ -48,9 +49,9 @@ int PT_DECLSPEC ptimeParseDateStr(char *, int, int *, int *, int *);
 int PT_DECLSPEC ptimeConvertMDYtoTimeT(int, int, int, time_t *);
 int PT_DECLSPEC ptimeUnixTimeToFileTime(time_t t, LPFILETIME pft);
 int PT_DECLSPEC ptimeUnixTimeToSystemTime(time_t t, LPSYSTEMTIME pst);
-int PT_DECLSPEC ptimeUnixTimeToFormattedString(long, bool, bool, wchar_t *, wchar_t *);
+int PT_DECLSPEC ptimeUnixTimeToFormattedString(pt_long, bool, bool, wchar_t *, wchar_t *);
 int PT_DECLSPEC ptimeFILETIMEToFormattedString(FILETIME*, wchar_t *);
-int PT_DECLSPEC ptimeCheckIfTimeIsToday(long, bool *);
+int PT_DECLSPEC ptimeCheckIfTimeIsToday(pt_long, bool *);
 int PT_DECLSPEC ptimeConvertSecondsToNiceText(time_t i_seconds, wchar_t * wcp_nice_text);
 
 #endif /* _PTIME_H_ */

@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _U_COMSFTWR_H_
 #define _U_COMSFTWR_H_
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "codedefs.h"
 #include "pt_defs.h"
 #include "c_dsps.h"
@@ -41,8 +42,8 @@ struct comSftwrHdlType {
 	/* Note that since player shares state and param space with all the dsp functs these still have to be big */
 	float dsp_state[DSPFX_MAX_NUM_PROCS * DSPS_NUM_STATE_VARS];
 	float dsp_params[DSPFX_MAX_NUM_PROCS * 2 * DSPS_MAX_NUM_PARAMS];
-	long dsp_memory_size_required;
-	long dsp_memory_size;
+	pt_long dsp_memory_size_required;
+	pt_long dsp_memory_size;
 	float *dsp_memory;
 
 	/* ---> Globals formerly in comSftwr.c <--- */
@@ -51,10 +52,10 @@ struct comSftwrHdlType {
 	int comSftwrReCuePending;
 	int comSftwrBitWidth;
 	struct hardwareMeterValType ComSftwrMeterData;
-	int (*comSftDspInitPtr[DSPS_MAX_NUM_PROC_FUNCTIONS]) (float *, float *, long, float *, int, float);
-	void (*comSftDspProcessPtr[DSPS_MAX_NUM_PROC_FUNCTIONS]) (long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
-	long sample_count;
-	long silence_count;
+	int (*comSftDspInitPtr[DSPS_MAX_NUM_PROC_FUNCTIONS]) (float *, float *, pt_long, float *, int, float);
+	void (*comSftDspProcessPtr[DSPS_MAX_NUM_PROC_FUNCTIONS]) (pt_long *, int, float *, float *, float *, struct hardwareMeterValType *, int);
+	pt_long sample_count;
+	pt_long silence_count;
 };
 
 #endif //_U_COMSFTWR_H

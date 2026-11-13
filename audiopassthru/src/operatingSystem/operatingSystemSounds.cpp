@@ -80,7 +80,7 @@ int PT_DECLSPEC operatingSystemMuteSystemSoundsForRecording(int i_run_mode, wcha
 	wchar_t wcp_system_key_value[PT_MAX_PATH_STRLEN];
 
 	// Get Local reg value
-	swprintf(wcp_local_full_key_path, L"%s\\%s", wcp_user_app_reg_top_folder, OPERATING_SYSTEM_MUTE_SOUNDS_LOCAL_REG_KEYNAME_WIDE);
+	swprintf(wcp_local_full_key_path, L"%ls\\%ls", wcp_user_app_reg_top_folder, OPERATING_SYSTEM_MUTE_SOUNDS_LOCAL_REG_KEYNAME_WIDE);
 
 	if (regReadKey_Wide(REG_CURRENT_USER, wcp_local_full_key_path, 
 					    &i_local_key_exists_flag, wcp_local_key_value,

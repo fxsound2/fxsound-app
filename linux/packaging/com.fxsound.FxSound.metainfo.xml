@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.fxsound.FxSound</id>
+  <name>FxSound</name>
+  <summary>PipeWire audio enhancer</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>AGPL-3.0-or-later</project_license>
+  <description><p>System-wide EQ and effects via a PipeWire null sink.</p></description>
+  <launchable type="desktop-id">fxsound.desktop</launchable>
+</component>

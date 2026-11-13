@@ -46,6 +46,7 @@ protected:
 
 	void mouseEnter(const MouseEvent&) override;
 	void mouseExit(const MouseEvent&) override;
+	void mouseMove(const MouseEvent&) override;
 
 	FxComboBox preset_list_;
 	FxComboBox endpoint_list_;

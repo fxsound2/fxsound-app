@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* Standard includes */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -29,12 +30,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif //WIN32
 
 #include "codedefs.h"
-#include "pwav.h"
+#include "Pwav.h"
 
 // Handle and functions declared in u_pwav.h are only used in WIN32 builds.
 // The function pwave24BitToFloat should be moved out of the pwav module to eliminate these problems.
 #ifndef __ANDROID__
-#include "u_pwav.h"
+#include "U_pwav.h"
 #endif //WIN32
 
 /*
@@ -47,7 +48,7 @@ int PT_DECLSPEC pwav24BitToFloat(char *cp_24_bit, realtype *rp_float,
 							int i_length, int i_stereo_flag)
 {
 	int i;
-	long itmp;
+	pt_long itmp;
    
 	if (i_stereo_flag)
 		i_length *= 2;
@@ -73,7 +74,7 @@ int PT_DECLSPEC pwavFloatTo24Bit(realtype *rp_float, char *cp_24_bit,
 							int i_length, int i_stereo_flag)
 {
 	int i;
-	long itmp;
+	pt_long itmp;
    
 	if (i_stereo_flag)
 		i_length *= 2;
@@ -88,7 +89,7 @@ int PT_DECLSPEC pwavFloatTo24Bit(realtype *rp_float, char *cp_24_bit,
 			/* If you try to assign to -2147483647, compiler gives warning */
 			itmp = -2147483647L;
 		else
-			itmp = (long)(ftmp * (realtype)2147483648.0);
+			itmp = (pt_long)(ftmp * (realtype)2147483648.0);
 
 		/* Note that this copys the first 3 lsb's, so shift left */
 		itmp >>= 8;

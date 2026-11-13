@@ -354,9 +354,9 @@ PlaybackDeviceIsSelected:  // Label to jump to when the playback device num has 
 			return(NOT_OKAY);
 
 		cast_handle->slout_hdl->Message_Wide(FIRST_LINE, L"sndDevicesImplementDeviceRules(): Writing Playback device to registry");
-		swprintf(wcp_trace_msg, L"   Device: %s", cast_handle->pwszID[cast_handle->playbackDeviceNum]);
+		swprintf(wcp_trace_msg, L"   Device: %ls", cast_handle->pwszID[cast_handle->playbackDeviceNum]);
 		cast_handle->slout_hdl->Message_Wide(FIRST_LINE, wcp_trace_msg);
-		swprintf(wcp_trace_msg, L"   Timestamp: %s", wcp_formatted_time);
+		swprintf(wcp_trace_msg, L"   Timestamp: %ls", wcp_formatted_time);
 		cast_handle->slout_hdl->Message_Wide(FIRST_LINE, wcp_trace_msg);
 	}
 

@@ -21,9 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* dfxpUniversal.cpp */
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "codedefs.h"
 
-#include <Windows.h>
+#include <windows.h>
 #include <math.h>
 #include <stdio.h>
 
@@ -336,9 +337,9 @@ int dfxp_UniversalUpdateTotalTimeProcessed(PT_HANDLE *hp_dfxp, int i_num_sample_
 	if (cast_handle == NULL)
 		return(OKAY);
 
-	unsigned long ul_msecs_processed_by_buffer;
-	unsigned long ul_previous_total_processed_time_msecs;
-	unsigned long ul_new_total_processed_time_msecs;
+	pt_ulong ul_msecs_processed_by_buffer;
+	pt_ulong ul_previous_total_processed_time_msecs;
+	pt_ulong ul_new_total_processed_time_msecs;
 	int bypass_all;
 
 	realtype r_num_secs;
@@ -350,7 +351,7 @@ int dfxp_UniversalUpdateTotalTimeProcessed(PT_HANDLE *hp_dfxp, int i_num_sample_
 		return(OKAY);
 
 	r_num_secs = (realtype)i_num_sample_sets / (realtype)cast_handle->universal.last_called_srate;
-	ul_msecs_processed_by_buffer = (long)(r_num_secs * (realtype)1000);
+	ul_msecs_processed_by_buffer = (pt_long)(r_num_secs * (realtype)1000);
 
 	if (dfxpGetButtonValue(hp_dfxp, DFX_UI_BUTTON_BYPASS, &bypass_all) != OKAY)
 		return(NOT_OKAY);

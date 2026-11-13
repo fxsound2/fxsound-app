@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* Standard includes */
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -33,10 +34,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * DESCRIPTION:
  *
  *  Uses a passed in key to both encrypt and decrypt the passed in
- *  long value. The same key is used both for encryption and decryption.
+ *  pt_long value. The same key is used both for encryption and decryption.
  *  The first call encrypts the value, and to decrypt the value,
  *  call the function again with the same key and the encrypted value.
- *  The key is a fixed unsigned long value.
+ *  The key is a fixed pt_ulong value.
  */
 int PT_DECLSPEC mthGenerateStatistics( realtype *rp_values, int i_num_vals, realtype *rp_average,
 								   realtype *rp_variance, realtype *rp_normalized_variance) 

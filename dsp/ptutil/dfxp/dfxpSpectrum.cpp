@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "spectrum.h"
 #include "DfxSdk.h"
 #include "reg.h"
-#include "file.h"
+#include "File.h"
 #include "dfxSharedUtil.h"
 
 /*

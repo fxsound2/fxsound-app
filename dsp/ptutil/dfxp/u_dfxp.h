@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _U_DFXP_H_
 #define _U_DFXP_H_ 
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "pt_defs.h"
 //#include "CWaveFile.h" // This must come first because it must come before any codedefs.h due to the mmgr module */
 #include "slout.h"
@@ -224,7 +225,7 @@ struct dfxpHdlType {
 	int i_freemium_version;
 	int oem_build;
 	int major_version; /* Major version number (ex. 7) */
-	long l_host_buffer_delay_msecs;
+	pt_long l_host_buffer_delay_msecs;
 	int processing_only;
 
 	// Buffers for internal signal manipulations
@@ -285,7 +286,7 @@ struct dfxpHdlType {
 	int i_communicate_slowly_count;
 
 	/* Total audio processed time in the session in milliseconds */
-	unsigned long ul_total_msecs_audio_processed_time;
+	pt_ulong ul_total_msecs_audio_processed_time;
 
 	/* Shared memory */
 	PT_HANDLE *hp_sharedUtil;

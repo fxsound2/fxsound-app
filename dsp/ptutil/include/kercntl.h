@@ -1,3 +1,4 @@
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 /* (C) COPYRIGHT 1994-1997 Power Technology. All Rights Reserved.
  * This document and file contain highly confidential information
  * which is not to be disclosed or in any other way retransmitted
@@ -24,7 +25,7 @@
 #define kerParamFiltExp(ip_delay_in, r_old_delay, alpha, i_delay_out) \
 { \
 	float r_tmp_MACRO; \
-	r_tmp_MACRO = alpha * *(volatile long *)ip_delay_in \
+	r_tmp_MACRO = alpha * *(volatile pt_long *)ip_delay_in \
 	           + ((float)1.0 - alpha) * r_old_delay; \
     r_old_delay = r_tmp_MACRO; \
 	i_delay_out = r_tmp_MACRO; \
@@ -34,9 +35,9 @@
  * Last line as shown to compile. Didn't sound so hot with delay */
 #define kerParamFiltLinear(ip_delay_in, r_old_delay, i_delay_out) \
 { \
-	long itmp_MACRO;\
+	pt_long itmp_MACRO;\
 	i_delay_out = r_old_delay;\
-	itmp_MACRO = *(volatile long *)(ip_delay_in);\
+	itmp_MACRO = *(volatile pt_long *)(ip_delay_in);\
 	if( i_delay_out < itmp_MACRO ) i_delay_out += 1;\
 	else if( i_delay_out > itmp_MACRO ) i_delay_out -= 1; r_old_delay = i_delay_out; }
 

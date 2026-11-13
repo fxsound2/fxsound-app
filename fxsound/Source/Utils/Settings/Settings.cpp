@@ -20,11 +20,49 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "Settings.h"
+#if JUCE_WINDOWS
 #include <Windows.h>
 #include <wincrypt.h>
+#endif
+
+namespace
+{
+	// JUCE's PropertiesFile defaults to ~/<folderName> on Linux (juce_PropertiesFile.cpp
+	// builds the dir from File("~")); use the XDG config dir instead, and migrate any
+	// settings written there by earlier builds of the Linux port.
+	String getSettingsFolder()
+	{
+#if JUCE_WINDOWS
+		return FxSound::SETTINGS_FOLDER;
+#else
+		return File::getSpecialLocation(File::userApplicationDataDirectory)
+			.getChildFile("FxSound").getFullPathName();  // absolute: overrides JUCE's ~ base
+#endif
+	}
+
+	void migrateLegacySettings()
+	{
+#if ! JUCE_WINDOWS
+		File xdg_dir = File(getSettingsFolder());
+		File legacy_dir = File("~").getChildFile("FxSound");
+		for (const wchar_t* suffix : { FxSound::SETTINGS_EXTN, FxSound::SECURE_EXTN })
+		{
+			File legacy = legacy_dir.getChildFile("FxSound." + String(suffix));
+			File target = xdg_dir.getChildFile("FxSound." + String(suffix));
+			if (legacy.existsAsFile() && !target.existsAsFile())
+			{
+				xdg_dir.createDirectory();
+				legacy.copyFileTo(target);
+			}
+		}
+#endif
+	}
+}
 
 FxSound::Settings::Settings()
 {
+	migrateLegacySettings();
+
 	PropertiesFile::Options options;
 	const String properties_xml = R"(
 		<PROPERTIES>
@@ -40,7 +78,7 @@ FxSound::Settings::Settings()
     )";
 
 	options.applicationName = FxSound::APPLICATION_NAME;
-	options.folderName = FxSound::SETTINGS_FOLDER;
+	options.folderName = getSettingsFolder();
 	options.filenameSuffix = FxSound::SECURE_EXTN;
 	options.doNotSave = false;
 	app_secure_properties_.setStorageParameters(options);
@@ -99,9 +137,9 @@ juce::var FxSound::Settings::getJson(juce::StringRef key) noexcept
 	return json.isNotEmpty() ? juce::JSON::parse(json) : juce::var{};
 }
 
-void FxSound::Settings::setString(StringRef key, String value, bool default) noexcept
+void FxSound::Settings::setString(StringRef key, String value, bool default_value) noexcept
 {
-    if (default)
+    if (default_value)
     {
         default_settings_.setValue(key, value);
     }
@@ -111,9 +149,9 @@ void FxSound::Settings::setString(StringRef key, String value, bool default) noe
     }	
 }
 
-void FxSound::Settings::setInt(StringRef key, int value, bool default) noexcept
+void FxSound::Settings::setInt(StringRef key, int value, bool default_value) noexcept
 {
-    if (default)
+    if (default_value)
     {
         default_settings_.setValue(key, value);
     }
@@ -123,9 +161,9 @@ void FxSound::Settings::setInt(StringRef key, int value, bool default) noexcept
     }
 }
 
-void FxSound::Settings::setDouble(StringRef key, double value, bool default) noexcept
+void FxSound::Settings::setDouble(StringRef key, double value, bool default_value) noexcept
 {
-    if (default)
+    if (default_value)
     {
         default_settings_.setValue(key, value);
     }
@@ -135,9 +173,9 @@ void FxSound::Settings::setDouble(StringRef key, double value, bool default) noe
     }
 }
 
-void FxSound::Settings::setBool(StringRef key, bool value, bool default) noexcept
+void FxSound::Settings::setBool(StringRef key, bool value, bool default_value) noexcept
 {
-    if (default)
+    if (default_value)
     {
         default_settings_.setValue(key, value);
     }

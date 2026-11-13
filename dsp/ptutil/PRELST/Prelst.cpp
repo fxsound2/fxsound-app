@@ -29,11 +29,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "slout.h"
 #include "vals.h"
 #include "mry.h"
-#include "file.h"
-#include "prelst.h"
+#include "File.h"
+#include "Prelst.h"
 #include "pstr.h"
 #include "pt_defs.h"
-#include "u_prelst.h"
+#include "U_prelst.h"
 
 /*
  * FUNCTION: prelstCreate()
@@ -66,14 +66,14 @@ int PT_DECLSPEC prelstCreate(PT_HANDLE **hpp_prelst, CSlout *hp_slout, wchar_t *
 						(sizeof(wchar_t) * (wcslen(wcp_factory_dir) + 1)));
 	if (cast_handle->wcp_factory_dir == NULL)
 		return(NOT_OKAY);
-	swprintf(cast_handle->wcp_factory_dir, L"%s", wcp_factory_dir);
+	swprintf(cast_handle->wcp_factory_dir, L"%ls", wcp_factory_dir);
 
 	/* Store the user directory */
     cast_handle->wcp_user_dir = (wchar_t *)calloc(1,
 						(sizeof(wchar_t) * (wcslen(wcp_user_dir) + 1)));
 	if (cast_handle->wcp_user_dir == NULL)
 		return(NOT_OKAY);
-	swprintf(cast_handle->wcp_user_dir, L"%s", wcp_user_dir);
+	swprintf(cast_handle->wcp_user_dir, L"%ls", wcp_user_dir);
 
 	/* Store the slout */
 	cast_handle->slout_hdl = hp_slout;
@@ -157,9 +157,9 @@ int PT_DECLSPEC prelstConstructFullpath(PT_HANDLE *hp_prelst, int i_index, wchar
    if (prelstAskIsFactory(hp_prelst, i_index, &is_factory) != OKAY)
 	   return(NOT_OKAY);
    if (is_factory)
-      swprintf(wcp_fullpath, L"%s\\%s", cast_handle->wcp_factory_dir, wcp_filename);
+      swprintf(wcp_fullpath, L"%ls\\%ls", cast_handle->wcp_factory_dir, wcp_filename);
    else
-      swprintf(wcp_fullpath, L"%s\\%s", cast_handle->wcp_user_dir, wcp_filename);
+      swprintf(wcp_fullpath, L"%ls\\%ls", cast_handle->wcp_user_dir, wcp_filename);
    
    return(OKAY);
 } 
@@ -182,9 +182,9 @@ int PT_DECLSPEC prelstConstructFilename(PT_HANDLE *hp_prelst, int i_index, wchar
       return(NOT_OKAY);
 
    if (i_index < cast_handle->user_min_index)
-	  swprintf(wcp_filename, L"%d.%s", i_index + 1, PRELST_FACTORY_EXTENSION_WIDE);
+	  swprintf(wcp_filename, L"%d.%ls", i_index + 1, PRELST_FACTORY_EXTENSION_WIDE);
    else
-      swprintf(wcp_filename, L"%d.%s", i_index + 1, PRELST_USER_EXTENSION_WIDE);
+      swprintf(wcp_filename, L"%d.%ls", i_index + 1, PRELST_USER_EXTENSION_WIDE);
    
    return(OKAY);
 } 

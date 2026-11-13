@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <windows.h> /* Linux: compat for swprintf 2-arg overload (Phase 5); Windows: real SDK, harmless. */
 
 #include "slout.h"
 #include "sos.h"

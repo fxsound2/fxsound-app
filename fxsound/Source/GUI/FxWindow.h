@@ -33,6 +33,7 @@ public:
 	void setContent(Component* content);
 	virtual void closeButtonPressed() = 0;
 
+	void setLogoHighlighted(bool highlighted, bool animate = false);
 	void startLogoAnimation();
 	void stopLogoAnimation();
 	void addToolbarButton(Button* toolbarButton, bool right_aligned = true);
@@ -63,6 +64,7 @@ protected:
 		TitleBar(String name);
 		~TitleBar() = default;
 
+		void setLogoHighlighted(bool highlighted, bool animate = false);
 		void startLogoAnimation();
 		void stopLogoAnimation();
 		void addToolbarButton(Button* toolbarButton, bool right_aligned=true);

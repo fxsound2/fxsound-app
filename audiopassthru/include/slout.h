@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _SLOUT_H_
 #define _SLOUT_H_
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include "codedefs.h"
 
 #define FIRST_LINE 1
@@ -35,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /************************ 
  * FUNCTIONS            *
  ************************/
-int sloutDisplayFileAndLine(char *, long);
+int sloutDisplayFileAndLine(char *, pt_long);
 
 /************************ 
  * CLASSES              *
@@ -50,7 +51,7 @@ public:
 
    virtual int Display_Wide(int, wchar_t *);
 
-#if defined( WIN32 ) // Wide char functions only supported in WIN32 builds.
+#if defined( WIN32 ) || defined( _WIN32 ) || defined( __linux__ ) // Wide char logging needed on Linux too (port).
    virtual int Message_Wide(int, wchar_t *);
    virtual int Error_Wide(int, wchar_t *);
    virtual int Warning_Wide(int, wchar_t *);

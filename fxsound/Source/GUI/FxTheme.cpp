@@ -200,7 +200,7 @@ void FxTheme::drawLinearSlider(Graphics& g, int x, int y, int width, int height,
         }
 
 		g.setGradientFill(ColourGradient(colour1, { 0, 0 }, colour2, { 0, (float)height }, false));
-		g.drawDashedLine(Line<float>(x+width/2, y, x+width/2, y+height), dash_lengths, _countof(dash_lengths), 1.0f);
+		g.drawDashedLine(Line<float>(x+width/2, y, x+width/2, y+height), dash_lengths, (int) (sizeof (dash_lengths) / sizeof (dash_lengths[0])), 1.0f);
 
         if (slider.isEnabled())
 		    slider_thumb_->drawWithin(g, Rectangle<float>(x+width/2-radius, sliderPos-radius, radius*2, radius*2), { RectanglePlacement::centred }, 1.0f);
@@ -211,7 +211,8 @@ void FxTheme::drawLinearSlider(Graphics& g, int x, int y, int width, int height,
         {
             Colour colour = Colour(FXCOLOR(SliderHighlight)).withAlpha(0.1f);
             g.setFillType(colour);
-            g.fillRoundedRectangle(juce::Rectangle<float>(x + (width - SLIDER_THUMB_RADIUS*4) / 2, y, SLIDER_THUMB_RADIUS * 4, height).expanded(0, SLIDER_THUMB_RADIUS), 20);
+            float hl_w = jmin((float)width, (float)SLIDER_THUMB_RADIUS * 4);
+            g.fillRoundedRectangle(juce::Rectangle<float>(x + (width - hl_w) / 2.0f, (float)y, hl_w, (float)height).expanded(0.0f, (float)SLIDER_THUMB_RADIUS), 20.0f);
         }
 	}
 	else if (style == Slider::LinearHorizontal)

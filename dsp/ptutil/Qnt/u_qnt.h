@@ -14,6 +14,7 @@
 #ifndef _U_QNT_H_
 #define _U_QNT_H_
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP long (see ptLong.h) */
 #include "slout.h"
 #include "filt.h"
 
@@ -36,7 +37,7 @@ struct qntHdlType {
    int array_size;
    int min_int_input;    
    int *int_array;
-   long *long_array;
+   pt_long *long_array;
    realtype *real_array;
 	struct filt2ndOrderBoostCutShelfFilterType *filt_array;
 
@@ -47,8 +48,8 @@ struct qntHdlType {
 	int i_output_max;
 	realtype r_output_min;
 	realtype r_output_max;
-	long l_output_min;
-	long l_output_max;
+	pt_long l_output_min;
+	pt_long l_output_max;
 
 	int output_quantized_flag;
 	int num_output_levels;

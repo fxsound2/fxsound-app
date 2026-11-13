@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* dfxpQnt.cpp */
 
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 #include <windows.h>
 #include <stdio.h>
 
@@ -28,13 +29,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "qnt.h"
 #include "filt.h"
 #include "c_aural.h"
-#include "c_Play.h"
+#include "c_play.h"
 #include "c_lex.h"
 #include "c_max.h"
 #include "c_aural.h"
 #include "c_wid.h"
 #include "c_dly1.h"
-#include "Pt_defs.h"
+#include "pt_defs.h"
 #include "DfxSdk.h"
 #include "midi.h"
 
@@ -444,8 +445,8 @@ int dfxp_InitDynamicQnts_Wid(PT_HANDLE *hp_dfxp)
 	if (cast_handle == NULL)
 		return(OKAY);
 
-	long dsp_dispersion_min_value;
-	long dsp_dispersion_max_value;
+	pt_long dsp_dispersion_min_value;
+	pt_long dsp_dispersion_max_value;
    realtype dsp_threshold_min_value;
    realtype dsp_threshold_max_value;
 	realtype omega_min;
@@ -455,9 +456,9 @@ int dfxp_InitDynamicQnts_Wid(PT_HANDLE *hp_dfxp)
 	 * Note delay line method requires minimum delay of 1.
 	 */
 	dsp_dispersion_min_value = 
-	   1 + (long)((float)(WID_DISPERSION_MIN_MS * 0.001) * cast_handle->internal_sampling_freq);
+	   1 + (pt_long)((float)(WID_DISPERSION_MIN_MS * 0.001) * cast_handle->internal_sampling_freq);
 	dsp_dispersion_max_value = 
-	   (long)((float)(WID_DISPERSION_MAX_MS * 0.001) * cast_handle->internal_sampling_freq);
+	   (pt_long)((float)(WID_DISPERSION_MAX_MS * 0.001) * cast_handle->internal_sampling_freq);
 
 	if (cast_handle->midi_to_dsp.dispersion_delay_qnt_hdl != NULL)
 	{
@@ -554,13 +555,13 @@ int dfxp_InitDynamicQnts_Delay(PT_HANDLE *hp_dfxp)
 		return(OKAY);
 
 	/* Delay qnt */
-   long dsp_delay_max_value;
+   pt_long dsp_delay_max_value;
    realtype max_total_dly_msecs;
    realtype max_total_dly_secs;
 
    max_total_dly_msecs = DSP_PLY_MAX_ELEMENT_DELAY;
    max_total_dly_secs = (max_total_dly_msecs) / (realtype) 1000.0;
-   dsp_delay_max_value = (long)((cast_handle->internal_sampling_freq)*(max_total_dly_secs));
+   dsp_delay_max_value = (pt_long)((cast_handle->internal_sampling_freq)*(max_total_dly_secs));
    
 	if (cast_handle->midi_to_dsp.dly_qnt_hdl != NULL)
 	{

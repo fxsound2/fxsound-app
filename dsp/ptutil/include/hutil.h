@@ -1,3 +1,4 @@
+#include "ptLong.h"   /* FxSound Linux port: fixed-width DSP pt_long (see ptLong.h) */
 /* (C) COPYRIGHT 1994-1997 Power Technology. All Rights Reserved.
  * This document and file contain highly confidential information
  * which is not to be disclosed or in any other way retransmitted
@@ -17,8 +18,8 @@
 
 /* Functions */ 
 /* huteep.c - DSP EEPROM related functions */
-int COMHRDWR_DECL comHrdEepromReadUlong(short unsigned board_address, short unsigned address, unsigned long *ulpdata);
-int COMHRDWR_DECL comHrdEepromWriteUlong(short unsigned board_address, short unsigned address, unsigned long uldata);
+int COMHRDWR_DECL comHrdEepromReadUlong(short unsigned board_address, short unsigned address, pt_ulong *ulpdata);
+int COMHRDWR_DECL comHrdEepromWriteUlong(short unsigned board_address, short unsigned address, pt_ulong uldata);
 
 /* hutbtld.c - Boots and Loads chosen DSP */
 int COMHRDWR_DECL hutBootLoad(char *file_name, unsigned short us_processor_num);
