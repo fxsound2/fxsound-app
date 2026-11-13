@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <JuceHeader.h>
 #include "FxClipIndicator.h"
-#include "../../../analysis/BarPeakAccumulator.h"
+#include "BarPeakAccumulator.h"
 
 //==============================================================================
 /*
@@ -55,6 +55,12 @@ private:
     static constexpr int NUM_BARS = 10;
 
     void paint(Graphics& g) override;
+    void resized() override;
+    void visibilityChanged() override;
+    void parentHierarchyChanged() override;
+    void updateAnalysisState();
+    void updateMeterTooltip();
+    void resetMeters();
     void enablementChanged() override;
 	void lookAndFeelChanged() override;
 
@@ -63,9 +69,17 @@ private:
     fxanalysis::BarPeakAccumulator pending_bars_;
     fxanalysis::StereoBarLevels displayed_bars_;
     std::uint64_t analysis_generation_ = 0;
-    bool was_showing_ = false;
+    bool running_ = false;
+    bool showing_highres_ = false;
+    bool was_muted_ = true;
+    bool output_supported_ = true;
+    int tooltip_left_ = -1;
+    int tooltip_right_ = -1;
+    bool tooltip_clipped_ = false;
     ColourGradient gradient_;
-    TextButton analysis_button_{ "HighRes" };
+    DrawableButton analysis_button_{ "HighRes", DrawableButton::ImageFitted };
+    class MeterTooltip final : public Component, public SettableTooltipClient {};
+    MeterTooltip meter_tooltip_;
     FxClipIndicator left_clip_, right_clip_;
 
 #if JUCE_MAJOR_VERSION >=8

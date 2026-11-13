@@ -93,6 +93,11 @@ void AudioPassthru::mute(bool mute)
 	data_->mute(mute);
 }
 
+bool AudioPassthru::isMuted() const noexcept
+{
+	return data_->isMuted();
+}
+
 void AudioPassthru::registerCallback(AudioPassthruCallback* callback)
 {
 	data_->registerCallback(callback);

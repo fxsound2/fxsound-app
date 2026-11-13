@@ -65,8 +65,10 @@ check for these cases, not an exhaustive proof for every input or device.
 
 ## Manual checks
 
-1. Start FxSound and confirm HighRes is selected. Switch it off and on; the original
-   spectrum must remain usable, with a clear selected state on the button.
+1. With fresh settings, start FxSound in the classic view. Switch to HighRes with
+   the flip button and restart to verify the saved choice. On a multichannel
+   output the classic spectrum should appear. Return to stereo to recover the
+   selected HighRes view.
 2. Play left-only and right-only material; activity should predominantly appear
    above and below the center respectively. Check mono, silence and balanced stereo.
 3. Play short transients and sustained tones. Attacks should survive between UI
@@ -74,8 +76,11 @@ check for these cases, not an exhaustive proof for every input or device.
    promise to identify every note in a mixture.
 4. Pause/resume playback, switch output devices, hide/show the window and disable/
    enable FxSound processing. Old peaks should not reappear after a reset.
-5. Check UI responsiveness and CPU use on the target machine, with HighRes both on
-   and off. Repeat with the supported sample rates and display scaling settings.
+5. Check CPU use, wakeups and audio dropouts with HighRes visible, in classic mode,
+   and with FxSound in the tray. Mute the output, check that no new peaks or
+   limiter activity appear, and confirm recovery after unmute. Repeat at supported
+   sample rates and display scales. Quit during active playback and after a device
+   change to exercise the callback shutdown path.
 6. With HighRes enabled, exercise left/right output peaks and limiter activity at
    a safe listening volume. Check the independent indicators, tooltip and hold.
    A synthesized impulse is preferable for testing single-sample capture. Red

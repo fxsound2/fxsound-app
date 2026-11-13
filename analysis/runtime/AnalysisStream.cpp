@@ -1,4 +1,23 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+/*
+FxSound
+Copyright (C) 2025  FxSound LLC
+
+Contributors:
+    Sylvain Petitgrand (2026)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 #include "AnalysisStream.h"
 #include <algorithm>
 #include <cstring>
@@ -10,15 +29,25 @@ namespace fxanalysis
 AnalysisStream::AnalysisStream() : queue_(new Block[capacity]), worker_(&AnalysisStream::run, this) {}
 AnalysisStream::~AnalysisStream()
 {
-    stopping_.store(true, std::memory_order_release);
+    {
+        const std::lock_guard<std::mutex> lock(workerMutex_);
+        stopping_.store(true, std::memory_order_release);
+    }
+    workerWake_.notify_one();
     if (worker_.joinable()) worker_.join();
 }
 void AnalysisStream::setEnabled(bool value) noexcept
 {
-    clipDetector_.reset();
-    monitoringEnabled_.store(value, std::memory_order_release);
-    enabled_.store(value && !failed_.load(std::memory_order_acquire), std::memory_order_release);
-    invalidate();
+    {
+        const std::lock_guard<std::mutex> lock(workerMutex_);
+        if (monitoringEnabled_.load(std::memory_order_relaxed) == value) return;
+        monitoringEnabled_.store(false, std::memory_order_release);
+        invalidate();
+        clipDetector_.reset();
+        enabled_.store(value && !failed_.load(std::memory_order_acquire), std::memory_order_release);
+        monitoringEnabled_.store(value, std::memory_order_release);
+    }
+    workerWake_.notify_one();
 }
 void AnalysisStream::invalidate() noexcept { revision_.fetch_add(1, std::memory_order_acq_rel); }
 
@@ -131,7 +160,11 @@ void AnalysisStream::run() noexcept
             const unsigned read = read_.load(std::memory_order_relaxed);
             if (read == write_.load(std::memory_order_acquire))
             {
-                std::this_thread::sleep_for(std::chrono::milliseconds(2));
+                std::unique_lock<std::mutex> lock(workerMutex_);
+                workerWake_.wait(lock, [this] { return stopping_.load() || enabled(); });
+                if (!stopping_.load())
+                    workerWake_.wait_for(lock, std::chrono::milliseconds(2),
+                        [this] { return stopping_.load() || !enabled(); });
                 continue;
             }
             const auto& block = queue_[read];

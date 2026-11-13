@@ -27,22 +27,20 @@ FxVisualizer::FxVisualizer()
 {
     band_values_.resize(FxController::NUM_SPECTRUM_BANDS);
     band_graph_.resize(FxController::NUM_SPECTRUM_BANDS * NUM_BARS);
+    auto& settings = FxController::getInstance().getSettings();
     analysis_button_.setClickingTogglesState(true);
-    analysis_button_.setTooltip(TRANS("HighRes: left above, right below. Switch off for the original spectrum."));
-    analysis_button_.setColour(TextButton::buttonColourId, Colour(0xff303540));
-    analysis_button_.setColour(TextButton::buttonOnColourId, Colour(0xffbc254b));
-    analysis_button_.setColour(TextButton::textColourOffId, Colour(0xffb8bcc4));
-    analysis_button_.setColour(TextButton::textColourOnId, Colours::white);
+    analysis_button_.setToggleState(settings.getBool("highres_visualizer"), dontSendNotification);
     analysis_button_.onClick = [this]
     {
-        FxController::getInstance().setAnalysisEnabled(analysis_button_.getToggleState());
-        reset();
+        FxController::getInstance().getSettings().setBool("highres_visualizer", analysis_button_.getToggleState());
+        updateAnalysisState();
         repaint();
     };
-    analysis_button_.setToggleState(true, NotificationType::dontSendNotification);
-    FxController::getInstance().setAnalysisEnabled(analysis_button_.getToggleState());
+    analysis_button_.setTitle(TRANS("Switch spectrum visualizer"));
+    analysis_button_.setTooltip(TRANS("Switch between the classic and HighRes spectrum."));
     addAndMakeVisible(analysis_button_);
-    analysis_button_.setBounds(WIDTH - 94, 3, 86, 20);
+    addChildComponent(meter_tooltip_);
+    lookAndFeelChanged();
 
 #if JUCE_MAJOR_VERSION >= 8
     start();
@@ -58,7 +56,8 @@ FxVisualizer::FxVisualizer()
 
 void FxVisualizer::start()
 {
-    was_showing_ = false;
+    running_ = true;
+    updateAnalysisState();
     calcGradient();
 
 #if JUCE_MAJOR_VERSION >= 8
@@ -70,8 +69,7 @@ void FxVisualizer::start()
             {
                 if (!isShowing())
                 {
-                    was_showing_ = false;
-                    pending_bars_.reset();
+                    updateAnalysisState();
                     return;
                 }
 
@@ -88,9 +86,7 @@ void FxVisualizer::start()
                     }
                     else
                     {
-                        reset();
-                        repaint();
-                        vblank_listener_.reset();
+                        pause();
                     }
                 }
             });
@@ -102,7 +98,8 @@ void FxVisualizer::start()
 
 void FxVisualizer::pause()
 {
-    was_showing_ = false;
+    running_ = false;
+    updateAnalysisState();
     calcGradient();
 
 #if JUCE_MAJOR_VERSION >= 8
@@ -124,10 +121,7 @@ void FxVisualizer::reset()
     displayed_bars_ = {};
     analysis_generation_ = 0;
     FxController::getInstance().discardAnalyzedSpectrumPeaks();
-    left_clip_.reset();
-    right_clip_.reset();
-    FxController::getInstance().consumeOutputClipEvents();
-    FxController::getInstance().consumeLimiterActivity();
+    resetMeters();
     for (int i = 0; i < FxController::NUM_SPECTRUM_BANDS * NUM_BARS; i++)
     {
         band_graph_.set(i, 0);
@@ -136,35 +130,24 @@ void FxVisualizer::reset()
 
 void FxVisualizer::update()
 {
-    if (!isEnabled() || !isShowing())
-    {
-        was_showing_ = false;
-        pending_bars_.reset();
-        return;
-    }
-    if (!was_showing_)
-    {
-        pending_bars_.reset();
-        FxController::getInstance().discardAnalyzedSpectrumPeaks();
-        was_showing_ = true;
-    }
+    updateAnalysisState();
+    if (!isEnabled() || !isShowing()) return;
 
-    if (analysis_button_.getToggleState())
+    if (showing_highres_)
     {
-        const auto clips = FxController::getInstance().consumeOutputClipEvents();
-        const auto limiting = FxController::getInstance().consumeLimiterActivity();
+        auto& controller = FxController::getInstance();
+        if (controller.isOutputMuted()) return;
+        const auto clips = controller.consumeOutputClipEvents();
+        const auto limiting = controller.consumeLimiterActivity();
         const auto now = FxClipIndicator::Clock::now();
         left_clip_.update(clips.left, now);
         right_clip_.update(clips.right, now);
         left_clip_.updateLimiter(limiting.leftDb, now);
         right_clip_.updateLimiter(limiting.rightDb, now);
-        analysis_button_.setTooltip(TRANS("Limiter gain reduction: L") + " " + String(left_clip_.reductionDb(now), 1)
-            + " dB / " + TRANS("R") + " " + String(right_clip_.reductionDb(now), 1)
-            + " dB. " + TRANS("Amber from 0.5 dB, red at 6 dB. Held for 500 ms.")
-            + " " + (left_clip_.isClipped(now) || right_clip_.isClipped(now)
-                ? TRANS("Output sample peak near full scale detected.") : TRANS("No output sample peak near full scale.")));
+        updateMeterTooltip();
+
         fxanalysis::BarSnapshot bars;
-        if (FxController::getInstance().getAnalyzedSpectrumBands(bars))
+        if (controller.getAnalyzedSpectrumBands(bars))
         {
             if (analysis_generation_ != bars.generation) pending_bars_.reset();
             analysis_generation_ = bars.generation;
@@ -208,7 +191,7 @@ void FxVisualizer::paint(Graphics& g)
 
     // Keep maxima through coalesced UI updates. An exposure repaint without
     // new data reuses the last drawn values and never consumes the audio stream.
-    if (analysis_button_.getToggleState() && pending_bars_.hasPending()
+    if (showing_highres_ && pending_bars_.hasPending()
         && g.getClipBounds().contains(juce::Rectangle<int>(27, 10, 910, 100)))
         displayed_bars_ = pending_bars_.consume();
 
@@ -220,7 +203,7 @@ void FxVisualizer::paint(Graphics& g)
 
     for (auto i = 0; i < FxController::NUM_SPECTRUM_BANDS * NUM_BARS; i++)
     {
-        if (analysis_button_.getToggleState())
+        if (showing_highres_)
         {
             const float centre = bounds.getHeight() * 0.5f;
             const float leftHeight = displayed_bars_.left[i] * 50.0f;
@@ -238,9 +221,9 @@ void FxVisualizer::paint(Graphics& g)
     }
 
     g.fillPath(barsPath);
-    if (analysis_button_.getToggleState())
+    if (showing_highres_)
     {
-        g.setColour(Colour(0xffb8bcc4));
+        g.setColour(Colour(FXCOLOR(GraphHigh)));
         g.setFont(11.0f);
         g.drawText(TRANS("L"), 5, bounds.getHeight() / 2 - 23, 18, 16, Justification::centred);
         g.drawText(TRANS("R"), 5, bounds.getHeight() / 2 + 7, 18, 16, Justification::centred);
@@ -278,8 +261,76 @@ void FxVisualizer::enablementChanged()
     }
 }
 
+void FxVisualizer::resized()
+{
+    constexpr int buttonSize = 18;
+    analysis_button_.setBounds(getWidth() - buttonSize - 5, 5, buttonSize, buttonSize);
+    meter_tooltip_.setBounds(5, getHeight() / 2 - 6, 18, 38);
+}
+
+void FxVisualizer::visibilityChanged()
+{
+    updateAnalysisState();
+}
+
+void FxVisualizer::parentHierarchyChanged()
+{
+    updateAnalysisState();
+}
+
+void FxVisualizer::updateAnalysisState()
+{
+    auto& controller = FxController::getInstance();
+    const bool supported = controller.canAnalyzeOutput();
+    const bool muted = controller.isOutputMuted();
+    const bool highres = running_ && isEnabled() && isShowing()
+        && analysis_button_.getToggleState() && supported;
+    if (supported != output_supported_)
+    {
+        output_supported_ = supported;
+        analysis_button_.setTooltip(supported ? TRANS("Switch between the classic and HighRes spectrum.")
+            : TRANS("HighRes supports mono and stereo. Showing the classic spectrum."));
+    }
+
+    if (highres == showing_highres_ && muted == was_muted_) return;
+    showing_highres_ = highres;
+    was_muted_ = muted;
+    controller.setAnalysisEnabled(false);
+    reset();
+    controller.setAnalysisEnabled(highres && !muted);
+    meter_tooltip_.setVisible(highres);
+}
+
+void FxVisualizer::resetMeters()
+{
+    left_clip_.reset();
+    right_clip_.reset();
+    FxController::getInstance().consumeOutputClipEvents();
+    FxController::getInstance().consumeLimiterActivity();
+    updateMeterTooltip();
+}
+
+void FxVisualizer::updateMeterTooltip()
+{
+    const auto now = FxClipIndicator::Clock::now();
+    const int left = roundToInt(left_clip_.reductionDb(now) * 10.0f);
+    const int right = roundToInt(right_clip_.reductionDb(now) * 10.0f);
+    const bool clipped = left_clip_.isClipped(now) || right_clip_.isClipped(now);
+    if (left == tooltip_left_ && right == tooltip_right_ && clipped == tooltip_clipped_) return;
+    tooltip_left_ = left;
+    tooltip_right_ = right;
+    tooltip_clipped_ = clipped;
+    meter_tooltip_.setTooltip(TRANS("Estimated front limiter activity: L") + " " + String(left / 10.0f, 1)
+        + " dB / " + TRANS("R") + " " + String(right / 10.0f, 1) + " dB. "
+        + (clipped ? TRANS("Output sample peak near full scale detected.")
+                   : TRANS("No output sample peak near full scale.")));
+}
+
 void FxVisualizer::lookAndFeelChanged()
 {
+    const auto image = Drawable::createFromImageData(FXIMAGE(FlipButton), FXIMAGESIZE(FlipButton));
+    const auto hover = Drawable::createFromImageData(FXIMAGE(FlipButtonHover), FXIMAGESIZE(FlipButtonHover));
+    analysis_button_.setImages(image.get(), hover.get());
     calcGradient();
     repaint();
 }

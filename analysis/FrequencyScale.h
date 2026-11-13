@@ -1,4 +1,23 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+/*
+FxSound
+Copyright (C) 2025  FxSound LLC
+
+Contributors:
+    Sylvain Petitgrand (2026)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 #pragma once
 #include <algorithm>
 #include <cmath>
@@ -18,7 +37,7 @@ static_assert(FrequencySettings::offsetHz >= 0.0 && FrequencySettings::trebleSta
               && FrequencySettings::trebleDisplayFraction > 0.0 && FrequencySettings::trebleDisplayFraction <= 1.0
               && FrequencySettings::transitionOctaves > 0.0, "Invalid frequency display settings");
 
-// Shared by analysis and lab axes. No allocation, UI, or sample processing.
+// Frequency mapping for the spectrum display. No allocation, UI, or sample processing.
 // Inputs: finite maximum > minimumHz, offset >= 0, and treble fraction in (0,1].
 class FrequencyScale
 {

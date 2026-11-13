@@ -100,6 +100,7 @@ public:
             FxController::getInstance().autoSaveModifiedPreset();
             FxController::getInstance().stopTimer();
 
+            FxController::getInstance().detachAudioPassthru();
             audio_passthru_.reset();
 
             // UIA holds COM references to AccessibilityNativeHandle objects for

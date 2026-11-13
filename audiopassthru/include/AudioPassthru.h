@@ -70,6 +70,7 @@ public:
 	~AudioPassthru();
 	int init();
 	void mute(bool mute);
+	bool isMuted() const noexcept;
 	std::vector<SoundDevice> getSoundDevices(bool active_devices = true);
 	int setBufferLength(int i_buffer_length_msecs);
 	int processTimer();

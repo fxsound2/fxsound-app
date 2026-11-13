@@ -1,4 +1,23 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+/*
+FxSound
+Copyright (C) 2025  FxSound LLC
+
+Contributors:
+    Sylvain Petitgrand (2026)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 #include "AudioAnalyzer.h"
 #include <algorithm>
 #include <cmath>
@@ -199,7 +218,7 @@ void AudioAnalyzer::emit(SpectrumSink& sink)
         frame_.power[k] = 0.5f * (std::norm(frame_.left[k]) + std::norm(frame_.right[k]));
     }
     // The same precomputed smooth projection is used for every band and channel.
-    // Keep mean power for reference views; HighRes uses the fourth amplitude
+    // Keep mean power as a separate measurement; HighRes uses the fourth amplitude
     // moment to emphasize strong bins without hard peak picking.
     for (int b = 0; b < displayBandCount; ++b)
     {
@@ -229,7 +248,7 @@ void AudioAnalyzer::emit(SpectrumSink& sink)
         frame_.bandLevelRight[b] = level(rightFourth);
     }
     // Read the complete current frame before enhancing either channel. Keep the
-    // raw projection for the lab's reference views; only HighRes bars are enhanced.
+    // raw projection for numerical consumers; only HighRes bars are enhanced.
     const auto enhancedLeft = enhanceSpectralContrast(frame_.bandLevelLeft);
     const auto enhancedRight = enhanceSpectralContrast(frame_.bandLevelRight);
     for (int b = 0; b < displayBandCount; ++b)

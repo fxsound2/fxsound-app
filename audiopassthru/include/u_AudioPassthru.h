@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Mmdeviceapi.h>
 #include <vector> 
 #include <map>
+#include <atomic>
+#include <mutex>
 
 class DspProcessingModule
 {
@@ -40,6 +42,7 @@ public:
 	~AudioPassthruPrivate();
 	int init();
 	void mute(bool mute);
+	bool isMuted() const noexcept { return mute_.load(std::memory_order_relaxed); }
 	std::vector<SoundDevice> getSoundDevices(bool active_devices = true);
 	int killProcessingThread(int *ip_timed_out);
 	int setBufferLength(int i_buffer_length_msecs);
@@ -63,13 +66,14 @@ private:
 	/* Processing Thread Info */
 	HANDLE hProcessingThread_;
 	DWORD ProcessingThreadID_;
-	int i_kill_processing_thread_; /* Flag set from the outside telling processing thread to end */
+	std::atomic<int> i_kill_processing_thread_; /* Flag set from the outside telling processing thread to end */
 	wchar_t wcp_playback_device_guid_[PT_MAX_GENERIC_STRLEN];
 	bool b_no_valid_snd_device_dialog_shown_; /* Flag stating whether we have shown the user a message to select a valid snd device.  We only want it shown once per session. */
 	int debug_;
 	std::vector<SoundDevice> sound_devices_;
-	bool mute_;
+	std::atomic<bool> mute_{false};
 	DfxDsp *p_dfx_dsp_;
-	static AudioPassthruCallback *s_callback_;
+	static std::atomic<AudioPassthruCallback*> s_callback_;
+	static std::mutex s_device_callback_mutex_;
 };
 

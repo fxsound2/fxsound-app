@@ -184,12 +184,11 @@ int DfxDspPrivate::processAudio(short int *si_input_samples, short int *si_outpu
 	// Apply DFX processing here using data and format vars above. Format will always be 32 bit floating point.
 	const auto handle = (struct dfxpHdlType *)dfxp_handle_;
 	float left = 0.0f, right = 0.0f;
-	// Clear stale meters before processing, including buffers skipped by the DSP.
-	const bool meter_available = handle != nullptr
-		&& comTakeLimiterActivity(handle->com_hdl_front, &left, &right) == OKAY;
 	if (dfxpUniversalModifySamples(dfxp_handle_, si_input_samples, si_output_samples, i_num_sample_sets, i_check_for_duplicate_buffers) != OKAY)
 		return(NOT_OKAY);
-	if (meter_available && comTakeLimiterActivity(handle->com_hdl_front, &left, &right) == OKAY)
+	if (handle == nullptr || handle->com_hdl_front == nullptr)
+		return OKAY; // Signal format is not ready yet.
+	if (comTakeLimiterActivity(handle->com_hdl_front, &left, &right) == OKAY)
 	{
 		if (handle->num_channels_out == 1 || handle->num_channels_out == 2)
 			limiter_activity_.publish(left, right);

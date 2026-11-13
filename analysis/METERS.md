@@ -7,10 +7,10 @@ when the current processing settings require gain reduction.
 | State | Meaning |
 | --- | --- |
 | Dark | No recent warning |
-| Amber, gradually becoming red | At least 0.5 dB of limiter gain reduction; fully red at 6 dB |
-| Red | Strong limiter reduction, or an output sample at/above the near-full-scale threshold |
+| Amber, gradually becoming red | At least 0.5 dB of estimated front limiter activity; fully red at 6 dB |
+| Red | Strong estimated limiter activity, or an output sample at/above the near-full-scale threshold |
 
-The tooltip reports gain reduction per channel and separately states whether a
+The indicator tooltip reports estimated front limiter activity per channel and separately states whether a
 near-full-scale sample was detected. This distinction matters: limiter activity
 can be substantial while every output sample remains below full scale.
 
@@ -32,9 +32,10 @@ threshold is a useful warning and does not prove audible distortion. The lights
 do not measure input clipping before the effects chain.
 
 Limiter instrumentation reads the final maximizer's existing envelope-to-ceiling
-ratio, retaining the largest active reciprocal gain in each block. Conversion
-to dB is `20 * log10(ratio)` on the UI side. This measures that limiter's dynamic
-attenuation; it is not a meter of all gain changes in the processing chain.
+ratio, retaining the largest ratio in each block. Conversion to dB is
+`20 * log10(ratio)` on the UI side. The value estimates limiter activity from
+the envelope; the applied per-sample gain can differ. The indicators report the
+front L/R limiter in mono or stereo. Other channel groups are outside this readout.
 
 ## Review map
 

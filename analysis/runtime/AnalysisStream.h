@@ -1,9 +1,29 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+/*
+FxSound
+Copyright (C) 2025  FxSound LLC
+
+Contributors:
+    Sylvain Petitgrand (2026)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 #pragma once
 #include "../BarPeakAccumulator.h"
 #include "../ClipDetector.h"
 #include <atomic>
 #include <chrono>
+#include <condition_variable>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -69,6 +89,8 @@ private:
     BarPeakAccumulator barPeaks_;
     std::uint64_t barGeneration_ = 0;
     std::chrono::steady_clock::time_point publishedAt_;
+    std::mutex workerMutex_;
+    std::condition_variable workerWake_;
     std::thread worker_;
 };
 }

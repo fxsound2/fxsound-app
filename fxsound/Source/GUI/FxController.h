@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Source/Utils/Settings/DeviceConfig.h"
 #include "AudioPassthru.h"
 #include "DfxDsp.h"
-#include "../../../analysis/runtime/AnalysisStream.h"
+#include "runtime/AnalysisStream.h"
 #include <wtsapi32.h>
 
 using namespace FxSound;
@@ -128,6 +128,9 @@ public:
 	void setEqBandBoostCut(int band_num, float boost);
     void getSpectrumBandValues(Array<float>& band_values);
     void setAnalysisEnabled(bool enabled);
+    void detachAudioPassthru();
+    bool canAnalyzeOutput() const noexcept;
+    bool isOutputMuted() const noexcept;
     bool getAnalyzedSpectrumBands(fxanalysis::BarSnapshot& bars);
     void discardAnalyzedSpectrumPeaks();
     fxanalysis::ClipEvents consumeOutputClipEvents() noexcept;
@@ -288,6 +291,7 @@ private:
 	AudioPassthru* audio_passthru_;
 	DfxDsp dfx_dsp_;
     fxanalysis::AnalysisStream analysis_stream_;
+    std::atomic<int> analysis_channels_{0};
     fxanalysis::AnalysisResult analysis_reported_result_ = fxanalysis::AnalysisResult::ok;
 	FxSound::Settings settings_;
 	uint32_t device_count_;

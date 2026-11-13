@@ -32,7 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // but without doing this I was getting access violiation excpeiotn in MMDevApi.dll so 
 // there is some truth to it.
 sndDevicesHdlType AudioPassthruPrivate::s_sndDevices_;
-AudioPassthruCallback* AudioPassthruPrivate::s_callback_ = nullptr;
+std::atomic<AudioPassthruCallback*> AudioPassthruPrivate::s_callback_{nullptr};
+std::mutex AudioPassthruPrivate::s_device_callback_mutex_;
 
 AudioPassthruPrivate::AudioPassthruPrivate()
 {
@@ -51,16 +52,19 @@ AudioPassthruPrivate::~AudioPassthruPrivate()
 	int i_result_flag;
 	int i_timed_out;
 
+	registerCallback(nullptr);
 	if (hp_sndDevices_ == NULL)
 		return;
 
-	/* If the processing thread is running, kill it */
-	if (killProcessingThread(&i_timed_out) != OKAY)
-		return;
-
-	/* If the killing of processing attempt timed out, then we can't do anything else */
-	if (i_timed_out)
-		return;
+	// Keep the passthru and its DSP owner alive until the last audio call returns.
+	if (killProcessingThread(&i_timed_out) != OKAY || i_timed_out)
+		OutputDebugStringW(L"FxSound: waiting for audio processing to stop during shutdown\n");
+	if (hProcessingThread_ != NULL && hProcessingThread_ != INVALID_HANDLE_VALUE)
+	{
+		WaitForSingleObject(hProcessingThread_, INFINITE);
+		CloseHandle(hProcessingThread_);
+		hProcessingThread_ = NULL;
+	}
 
 	/* Disable volume callbacks before switching devices to prevent the DFX driver's
 	   volume state reset from propagating to the real speakers during shutdown. */
@@ -241,10 +245,9 @@ void AudioPassthruPrivate::onDeviceChange()
 	// Clear the unavailability flag so processTimer() can retry after this device change.
 	s_sndDevices_.playbackDeviceIsUnavailable = FALSE;
 
-	if (s_callback_ != nullptr)
-	{
-		s_callback_->onSoundDeviceChange(false);
-	}
+	const std::lock_guard<std::mutex> lock(s_device_callback_mutex_);
+	if (auto* callback = s_callback_.load(std::memory_order_acquire))
+		callback->onSoundDeviceChange(false);
 }
 
 /*
@@ -285,11 +288,10 @@ int AudioPassthruPrivate::killProcessingThread(int *ip_timed_out)
 	/* Kill the thread */
 	if (b_need_to_kill_thread)
 	{
-		// Stop capture.  This will cause sndDevicesDoCapture() to exit and then the thread will die.
+		i_kill_processing_thread_ = IS_TRUE;
+		// Stop capture to let the worker leave its capture loop.
 		if (sndDevicesStartStopCapture(hp_sndDevices_, SND_DEVICES_STOP_CAPTURE) != OKAY)
 			return(NOT_OKAY);
-
-		i_kill_processing_thread_ = IS_TRUE;
 
 		/* Wait until thread has died or we have timed out */
 		i_thread_has_died = IS_FALSE;
@@ -456,8 +458,11 @@ int AudioPassthruPrivate::processTimer()
 			hProcessingThread_ = INVALID_HANDLE_VALUE;
 		}
 
-		if (s_callback_ != nullptr)
-			s_callback_->onSoundDeviceChange(true);
+		{
+			const std::lock_guard<std::mutex> lock(s_device_callback_mutex_);
+			if (auto* callback = s_callback_.load(std::memory_order_acquire))
+				callback->onSoundDeviceChange(true);
+		}
 
 		/* Check if a new playback device has been selected */
 		/*
@@ -518,6 +523,7 @@ DWORD AudioPassthruPrivate::threadWorker(void)
 		if (i_kill_processing_thread_)
 			goto KillProcessingThread;
 
+		const bool muted = isMuted();
 		if (numSampleSets > 0)
 		{
 			/* Set additional processing settings */
@@ -548,9 +554,11 @@ DWORD AudioPassthruPrivate::threadWorker(void)
 				p_dfx_dsp_->processAudio((short int *)fp_buffer, (short int *)fp_buffer, numSampleSets, i_check_for_duplicate_buffers);
 			}
 
-            if (s_callback_ != nullptr)
-                s_callback_->onAudioBlock(fp_buffer, numSampleSets, pwfx->nChannels,
-                                         pwfx->nSamplesPerSec, analysis_sample_position);
+            if (muted)
+                p_dfx_dsp_->consumeLimiterActivity();
+            else if (auto* callback = s_callback_.load(std::memory_order_acquire))
+                callback->onAudioBlock(fp_buffer, numSampleSets, pwfx->nChannels,
+                                       pwfx->nSamplesPerSec, analysis_sample_position);
             analysis_sample_position += static_cast<std::uint64_t>(numSampleSets);
 
 			/* Check if thread has been signaled to end */
@@ -567,7 +575,7 @@ DWORD AudioPassthruPrivate::threadWorker(void)
 		* NOTE: This needs to outside of the if block so that unplayed buffers can still be played.
 		*       It is okay to call this even when all buffers have already been played.
 		*/
-		if (!mute_)
+		if (!muted)
 		{
 			if (sndDevicesDoPlayback(hp_sndDevices_, &resultFlag) != OKAY)
 				return(NOT_OKAY);
@@ -609,12 +617,13 @@ DWORD WINAPI AudioPassthruPrivate::processingThread(LPVOID lpParam)
 
 void AudioPassthruPrivate::mute(bool mute)
 {
-	mute_ = mute;
+	mute_.store(mute, std::memory_order_relaxed);
 }
 
 void AudioPassthruPrivate::registerCallback(AudioPassthruCallback* callback)
 {
-	s_callback_ = callback;
+	const std::lock_guard<std::mutex> lock(s_device_callback_mutex_);
+	s_callback_.store(callback, std::memory_order_release);
 }
 
 bool AudioPassthruPrivate::isPlaybackDeviceAvailable()

@@ -2983,8 +2983,13 @@ void FxController::getSpectrumBandValues(Array<float>& band_values)
 void FxController::onAudioBlock(const float* pcm, int frames, int channels, int sample_rate,
                                std::uint64_t first_sample) noexcept
 {
-    // AudioPassthru supplies post-DSP PCM. Raw output peaks are detected before the FFT queue.
-    analysis_stream_.push(pcm, frames, channels, sample_rate, first_sample);
+    if (analysis_channels_.load(std::memory_order_relaxed) != channels)
+    {
+        analysis_stream_.invalidate();
+        analysis_channels_.store(channels, std::memory_order_release);
+    }
+    if (channels == 1 || channels == 2)
+        analysis_stream_.push(pcm, frames, channels, sample_rate, first_sample);
 }
 
 fxanalysis::ClipEvents FxController::consumeOutputClipEvents() noexcept
@@ -2995,6 +3000,27 @@ fxanalysis::ClipEvents FxController::consumeOutputClipEvents() noexcept
 fxdsp::LimiterLevels FxController::consumeLimiterActivity() noexcept
 {
     return dfx_dsp_.consumeLimiterActivity();
+}
+
+void FxController::detachAudioPassthru()
+{
+    if (audio_passthru_ != nullptr)
+    {
+        audio_passthru_->registerCallback(nullptr);
+        audio_passthru_ = nullptr;
+    }
+    analysis_stream_.setEnabled(false);
+}
+
+bool FxController::canAnalyzeOutput() const noexcept
+{
+    const int channels = analysis_channels_.load(std::memory_order_acquire);
+    return channels <= 2;
+}
+
+bool FxController::isOutputMuted() const noexcept
+{
+    return audio_passthru_ == nullptr || audio_passthru_->isMuted();
 }
 
 void FxController::setAnalysisEnabled(bool enabled)

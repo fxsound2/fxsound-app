@@ -6,9 +6,9 @@ This optional spectrum view emphasizes attacks, sustained tones and stereo
 differences, making overlapping musical activity easier to distinguish visually
 while leaving the audio unchanged.
 
-HighRes starts enabled. Its toggle restores the original spectrum. Left-channel
-activity is drawn above the center and right-channel activity below it. The
-selection currently lasts for the lifetime of the view; it is not a saved setting.
+The classic spectrum is the initial selection. The flip button selects HighRes
+and saves the preference. HighRes draws left-channel activity above the center
+and right-channel activity below it.
 The bars use the existing spectrum theme colors.
 
 ## Scope and integration
@@ -24,11 +24,11 @@ The bars use the existing spectrum theme colors.
 The audio callback copies PCM into the queue without allocation or waiting for
 the analysis worker. Analysis and snapshot locking happen off the audio thread.
 Dropped input or a format change resets analysis history; results older than
-400 ms are hidden. Turning HighRes off disables analysis input. The worker stays
-alive and polls its queue. This has a cost even when no spectrum is being computed.
+400 ms are hidden. Analysis runs while HighRes is visible and output is active.
+The worker sleeps while analysis is disabled and wakes on enable or shutdown.
 
 The first version analyzes mono and stereo. Mono is mirrored. Other channel
-layouts keep their existing audio behavior but are not analyzed by this view.
+layouts use the classic spectrum. Returning to mono or stereo restores the saved selection.
 This is a perceptual display, not note transcription, source separation, a
 calibrated loudness meter or an invertible representation of the waveform.
 
@@ -66,13 +66,12 @@ prefers. That runtime configuration change is open for discussion and is not
 implemented in this submission. FFT format and hop are supplied separately
 through `AnalyzerConfig`.
 
-These parameters affect visualization only. The standalone WAV laboratory is
-not required to build or use this feature.
+These parameters affect visualization only.
 
 ## Build and review
 
-Both Projucer files and the checked-in desktop/ARM app projects list the analysis
-sources. Existing toolsets, dependency locations and build conventions are
+The Windows Projucer file and unified checked-in application project list the
+analysis sources. Existing toolsets, dependency locations and build conventions are
 retained. No VS2026 migration or personal filesystem paths are introduced.
 
 For automated and manual checks, see [Testing](TESTING.md).
