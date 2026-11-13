@@ -31,7 +31,71 @@ For Debug, replace `/O2 /MT` with `/Od /Zi /MTd`. The tests have no JUCE depende
 Build the application using the repository's normal JUCE/Visual Studio workflow;
 rebuild the audio callback library with its consumers after the interface change.
 
+## Windows application build on develop/windows
+
+Use VS 2026/MSVC v145 and initialize the Resources submodule. The Windows
+solution is fxsound/Project/FxSound.sln. The upstream project expects JUCE at
+C:\JUCE8. To build with JUCE 8.0.13 elsewhere, use the external MSBuild import
+below. It supplies the four additional implementation units from the split
+GUI module and redirects build products away from the checkout.
+
+From an x64 Developer PowerShell at the repository root, set
+FXSOUND_JUCE_ROOT to the extracted JUCE 8.0.13 directory, then run:
+
+```powershell
+$repo = (Get-Location).Path
+$juce = Join-Path $env:FXSOUND_JUCE_ROOT 'modules'
+$build = Join-Path $env:TEMP ('fxsound-build-' + [guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Path $build | Out-Null
+$units = foreach ($number in 2..5) {
+    $name = "juce_gui_basics_$number.cpp"
+    $file = Join-Path $build $name
+    @('#include "AppConfig.h"', "#include <juce_gui_basics/$name>") |
+        Set-Content -LiteralPath $file -Encoding ascii
+    '<ClCompile Include="{0}" />' -f [Security.SecurityElement]::Escape($file)
+}
+$targets = Join-Path $build 'Validation.targets'
+$xml = @'
+<Project>
+  <PropertyGroup>
+    <OutDir>$(FxValidationRoot)\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+    <IntDir>$(FxValidationRoot)\$(Platform)\$(Configuration)\$(MSBuildProjectName)\obj\</IntDir>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(FxValidationJuce);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <PostBuildEvent><Command></Command></PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup Condition="'$(MSBuildProjectName)' == 'FxSound_App'">
+    ADDITIONAL_UNITS
+  </ItemGroup>
+</Project>
+'@
+$xml.Replace('ADDITIONAL_UNITS', ($units -join [Environment]::NewLine)) |
+    Set-Content -LiteralPath $targets -Encoding utf8
+$env:INCLUDE = "$juce;$env:INCLUDE"
+foreach ($configuration in 'Debug', 'Release') {
+    msbuild "$repo/fxsound/Project/FxSound.sln" /m `
+        "/p:Configuration=$configuration" /p:Platform=x64 `
+        "/p:ForceImportBeforeCppTargets=$targets" `
+        "/p:FxValidationRoot=$build" "/p:FxValidationJuce=$juce" `
+        "/bl:$build/$configuration.binlog"
+    if ($LASTEXITCODE -ne 0) { throw "$configuration build failed" }
+}
+```
+
+The DSP library is under x64/<configuration>/DfxDsp in the build directory.
+Rebuild the audio callback library and its consumers together. For the PCM
+comparison, build DfxDsp from the same develop/windows revision and toolchain
+in a separate directory.
+
 ## DSP meter regression and audio comparison
+
+In the Windows software DSP, the Play and Maximizer entry points receive
+caller-owned meter storage. The limiter uses auxiliary slots 4 and 5 in that
+storage. The application displays the front limiter activity on mono and stereo outputs.
 
 Build `DfxDsp` in x64 Release first. In an x64 Developer PowerShell, use an empty
 external `$build` directory as above and set `$dspLibrary` to that build's
@@ -79,8 +143,10 @@ check for these cases, not an exhaustive proof for every input or device.
 5. Check CPU use, wakeups and audio dropouts with HighRes visible, in classic mode,
    and with FxSound in the tray. Mute the output, check that no new peaks or
    limiter activity appear, and confirm recovery after unmute. Repeat at supported
-   sample rates and display scales. Quit during active playback and after a device
-   change to exercise the callback shutdown path.
+   sample rates and display scales. Switch Lite → Pro while playback is already
+   running. Repeat a device switch between two stereo outputs and verify that
+   the earlier meter holds disappear. Quit during active playback and after a
+   device change to exercise the callback shutdown path.
 6. With HighRes enabled, exercise left/right output peaks and limiter activity at
    a safe listening volume. Check the independent indicators, tooltip and hold.
    A synthesized impulse is preferable for testing single-sample capture. Red
