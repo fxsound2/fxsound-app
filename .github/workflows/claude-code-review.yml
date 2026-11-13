@@ -2,7 +2,9 @@ name: Claude Code Review
 
 on:
   pull_request_target:
-    types: [opened, ready_for_review]
+    # 'labeled' lets a maintainer approve a review for an external PR.
+    # 'synchronize' is intentionally omitted: fork pushes must not trigger runs with secrets.
+    types: [opened, ready_for_review, labeled]
     # Optional: Only run on specific file changes
     # paths:
     #   - "src/**/*.ts"
@@ -12,13 +14,22 @@ on:
 
 jobs:
   claude-review:
-    # Optional: Filter by PR author
-    # if: |
-    #   github.event.pull_request.user.login == 'external-contributor' ||
-    #   github.event.pull_request.user.login == 'new-developer' ||
-    #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
+    # Trusted authors are reviewed automatically. PRs from anyone else run only
+    # after a maintainer adds the 'safe-to-review' label.
+    if: |
+      github.event.pull_request.draft == false && (
+        (github.event.action != 'labeled' &&
+          contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.pull_request.author_association)) ||
+        (github.event.action == 'labeled' && github.event.label.name == 'safe-to-review')
+      )
 
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Job-level so only runs that pass the 'if' above join the group. At workflow
+    # level, adding an unrelated label would cancel an in-progress review.
+    concurrency:
+      group: claude-review-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
     permissions:
       contents: read
       pull-requests: read
@@ -26,11 +37,14 @@ jobs:
       id-token: write
 
     steps:
+      # SECURITY: check out the trusted BASE branch (the pull_request_target default),
+      # never the PR head. This job has access to secrets; untrusted PR files must not
+      # be placed in the workspace. The review reads PR changes via the GitHub API.
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 1
+          persist-credentials: false
 
       - name: Run Claude Code Review
         id: claude-review
