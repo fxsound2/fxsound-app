@@ -71,6 +71,7 @@ private:
     std::uint64_t analysis_generation_ = 0;
     bool running_ = false;
     bool showing_highres_ = false;
+    bool analysis_requested_ = false;
     bool was_muted_ = true;
     bool output_supported_ = true;
     int tooltip_left_ = -1;

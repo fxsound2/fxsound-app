@@ -80,7 +80,7 @@ public:
 
             CaptureAndLogCallStack();
 
-            quit();
+            systemRequestedQuit();
         }
         catch (...)
         {
@@ -89,7 +89,7 @@ public:
 
             CaptureAndLogCallStack();
 
-            quit();
+            systemRequestedQuit();
         }
     }
 
@@ -133,18 +133,50 @@ public:
     //==============================================================================
     void systemRequestedQuit() override
     {
-        // This is called when the app is being asked to quit: you can ignore this
-        // request and let the app carry on running, or call quit() to allow the app to close.
-        
-        quit();
+        if (audio_stop_started_ != 0) return;
+        if (audio_passthru_ == nullptr)
+        {
+            quit();
+            return;
+        }
+
+        auto& controller = FxController::getInstance();
+        controller.stopTimer();
+        audio_passthru_->setDeviceNotificationWindow(nullptr);
+        audio_passthru_->requestStop();
+        audio_stop_started_ = GetTickCount64() + 1;
+        checkAudioStopped();
     }
 
     void anotherInstanceStarted (const String& commandline) override
     {
-        FxController::getInstance().applyConfig(commandline);
+        if (audio_stop_started_ == 0)
+            FxController::getInstance().applyConfig(commandline);
     }
 
 private:
+    void checkAudioStopped()
+    {
+        DWORD error = ERROR_SUCCESS;
+        const DWORD status = audio_passthru_->pollStopped(error);
+        if (status == WAIT_OBJECT_0)
+        {
+            quit();
+            return;
+        }
+        if (!audio_stop_reported_ && (status == WAIT_FAILED || GetTickCount64() + 1 - audio_stop_started_ >= 3000))
+        {
+            audio_stop_reported_ = true;
+            FxController::getInstance().logMessage(status == WAIT_FAILED
+                ? "FxSound: audio shutdown wait failed, error " + String(error)
+                : "FxSound: still waiting for the audio device to stop");
+        }
+        // Keep the UI responsive and keep the DSP and passthru alive until the thread exits.
+        Timer::callAfterDelay(50, [this] { checkAudioStopped(); });
+    }
+
+    ULONGLONG audio_stop_started_ = 0;
+    bool audio_stop_reported_ = false;
     FxTheme theme_;
     static constexpr int MAX_FRAMES = 64;
     static constexpr ULONGLONG MIN_UPTIME_FOR_RELAUNCH_MS = 60 * 1000;

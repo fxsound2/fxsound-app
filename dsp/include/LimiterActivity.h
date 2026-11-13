@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <cmath>
 #include <cstring>
 #include <limits>
+#include <cstdint>
 
 namespace fxdsp
 {
@@ -38,10 +39,28 @@ struct LimiterLevels
 class LimiterActivity final
 {
 public:
+    using Generation = std::uint64_t;
+
+    Generation generation() const noexcept { return generation_.load(std::memory_order_acquire); }
+
     void publish(float leftRatio, float rightRatio) noexcept
     {
-        accumulate(left_, leftRatio);
-        accumulate(right_, rightRatio);
+        publish(leftRatio, rightRatio, generation());
+    }
+
+    void publish(float leftRatio, float rightRatio, Generation generation) noexcept
+    {
+        accumulate(left_, leftRatio, generation);
+        accumulate(right_, rightRatio, generation);
+    }
+
+    // Called on the control thread when the displayed output changes or is muted.
+    void discard() noexcept
+    {
+        const auto next = generation() + generationStep;
+        left_.store(next, std::memory_order_release);
+        right_.store(next, std::memory_order_release);
+        generation_.store(next, std::memory_order_release);
     }
     LimiterLevels consume() noexcept
     {
@@ -49,26 +68,33 @@ public:
     }
 
 private:
-    static_assert(ATOMIC_INT_LOCK_FREE == 2, "Audio telemetry requires lock-free integers");
+    static_assert(ATOMIC_LLONG_LOCK_FREE == 2, "Audio telemetry requires lock-free integers");
+    static constexpr Generation generationStep = Generation{1} << 32;
+    static constexpr Generation ratioMask = generationStep - 1;
     static_assert(sizeof(unsigned) == sizeof(float) && std::numeric_limits<float>::is_iec559,
                   "Positive float bit patterns must preserve ordering");
-    static void accumulate(std::atomic<unsigned>& pending, float ratio) noexcept
+    static void accumulate(std::atomic<Generation>& pending, float ratio, Generation generation) noexcept
     {
         if (!(ratio > 1.0f) || !std::isfinite(ratio)) return;
         unsigned bits;
         std::memcpy(&bits, &ratio, sizeof(bits));
         auto previous = pending.load(std::memory_order_relaxed);
-        while (bits > previous && !pending.compare_exchange_weak(previous, bits,
-               std::memory_order_relaxed, std::memory_order_relaxed)) {}
+        while ((previous & ~ratioMask) == generation)
+        {
+            // Confirm the maximum atomically even when it equals the prior peak:
+            // a reader may have cleared the latch since the initial load.
+            const auto peak = (previous & ratioMask) > bits ? (previous & ratioMask) : bits;
+            if (pending.compare_exchange_weak(previous, generation | peak, std::memory_order_relaxed)) break;
+        }
     }
-    static float read(std::atomic<unsigned>& pending) noexcept
+    static float read(std::atomic<Generation>& pending) noexcept
     {
-        const auto bits = pending.exchange(0, std::memory_order_relaxed);
+        const auto bits = static_cast<unsigned>(pending.fetch_and(~ratioMask, std::memory_order_relaxed));
         if (bits == 0) return 0.0f;
         float ratio;
         std::memcpy(&ratio, &bits, sizeof(ratio));
         return 20.0f * std::log10(ratio);
     }
-    std::atomic<unsigned> left_{0}, right_{0};
+    std::atomic<Generation> generation_{0}, left_{0}, right_{0};
 };
 }

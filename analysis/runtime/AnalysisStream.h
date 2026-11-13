@@ -49,9 +49,14 @@ public:
     void setEnabled(bool enabled) noexcept;
     bool enabled() const noexcept { return enabled_.load(std::memory_order_acquire); }
     void invalidate() noexcept;
+    void resetInput() noexcept;
+    struct InputToken { std::uint64_t revision; ClipDetector::Generation clips; };
+    InputToken beginInput() const noexcept;
     // Non-blocking, allocation-free PCM copy. Mono/stereo only in this first version.
     bool push(const float* pcm, int frames, int channels, int sampleRate,
               std::uint64_t firstSample) noexcept;
+    bool push(const float* pcm, int frames, int channels, int sampleRate,
+              std::uint64_t firstSample, InputToken input) noexcept;
     bool latest(SpectrumFrame& frame); // Non-destructive, instantaneous scientific data.
     bool consumeBars(BarSnapshot& bars); // One display consumer; peaks since its last read.
     void discardBarPeaks(); // Non-audio thread, when a display hides/resumes.
@@ -80,7 +85,7 @@ private:
     ClipDetector clipDetector_;
     std::atomic<bool> failed_{false};
     std::array<char, 256> failure_{};
-    std::atomic<std::uint64_t> revision_{1}, dropped_{0};
+    std::atomic<std::uint64_t> revision_{2}, dropped_{0};
     std::atomic<AnalysisResult> result_{AnalysisResult::ok};
     AudioAnalyzer analyzer_;
     std::uint64_t processingRevision_ = 0, publishedRevision_ = 0;

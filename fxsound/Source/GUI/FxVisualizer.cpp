@@ -283,8 +283,9 @@ void FxVisualizer::updateAnalysisState()
     auto& controller = FxController::getInstance();
     const bool supported = controller.canAnalyzeOutput();
     const bool muted = controller.isOutputMuted();
-    const bool highres = running_ && isEnabled() && isShowing()
+    const bool highres = isEnabled() && isShowing()
         && analysis_button_.getToggleState() && supported;
+    const bool requested = running_ && highres && !muted && controller.isAudioProcessing();
     if (supported != output_supported_)
     {
         output_supported_ = supported;
@@ -292,12 +293,13 @@ void FxVisualizer::updateAnalysisState()
             : TRANS("HighRes supports mono and stereo. Showing the classic spectrum."));
     }
 
-    if (highres == showing_highres_ && muted == was_muted_) return;
+    if (highres == showing_highres_ && muted == was_muted_ && requested == analysis_requested_) return;
+    analysis_requested_ = requested;
     showing_highres_ = highres;
     was_muted_ = muted;
-    controller.setAnalysisEnabled(false);
+    if (!requested) controller.setAnalysisEnabled(false);
     reset();
-    controller.setAnalysisEnabled(highres && !muted);
+    if (requested) controller.setAnalysisEnabled(true);
     meter_tooltip_.setVisible(highres);
 }
 

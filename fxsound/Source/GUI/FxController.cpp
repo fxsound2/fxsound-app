@@ -752,6 +752,10 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		}
 
 		audio_passthru_->registerCallback(this);
+        audio_passthru_->setDeviceNotificationWindow(message_window_.getHandle());
+        // The low-frequency owner timer also drains a notice if PostMessage fails.
+        if (SetTimer(message_window_.getHandle(), AudioPassthru::deviceChangeMessage, 250, nullptr) == 0)
+            logMessage("FxSound: unable to arm the device notification fallback timer");
 
 		auto path = File(File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userApplicationDataDirectory).getFullPathName()) + L"FxSound\\Presets");
 		if (!path.exists())
@@ -1180,7 +1184,7 @@ void FxController::setOutput(const String output_device_id, bool notify)
 
 	if (!output_found)
 	{
-		audio_passthru_->mute(true);
+		muteOutput(true);
 		powerOn(false);
 
 		FxModel::getModel().pushMessage(TRANS("Output Disconnected"));
@@ -1190,7 +1194,7 @@ void FxController::setOutput(const String output_device_id, bool notify)
 		if (FxModel::getModel().getPowerState())
 		{
 			powerOn(true);
-			audio_passthru_->mute(false);
+			muteOutput(false);
 		}
 	}
 
@@ -1725,7 +1729,7 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 	{
 		if (FxModel::getModel().getPowerState())
 		{
-			audio_passthru_->mute(true);
+			muteOutput(true);
 		}
 		return;
 	}
@@ -1887,7 +1891,7 @@ void FxController::powerOn(bool on)
 
 			if (hdmi_reconnect_pending_)
 			{
-				audio_passthru_->mute(false);
+				muteOutput(false);
 				clearOutputRestore();
 			}
 		}
@@ -2083,6 +2087,16 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 
 	switch (message)
 	{
+	case AudioPassthru::deviceChangeMessage:
+    case WM_TIMER:
+        if (message == AudioPassthru::deviceChangeMessage || w_param == AudioPassthru::deviceChangeMessage)
+        {
+            if (controller != nullptr && controller->audio_passthru_ != nullptr)
+                controller->audio_passthru_->dispatchDeviceChange();
+            return 0;
+        }
+        break;
+
 	case WM_HOTKEY:
 	{
 		if (w_param == CMD_ON_OFF)
@@ -2237,7 +2251,7 @@ void FxController::timerCallback()
 			// and an output is available (setOutput() keeps it muted when no output is available).
 			if (FxModel::getModel().getPowerState() && !active_output_devices_.empty())
 			{
-				audio_passthru_->mute(false);
+				muteOutput(false);
 			}
 		}
 	}
@@ -2309,7 +2323,9 @@ void FxController::timerCallback()
 
 void FxController::onSoundDeviceChange(bool processing)
 {
-    if (!processing) analysis_stream_.invalidate();
+    if (audio_passthru_ == nullptr) return;
+    analysis_stream_.resetInput();
+    dfx_dsp_.discardLimiterActivity();
 	if (session_id_ != WTSGetActiveConsoleSessionId())
 		return; // Ignore device changes on another user session
 
@@ -2346,7 +2362,7 @@ void FxController::onSystemSuspend()
 
 	if (FxModel::getModel().getPowerState())
 	{
-		audio_passthru_->mute(true);
+		muteOutput(true);
 	}
 }
 
@@ -2360,7 +2376,7 @@ void FxController::onSystemResume()
 
 	if (!hdmi_reconnect_pending_ && FxModel::getModel().getPowerState())
 	{
-		audio_passthru_->mute(false);
+		muteOutput(false);
 	}
 }
 
@@ -2980,16 +2996,18 @@ void FxController::getSpectrumBandValues(Array<float>& band_values)
 	}
 }
 
-void FxController::onAudioBlock(const float* pcm, int frames, int channels, int sample_rate,
-                               std::uint64_t first_sample) noexcept
+AudioPassthruCallback::AnalysisInput FxController::beginAudioBlock() noexcept
 {
-    if (analysis_channels_.load(std::memory_order_relaxed) != channels)
-    {
-        analysis_stream_.invalidate();
-        analysis_channels_.store(channels, std::memory_order_release);
-    }
+    const auto input = analysis_stream_.beginInput();
+    return {input.revision, input.clips};
+}
+
+void FxController::onAudioBlock(const float* pcm, int frames, int channels, int sample_rate,
+                               std::uint64_t first_sample, AnalysisInput input) noexcept
+{
     if (channels == 1 || channels == 2)
-        analysis_stream_.push(pcm, frames, channels, sample_rate, first_sample);
+        analysis_stream_.push(pcm, frames, channels, sample_rate, first_sample,
+                              {input.revision, input.clipGeneration});
 }
 
 fxanalysis::ClipEvents FxController::consumeOutputClipEvents() noexcept
@@ -3006,6 +3024,8 @@ void FxController::detachAudioPassthru()
 {
     if (audio_passthru_ != nullptr)
     {
+        KillTimer(message_window_.getHandle(), AudioPassthru::deviceChangeMessage);
+        audio_passthru_->setDeviceNotificationWindow(nullptr);
         audio_passthru_->registerCallback(nullptr);
         audio_passthru_ = nullptr;
     }
@@ -3014,7 +3034,7 @@ void FxController::detachAudioPassthru()
 
 bool FxController::canAnalyzeOutput() const noexcept
 {
-    const int channels = analysis_channels_.load(std::memory_order_acquire);
+    const int channels = audio_passthru_ != nullptr ? audio_passthru_->playbackChannels() : 0;
     return channels <= 2;
 }
 
@@ -3026,6 +3046,16 @@ bool FxController::isOutputMuted() const noexcept
 void FxController::setAnalysisEnabled(bool enabled)
 {
     analysis_stream_.setEnabled(enabled);
+    dfx_dsp_.discardLimiterActivity();
+}
+
+void FxController::muteOutput(bool muted)
+{
+    if (audio_passthru_ == nullptr || audio_passthru_->isMuted() == muted) return;
+    if (muted) audio_passthru_->mute(true);
+    analysis_stream_.resetInput();
+    dfx_dsp_.discardLimiterActivity();
+    if (!muted) audio_passthru_->mute(false);
 }
 
 void FxController::discardAnalyzedSpectrumPeaks()
@@ -3039,9 +3069,21 @@ bool FxController::getAnalyzedSpectrumBands(fxanalysis::BarSnapshot& bars)
     if (result != analysis_reported_result_)
     {
         analysis_reported_result_ = result;
-        if (result != fxanalysis::AnalysisResult::ok)
+        const auto now = Time::getMillisecondCounter();
+        if (result != fxanalysis::AnalysisResult::ok
+            && (!analysis_has_logged_ || now - analysis_last_log_ >= 5000))
+        {
             logMessage(String("Audio analysis: ") + fxanalysis::describe(result) + " "
                        + String(analysis_stream_.failureMessage()));
+            analysis_has_logged_ = true;
+            analysis_last_log_ = now;
+            analysis_failure_logged_ = true;
+        }
+        else if (result == fxanalysis::AnalysisResult::ok && analysis_failure_logged_)
+        {
+            logMessage("Audio analysis: recovered");
+            analysis_failure_logged_ = false;
+        }
     }
     return analysis_stream_.consumeBars(bars) && audio_process_on_;
 }

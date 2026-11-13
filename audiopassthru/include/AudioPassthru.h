@@ -59,7 +59,9 @@ public:
 	virtual void onSoundDeviceChange(bool processing) = 0;
     // Borrowed post-effects PCM; valid only for this call on the audio thread.
     // Implementations may only perform bounded, non-blocking observation/copy.
-    virtual void onAudioBlock(const float*, int, int, int, std::uint64_t) noexcept {}
+    struct AnalysisInput { std::uint64_t revision = 0, clipGeneration = 0; };
+    virtual AnalysisInput beginAudioBlock() noexcept { return {}; }
+    virtual void onAudioBlock(const float*, int, int, int, std::uint64_t, AnalysisInput) noexcept {}
 };
 
 class AudioPassthruPrivate;
@@ -77,6 +79,12 @@ public:
 	void setDspProcessingModule(DfxDsp* pDspProcessingModule);
 	void setAsPlaybackDevice(const SoundDevice sound_device);
 	void registerCallback(AudioPassthruCallback *callback);
+    static constexpr UINT deviceChangeMessage = WM_APP + 1;
+    void setDeviceNotificationWindow(HWND window) noexcept;
+    void dispatchDeviceChange();
+    void requestStop() noexcept;
+    DWORD pollStopped(DWORD& error) noexcept;
+    int playbackChannels() const noexcept;
     bool isPlaybackDeviceAvailable();
 	bool checkDeviceChanges();
 	void restoreDefaultPlaybackDevice();

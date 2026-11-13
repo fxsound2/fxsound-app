@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector> 
 #include <map>
 #include <atomic>
-#include <mutex>
 
 class DspProcessingModule
 {
@@ -52,13 +51,20 @@ public:
 	DWORD threadWorker(void); // Needs to be public to be called from static thread starter function
 	int setTargetedRealPlaybackDevice(const std::wstring sound_device_guid);
 	void registerCallback(AudioPassthruCallback *callback);
+    void setDeviceNotificationWindow(HWND window) noexcept;
+    void dispatchDeviceChange();
+    void requestStop() noexcept;
+    DWORD pollStopped(DWORD& error) noexcept;
+    int playbackChannels() const noexcept { return playback_channels_.load(std::memory_order_acquire); }
     bool isPlaybackDeviceAvailable();
 	bool checkDeviceChanges();
 	void restoreDefaultPlaybackDevice();
 
 private:
 	int sndDeviceHandleToSoundDevices(bool active_devices = true);
-	static void onDeviceChange();
+	static void onDeviceChange() noexcept;
+    void signalCaptureStop() noexcept;
+    bool stopping_ = false; // Owner thread; prevents restart once shutdown begins.
 
 	PT_HANDLE *hp_sndDevices_;
 	static sndDevicesHdlType s_sndDevices_;
@@ -74,6 +80,8 @@ private:
 	std::atomic<bool> mute_{false};
 	DfxDsp *p_dfx_dsp_;
 	static std::atomic<AudioPassthruCallback*> s_callback_;
-	static std::mutex s_device_callback_mutex_;
+    std::atomic<int> playback_channels_{0};
+    static std::atomic<HWND> s_notification_window_;
+    static std::atomic<bool> s_device_change_pending_, s_device_message_posted_;
 };
 

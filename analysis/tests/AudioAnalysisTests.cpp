@@ -788,6 +788,25 @@ int main()
         stream.setEnabled(true);
         clips = stream.consumeClipEvents();
         check("clip_reenable_starts_clear", !clips.left && !clips.right);
+        const auto previousInput = stream.beginInput();
+        stream.setEnabled(false);
+        stream.setEnabled(true);
+        check("stream_rejects_block_from_previous_enable", stream.push(pulse, 1, 2, 48000, 0, previousInput)
+            && !stream.consumeClipEvents().left);
+        ClipDetector detector;
+        const auto scanning = detector.generation();
+        detector.reset();
+        check("clip_rejects_scan_started_before_reset", detector.processBlock(pulse, 1, 2, scanning)
+            && !detector.consume().left);
+        fxdsp::LimiterActivity limiter;
+        const auto processing = limiter.generation();
+        limiter.discard();
+        limiter.publish(2.0f, 2.0f, processing);
+        const auto stale = limiter.consume();
+        limiter.publish(2.0f, 1.0f);
+        const auto fresh = limiter.consume();
+        check("limiter_discards_old_block_but_keeps_new_activity",
+            stale.leftDb == 0.0f && stale.rightDb == 0.0f && fresh.leftDb > 6.0f && fresh.rightDb == 0.0f);
     }
     {
         AnalysisStream stream;

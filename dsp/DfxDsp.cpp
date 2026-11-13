@@ -103,7 +103,7 @@ int DfxDsp::setSignalFormat(int i_bps, int i_nch, int i_srate, int i_valid_bits)
 	}
 }
 
-int DfxDsp::processAudio(short int *si_input_samples, short int *si_output_samples, int i_num_sample_sets, int i_check_for_duplicate_buffers)
+int DfxDsp::processAudio(short int *si_input_samples, short int *si_output_samples, int i_num_sample_sets, int i_check_for_duplicate_buffers, bool measureLimiter)
 {
 	if (data_->being_destroyed_)
 	{
@@ -111,7 +111,7 @@ int DfxDsp::processAudio(short int *si_input_samples, short int *si_output_sampl
 	}
 	else
 	{
-		return data_->processAudio(si_input_samples, si_output_samples, i_num_sample_sets, i_check_for_duplicate_buffers);
+		return data_->processAudio(si_input_samples, si_output_samples, i_num_sample_sets, i_check_for_duplicate_buffers, measureLimiter);
 	}
 }
 
@@ -203,6 +203,11 @@ void DfxDsp::setEqBandBoostCut(int band_num, float boost)
 void DfxDsp::getSpectrumBandValues(float* rp_band_values, int i_array_size)
 {
     data_->getSpectrumBandValues(rp_band_values, i_array_size);
+}
+
+void DfxDsp::discardLimiterActivity() noexcept
+{
+    data_->limiter_activity_.discard();
 }
 
 fxdsp::LimiterLevels DfxDsp::consumeLimiterActivity() noexcept

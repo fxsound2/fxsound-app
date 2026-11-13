@@ -178,22 +178,25 @@ void DfxDspPrivate::processTimer()
 	}
 }
 
-int DfxDspPrivate::processAudio(short int *si_input_samples, short int *si_output_samples, int i_num_sample_sets, int i_check_for_duplicate_buffers)
+int DfxDspPrivate::processAudio(short int *si_input_samples, short int *si_output_samples, int i_num_sample_sets, int i_check_for_duplicate_buffers, bool measureLimiter)
 {
 	processTimer();
 	// Apply DFX processing here using data and format vars above. Format will always be 32 bit floating point.
 	const auto handle = (struct dfxpHdlType *)dfxp_handle_;
+	const auto generation = limiter_activity_.generation();
 	float left = 0.0f, right = 0.0f;
-	if (dfxpUniversalModifySamples(dfxp_handle_, si_input_samples, si_output_samples, i_num_sample_sets, i_check_for_duplicate_buffers) != OKAY)
-		return(NOT_OKAY);
+	const int result = dfxpUniversalModifySamples(dfxp_handle_, si_input_samples, si_output_samples,
+		i_num_sample_sets, i_check_for_duplicate_buffers);
 	if (handle == nullptr || handle->com_hdl_front == nullptr)
-		return OKAY; // Signal format is not ready yet.
+		return result; // Signal format is not ready yet.
 	if (comTakeLimiterActivity(handle->com_hdl_front, &left, &right) == OKAY)
 	{
-		if (handle->num_channels_out == 1 || handle->num_channels_out == 2)
-			limiter_activity_.publish(left, right);
+		// Drain the raw accumulator even on errors or mute. A later audible
+		// block must never publish activity left by an earlier block.
+		if (result == OKAY && measureLimiter && (handle->num_channels_out == 1 || handle->num_channels_out == 2))
+			limiter_activity_.publish(left, right, generation);
 	}
-	else if (!limiter_meter_error_reported_)
+	else if (result == OKAY && !limiter_meter_error_reported_)
 	{
 		// This class has no initialized CSlout sink. Keep the one-shot diagnostic
 		// available in release builds without dereferencing that null sink.
@@ -201,7 +204,7 @@ int DfxDspPrivate::processAudio(short int *si_input_samples, short int *si_outpu
 		limiter_meter_error_reported_ = true;
 	}
 
-	return OKAY;
+	return result;
 }
 
 int DfxDspPrivate::setSignalFormat(int i_bps, int i_nch, int i_srate, int i_valid_bits)

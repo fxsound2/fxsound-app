@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace fxanalysis
 {
-AnalysisStream::AnalysisStream() : queue_(new Block[capacity]), worker_(&AnalysisStream::run, this) {}
+AnalysisStream::AnalysisStream() : worker_(&AnalysisStream::run, this) {}
 AnalysisStream::~AnalysisStream()
 {
     {
@@ -42,29 +42,58 @@ void AnalysisStream::setEnabled(bool value) noexcept
         const std::lock_guard<std::mutex> lock(workerMutex_);
         if (monitoringEnabled_.load(std::memory_order_relaxed) == value) return;
         monitoringEnabled_.store(false, std::memory_order_release);
-        invalidate();
-        clipDetector_.reset();
+        enabled_.store(false, std::memory_order_release);
+        resetInput();
+        if (value && !queue_ && !failed_.load(std::memory_order_acquire))
+        {
+            try { queue_ = std::make_unique<Block[]>(capacity); }
+            catch (const std::exception& error) { fail(error.what()); }
+        }
         enabled_.store(value && !failed_.load(std::memory_order_acquire), std::memory_order_release);
         monitoringEnabled_.store(value, std::memory_order_release);
     }
     workerWake_.notify_one();
 }
-void AnalysisStream::invalidate() noexcept { revision_.fetch_add(1, std::memory_order_acq_rel); }
+void AnalysisStream::invalidate() noexcept { revision_.fetch_add(2, std::memory_order_acq_rel); }
 
 bool AnalysisStream::push(const float* pcm, int frames, int channels, int rate, std::uint64_t first) noexcept
 {
-    if (!monitoringEnabled_.load(std::memory_order_acquire)) return true;
+    return push(pcm, frames, channels, rate, first, beginInput());
+}
+
+AnalysisStream::InputToken AnalysisStream::beginInput() const noexcept
+{
+    const auto revision = revision_.load(std::memory_order_acquire);
+    const auto clips = clipDetector_.generation();
+    return {(revision & 1u) == 0 && monitoringEnabled_.load(std::memory_order_acquire)
+        && revision == revision_.load(std::memory_order_acquire)
+        ? revision : 0, clips};
+}
+
+void AnalysisStream::resetInput() noexcept
+{
+    // Odd revisions mark the transition while the control thread resets the peak latch.
+    revision_.fetch_add(1, std::memory_order_acq_rel);
+    clipDetector_.reset();
+    revision_.fetch_add(1, std::memory_order_release);
+}
+
+bool AnalysisStream::push(const float* pcm, int frames, int channels, int rate, std::uint64_t first,
+                          InputToken input) noexcept
+{
+    if (input.revision == 0 || input.revision != revision_.load(std::memory_order_acquire)) return true;
     if (frames < 0 || rate < 8000 || rate > 384000
         || static_cast<std::uint64_t>(frames) > std::numeric_limits<std::uint64_t>::max() - first
-        || !clipDetector_.processBlock(pcm, frames, channels))
+        || !clipDetector_.processBlock(pcm, frames, channels, input.clips))
     {
-        result_.store(AnalysisResult::invalidBlock);
-        invalidate();
+        auto revision = input.revision;
+        if (revision_.compare_exchange_strong(revision, revision + 2, std::memory_order_acq_rel))
+            result_.store(AnalysisResult::invalidBlock);
         return false;
     }
     // Peaks are latched from the raw block before a full queue can drop FFT input.
     if (!enabled()) return true;
-    const auto revision = revision_.load(std::memory_order_acquire);
+    const auto revision = input.revision;
     for (int offset = 0; offset < frames;)
     {
         const unsigned write = write_.load(std::memory_order_relaxed);

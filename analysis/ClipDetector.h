@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 #include <atomic>
 #include <cmath>
+#include <cstdint>
 
 namespace fxanalysis
 {
@@ -42,7 +43,16 @@ public:
     // Returns false for an invalid block; existing events remain pending.
     // NaN does not compare as a peak; infinities exceed the threshold. The host
     // remains responsible for reporting invalid audio data independently.
+    using Generation = std::uint64_t;
+
+    Generation generation() const noexcept { return pending_.load(std::memory_order_acquire) & ~flags; }
+
     bool processBlock(const float* pcm, int frames, int channels) noexcept
+    {
+        return processBlock(pcm, frames, channels, generation());
+    }
+
+    bool processBlock(const float* pcm, int frames, int channels, Generation generation) noexcept
     {
         if (frames < 0 || (frames > 0 && pcm == nullptr) || (channels != 1 && channels != 2))
             return false;
@@ -53,7 +63,12 @@ public:
             if (std::abs(pcm[channels == 1 ? 0 : 1]) >= threshold) detected |= 2u;
             if (detected == 3u) break;
         }
-        if (detected != 0) pending_.fetch_or(detected, std::memory_order_relaxed);
+        if (detected != 0)
+        {
+            auto previous = pending_.load(std::memory_order_relaxed);
+            while ((previous & ~flags) == generation
+                && !pending_.compare_exchange_weak(previous, previous | detected, std::memory_order_relaxed)) {}
+        }
         return true;
     }
 
@@ -61,15 +76,21 @@ public:
     // it is returned now or remains pending for the next read.
     ClipEvents consume() noexcept
     {
-        const auto detected = pending_.exchange(0, std::memory_order_relaxed);
+        const auto detected = pending_.fetch_and(~flags, std::memory_order_relaxed);
         return {(detected & 1u) != 0, (detected & 2u) != 0};
     }
 
-    // Explicit host lifecycle reset, discarding events published before this call.
-    void reset() noexcept { pending_.store(0, std::memory_order_relaxed); }
+    // Reset also rejects a producer that already began scanning the previous block.
+    void reset() noexcept
+    {
+        auto previous = pending_.load(std::memory_order_relaxed);
+        while (!pending_.compare_exchange_weak(previous, (previous & ~flags) + flags + 1,
+                                                std::memory_order_acq_rel)) {}
+    }
 
 private:
-    static_assert(std::atomic<unsigned>::is_always_lock_free, "Audio peak flags must be lock-free");
-    std::atomic<unsigned> pending_{0};
+    static constexpr Generation flags = 3;
+    static_assert(std::atomic<Generation>::is_always_lock_free, "Audio peak flags must be lock-free");
+    std::atomic<Generation> pending_{0};
 };
 }

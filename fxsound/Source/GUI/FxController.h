@@ -129,6 +129,7 @@ public:
     void getSpectrumBandValues(Array<float>& band_values);
     void setAnalysisEnabled(bool enabled);
     void detachAudioPassthru();
+    void muteOutput(bool muted);
     bool canAnalyzeOutput() const noexcept;
     bool isOutputMuted() const noexcept;
     bool getAnalyzedSpectrumBands(fxanalysis::BarSnapshot& bars);
@@ -252,8 +253,9 @@ private:
 	static LRESULT CALLBACK eventCallback(HWND hwnd, const UINT message, const WPARAM w_param, const LPARAM l_param);
 	void timerCallback() override;
 	void onSoundDeviceChange(bool processing) override;
+    AnalysisInput beginAudioBlock() noexcept override;
     void onAudioBlock(const float* pcm, int frames, int channels, int sample_rate,
-                      std::uint64_t first_sample) noexcept override;
+                      std::uint64_t first_sample, AnalysisInput input) noexcept override;
 	void onSystemSuspend();
 	void onSystemResume();
 	
@@ -291,8 +293,9 @@ private:
 	AudioPassthru* audio_passthru_;
 	DfxDsp dfx_dsp_;
     fxanalysis::AnalysisStream analysis_stream_;
-    std::atomic<int> analysis_channels_{0};
     fxanalysis::AnalysisResult analysis_reported_result_ = fxanalysis::AnalysisResult::ok;
+    std::uint32_t analysis_last_log_ = 0;
+    bool analysis_has_logged_ = false, analysis_failure_logged_ = false;
 	FxSound::Settings settings_;
 	uint32_t device_count_;
 	std::unique_ptr<FileLogger> file_logger_;
