@@ -50,6 +50,8 @@ extern "C"
 
 #include "com.h"
 #include "u_com.h"
+#include <new>
+#include "Resampler.h"
 #include "mry.h"
 #include "dongle.h"
 
@@ -86,6 +88,13 @@ int PT_DECLSPEC comInit(PT_HANDLE **hpp_com, int i_softdsp, int i_board_address,
 	if (cast_handle == NULL)
 		return(NOT_OKAY);
     
+	cast_handle->resampler_hdl = new (std::nothrow) Resampler(COM_RESAMPLE_MAX_CHANNELS, COM_RESAMPLE_MAX_FACTOR, COM_RESAMPLE_MAX_FRAMES);
+	if (cast_handle->resampler_hdl == NULL)
+	{
+		free(cast_handle);
+		return(NOT_OKAY);
+	}
+
 	cast_handle->slout_hdl = hp_slout;
     /* Used to index software processor memory spaces and vars */
 	cast_handle->processor_index = i_processor_num - 1;
@@ -429,6 +438,8 @@ int PT_DECLSPEC comFreeUp(PT_HANDLE **hpp_com)
 
 	if( comSftwrFreeUp( &(cast_handle->comSftwr_hdl) ) != OKAY)
 		return(NOT_OKAY);
+
+	delete cast_handle->resampler_hdl;
 
 	free(cast_handle);
 

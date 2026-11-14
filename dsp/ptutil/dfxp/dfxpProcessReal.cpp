@@ -37,6 +37,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "BinauralSyn.h"
 #include "GraphicEq.h"
 
+#if DAW_MAX_BUFFER_SIZE > COM_RESAMPLE_MAX_FRAMES
+#error COM_RESAMPLE_MAX_FRAMES must hold a full DAW_MAX_BUFFER_SIZE processing buffer
+#endif
+
 extern "C" {
 #include "comSftwr.h"
 }
