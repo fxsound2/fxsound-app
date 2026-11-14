@@ -128,7 +128,7 @@ void FxSettingsDialog::SettingsComponent::resized()
 		y = entry.button->getBottom() + 20;
 	}
 
-	juce::Rectangle<int> pane_rect(SEPARATOR_X + 1, 1, getWidth() - SEPARATOR_X + 1, getHeight() - 1);
+	juce::Rectangle<int> pane_rect(SEPARATOR_X + 1, 1, getWidth() - (SEPARATOR_X + 1), getHeight() - 1);
 	for (auto& entry : panes_)
 	{
 		entry.pane->setBounds(pane_rect);

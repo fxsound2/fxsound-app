@@ -38,7 +38,7 @@ private:
 	static constexpr int HOTKEY_LABEL_X = X_MARGIN + 25;
 	static constexpr int HOTKEY_LABEL_HEIGHT = 20;
 
-    void setText();
+	void setText() override;
 	void onGpuRenderToggled();
 
     ToggleButton launch_toggle_;

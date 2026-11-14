@@ -42,7 +42,7 @@ private:
 	static constexpr int BUTTON_HEIGHT = 24;
 	static constexpr int MAX_BUTTON_WIDTH = 315;
 
-	void setText();
+	void setText() override;
 	void resizeResetButton(int x, int y);
 
 	void visibilityChanged() override;

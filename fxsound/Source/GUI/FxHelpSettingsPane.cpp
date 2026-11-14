@@ -80,27 +80,22 @@ void FxHelpSettingsPane::resized()
 void FxHelpSettingsPane::paint(Graphics& g)
 {
 	g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-
-    setText();
-
-	FxSettingsPane::paint(g);
 }
 
 void FxHelpSettingsPane::setText()
 {
-    auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
-
     version_title_.setText(TRANS("Version"), NotificationType::dontSendNotification);
-    version_title_.setFont(theme.getNormalFont());
-
     version_text_.setText(L"v" + JUCEApplication::getInstance()->getApplicationVersion(), NotificationType::dontSendNotification);
-    version_text_.setFont(theme.getSmallFont());
-
     support_title_.setText(TRANS("Support"), NotificationType::dontSendNotification);
-    support_title_.setFont(theme.getNormalFont());
-
     maintenance_title_.setText(TRANS("Maintenance"), NotificationType::dontSendNotification);
-    maintenance_title_.setFont(theme.getNormalFont());
+
+    if (auto* theme = getTheme())
+    {
+        version_title_.setFont(theme->getNormalFont());
+        version_text_.setFont(theme->getSmallFont());
+        support_title_.setFont(theme->getNormalFont());
+        maintenance_title_.setFont(theme->getNormalFont());
+    }
 
     changelog_link_.setButtonText(TRANS("Changelog"));
     quicktour_link_.setButtonText(TRANS("Quick tour"));

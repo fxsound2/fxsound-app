@@ -108,17 +108,14 @@ void FxAudioSettingsPane::paint(Graphics& g)
 
 	g.setFillType(FillType(Colour(FXCOLOR(DefaultFill)).withAlpha(0.2f)));
 	g.fillRoundedRectangle(output_preference_bounds_, 8);
-
-	setText();
-
-	FxSettingsPane::paint(g);
 }
 
 void FxAudioSettingsPane::setText()
 {
-	auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
-
-	output_preference_title_.setFont(theme.getNormalFont().withHeight(15.0f));
+	if (auto* theme = getTheme())
+	{
+		output_preference_title_.setFont(theme->getNormalFont().withHeight(15.0f));
+	}
 	output_preference_title_.setText(TRANS("Output Device Preference"), NotificationType::dontSendNotification);
 
 	prioritize_new_output_toggle_.setButtonText(TRANS("Prioritize new output devices"));

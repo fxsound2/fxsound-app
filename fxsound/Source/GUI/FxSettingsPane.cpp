@@ -24,19 +24,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 FxSettingsPane::FxSettingsPane(String name)
 {
 	name_ = name;
-	auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
 
-    title_.setFont(theme.getTitleFont());
-	title_.setText(TRANS(name_), NotificationType::dontSendNotification);
 	title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	title_.setJustificationType(Justification::centredLeft);
+	updateTitle();
 	addAndMakeVisible(title_);
 }
 
-void FxSettingsPane::paint(Graphics&)
+void FxSettingsPane::lookAndFeelChanged()
 {
-    auto& theme = dynamic_cast<FxTheme&>(getLookAndFeel());
+	updateTitle();
+	setText();
+	repaint();
+}
 
-    title_.setFont(theme.getTitleFont());
-    title_.setText(TRANS(name_), NotificationType::dontSendNotification);
+FxTheme* FxSettingsPane::getTheme()
+{
+	return dynamic_cast<FxTheme*>(&LookAndFeel::getDefaultLookAndFeel());
+}
+
+void FxSettingsPane::updateTitle()
+{
+	if (auto* theme = getTheme())
+	{
+		title_.setFont(theme->getTitleFont());
+	}
+	title_.setText(TRANS(name_), NotificationType::dontSendNotification);
 }
