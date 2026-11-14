@@ -52,6 +52,7 @@ public:
         try
         {
             SetUnhandledExceptionFilter(unhandledExceptionFilter);
+            start_tick_ = GetTickCount64();
 
             HRESULT hRes = CoInitializeEx(0, COINIT_MULTITHREADED);
             if (SUCCEEDED(hRes))
@@ -145,6 +146,8 @@ public:
 private:
     FxTheme theme_;
     static constexpr int MAX_FRAMES = 64;
+    static constexpr ULONGLONG MIN_UPTIME_FOR_RELAUNCH_MS = 60 * 1000;
+    static inline ULONGLONG start_tick_ = 0;
 
     static LONG WINAPI unhandledExceptionFilter(EXCEPTION_POINTERS* exception_info)
     {
@@ -188,7 +191,25 @@ private:
         // Capture stack based on crash context
         CaptureAndLogCallStack(exception_info->ContextRecord);
 
+        relaunchAfterCrash();
+
         return EXCEPTION_EXECUTE_HANDLER;
+    }
+
+    // Starts a fresh instance after a crash so the app doesn't just disappear from the tray.
+    // Skipped when the process crashed shortly after starting, to avoid a crash loop.
+    static void relaunchAfterCrash()
+    {
+        auto& controller = FxController::getInstance();
+
+        if (GetTickCount64() - start_tick_ < MIN_UPTIME_FOR_RELAUNCH_MS)
+        {
+            controller.logMessage("Crashed shortly after start, not relaunching\n");
+            return;
+        }
+
+        controller.logMessage("Relaunching after crash\n");
+        FxController::launchNewInstance();
     }
 
     static void CaptureAndLogCallStack(CONTEXT* context = nullptr)

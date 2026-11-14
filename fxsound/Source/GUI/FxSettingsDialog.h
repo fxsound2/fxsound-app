@@ -81,7 +81,6 @@ private:
 		static constexpr int BUTTON_Y = 50;
 		static constexpr int BUTTON_WIDTH = 150;
 		static constexpr int BUTTON_HEIGHT = 40;
-		static constexpr int SEPARATOR_X = 152;
 
 		struct PaneEntry
 		{

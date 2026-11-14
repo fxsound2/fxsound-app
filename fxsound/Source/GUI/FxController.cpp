@@ -133,11 +133,13 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 	hotkeys_registered_ = false;
 	output_changed_ = false;
 	playback_device_available_ = true;
+	system_sleeping_ = false;
 	powerNotify_ = nullptr;
 	unregister_suspend_resume_notification_ = nullptr;
 
 	device_count_ = 0;
 	output_device_name_ = L"";
+	clearOutputRestore();
 
 	audio_process_time_ = 0;
 	audio_process_on_counter_ = 0;
@@ -171,7 +173,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 		logMessage(String("ARM64"));
 	}
 
-    gpu_render_ = false;
+    gpu_render_ = settings_.getBool("gpu_render") && canSupportGpuRendering();
 
 	auto view = settings_.getInt("view");
 	if (view <= 0 || view > 2)
@@ -236,12 +238,10 @@ void FxController::initConfig(const String& commandline)
 	auto mastergain = arg_list.getValueForOption("--master_gain");
 	auto volume_leveling = arg_list.getValueForOption("--volume_leveling");
 
-    if (arg_list.containsOption("--gpu"))
+    // Forces GPU rendering for this session only; the saved preference is not changed.
+    if (arg_list.containsOption("--gpu") && canSupportGpuRendering())
     {
-		if (juce::SystemStats::getOperatingSystemType() > juce::SystemStats::Windows7)
-		{
-            gpu_render_ = true;
-		}
+        gpu_render_ = true;
     }
 
 	if (arg_list.containsOption("--run_minimized"))
@@ -1203,6 +1203,12 @@ void FxController::setOutput(int output, bool notify)
 
 	if (output < output_devices.size())
 	{
+		// Explicit user selection overrides any pending restore after sleep.
+		{
+			ScopedLock auto_lock(lock_);
+			clearOutputRestore();
+			system_sleeping_ = false;
+		}
 		setOutput(output_devices[output].pwszID.c_str(), notify);
 	}
 }
@@ -1649,8 +1655,81 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 		}
 	}
 
+	auto previous_output_name = getOutputName();
+
+	// HDMI output handling around sleep. The HDMI removal is notified before the system suspend, so
+	// the failover is held (hdmi_reconnect_pending_) until HDMI_FAILOVER_INTERVAL ticks pass:
+	//  - HDMI reconnects in time (including after sleep): it is selected again.
+	//  - Not in time: physical disconnect, fail over as per the preferred output logic.
+	const SoundDevice* lost_hdmi = nullptr;
+	// Only the HDMI that was the selected output is restored.
+	if (failover_output_name_.isNotEmpty() && failover_output_name_ == previous_output_name)
+	{
+		for (auto& output_device : active_output_devices_)
+		{
+			if (output_device.deviceFormFactor == L"HDMI" &&
+				failover_output_name_ == output_device.deviceFriendlyName.c_str())
+			{
+				lost_hdmi = &output_device;
+				break;
+			}
+		}
+	}
+
+	if (hdmi_reconnect_pending_)
+	{
+		if (hdmi_failover_counter_ >= HDMI_FAILOVER_INTERVAL)
+		{
+			clearOutputRestore();
+		}
+		else if (lost_hdmi != nullptr)
+		{
+			preferred_device = *lost_hdmi;
+			clearOutputRestore();
+		}
+	}
+	else if (previous_output_name.isNotEmpty())
+	{
+		bool previous_still_active = false;
+		for (auto& output_device : active_output_devices_)
+		{
+			if (previous_output_name == output_device.deviceFriendlyName.c_str())
+			{
+				previous_still_active = true;
+				break;
+			}
+		}
+
+		if (!previous_still_active)
+		{
+			for (auto& prev_device : prev_active_devices)
+			{
+				if (prev_device.deviceFormFactor == L"HDMI" &&
+					previous_output_name == prev_device.deviceFriendlyName.c_str())
+				{
+					failover_output_name_ = previous_output_name;
+					hdmi_failover_counter_ = 0;
+					hdmi_reconnect_pending_ = true;
+					break;
+				}
+			}
+		}
+	}
+
 	// Initialize the model to update the output devices in the UI.
 	FxModel::getModel().initOutputs(active_output_devices_);
+
+	// Waiting for the lost HDMI output to reconnect: stay muted and keep the current selection.
+	// timerCallback() fails over when the wait ends.
+	if (hdmi_reconnect_pending_)
+	{
+		if (FxModel::getModel().getPowerState())
+		{
+			audio_passthru_->mute(true);
+		}
+		return;
+	}
+
 	// Set the output to select the new output and update the UI.
 	// If the output has not changed, still output has to be set to update the UI.
 	setOutput(preferred_device.pwszID.c_str());
@@ -1659,13 +1738,6 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 // Handled when FxSound processing is on
 void FxController::selectProcessingOutput(std::vector<SoundDevice>& sound_devices)
 {
-	auto available = audio_passthru_->isPlaybackDeviceAvailable();
-	if (available != playback_device_available_)
-	{
-		playback_device_available_ = available;
-		FxModel::getModel().notifyOutputError();
-	}
-
 	// New device is added or removed, so update the output device list and select a preferred output device based on the updated device list.
 	if (sound_devices.size() != device_count_)
 	{
@@ -1689,23 +1761,47 @@ void FxController::selectProcessingOutput(std::vector<SoundDevice>& sound_device
 	}
 	else
 	{
-		for (auto sound_device : sound_devices)
+		if (!hdmi_reconnect_pending_)
 		{
-			// If the selected output device is different from the output device selected in application UI, update the application UI.
-			if (sound_device.isRealDevice && sound_device.isTargetedRealPlaybackDevice && getOutputName() != sound_device.deviceFriendlyName.c_str())
+			for (auto sound_device : sound_devices)
 			{
-				setOutputName(sound_device.deviceFriendlyName.c_str());
-				FxModel::getModel().setSelectedOutput(sound_device);
-
-				auto device_config = DeviceConfig::getDeviceConfig(settings_, getOutputName());
-				if (device_config.preset.isNotEmpty())
+				// If the selected output device is different from the output device selected in application UI, update the application UI.
+				if (sound_device.isRealDevice && sound_device.isTargetedRealPlaybackDevice && getOutputName() != sound_device.deviceFriendlyName.c_str())
 				{
-					setPreset(device_config.preset, false);
-				}
+					setOutputName(sound_device.deviceFriendlyName.c_str());
+					FxModel::getModel().setSelectedOutput(sound_device);
 
-				break;
+					auto device_config = DeviceConfig::getDeviceConfig(settings_, getOutputName());
+					if (device_config.preset.isNotEmpty())
+					{
+						setPreset(device_config.preset, false);
+					}
+
+					break;
+				}
 			}
 		}
+	}
+
+	// Sync after the outputs are updated, as the HDMI wait (if any) may have just ended.
+	syncPlaybackAvailability();
+}
+
+// Notify the UI when the playback device availability changes (available <-> unavailable).
+// Skipped while waiting for the HDMI output to reconnect, so no error is shown meanwhile; the
+// state is synced again after the wait ends.
+void FxController::syncPlaybackAvailability()
+{
+	if (hdmi_reconnect_pending_)
+	{
+		return;
+	}
+
+	auto available = audio_passthru_->isPlaybackDeviceAvailable();
+	if (available != playback_device_available_)
+	{
+		playback_device_available_ = available;
+		FxModel::getModel().notifyOutputError();
 	}
 }
 
@@ -1785,6 +1881,16 @@ void FxController::powerOn(bool on)
 	else
 	{
 		dfx_dsp_.powerOn(false);
+
+		{
+			ScopedLock auto_lock(lock_);
+
+			if (hdmi_reconnect_pending_)
+			{
+				audio_passthru_->mute(false);
+				clearOutputRestore();
+			}
+		}
 
 		if (isTimerRunning())
 		{
@@ -2115,7 +2221,35 @@ void FxController::timerCallback()
 		return;
 	}
 
+	{
+		// No suspend followed the HDMI removal (physical disconnect), or HDMI did not return within
+		// the wait after wake: continue on the available output as per preference.
+		ScopedLock auto_lock(lock_);
+		// The timer keeps running for a few seconds after the suspend notification, before the system
+		// actually sleeps. Don't count that time; the wait starts again on resume.
+		if (!system_sleeping_ && (hdmi_reconnect_pending_ && ++hdmi_failover_counter_ >= HDMI_FAILOVER_INTERVAL))
+		{
+			clearOutputRestore();
+			auto sound_devices = audio_passthru_->getSoundDevices(true);
+			updateOutputs(sound_devices);
+
+			// The hold in updateOutputs() muted the audio; make sure it is unmuted once the wait is over
+			// and an output is available (setOutput() keeps it muted when no output is available).
+			if (FxModel::getModel().getPowerState() && !active_output_devices_.empty())
+			{
+				audio_passthru_->mute(false);
+			}
+		}
+	}
+
 	audio_passthru_->processTimer();
+	{
+		// Sample after processTimer(), once any device reinit has set the availability. This also covers
+		// the HDMI wait ending through the timer, where selectProcessingOutput() may not be called.
+		ScopedLock auto_lock(lock_);
+		syncPlaybackAvailability();
+	}
+
 	auto total_audio_process_time = dfx_dsp_.getTotalAudioProcessedTime();
 	if (audio_process_time_ != total_audio_process_time)
 	{
@@ -2201,6 +2335,14 @@ void FxController::onSoundDeviceChange(bool processing)
 
 void FxController::onSystemSuspend()
 {
+	{
+		ScopedLock auto_lock(lock_);
+
+		hdmi_failover_counter_ = 0;
+
+		system_sleeping_ = true;
+	}
+
 	if (FxModel::getModel().getPowerState())
 	{
 		audio_passthru_->mute(true);
@@ -2209,12 +2351,24 @@ void FxController::onSystemSuspend()
 
 void FxController::onSystemResume()
 {
-	if (FxModel::getModel().getPowerState())
+	ScopedLock auto_lock(lock_);
+
+	hdmi_failover_counter_ = 0;
+
+	system_sleeping_ = false;
+
+	if (!hdmi_reconnect_pending_ && FxModel::getModel().getPowerState())
 	{
 		audio_passthru_->mute(false);
 	}
 }
 
+void FxController::clearOutputRestore()
+{
+	failover_output_name_ = String();
+	hdmi_failover_counter_ = 0;
+	hdmi_reconnect_pending_ = false;
+}
 
 void FxController::enableHotkeys(bool enable)
 {
@@ -2475,6 +2629,83 @@ void FxController::setRenderingEngine(juce::Component& component)
 	{
 		// Engine index 0 is GDI (software), 1 is Direct2D.
 		peer->setCurrentRenderingEngine(gpu_render_ ? 1 : 0);
+	}
+}
+
+bool FxController::isGpuRenderingEnabled()
+{
+	return settings_.getBool("gpu_render");
+}
+
+void FxController::setGpuRenderingEnabled(bool enable)
+{
+	settings_.setBool("gpu_render", enable);
+}
+
+bool FxController::isGpuRenderingActive() const
+{
+	return gpu_render_;
+}
+
+bool FxController::canSupportGpuRendering()
+{
+	return juce::SystemStats::getOperatingSystemType() > juce::SystemStats::Windows7;
+}
+
+bool FxController::launchNewInstance()
+{
+	auto& controller = getInstance();
+
+	wchar_t module_file[MAX_PATH];
+	DWORD length = GetModuleFileNameW(NULL, module_file, MAX_PATH);
+	if (length == 0 || length >= MAX_PATH)
+	{
+		controller.logMessage("Relaunch failed: module path unavailable\n");
+		return false;
+	}
+
+	// A hidden helper waits ~3 seconds before starting the exe, because the single instance
+	// check would otherwise see this process while it is still exiting.
+	std::wstring command_line = L"cmd.exe /c \"ping -n 4 127.0.0.1 >nul & start \"\" \"";
+	command_line += module_file;
+	command_line += L"\"\"";
+
+	// CREATE_NO_WINDOW gives cmd a hidden console that ping shares. It must not be combined
+	// with DETACHED_PROCESS: Windows then ignores CREATE_NO_WINDOW, and ping, having no console
+	// to inherit, opens a visible one of its own.
+	STARTUPINFOW startup_info = { sizeof(STARTUPINFOW) };
+	startup_info.dwFlags = STARTF_USESHOWWINDOW;
+	startup_info.wShowWindow = SW_HIDE;
+	PROCESS_INFORMATION process_info = { 0 };
+	if (CreateProcessW(NULL, command_line.data(), NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &startup_info, &process_info))
+	{
+		CloseHandle(process_info.hThread);
+		CloseHandle(process_info.hProcess);
+		controller.logMessage("Relaunching\n");
+		return true;
+	}
+
+	controller.logMessage("Relaunch failed\n");
+	return false;
+}
+
+void FxController::restartApplication()
+{
+	autoSaveModifiedPreset();
+
+	if (launchNewInstance())
+	{
+		// Close open modal dialogs (e.g. Settings) first; their deletion is queued before the
+		// quit below, so they are gone before shutdown() tears down the windows.
+		if (auto* modal_manager = ModalComponentManager::getInstanceWithoutCreating())
+		{
+			modal_manager->cancelAllModalComponents();
+		}
+
+		MessageManager::callAsync([]()
+		{
+			JUCEApplication::getInstance()->systemRequestedQuit();
+		});
 	}
 }
 

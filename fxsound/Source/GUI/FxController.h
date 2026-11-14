@@ -172,6 +172,19 @@ public:
 
     void setRenderingEngine(juce::Component& component);
 
+	// Saved preference, applied on the next start.
+	bool isGpuRenderingEnabled();
+	void setGpuRenderingEnabled(bool enable);
+	// Engine this process is actually running with.
+	bool isGpuRenderingActive() const;
+	static bool canSupportGpuRendering();
+
+	// Starts a fresh instance after a short delay, so it runs once this process has exited
+	// and released the single instance lock. Used for crash recovery and user restarts.
+	static bool launchNewInstance();
+	// Saves state, launches a new instance and quits this one.
+	void restartApplication();
+
 	void logMessage(const String& message)
 	{
 		file_logger_->logMessage(message);
@@ -235,7 +248,9 @@ private:
 	
     void initOutputs(std::vector<SoundDevice>& sound_devices);
 	void updateOutputs(std::vector<SoundDevice>& sound_devices);
+	void clearOutputRestore();
     void selectProcessingOutput(std::vector<SoundDevice>& sound_devices);
+	void syncPlaybackAvailability();
     void syncOutputWithSystemDefault(std::vector<SoundDevice>& sound_devices);
 
 	void sortByDeviceConfigPriority(std::vector<SoundDevice>& devices);
@@ -273,7 +288,19 @@ private:
 	bool authenticated_;
 	bool output_changed_;
     bool playback_device_available_;
+	bool system_sleeping_;
 	String output_device_name_;
+
+	// HDMI outputs disappear when the PC goes to sleep. The device removal notification arrives
+	// before the system suspend notification, so a removal can only be recognized as sleep-related
+	// after the fact. After removal of the HDMI output in use, the failover is held for
+	// HDMI_FAILOVER_INTERVAL timer ticks. The count restarts on suspend (the timer does not tick while
+	// asleep) so HDMI also gets that time after wake. If HDMI is back in time it is reused, otherwise
+	// it is treated as a physical disconnect and the preferred output is selected.
+	static constexpr int HDMI_FAILOVER_INTERVAL = 30;	// 30 ticks * 100 ms = 3 s
+	String failover_output_name_;
+	int hdmi_failover_counter_;
+	bool hdmi_reconnect_pending_;	// HDMI output lost, waiting for it to reconnect
 	std::vector<SoundDevice> active_output_devices_;
 	std::vector<SoundDevice> output_devices_;
 	bool always_on_top_;
