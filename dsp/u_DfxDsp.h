@@ -20,11 +20,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma once
 #include <string>
+#include <atomic>
+#include <thread>
+#include <mutex>
 #include "AudioPassthru.h"
 #include "codedefs.h"
 #include "DfxDsp.h"
 #include "pt_defs.h"
 #include "slout.h"
+#include "FiltLowCut.h"
+#include "FiltChain.h"
+#include "FilterEngine.h"
 
 struct dfxg_section_type {
 	realtype value;
@@ -88,6 +94,25 @@ public:
 	int resetEQ();
 	void eqOn(bool on);
 	int getNumEqBands();
+	void filtersOn(bool on);
+	bool isFiltersOn();
+	void setCutSlope(int db_per_octave);
+	int getCutSlope();
+	void lowCutOn(bool on);
+	bool isLowCutOn();
+	void setLowCutCutoff(float hz);
+	float getLowCutCutoff();
+	void highCutOn(bool on);
+	bool isHighCutOn();
+	void setHighCutCutoff(float hz);
+	float getHighCutCutoff();
+	void monoBassOn(bool on);
+	bool isMonoBassOn();
+	void setMonoBassCutoff(float hz);
+	float getMonoBassCutoff();
+	bool isFilterPreviewAvailable(int preview_flags);
+	void setFilterPreview(int preview_flags);
+	int getFilterPreview();
 	float getBalance();
 	void setBalance(float gain_db);
 	float getNormalization();
@@ -114,7 +139,7 @@ public:
 	void resetTotalAudioProcessedTime();
     void getSpectrumBandValues(float* rp_band_values, int i_array_size);
 
-	bool being_destroyed_ = false;
+	std::atomic<bool> being_destroyed_{ false };
 private:
 	void processTimer();
 	int eqUpdateFromRegistry(int *ip_eq_changed);
@@ -131,6 +156,17 @@ private:
 	// DfxDspEq.cpp
 	int eqSetProcessingOn(int i_storage_type, int i_on);
 	int eqGetProcessingOn(int i_storage_type, int *ip_on);
+
+	void applyFilters(float *audio_buffer, int num_sample_sets);
+	void requestFilterDesign();
+	void filterDesignerThreadMain();
+	static HANDLE createFilterDesignerEvent();
+	int filterDesiredSource(bool filter_on, unsigned int reset_serial);
+	FilterSettings filterSettings();
+	bool beginFilterChange(const FilterSettings &next, int requested_preview);
+	bool beginFilterChange(const FilterSettings &next);
+	void setStageOn(int stage_bit, std::atomic<bool> &stage_on, bool on);
+	void setStageCutoff(int stage_bit, std::atomic<float> &stage_cutoff, float clamped_hz);
 
 	// Handles
 	int *dfxp_handle_;
@@ -155,5 +191,39 @@ private:
 	struct dfxg_product_specific_info_type product_specific_;
 
 	int eq_processing_on_;
+
+	std::atomic<bool> filters_on_{ false };
+	std::atomic<bool> low_cut_on_{ true };
+	std::atomic<bool> high_cut_on_{ true };
+	std::atomic<bool> mono_bass_on_{ false };
+	std::atomic<bool> filter_power_on_{ true };
+	std::atomic<int> cut_slope_db_{ DfxDsp::CUT_DEFAULT_SLOPE_DB };
+	std::atomic<float> low_cut_cutoff_hz_{ (float)DfxDsp::LOW_CUT_DEFAULT_CUTOFF_HZ };
+	std::atomic<float> high_cut_cutoff_hz_{ (float)DfxDsp::HIGH_CUT_DEFAULT_CUTOFF_HZ };
+	std::atomic<float> mono_bass_cutoff_hz_{ (float)DfxDsp::MONO_BASS_DEFAULT_CUTOFF_HZ };
+	std::atomic<int> filter_preview_{ DfxDsp::PreviewNone };
+	int filter_cached_sample_rate_ = 44100;
+	int filter_cached_num_channels_ = 2;
+	int filter_cached_bps_ = 32;
+	unsigned int filter_format_serial_ = 0;
+
+	FilterIirExchange filter_iir_exchange_;
+	FilterAudioState filter_audio_;
+
+	std::atomic<int> filter_request_sample_rate_{ 44100 };
+	std::atomic<unsigned int> filter_request_generation_{ 1 };
+	std::atomic<unsigned int> filter_reset_serial_{ 0 };
+	std::atomic<bool> filter_designer_stop_{ false };
+	// Auto-reset event that wakes the designer. SetEvent never blocks and a signal set before the designer waits is
+	// kept, so any thread (the audio thread included) can wake it without a lock and no wakeup is lost. Atomic because
+	// the designer recreates it if creation failed in the constructor (see filterDesignerThreadMain).
+	std::atomic<HANDLE> filter_designer_event_{ NULL };
+	// How often the designer checks for requests while it has no event.
+	static constexpr DWORD FILTER_DESIGNER_POLL_MS = 50;
+	// Held by the GUI-thread filter setters around a reset-serial bump and the store it guards, and by the designer
+	// while it reads the serial and settings, so a design never pairs a new serial with the settings from before it.
+	// Never taken on the audio thread.
+	std::mutex filter_settings_mutex_;
+	std::thread filter_designer_thread_;
 };
 

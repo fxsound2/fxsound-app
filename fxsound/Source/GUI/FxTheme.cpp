@@ -366,6 +366,7 @@ Slider::SliderLayout FxTheme::getSliderLayout(Slider& slider)
 	}
 	else if (style == Slider::LinearHorizontal)
 	{
+		// Leave room on the right for a value label drawn beside the thumb.
 		auto width = layout.sliderBounds.getWidth() - (SLIDER_THUMB_RADIUS*4);
 		layout.sliderBounds.setWidth(width);
 	}
