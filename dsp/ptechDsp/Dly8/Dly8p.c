@@ -73,7 +73,7 @@ void main(int argc, char *argv[])
 
 /* Only build init function in 32 bit files (same for both) */
 #if defined(DSPSOFT_32_BIT)
-DSP_FUNC_DEF int DSPS_DLY_INIT(float *fp_params, float *fp_memory, long l_memsize, float *fp_state, int i_init_flag, float r_samp_freq)
+DSP_FUNC_DEF int DSPS_DLY_INIT(float *fp_params, float *fp_memory, int32_t l_memsize, float *fp_state, int i_init_flag, float r_samp_freq)
 {
 	float *COMM_MEM_OFFSET = fp_params;
 	float *MEMBANK0_START = fp_memory;
@@ -90,13 +90,13 @@ DSP_FUNC_DEF int DSPS_DLY_INIT(float *fp_params, float *fp_memory, long l_memsiz
 	float *delay5_start = NULL;
 	float *delay6_start = NULL;
 	float *delay7_start = NULL;
-	long line_len = 0;
+	int32_t line_len = 0;
 	float old_delay[NUM_ELEMS];
 
-	long i;
+	int32_t i;
  
 	#define FPVAL *(volatile float *)
-	#define LPVAL *(volatile long *) 
+	#define LPVAL *(volatile int32_t *) 
 
 	if( i_init_flag & DSPS_INIT_PARAMS )
 	{
@@ -137,14 +137,14 @@ DSP_FUNC_DEF int DSPS_DLY_INIT(float *fp_params, float *fp_memory, long l_memsiz
 		FPVAL(ELEM7_PAN_GAIN_LEFT) = 0.0;
 		FPVAL(ELEM7_PAN_GAIN_RIGHT) = 0.0;
 		/* Initialize delay values */
-		*(volatile long *)(ELEM0_DELAY) = 1;
-		*(volatile long *)(ELEM1_DELAY) = 1;
-		*(volatile long *)(ELEM2_DELAY) = 1;
-		*(volatile long *)(ELEM3_DELAY) = 1;
-		*(volatile long *)(ELEM4_DELAY) = 1;
-		*(volatile long *)(ELEM5_DELAY) = 1;
-		*(volatile long *)(ELEM6_DELAY) = 1;
-		*(volatile long *)(ELEM7_DELAY) = 1;
+		*(volatile int32_t *)(ELEM0_DELAY) = 1;
+		*(volatile int32_t *)(ELEM1_DELAY) = 1;
+		*(volatile int32_t *)(ELEM2_DELAY) = 1;
+		*(volatile int32_t *)(ELEM3_DELAY) = 1;
+		*(volatile int32_t *)(ELEM4_DELAY) = 1;
+		*(volatile int32_t *)(ELEM5_DELAY) = 1;
+		*(volatile int32_t *)(ELEM6_DELAY) = 1;
+		*(volatile int32_t *)(ELEM7_DELAY) = 1;
 	}
 
 	if( i_init_flag & DSPS_INIT_MEMORY )
@@ -198,14 +198,14 @@ DSP_FUNC_DEF int DSPS_DLY_INIT(float *fp_params, float *fp_memory, long l_memsiz
 		{	/* Init old delay values */
 			unsigned j;
 			for(j=0; j<NUM_ELEMS; j++)
-				old_delay[j] =  (float)*(volatile long *)(ELEM0_DELAY + j);
+				old_delay[j] =  (float)*(volatile int32_t *)(ELEM0_DELAY + j);
 		}
 
 		/* Place variables into state array */
 		{		
 			/* int k; */
 			float **fpp = (float **)&(fp_state[0]);
-			long *lpp  =  (long *)&(fp_state[0]);
+			int32_t *lpp  =  (int32_t *)&(fp_state[0]);
 			fpp[0] = ptr0;
 			/* Original version with variable memsize 
 			fpp[1] = delay0_start;
@@ -242,7 +242,7 @@ DSP_FUNC_DEF int DSPS_DLY_INIT(float *fp_params, float *fp_memory, long l_memsiz
 #endif /* DSPSOFT_32_BIT */
 
 #ifdef DSPSOFT_TARGET
-DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
+DSP_FUNC_DEF void DSPS_DLY_PROCESS(int32_t *lp_data, int l_length,
 								   float *fp_params, float *fp_memory, float *fp_state,
 								   struct hardwareMeterValType *sp_meters,
 								   int DSP_data_type)
@@ -254,7 +254,7 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 	 * stored back at end of buffer processing
 	 */
 	float **fpp = (float **)&(fp_state[0]);
-	long *lpp  =  (long *)&(fp_state[0]);
+	int32_t *lpp  =  (int32_t *)&(fp_state[0]);
 	float *ptr0 = fpp[0];
 	/* Original version that handled variable memsize
 	float *delay0_start = fpp[1];
@@ -265,10 +265,10 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 	float *delay5_start = fpp[6];
 	float *delay6_start = fpp[7];
 	float *delay7_start = fpp[8];
-	long line_len = lpp[9];
+	int32_t line_len = lpp[9];
 	*/
 	/* Version with fixed memsize, no old_delay filtering */
-	long line_len = DSPS_SOFT_MEM_DELAY_LENGTH/NUM_ELEMS;
+	int32_t line_len = DSPS_SOFT_MEM_DELAY_LENGTH/NUM_ELEMS;
 	float *delay0_start = fp_memory + 0 * DSPS_SOFT_MEM_DELAY_LENGTH/NUM_ELEMS;
 	float *delay1_start = fp_memory + 1 * DSPS_SOFT_MEM_DELAY_LENGTH/NUM_ELEMS;
 	float *delay2_start = fp_memory + 2 * DSPS_SOFT_MEM_DELAY_LENGTH/NUM_ELEMS;
@@ -285,8 +285,8 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 
 #if(PT_DSP_BUILD == PT_DSP_DSPFX)
 	/* Below only used in DSP-FX builds */
-	long transfer_state = 0; /* For sending out meter values */
-	long status = 0;         /* For sending run time status to PC */
+	int32_t transfer_state = 0; /* For sending out meter values */
+	int32_t status = 0;         /* For sending run time status to PC */
 
 	/* All the vars below are from DMA_LOCAL_DECLARATIONS.
 	 * They are declared there as statics, but don't need to be
@@ -302,8 +302,8 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 	/* All the vars below are from DMA_GLOBAL_DECLARATIONS.
 	 * They are declared there as statics, but don't need to be
 	 */
-	long *read_in_buf;
-	long *read_out_buf;
+	int32_t *read_in_buf;
+	int32_t *read_out_buf;
 
 	int i;
 
@@ -344,9 +344,9 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 	  float out1, out2;
 	  float in1, in2;
 	  float dly_out[NUM_ELEMS];
-	  long delay_filtered[NUM_ELEMS];
-	  volatile long in_count = 0;
-	  volatile long out_count = 0;
+	  int32_t delay_filtered[NUM_ELEMS];
+	  volatile int32_t in_count = 0;
+	  volatile int32_t out_count = 0;
 	  
 	  load_parameter(); /* If its been sent, loads a parameter into memory */
 
@@ -361,7 +361,7 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 	  
 	  {	  /* Loop to filter delay settings- looping was faster */
 		  unsigned j;
-		  volatile long *delay = (volatile long *)(ELEM0_DELAY);
+		  volatile int32_t *delay = (volatile int32_t *)(ELEM0_DELAY);
 		  for(j=0; j<NUM_ELEMS; j++)
 		  {
 			/* Hardware version filters delay changes, no filtering on soft dsp */
@@ -387,7 +387,7 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 	  	float *tmp_ptr = ptr0;
 
 		rp_MACRO = (float *)(ptr0 - delay_filtered[0] );
-	 	if( (long)rp_MACRO < (long)delay0_start ) 		
+	 	if( (int32_t)rp_MACRO < (int32_t)delay0_start ) 		
 			rp_MACRO += line_len; 	
 		/* Note - currently in PC version, init calls are asynchronous
 		 * to processing calls. This can cause bad delay setting values
@@ -396,7 +396,7 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 		 * on both ends.
 		 */
 		#ifndef DSP_TARGET
-	 	if( (long)rp_MACRO >= (long)delay1_start ) 		
+	 	if( (int32_t)rp_MACRO >= (int32_t)delay1_start ) 		
 			rp_MACRO = delay0_start;
 		#endif
 		dly_out[0] = *rp_MACRO; 
@@ -405,10 +405,10 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 #ifdef ELEM1
 		tmp_ptr = ptr0 + line_len; /* These LINE_LEN increments could be done on PC side */
 		rp_MACRO = (float *)(tmp_ptr - delay_filtered[1] );
-	 	if( (long)rp_MACRO < (long)delay1_start ) 		
+	 	if( (int32_t)rp_MACRO < (int32_t)delay1_start ) 		
 			rp_MACRO += line_len; 	
 		#ifndef DSP_TARGET
-	 	if( (long)rp_MACRO >= (long)delay2_start ) 		
+	 	if( (int32_t)rp_MACRO >= (int32_t)delay2_start ) 		
 			rp_MACRO = delay1_start;
 		#endif
 		dly_out[1] = *rp_MACRO; 
@@ -418,10 +418,10 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 #ifdef ELEM2
 		tmp_ptr += line_len;
 		rp_MACRO = (float *)(tmp_ptr - delay_filtered[2] );
-	 	if( (long)rp_MACRO < (long)delay2_start ) 		
+	 	if( (int32_t)rp_MACRO < (int32_t)delay2_start ) 		
 			rp_MACRO += line_len; 	
 		#ifndef DSP_TARGET
-	 	if( (long)rp_MACRO >= (long)delay3_start ) 		
+	 	if( (int32_t)rp_MACRO >= (int32_t)delay3_start ) 		
 			rp_MACRO = delay2_start;
 		#endif
 		dly_out[2] = *rp_MACRO; 
@@ -431,10 +431,10 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 #ifdef ELEM3
 		tmp_ptr += line_len;
 		rp_MACRO = (float *)(tmp_ptr - delay_filtered[3] );
-	 	if( (long)rp_MACRO < (long)delay3_start ) 		
+	 	if( (int32_t)rp_MACRO < (int32_t)delay3_start ) 		
 			rp_MACRO += line_len; 	
 		#ifndef DSP_TARGET
-	 	if( (long)rp_MACRO >= (long)delay4_start ) 		
+	 	if( (int32_t)rp_MACRO >= (int32_t)delay4_start ) 		
 			rp_MACRO = delay3_start;
 		#endif
 		dly_out[3] = *rp_MACRO; 
@@ -444,10 +444,10 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 #ifdef ELEM4
 		tmp_ptr += line_len;
 		rp_MACRO = (float *)(tmp_ptr - delay_filtered[4] );
-	 	if( (long)rp_MACRO < (long)delay4_start ) 		
+	 	if( (int32_t)rp_MACRO < (int32_t)delay4_start ) 		
 			rp_MACRO += line_len; 	
 		#ifndef DSP_TARGET
-	 	if( (long)rp_MACRO >= (long)delay5_start ) 		
+	 	if( (int32_t)rp_MACRO >= (int32_t)delay5_start ) 		
 			rp_MACRO = delay4_start;
 		#endif
 		dly_out[4] = *rp_MACRO; 
@@ -457,10 +457,10 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 #ifdef ELEM5
 		tmp_ptr += line_len;
 		rp_MACRO = (float *)(tmp_ptr - delay_filtered[5] );
-	 	if( (long)rp_MACRO < (long)delay5_start ) 		
+	 	if( (int32_t)rp_MACRO < (int32_t)delay5_start ) 		
 			rp_MACRO += line_len; 	
 		#ifndef DSP_TARGET
-	 	if( (long)rp_MACRO >= (long)delay6_start ) 		
+	 	if( (int32_t)rp_MACRO >= (int32_t)delay6_start ) 		
 			rp_MACRO = delay5_start;
 		#endif
 		dly_out[5] = *rp_MACRO; 
@@ -472,10 +472,10 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 #ifdef ELEM6
 		tmp_ptr += line_len;
 		rp_MACRO = (float *)(tmp_ptr - delay_filtered[6] );
-	 	if( (long)rp_MACRO < (long)delay6_start ) 		
+	 	if( (int32_t)rp_MACRO < (int32_t)delay6_start ) 		
 			rp_MACRO += line_len; 	
 		#ifndef DSP_TARGET
-	 	if( (long)rp_MACRO >= (long)delay7_start ) 		
+	 	if( (int32_t)rp_MACRO >= (int32_t)delay7_start ) 		
 			rp_MACRO = delay6_start;
 		#endif
 		dly_out[6] = *rp_MACRO; 
@@ -485,10 +485,10 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 #ifdef ELEM7
 		tmp_ptr += line_len;
 		rp_MACRO = (float *)(tmp_ptr - delay_filtered[7] );
-	 	if( (long)rp_MACRO < (long)delay7_start ) 		
+	 	if( (int32_t)rp_MACRO < (int32_t)delay7_start ) 		
 			rp_MACRO += line_len; 	
 		#ifndef DSP_TARGET
-	 	if( (long)rp_MACRO >= (long)delay_end ) 		
+	 	if( (int32_t)rp_MACRO >= (int32_t)delay_end ) 		
 			rp_MACRO = delay7_start;
 		#endif
 		dly_out[7] = *rp_MACRO;		
@@ -553,7 +553,7 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 	}
 
 	/* Write averaged meter data temporarily writing as a float.
-	 * Will be converted to long and factored in calling function.
+	 * Will be converted to int32_t and factored in calling function.
 	 */
 	write_meter_average();
 
@@ -561,7 +561,7 @@ DSP_FUNC_DEF void DSPS_DLY_PROCESS(long *lp_data, int l_length,
 	{		
 		/* int k; */
 		float **fpp = (float **)&(fp_state[0]);
-		long *lpp  =  (long *)&(fp_state[0]);
+		int32_t *lpp  =  (int32_t *)&(fp_state[0]);
 		fpp[0] = ptr0;
 		/* Original version that allowed dynamic memsizes 
 		fpp[1] = delay0_start;

@@ -47,6 +47,7 @@ private:
     static constexpr int HYPERLINK_HEIGHT = 24;
 
 	void paint(Graphics&) override;
+	void userTriedToCloseWindow() override { timerCallback(); }
 
 	void timerCallback() override;
 

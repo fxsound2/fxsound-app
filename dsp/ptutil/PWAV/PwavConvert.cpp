@@ -47,7 +47,7 @@ int PT_DECLSPEC pwav24BitToFloat(char *cp_24_bit, realtype *rp_float,
 							int i_length, int i_stereo_flag)
 {
 	int i;
-	long itmp;
+	int32_t itmp;
    
 	if (i_stereo_flag)
 		i_length *= 2;
@@ -73,7 +73,7 @@ int PT_DECLSPEC pwavFloatTo24Bit(realtype *rp_float, char *cp_24_bit,
 							int i_length, int i_stereo_flag)
 {
 	int i;
-	long itmp;
+	int32_t itmp;
    
 	if (i_stereo_flag)
 		i_length *= 2;
@@ -88,7 +88,7 @@ int PT_DECLSPEC pwavFloatTo24Bit(realtype *rp_float, char *cp_24_bit,
 			/* If you try to assign to -2147483647, compiler gives warning */
 			itmp = -2147483647L;
 		else
-			itmp = (long)(ftmp * (realtype)2147483648.0);
+			itmp = (int32_t)(ftmp * (realtype)2147483648.0);
 
 		/* Note that this copys the first 3 lsb's, so shift left */
 		itmp >>= 8;

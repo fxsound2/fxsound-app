@@ -41,9 +41,9 @@ extern "C"
 /*
  * FUNCTION: comEepromUnsignedLongRead()
  * DESCRIPTION:
- *   Reads the unsigned long value from eeprom. 
+ *   Reads the uint32_t value from eeprom. 
  */
-int PT_DECLSPEC comEepromUnsignedLongRead(PT_HANDLE *hp_com, short unsigned i_address, unsigned long *ulp_value)
+int PT_DECLSPEC comEepromUnsignedLongRead(PT_HANDLE *hp_com, short unsigned i_address, uint32_t *ulp_value)
 {
 	struct comHdlType *cast_handle;
 
@@ -74,10 +74,10 @@ int PT_DECLSPEC comEepromUnsignedLongRead(PT_HANDLE *hp_com, short unsigned i_ad
 /*
  * FUNCTION: comEepromUnsignedLongWrite()
  * DESCRIPTION:
- *  Writes the passed unsigned long integer value to the specified board eemprom address.
+ *  Writes the passed uint32_t integer value to the specified board eemprom address.
  *
  */
-int PT_DECLSPEC comEepromUnsignedLongWrite(PT_HANDLE *hp_com, short unsigned i_address, unsigned long ul_value)
+int PT_DECLSPEC comEepromUnsignedLongWrite(PT_HANDLE *hp_com, short unsigned i_address, uint32_t ul_value)
 {
 	struct comHdlType *cast_handle;
 
@@ -102,7 +102,7 @@ int PT_DECLSPEC comEepromUnsignedLongWrite(PT_HANDLE *hp_com, short unsigned i_a
 	/* Print the sent value if in debug mode */
 	if (cast_handle->debug_mode)
 	{
-		sprintf(cast_handle->msg1, "(unsigned long) EEPROM value=%lu", ul_value);
+		sprintf(cast_handle->msg1, "(uint32_t) EEPROM value=%lu", ul_value);
 		(cast_handle->slout_hdl)->Message(FIRST_LINE, cast_handle->msg1);
 		
 		sprintf(cast_handle->msg1, "   address=%d", i_address);

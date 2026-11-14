@@ -72,7 +72,7 @@ int com_SendIoInfo(PT_HANDLE *);
  *  execuable..
  */
 int PT_DECLSPEC comInit(PT_HANDLE **hpp_com, int i_softdsp, int i_board_address, 
-			int i_processor_num, long l_base_address, char *cp_exe_dirpath, 
+			int i_processor_num, int32_t l_base_address, char *cp_exe_dirpath, 
 			int i_num_cards_configured, CSlout *hp_slout)
 {
 	struct comHdlType *cast_handle;
@@ -156,7 +156,7 @@ int PT_DECLSPEC comInit(PT_HANDLE **hpp_com, int i_softdsp, int i_board_address,
  * DESCRIPTION:
  *   Stores the passed buffer_size..
  */
-int PT_DECLSPEC comSetBufferSize(PT_HANDLE *hp_com, long l_buffer_size)
+int PT_DECLSPEC comSetBufferSize(PT_HANDLE *hp_com, int32_t l_buffer_size)
 {
    struct comHdlType *cast_handle;
 

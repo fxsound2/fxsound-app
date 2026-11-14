@@ -55,7 +55,7 @@ struct pwavHdlType {
    char msg1[1024]; /* String for messages */
 
    HWND master_hwnd;
-   long buffer_length_samples;
+   int32_t buffer_length_samples;
    
    int input_num_channels;  /* Number of channels of input file */
    int output_num_channels; /* Number of channels of output file */
@@ -72,7 +72,7 @@ struct pwavHdlType {
    WAVEFORMATEX *pFormatOut;
 
    DWORD dwDataSize; /* Number of bytes of data in file */
-   long bytes_left_to_read; /* Number of bytes left to read */    
+   int32_t bytes_left_to_read; /* Number of bytes left to read */    
 
    WORD wBlockSizeIn;  /* Number of bytes per sample taking mono/stereo into account */
    WORD wBlockSizeOut; /* For example, 16 bit mono -> 2, 24 bit stereo -> 6 */

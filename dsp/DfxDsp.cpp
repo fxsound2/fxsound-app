@@ -82,7 +82,7 @@ DfxPreset DfxDsp::getPresetInfo(std::wstring preset_file_full_path)
 	return data_->getPresetInfo(preset_file_full_path);
 }
 
-unsigned long DfxDsp::getTotalAudioProcessedTime()
+uint32_t DfxDsp::getTotalAudioProcessedTime()
 {
 	return data_->getTotalAudioProcessedTime();
 }

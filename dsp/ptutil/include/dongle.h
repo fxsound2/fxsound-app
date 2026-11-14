@@ -18,7 +18,7 @@
 
 /* dongle.cpp */
 int PT_DECLSPEC dongleCheckValid(int *, CSlout *);
-int PT_DECLSPEC dongleWriteMemory(int, unsigned long, CSlout *hp_slout);
-int PT_DECLSPEC dongleReadMemory(int, unsigned long *, CSlout *hp_slout);
+int PT_DECLSPEC dongleWriteMemory(int, uint32_t, CSlout *hp_slout);
+int PT_DECLSPEC dongleReadMemory(int, uint32_t *, CSlout *hp_slout);
 
 #endif //_DONGLE_H_

@@ -32,7 +32,7 @@
  * not need to be shared, and is unique to
  * each instance of the dll.
  */
-/* extern long MEMBANK0_START[]; MOVED INTO .C FILES */
+/* extern int32_t MEMBANK0_START[]; MOVED INTO .C FILES */
 
 #define MEMBANK0_LEN 0
 #define MEMBANK0_BIG_LEN DSPSOFT_MEM_LENGTH

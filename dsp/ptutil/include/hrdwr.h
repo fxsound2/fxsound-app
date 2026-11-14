@@ -83,36 +83,36 @@
 
 /* Functions */ 
 /* comHrdwr.c */
-int COMHRDWR_DECL comHrdwrPutChar(int, long l_val);
-int COMHRDWR_DECL comHrdwrWriteParam(int, long, long);
-int COMHRDWR_DECL comHrdwrGetChar(int, long *lp_val);
+int COMHRDWR_DECL comHrdwrPutChar(int, int32_t l_val);
+int COMHRDWR_DECL comHrdwrWriteParam(int, int32_t, int32_t);
+int COMHRDWR_DECL comHrdwrGetChar(int, int32_t *lp_val);
 int COMHRDWR_DECL comHrdwrWaitForFlag(int);
 int COMHRDWR_DECL comHrdwrCheckFlag( int, int * );
-int COMHRDWR_DECL comHrdwrProcessWaveBuffer(int i_processor_num, long *lp_data, long l_length, 
+int COMHRDWR_DECL comHrdwrProcessWaveBuffer(int i_processor_num, int32_t *lp_data, int32_t l_length, 
                          int i_stereo_in_mode, int i_stereo_out_mode);
-int COMHRDWR_DECL comHrdwrProcessActiveBuffer(int i_processor_num, short *sp_data, long l_length, 
+int COMHRDWR_DECL comHrdwrProcessActiveBuffer(int i_processor_num, short *sp_data, int32_t l_length, 
                          int i_stereo_in_mode, int i_stereo_out_mode);
 
 /* comHrdut.c */
 int COMHRDWR_DECL comHrdwrInitializeCommHrdwr(int *);
 int COMHRDWR_DECL comHrdwrResetCommHrdwr(int *);
-int COMHRDWR_DECL comHrdwrLdcharBuf(unsigned short us_process_num, unsigned short us_buflen, long *lp_databuf);
+int COMHRDWR_DECL comHrdwrLdcharBuf(unsigned short us_process_num, unsigned short us_buflen, int32_t *lp_databuf);
 
 /* hrdwrsc.c */
 int COMHRDWR_DECL hrdwrResetProcessor(unsigned short us_processor_num);
 
-int COMHRDWR_DECL hrdwrReadXferReg(unsigned short us_proc_num, long *lp_data);
-int COMHRDWR_DECL hrdwrReadXferRegIfNotBusy(unsigned short us_proc_num, short *sp_busy, long *lp_data);
-int COMHRDWR_DECL hrdwrReadXferRegIfFull(unsigned short s_proc_num, long *lp_data, short *sp_full);
-int COMHRDWR_DECL hrdwrReadXferRegIfFullAndNotBusy(unsigned short s_proc_num, short *sp_busy, long *lp_data, short *sp_full);
-int COMHRDWR_DECL hrdwrWaitForXferRegFull(unsigned short us_proc_num, long *lp_data);
+int COMHRDWR_DECL hrdwrReadXferReg(unsigned short us_proc_num, int32_t *lp_data);
+int COMHRDWR_DECL hrdwrReadXferRegIfNotBusy(unsigned short us_proc_num, short *sp_busy, int32_t *lp_data);
+int COMHRDWR_DECL hrdwrReadXferRegIfFull(unsigned short s_proc_num, int32_t *lp_data, short *sp_full);
+int COMHRDWR_DECL hrdwrReadXferRegIfFullAndNotBusy(unsigned short s_proc_num, short *sp_busy, int32_t *lp_data, short *sp_full);
+int COMHRDWR_DECL hrdwrWaitForXferRegFull(unsigned short us_proc_num, int32_t *lp_data);
 
-int COMHRDWR_DECL hrdwrWriteXferReg(unsigned short us_proc_num, long l_data);
-int COMHRDWR_DECL hrdwrWriteXferRegIfNotBusy(unsigned short us_proc_num, long l_data, short *sp_busy);
-int COMHRDWR_DECL hrdwrWriteXferRegIfEmpty(unsigned short us_proc_num, long l_data, short *sp_empty);
-int COMHRDWR_DECL hrdwrWriteXferRegIfEmptyAndNotBusy(unsigned short us_proc_num, long l_data, short *sp_busy, short *sp_empty);
-int COMHRDWR_DECL hrdwrWriteParameterIfEmpty(unsigned short, long, long, short *);
-int COMHRDWR_DECL hrdwrWriteParameterIfEmptyAndNotBusy(unsigned short, long, long, short *, short *);
+int COMHRDWR_DECL hrdwrWriteXferReg(unsigned short us_proc_num, int32_t l_data);
+int COMHRDWR_DECL hrdwrWriteXferRegIfNotBusy(unsigned short us_proc_num, int32_t l_data, short *sp_busy);
+int COMHRDWR_DECL hrdwrWriteXferRegIfEmpty(unsigned short us_proc_num, int32_t l_data, short *sp_empty);
+int COMHRDWR_DECL hrdwrWriteXferRegIfEmptyAndNotBusy(unsigned short us_proc_num, int32_t l_data, short *sp_busy, short *sp_empty);
+int COMHRDWR_DECL hrdwrWriteParameterIfEmpty(unsigned short, int32_t, int32_t, short *);
+int COMHRDWR_DECL hrdwrWriteParameterIfEmptyAndNotBusy(unsigned short, int32_t, int32_t, short *, short *);
 
 int COMHRDWR_DECL hrdwrWriteCommandReg(unsigned short us_proc_num, unsigned short u_data);
 int COMHRDWR_DECL hrdwrWriteCommandRegIfNotBusy(unsigned short us_proc_num, unsigned short u_data, short *sp_busy);
@@ -122,7 +122,7 @@ int COMHRDWR_DECL hrdwrGetDspFlag(unsigned short us_process_num, unsigned short 
 
 int COMHRDWR_DECL hrdwrWaitStat(unsigned short us_process_num, unsigned short us_mask, unsigned short us_stat);
 
-int COMHRDWR_DECL hrdwrDMAtransmitStereo(unsigned short us_proc_num, long *lp_data, long l_length);
-int COMHRDWR_DECL hrdwrDMAtransmitMono(unsigned short us_proc_num, long *lp_data, long l_length);
-int COMHRDWR_DECL hrdwrDMAreceiveStereo(unsigned short us_proc_num, long *lp_data, long l_length);
-int COMHRDWR_DECL hrdwrDMAreceiveMono(unsigned short us_proc_num, long *lp_data, long l_length);
+int COMHRDWR_DECL hrdwrDMAtransmitStereo(unsigned short us_proc_num, int32_t *lp_data, int32_t l_length);
+int COMHRDWR_DECL hrdwrDMAtransmitMono(unsigned short us_proc_num, int32_t *lp_data, int32_t l_length);
+int COMHRDWR_DECL hrdwrDMAreceiveStereo(unsigned short us_proc_num, int32_t *lp_data, int32_t l_length);
+int COMHRDWR_DECL hrdwrDMAreceiveMono(unsigned short us_proc_num, int32_t *lp_data, int32_t l_length);

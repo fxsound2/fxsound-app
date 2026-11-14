@@ -22,11 +22,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _AUDIOPASSTHRU_H_
 #define _AUDIOPASSTHRU_H_ 
 
-#ifndef __ANDROID__
+#if defined(_WIN32)
 #include <Windows.h>
-#endif //WIN32
 #include <Mmdeviceapi.h>
-#include <vector> 
+#else
+// Non-Windows (Linux/PipeWire) portability shims. The PipeWire backend does
+// not use COM; pAllDevices carries an opaque device handle instead of IMMDevice*.
+#include <cwchar>
+using IMMDevice = void;
+#ifndef WCHAR
+typedef wchar_t WCHAR;
+#endif
+#endif
+#include <vector>
 #include "DfxDsp.h"
 
 struct SoundDevice {

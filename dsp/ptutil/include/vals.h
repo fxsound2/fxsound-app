@@ -49,13 +49,13 @@ int PT_DECLSPEC valsCfgGetStereoInputMode(PT_HANDLE *, int *);
 int PT_DECLSPEC valsCfgGetStereoOutputMode(PT_HANDLE *, int *);
 int PT_DECLSPEC valsCfgGetDefaultPreset(PT_HANDLE *, int *); 
 int PT_DECLSPEC valsCfgGetMinUserPreset(PT_HANDLE *, int *);
-int PT_DECLSPEC valsCfgGetPresetSaveTime(PT_HANDLE *, long *);
+int PT_DECLSPEC valsCfgGetPresetSaveTime(PT_HANDLE *, int32_t *);
 int PT_DECLSPEC valsCfgSetNumElements(PT_HANDLE *, int);
 int PT_DECLSPEC valsCfgSetStereoInputMode(PT_HANDLE *, int);  
 int PT_DECLSPEC valsCfgSetStereoOutputMode(PT_HANDLE *, int);
 int PT_DECLSPEC valsCfgSetDefaultPreset(PT_HANDLE *, int); 
 int PT_DECLSPEC valsCfgSetMinUserPreset(PT_HANDLE *, int);
-int PT_DECLSPEC valsCfgSetPresetSaveTime(PT_HANDLE *, long);
+int PT_DECLSPEC valsCfgSetPresetSaveTime(PT_HANDLE *, int32_t);
 int PT_DECLSPEC valsCfgFreeUp(PT_HANDLE **);
 
 /* valsSet.c */ 

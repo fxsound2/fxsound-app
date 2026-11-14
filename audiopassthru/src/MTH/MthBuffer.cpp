@@ -387,7 +387,10 @@ int PT_DECLSPEC mthConvertRealtypeBufToIntBuf(int i_length, int i_bit_width, int
 	case 16:
 		for(i=0; i<i_length; i++)
 		{
-			sp_buf[i] = (short int)(rp_buf[i] * (float)MTH_16_BIT_REAL_CONVERSION_FACTOR);
+			float r_tmp = rp_buf[i] * (float)MTH_16_BIT_REAL_CONVERSION_FACTOR;
+			if (r_tmp > 32767.0f) sp_buf[i] = 32767;
+			else if (r_tmp < -32768.0f) sp_buf[i] = -32768;
+			else sp_buf[i] = (short int)r_tmp;
 		}
 		break;
 
@@ -399,7 +402,9 @@ int PT_DECLSPEC mthConvertRealtypeBufToIntBuf(int i_length, int i_bit_width, int
 	   for(i=0; i<i_length; i++)
 		{
 			i_tmp = (int)(rp_buf[i] * (float)MTH_8_BIT_REAL_CONVERSION_FACTOR);
-			unsigned_char_p[i] = i_tmp + 128;
+			if (i_tmp > 127) i_tmp = 127;
+			else if (i_tmp < -128) i_tmp = -128;
+			unsigned_char_p[i] = (unsigned char)(i_tmp + 128);
 		}
 		break;
 
@@ -413,7 +418,10 @@ int PT_DECLSPEC mthConvertRealtypeBufToIntBuf(int i_length, int i_bit_width, int
 		case 16:
 			for(i=0; i<i_length; i++)
 			{
-				i_tmp = (int)(rp_buf[i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR);
+				float r_tmp = rp_buf[i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR;
+				if (r_tmp > 2147483647.0f) i_tmp = 2147483647;
+				else if (r_tmp < -2147483648.0f) i_tmp = -2147483648;
+				else i_tmp = (int)r_tmp;
 				unsigned_char_p[1] = unsigned_char_p2[2];
 				unsigned_char_p[2] = unsigned_char_p2[3];
 				unsigned_char_p += 3;
@@ -423,7 +431,10 @@ int PT_DECLSPEC mthConvertRealtypeBufToIntBuf(int i_length, int i_bit_width, int
 		case 20:
 			for(i=0; i<i_length; i++)
 			{
-				i_tmp = (int)(rp_buf[i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR);
+				float r_tmp = rp_buf[i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR;
+				if (r_tmp > 2147483647.0f) i_tmp = 2147483647;
+				else if (r_tmp < -2147483648.0f) i_tmp = -2147483648;
+				else i_tmp = (int)r_tmp;
 				i_tmp = i_tmp >> 4;
 				unsigned_char_p[0] = unsigned_char_p2[1];
 				unsigned_char_p[1] = unsigned_char_p2[2];
@@ -435,7 +446,10 @@ int PT_DECLSPEC mthConvertRealtypeBufToIntBuf(int i_length, int i_bit_width, int
 		case 24:
 			for(i=0; i<i_length; i++)
 			{
-				i_tmp = (int)(rp_buf[i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR);
+				float r_tmp = rp_buf[i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR;
+				if (r_tmp > 2147483647.0f) i_tmp = 2147483647;
+				else if (r_tmp < -2147483648.0f) i_tmp = -2147483648;
+				else i_tmp = (int)r_tmp;
 				unsigned_char_p[0] = unsigned_char_p2[1];
 				unsigned_char_p[1] = unsigned_char_p2[2];
 				unsigned_char_p[2] = unsigned_char_p2[3];
@@ -454,7 +468,10 @@ int PT_DECLSPEC mthConvertRealtypeBufToIntBuf(int i_length, int i_bit_width, int
 		case 16:
 			for(i=0; i<i_length; i++)
 			{
-				i_tmp = (int)(rp_buf[i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR);
+				float r_tmp = rp_buf[i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR;
+				if (r_tmp > 2147483647.0f) i_tmp = 2147483647;
+				else if (r_tmp < -2147483648.0f) i_tmp = -2147483648;
+				else i_tmp = (int)r_tmp;
 				int_p[i] = (i_tmp >> 16);
 			}
 			break;
@@ -462,7 +479,10 @@ int PT_DECLSPEC mthConvertRealtypeBufToIntBuf(int i_length, int i_bit_width, int
 		case 20:
 			for(i=0; i<i_length; i++)
 			{
-				i_tmp = (int)(rp_buf[i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR);
+				float r_tmp = rp_buf[i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR;
+				if (r_tmp > 2147483647.0f) i_tmp = 2147483647;
+				else if (r_tmp < -2147483648.0f) i_tmp = -2147483648;
+				else i_tmp = (int)r_tmp;
 				int_p[i] = (i_tmp >> 12);
 			}
 			break;
@@ -470,7 +490,10 @@ int PT_DECLSPEC mthConvertRealtypeBufToIntBuf(int i_length, int i_bit_width, int
 		case 24:
 			for(i=0; i<i_length; i++)
 			{
-				i_tmp = (int)(rp_buf[i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR);
+				float r_tmp = rp_buf[i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR;
+				if (r_tmp > 2147483647.0f) i_tmp = 2147483647;
+				else if (r_tmp < -2147483648.0f) i_tmp = -2147483648;
+				else i_tmp = (int)r_tmp;
 				int_p[i] = (i_tmp >> 8);
 			}
 			break;
@@ -478,7 +501,10 @@ int PT_DECLSPEC mthConvertRealtypeBufToIntBuf(int i_length, int i_bit_width, int
 		case 32:
 			for(i=0; i<i_length; i++)
 			{
-				int_p[i] = (int)(rp_buf[i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR);
+				float r_tmp = rp_buf[i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR;
+				if (r_tmp > 2147483647.0f) int_p[i] = 2147483647;
+				else if (r_tmp < -2147483648.0f) int_p[i] = -2147483648;
+				else int_p[i] = (int)r_tmp;
 			}
 			break;
 		}
@@ -522,18 +548,38 @@ int PT_DECLSPEC mthConvertRealtypeBufToIntBufSurroundPostProcess(int i_length, i
 			k = i * 6;
 
 			// Front channels
-			sp_buf[k]   = (short int)(rp_buf[j] * (float)MTH_16_BIT_REAL_CONVERSION_FACTOR);
-			sp_buf[k+1] = (short int)(rp_buf[j+1] * (float)MTH_16_BIT_REAL_CONVERSION_FACTOR);
+			float r_tmp0 = rp_buf[j] * (float)MTH_16_BIT_REAL_CONVERSION_FACTOR;
+			if (r_tmp0 > 32767.0f) sp_buf[k] = 32767;
+			else if (r_tmp0 < -32768.0f) sp_buf[k] = -32768;
+			else sp_buf[k] = (short int)r_tmp0;
+
+			float r_tmp1 = rp_buf[j+1] * (float)MTH_16_BIT_REAL_CONVERSION_FACTOR;
+			if (r_tmp1 > 32767.0f) sp_buf[k+1] = 32767;
+			else if (r_tmp1 < -32768.0f) sp_buf[k+1] = -32768;
+			else sp_buf[k+1] = (short int)r_tmp1;
 
 			// Rear channels
-			sp_buf[k+2] = (short int)(rp_buf[array_length * 2 + j] * (float)MTH_16_BIT_REAL_CONVERSION_FACTOR);
-			sp_buf[k+3] = (short int)(rp_buf[array_length * 2 + j + 1] * (float)MTH_16_BIT_REAL_CONVERSION_FACTOR);
+			float r_tmp2 = rp_buf[array_length * 2 + j] * (float)MTH_16_BIT_REAL_CONVERSION_FACTOR;
+			if (r_tmp2 > 32767.0f) sp_buf[k+2] = 32767;
+			else if (r_tmp2 < -32768.0f) sp_buf[k+2] = -32768;
+			else sp_buf[k+2] = (short int)r_tmp2;
+
+			float r_tmp3 = rp_buf[array_length * 2 + j + 1] * (float)MTH_16_BIT_REAL_CONVERSION_FACTOR;
+			if (r_tmp3 > 32767.0f) sp_buf[k+3] = 32767;
+			else if (r_tmp3 < -32768.0f) sp_buf[k+3] = -32768;
+			else sp_buf[k+3] = (short int)r_tmp3;
 
 			// Center channel
-			sp_buf[k+4] = (short int)(rp_buf[array_length * 4 + i] * (float)MTH_16_BIT_REAL_CONVERSION_FACTOR);
+			float r_tmp4 = rp_buf[array_length * 4 + i] * (float)MTH_16_BIT_REAL_CONVERSION_FACTOR;
+			if (r_tmp4 > 32767.0f) sp_buf[k+4] = 32767;
+			else if (r_tmp4 < -32768.0f) sp_buf[k+4] = -32768;
+			else sp_buf[k+4] = (short int)r_tmp4;
 
 			// Subwoofer channel
-			sp_buf[k+5] = (short int)(rp_buf[array_length * 5 + i] * (float)MTH_16_BIT_REAL_CONVERSION_FACTOR);
+			float r_tmp5 = rp_buf[array_length * 5 + i] * (float)MTH_16_BIT_REAL_CONVERSION_FACTOR;
+			if (r_tmp5 > 32767.0f) sp_buf[k+5] = 32767;
+			else if (r_tmp5 < -32768.0f) sp_buf[k+5] = -32768;
+			else sp_buf[k+5] = (short int)r_tmp5;
 		}
 		break;
 
@@ -550,18 +596,32 @@ int PT_DECLSPEC mthConvertRealtypeBufToIntBufSurroundPostProcess(int i_length, i
 			k = i * 6;
 
 			// Front channels
-			ucp[k]   = (int)(rp_buf[j] * (float)MTH_8_BIT_REAL_CONVERSION_FACTOR) + 128;
-			ucp[k+1] = (int)(rp_buf[j+1] * (float)MTH_8_BIT_REAL_CONVERSION_FACTOR) + 128;
+			int i_tmp0 = (int)(rp_buf[j] * (float)MTH_8_BIT_REAL_CONVERSION_FACTOR);
+			if (i_tmp0 > 127) i_tmp0 = 127; else if (i_tmp0 < -128) i_tmp0 = -128;
+			ucp[k] = (unsigned char)(i_tmp0 + 128);
+
+			int i_tmp1 = (int)(rp_buf[j+1] * (float)MTH_8_BIT_REAL_CONVERSION_FACTOR);
+			if (i_tmp1 > 127) i_tmp1 = 127; else if (i_tmp1 < -128) i_tmp1 = -128;
+			ucp[k+1] = (unsigned char)(i_tmp1 + 128);
 
 			// Rear channels
-			ucp[k+2] = (int)(rp_buf[array_length * 2 + j] * (float)MTH_8_BIT_REAL_CONVERSION_FACTOR) + 128;
-			ucp[k+3] = (int)(rp_buf[array_length * 2 + j + 1] * (float)MTH_8_BIT_REAL_CONVERSION_FACTOR) + 128;
+			int i_tmp2 = (int)(rp_buf[array_length * 2 + j] * (float)MTH_8_BIT_REAL_CONVERSION_FACTOR);
+			if (i_tmp2 > 127) i_tmp2 = 127; else if (i_tmp2 < -128) i_tmp2 = -128;
+			ucp[k+2] = (unsigned char)(i_tmp2 + 128);
+
+			int i_tmp3 = (int)(rp_buf[array_length * 2 + j + 1] * (float)MTH_8_BIT_REAL_CONVERSION_FACTOR);
+			if (i_tmp3 > 127) i_tmp3 = 127; else if (i_tmp3 < -128) i_tmp3 = -128;
+			ucp[k+3] = (unsigned char)(i_tmp3 + 128);
 
 			// Center channel
-			ucp[k+4] = (int)(rp_buf[array_length * 4 + i] * (float)MTH_8_BIT_REAL_CONVERSION_FACTOR) + 128;
+			int i_tmp4 = (int)(rp_buf[array_length * 4 + i] * (float)MTH_8_BIT_REAL_CONVERSION_FACTOR);
+			if (i_tmp4 > 127) i_tmp4 = 127; else if (i_tmp4 < -128) i_tmp4 = -128;
+			ucp[k+4] = (unsigned char)(i_tmp4 + 128);
 
 			// Subwoofer channel
-			ucp[k+5] = (int)(rp_buf[array_length * 5 + i] * (float)MTH_8_BIT_REAL_CONVERSION_FACTOR) + 128;
+			int i_tmp5 = (int)(rp_buf[array_length * 5 + i] * (float)MTH_8_BIT_REAL_CONVERSION_FACTOR);
+			if (i_tmp5 > 127) i_tmp5 = 127; else if (i_tmp5 < -128) i_tmp5 = -128;
+			ucp[k+5] = (unsigned char)(i_tmp5 + 128);
 		}
 		break;
 
@@ -579,18 +639,38 @@ int PT_DECLSPEC mthConvertRealtypeBufToIntBufSurroundPostProcess(int i_length, i
 			k = i * 6;
 
 			// Front channels
-			int_p[k]   = (int)(rp_buf[j] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR);
-			int_p[k+1] = (int)(rp_buf[j+1] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR);
+			float r_tmp0 = rp_buf[j] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR;
+			if (r_tmp0 > 2147483647.0f) int_p[k] = 2147483647;
+			else if (r_tmp0 < -2147483648.0f) int_p[k] = -2147483648;
+			else int_p[k] = (int)r_tmp0;
+
+			float r_tmp1 = rp_buf[j+1] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR;
+			if (r_tmp1 > 2147483647.0f) int_p[k+1] = 2147483647;
+			else if (r_tmp1 < -2147483648.0f) int_p[k+1] = -2147483648;
+			else int_p[k+1] = (int)r_tmp1;
 
 			// Rear channels
-			int_p[k+2] = (int)(rp_buf[array_length * 2 + j] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR);
-			int_p[k+3] = (int)(rp_buf[array_length * 2 + j + 1] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR);
+			float r_tmp2 = rp_buf[array_length * 2 + j] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR;
+			if (r_tmp2 > 2147483647.0f) int_p[k+2] = 2147483647;
+			else if (r_tmp2 < -2147483648.0f) int_p[k+2] = -2147483648;
+			else int_p[k+2] = (int)r_tmp2;
+
+			float r_tmp3 = rp_buf[array_length * 2 + j + 1] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR;
+			if (r_tmp3 > 2147483647.0f) int_p[k+3] = 2147483647;
+			else if (r_tmp3 < -2147483648.0f) int_p[k+3] = -2147483648;
+			else int_p[k+3] = (int)r_tmp3;
 
 			// Center channel
-			int_p[k+4] = (int)(rp_buf[array_length * 4 + i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR);
+			float r_tmp4 = rp_buf[array_length * 4 + i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR;
+			if (r_tmp4 > 2147483647.0f) int_p[k+4] = 2147483647;
+			else if (r_tmp4 < -2147483648.0f) int_p[k+4] = -2147483648;
+			else int_p[k+4] = (int)r_tmp4;
 
 			// Subwoofer channel
-			int_p[k+5] = (int)(rp_buf[array_length * 5 + i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR);
+			float r_tmp5 = rp_buf[array_length * 5 + i] * (float)MTH_32_BIT_REAL_CONVERSION_FACTOR;
+			if (r_tmp5 > 2147483647.0f) int_p[k+5] = 2147483647;
+			else if (r_tmp5 < -2147483648.0f) int_p[k+5] = -2147483648;
+			else int_p[k+5] = (int)r_tmp5;
 		}
 		break;
 

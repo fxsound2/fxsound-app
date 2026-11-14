@@ -444,8 +444,8 @@ int dfxp_InitDynamicQnts_Wid(PT_HANDLE *hp_dfxp)
 	if (cast_handle == NULL)
 		return(OKAY);
 
-	long dsp_dispersion_min_value;
-	long dsp_dispersion_max_value;
+	int32_t dsp_dispersion_min_value;
+	int32_t dsp_dispersion_max_value;
    realtype dsp_threshold_min_value;
    realtype dsp_threshold_max_value;
 	realtype omega_min;
@@ -455,9 +455,9 @@ int dfxp_InitDynamicQnts_Wid(PT_HANDLE *hp_dfxp)
 	 * Note delay line method requires minimum delay of 1.
 	 */
 	dsp_dispersion_min_value = 
-	   1 + (long)((float)(WID_DISPERSION_MIN_MS * 0.001) * cast_handle->internal_sampling_freq);
+	   1 + (int32_t)((float)(WID_DISPERSION_MIN_MS * 0.001) * cast_handle->internal_sampling_freq);
 	dsp_dispersion_max_value = 
-	   (long)((float)(WID_DISPERSION_MAX_MS * 0.001) * cast_handle->internal_sampling_freq);
+	   (int32_t)((float)(WID_DISPERSION_MAX_MS * 0.001) * cast_handle->internal_sampling_freq);
 
 	if (cast_handle->midi_to_dsp.dispersion_delay_qnt_hdl != NULL)
 	{
@@ -554,13 +554,13 @@ int dfxp_InitDynamicQnts_Delay(PT_HANDLE *hp_dfxp)
 		return(OKAY);
 
 	/* Delay qnt */
-   long dsp_delay_max_value;
+   int32_t dsp_delay_max_value;
    realtype max_total_dly_msecs;
    realtype max_total_dly_secs;
 
    max_total_dly_msecs = DSP_PLY_MAX_ELEMENT_DELAY;
    max_total_dly_secs = (max_total_dly_msecs) / (realtype) 1000.0;
-   dsp_delay_max_value = (long)((cast_handle->internal_sampling_freq)*(max_total_dly_secs));
+   dsp_delay_max_value = (int32_t)((cast_handle->internal_sampling_freq)*(max_total_dly_secs));
    
 	if (cast_handle->midi_to_dsp.dly_qnt_hdl != NULL)
 	{

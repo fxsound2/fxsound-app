@@ -32,6 +32,7 @@ public:
 
 	void setContent(Component* content);
 	virtual void closeButtonPressed() = 0;
+	void userTriedToCloseWindow() override { closeButtonPressed(); }
 
 	void startLogoAnimation();
 	void stopLogoAnimation();

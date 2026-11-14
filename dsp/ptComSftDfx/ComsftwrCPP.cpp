@@ -128,7 +128,7 @@ int COMSFTWR_DECL comSftwrInitDspAlgorithmCPP(PT_HANDLE *hp_comSftwr, realtype r
 #else
 	long long perf_count;
 #endif
-	long sample_count_init;
+	int32_t sample_count_init;
 	struct comSftwrHdlType *cast_handle;
 
 	cast_handle = (struct comSftwrHdlType *)hp_comSftwr;
@@ -153,9 +153,9 @@ int COMSFTWR_DECL comSftwrInitDspAlgorithmCPP(PT_HANDLE *hp_comSftwr, realtype r
 #endif
 
 #ifdef WIN32
-	sample_count_init = (long)(perf_count % (__int64)COMSFTWR_DEMO_SAMPLES_ALLOWED);
+	sample_count_init = (int32_t)(perf_count % (__int64)COMSFTWR_DEMO_SAMPLES_ALLOWED);
 #else
-	sample_count_init = (long)(perf_count % (long long)COMSFTWR_DEMO_SAMPLES_ALLOWED);
+	sample_count_init = (int32_t)(perf_count % (long long)COMSFTWR_DEMO_SAMPLES_ALLOWED);
 #endif
 	cast_handle->sample_count = sample_count_init;
 
@@ -266,8 +266,8 @@ int COMSFTWR_DECL comSftwrZeroDspMemoryCPP(PT_HANDLE *hp_comSftwr)
  */
 int COMSFTWR_DECL comSftwrAllocDspMemCPP(PT_HANDLE *hp_comSftwr)
 {
-	long memsize_required;
-	long current_memsize;
+	int32_t memsize_required;
+	int32_t current_memsize;
 	float *mem_ptr;
 	struct comSftwrHdlType *cast_handle;
 

@@ -96,7 +96,7 @@ void main(int argc, char *argv[])
 
 /* Only build init function in 32 bit files (same for both) */
 #if defined(DSPSOFT_32_BIT)
-DSP_FUNC_DEF int DSPS_AURAL_INIT(float *fp_params, float *fp_memory, long l_memsize, float *fp_state, int i_init_flag, float r_samp_freq)
+DSP_FUNC_DEF int DSPS_AURAL_INIT(float *fp_params, float *fp_memory, int32_t l_memsize, float *fp_state, int i_init_flag, float r_samp_freq)
 {
 	float *COMM_MEM_OFFSET = fp_params;
 	float *MEMBANK0_START = fp_memory;
@@ -107,7 +107,7 @@ DSP_FUNC_DEF int DSPS_AURAL_INIT(float *fp_params, float *fp_memory, long l_mems
 	/* For this plug-in, all state vars are stored in param memory area */
 
 
-	long i;
+	int32_t i;
 	struct dspAuralStructType *s = (struct dspAuralStructType *)(COMM_MEM_OFFSET);
  
 	if( i_init_flag & DSPS_INIT_PARAMS )
@@ -154,7 +154,7 @@ DSP_FUNC_DEF int DSPS_AURAL_INIT(float *fp_params, float *fp_memory, long l_mems
 #endif /* DSPSOFT_32_BIT */
 
 #ifdef DSPSOFT_TARGET
-DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
+DSP_FUNC_DEF void DSPS_AURAL_PROCESS(int32_t *lp_data, int l_length,
 								   float *fp_params, float *fp_memory, float *fp_state,
 								   struct hardwareMeterValType *sp_meters,
 								   int DSP_data_type)
@@ -166,8 +166,8 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 	 * stored back at end of buffer processing
 	 */
 
-	long transfer_state = 0; /* For sending out meter values */
-	long status = 0;         /* For sending run time status to PC */
+	int32_t transfer_state = 0; /* For sending out meter values */
+	int32_t status = 0;         /* For sending run time status to PC */
 
 	/* All the vars below are from DMA_LOCAL_DECLARATIONS.
 	 * They are declared there as statics, but don't need to be
@@ -181,8 +181,8 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 	/* All the vars below are from DMA_GLOBAL_DECLARATIONS.
 	 * They are declared there as statics, but don't need to be
 	 */
-	long *read_in_buf;
-	long *read_out_buf;
+	int32_t *read_in_buf;
+	int32_t *read_out_buf;
 	struct dspAuralStructType *s = (struct dspAuralStructType *)(COMM_MEM_OFFSET);
 	int i;
 
@@ -224,8 +224,8 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 		float out1, out2;
 		float in1, in2;
 		float odd1, odd2, filtH1, filtH2;
-		volatile long in_count = 0;
-		volatile long out_count = 0;
+		volatile int32_t in_count = 0;
+		volatile int32_t out_count = 0;
 		int error = 0;
 
 		/* Declare the integer temporary variables used in algorithm */
@@ -245,7 +245,7 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 
 		/* Implement Highpass linear transformed 2nd order Butterworth filter */
 		{
-			long wideReg1; /* A temporary 32 bit register value */
+			int32_t wideReg1; /* A temporary 32 bit register value */
 
 			/* wideReg1 will be used to maintain temporary values at a higher
 			 * bit precision than the native data and coefficients.
@@ -258,17 +258,17 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 			 * to generate 32 bit results.
 			 */
 			/* Note s->a1 is > 1.0, compensate with one less post-op shift */
-			wideReg1 = ( ((long)out1_minus1 * (long)i_a1) >> (DSP_INTERMEDIATE_SHIFT - 1) );
+			wideReg1 = ( ((int32_t)out1_minus1 * (int32_t)i_a1) >> (DSP_INTERMEDIATE_SHIFT - 1) );
 
-			wideReg1 += ( ((long)out1_minus2 * (long)i_a0) >> DSP_INTERMEDIATE_SHIFT );
+			wideReg1 += ( ((int32_t)out1_minus2 * (int32_t)i_a0) >> DSP_INTERMEDIATE_SHIFT );
 
 			out1_minus2 = out1_minus1;
 
 			wideReg1 += ( 
-				           (  (long)i_in1 
-							   + (long)in1_minus2 
-				            - ( ((long)in1_minus1) << 1)  /* Mult this value by 2 using shift */
-						     ) * (long)i_gain
+				           (  (int32_t)i_in1 
+							   + (int32_t)in1_minus2 
+				            - ( ((int32_t)in1_minus1) << 1)  /* Mult this value by 2 using shift */
+						     ) * (int32_t)i_gain
 						   ) >> DSP_INTERMEDIATE_SHIFT;
 
 			/* Convert wideReg1 back to 16 value for storage in out1_minus1 variable */
@@ -285,7 +285,7 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 			 */
 
 			wideReg1 = (wideReg1 >> (DSP_FINAL_SHIFT - COEFF_REDUCE_SHIFT));
-			wideReg1 = wideReg1 * (long)i_drive;
+			wideReg1 = wideReg1 * (int32_t)i_drive;
 			wideReg1 = wideReg1 >> (DSP_INTERMEDIATE_SHIFT);
 
 			/* Refer to floating point implementation to see specifics of algorithm below.
@@ -293,7 +293,7 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 			 * with a factor of 4 gain added after the generation.
 			 */
 			{
-				long wideReg2;
+				int32_t wideReg2;
 
 				/* Prepare to multiply */
 				wideReg2 = wideReg1 >> (DSP_FINAL_SHIFT);
@@ -310,7 +310,7 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 				/* Note that coeff value is corrected for the fact that a gain of 4 was pulled
 				 * out from drive value above and also coeff bit precision reductions was used..
 				 */
-				wideReg2 = wideReg2 * (((long)((double)MAX_INT_VAL * 2.0/3.0)) >> (COEFF_REDUCE_SHIFT));
+				wideReg2 = wideReg2 * (((int32_t)((double)MAX_INT_VAL * 2.0/3.0)) >> (COEFF_REDUCE_SHIFT));
 
 				wideReg2 = wideReg2 >> (DSP_INTERMEDIATE_SHIFT - COEFF_REDUCE_SHIFT);
 
@@ -323,7 +323,7 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 			 */
 			wideReg1 = wideReg1 >> (DSP_FINAL_SHIFT - (COEFF_REDUCE_SHIFT - 1) - 1);
 
-			wideReg1 = wideReg1 * (long)i_odd;
+			wideReg1 = wideReg1 * (int32_t)i_odd;
 
 			/* Put back gain factor 4 that was taken out of the drive above */
 			wideReg1 = wideReg1 >> (DSP_INTERMEDIATE_SHIFT - 2);
@@ -333,7 +333,7 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 			 * Also note that odd value uses a reduced coeff precision reduction since some
 			 * post-shift reduction already occurs
 			 */
-			wideReg1 = wideReg1 + ( ((long)i_in1) << DSP_FINAL_SHIFT );
+			wideReg1 = wideReg1 + ( ((int32_t)i_in1) << DSP_FINAL_SHIFT );
 			
 			/* Shift to final 16 bit precision, round if available rather than simple shift truncation. */
 			wideReg1 = wideReg1 >> (DSP_FINAL_SHIFT);
@@ -353,7 +353,7 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 		/* Do right channel if stereo in */
 		if(s->stereo_in_flag)
 		{
-			long wideReg1; /* A temporary 32 bit register value */
+			int32_t wideReg1; /* A temporary 32 bit register value */
 
 			/* wideReg1 will be used to maintain temporary values at a higher
 			 * bit precision than the native data and coefficients.
@@ -366,17 +366,17 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 			 * to generate 32 bit results.
 			 */
 			/* Note s->a1 is > 1.0, compensate with one less post-op shift */
-			wideReg1 = ( ((long)out2_minus1 * (long)i_a1) >> (DSP_INTERMEDIATE_SHIFT - 1) );
+			wideReg1 = ( ((int32_t)out2_minus1 * (int32_t)i_a1) >> (DSP_INTERMEDIATE_SHIFT - 1) );
 
-			wideReg1 += ( ((long)out2_minus2 * (long)i_a0) >> DSP_INTERMEDIATE_SHIFT );
+			wideReg1 += ( ((int32_t)out2_minus2 * (int32_t)i_a0) >> DSP_INTERMEDIATE_SHIFT );
 
 			out2_minus2 = out2_minus1;
 
 			wideReg1 += ( 
-				           (  (long)i_in2 
-							   + (long)in2_minus2 
-				            - ( ((long)in2_minus1) << 1)  /* Mult this value by 2 using shift */
-						     ) * (long)i_gain
+				           (  (int32_t)i_in2 
+							   + (int32_t)in2_minus2 
+				            - ( ((int32_t)in2_minus1) << 1)  /* Mult this value by 2 using shift */
+						     ) * (int32_t)i_gain
 						   ) >> DSP_INTERMEDIATE_SHIFT;
 
 			/* Convert wideReg1 back to 16 value for storage in out1_minus1 variable */
@@ -393,7 +393,7 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 			 */
 
 			wideReg1 = (wideReg1 >> (DSP_FINAL_SHIFT - COEFF_REDUCE_SHIFT));
-			wideReg1 = wideReg1 * (long)i_drive;
+			wideReg1 = wideReg1 * (int32_t)i_drive;
 			wideReg1 = wideReg1 >> (DSP_INTERMEDIATE_SHIFT);
 
 			/* Refer to floating point implementation to see specifics of algorithm below.
@@ -401,7 +401,7 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 			 * with a factor of 4 gain added after the generation.
 			 */
 			{
-				long wideReg2;
+				int32_t wideReg2;
 
 				/* Prepare to multiply */
 				wideReg2 = wideReg1 >> (DSP_FINAL_SHIFT);
@@ -418,7 +418,7 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 				/* Note that coeff value is corrected for the fact that a gain of 4 was pulled
 				 * out from drive value above and also coeff bit precision reductions was used..
 				 */
-				wideReg2 = wideReg2 * (((long)((double)MAX_INT_VAL * 2.0/3.0)) >> (COEFF_REDUCE_SHIFT));
+				wideReg2 = wideReg2 * (((int32_t)((double)MAX_INT_VAL * 2.0/3.0)) >> (COEFF_REDUCE_SHIFT));
 
 				wideReg2 = wideReg2 >> (DSP_INTERMEDIATE_SHIFT - COEFF_REDUCE_SHIFT);
 
@@ -431,7 +431,7 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 			 */
 			wideReg1 = wideReg1 >> (DSP_FINAL_SHIFT - (COEFF_REDUCE_SHIFT - 1) - 1);
 
-			wideReg1 = wideReg1 * (long)i_odd;
+			wideReg1 = wideReg1 * (int32_t)i_odd;
 
 			/* Put back gain factor 4 that was taken out of the drive above */
 			wideReg1 = wideReg1 >> (DSP_INTERMEDIATE_SHIFT - 2);
@@ -441,7 +441,7 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 			 * Also note that odd value uses a reduced coeff precision reduction since some
 			 * post-shift reduction already occurs
 			 */
-			wideReg1 = wideReg1 + ( ((long)i_in2) << DSP_FINAL_SHIFT );
+			wideReg1 = wideReg1 + ( ((int32_t)i_in2) << DSP_FINAL_SHIFT );
 			
 			/* Shift to final 16 bit precision, round if available rather than simple shift truncation. */
 			wideReg1 = wideReg1 >> (DSP_FINAL_SHIFT);
@@ -495,7 +495,7 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 	}
 
 	/* Write averaged meter data temporarily writing as a float.
-	 * Will be converted to long and factored in calling function.
+	 * Will be converted to int32_t and factored in calling function.
 	 */
 	write_meter_average();
 
@@ -503,7 +503,7 @@ DSP_FUNC_DEF void DSPS_AURAL_PROCESS(long *lp_data, int l_length,
 	/* For this plug-in, all state vars are stored in param memory area */
 	{	/*
 		float **fpp = (float **)&(fp_state[0]);
-		long *lpp  =  (long *)&(fp_state[0]);
+		int32_t *lpp  =  (int32_t *)&(fp_state[0]);
 		fpp[0] = ptr0;
 		*/
 	}

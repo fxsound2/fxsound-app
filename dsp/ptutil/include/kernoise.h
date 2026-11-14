@@ -48,7 +48,7 @@
 #define kerUniformWhiteNoise(ul_seed, r_PeakVal, r_output)\
 {\
 	ul_seed = (3141592621L * ul_seed + 2718282829L) % 4294967291L;\
-	r_output = (realtype)*(long *)&ul_seed * ((realtype)r_PeakVal * (realtype)1.0/(realtype)2147483648L);\
+	r_output = (realtype)*(int32_t *)&ul_seed * ((realtype)r_PeakVal * (realtype)1.0/(realtype)2147483648L);\
 }
 
 /* 
@@ -59,9 +59,9 @@
 #define kerTriangularWhiteNoise(ul_seed, r_PeakVal, r_output)\
 {\
 	ul_seed = (3141592621L * ul_seed + 2718282829L) % 4294967291L;\
-	r_output = (realtype)*(long *)&ul_seed * ((realtype)r_PeakVal * (realtype)0.5/(realtype)2147483648L);\
+	r_output = (realtype)*(int32_t *)&ul_seed * ((realtype)r_PeakVal * (realtype)0.5/(realtype)2147483648L);\
 	ul_seed = (3141592621L * ul_seed + 2718282829L) % 4294967291L;\
-	r_output += (realtype)*(long *)&ul_seed * ((realtype)r_PeakVal * (realtype)0.5/(realtype)2147483648L);\
+	r_output += (realtype)*(int32_t *)&ul_seed * ((realtype)r_PeakVal * (realtype)0.5/(realtype)2147483648L);\
 }
 
 /* 
@@ -72,9 +72,9 @@
 {\
 	r_val = r_val * (realtype)r_peak_level;\
 	if( r_val >= (realtype)0.0 )\
-		r_val = (realtype)((long)(r_val + (realtype)0.5));\
+		r_val = (realtype)((int32_t)(r_val + (realtype)0.5));\
 	else\
-		r_val = (realtype)((long)(r_val - (realtype)0.5));\
+		r_val = (realtype)((int32_t)(r_val - (realtype)0.5));\
 	r_val *= (realtype)((realtype)1.0/(realtype)r_peak_level);\
 }
 
@@ -87,9 +87,9 @@
 {\
 	r_error = r_val * (realtype)r_peak_level;\
 	if( r_error >= (realtype)0.0 )\
-		r_val = (long)(r_error + (realtype)0.5);\
+		r_val = (int32_t)(r_error + (realtype)0.5);\
 	else\
-		r_val = (long)(r_error - (realtype)0.5);\
+		r_val = (int32_t)(r_error - (realtype)0.5);\
 	r_error -= r_val;\
 	r_val *= (realtype)((realtype)1.0/(realtype)r_peak_level);\
 }
@@ -103,8 +103,8 @@
 {\
 	r_val = r_val * (realtype)r_peak_level + r_dither;\
 	if( r_val >= (realtype)0.0 )\
-		r_val = (realtype)((long)(r_val + (realtype)0.5));\
+		r_val = (realtype)((int32_t)(r_val + (realtype)0.5));\
 	else\
-		r_val = (realtype)((long)(r_val - (realtype)0.5));\
+		r_val = (realtype)((int32_t)(r_val - (realtype)0.5));\
 	r_val *= (realtype)((realtype)1.0/(realtype)r_peak_level);\
 }

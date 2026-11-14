@@ -29,7 +29,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Source/Utils/Settings/DeviceConfig.h"
 #include "AudioPassthru.h"
 #include "DfxDsp.h"
+#ifdef _WIN32
 #include <wtsapi32.h>
+#else
+#include "win_compat.h"
+#include "LinuxHotkeys.h"
+#endif
 
 using namespace FxSound;
 
@@ -182,6 +187,7 @@ private:
 	public:
 		MessageWindow(const WCHAR* const wnd_name, WNDPROC wnd_proc)
 		{
+#ifdef _WIN32
 			String class_name("FXSOUND_");
 			class_name << String::toHexString(Time::getHighResolutionTicks());
 
@@ -199,21 +205,28 @@ private:
 			hwnd_ = ::CreateWindowW(getClassNameFromAtom(), wnd_name,
 				0, 0, 0, 0, 0, 0, 0, h_module, 0);
 			jassert(hwnd_ != 0);
+#else
+			// Linux: no hidden message window.
+			ignoreUnused(wnd_name, wnd_proc);
+#endif
 		}
 
 		~MessageWindow()
 		{
+#ifdef _WIN32
 			DestroyWindow(hwnd_);
 			UnregisterClassW(getClassNameFromAtom(), 0);
+#endif
 		}
 
 		inline HWND getHandle() const noexcept { return hwnd_; }
 
 	private:
+		HWND hwnd_ = nullptr;
+#ifdef _WIN32
 		ATOM atom_;
-		HWND hwnd_;
-
 		LPCWSTR getClassNameFromAtom() noexcept { return (LPCWSTR)(pointer_sized_uint)atom_; }
+#endif
 	};
 
 	static constexpr UINT CMD_ON_OFF = 1001;
@@ -244,18 +257,28 @@ private:
 	void autoSavePreset(int preset_index);
 	void deleteAutoSavedPreset(const String& preset_name);
 
+#ifndef _WIN32
+	static juce::File getAutostartDesktopFile();
+	juce::File getFactoryPresetDir();
+	void handleLinuxHotkey(int cmd);
+#endif
+
 	void registerHotkeys();
 	void unregisterHotkeys();
 
     String FormatString(const String& format, const String& arg);
 
+#ifdef _WIN32
 	typedef HPOWERNOTIFY(WINAPI* RegisterSuspendResumeNotificationFunc)(HANDLE, DWORD);
 	typedef BOOL(WINAPI* UnregisterSuspendResumeNotificationFunc)(HPOWERNOTIFY);
+#endif
 
 	MessageWindow message_window_;
 	bool hotkeys_registered_;
+#ifdef _WIN32
 	HPOWERNOTIFY powerNotify_;
 	UnregisterSuspendResumeNotificationFunc unregister_suspend_resume_notification_;
+#endif
 
 	FxMainWindow* main_window_;
 	FxSystemTrayView* system_tray_view_;
@@ -292,6 +315,10 @@ private:
 	int max_user_presets_;
 
 	DWORD session_id_;
+
+#ifndef _WIN32
+	std::unique_ptr<LinuxHotkeys> linux_hotkeys_;
+#endif
 
 	CriticalSection lock_;
 	CriticalSection save_lock_;

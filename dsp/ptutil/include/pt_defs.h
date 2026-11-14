@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _PT_DEFS_H_
 #define _PT_DEFS_H_
 
-#ifndef __ANDROID__
+#if !defined(__ANDROID__) && !defined(__linux__) && !defined(__APPLE__)
 #include <windows.h>
 #endif //WIN32
 
@@ -43,11 +43,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 struct hardwareMeterValType
 {
 	int  values_are_new;
-	long left_in;
-	long right_in;
-	long left_out;
-	long right_out;
-	long dsp_status;
+	int32_t left_in;
+	int32_t right_in;
+	int32_t left_out;
+	int32_t right_out;
+	int32_t dsp_status;
 	float aux_vals[8]; /* For addition info transfer */
 };
 

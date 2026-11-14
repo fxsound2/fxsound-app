@@ -426,7 +426,7 @@ int dfxpSetDfxTunedTrackPlaying(PT_HANDLE *hp_dfxp, int i_dfx_tuned_track_playin
 
 	if (cast_handle->trace.mode)
 	{
-		swprintf(cast_handle->wcp_msg1, L"dfxpSetDfxTunedTrackPlaying: i_dfx_tuned_track_playing = %d", i_dfx_tuned_track_playing);
+		swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"dfxpSetDfxTunedTrackPlaying: i_dfx_tuned_track_playing = %d", i_dfx_tuned_track_playing);
 	   (cast_handle->slout1)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
    }
 
@@ -441,7 +441,7 @@ int dfxpSetDfxTunedTrackPlaying(PT_HANDLE *hp_dfxp, int i_dfx_tuned_track_playin
  * DESCRIPTION:
  *   Set the total audio processed time to the given value
  */
-int dfxpSetTotalAudioProcessedTime(PT_HANDLE *hp_dfxp, unsigned long ul_msec_audio_processed_time)
+int dfxpSetTotalAudioProcessedTime(PT_HANDLE *hp_dfxp, uint32_t ul_msec_audio_processed_time)
 {
 	struct dfxpHdlType *cast_handle;
 

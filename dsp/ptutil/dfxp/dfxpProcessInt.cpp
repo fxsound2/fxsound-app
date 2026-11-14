@@ -65,7 +65,7 @@ int dfxpModifyShortIntSamples(PT_HANDLE *hp_dfxp, short int *sip_input_samples,
 
 	if ((cast_handle->trace.mode) && (!cast_handle->trace.i_process_int_samples_done))
 	{
-		swprintf(cast_handle->wcp_msg1, L"dfxpModifyShortIntSamples(): i_num_sample_sets = %d", i_num_sample_sets);
+		swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"dfxpModifyShortIntSamples(): i_num_sample_sets = %d", i_num_sample_sets);
 	   (cast_handle->slout1)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
    }
 
@@ -73,7 +73,7 @@ int dfxpModifyShortIntSamples(PT_HANDLE *hp_dfxp, short int *sip_input_samples,
 
 	if ((cast_handle->trace.mode) && (!cast_handle->trace.i_process_int_samples_done))
 	{
-		swprintf(cast_handle->wcp_msg1, L"dfxpModifyShortIntSamples(): Total Num Samples = %d", total_num_samples);
+		swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"dfxpModifyShortIntSamples(): Total Num Samples = %d", total_num_samples);
 	   (cast_handle->slout1)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
    }
 
@@ -103,7 +103,7 @@ int dfxpModifyShortIntSamples(PT_HANDLE *hp_dfxp, short int *sip_input_samples,
 
 	if ((cast_handle->trace.mode) && (!cast_handle->trace.i_process_int_samples_done))
 	{
-		swprintf(cast_handle->wcp_msg1, L"dfxpModifyShortIntSamples(): Calling dfxpModifyRealtypeSamples(), i_reorder = %d", i_reorder);
+		swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"dfxpModifyShortIntSamples(): Calling dfxpModifyRealtypeSamples(), i_reorder = %d", i_reorder);
 		(cast_handle->slout1)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 	}
 
@@ -117,7 +117,7 @@ int dfxpModifyShortIntSamples(PT_HANDLE *hp_dfxp, short int *sip_input_samples,
 	if ((cast_handle->trace.mode) && (!cast_handle->trace.i_process_int_samples_done))
 	{
 		(cast_handle->slout1)->Message_Wide(FIRST_LINE, L"dfxpModifyShortIntSamples(): Calling mthConvertRealtypeBufToIntBuf()");
-		swprintf(cast_handle->wcp_msg1, L"   bps = %d, valid_bits = %d", cast_handle->bits_per_sample, cast_handle->valid_bits);
+		swprintf(cast_handle->wcp_msg1, sizeof(cast_handle->wcp_msg1)/sizeof(*(cast_handle->wcp_msg1)), L"   bps = %d, valid_bits = %d", cast_handle->bits_per_sample, cast_handle->valid_bits);
 		(cast_handle->slout1)->Message_Wide(FIRST_LINE, cast_handle->wcp_msg1);
 	}
 

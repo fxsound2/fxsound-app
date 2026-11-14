@@ -54,7 +54,7 @@ void main(int argc, char *argv[])
 
 /* Only build init function in 32 bit files (same for both) */
 #if defined(DSPSOFT_32_BIT)
-DSP_FUNC_DEF int DSPS_LEX_INIT(float *fp_params, float *fp_memory, long l_memsize, float *fp_state, int i_init_flag, float r_samp_freq)
+DSP_FUNC_DEF int DSPS_LEX_INIT(float *fp_params, float *fp_memory, int32_t l_memsize, float *fp_state, int i_init_flag, float r_samp_freq)
 {
 	float *COMM_MEM_OFFSET = fp_params;
 	float *MEMBANK0_START = fp_memory;
@@ -63,7 +63,7 @@ DSP_FUNC_DEF int DSPS_LEX_INIT(float *fp_params, float *fp_memory, long l_memsiz
 	 * stored back at end of buffer processing
 	 */
 
-	long i;
+	int32_t i;
 	struct dspLexStructType *s = (struct dspLexStructType *)(COMM_MEM_OFFSET);
  
 	s->dsp_sampling_freq = r_samp_freq;
@@ -139,19 +139,19 @@ DSP_FUNC_DEF int DSPS_LEX_INIT(float *fp_params, float *fp_memory, long l_memsiz
 
 		s->MasterStart = s->osc_plus_table + LEX_NUM_OSC_PTS;
 		s->ptr = s->MasterStart;
-		s->pre_dly_len_l = (unsigned long)(r_samp_freq * (realtype)LEX_PREDELAY_LEN);
+		s->pre_dly_len_l = (uint32_t)(r_samp_freq * (realtype)LEX_PREDELAY_LEN);
 		s->MasterLen = s->pre_dly_len_l;
 
-		s->lat1_dly_len_l = (long)(r_samp_freq * (realtype)LAT1_LEFT_DELAY_LEN);
+		s->lat1_dly_len_l = (int32_t)(r_samp_freq * (realtype)LAT1_LEFT_DELAY_LEN);
 		s->MasterLen += s->lat1_dly_len_l;
 
-		s->lat2_dly_len_l = (long)(r_samp_freq * (realtype)LAT2_LEFT_DELAY_LEN);
+		s->lat2_dly_len_l = (int32_t)(r_samp_freq * (realtype)LAT2_LEFT_DELAY_LEN);
 		s->MasterLen += s->lat2_dly_len_l;
 
-		s->lat3_dly_len_l = (long)(r_samp_freq * (realtype)LAT3_LEFT_DELAY_LEN);
+		s->lat3_dly_len_l = (int32_t)(r_samp_freq * (realtype)LAT3_LEFT_DELAY_LEN);
 		s->MasterLen += s->lat3_dly_len_l;
 
-		s->lat4_dly_len_l = (long)(r_samp_freq * (realtype)LAT4_LEFT_DELAY_LEN);
+		s->lat4_dly_len_l = (int32_t)(r_samp_freq * (realtype)LAT4_LEFT_DELAY_LEN);
 		s->MasterLen += s->lat4_dly_len_l;
 
 		/* Note that for the rest of this function, we need to normalize r_roomsize
@@ -160,47 +160,47 @@ DSP_FUNC_DEF int DSPS_LEX_INIT(float *fp_params, float *fp_memory, long l_memsiz
 		r_roomsize = s->roomsize * r_samp_freq;
 		
 		/* Make sure non-modulated is right on an integer value */
-		s->lat5_dly_len_l = (float)((long)(LAT5_LEFT_DELAY_LEN_NOMINAL * r_roomsize));
+		s->lat5_dly_len_l = (float)((int32_t)(LAT5_LEFT_DELAY_LEN_NOMINAL * r_roomsize));
 		/* Add one for roundoff room */
-		s->lat5_dly_maxlen_l = (unsigned long)s->lat5_dly_len_l + (unsigned long)(r_samp_freq * (realtype)LEX_MAX_MODULATION_DELAY) + 1;
+		s->lat5_dly_maxlen_l = (uint32_t)s->lat5_dly_len_l + (uint32_t)(r_samp_freq * (realtype)LEX_MAX_MODULATION_DELAY) + 1;
 		s->MasterLen += s->lat5_dly_maxlen_l;
 
-		s->D1_tap1 = (unsigned long)(D1_LEFT_TAP1_DELAY * r_roomsize);
-		s->D1_tap2 = (unsigned long)(D1_LEFT_TAP2_DELAY * r_roomsize);
-		s->D1_tap3 = (unsigned long)(D1_LEFT_TAP3_DELAY * r_roomsize);
-		s->D1_tap4 = (unsigned long)(D1_LEFT_TAP4_DELAY * r_roomsize);
+		s->D1_tap1 = (uint32_t)(D1_LEFT_TAP1_DELAY * r_roomsize);
+		s->D1_tap2 = (uint32_t)(D1_LEFT_TAP2_DELAY * r_roomsize);
+		s->D1_tap3 = (uint32_t)(D1_LEFT_TAP3_DELAY * r_roomsize);
+		s->D1_tap4 = (uint32_t)(D1_LEFT_TAP4_DELAY * r_roomsize);
 		s->MasterLen += s->D1_tap4;
 
-		s->lat6_tap1 = (unsigned long)(LAT6_LEFT_TAP1_DELAY * r_roomsize);
-		s->lat6_tap2 = (unsigned long)(LAT6_LEFT_TAP2_DELAY * r_roomsize);
-		s->lat6_dly_len_l = (unsigned long)(LAT6_LEFT_DELAY_LEN * r_roomsize);
+		s->lat6_tap1 = (uint32_t)(LAT6_LEFT_TAP1_DELAY * r_roomsize);
+		s->lat6_tap2 = (uint32_t)(LAT6_LEFT_TAP2_DELAY * r_roomsize);
+		s->lat6_dly_len_l = (uint32_t)(LAT6_LEFT_DELAY_LEN * r_roomsize);
 		s->MasterLen += s->lat6_dly_len_l;
 
-		s->D2_tap1 = (unsigned long)(D2_LEFT_TAP1_DELAY * r_roomsize);
-		s->D2_tap2 = (unsigned long)(D2_LEFT_TAP2_DELAY * r_roomsize);
-		s->D2_tap3 = (unsigned long)(D2_LEFT_TAP3_DELAY * r_roomsize);
+		s->D2_tap1 = (uint32_t)(D2_LEFT_TAP1_DELAY * r_roomsize);
+		s->D2_tap2 = (uint32_t)(D2_LEFT_TAP2_DELAY * r_roomsize);
+		s->D2_tap3 = (uint32_t)(D2_LEFT_TAP3_DELAY * r_roomsize);
 		s->MasterLen += s->D2_tap3;
 
 		/* Make sure non-modulated is right on an integer value */
-		s->lat7_dly_len_l = (float)((long)(LAT7_LEFT_DELAY_LEN_NOMINAL * r_roomsize));
+		s->lat7_dly_len_l = (float)((int32_t)(LAT7_LEFT_DELAY_LEN_NOMINAL * r_roomsize));
 		/* Add one for roundoff room */
-		s->lat7_dly_maxlen_l = (unsigned long)s->lat7_dly_len_l + (unsigned long)(r_samp_freq * (realtype)LEX_MAX_MODULATION_DELAY) + 1;
+		s->lat7_dly_maxlen_l = (uint32_t)s->lat7_dly_len_l + (uint32_t)(r_samp_freq * (realtype)LEX_MAX_MODULATION_DELAY) + 1;
 		s->MasterLen += s->lat7_dly_maxlen_l;
 
-		s->D3_tap1 = (unsigned long)(D3_LEFT_TAP1_DELAY * r_roomsize);
-		s->D3_tap2 = (unsigned long)(D3_LEFT_TAP2_DELAY * r_roomsize);
-		s->D3_tap3 = (unsigned long)(D3_LEFT_TAP3_DELAY * r_roomsize);
-		s->D3_tap4 = (unsigned long)(D3_LEFT_TAP4_DELAY * r_roomsize);
+		s->D3_tap1 = (uint32_t)(D3_LEFT_TAP1_DELAY * r_roomsize);
+		s->D3_tap2 = (uint32_t)(D3_LEFT_TAP2_DELAY * r_roomsize);
+		s->D3_tap3 = (uint32_t)(D3_LEFT_TAP3_DELAY * r_roomsize);
+		s->D3_tap4 = (uint32_t)(D3_LEFT_TAP4_DELAY * r_roomsize);
 		s->MasterLen += s->D3_tap4;
 
-		s->lat8_tap1 = (unsigned long)(LAT8_LEFT_TAP1_DELAY * r_roomsize);
-		s->lat8_tap2 = (unsigned long)(LAT8_LEFT_TAP2_DELAY * r_roomsize);
-		s->lat8_dly_len_l = (unsigned long)(LAT8_LEFT_DELAY_LEN * r_roomsize);
+		s->lat8_tap1 = (uint32_t)(LAT8_LEFT_TAP1_DELAY * r_roomsize);
+		s->lat8_tap2 = (uint32_t)(LAT8_LEFT_TAP2_DELAY * r_roomsize);
+		s->lat8_dly_len_l = (uint32_t)(LAT8_LEFT_DELAY_LEN * r_roomsize);
 		s->MasterLen += s->lat8_dly_len_l;
 
-		s->D4_tap1 = (unsigned long)(D4_LEFT_TAP1_DELAY * r_roomsize);
-		s->D4_tap2 = (unsigned long)(D4_LEFT_TAP2_DELAY * r_roomsize);
-		s->D4_tap3 = (unsigned long)(D4_LEFT_TAP3_DELAY * r_roomsize);
+		s->D4_tap1 = (uint32_t)(D4_LEFT_TAP1_DELAY * r_roomsize);
+		s->D4_tap2 = (uint32_t)(D4_LEFT_TAP2_DELAY * r_roomsize);
+		s->D4_tap3 = (uint32_t)(D4_LEFT_TAP3_DELAY * r_roomsize);
 		s->MasterLen += s->D4_tap3;
 
 		/* Note that we subtract one so MasterEnd points to the last actually used location */
@@ -217,7 +217,7 @@ DSP_FUNC_DEF int DSPS_LEX_INIT(float *fp_params, float *fp_memory, long l_memsiz
 #endif /* DSPSOFT_32_BIT */
 
 #ifdef DSPSOFT_TARGET
-DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
+DSP_FUNC_DEF void DSPS_LEX_PROCESS(int32_t *lp_data, int l_length,
 								   float *fp_params, float *fp_memory, float *fp_state,
 								   struct hardwareMeterValType *sp_meters, int DSP_data_type)
 {
@@ -229,12 +229,12 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 	 */
 	/*
 	float **fpp = (float **)&(fp_state[0]);
-	long *lpp  =  (long *)&(fp_state[0]);
+	int32_t *lpp  =  (int32_t *)&(fp_state[0]);
 	float *ptr0 = fpp[0];
 	*/
 
-	long transfer_state = 0; /* For sending out meter values */
-	long status = 0;         /* For sending run time status to PC */
+	int32_t transfer_state = 0; /* For sending out meter values */
+	int32_t status = 0;         /* For sending run time status to PC */
 
 	/* All the vars below are from DMA_LOCAL_DECLARATIONS.
 	 * They are declared there as statics, but don't need to be
@@ -248,8 +248,8 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 	/* All the vars below are from DMA_GLOBAL_DECLARATIONS.
 	 * They are declared there as statics, but don't need to be
 	 */
-	long *read_in_buf;
-	long *read_out_buf;
+	int32_t *read_in_buf;
+	int32_t *read_out_buf;
 
 	int i;
 	struct dspLexStructType *s = (struct dspLexStructType *)(COMM_MEM_OFFSET);
@@ -268,12 +268,12 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 		float input_diffuser_out;
 		float osc;
 		float delay_real;
-		volatile long in_count = 0;
-		volatile long out_count = 0;
+		volatile int32_t in_count = 0;
+		volatile int32_t out_count = 0;
 		float *ptr;
 		float *MasterStart;
 		float *MasterEnd;
-		unsigned long MasterLen;
+		uint32_t MasterLen;
 		float next_out;
 
 	  	load_parameter(); /* If its been sent, loads a parameter into memory */
@@ -302,7 +302,7 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 			if(ptr > MasterEnd)
 				ptr -= MasterLen;
 			rp_MACRO = (float *)(ptr - s->pre_delay );
-			if((long)rp_MACRO < (long)MasterStart)
+			if((int32_t)rp_MACRO < (int32_t)MasterStart)
 				rp_MACRO += MasterLen;
 			tmp_b = *rp_MACRO;
 			next_out = *ptr;
@@ -401,7 +401,7 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 			float dl_in, dl_out;
 			float *tmp_ptr;
 			float y1, y2;
-			long idly = (long)delay_real;
+			int32_t idly = (int32_t)delay_real;
 			float del = delay_real - idly;
 			ptr += s->lat5_dly_maxlen_l;
 			if(ptr > MasterEnd)
@@ -514,7 +514,7 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 			float dl_in, dl_out;
 			float *tmp_ptr;
 			float y1, y2;
-			long idly = (long)delay_real;
+			int32_t idly = (int32_t)delay_real;
 			float del = delay_real - idly;
 			ptr += s->lat7_dly_maxlen_l;
 			if(ptr > MasterEnd)
@@ -540,7 +540,7 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 		/* kerDelay4Taps(tmp_a, s->D3_tap1, tap1_out, s->D3_tap2, tap2_out, s->D3_tap3, tap3_out, s->D3_tap4, tap4_out, s->D3_ptr_l, s->D3_dly_start_l, s->D3_dly_end_l); */
 		{
 			float *tmp_ptr;
-			ptr += (long)s->D3_tap4;
+			ptr += (int32_t)s->D3_tap4;
 			if(ptr > MasterEnd)
 				ptr -= MasterLen;
 #ifdef D3
@@ -599,7 +599,7 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 		/* kerDelay3Taps(tmp_b, s->D4_tap1, tap1_out, s->D4_tap2, tap2_out, s->D4_tap3, tap3_out, s->D4_ptr_l, s->D4_dly_start_l, s->D4_dly_end_l); */
 		{ 
 			float *tmp_ptr;
-			ptr += (long)s->D4_tap3;
+			ptr += (int32_t)s->D4_tap3;
 			if(ptr > MasterEnd)
 				ptr -= MasterLen;
 #ifdef D4
@@ -636,7 +636,7 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 	}
 
 	/* Write averaged meter data temporarily writing as a float.
-	 * Will be converted to long and factored in calling function.
+	 * Will be converted to int32_t and factored in calling function.
 	 */
 	*(float *)&(sp_meters->left_in) = in_meter1_dma; 
 	*(float *)&(sp_meters->right_in) = in_meter2_dma; 
@@ -649,7 +649,7 @@ DSP_FUNC_DEF void DSPS_LEX_PROCESS(long *lp_data, int l_length,
 	{
 		/*
 		float **fpp = (float **)&(fp_state[0]);
-		long *lpp  =  (long *)&(fp_state[0]);
+		int32_t *lpp  =  (int32_t *)&(fp_state[0]);
 		fpp[0] = ptr0;
 		*/
 	}
