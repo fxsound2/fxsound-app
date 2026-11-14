@@ -38,7 +38,7 @@ private:
 	static constexpr int TOGGLE_BUTTON_HEIGHT = 24;
 	static constexpr int BUTTON_WIDTH = 220;
 
-    void setText();
+	void setText() override;
 
 	Label version_title_;
 	Label support_title_;

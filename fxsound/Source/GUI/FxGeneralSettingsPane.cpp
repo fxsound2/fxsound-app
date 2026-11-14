@@ -162,10 +162,6 @@ void FxGeneralSettingsPane::resized()
 void FxGeneralSettingsPane::paint(Graphics& g)
 {
 	g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-
-    setText();
-
-	FxSettingsPane::paint(g);
 }
 
 void FxGeneralSettingsPane::setText()

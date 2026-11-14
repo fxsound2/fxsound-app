@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <JuceHeader.h>
 
+class FxTheme;
+
 class FxSettingsPane : public Component
 {
 public:
@@ -27,7 +29,15 @@ public:
     virtual ~FxSettingsPane() = default;
 
 protected:
-    void paint(Graphics& g) override;
+    // Re-applies translated text and theme fonts. FxController::setLanguage()
+    // calls sendLookAndFeelChange() on every FxWindow, which lands here.
+    void lookAndFeelChanged() override;
+
+    // Panes override this to refresh their own language-dependent text.
+    virtual void setText() {}
+
+    // Returns the app's FxTheme, or nullptr if the default LookAndFeel isn't one.
+    static FxTheme* getTheme();
 
     static constexpr int X_MARGIN = 20;
     static constexpr int Y_MARGIN = 5;
@@ -36,6 +46,9 @@ protected:
     Label title_;
 
     String name_;
+
+private:
+    void updateTitle();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxSettingsPane)
 };
