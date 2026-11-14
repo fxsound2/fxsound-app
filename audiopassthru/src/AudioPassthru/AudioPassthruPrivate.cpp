@@ -399,7 +399,15 @@ int AudioPassthruPrivate::processTimer()
 
 		/* Reinit the sndDevices module */
 		if (sndDevicesReInit(hp_sndDevices_, SND_DEVICES_INIT_FOR_PROCESSING, &numRealDevices, &DfxDeviceEnabledFlag, &statusFlag) != OKAY)
+		{
+			// The reinitialization failed outright (e.g. a device became unavailable while
+			// it was being set up). Pause retries until onDeviceChange() signals that the
+			// device situation has changed, otherwise the timer would repeat the failing
+			// enumeration/setup on every tick.
+			s_sndDevices_.playbackDeviceIsUnavailable = TRUE;
+			hProcessingThread_ = INVALID_HANDLE_VALUE;
 			return(NOT_OKAY);
+		}
 
 		if (statusFlag != SND_DEVICES_DEVICE_OPERATION_COMPLETED)
 		{
