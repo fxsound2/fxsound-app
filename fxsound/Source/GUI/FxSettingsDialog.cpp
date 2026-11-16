@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <JuceHeader.h>
 #include "FxSettingsDialog.h"
+#include "FxMessage.h"
 #include "../Utils/SysInfo/SysInfo.h"
 
 //==============================================================================
@@ -500,19 +501,15 @@ void FxSettingsDialog::GeneralSettingsPane::onGpuRenderToggled()
 		return;
 	}
 
-	AlertWindow::showOkCancelBox(AlertWindow::NoIcon,
-		JUCEApplication::getInstance()->getApplicationName(),
-		TRANS("FxSound needs to restart to apply this change. Restart now?"),
-		TRANS("Restart now"),
-		TRANS("Later"),
-		nullptr,
-		ModalCallbackFunction::create([](int result)
+	FxConfirmationMessage::showMessage(TRANS("FxSound needs to restart to apply this change. Restart now?"), FxConfirmationMessage::Style::YesNo,
+		[](bool restart)
 		{
-			if (result != 0)
-			{
-				FxController::getInstance().restartApplication();
-			}
-		}));
+            if (restart)
+            {
+                FxController::getInstance().restartApplication();
+            }
+		},
+		TRANS("Restart now"), TRANS("Later"));
 }
 
 FxSettingsDialog::HelpSettingsPane::HelpSettingsPane() : SettingsPane("Help"), auto_updates_toggle_(TRANS("Automatic updates"))
