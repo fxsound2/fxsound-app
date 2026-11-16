@@ -39,6 +39,15 @@ FxWindow::~FxWindow()
 	setLookAndFeel(nullptr);
 }
 
+#if FX_JUCE_HAS_CREATE_DESKTOP_WINDOW
+void FxWindow::createDesktopWindow(const DesktopWindowOptions& options)
+{
+	Component::createDesktopWindow(options);
+
+	// The peer only exists once the window is on the desktop
+	FxController::getInstance().setRenderingEngine(*this);
+}
+#else
 void FxWindow::addToDesktop(int window_style_flags, void* native_window_to_attach_to)
 {
 	Component::addToDesktop(window_style_flags, native_window_to_attach_to);
@@ -46,6 +55,7 @@ void FxWindow::addToDesktop(int window_style_flags, void* native_window_to_attac
 	// The peer only exists once the window is on the desktop
 	FxController::getInstance().setRenderingEngine(*this);
 }
+#endif
 
 void FxWindow::setContent(Component* content)
 {
@@ -371,17 +381,17 @@ void FxWindow::TitleBar::updateLogo()
 {
 	if (name_.isEmpty())
 	{
-		icon_ = Drawable::createFromImageData(FXIMAGE(DefaultLogo), FXIMAGESIZE(DefaultLogo));
+		icon_.reset(Drawable::createFromImageData(FXIMAGE(DefaultLogo), FXIMAGESIZE(DefaultLogo)));
 		icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT) / 2, (float)ICON_WIDTH, (float)ICON_HEIGHT),
 			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
 
-		animation_icon_ = Drawable::createFromImageData(FXIMAGE(HighlightedLogo), FXIMAGESIZE(HighlightedLogo));
+		animation_icon_.reset(Drawable::createFromImageData(FXIMAGE(HighlightedLogo), FXIMAGESIZE(HighlightedLogo)));
 		animation_icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT) / 2, (float)ICON_WIDTH, (float)ICON_HEIGHT),
 			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
 	}
 	else
 	{
-		icon_ = Drawable::createFromImageData(FXIMAGE(IconLogo), FXIMAGESIZE(IconLogo));
+		icon_.reset(Drawable::createFromImageData(FXIMAGE(IconLogo), FXIMAGESIZE(IconLogo)));
 		auto width = (ICON_HEIGHT - 1) * icon_->getWidth() / icon_->getHeight();
 		icon_->setTransformToFit(juce::Rectangle<float>(0, (float)(FxTheme::TITLE_BAR_HEIGHT - ICON_HEIGHT - 1) / 2, (float)width, (float)ICON_HEIGHT - 1),
 			{ RectanglePlacement::xLeft | RectanglePlacement::yMid });
