@@ -2649,7 +2649,11 @@ bool FxController::isGpuRenderingActive() const
 
 bool FxController::canSupportGpuRendering()
 {
+#if JUCE_MAJOR_VERSION >= 8
 	return juce::SystemStats::getOperatingSystemType() > juce::SystemStats::Windows7;
+#else
+	return false;
+#endif
 }
 
 bool FxController::launchNewInstance()

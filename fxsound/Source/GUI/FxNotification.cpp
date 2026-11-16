@@ -81,7 +81,11 @@ void FxNotification::setMessage(const String& message, const std::pair<String, S
 	message_link_.setButtonText(link.first);
 	message_link_.setURL(URL(link.second));
 
+#if JUCE_MAJOR_VERSION >= 8
     auto font = theme.getSmallFont().withHeight(15.0f);
+#else
+    auto font = theme.getSmallFont().withHeight(17.0f);
+#endif
 
 	for (int i=0; i<3; i++)
 	{
@@ -127,7 +131,11 @@ void FxNotification::setMessage(const String& message, const std::pair<String, S
 		}
 
         auto margin = autohide ? 80 : 40;
+#if JUCE_MAJOR_VERSION >= 8
 		line_width = static_cast<int>(GlyphArrangement::getStringWidth(font, lines[i])) + link_width;
+#else
+		line_width = font.getStringWidth(lines[i]) + link_width;
+#endif
 		if (line_width > WIDTH-margin)
 		{
 			if (line_width > MAX_WIDTH-margin)
@@ -167,8 +175,13 @@ void FxNotification::showMessage(bool autohide)
 		if (last_line == link_line_)
 		{
             auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
+#if JUCE_MAJOR_VERSION >= 8
 			auto font = theme.getSmallFont().withHeight(15.0f);
 			x += static_cast<int>(GlyphArrangement::getStringWidth(font, message_lines_[last_line].getText()));
+#else
+			auto font = theme.getSmallFont().withHeight(17.0f);
+			x += font.getStringWidth(message_lines_[last_line].getText());
+#endif
 		}
         message_link_.setBounds(x, link_line_ * 20 + 30, width, 20);
 		message_link_.setVisible(true);
