@@ -99,6 +99,22 @@
  //#define JUCE_DISABLE_COREGRAPHICS_FONT_SMOOTHING 0
 #endif
 
+#ifndef    JUCE_INCLUDE_PNGLIB_CODE
+ //#define JUCE_INCLUDE_PNGLIB_CODE 1
+#endif
+
+#ifndef    JUCE_INCLUDE_JPEGLIB_CODE
+ //#define JUCE_INCLUDE_JPEGLIB_CODE 1
+#endif
+
+#ifndef    JUCE_USE_WEBP
+ //#define JUCE_USE_WEBP 1
+#endif
+
+#ifndef    JUCE_INCLUDE_WEBPLIB_CODE
+ //#define JUCE_INCLUDE_WEBPLIB_CODE 1
+#endif
+
 //==============================================================================
 // juce_gui_basics flags:
 
@@ -126,6 +142,10 @@
  //#define JUCE_USE_XCURSOR 1
 #endif
 
+#ifndef    JUCE_USE_XINPUT
+ //#define JUCE_USE_XINPUT 1
+#endif
+
 #ifndef    JUCE_WIN_PER_MONITOR_DPI_AWARE
  //#define JUCE_WIN_PER_MONITOR_DPI_AWARE 1
 #endif
@@ -147,6 +167,15 @@
 
 #ifndef    JUCE_ENABLE_LIVE_CONSTANT_EDITOR
  //#define JUCE_ENABLE_LIVE_CONSTANT_EDITOR 0
+#endif
+
+#define JUCE_WEBVIEW_INTEROP_LIBRARY_VERSION "1.0.0"
+
+//==============================================================================
+// juce_opengl flags:
+
+#ifndef    JUCE_OPENGL_ES
+ //#define JUCE_OPENGL_ES 0
 #endif
 
 //==============================================================================
