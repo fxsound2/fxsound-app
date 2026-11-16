@@ -248,7 +248,11 @@ void FxWindow::TitleBar::paint(Graphics& g)
     title_.setText(TRANS(name_), NotificationType::dontSendNotification);
     auto font = theme.getNormalFont();
     title_.setFont(font);
+#if JUCE_MAJOR_VERSION >= 8
     title_.setSize(static_cast<int>(GlyphArrangement::getStringWidth(font, TRANS(name_)) * 2), static_cast<int>(font.getHeight()));
+#else
+    title_.setSize(font.getStringWidth(TRANS(name_)) * 2, (int)font.getHeight());
+#endif
 
 	for (auto& item : toolbar_buttons_)
 	{
@@ -389,7 +393,11 @@ void FxWindow::TitleBar::updateLogo()
 		title_.setColour(Label::ColourIds::textColourId, theme.getCurrentColourScheme().getUIColour(LookAndFeel_V4::ColourScheme::highlightedText));
 		title_.setFont(font);
 		title_.setJustificationType(Justification::centredLeft);
+#if JUCE_MAJOR_VERSION >= 8
 		title_.setSize(static_cast<int>(GlyphArrangement::getStringWidth(font, name_) * 2), static_cast<int>(font.getHeight()));
+#else
+		title_.setSize(font.getStringWidth(name_) * 2, (int)font.getHeight());
+#endif
 		title_.setVisible(true);
 	}
 

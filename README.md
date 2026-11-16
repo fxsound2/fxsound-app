@@ -21,15 +21,13 @@ FxSound is a digital audio program built for Windows PC's. The background proces
 * Install [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk)
 * Install [Latest JUCE framework](https://api.juce.com/api/v1/download/juce/latest/windows)
 
-**Note:** To build x64/x86 FxSound v1.2.16.0 or older, use [JUCE 6.1.6](https://github.com/juce-framework/JUCE/releases/tag/6.1.6)
-
 FxSound application requires FxSound Audio Enhancer virtual audio driver. So, to run FxSound application built from source, we need to install FxSound which installs the audio driver.
 
 ### Build FxSound from Visual Studio
 * Open [fxsound/Project/FxSound.sln](https://github.com/fxsound2/fxsound-app/blob/main/fxsound/Project/FxSound.sln) in Visual Studio
 * Build the required configuration and platform and run
 
-### Build after exporting the project form Projucer
+### Build after exporting the project from Projucer
 FxSound application has three components. 
 1. FxSound GUI application which uses JUCE framework
 2. Audiopassthru module which is used by the application to interact with the audio devices
@@ -39,6 +37,18 @@ Due to the some limitations with Projucer, after exporting the Visual Studio sol
 1. Since the audiopassthru and DfxDsp dependency projects cannot be added to the solution when FxSound.sln is exported, open fxsound/Project/FxSound.sln in Visual Studio and add the existing projects audiopassthru/audiopassthru.vcxproj, dsp/DfxDsp.vcxproj.
 2. From FxSound_App project, add reference to audiopassthru and DfxDsp.
 3. If you run FxSound from Visual Studio, to let the application to use the presets, set the Working Directory to ```$(SolutionDir)..\..\bin\$(PlatformTarget)``` in FxSound_App Project->Properties->Debugging setting.
+
+**Note:** To build x64/x86 FxSound v1.2.16.0 or older, and to build for Windows 7 from v1.2.18.0, use [JUCE 6.1.6](https://github.com/juce-framework/JUCE/releases/tag/6.1.6).
+
+### Build for Windows 7
+From v1.2.18.0, the Windows 7 build is built from the same source code with JUCE 6.1.6, using a separate Projucer project.
+
+1. Open ```fxsound/FxSoundWin7.jucer``` in **Projucer 6.1.6**, and set the global JUCE modules path (File->Global Paths) to the JUCE 6.1.6 ```modules``` folder.
+2. Save the project (File->Save Project) to export ```fxsound/ProjectWin7/FxSound.sln```.
+3. Open ```fxsound/ProjectWin7/FxSound.sln``` in Visual Studio and change the Platform Toolset of FxSound_App to v145.
+4. Follow steps 1-3 in the previous section to add audiopassthru.vcxproj and DfxDsp.vcxproj to the solution, add the references from FxSound_App and set the Working Directory.
+
+**Important:** Projucer always exports the shared ```fxsound/JuceLibraryCode``` folder, so exporting FxSoundWin7.jucer overwrites the JUCE 9 versions of ```AppConfig.h```, ```BinaryData.*``` and ```JuceHeader.h```. Before building ```fxsound/Project/FxSound.sln``` again, re-export ```fxsound/FxSound.jucer``` with the latest Projucer, and do not commit the JUCE 6 versions of the ```JuceLibraryCode``` files.
 
 ## How to contribute
 We welcome anyone who wants to contribute to this project. For more details on how to contribute, follow [this contributing guideline](./CONTRIBUTING.md).

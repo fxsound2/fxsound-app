@@ -122,10 +122,17 @@ Label* FxTheme::createComboBoxTextBox(ComboBox& box)
 
 Font FxTheme::getComboBoxFont(ComboBox& box)
 {
+#if JUCE_MAJOR_VERSION >= 8
 	if (box.getHeight() <= 30)
 		return Font(FontOptions(font_600_).withHeight(12.5f));
     else
 		return Font(FontOptions(font_600_).withHeight(15.0f));
+#else
+	if (box.getHeight() <= 30)
+		return Font(font_600_).withHeight(14.0f);
+	else
+		return Font(font_600_).withHeight(17.0f);
+#endif
 }
 
 void FxTheme::positionComboBoxText(ComboBox& box, Label& label)
@@ -389,7 +396,11 @@ void FxTheme::drawPopupMenuItem(Graphics& g, const juce::Rectangle<int>& area, b
 
 Font FxTheme::getPopupMenuFont()
 {
+#if JUCE_MAJOR_VERSION >= 8
 	return Font(FontOptions(font_600_).withHeight(15.0f));
+#else
+	return Font(font_600_).withHeight(17.0f);
+#endif
 }
 
 void FxTheme::preparePopupMenuWindow(Component& new_window)
@@ -436,22 +447,38 @@ void FxTheme::loadFont(String language)
 
 Font FxTheme::getTextButtonFont(TextButton&, int button_height)
 {
+#if JUCE_MAJOR_VERSION >= 8
 	return Font(FontOptions(font_600_).withHeight(jmin(14.0f, (float)button_height)));
+#else
+	return Font(font_600_.get()).withHeight(jmin(17.0f, (float)button_height));
+#endif
 }
 
 Font FxTheme::getNormalFont()
 {
+#if JUCE_MAJOR_VERSION >= 8
 	return Font(FontOptions(font_600_).withHeight(15.0f));
+#else
+	return Font(font_600_).withHeight(17.0f);
+#endif
 }
 
 Font FxTheme::getSmallFont()
 {
+#if JUCE_MAJOR_VERSION >= 8
 	return Font(FontOptions(font_400_).withHeight(14.0f));
+#else
+	return Font(font_400_).withHeight(14.0f);
+#endif
 }
 
 Font FxTheme::getTitleFont()
 {
+#if JUCE_MAJOR_VERSION >= 8
 	return Font(FontOptions(font_700_).withHeight(17.0f));
+#else
+	return Font(font_700_).withHeight(17.0f);
+#endif
 }
 
 Typeface::Ptr FxTheme::getDefaultTypeface()
@@ -528,10 +555,17 @@ void FxTheme::drawDocumentWindowTitleBar(DocumentWindow& window, Graphics& g,
 	g.setColour(getCurrentColourScheme().getUIColour(ColourScheme::widgetBackground));
 	g.fillAll();
 
+#if JUCE_MAJOR_VERSION >= 8
 	Font font(FontOptions{}.withHeight(12.0f).withStyle("plain"));
 	g.setFont(font);
 
 	auto textW = static_cast<int>(GlyphArrangement::getStringWidth(font, window.getName()));
+#else
+	Font font(12.0f, Font::plain);
+	g.setFont(font);
+
+	auto textW = font.getStringWidth(window.getName());
+#endif
 	auto iconW = 0;
 	auto iconH = 0;
 

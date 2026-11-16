@@ -46,5 +46,10 @@ int FxHyperlink::getTextWidth()
 	auto& theme = dynamic_cast<FxTheme&>(LookAndFeel::getDefaultLookAndFeel());
 	auto text_font = theme.getNormalFont();
 	text_font.setUnderline(true);
+	
+#if JUCE_MAJOR_VERSION >= 8
 	return static_cast<int>(GlyphArrangement::getStringWidth(text_font, getButtonText()));
+#else
+	return text_font.getStringWidth(getButtonText());
+#endif
 }
