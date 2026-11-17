@@ -61,11 +61,13 @@ Write-Host ""
 
 # Refresh the embedded docs/COMMAND_LINE_OPTIONS.md copy before building,
 # so a release build never ships stale embedded docs -- see
-# internal/mcpserver/docsdata/embed.go.
-Write-Host "Running go generate..."
+# internal/mcpserver/docsdata/embed.go. Scoped to that package on purpose:
+# the cmd/fxmcp go:generate (goversioninfo) only needs re-running when
+# versioninfo.json changes, and the .syso files it produces are checked in.
+Write-Host "Running go generate (docs sync)..."
 Push-Location $fxmcpRoot
 try {
-    & $goExe generate ./...
+    & $goExe generate ./internal/mcpserver/docsdata
     if ($LASTEXITCODE -ne 0) { throw "go generate failed with exit code $LASTEXITCODE" }
 }
 finally {
