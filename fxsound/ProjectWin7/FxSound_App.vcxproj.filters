@@ -297,6 +297,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\GUI\FxDrawable.cpp">
+      <Filter>FxSound\Source\GUI\Components</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\GUI\FxAudioControls.cpp">
       <Filter>FxSound\Source\GUI\Components</Filter>
     </ClCompile>
@@ -1688,6 +1691,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\GUI\FxDrawable.h">
+      <Filter>FxSound\Source\GUI\Components</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\GUI\FxAudioControls.h">
       <Filter>FxSound\Source\GUI\Components</Filter>
     </ClInclude>
