@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mry.h"
 #include "u_sndDevices.h"
 #include "sndDevices.h"
+#include "Resampler.h"
 
 /*
  * FUNCTION: sndDevicesDoPlayback()
@@ -46,10 +47,9 @@ int PT_DECLSPEC sndDevicesDoPlayback(PT_HANDLE *hp_sndDevices, int *ip_resultFla
 	struct sndDevicesHdlType *cast_handle;
 	HRESULT hr;
 	UINT32 numFramesQueuedUpToPlay;
-	UINT32 i, j, index, loopsize;
+	UINT32 i, loopsize;
 	DWORD flags = 0;
 	int numPlaybackChannels;
-	int k;
 
 	float *fptr;
 
@@ -66,28 +66,9 @@ int PT_DECLSPEC sndDevicesDoPlayback(PT_HANDLE *hp_sndDevices, int *ip_resultFla
 
 	numPlaybackChannels = cast_handle->wfxPlayback.nChannels;
 
-	// Do upsampling if needed.
-	if( cast_handle->upsampleRatio > 1 )
-	{
-		// Copy channel corrected playback buffers back to capture buffer so we can then re-sample.
-		loopsize = cast_handle->capturedFramesCount * numPlaybackChannels;
-		for(i=0; i<loopsize; i++)
-			cast_handle->fCaptureBuf[i] = cast_handle->fPlaybackBuf[i];
-
-		// Fill playback buff with upsampling
-		index = 0;
-		for(i=0; i<cast_handle->capturedFramesCount; i++) // Index through frames (sample sets)
-		{
-			for(j=0; j<cast_handle->upsampleRatio; j++)	 // Repeat frame fills for upsampling
-			{
-				for(k=0; k<numPlaybackChannels; k++)
-				{
-					cast_handle->fPlaybackBuf[index] = cast_handle->fCaptureBuf[i * numPlaybackChannels + k];
-					index++;
-				}
-			}
-		}
-	}
+	// Bring the processed frames up from the DFX device rate to the playback rate.
+	if( (cast_handle->upsampleRatio > 1) && (cast_handle->playbackResampler != NULL) )
+		cast_handle->playbackResampler->interpolate(cast_handle->fPlaybackBuf, (int)cast_handle->capturedFramesCount, cast_handle->fPlaybackBuf);
 
 	// This call returns the number of frames still awaiting playback in the playback buffer
 	hr = cast_handle->pAudioClientPlayback->GetCurrentPadding(&numFramesQueuedUpToPlay);

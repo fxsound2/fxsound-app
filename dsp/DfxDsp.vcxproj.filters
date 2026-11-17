@@ -34,6 +34,9 @@
     <Filter Include="Source Files\ptutil\DspUtil\GraphicEq">
       <UniqueIdentifier>{a24b254b-eae9-49a3-86a7-c649d21cc951}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\ptutil\DspUtil\Resampler">
+      <UniqueIdentifier>{a428c37f-980e-420b-8a18-cfeb138f16a8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\ptutil\Sos">
       <UniqueIdentifier>{a068e7c0-4eb7-4ddb-9a7a-a4243589c957}</UniqueIdentifier>
     </Filter>
@@ -282,6 +285,9 @@
     <ClInclude Include="include\DfxDsp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Resampler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DfxDsp.cpp">
@@ -379,6 +385,9 @@
     </ClCompile>
     <ClCompile Include="ptutil\DspUtil\GraphicEq\GraphicEqSet.cpp">
       <Filter>Source Files\ptutil\DspUtil\GraphicEq</Filter>
+    </ClCompile>
+    <ClCompile Include="ptutil\DspUtil\Resampler\Resampler.cpp">
+      <Filter>Source Files\ptutil\DspUtil\Resampler</Filter>
     </ClCompile>
     <ClCompile Include="ptutil\SOS\Sos.cpp">
       <Filter>Source Files\ptutil\Sos</Filter>
