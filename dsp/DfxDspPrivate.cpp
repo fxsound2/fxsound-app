@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "file.h"
 #include "qnt.h"
 #include <string>
+#include <math.h>
 
 #include "BinauralSyn.h"
 #include "ptutil\dfxp\u_dfxp.h"
@@ -111,6 +112,14 @@ DfxDspPrivate::DfxDspPrivate()
 	{
 	}
 
+	filter_cached_sample_rate_ = 44100;
+	filter_cached_num_channels_ = 2;
+	filterIirExchangeInit(&filter_iir_exchange_);
+	filterAudioStateInit(&filter_audio_);
+
+	filter_designer_event_ = createFilterDesignerEvent();
+	filter_designer_thread_ = std::thread(&DfxDspPrivate::filterDesignerThreadMain, this);
+
 	//return(OKAY);
 }
 
@@ -119,7 +128,24 @@ DfxDspPrivate::~DfxDspPrivate()
 {
 	// So the thread/timer will not attempt to use this object while it's being destroyed.
 	being_destroyed_ = true;
-	
+
+	filter_designer_stop_ = true;
+	HANDLE designer_event = filter_designer_event_.load();
+	if (designer_event != NULL)
+	{
+		SetEvent(designer_event);
+	}
+	if (filter_designer_thread_.joinable())
+	{
+		filter_designer_thread_.join();
+	}
+	// Reloaded after the join: the designer may have created the event since.
+	designer_event = filter_designer_event_.exchange(NULL);
+	if (designer_event != NULL)
+	{
+		CloseHandle(designer_event);
+	}
+
 	// Free the prelst
 	if (preset_list_handle_ != NULL)
 	{
@@ -185,17 +211,351 @@ int DfxDspPrivate::processAudio(short int *si_input_samples, short int *si_outpu
 	if (dfxpUniversalModifySamples(dfxp_handle_, si_input_samples, si_output_samples, i_num_sample_sets, i_check_for_duplicate_buffers) != OKAY)
 		return(NOT_OKAY);
 
+	applyFilters(reinterpret_cast<float*>(si_output_samples), i_num_sample_sets);
+
 	return OKAY;
 }
 
 int DfxDspPrivate::setSignalFormat(int i_bps, int i_nch, int i_srate, int i_valid_bits)
 {
-	if (dfxpUniversalSetSignalFormat(dfxp_handle_, i_bps, i_nch, i_srate, i_valid_bits) != OKAY)
-		return(NOT_OKAY);
+	int result = dfxpUniversalSetSignalFormat(dfxp_handle_, i_bps, i_nch, i_srate, i_valid_bits);
 
-	return OKAY;
+	if (i_srate != filter_cached_sample_rate_ || i_nch != filter_cached_num_channels_ || i_bps != filter_cached_bps_)
+	{
+		// The rate is stored before the serial is bumped, so a design carrying the new serial is for the new rate.
+		filter_request_sample_rate_ = i_srate;
+		filter_format_serial_++;
+		filter_reset_serial_.fetch_add(1, std::memory_order_acq_rel);
+		filter_cached_sample_rate_ = i_srate;
+		filter_cached_num_channels_ = i_nch;
+		filter_cached_bps_ = i_bps;
+		// Lock-free: requestFilterDesign only bumps an atomic and signals the event.
+		requestFilterDesign();
+	}
+
+	return (result == OKAY) ? OKAY : NOT_OKAY;
 }
 
+// Safe from any thread, the audio thread included: no lock, and SetEvent does not block.
+void DfxDspPrivate::requestFilterDesign()
+{
+	filter_request_generation_.fetch_add(1, std::memory_order_acq_rel);
+	HANDLE designer_event = filter_designer_event_.load();
+	if (designer_event != NULL)
+	{
+		SetEvent(designer_event);
+	}
+}
+
+// An auto-reset event for waking the designer, or NULL (reported to the debugger output) when it cannot be created.
+HANDLE DfxDspPrivate::createFilterDesignerEvent()
+{
+	HANDLE designer_event = CreateEventW(NULL, FALSE, FALSE, NULL);
+
+	if (designer_event == NULL)
+	{
+		wchar_t message[128];
+
+		swprintf(message, sizeof(message) / sizeof(message[0]),
+			L"FxSound: CreateEventW for the filter designer failed (error %lu); polling until it can be created.\n",
+			GetLastError());
+		OutputDebugStringW(message);
+	}
+	return designer_event;
+}
+
+void DfxDspPrivate::filterDesignerThreadMain()
+{
+	unsigned int handled_generation = 0;
+
+	while (!filter_designer_stop_)
+	{
+		unsigned int generation = filter_request_generation_.load(std::memory_order_acquire);
+		if (generation != handled_generation)
+		{
+			handled_generation = generation;
+
+			int sample_rate = filter_request_sample_rate_;
+			unsigned int reset_serial;
+			FilterSettings settings;
+			FilterIirParams iir_params;
+
+			{
+				// The serial and the settings are read together, so a serial a setter has just bumped always comes
+				// with the value that setter stores (see beginFilterChange).
+				std::lock_guard<std::mutex> lock(filter_settings_mutex_);
+				reset_serial = filter_reset_serial_.load(std::memory_order_acquire);
+				settings = filterSettings();
+			}
+			filterDesignParams(sample_rate, cut_slope_db_.load(), settings, reset_serial, &iir_params);
+			filterIirExchangePublish(&filter_iir_exchange_, &iir_params);
+			// A request made while designing has bumped the generation: loop again before waiting.
+			continue;
+		}
+
+		HANDLE designer_event = filter_designer_event_.load();
+		if (designer_event != NULL)
+		{
+			// No timeout: every request signals the event, and a signal set while designing is kept until this wait.
+			WaitForSingleObject(designer_event, INFINITE);
+			continue;
+		}
+
+		// The event could not be created: poll for requests, and retry creating it so the polling stops once it
+		// exists. After storing it, go back to the top (stop flag and generation are checked again before the first
+		// wait): a request or the destructor that saw no event yet has already bumped the generation or set the stop
+		// flag, so nothing is missed.
+		Sleep(FILTER_DESIGNER_POLL_MS);
+		designer_event = CreateEventW(NULL, FALSE, FALSE, NULL);
+		if (designer_event != NULL)
+		{
+			filter_designer_event_ = designer_event;
+			OutputDebugStringW(L"FxSound: filter designer event created; polling stopped.\n");
+		}
+	}
+}
+
+int DfxDspPrivate::filterDesiredSource(bool filter_on, unsigned int reset_serial)
+{
+	return filterDesiredSourceFor(&filter_audio_, filter_on, filter_cached_sample_rate_, reset_serial);
+}
+
+void DfxDspPrivate::applyFilters(float *audio_buffer, int num_sample_sets)
+{
+	if (filter_cached_bps_ != 32)
+	{
+		return;
+	}
+
+	const int num_channels = filter_cached_num_channels_;
+	const FilterSettings settings = filterSettings();
+	const bool power_on = filter_power_on_;
+	// With the global switch on, previews play even for a filter whose own switch is off (what it would remove).
+	// With the global switch off nothing is previewed (filterPreviewMaskFor returns 0).
+	const int preview_mask = power_on ? filterPreviewMaskFor(filter_preview_.load(), settings) : 0;
+	const bool filter_on = power_on && (filterAudibleMaskFor(settings) != 0 || preview_mask != 0);
+	const unsigned int reset_serial = filter_reset_serial_.load(std::memory_order_acquire);
+
+	filterProcessBuffer(&filter_audio_, &filter_iir_exchange_, filter_cached_sample_rate_, reset_serial,
+		filter_format_serial_, audio_buffer, num_sample_sets, num_channels, preview_mask,
+		[this, filter_on, reset_serial]() {
+			return filterDesiredSource(filter_on, reset_serial);
+		});
+}
+
+FilterSettings DfxDspPrivate::filterSettings()
+{
+	FilterSettings settings;
+
+	settings.filters_on = filters_on_;
+	settings.low_on = low_cut_on_;
+	settings.low_hz = low_cut_cutoff_hz_;
+	settings.high_on = high_cut_on_;
+	settings.high_hz = high_cut_cutoff_hz_;
+	settings.mono_on = mono_bass_on_;
+	settings.mono_hz = mono_bass_cutoff_hz_;
+	return settings;
+}
+
+// Called on the GUI thread, with filter_settings_mutex_ held, by every filter setter just before it stores its new
+// value (still under the lock), and by setFilterPreview. The
+// preview selection is stored here, with flags the new settings make unavailable dropped. When the IIR chain goes from
+// not needed (nothing heard, nothing previewed) to needed, the reset serial is bumped before any store, so the audio
+// thread sees the new serial no later than it sees the chain needed and starts again from a freshly designed filter.
+// Returns true when the serial was bumped; the caller must then request a design.
+bool DfxDspPrivate::beginFilterChange(const FilterSettings &next, int requested_preview)
+{
+	const int current_preview = filter_preview_.load();
+	const int next_preview = filterPreviewSelectionFor(requested_preview, next);
+	bool bumped = false;
+
+	if (filterChangeNeedsReset(current_preview, filterSettings(), next_preview, next))
+	{
+		filter_reset_serial_.fetch_add(1, std::memory_order_acq_rel);
+		bumped = true;
+	}
+	if (next_preview != current_preview)
+	{
+		filter_preview_ = next_preview;
+	}
+
+	return bumped;
+}
+
+bool DfxDspPrivate::beginFilterChange(const FilterSettings &next)
+{
+	return beginFilterChange(next, filter_preview_.load());
+}
+
+// The shared part of lowCutOn / highCutOn / monoBassOn. stage_bit is the filter's FILT_CHAIN_CHANGED_* bit, which is
+// also its preview flag: switching the filter off also releases its delta.
+void DfxDspPrivate::setStageOn(int stage_bit, std::atomic<bool> &stage_on, bool on)
+{
+	{
+		std::lock_guard<std::mutex> lock(filter_settings_mutex_);
+		const FilterSettings current = filterSettings();
+		const FilterSettings next = filterSettingsWithStage(current, stage_bit, on, filterStageHz(current, stage_bit));
+
+		beginFilterChange(next, filterPreviewAfterSwitch(filter_preview_.load(), stage_bit, on));
+		stage_on = on;
+	}
+	requestFilterDesign();
+}
+
+// The shared part of the cutoff setters, after each one's own clamp or snap.
+void DfxDspPrivate::setStageCutoff(int stage_bit, std::atomic<float> &stage_cutoff, float clamped_hz)
+{
+	{
+		std::lock_guard<std::mutex> lock(filter_settings_mutex_);
+		const FilterSettings current = filterSettings();
+		const FilterSettings next = filterSettingsWithStage(current, stage_bit, filterStageOn(current, stage_bit), clamped_hz);
+
+		beginFilterChange(next);
+		stage_cutoff = clamped_hz;
+	}
+	requestFilterDesign();
+}
+
+void DfxDspPrivate::filtersOn(bool on)
+{
+	{
+		std::lock_guard<std::mutex> lock(filter_settings_mutex_);
+		FilterSettings next = filterSettings();
+
+		next.filters_on = on;
+		beginFilterChange(next);
+		filters_on_ = on;
+	}
+	requestFilterDesign();
+}
+
+bool DfxDspPrivate::isFiltersOn()
+{
+	return filters_on_;
+}
+
+void DfxDspPrivate::setCutSlope(int db_per_octave)
+{
+	cut_slope_db_ = filtLowCutSnapSlopeDb(db_per_octave);
+	requestFilterDesign();
+}
+
+int DfxDspPrivate::getCutSlope()
+{
+	return cut_slope_db_;
+}
+
+void DfxDspPrivate::lowCutOn(bool on)
+{
+	setStageOn(FILT_CHAIN_CHANGED_LOW_CUT, low_cut_on_, on);
+}
+
+bool DfxDspPrivate::isLowCutOn()
+{
+	return low_cut_on_;
+}
+
+void DfxDspPrivate::setLowCutCutoff(float hz)
+{
+	if (hz < (float)DfxDsp::LOW_CUT_MIN_CUTOFF_HZ)
+	{
+		hz = (float)DfxDsp::LOW_CUT_MIN_CUTOFF_HZ;
+	}
+	else if (hz > (float)DfxDsp::LOW_CUT_MAX_CUTOFF_HZ)
+	{
+		hz = (float)DfxDsp::LOW_CUT_MAX_CUTOFF_HZ;
+	}
+
+	setStageCutoff(FILT_CHAIN_CHANGED_LOW_CUT, low_cut_cutoff_hz_, hz);
+}
+
+float DfxDspPrivate::getLowCutCutoff()
+{
+	return low_cut_cutoff_hz_;
+}
+
+void DfxDspPrivate::highCutOn(bool on)
+{
+	setStageOn(FILT_CHAIN_CHANGED_HIGH_CUT, high_cut_on_, on);
+}
+
+bool DfxDspPrivate::isHighCutOn()
+{
+	return high_cut_on_;
+}
+
+void DfxDspPrivate::setHighCutCutoff(float hz)
+{
+	if (hz < (float)DfxDsp::HIGH_CUT_MIN_CUTOFF_HZ)
+	{
+		hz = (float)DfxDsp::HIGH_CUT_MIN_CUTOFF_HZ;
+	}
+	hz = roundf(hz / (float)DfxDsp::HIGH_CUT_STEP_HZ) * (float)DfxDsp::HIGH_CUT_STEP_HZ;
+	if (hz > (float)DfxDsp::HIGH_CUT_MAX_CUTOFF_HZ)
+	{
+		hz = (float)DfxDsp::HIGH_CUT_OFF_HZ;
+	}
+
+	setStageCutoff(FILT_CHAIN_CHANGED_HIGH_CUT, high_cut_cutoff_hz_, hz);
+}
+
+float DfxDspPrivate::getHighCutCutoff()
+{
+	return high_cut_cutoff_hz_;
+}
+
+void DfxDspPrivate::monoBassOn(bool on)
+{
+	setStageOn(FILT_CHAIN_CHANGED_MONO, mono_bass_on_, on);
+}
+
+bool DfxDspPrivate::isMonoBassOn()
+{
+	return mono_bass_on_;
+}
+
+void DfxDspPrivate::setMonoBassCutoff(float hz)
+{
+	if (hz < (float)DfxDsp::MONO_BASS_MIN_CUTOFF_HZ)
+	{
+		hz = (float)DfxDsp::MONO_BASS_MIN_CUTOFF_HZ;
+	}
+	else if (hz > (float)DfxDsp::MONO_BASS_MAX_CUTOFF_HZ)
+	{
+		hz = (float)DfxDsp::MONO_BASS_MAX_CUTOFF_HZ;
+	}
+
+	setStageCutoff(FILT_CHAIN_CHANGED_MONO, mono_bass_cutoff_hz_, hz);
+}
+
+float DfxDspPrivate::getMonoBassCutoff()
+{
+	return mono_bass_cutoff_hz_;
+}
+
+bool DfxDspPrivate::isFilterPreviewAvailable(int preview_flags)
+{
+	return filterPreviewAvailableFor(preview_flags, filterSettings());
+}
+
+void DfxDspPrivate::setFilterPreview(int preview_flags)
+{
+	bool bumped;
+
+	{
+		std::lock_guard<std::mutex> lock(filter_settings_mutex_);
+		bumped = beginFilterChange(filterSettings(), preview_flags);
+	}
+	if (bumped)
+	{
+		requestFilterDesign();
+	}
+}
+
+int DfxDspPrivate::getFilterPreview()
+{
+	return filter_preview_.load();
+}
 
 void DfxDspPrivate::powerOn(bool on)
 {
@@ -210,6 +570,23 @@ void DfxDspPrivate::powerOn(bool on)
 		if (dfxpSetButtonValue(dfxp_handle_, DFX_UI_BUTTON_BYPASS, 1) != OKAY)
 		{
 		}
+	}
+
+	if (on)
+	{
+		if (!filter_power_on_)
+		{
+			{
+				std::lock_guard<std::mutex> lock(filter_settings_mutex_);
+				filter_reset_serial_.fetch_add(1, std::memory_order_acq_rel);
+				filter_power_on_ = true;
+			}
+			requestFilterDesign();
+		}
+	}
+	else
+	{
+		filter_power_on_ = false;
 	}
 }
 

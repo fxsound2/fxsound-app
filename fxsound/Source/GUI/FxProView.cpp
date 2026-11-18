@@ -135,6 +135,10 @@ void FxProView::modelChanged(FxModel::Event model_event)
 	{
 		update();
 	}
+	else if (model_event == FxModel::Event::Other)
+	{
+		audio_controls_.update();
+	}
 }
 
 void FxProView::mouseEnter(const MouseEvent& mouse_event)
