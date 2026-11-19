@@ -1,0 +1,54 @@
+/*
+FxSound
+Copyright (C) 2025  FxSound LLC
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#pragma once
+
+#include <JuceHeader.h>
+
+class FxTheme;
+
+class FxSettingsPane : public Component
+{
+public:
+    FxSettingsPane(String name);
+    virtual ~FxSettingsPane() = default;
+
+protected:
+    // Re-applies translated text and theme fonts. FxController::setLanguage()
+    // calls sendLookAndFeelChange() on every FxWindow, which lands here.
+    void lookAndFeelChanged() override;
+
+    // Panes override this to refresh their own language-dependent text.
+    virtual void setText() {}
+
+    // Returns the app's FxTheme, or nullptr if the default LookAndFeel isn't one.
+    static FxTheme* getTheme();
+
+    static constexpr int X_MARGIN = 20;
+    static constexpr int Y_MARGIN = 5;
+    static constexpr int TITLE_HEIGHT = 24;
+
+    Label title_;
+
+    String name_;
+
+private:
+    void updateTitle();
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxSettingsPane)
+};
