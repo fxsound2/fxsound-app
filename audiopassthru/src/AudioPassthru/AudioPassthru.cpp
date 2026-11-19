@@ -93,6 +93,36 @@ void AudioPassthru::mute(bool mute)
 	data_->mute(mute);
 }
 
+bool AudioPassthru::isMuted() const noexcept
+{
+	return data_->isMuted();
+}
+
+void AudioPassthru::setDeviceNotificationWindow(HWND window) noexcept
+{
+    data_->setDeviceNotificationWindow(window);
+}
+
+void AudioPassthru::dispatchDeviceChange()
+{
+    data_->dispatchDeviceChange();
+}
+
+void AudioPassthru::requestStop() noexcept
+{
+    data_->requestStop();
+}
+
+DWORD AudioPassthru::pollStopped(DWORD& error) noexcept
+{
+    return data_->pollStopped(error);
+}
+
+int AudioPassthru::playbackChannels() const noexcept
+{
+    return data_->playbackChannels();
+}
+
 void AudioPassthru::registerCallback(AudioPassthruCallback* callback)
 {
 	data_->registerCallback(callback);

@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Mmdeviceapi.h>
 #include <vector> 
 #include <map>
+#include <atomic>
 
 class DspProcessingModule
 {
@@ -40,6 +41,7 @@ public:
 	~AudioPassthruPrivate();
 	int init();
 	void mute(bool mute);
+	bool isMuted() const noexcept { return (mute_state_.load(std::memory_order_acquire) & mutedBit) != 0; }
 	std::vector<SoundDevice> getSoundDevices(bool active_devices = true);
 	int killProcessingThread(int *ip_timed_out);
 	int setBufferLength(int i_buffer_length_msecs);
@@ -49,13 +51,24 @@ public:
 	DWORD threadWorker(void); // Needs to be public to be called from static thread starter function
 	int setTargetedRealPlaybackDevice(const std::wstring sound_device_guid);
 	void registerCallback(AudioPassthruCallback *callback);
+    void setDeviceNotificationWindow(HWND window) noexcept;
+    void dispatchDeviceChange();
+    void requestStop() noexcept;
+    DWORD pollStopped(DWORD& error) noexcept;
+    int playbackChannels() const noexcept { return playback_channels_.load(std::memory_order_acquire); }
     bool isPlaybackDeviceAvailable();
 	bool checkDeviceChanges();
 	void restoreDefaultPlaybackDevice();
 
 private:
 	int sndDeviceHandleToSoundDevices(bool active_devices = true);
-	static void onDeviceChange();
+	static void onDeviceChange() noexcept;
+    void signalCaptureStop() noexcept;
+    DWORD captureAndPlay();
+    void applyDsp(float* pcm, int frames, const WAVEFORMATEX& format, bool measureLimiter,
+                  std::uint64_t limiterGeneration);
+    bool initialization_started_ = false;
+    bool stopping_ = false; // Owner thread; prevents restart once shutdown begins.
 
 	PT_HANDLE *hp_sndDevices_;
 	static sndDevicesHdlType s_sndDevices_;
@@ -63,13 +76,18 @@ private:
 	/* Processing Thread Info */
 	HANDLE hProcessingThread_;
 	DWORD ProcessingThreadID_;
-	int i_kill_processing_thread_; /* Flag set from the outside telling processing thread to end */
+	std::atomic<int> i_kill_processing_thread_; /* Flag set from the outside telling processing thread to end */
 	wchar_t wcp_playback_device_guid_[PT_MAX_GENERIC_STRLEN];
 	bool b_no_valid_snd_device_dialog_shown_; /* Flag stating whether we have shown the user a message to select a valid snd device.  We only want it shown once per session. */
 	int debug_;
 	std::vector<SoundDevice> sound_devices_;
-	bool mute_;
+	static constexpr unsigned mutedBit = 1;
+    // Low bit is mute; the remaining bits distinguish successive mute cycles.
+    std::atomic<unsigned> mute_state_{0};
 	DfxDsp *p_dfx_dsp_;
-	static AudioPassthruCallback *s_callback_;
+	static std::atomic<AudioPassthruCallback*> s_callback_;
+    std::atomic<int> playback_channels_{0};
+    static std::atomic<HWND> s_notification_window_;
+    static std::atomic<bool> s_device_change_pending_, s_device_message_posted_;
 };
 

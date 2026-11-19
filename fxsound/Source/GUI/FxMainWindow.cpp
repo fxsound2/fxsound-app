@@ -278,6 +278,10 @@ void FxMainWindow::showProView()
 {
     pro_view_.update();
 	setContent(&pro_view_);
+    if (FxController::getInstance().isAudioProcessing())
+        pro_view_.startVisualizer();
+    else
+        pro_view_.pauseVisualizer();
     setResizeImage();
 	setAlwaysOnTop(FxController::getInstance().isAlwaysOnTop());
 	

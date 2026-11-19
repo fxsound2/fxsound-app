@@ -22,6 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include <JuceHeader.h>
+#include "FxClipIndicator.h"
+
+#include "BarPeakAccumulator.h"
+
+class FxController;
 
 //==============================================================================
 /*
@@ -51,14 +56,44 @@ private:
     static constexpr int WIDTH = 960;
     static constexpr int HEIGHT = 120;
     static constexpr int NUM_BARS = 10;
+    static constexpr int plotLeft = 27, plotTop = 10, plotWidth = 910, plotHeight = 100;
+    static constexpr float barWidth = 4.0f;
 
     void paint(Graphics& g) override;
+    void resized() override;
+    void visibilityChanged() override;
+    void parentHierarchyChanged() override;
+    void updateAnalysisState();
+    void updateMeterTooltip();
+    void updateOutputIndicators(FxController& controller);
+    void updateHighResBars(FxController& controller);
+    void updateClassicSpectrum();
+    void paintHighResSpectrum(Graphics& g);
+    void paintClassicSpectrum(Graphics& g);
+    void paintOutputIndicators(Graphics& g);
+    void resetMeters();
     void enablementChanged() override;
 	void lookAndFeelChanged() override;
 
     Array<float> band_values_;
     Array<float> band_graph_;
+    fxanalysis::BarPeakAccumulator pending_bars_;
+    fxanalysis::StereoBarLevels displayed_bars_;
+    std::uint64_t analysis_generation_ = 0;
+    bool running_ = false;
+    bool showing_highres_ = false;
+    bool analysis_requested_ = false;
+    bool was_muted_ = true;
+    std::uint64_t output_observation_generation_ = 0;
+    bool output_supported_ = true;
+    int tooltip_left_ = -1;
+    int tooltip_right_ = -1;
+    bool tooltip_clipped_ = false;
     ColourGradient gradient_;
+    DrawableButton analysis_button_{ "HighRes", DrawableButton::ImageFitted };
+    class MeterTooltip final : public Component, public SettableTooltipClient {};
+    MeterTooltip meter_tooltip_;
+    FxClipIndicator left_clip_, right_clip_;
 
 #if JUCE_MAJOR_VERSION >=8
     std::unique_ptr<juce::VBlankAttachment> vblank_listener_;

@@ -334,7 +334,7 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 	return(OKAY);
 }
 
-int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE* hp_sndDevices, BOOL* bp_deviceChanged)
+int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE* hp_sndDevices, BOOL* bp_deviceChanged, bool checkDefault)
 {
 	struct sndDevicesHdlType* cast_handle;
 	IMMDeviceEnumeratorPtr pEnumerator = NULL;
@@ -420,6 +420,29 @@ int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE* hp_sndDevices, BOOL* bp_deviceC
 			return OKAY;
 		}
 	}
+
+    // Endpoint IDs and states can stay unchanged when the default output changes.
+    // Ignore the virtual default selected by FxSound itself.
+    if (checkDefault)
+    {
+        IMMDevicePtr defaultPlayback;
+        hr = pEnumerator->GetDefaultAudioEndpoint(eRender, eMultimedia, &defaultPlayback);
+        if (SUCCEEDED(hr) && defaultPlayback != nullptr && SUCCEEDED(defaultPlayback->GetId(&pID)))
+        {
+            for (int index = 0; index < cast_handle->totalNumDevices; ++index)
+            {
+                if (wcscmp(pID, cast_handle->pwszID[index]) != 0) continue;
+                if (index != cast_handle->dfxDeviceNum && index != cast_handle->defaultDeviceNum)
+                {
+                    cast_handle->defaultDeviceNum = index;
+                    *bp_deviceChanged = TRUE;
+                    cast_handle->stopAudioCaptureAndPlaybackLoop = 1;
+                }
+                break;
+            }
+            CoTaskMemFree(pID);
+        }
+    }
 
 	return(OKAY);
 }

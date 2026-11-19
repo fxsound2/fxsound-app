@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif //WIN32
 #include <Mmdeviceapi.h>
 #include <vector> 
+#include <cstdint>
 #include "DfxDsp.h"
 
 struct SoundDevice {
@@ -56,6 +57,11 @@ class AudioPassthruCallback
 {
 public:
 	virtual void onSoundDeviceChange(bool processing) = 0;
+    // Borrowed post-effects PCM; valid only for this call on the audio thread.
+    // Implementations may only perform bounded, non-blocking observation/copy.
+    struct AnalysisInput { std::uint64_t revision = 0, clipGeneration = 0; };
+    virtual AnalysisInput beginAudioBlock() noexcept { return {}; }
+    virtual void onAudioBlock(const float*, int, int, int, std::uint64_t, AnalysisInput) noexcept {}
 };
 
 class AudioPassthruPrivate;
@@ -66,12 +72,19 @@ public:
 	~AudioPassthru();
 	int init();
 	void mute(bool mute);
+	bool isMuted() const noexcept;
 	std::vector<SoundDevice> getSoundDevices(bool active_devices = true);
 	int setBufferLength(int i_buffer_length_msecs);
 	int processTimer();
 	void setDspProcessingModule(DfxDsp* pDspProcessingModule);
 	void setAsPlaybackDevice(const SoundDevice sound_device);
 	void registerCallback(AudioPassthruCallback *callback);
+    static constexpr UINT deviceChangeMessage = WM_APP + 1;
+    void setDeviceNotificationWindow(HWND window) noexcept;
+    void dispatchDeviceChange();
+    void requestStop() noexcept;
+    DWORD pollStopped(DWORD& error) noexcept;
+    int playbackChannels() const noexcept;
     bool isPlaybackDeviceAvailable();
 	bool checkDeviceChanges();
 	void restoreDefaultPlaybackDevice();

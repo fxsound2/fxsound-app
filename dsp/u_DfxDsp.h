@@ -80,7 +80,7 @@ class DfxDspPrivate
 public:
 	DfxDspPrivate();
 	~DfxDspPrivate();
-	int processAudio(short int *si_input_samples, short int *si_output_samples, int i_num_sample_sets, int i_check_for_duplicate_buffers);
+	int processAudio(short int *si_input_samples, short int *si_output_samples, int i_num_sample_sets, int i_check_for_duplicate_buffers, bool measureLimiter, fxdsp::LimiterActivity::Generation generation);
 	int setSignalFormat(int i_bps, int i_nch, int i_srate, int i_valid_bits);
 	int loadPreset(std::wstring preset_file_full_path);
 	int savePreset(std::wstring preset_name, std::wstring preset_file_full_path);
@@ -113,6 +113,7 @@ public:
 	unsigned long getTotalAudioProcessedTime();
 	void resetTotalAudioProcessedTime();
     void getSpectrumBandValues(float* rp_band_values, int i_array_size);
+    fxdsp::LimiterActivity limiter_activity_;
 
 	bool being_destroyed_ = false;
 private:
@@ -148,6 +149,7 @@ private:
 	struct dfxg_section_type bass_boost_;
 
 	bool update_from_registry_ = true;
+	bool limiter_meter_error_reported_ = false;
 	int headphone_on_;
 	int music_mode_;     /* DFXP_MUSIC_MODE_MUSIC1, DFXP_MUSIC_MODE_MUSIC2, DFXP_MUSIC_MODE_SPEECH */
 

@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Source/Utils/Settings/DeviceConfig.h"
 #include "AudioPassthru.h"
 #include "DfxDsp.h"
+#include "runtime/AnalysisStream.h"
 #include <wtsapi32.h>
 
 using namespace FxSound;
@@ -126,6 +127,17 @@ public:
 	float getEqBandBoostCut(int band_num);
 	void setEqBandBoostCut(int band_num, float boost);
     void getSpectrumBandValues(Array<float>& band_values);
+    void setAnalysisEnabled(bool enabled);
+    void beginAudioShutdown();
+    void detachAudioPassthru();
+    void muteOutput(bool muted);
+    bool canAnalyzeOutput() const noexcept;
+    bool isOutputMuted() const noexcept;
+    std::uint64_t outputObservationGeneration() const noexcept { return output_observation_generation_; }
+    bool getAnalyzedSpectrumBands(fxanalysis::BarSnapshot& bars);
+    void discardAnalyzedSpectrumPeaks();
+    fxanalysis::ClipEvents consumeOutputClipEvents() noexcept;
+    fxdsp::LimiterLevels consumeLimiterActivity() noexcept;
 
 	void enableHotkeys(bool enable);
 	bool getHotkey(String cmdKey, int& mod, int& vk);
@@ -243,6 +255,9 @@ private:
 	static LRESULT CALLBACK eventCallback(HWND hwnd, const UINT message, const WPARAM w_param, const LPARAM l_param);
 	void timerCallback() override;
 	void onSoundDeviceChange(bool processing) override;
+    AnalysisInput beginAudioBlock() noexcept override;
+    void onAudioBlock(const float* pcm, int frames, int channels, int sample_rate,
+                      std::uint64_t first_sample, AnalysisInput input) noexcept override;
 	void onSystemSuspend();
 	void onSystemResume();
 	
@@ -278,7 +293,13 @@ private:
 	FxMainWindow* main_window_;
 	FxSystemTrayView* system_tray_view_;
 	AudioPassthru* audio_passthru_;
+    bool audio_shutdown_requested_ = false;
+    std::uint64_t output_observation_generation_ = 0;
 	DfxDsp dfx_dsp_;
+    fxanalysis::AnalysisStream analysis_stream_;
+    fxanalysis::AnalysisResult analysis_reported_result_ = fxanalysis::AnalysisResult::ok;
+    std::uint32_t analysis_last_log_ = 0;
+    bool analysis_has_logged_ = false, analysis_failure_logged_ = false;
 	FxSound::Settings settings_;
 	uint32_t device_count_;
 	std::unique_ptr<FileLogger> file_logger_;
