@@ -34,26 +34,19 @@ rebuild the audio callback library with its consumers after the interface change
 ## Windows application build on develop/windows
 
 Use VS 2026/MSVC v145 and initialize the Resources submodule. The Windows
-solution is fxsound/Project/FxSound.sln. The upstream project expects JUCE at
-C:\JUCE8. To build with JUCE 8.0.13 elsewhere, use the external MSBuild import
-below. It supplies the four additional implementation units from the split
-GUI module and redirects build products away from the checkout.
+solution is fxsound/Project/FxSound.sln. The modern Windows project expects JUCE 9.0.5 at C:\JUCE. The Windows 7
+project is fxsound/ProjectWin7/FxSound.sln and uses JUCE 6.1.6 at C:\JUCE6.
+Use the external import below to redirect SDK paths and build products away
+from the checkout. The checked-in modern project includes the split GUI units.
 
 From an x64 Developer PowerShell at the repository root, set
-FXSOUND_JUCE_ROOT to the extracted JUCE 8.0.13 directory, then run:
+FXSOUND_JUCE_ROOT to the extracted JUCE 9.0.5 directory, then run:
 
 ```powershell
 $repo = (Get-Location).Path
 $juce = Join-Path $env:FXSOUND_JUCE_ROOT 'modules'
 $build = Join-Path $env:TEMP ('fxsound-build-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $build | Out-Null
-$units = foreach ($number in 2..5) {
-    $name = "juce_gui_basics_$number.cpp"
-    $file = Join-Path $build $name
-    @('#include "AppConfig.h"', "#include <juce_gui_basics/$name>") |
-        Set-Content -LiteralPath $file -Encoding ascii
-    '<ClCompile Include="{0}" />' -f [Security.SecurityElement]::Escape($file)
-}
 $targets = Join-Path $build 'Validation.targets'
 $xml = @'
 <Project>
@@ -68,12 +61,9 @@ $xml = @'
     </ClCompile>
     <PostBuildEvent><Command></Command></PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemGroup Condition="'$(MSBuildProjectName)' == 'FxSound_App'">
-    ADDITIONAL_UNITS
-  </ItemGroup>
 </Project>
 '@
-$xml.Replace('ADDITIONAL_UNITS', ($units -join [Environment]::NewLine)) |
+$xml |
     Set-Content -LiteralPath $targets -Encoding utf8
 $env:INCLUDE = "$juce;$env:INCLUDE"
 foreach ($configuration in 'Debug', 'Release') {
@@ -85,6 +75,11 @@ foreach ($configuration in 'Debug', 'Release') {
     if ($LASTEXITCODE -ne 0) { throw "$configuration build failed" }
 }
 ```
+
+To validate the Win7 project, use JUCE 6.1.6, replace Project/FxSound.sln with
+ProjectWin7/FxSound.sln, and use a separate build directory. A modern compiler
+can build that project with /p:PlatformToolset=v145 if v143 is unavailable.
+Compilation on a current Windows machine does not validate Windows 7 runtime behavior.
 
 The DSP library is under x64/<configuration>/DfxDsp in the build directory.
 Rebuild the audio callback library and its consumers together. For the PCM
