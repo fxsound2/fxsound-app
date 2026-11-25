@@ -263,8 +263,7 @@ int PT_DECLSPEC sndDevicesFree(PT_HANDLE *hp_sndDevices)
 	
 	hr = CoCreateInstance(cast_handle->CLSID_MMDeviceEnumerator, NULL, CLSCTX_ALL, cast_handle->IID_IMMDeviceEnumerator, (void**)&pEnumerator);
 
-	if (SUCCEEDED(hr))
-        pEnumerator->UnregisterEndpointNotificationCallback(&cast_handle->DeviceEvents);
+	hr = pEnumerator->UnregisterEndpointNotificationCallback(&(cast_handle->DeviceEvents));
 
 	return(OKAY);
 }

@@ -752,10 +752,6 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		}
 
 		audio_passthru_->registerCallback(this);
-        audio_passthru_->setDeviceNotificationWindow(message_window_.getHandle());
-        // The low-frequency owner timer also drains a notice if PostMessage fails.
-        if (SetTimer(message_window_.getHandle(), AudioPassthru::deviceChangeMessage, 250, nullptr) == 0)
-            logMessage("FxSound: unable to arm the device notification fallback timer");
 
 		auto path = File(File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userApplicationDataDirectory).getFullPathName()) + L"FxSound\\Presets");
 		if (!path.exists())
@@ -1126,7 +1122,6 @@ bool FxController::setPreset(int selected_index, bool notify)
 
 void FxController::setOutput(const String output_device_id, bool notify)
 {
-    if (audio_shutdown_requested_) return;
 	std::vector<SoundDevice> sound_devices = audio_passthru_->getSoundDevices();
 
 	bool output_found = false;
@@ -1204,7 +1199,6 @@ void FxController::setOutput(const String output_device_id, bool notify)
 
 void FxController::setOutput(int output, bool notify)
 {
-    if (audio_shutdown_requested_) return;
 	auto output_devices = FxModel::getModel().getOutputDevices();
 
 	if (output < output_devices.size())
@@ -1875,7 +1869,6 @@ void FxController::sortByDeviceConfigPriority(std::vector<SoundDevice>& devices)
 
 void FxController::powerOn(bool on)
 {
-    if (audio_shutdown_requested_) return;
 	if (on)
 	{
 		dfx_dsp_.powerOn(true);
@@ -2087,21 +2080,9 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 {
 	static auto os = SystemStats::getOperatingSystemType();
 	FxController* controller = (FxController*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-    if (controller != nullptr && controller->audio_shutdown_requested_)
-        return DefWindowProc(hwnd, message, w_param, l_param);
 
 	switch (message)
 	{
-	case AudioPassthru::deviceChangeMessage:
-    case WM_TIMER:
-        if (message == AudioPassthru::deviceChangeMessage || w_param == AudioPassthru::deviceChangeMessage)
-        {
-            if (controller != nullptr && controller->audio_passthru_ != nullptr)
-                controller->audio_passthru_->dispatchDeviceChange();
-            return 0;
-        }
-        break;
-
 	case WM_HOTKEY:
 	{
 		if (w_param == CMD_ON_OFF)
@@ -2328,14 +2309,19 @@ void FxController::timerCallback()
 
 void FxController::onSoundDeviceChange(bool processing)
 {
-    if (audio_passthru_ == nullptr || audio_shutdown_requested_) return;
-    ++output_observation_generation_;
-    analysis_stream_.resetInput();
-    dfx_dsp_.discardLimiterActivity();
 	if (session_id_ != WTSGetActiveConsoleSessionId())
 		return; // Ignore device changes on another user session
 
 	ScopedLock auto_lock(lock_);
+    // MMDevice callbacks and UI actions share this reset sequence. The audio
+    // producer only reads revision tokens and never takes this control lock.
+    {
+        const ScopedLock analysis_lock(analysis_control_lock_);
+        output_observation_generation_.fetch_add(1, std::memory_order_release);
+        output_channels_.store(0, std::memory_order_release);
+        analysis_stream_.resetInput();
+        dfx_dsp_.discardLimiterActivity();
+    }
 
 	if (isTimerRunning())
 	{
@@ -3011,6 +2997,9 @@ AudioPassthruCallback::AnalysisInput FxController::beginAudioBlock() noexcept
 void FxController::onAudioBlock(const float* pcm, int frames, int channels, int sample_rate,
                                std::uint64_t first_sample, AnalysisInput input) noexcept
 {
+    // Keep the format observation even when HighRes is disabled, so the UI can
+    // fall back for multichannel and resume the saved choice for mono/stereo.
+    output_channels_.store(channels, std::memory_order_release);
     if (channels == 1 || channels == 2)
         analysis_stream_.push(pcm, frames, channels, sample_rate, first_sample,
                               {input.revision, input.clipGeneration});
@@ -3026,48 +3015,33 @@ fxdsp::LimiterLevels FxController::consumeLimiterActivity() noexcept
     return dfx_dsp_.consumeLimiterActivity();
 }
 
-void FxController::beginAudioShutdown()
-{
-    audio_shutdown_requested_ = true;
-    stopTimer();
-}
-
-void FxController::detachAudioPassthru()
-{
-    if (audio_passthru_ != nullptr)
-    {
-        KillTimer(message_window_.getHandle(), AudioPassthru::deviceChangeMessage);
-        audio_passthru_->setDeviceNotificationWindow(nullptr);
-        audio_passthru_->registerCallback(nullptr);
-        audio_passthru_ = nullptr;
-    }
-    analysis_stream_.setEnabled(false);
-}
-
 bool FxController::canAnalyzeOutput() const noexcept
 {
-    const int channels = audio_passthru_ != nullptr ? audio_passthru_->playbackChannels() : 0;
+    const int channels = output_channels_.load(std::memory_order_acquire);
     return channels <= 2;
 }
 
 bool FxController::isOutputMuted() const noexcept
 {
-    return audio_passthru_ == nullptr || audio_passthru_->isMuted();
+    return output_muted_.load(std::memory_order_acquire);
 }
 
 void FxController::setAnalysisEnabled(bool enabled)
 {
+    const ScopedLock analysis_lock(analysis_control_lock_);
     analysis_stream_.setEnabled(enabled);
     dfx_dsp_.discardLimiterActivity();
 }
 
 void FxController::muteOutput(bool muted)
 {
-    if (audio_passthru_ == nullptr || audio_shutdown_requested_ || audio_passthru_->isMuted() == muted) return;
-    ++output_observation_generation_;
+    const ScopedLock analysis_lock(analysis_control_lock_);
+    if (audio_passthru_ == nullptr || output_muted_.load(std::memory_order_relaxed) == muted) return;
+    output_observation_generation_.fetch_add(1, std::memory_order_release);
     if (muted) audio_passthru_->mute(true);
     analysis_stream_.resetInput();
     dfx_dsp_.discardLimiterActivity();
+    output_muted_.store(muted, std::memory_order_release);
     if (!muted) audio_passthru_->mute(false);
 }
 

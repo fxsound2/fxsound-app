@@ -46,6 +46,8 @@ public:
     ~AnalysisStream();
     AnalysisStream(const AnalysisStream&) = delete;
     AnalysisStream& operator=(const AnalysisStream&) = delete;
+    // The host serializes setEnabled/resetInput on its control paths. Neither
+    // operation belongs on the audio producer; old tokens discard stale output.
     void setEnabled(bool enabled) noexcept;
     bool enabled() const noexcept { return enabled_.load(std::memory_order_acquire); }
     void invalidate() noexcept;

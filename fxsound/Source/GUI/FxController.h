@@ -128,12 +128,11 @@ public:
 	void setEqBandBoostCut(int band_num, float boost);
     void getSpectrumBandValues(Array<float>& band_values);
     void setAnalysisEnabled(bool enabled);
-    void beginAudioShutdown();
-    void detachAudioPassthru();
     void muteOutput(bool muted);
     bool canAnalyzeOutput() const noexcept;
     bool isOutputMuted() const noexcept;
-    std::uint64_t outputObservationGeneration() const noexcept { return output_observation_generation_; }
+    std::uint64_t outputObservationGeneration() const noexcept
+    { return output_observation_generation_.load(std::memory_order_acquire); }
     bool getAnalyzedSpectrumBands(fxanalysis::BarSnapshot& bars);
     void discardAnalyzedSpectrumPeaks();
     fxanalysis::ClipEvents consumeOutputClipEvents() noexcept;
@@ -293,8 +292,12 @@ private:
 	FxMainWindow* main_window_;
 	FxSystemTrayView* system_tray_view_;
 	AudioPassthru* audio_passthru_;
-    bool audio_shutdown_requested_ = false;
-    std::uint64_t output_observation_generation_ = 0;
+    // Control-thread resets are serialized; the audio/UI observations are atomic.
+    CriticalSection analysis_control_lock_;
+    std::atomic<bool> output_muted_{false};
+    std::atomic<int> output_channels_{0};
+    // Mute/endpoint changes make the visualizer clear its held peaks and meters.
+    std::atomic<std::uint64_t> output_observation_generation_{0};
 	DfxDsp dfx_dsp_;
     fxanalysis::AnalysisStream analysis_stream_;
     fxanalysis::AnalysisResult analysis_reported_result_ = fxanalysis::AnalysisResult::ok;

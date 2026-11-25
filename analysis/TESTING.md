@@ -8,7 +8,7 @@ peak retention, queue overflow, reset/recovery and stale-frame handling. Tests
 generate their own signals and do not open an audio device or alter user settings.
 The executable writes JSON and returns a nonzero exit code on failure.
 
-From a Visual Studio 2022 x64 **Developer PowerShell**, set `$repo` to this checkout
+From a Visual Studio 2022/v143 or Visual Studio 2026/v145 x64 **Developer PowerShell**, set `$repo` to this checkout
 and choose an empty build directory outside all source trees. For example:
 
 ```powershell
@@ -33,9 +33,17 @@ rebuild the audio callback library with its consumers after the interface change
 
 ## Windows application build on develop/windows
 
-Use VS 2026/MSVC v145 and initialize the Resources submodule. The Windows
-solution is fxsound/Project/FxSound.sln. The modern Windows project expects JUCE 9.0.5 at C:\JUCE. The Windows 7
-project is fxsound/ProjectWin7/FxSound.sln and uses JUCE 6.1.6 at C:\JUCE6.
+Initialize the Resources submodule before building. The current `develop/windows`
+projects select MSVC v145, as described in `README.md`; the older VS 2022/JUCE 6
+instructions in `CLAUDE.md` describe a different toolchain. Validate the native
+configuration and any requested compatibility configuration separately:
+
+| Configuration | Solution | JUCE | Compiler |
+| --- | --- | --- | --- |
+| Current Windows | `fxsound/Project/FxSound.sln` | 9.0.5 (`C:\JUCE` by default) | VS 2026/v145 |
+| Current Win7 project | `fxsound/ProjectWin7/FxSound.sln` | 6.1.6 (`C:\JUCE6` by default) | v145 as declared in the project |
+| VS 2022 compatibility | `fxsound/ProjectWin7/FxSound.sln` | 6.1.6 | VS 2022/v143, explicitly retargeting the complete solution |
+
 Use the external import below to redirect SDK paths and build products away
 from the checkout. The checked-in modern project includes the split GUI units.
 
@@ -76,9 +84,15 @@ foreach ($configuration in 'Debug', 'Release') {
 }
 ```
 
-To validate the Win7 project, use JUCE 6.1.6, replace Project/FxSound.sln with
-ProjectWin7/FxSound.sln, and use a separate build directory. A modern compiler
-can build that project with /p:PlatformToolset=v145 if v143 is unavailable.
+To validate the native Win7 project, use JUCE 6.1.6, replace Project/FxSound.sln with
+ProjectWin7/FxSound.sln, and use a separate build directory. Do not pass
+`/p:PlatformToolset=v145`: the checked-in project already selects that toolset.
+For the additional VS 2022 compatibility check, use an x64 VS 2022 Developer
+PowerShell and `/p:PlatformToolset=v143` for the complete solution, including
+audiopassthru and DfxDsp. Record that explicit retargeting in the results.
+Use separate intermediate/output directories for every toolchain and JUCE variant.
+Projucer exports share `fxsound/JuceLibraryCode`; do not regenerate the Win7 and
+current Windows variants in the same checkout during concurrent validation.
 Compilation on a current Windows machine does not validate Windows 7 runtime behavior.
 
 The DSP library is under x64/<configuration>/DfxDsp in the build directory.
@@ -113,10 +127,10 @@ try {
 For Debug, use `/Od /Zi /MTd` and the matching Debug library. All output remains
 in the external directory. The test does not play sound or write user settings.
 
-To check audio transparency, build the parent of the meters commit in another
-checkout and output directory with the same compiler/configuration. Copy only
-`LimiterMeterTests.cpp` into its `dsp/tests` directory and compile it there with
-`/DFXSOUND_TEST_BASELINE`, linking that parent's library. This disables references
+To check audio transparency, build the PR's exact `develop/windows` base in another
+checkout and output directory with the same compiler/configuration. Compile the
+same `LimiterMeterTests.cpp` with `/DFXSOUND_TEST_BASELINE`, linking that base's
+library. This disables references
 to the new meter API while generating the same test signal. Save its output as
 `baseline.f32`. Compare `Get-FileHash` results (SHA-256) and file lengths: all
 432,000 float samples should be byte-identical. This is a numerical regression
@@ -160,22 +174,47 @@ Use the stereo example to inspect channel placement and the other examples to
 inspect musical movement. Browser playback, streaming processing and source
 mastering are uncontrolled; use generated signals for quantitative measurements.
 
-## Preparation results (2026-09-26)
+## Recording validation results
 
-- Visual Studio 2022, v143/MSVC 14.44, JUCE 6.1.6, x64: application builds passed
-  in Release and Debug. A local validation copy adjusted JUCE locations and moved
-  outputs outside the source tree; those build overrides are not in this branch.
-- HighRes-only commit: 109 checks passed in Release. The combined spectrum/meter
-  suite passed all 155 checks in both Release and Debug.
-- DSP meter tests: 35 checks passed in both configurations. The uninstrumented
-  parent and the instrumented Release build produced identical captures:
-  432,000 float samples / 1,728,000 bytes, SHA-256
+Record results for the exact revision being reviewed, with its base and head
+commits, compiler/SDK/JUCE versions, commands and any build-path or toolset
+overrides. Keep analysis and DSP test counts separate and attach their JSON/log
+outputs. For the PCM comparison, identify both source revisions and compare
+matching compiler/configuration pairs. Historical results from an earlier
+revision are not evidence for the current application build.
+
+Separate successful compilation and numerical tests from manual device, UI,
+shutdown, Windows 7 runtime and performance checks. List checks not performed;
+do not infer them from an older local or trial executable.
+
+## Validation of the narrowed PR (2026-11-25)
+
+The following runs use the spectrum/indicator changes after restoring the
+upstream shutdown and device-notification implementation. Their base is
+`develop/windows` commit `191d91c6cb843a3f9d1e792f6c5f0e9f79e75f55`.
+All application builds target x64 and use Windows SDK 10.0.26100.0, with separate
+output/intermediate directories outside the source checkout.
+
+| Application | Toolchain | Debug | Release |
+| --- | --- | --- | --- |
+| Current Windows, JUCE 9.0.5 | VS 2026, v145/MSVC 14.51 | Passed | Passed |
+| Win7 project, JUCE 6.1.6, native toolset | VS 2026, v145/MSVC 14.51; no toolset override | Passed | Passed |
+| Win7 project, JUCE 6.1.6, VS 2022 compatibility | VS 2022, v143/MSVC 14.44; explicit solution-wide v143 override | Passed | Passed |
+
+- Analysis tests: **158/158** passed in each of Debug and Release on both v143
+  and v145 (four runs). Their compilation logs have no warnings and their run
+  stderr streams are empty.
+- DSP meter tests: **35/35** passed in Debug and Release on v145. The matching
+  uninstrumented base passed its seven applicable checks in both configurations.
+  Each PR/base pair produced byte-identical captures: **432,000 float samples /
+  1,728,000 bytes**, SHA-256
   `a02e327e9c98526a8c2002df837b55f555504b9d572994f44d366ca96df7401c`.
-  The instrumented Debug capture has the same hash.
-- Build warnings were reviewed against the base sources; their reported source
-  lines are unchanged. The standalone test builds produced no warnings.
+- Application warnings were checked at their source locations against the base:
+  the reported lines are unchanged. The upstream application was not rebuilt as
+  part of that warning comparison; its DSP was rebuilt for the PCM comparison.
+- Commands, evaluated output paths, build logs/binlogs and numerical JSON
+  results were retained with the validation record.
 
-These checks do not include fresh interactive testing of the repackaged build,
-Win32 or ARM64/JUCE 8 builds, a Projucer regeneration run, or CPU measurements
-across devices. Both Projucer files and exported project references were checked
-for valid XML and resolution of all newly added source paths.
+No application instance was launched or restarted for these runs. Interactive
+UI, device switching, HDMI, system shutdown/sign-out, Windows 7 runtime,
+Win32/ARM64, Projucer regeneration and performance measurements were not tested.

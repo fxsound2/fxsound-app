@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _SND_DEVICES_H_
 
 #include <Winbase.h>
-#include <atomic>
 #include <comdef.h>
 #include <mmreg.h>
 #include <Mmdeviceapi.h>
@@ -403,7 +402,7 @@ struct sndDevicesHdlType {
 	float sigPower;
 	int bufferSizeMilliSecs;		// This is the average delay, actual internal buffers are twice this length.
 	//int playback_has_started;
-	std::atomic<int> stopAudioCaptureAndPlaybackLoop{0};
+	int stopAudioCaptureAndPlaybackLoop;
 	int dfxDeviceNum;	// The combo 44.1k and 48k hz. DFX device
 	//int dfx48DeviceNum;	// The 48k hz. DFX device
 	int defaultDeviceNum;
@@ -445,7 +444,7 @@ struct sndDevicesHdlType {
 	// Module common status flag, set by functions that can't complete their requestion operation
 	int function_status;
 
-	std::atomic<void (*)()> deviceChangeCallback{nullptr};
+	void (*deviceChangeCallback)();
 };
 
 _COM_SMARTPTR_TYPEDEF(IMMDevice, __uuidof(IMMDevice));
@@ -458,7 +457,7 @@ int PT_DECLSPEC sndDevicesFree(PT_HANDLE *);
 
 /* sndDevicesReInit.cpp */
 int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *, int, int *, int *, int *);
-int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE*, BOOL*, bool checkDefault = false);
+int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE*, BOOL*);
 int PT_DECLSPEC sndDevices_GetAll(PT_HANDLE*, int*);
 
 /* sndDevicesGet.cpp */
