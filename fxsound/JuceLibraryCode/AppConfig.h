@@ -20,30 +20,7 @@
 
 // [END_USER_CODE_SECTION]
 
-/*
-  ==============================================================================
-
-   In accordance with the terms of the JUCE 6 End-Use License Agreement, the
-   JUCE Code in SECTION A cannot be removed, changed or otherwise rendered
-   ineffective unless you have a JUCE Indie or Pro license, or are using JUCE
-   under the GPL v3 license.
-
-   End User License Agreement: www.juce.com/juce-6-licence
-
-  ==============================================================================
-*/
-
-// BEGIN SECTION A
-
-#ifndef JUCE_DISPLAY_SPLASH_SCREEN
- #define JUCE_DISPLAY_SPLASH_SCREEN 1
-#endif
-
-// END SECTION A
-
-#define JUCE_USE_DARK_SPLASH_SCREEN 1
-
-#define JUCE_PROJUCER_VERSION 0x60106
+#define JUCE_PROJUCER_VERSION 0x90005
 
 //==============================================================================
 #define JUCE_MODULE_AVAILABLE_juce_core                 1
@@ -118,12 +95,24 @@
  //#define JUCE_USE_COREIMAGE_LOADER 1
 #endif
 
-#ifndef    JUCE_USE_DIRECTWRITE
- //#define JUCE_USE_DIRECTWRITE 1
-#endif
-
 #ifndef    JUCE_DISABLE_COREGRAPHICS_FONT_SMOOTHING
  //#define JUCE_DISABLE_COREGRAPHICS_FONT_SMOOTHING 0
+#endif
+
+#ifndef    JUCE_INCLUDE_PNGLIB_CODE
+ //#define JUCE_INCLUDE_PNGLIB_CODE 1
+#endif
+
+#ifndef    JUCE_INCLUDE_JPEGLIB_CODE
+ //#define JUCE_INCLUDE_JPEGLIB_CODE 1
+#endif
+
+#ifndef    JUCE_USE_WEBP
+ //#define JUCE_USE_WEBP 1
+#endif
+
+#ifndef    JUCE_INCLUDE_WEBPLIB_CODE
+ //#define JUCE_INCLUDE_WEBPLIB_CODE 1
 #endif
 
 //==============================================================================
@@ -153,6 +142,10 @@
  //#define JUCE_USE_XCURSOR 1
 #endif
 
+#ifndef    JUCE_USE_XINPUT
+ //#define JUCE_USE_XINPUT 1
+#endif
+
 #ifndef    JUCE_WIN_PER_MONITOR_DPI_AWARE
  //#define JUCE_WIN_PER_MONITOR_DPI_AWARE 1
 #endif
@@ -164,12 +157,25 @@
  //#define JUCE_WEB_BROWSER 1
 #endif
 
+#ifndef    JUCE_USE_WIN_WEBVIEW2_WITH_STATIC_LINKING
+ //#define JUCE_USE_WIN_WEBVIEW2_WITH_STATIC_LINKING 0
+#endif
+
 #ifndef    JUCE_USE_WIN_WEBVIEW2
  //#define JUCE_USE_WIN_WEBVIEW2 0
 #endif
 
 #ifndef    JUCE_ENABLE_LIVE_CONSTANT_EDITOR
  //#define JUCE_ENABLE_LIVE_CONSTANT_EDITOR 0
+#endif
+
+#define JUCE_WEBVIEW_INTEROP_LIBRARY_VERSION "1.0.0"
+
+//==============================================================================
+// juce_opengl flags:
+
+#ifndef    JUCE_OPENGL_ES
+ //#define JUCE_OPENGL_ES 0
 #endif
 
 //==============================================================================

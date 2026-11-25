@@ -272,8 +272,8 @@ void FxPresetImportDialog::PresetImportComponent::buttonClicked(Button* button)
         Component::getParentComponent()->exitModalState(0);
         Component::getParentComponent()->removeFromDesktop();
 
-        FxImportCompleteMessage import_complete_message(imported_presets, skipped_presets);
-        import_complete_message.runModalLoop();
+        auto* import_complete_message = new FxImportCompleteMessage(imported_presets, skipped_presets);
+        import_complete_message->enterModalState(true, nullptr, true);
     }
 }
 

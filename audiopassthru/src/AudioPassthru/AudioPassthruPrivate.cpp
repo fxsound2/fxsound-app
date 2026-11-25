@@ -133,10 +133,6 @@ std::vector<SoundDevice> AudioPassthruPrivate::getSoundDevices(bool active_devic
 {
 	if (checkDeviceChanges())
 	{
-		int numRealDevices;
-		int DfxDeviceEnabledFlag;
-		int statusFlag;
-
 		sndDevices_GetAll(hp_sndDevices_, &(s_sndDevices_.totalNumDevices));
 	}
 

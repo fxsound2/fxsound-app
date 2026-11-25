@@ -242,15 +242,14 @@ HRESULT STDMETHODCALLTYPE CsndDevicesAudioEndpointVolumeCallbackPlayback::OnNoti
 
 		if (hr == S_OK)
 		{
-			// We only get here for changes this app didn't make, so these are the settings the user made
-			// on the playback device itself. Update the settings held for this device so that these, and
-			// not the ones this app imposes on the device, are what get put back on it when FxSound
-			// switches to a different playback device.
-			if ((hrVolume == S_OK) && cast_handle->playbackSettingsAreSaved &&
+			// We only get here for changes this app didn't make, so this is the mute setting the user made
+			// on the playback device itself. Update the one held for this device so that this, and not the
+			// FxSound mute setting this app applies to the device, is what gets put back on it when FxSound
+			// stops driving it.
+			if (cast_handle->playbackSettingsAreSaved &&
 				 (cast_handle->playbackDeviceNum >= 0) && (cast_handle->playbackDeviceNum < SND_DEVICES_MAX_NUM_DEVICES) &&
 				 (wcscmp(cast_handle->savedPlaybackDeviceID, cast_handle->pwszID[cast_handle->playbackDeviceNum]) == 0))
 			{
-				cast_handle->savedPlaybackVolume = playbackVolSetting;
 				cast_handle->savedPlaybackMute = playbackMute;
 			}
 

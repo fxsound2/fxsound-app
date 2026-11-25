@@ -20,6 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <JuceHeader.h>
 #include "FxTheme.h"
+#include "FxDrawable.h"
+
+//==============================================================================
+// JUCE version compatibility.
+// Older JUCE (6.x / 8.x) is still used for builds that must support Windows 7, so
+// API changes from JUCE 9 are handled behind these checks rather than replaced outright.
+
+// JUCE 9.0.5: Component::addToDesktop() is no longer virtual; override createDesktopWindow() instead.
+// (Drawable compatibility for JUCE 9 is in FxDrawable.h.)
+#define FX_JUCE_HAS_CREATE_DESKTOP_WINDOW (JUCE_VERSION >= 0x090005)
 
 //==============================================================================
 /*
@@ -30,6 +40,9 @@ public:
 	FxWindow(String name = "");
 	~FxWindow();
 
+#if ! FX_JUCE_HAS_CREATE_DESKTOP_WINDOW
+	void addToDesktop(int window_style_flags, void* native_window_to_attach_to = nullptr) override;
+#endif
 	void setContent(Component* content);
 	virtual void closeButtonPressed() = 0;
 
@@ -46,6 +59,10 @@ protected:
 
 	void paint(Graphics&) override;
 	void resized() override;
+
+#if FX_JUCE_HAS_CREATE_DESKTOP_WINDOW
+	void createDesktopWindow(const DesktopWindowOptions& options) override;
+#endif
 
 	class CloseButton : public Button
 	{
@@ -84,8 +101,8 @@ protected:
 		void updateLogo();
 
 		String name_;
-		std::unique_ptr<Drawable> icon_;
-		std::unique_ptr<Drawable> animation_icon_;
+		FxDrawable icon_;
+		FxDrawable animation_icon_;
 		Label title_;
 		std::vector<std::pair<Button*, bool>> toolbar_buttons_;
 		CloseButton close_button_;

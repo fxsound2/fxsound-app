@@ -107,9 +107,6 @@ int dfxpUniversalModifySamples(PT_HANDLE *hp_dfxp, short int *si_input_samples, 
 	BYTE *bp_out;
 	int i_do_not_process;
 	int bytes_total;
-	int byte_index;
-	int i_current_buffer_hash;
-	int hash_index;
 	BOOL b_lean_and_mean;
 	int i_is_all_zeros;
 

@@ -40,7 +40,7 @@ public:
 
     void reinit(int num_bands);
 
-    void sliderValueChanged(Slider*slider) override;
+    void sliderValueChanged(Slider*) override;
     void sliderDragStarted(Slider* slider) override;
     void sliderDragEnded(Slider* slider) override;
 
@@ -62,7 +62,7 @@ private:
         void showValue(bool show);
 
     private:
-        static constexpr int LABEL_HEIGHT = 12;
+        static constexpr int LABEL_HEIGHT = 11;
 
         void resized() override;
         void valueChanged() override;
@@ -83,11 +83,13 @@ private:
 
         void enablementChanged() override;
 
+        void resetToDefaultFrequency();
+
     private:
         void valueChanged() override;
         bool keyPressed(const KeyPress& key) override;
         void mouseDown(const juce::MouseEvent& event) override;
-        
+
         Label& freq_label_;
 
         int band_;
@@ -96,7 +98,7 @@ private:
 	static constexpr int WIDTH = 776;
 	static constexpr int HEIGHT = 257;
 	static constexpr int SLIDER_HEIGHT = 180;
-	static constexpr int LABEL_HEIGHT = 12;
+	static constexpr int LABEL_HEIGHT = 11;
 	static constexpr int SMALL_FONT = 10;
     static constexpr int ROTARY_SLIDER_HEIGHT = 36;
 	static constexpr int X_MARGIN = 16;
@@ -107,12 +109,20 @@ private:
 	void resized() override;
 	void paint(Graphics& g) override;
 
+    void updateTooltips(int num_bands);
+
 	std::vector<std::unique_ptr<Label>> labels_;
     std::vector<std::unique_ptr<FxEqSlider>> band_boosts_;
     std::vector<std::unique_ptr<FxBandCenterFreqSlider>> center_frequencies_;
     std::vector<float> band_gain_values_;
 
     bool highlight_mode_;
-    
+
+    // State the tooltips were last built for, so paint() only rebuilds them when it changes
+    bool tooltips_valid_ = false;
+    bool tooltips_hidden_ = false;
+    int tooltips_num_bands_ = 0;
+    String tooltips_language_;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FxEqualizer)
 };

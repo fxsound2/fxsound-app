@@ -33,7 +33,7 @@ enum FxImage : int { DefaultLogo, HighlightedLogo, IconLogo,
 					 PowerOnButton, PowerOffButton, DonateButton, DonateButtonHover, MenuButton, MenuButtonHover,
 					 MinimizeButton, MinimizeButtonHover, MaximizeButton, MaximizeButtonHover, MinimizeWindowButton, MinimizeWindowButtonHover,
 					 FlipButton, FlipButtonHover, RestoreDefaultsButton, RestoreDefaultsButtonHover, RemoveButton,
-					 ArrowNext, ArrowNextBW, ArrowPrev, ArrowPrevBW, ArrowUpSelected, ArrowUp, ArrowDownSelected, ArrowDown, DropDownArrow, DropDownArrowHover,
+					 ArrowNext, ArrowNextBW, ArrowPrev, ArrowPrevBW, ArrowUpSelected, ArrowUp, ArrowDownSelected, ArrowDown, DropDownArrow, DropDownArrowHover, DropDownArrowGrey,
 	                 SliderThumb, SliderThumbBW, NumImages };
 
 class FxTheme : public LookAndFeel_V4
@@ -43,6 +43,8 @@ public:
 	static constexpr int TITLE_BAR_HEIGHT = 57;
 	static constexpr int SLIDER_THUMB_RADIUS = 8;
     static constexpr int ROTARY_SLIDER_THUMB_RADIUS = 5;
+	static constexpr int COMBOBOX_BUTTON_SIZE = 18;
+	static constexpr int COMBOBOX_BUTTON_MARGIN = 6;
 
 	FxTheme();
 	~FxTheme() = default;
@@ -86,6 +88,11 @@ public:
 	Font getTitleFont();
     Typeface::Ptr getDefaultTypeface();
 
+    // Loads a typeface from a font file in the app's working directory
+    // (used for languages that need a font other than the built-in Gilroy),
+    // or nullptr if the file doesn't exist.
+    Typeface::Ptr loadTypeface(String fileName);
+
 	static FxThemeMode getThemeMode();
 	static void setThemeMode(FxThemeMode theme_mode);
 	static uint32 getColor(FxColor color);
@@ -96,9 +103,9 @@ private:
 	void init();
 
     TextLayout layoutTooltipText(const String& text, Colour colour) noexcept;
-    Typeface::Ptr loadTypeface(String fileName);
 
 	std::unique_ptr<Drawable> drop_down_arrow_;
+	std::unique_ptr<Drawable> drop_down_arrow_hover_;
 	std::unique_ptr<Drawable> slider_thumb_;
     std::unique_ptr<Drawable> drop_down_arrow_grey_;
     std::unique_ptr<Drawable> slider_thumb_grey_;
@@ -106,6 +113,9 @@ private:
 	Typeface::Ptr font_400_;
 	Typeface::Ptr font_600_;
 	Typeface::Ptr font_700_;
+
+	StringArray loaded_typeface_keys_;
+	Array<Typeface::Ptr> loaded_typefaces_;
 
 	static const uint32 theme_colors_[FxThemeMode::NumModes][FxColor::NumColors];
 	static const char* theme_images_[FxThemeMode::NumModes][FxImage::NumImages];

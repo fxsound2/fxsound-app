@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <JuceHeader.h>
 #include "FxTheme.h"
+#include "FxDrawable.h"
 #include "FxHyperlink.h"
 #include "FxController.h"
 
@@ -50,7 +51,7 @@ private:
 
 	void timerCallback() override;
 
-	std::unique_ptr<Drawable> icon_;
+	FxDrawable icon_;
 	Label message_lines_[3];
 	FxHyperlink message_link_;
 

@@ -6,11 +6,16 @@
 // source, maintained alongside FxController.cpp). After editing the
 // canonical file, run `go generate ./...` from the fxmcp module root to
 // refresh this copy.
+//
+// The copy is a plain PowerShell Copy-Item rather than a small Go helper run
+// via `go run`: that compiles a fresh, unsigned exe into the Go build cache
+// on every run, and antivirus products (McAfee here) flag it as a false
+// positive and refuse to execute it, which breaks the build.
 package docsdata
 
 import _ "embed"
 
-//go:generate go run ../../../tools/copydocs -src=../../../../docs/COMMAND_LINE_OPTIONS.md -dst=command_line_options.md
+//go:generate powershell -NoProfile -NonInteractive -Command "Copy-Item -LiteralPath '../../../../docs/COMMAND_LINE_OPTIONS.md' -Destination 'command_line_options.md' -Force -ErrorAction Stop"
 
 //go:embed command_line_options.md
 var CommandLineOptions string

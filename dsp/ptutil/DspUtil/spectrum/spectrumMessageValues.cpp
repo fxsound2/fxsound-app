@@ -108,14 +108,14 @@ int PT_DECLSPEC spectrumGetBandValuesFromMessageValues_NoHandle(WPARAM w_band_bi
 	// Shift and mask w_band_bits to get correct band values
 	for(i=0; i<5; i++)
 	{
-		tmp[i] = w_band_bits >> (5 * (4 - i));
+		tmp[i] = (int)(w_band_bits >> (5 * (4 - i)));
 		tmp[i] &= 31; 
 	}
 
 	// Shift and mask l_band_bits to get correct band values
 	for(i=5; i<10; i++)
 	{
-		tmp[i] = l_band_bits >> (5 * (9 - i));
+		tmp[i] = (int)(l_band_bits >> (5 * (9 - i)));
 		tmp[i] &= 31; 
 	}
 

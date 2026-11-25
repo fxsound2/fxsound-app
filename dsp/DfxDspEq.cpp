@@ -131,7 +131,6 @@ int DfxDspPrivate::getGraphicEqInfoFromVals(PT_HANDLE *hp_vals)
     realtype r_freq;
 	int i_band_num;
 	int i_eq_on;
-	float f_bass_boost_value;
 
 	int graphic_eq_num_bands = DFXP_GRAPHIC_EQ_NUM_BANDS;
 
@@ -193,7 +192,7 @@ int DfxDspPrivate::getGraphicEqInfoFromVals(PT_HANDLE *hp_vals)
 				// -------------------------------------------------- Increase number of bands (linear interpolation)
 				for (int i = 1; i <= graphic_eq_num_bands; i++)
 				{
-					realtype source_index = 1.0 + (realtype)(i - 1) * (nBands - 1.0) / (graphic_eq_num_bands - 1.0);
+					realtype source_index = 1.0f + (realtype)(i - 1) * (nBands - 1.0f) / (graphic_eq_num_bands - 1.0f);
 					int lower_index = (int)source_index;
 					int upper_index = lower_index + 1;
 					realtype fraction = source_index - lower_index;
@@ -486,6 +485,20 @@ void DfxDspPrivate::getEqBandFrequencyRange(int band_num, float* min_freq, float
     dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
 
     GraphicEqGetBandFrequencyRange(graphic_eq_handle, band_num + 1, min_freq, max_freq);
+}
+
+bool DfxDspPrivate::getDefaultEqBandFrequency(int band_num, float* freq)
+{
+    PT_HANDLE* graphic_eq_handle;
+    realtype default_freq;
+
+    dfxpEqGetGraphicEqHdl(dfxp_handle_, &graphic_eq_handle);
+
+    if (GraphicEqGetDefaultBandFreq(graphic_eq_handle, band_num + 1, &default_freq) != OKAY)
+        return false;
+
+    *freq = default_freq;
+    return true;
 }
 
 float DfxDspPrivate::getEqBandBoostCut(int band_num)
