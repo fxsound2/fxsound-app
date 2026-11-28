@@ -54,6 +54,7 @@ public:
 	void restoreDefaultPlaybackDevice();
 
 private:
+	friend struct PlaybackReserveTestPeer;
 	int sndDeviceHandleToSoundDevices(bool active_devices = true);
 	static void onDeviceChange();
 

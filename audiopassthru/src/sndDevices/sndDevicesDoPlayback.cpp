@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mry.h"
 #include "u_sndDevices.h"
 #include "sndDevices.h"
+#include "PlaybackReserve.h"
 
 /*
  * FUNCTION: sndDevicesDoPlayback()
@@ -47,11 +48,11 @@ int PT_DECLSPEC sndDevicesDoPlayback(PT_HANDLE *hp_sndDevices, int *ip_resultFla
 	HRESULT hr;
 	UINT32 numFramesQueuedUpToPlay;
 	UINT32 i, j, index, loopsize;
-	DWORD flags = 0;
+
 	int numPlaybackChannels;
 	int k;
 
-	float *fptr;
+	*ip_resultFlag = SND_DEVICES_PLAYBACK_ERROR;
 
 	cast_handle = (struct sndDevicesHdlType *)hp_sndDevices;
 
@@ -89,35 +90,118 @@ int PT_DECLSPEC sndDevicesDoPlayback(PT_HANDLE *hp_sndDevices, int *ip_resultFla
 		}
 	}
 
-	// This call returns the number of frames still awaiting playback in the playback buffer
-	hr = cast_handle->pAudioClientPlayback->GetCurrentPadding(&numFramesQueuedUpToPlay);
-	if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_GET_PADDING_FAILED)
+    const UINT32 total = cast_handle->playbackFrameCount;
+    const UINT32 rate = cast_handle->wfxPlayback.nSamplesPerSec;
+    const UINT32 capacity = cast_handle->bufferFrameSizePlayback;
+    auto* client = cast_handle->pAudioClientPlayback;
+    auto* renderer = cast_handle->pAudioClientPlaybackRender;
+    if (!capacity || !rate || !renderer || !cast_handle->fPlaybackBuf) return NOT_OKAY;
+    if (!total) { *ip_resultFlag = SND_DEVICES_CAPTURE_PLAYBACK_SUCCESS; return OKAY; }
+    auto& controls = fxsoundtiming::playbackReserveControl();
+    const unsigned requestedMs = controls.targetMs.load(std::memory_order_relaxed);
+    const unsigned target = fxsoundtiming::targetFrames(rate, capacity, total, requestedMs);
+    // One worker/thread owns this state and starts a fresh physical stream after reinitialization.
+    thread_local fxsoundtiming::ReserveTransition slew;
+    fxsoundtiming::PacketPlan plan{total, false};
+    bool planned = false;
+    UINT32 sent = 0;
+    ULONGLONG progress = GetTickCount64();
+    const auto stopRequested = [&]()
+    {
+        if (!cast_handle->stopAudioCaptureAndPlaybackLoop) return false;
+        *ip_resultFlag = SND_DEVICES_CAPTURE_FORCED_EXIT;
+        return true;
+    };
+    while (sent < plan.frames)
+    {
+        if (stopRequested()) return OKAY;
+        hr = client->GetCurrentPadding(&numFramesQueuedUpToPlay);
+        if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_GET_PADDING_FAILED)
+        UINT32 prime = 0;
+        const bool resumeEmpty = !numFramesQueuedUpToPlay && !planned &&
+            (cast_handle->playbackStreamIsTemporarilyPaused ||
+             (target && slew.ready && slew.requested == requestedMs && !slew.remaining));
+        if (resumeEmpty)
+        {
+            if (!cast_handle->playbackStreamIsTemporarilyPaused)
+            {
+                hr = client->Stop();
+                if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_PLAYBACK_ERROR)
+                cast_handle->playbackStreamIsTemporarilyPaused = 1;
+            }
+            prime = target;
+            slew.prime(requestedMs, target);
+            if (prime)
+            {
+                if (stopRequested()) return OKAY;
+                BYTE* silence = nullptr;
+                hr = renderer->GetBuffer(prime, &silence);
+                if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_PLAYBACK_RENDER_FAILED)
+                hr = renderer->ReleaseBuffer(prime, AUDCLNT_BUFFERFLAGS_SILENT);
+                if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_RELEASE_BUFFER_FAILED)
+                hr = client->GetCurrentPadding(&numFramesQueuedUpToPlay);
+                if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_GET_PADDING_FAILED)
+            }
+        }
+        // Stop may arrive while COM primes the queue. Do not write new audio
+        // after the control thread has requested it to stop.
+        if (stopRequested()) return OKAY;
+        if (!planned)
+        {
+            plan = slew.plan(total, requestedMs, target, numFramesQueuedUpToPlay);
+            planned = true;
+        }
+        // Lowering the high-water mark during a transition would move the delay upstream.
+        const unsigned maxQueue = plan.transition ? capacity : target + (std::min)(capacity, total);
+        const unsigned space = numFramesQueuedUpToPlay < maxQueue ? maxQueue - numFramesQueuedUpToPlay : 0;
+        const UINT32 amount = (std::min)(space, plan.frames - sent);
+        if (!amount)
+        {
+            if (GetTickCount64() - progress > 2000)
+                SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_PLAYBACK_ERROR)
+            Sleep(1);
+            continue;
+        }
+        BYTE* output = nullptr;
+        hr = renderer->GetBuffer(amount, &output);
+        if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_PLAYBACK_RENDER_FAILED)
+        fxsoundtiming::writeFrames(reinterpret_cast<float*>(output), cast_handle->fPlaybackBuf, total,
+                               plan.frames, sent, amount, numPlaybackChannels);
+        hr = renderer->ReleaseBuffer(amount, 0);
+        if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_RELEASE_BUFFER_FAILED)
+        // In particular, never restart a client stopped during ReleaseBuffer.
+        if (stopRequested()) return OKAY;
+        const bool starting = cast_handle->playbackStreamIsTemporarilyPaused != 0;
+        if (starting)
+        {
+            hr = client->Start();
+            if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_PLAYBACK_ERROR)
+            // A control-thread Stop can finish while Start is in progress.
+            // Check again and compensate rather than leave the client running.
+            if (stopRequested())
+            {
+                hr = client->Stop();
+                if (FAILED(hr))
+                {
+                    wchar_t message[128];
+                    swprintf_s(message, L"FxSound: Stop after interrupted render Start failed (0x%08lx)\n",
+                        static_cast<unsigned long>(hr));
+                    OutputDebugStringW(message);
+                    *ip_resultFlag = SND_DEVICES_PLAYBACK_ERROR;
+                    SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_PLAYBACK_ERROR)
+                }
+                return OKAY;
+            }
+            cast_handle->playbackStreamIsTemporarilyPaused = 0;
+        }
+        controls.observedMs.store(static_cast<int>((numFramesQueuedUpToPlay * 1000ULL + rate / 2) / rate), std::memory_order_relaxed);
+        controls.appliedTargetMs.store(static_cast<int>((target * 1000ULL + rate / 2) / rate), std::memory_order_relaxed);
+        controls.transitioning.store(plan.transition, std::memory_order_relaxed);
+        controls.lastWriteTick.store(GetTickCount64(), std::memory_order_release);
 
-	cast_handle->numPlaybackFramesAvailableToFill = cast_handle->bufferFrameSizePlayback - numFramesQueuedUpToPlay;
-
-	// Data size should never come in to this function larger than available space, truncate it if need be.
-	if( cast_handle->playbackFrameCount > cast_handle->numPlaybackFramesAvailableToFill )
-		cast_handle->playbackFrameCount = cast_handle->numPlaybackFramesAvailableToFill;			
-
-	// If we have playback buffers to write, acquire the requested frame space in the internal playback buffer.
-	if( cast_handle->playbackFrameCount > 0 )
-	{
-		hr = cast_handle->pAudioClientPlaybackRender->GetBuffer(cast_handle->playbackFrameCount, &(cast_handle->pDataPacketPlayback));
-		if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_PLAYBACK_RENDER_FAILED)
-
-		// Don't do copy if either buffer is NULL
-		if( (cast_handle->pDataPacketPlayback != NULL) && (cast_handle->fPlaybackBuf != NULL) )
-		{
-			loopsize = cast_handle->playbackFrameCount * numPlaybackChannels;
-			fptr = (float *)(cast_handle->pDataPacketPlayback);
-
-			for(i=0; i<loopsize; i++)
-				fptr[i] = cast_handle->fPlaybackBuf[i];
-		}
-
-		hr = cast_handle->pAudioClientPlaybackRender->ReleaseBuffer(cast_handle->playbackFrameCount, flags);
-		if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_RELEASE_BUFFER_FAILED)
-	}
+        sent += amount;
+        progress = GetTickCount64();
+    }
 
 	*ip_resultFlag = SND_DEVICES_CAPTURE_PLAYBACK_SUCCESS;
 

@@ -30,6 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Functiondiscoverykeys_devpkey.h>
 #include <endpointvolume.h>
 #include <Propvarutil.h>
+#include <ks.h>
+#include <ksmedia.h>
+#include "PlaybackReserve.h"
 
 // This is the include file for the "hidden" IPolicyConfig MS functions.
 #include "PolicyConfig.h"
@@ -432,6 +435,28 @@ int PT_DECLSPEC sndDevicesFinalSetupPlaybackDevice(PT_HANDLE *hp_sndDevices, int
 		SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_DEVICE_GET_FORMAT_FAILED);
 	}
 
+    // The existing DSP mapper produces interleaved float frames in wfxPlayback.
+    // A fallback format must have the same frame layout and time base.
+    const auto openPlayback = [&](const WAVEFORMATEX* format) -> HRESULT
+    {
+        const bool extensibleFloat = format->wFormatTag == WAVE_FORMAT_EXTENSIBLE &&
+            format->cbSize >= sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX) &&
+            IsEqualGUID(reinterpret_cast<const WAVEFORMATEXTENSIBLE*>(format)->SubFormat, KSDATAFORMAT_SUBTYPE_IEEE_FLOAT);
+        if ((!extensibleFloat && format->wFormatTag != WAVE_FORMAT_IEEE_FLOAT) ||
+            format->wBitsPerSample != 32 || format->nChannels != cast_handle->wfxPlayback.nChannels ||
+            format->nSamplesPerSec != cast_handle->wfxPlayback.nSamplesPerSec ||
+            format->nBlockAlign != format->nChannels * sizeof(float))
+        {
+            OutputDebugStringW(L"FxSound: negotiated output is incompatible with the DSP float frame layout.\n");
+            return AUDCLNT_E_UNSUPPORTED_FORMAT;
+        }
+        // Capacity for the slider maximum plus the original packet headroom.
+        const REFERENCE_TIME duration = cast_handle->hnsRequestedDurationPlayback
+            + static_cast<REFERENCE_TIME>(fxsoundtiming::maxReserveMs) * 10000;
+        return cast_handle->pAudioClientPlayback->Initialize(AUDCLNT_SHAREMODE_SHARED, StreamFlags,
+            duration, 0, format, nullptr);
+    };
+
 	// Query for the closest supported format before calling Initialize.
 	// Some devices (e.g. Bluetooth) return a mix format from GetMixFormat that their driver
 	// then rejects in Initialize with AUDCLNT_E_UNSUPPORTED_FORMAT.
@@ -447,14 +472,14 @@ int PT_DECLSPEC sndDevicesFinalSetupPlaybackDevice(PT_HANDLE *hp_sndDevices, int
 		SAFE_RELEASE(cast_handle->pAudioClientPlayback);
 		hr = cast_handle->pPlaybackDevice->Activate(cast_handle->IID_IAudioClient, CLSCTX_ALL, NULL, (void**)&cast_handle->pAudioClientPlayback);
 		if (SUCCEEDED(hr) && cast_handle->pAudioClientPlayback != NULL)
-			hr = cast_handle->pAudioClientPlayback->Initialize(AUDCLNT_SHAREMODE_SHARED, StreamFlags, cast_handle->hnsRequestedDurationPlayback, 0, pClosestMatch, NULL);
+			hr = openPlayback(pClosestMatch);
 		else
 			hr = E_FAIL;
 	}
 	else
 	{
 		// Format is supported (S_OK) or IsFormatSupported gave no match — try pwfx directly.
-		hr = cast_handle->pAudioClientPlayback->Initialize(AUDCLNT_SHAREMODE_SHARED, StreamFlags, cast_handle->hnsRequestedDurationPlayback, 0, pwfx, NULL);
+		hr = openPlayback(pwfx);
 		CoTaskMemFree(pwfx);
 		pwfx = NULL;
 
@@ -464,7 +489,7 @@ int PT_DECLSPEC sndDevicesFinalSetupPlaybackDevice(PT_HANDLE *hp_sndDevices, int
 			SAFE_RELEASE(cast_handle->pAudioClientPlayback);
 			hr = cast_handle->pPlaybackDevice->Activate(cast_handle->IID_IAudioClient, CLSCTX_ALL, NULL, (void**)&cast_handle->pAudioClientPlayback);
 			if (SUCCEEDED(hr) && cast_handle->pAudioClientPlayback != NULL)
-				hr = cast_handle->pAudioClientPlayback->Initialize(AUDCLNT_SHAREMODE_SHARED, StreamFlags, cast_handle->hnsRequestedDurationPlayback, 0, pClosestMatch, NULL);
+				hr = openPlayback(pClosestMatch);
 			else
 				hr = E_FAIL;
 		}

@@ -230,6 +230,9 @@
     <ClInclude Include="include\pt_defs.h">
       <Filter>Header Files\ptutil</Filter>
     </ClInclude>
+    <ClInclude Include="include\PlaybackReserve.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\AudioPassthru.h">
       <Filter>Header Files</Filter>
     </ClInclude>
