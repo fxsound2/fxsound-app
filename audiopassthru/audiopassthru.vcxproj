@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM64">
@@ -261,6 +261,7 @@
     <ClCompile Include="src\sndDevices\sndDevicesDeviceCallbacks.cpp" />
     <ClCompile Include="src\sndDevices\sndDevicesDoCapture.cpp" />
     <ClCompile Include="src\sndDevices\sndDevicesDoPlayback.cpp" />
+    <ClCompile Include="src\sndDevices\DeviceCatalog.cpp" />
     <ClCompile Include="src\sndDevices\sndDevicesGet.cpp" />
     <ClCompile Include="src\sndDevices\sndDevicesImplementDeviceRules.cpp" />
     <ClCompile Include="src\sndDevices\sndDevicesInit.cpp" />
@@ -273,6 +274,7 @@
     <ClCompile Include="src\sndDevices\sndDevices_Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\DeviceCatalog.h" />
     <ClInclude Include="include\AudioPassthru.h" />
     <ClInclude Include="include\AudioShutdown.h" />
     <ClInclude Include="include\EndpointRestore.h" />

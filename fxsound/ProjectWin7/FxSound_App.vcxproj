@@ -1615,6 +1615,7 @@ copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\Win7\ /y</Command
     <ClInclude Include="..\Source\GUI\FxMessage.h" />
     <ClInclude Include="..\Source\GUI\FxMainWindow.h" />
     <ClInclude Include="..\Source\GUI\FxWindow.h" />
+    <ClInclude Include="..\Source\GUI\OutputRecovery.h" />
     <ClInclude Include="..\Source\GUI\FxController.h" />
     <ClInclude Include="..\Source\GUI\FxModel.h" />
     <ClInclude Include="..\Source\Utils\SysInfo\SysInfo.h" />

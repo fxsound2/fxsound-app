@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <exception>
 #include "reg.h"
 #include "sndDevices.h"
+#include "DeviceCatalog.h"
 
 #define DFXG_SND_SERVER_KILL_THREAD_TIMEOUT_MSECS		  3000
 #define DFXG_TRUNCATED_DRIVER_TEXT_LENGTH			      50
@@ -76,6 +77,8 @@ int AudioPassthruPrivate::init()
 
 	s_sndDevices_.deviceChangeCallback = onDeviceChange;
     refreshRestoreSnapshot();
+    publishUsedEndpoints();
+    sndDeviceHandleToSoundDevices(false);
     if (s_sndDevices_.deviceChanges.hasPending()) onDeviceChange();
 
 	if (status_flag != SND_DEVICES_DEVICE_OPERATION_COMPLETED)
@@ -112,28 +115,10 @@ void AudioPassthruPrivate::setDspProcessingModule(DfxDsp* p_dfx_dsp)
 
 std::vector<SoundDevice> AudioPassthruPrivate::getSoundDevices(bool active_devices)
 {
-    if (checkDeviceChanges())
-    {
-        DWORD error = ERROR_SUCCESS;
-        if (pollStopped(error) != WAIT_OBJECT_0)
-        {
-            onDeviceChange();
-            return sound_devices_;
-        }
-        const BOOL oldVolume = s_sndDevices_.ignoreVolumeCallbacks.exchange(TRUE);
-        if (s_sndDevices_.deviceCallbacksInFlight.load() != 0)
-        {
-            s_sndDevices_.ignoreVolumeCallbacks.store(oldVolume);
-            onDeviceChange();
-            return sound_devices_;
-        }
-        // No producer can still be reading the endpoint table or its COM aliases.
-        sndDevices_GetAll(hp_sndDevices_, &(s_sndDevices_.totalNumDevices));
-        s_sndDevices_.ignoreVolumeCallbacks.store(oldVolume);
-        refreshRestoreSnapshot();
-    }
-    sndDeviceHandleToSoundDevices(active_devices);
-    return sound_devices_;
+    std::vector<SoundDevice> result;
+    for (const auto& device : sound_devices_)
+        if (!active_devices || device.isActive) result.push_back(device);
+    return result;
 }
 
 int AudioPassthruPrivate::sndDeviceHandleToSoundDevices(bool active_devices)
@@ -235,7 +220,7 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices(bool active_devices)
 
 void AudioPassthruPrivate::onDeviceChange() noexcept
 {
-    // The MMDevice callback has already stopped the stream and copied the ID.
+    // MMDevice copied the ID; only events affecting the used route stopped it.
     // Pending survives a missing HWND; attaching the window retries delivery.
     if (s_sndDevices_.deviceNotificationsClosed.load(std::memory_order_acquire)) return;
     s_device_change_pending_.store(true, std::memory_order_release);
@@ -287,40 +272,183 @@ void AudioPassthruPrivate::dispatchDeviceChange()
 {
     s_device_message_posted_.store(false, std::memory_order_release);
     if (stopping_ || !s_device_change_pending_.load(std::memory_order_acquire)) return;
+    s_device_change_pending_.store(false, std::memory_order_release);
+    const bool notice = drainDeviceChanges();
+    const bool catalogUpdated = refreshPendingCatalogue(notice);
+    if (notice && s_sndDevices_.playbackDeviceIsUnavailable)
+    {
+        s_sndDevices_.playbackDeviceIsUnavailable = FALSE;
+        route_change_pending_ = true;
+    }
+    // Publish copied catalogue values while the old worker can still be alive.
+    // The callback may choose a fallback and replace pending_output_id_.
+    if (catalogUpdated)
+        if (auto* callback = s_callback_.load(std::memory_order_acquire)) callback->onSoundDeviceChange(false);
+    if (!route_change_pending_)
+    {
+        if (catalogue_dirty_)
+        {
+            s_device_change_pending_.store(true, std::memory_order_release);
+            armDeviceRetry();
+        }
+        if (s_sndDevices_.deviceChanges.hasPending()) onDeviceChange();
+        return;
+    }
     DWORD error = ERROR_SUCCESS;
     if (pollStopped(error) != WAIT_OBJECT_0)
     {
-        // The stop was immediate, but enumeration must wait for the old stream.
-        // Keep the notice and retry without blocking or reinitializing live buffers.
+        s_device_change_pending_.store(true, std::memory_order_release);
         armDeviceRetry();
         return;
     }
-    if (!s_device_change_pending_.exchange(false, std::memory_order_acq_rel)) return;
-    bool changed = false;
+    if (!applyPendingOutput())
+    {
+        s_device_change_pending_.store(true, std::memory_order_release);
+        armDeviceRetry();
+    }
+    if (catalogue_dirty_)
+    {
+        s_device_change_pending_.store(true, std::memory_order_release);
+        armDeviceRetry();
+    }
+    if (s_sndDevices_.deviceChanges.hasPending()) onDeviceChange();
+}
+
+bool AudioPassthruPrivate::drainDeviceChanges()
+{
+    bool notice = false;
     fxsounddevices::DeviceChangeQueue::Event event{};
     while (s_sndDevices_.deviceChanges.tryPop(event))
     {
-        BOOL itemChanged = FALSE;
-        if (sndDevicesApplyDeviceChange(hp_sndDevices_, event, &itemChanged) == OKAY)
-            changed = changed || itemChanged != FALSE;
+        if (s_sndDevices_.deviceChanges.isDuplicate(event)) continue;
+        notice = true;
+        // Re-evaluate against the latest published route, not the route that
+        // existed when this event was queued during a previous ReInit.
+        if (event.kind == fxsounddevices::DeviceChangeQueue::Kind::defaultChanged
+            || s_sndDevices_.deviceChanges.usesEndpoint(event.missingId ? nullptr : event.id))
+            route_change_pending_ = true;
     }
-    const bool reconcile = s_sndDevices_.deviceChanges.takeReconcileRequired();
-    if (reconcile)
-        OutputDebugStringW(L"FxSound: notification overflow/ID too long; reconciling endpoints\n");
-    BOOL enumeratedChange = FALSE;
-    if (sndCheckDeviceChanges(hp_sndDevices_, &enumeratedChange, reconcile) != OKAY)
-        OutputDebugStringW(L"FxSound: endpoint reconciliation failed\n");
-    changed = changed || enumeratedChange != FALSE;
-    if (changed || s_sndDevices_.playbackDeviceIsUnavailable)
+    if (s_sndDevices_.deviceChanges.takeReconcileRequired())
     {
-        s_sndDevices_.playbackDeviceIsUnavailable = FALSE;
-        refreshRestoreSnapshot();
-        if (auto* callback = s_callback_.load(std::memory_order_acquire))
-            callback->onSoundDeviceChange(false);
+        notice = true;
+        route_change_pending_ = true;
+        OutputDebugStringW(L"FxSound: reconciling an uncertain endpoint notification\n");
     }
-    if (s_sndDevices_.deviceChanges.hasPending()) onDeviceChange();
-    // Do not cancel here: another producer may have just armed a new retry.
-    // An existing one-shot stops naturally once its pending notice is consumed.
+    if (route_change_pending_) signalCaptureStop();
+    return notice;
+}
+
+void AudioPassthruPrivate::overlayRouteFlags()
+{
+    for (auto& item : sound_devices_)
+    {
+        item.isCaptureDevice = item.pwszID == route_capture_id_;
+        item.isTargetedRealPlaybackDevice = !route_output_id_.empty() && item.pwszID == route_output_id_;
+        if (!route_virtual_id_.empty()) item.isDFXDevice = item.pwszID == route_virtual_id_;
+        item.isRealDevice = !item.isDFXDevice;
+        item.pAllDevices = nullptr;
+    }
+}
+
+bool AudioPassthruPrivate::refreshDeviceCatalogue()
+{
+    std::vector<SoundDevice> next;
+    std::wstring currentDefault;
+    const HRESULT hr = fxsounddevices::readDeviceCatalog(next, currentDefault);
+    if (FAILED(hr))
+    {
+        OutputDebugStringW(L"FxSound: catalogue refresh failed; retaining its previous values\n");
+        return false;
+    }
+    for (auto& item : next)
+        for (const auto& previous : sound_devices_)
+            if (item.pwszID == previous.pwszID)
+            {
+                item.isUserSelectedPlaybackDevice = previous.isUserSelectedPlaybackDevice;
+                if (!item.isActive && item.deviceNumChannel == 0) item.deviceNumChannel = previous.deviceNumChannel;
+                break;
+            }
+    sound_devices_ = std::move(next);
+    overlayRouteFlags();
+    return true;
+}
+
+bool AudioPassthruPrivate::refreshPendingCatalogue(bool notice)
+{
+    const auto now = GetTickCount64();
+    if (notice)
+    {
+        catalogue_dirty_ = catalogue_notice_pending_ = true;
+        catalogue_retry_after_ = now;
+        catalogue_retry_until_ = now + 3000;
+    }
+    if (!catalogue_dirty_ || now < catalogue_retry_after_) return false;
+    if (refreshDeviceCatalogue())
+    {
+        catalogue_dirty_ = false;
+        const bool publish = catalogue_notice_pending_;
+        catalogue_notice_pending_ = false;
+        return publish;
+    }
+    if (now >= catalogue_retry_until_)
+    {
+        catalogue_dirty_ = catalogue_notice_pending_ = false;
+        OutputDebugStringW(L"FxSound: catalogue retry budget exhausted; waiting for the next device event\n");
+    }
+    else catalogue_retry_after_ = now + 250;
+    return false;
+}
+
+bool AudioPassthruPrivate::publishUsedEndpoints() noexcept
+{
+    try
+    {
+        const auto id = [](int index) -> const wchar_t*
+        {
+            return index >= 0 && index < s_sndDevices_.totalNumDevices && index < SND_DEVICES_MAX_NUM_DEVICES
+                ? s_sndDevices_.pwszID[index] : L"";
+        };
+        route_virtual_id_ = id(s_sndDevices_.dfxDeviceNum);
+        route_capture_id_ = id(s_sndDevices_.captureDeviceNum);
+        route_output_id_ = id(s_sndDevices_.playbackDeviceNum);
+        if (!s_sndDevices_.deviceChanges.setVirtualDeviceId(route_virtual_id_.c_str()))
+        { s_sndDevices_.deviceChanges.invalidateUsedEndpoints(); return false; }
+        return s_sndDevices_.deviceChanges.setUsedEndpoints(route_virtual_id_.c_str(),
+            route_capture_id_.c_str(), route_output_id_.c_str());
+    }
+    catch (const std::exception&)
+    {
+        s_sndDevices_.deviceChanges.invalidateUsedEndpoints();
+        return false;
+    }
+}
+
+bool AudioPassthruPrivate::applyPendingOutput()
+{
+    if (pending_output_id_.empty()) return true;
+    auto id = pending_output_id_;
+    const auto generation = pending_output_generation_;
+    const auto found = std::find_if(sound_devices_.begin(), sound_devices_.end(), [&](const SoundDevice& item)
+    { return item.isActive && item.isRealDevice && item.pwszID == id; });
+    if (found == sound_devices_.end()) { pending_output_id_.clear(); return true; }
+    const BOOL oldVolume = s_sndDevices_.ignoreVolumeCallbacks.exchange(TRUE);
+    if (s_sndDevices_.deviceCallbacksInFlight.load() != 0)
+    { s_sndDevices_.ignoreVolumeCallbacks.store(oldVolume); return false; }
+    // All engine users have retired; now a newly catalogued ID can enter its
+    // mutable table. This path is never used by catalogue-only notifications.
+    int status = SND_DEVICES_DEVICE_OPERATION_COMPLETED;
+    const int enumerated = sndDevices_GetAll(hp_sndDevices_, &s_sndDevices_.totalNumDevices);
+    if (generation != pending_output_generation_)
+    { s_sndDevices_.ignoreVolumeCallbacks.store(oldVolume); return false; }
+    const int selected = enumerated == OKAY ? sndDevicesSetDeviceType(hp_sndDevices_, SND_DEVICES_DEFAULT,
+        &id[0], &status) : NOT_OKAY_NO_BREAK;
+    s_sndDevices_.ignoreVolumeCallbacks.store(oldVolume);
+    if (generation != pending_output_generation_) return false;
+    pending_output_id_.clear();
+    if (selected != OKAY || status != SND_DEVICES_DEVICE_OPERATION_COMPLETED)
+        OutputDebugStringW(L"FxSound: requested output was not applied; refreshing the route\n");
+    refreshRestoreSnapshot();
+    return true;
 }
 
 void AudioPassthruPrivate::requestStop() noexcept
@@ -526,7 +654,7 @@ int AudioPassthruPrivate::processTimer()
     if (s_device_change_pending_.load(std::memory_order_acquire))
     {
         dispatchDeviceChange();
-        if (s_device_change_pending_.load(std::memory_order_acquire)) return OKAY;
+        if (route_change_pending_ && s_device_change_pending_.load(std::memory_order_acquire)) return OKAY;
     }
 	BOOL b_need_to_start_thread;
 	int numRealDevices;
@@ -564,6 +692,8 @@ int AudioPassthruPrivate::processTimer()
 
 		/* Initialize flag which can be set by the outside telling thread to end */
 		i_kill_processing_thread_ = IS_FALSE;
+        route_change_pending_ = false;
+        const auto reinitGeneration = pending_output_generation_;
 
 		/* Reinit the sndDevices module */
 		const int reinit = sndDevicesReInit(hp_sndDevices_, SND_DEVICES_INIT_FOR_PROCESSING,
@@ -577,11 +707,23 @@ int AudioPassthruPrivate::processTimer()
             return NOT_OKAY_NO_BREAK;
         }
         refreshRestoreSnapshot();
-        if (s_sndDevices_.deviceChanges.hasPending() || s_device_change_pending_.load())
+        sndDeviceHandleToSoundDevices(false);
+        const bool canStart = numRealDevices > 0 && DfxDeviceEnabledFlag == IS_TRUE;
+        if (canStart && !publishUsedEndpoints())
         {
+            signalCaptureStop();
+            route_change_pending_ = true;
             onDeviceChange();
             return OKAY;
         }
+        if (!canStart) s_sndDevices_.deviceChanges.forgetUsedEndpoints();
+        if (s_sndDevices_.deviceChanges.hasPending() || s_device_change_pending_.load())
+        {
+            onDeviceChange();
+            dispatchDeviceChange();
+            if (route_change_pending_) return OKAY;
+        }
+        if (reinitGeneration != pending_output_generation_ || !pending_output_id_.empty()) return OKAY;
 
 		if (statusFlag != SND_DEVICES_DEVICE_OPERATION_COMPLETED)
 		{
@@ -764,17 +906,23 @@ bool AudioPassthruPrivate::isPlaybackDeviceAvailable()
 
 bool AudioPassthruPrivate::checkDeviceChanges()
 {
-    BOOL deviceChanged;
-
-	sndCheckDeviceChanges(hp_sndDevices_, &deviceChanged);
-	if (deviceChanged == TRUE)
-		return true;
-	else
+    if (stopping_) return false;
+    if (!refreshPendingCatalogue(true))
+    {
+        if (catalogue_dirty_) { onDeviceChange(); armDeviceRetry(); }
         return false;
+    }
+    if (auto* callback = s_callback_.load(std::memory_order_acquire)) callback->onSoundDeviceChange(false);
+    return true;
 }
 
 void AudioPassthruPrivate::restoreDefaultPlaybackDevice()
 {
+	// Power-off supersedes a queued automatic restore, even if the previous
+	// worker has not stopped yet or a reentrant control call is still returning.
+	pending_output_id_.clear();
+	++pending_output_generation_;
+	route_change_pending_ = false;
 	int i_resultFlag;
 	/* Change the default soundcard to not be the DFX virtual one but instead the proper real one */
 	if (sndDevicesRestoreDefaultDevice(hp_sndDevices_, &i_resultFlag) != OKAY)
@@ -783,16 +931,15 @@ void AudioPassthruPrivate::restoreDefaultPlaybackDevice()
 
 int AudioPassthruPrivate::setTargetedRealPlaybackDevice(const std::wstring sound_device_guid)
 {
-	int i_resultFlag;
-	wchar_t wcp_new_targeted_real_playback_guid[PT_MAX_GENERIC_STRLEN];
-	
-	/* Set the guid of the newly selected playback device */
-	swprintf(wcp_new_targeted_real_playback_guid, PT_MAX_GENERIC_STRLEN, L"%s", sound_device_guid.c_str());
-
-	/* Set the newly targeted playback device as the default.  It will then automatically become the targeted device */
-	if (sndDevicesSetDeviceType(hp_sndDevices_, SND_DEVICES_DEFAULT, wcp_new_targeted_real_playback_guid, &i_resultFlag) != OKAY)
-		return(NOT_OKAY);
-
-    refreshRestoreSnapshot();
-	return(OKAY);
+    if (stopping_ || sound_device_guid.empty()) return NOT_OKAY_NO_BREAK;
+    if (pending_output_id_.empty() && !route_change_pending_ && sound_device_guid == route_output_id_
+        && hProcessingThread_ != nullptr && hProcessingThread_ != INVALID_HANDLE_VALUE) return OKAY;
+    // Always replace an older queued target, including a manual re-selection
+    // of the currently playing fallback while a restore is waiting for stop.
+    pending_output_id_ = sound_device_guid;
+    ++pending_output_generation_;
+    route_change_pending_ = true;
+    signalCaptureStop();
+    onDeviceChange();
+    return OKAY;
 }

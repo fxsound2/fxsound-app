@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector> 
 #include <map>
 #include <atomic>
+#include <cstdint>
 #include <memory>
 #include "AudioShutdown.h"
 #include "EndpointRestore.h"
@@ -70,6 +71,17 @@ private:
     DWORD captureAndPlay();
     void applyDsp(float* pcm, int frames, const WAVEFORMATEX& format);
     void refreshRestoreSnapshot() noexcept;
+    bool publishUsedEndpoints() noexcept;
+    bool refreshDeviceCatalogue();
+    bool refreshPendingCatalogue(bool notice);
+    bool drainDeviceChanges();
+    bool applyPendingOutput();
+    void overlayRouteFlags();
+    bool route_change_pending_ = false; // Owner only; catalogue events never set this implicitly.
+    std::wstring pending_output_id_, route_virtual_id_, route_capture_id_, route_output_id_;
+    std::uint64_t pending_output_generation_ = 0;
+    bool catalogue_dirty_ = false, catalogue_notice_pending_ = false;
+    ULONGLONG catalogue_retry_after_ = 0, catalogue_retry_until_ = 0;
     static void CALLBACK retryDeviceNotice(PTP_CALLBACK_INSTANCE, void*, PTP_TIMER) noexcept;
     static void armDeviceRetry() noexcept;
     void closeDeviceRetry() noexcept;

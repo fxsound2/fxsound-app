@@ -149,6 +149,47 @@ public:
     bool takeReconcileRequired() noexcept { return reconcile_.exchange(false, std::memory_order_acq_rel); }
     std::uint64_t droppedEvents() const noexcept { return dropped_.load(std::memory_order_relaxed); }
 
+    // Owner publishes one coherent route. Old nodes stay alive for MMDevice
+    // readers; repeated routes reuse their existing node.
+    bool setUsedEndpoints(const wchar_t* virtualId, const wchar_t* captureId, const wchar_t* outputId) noexcept
+    {
+        const wchar_t* ids[] = {virtualId, captureId, outputId};
+        std::size_t lengths[3]{};
+        for (int i = 0; i < 3; ++i)
+        {
+            if (ids[i] == nullptr) ids[i] = L"";
+            while (lengths[i] < idCapacity && ids[i][lengths[i]] != L'\0') ++lengths[i];
+            if (lengths[i] == idCapacity) return invalidateUsedEndpoints();
+        }
+        if (lengths[0] == 0 || lengths[1] == 0 || lengths[2] == 0) return invalidateUsedEndpoints();
+        for (auto* prior = routes_.get(); prior != nullptr; prior = prior->previous.get())
+            if (std::wcscmp(prior->ids[0].data(), ids[0]) == 0
+                && std::wcscmp(prior->ids[1].data(), ids[1]) == 0
+                && std::wcscmp(prior->ids[2].data(), ids[2]) == 0)
+            { usedRoute_.store(prior, std::memory_order_release); return true; }
+        auto next = std::unique_ptr<UsedRoute>(new (std::nothrow) UsedRoute);
+        if (!next) return invalidateUsedEndpoints();
+        for (int i = 0; i < 3; ++i)
+            for (std::size_t j = 0; j < lengths[i]; ++j) next->ids[i][j] = ids[i][j];
+        next->previous = std::move(routes_);
+        routes_ = std::move(next);
+        usedRoute_.store(routes_.get(), std::memory_order_release);
+        return true;
+    }
+    bool invalidateUsedEndpoints() noexcept
+    {
+        usedRoute_.store(nullptr, std::memory_order_release);
+        return lostEvent();
+    }
+    void forgetUsedEndpoints() noexcept { usedRoute_.store(nullptr, std::memory_order_release); }
+    bool usesEndpoint(const wchar_t* id) const noexcept
+    {
+        const auto* route = usedRoute_.load(std::memory_order_acquire);
+        if (route == nullptr || id == nullptr || id[0] == L'\0') return true;
+        for (const auto& used : route->ids) if (std::wcscmp(used.data(), id) == 0) return true;
+        return false;
+    }
+
     // Owner only. Retain old immutable identities until the notification backing
     // state dies, so callback readers need neither a lock nor reference counting.
     bool setVirtualDeviceId(const wchar_t* id) noexcept
@@ -189,6 +230,7 @@ private:
     friend struct DeviceChangeQueueTestPeer;
     struct Cell { std::atomic<std::size_t> sequence{0}; Event event; };
     struct Identity { std::array<wchar_t, idCapacity> id{}; std::unique_ptr<Identity> previous; };
+    struct UsedRoute { std::array<std::array<wchar_t, idCapacity>, 3> ids{}; std::unique_ptr<UsedRoute> previous; };
     bool lostEvent() noexcept
     {
         dropped_.fetch_add(1, std::memory_order_relaxed);
@@ -207,6 +249,8 @@ private:
     std::atomic<std::uint64_t> dropped_{0};
     std::unique_ptr<Identity> identities_;
     std::atomic<const wchar_t*> virtualId_{nullptr};
+    std::unique_ptr<UsedRoute> routes_;
+    std::atomic<const UsedRoute*> usedRoute_{nullptr};
     Event last_;
     bool haveLast_ = false;
 };

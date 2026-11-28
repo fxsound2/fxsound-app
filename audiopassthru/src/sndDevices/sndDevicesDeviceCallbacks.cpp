@@ -112,9 +112,16 @@ void recordDeviceChange(PT_HANDLE* opaque, fxsounddevices::DeviceChangeQueue::Ki
         if (handle->deviceChanges.isRepeatedState(id, state)) return;
     }
     else handle->deviceChanges.invalidateStateCache();
-    // Stop immediately on MMDevice's thread; dispatching the UI may be delayed.
-    handle->stopAudioCaptureAndPlaybackLoop.store(1, std::memory_order_release);
-    handle->deviceChanges.enqueue(kind, id, state);
+    // Only the committed route needs an immediate stop. Catalogue-only notices
+    // are still copied/woken, but cannot interrupt an unrelated healthy stream.
+    const bool routeChange = kind == fxsounddevices::DeviceChangeQueue::Kind::defaultChanged
+        || handle->deviceChanges.usesEndpoint(id);
+    if (routeChange) handle->stopAudioCaptureAndPlaybackLoop.store(1, std::memory_order_release);
+    if (!handle->deviceChanges.enqueue(kind, id, state))
+    {
+        handle->deviceChanges.invalidateUsedEndpoints();
+        handle->stopAudioCaptureAndPlaybackLoop.store(1, std::memory_order_release);
+    }
     if (auto wake = handle->deviceChangeCallback.load(std::memory_order_acquire)) wake();
 }
 }

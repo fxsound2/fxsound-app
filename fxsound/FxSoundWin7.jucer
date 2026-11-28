@@ -215,6 +215,7 @@
         <GROUP id="{FBD61171-43D0-1152-4B75-F146482E62D3}" name="Controller">
           <FILE id="GhxcDp" name="FxController.cpp" compile="1" resource="0"
                 file="Source/GUI/FxController.cpp"/>
+          <FILE id="OutRec" name="OutputRecovery.h" compile="0" resource="0" file="Source/GUI/OutputRecovery.h"/>
           <FILE id="DY0Igh" name="FxController.h" compile="0" resource="0" file="Source/GUI/FxController.h"/>
         </GROUP>
         <GROUP id="{145D6EE7-51A3-672A-B9B3-8D8F8412EC51}" name="Model">
