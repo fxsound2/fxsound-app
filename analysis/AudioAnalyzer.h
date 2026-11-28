@@ -31,6 +31,16 @@ namespace fxanalysis
 {
 constexpr int displayBandCount = 100;
 
+// Shared format/storage bounds for the analyzer and optional observers. These
+// are the ranges already accepted by AudioAnalyzer::prepare, not new formats.
+struct AnalysisLimits
+{
+    static constexpr int minimumSampleRate = 8000;
+    static constexpr int maximumSampleRate = 384000;
+    static constexpr int minimumFftSize = 64;
+    static constexpr int maximumFftSize = 32768;
+};
+
 struct BandSettings
 {
     static constexpr double sigmaBandSpacing = 0.60;

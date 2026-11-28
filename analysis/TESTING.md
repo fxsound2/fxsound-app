@@ -8,28 +8,46 @@ peak retention, queue overflow, reset/recovery and stale-frame handling. Tests
 generate their own signals and do not open an audio device or alter user settings.
 The executable writes JSON and returns a nonzero exit code on failure.
 
-From a Visual Studio 2022/v143 or Visual Studio 2026/v145 x64 **Developer PowerShell**, set `$repo` to this checkout
-and choose an empty build directory outside all source trees. For example:
+From a Visual Studio 2022/v143 or Visual Studio 2026/v145 x64 **Developer
+PowerShell**, invoke the checked-in runner with an absolute output directory
+outside the source checkout:
 
 ```powershell
 $repo = (Get-Location).Path
 $build = Join-Path $env:TEMP ('fxsound-analysis-' + [guid]::NewGuid().ToString('N'))
-New-Item -ItemType Directory -Path $build | Out-Null
-Push-Location $build
-try {
-    cl /nologo /std:c++17 /EHsc /O2 /MT /DNOMINMAX `
-        "$repo/analysis/tests/AudioAnalysisTests.cpp" `
-        "$repo/analysis/AudioAnalyzer.cpp" `
-        "$repo/analysis/runtime/AnalysisStream.cpp" /Fe:AudioAnalysisTests.exe
-    if ($LASTEXITCODE -ne 0) { throw 'Compilation failed' }
-    & ./AudioAnalysisTests.exe
-    if ($LASTEXITCODE -ne 0) { throw 'Tests failed' }
-} finally { Pop-Location }
+& "$repo/analysis/tests/Run-VisualizationTests.ps1" -BuildRoot $build -Configuration Release
+& "$repo/analysis/tests/Run-VisualizationTests.ps1" -BuildRoot $build -Configuration Debug
 ```
 
-For Debug, replace `/O2 /MT` with `/Od /Zi /MTd`. The tests have no JUCE dependency.
+The runner compiles the shared core once for each configuration, then links and
+runs two independent executables: the existing **158** analyzer/lifecycle checks
+and **384** additional history/model/request-session checks. It records build
+logs, JSON results, stderr and native exit status outside the checkout. It has no
+JUCE dependency and opens no audio endpoint or application profile. Debug CRT
+reports are configured for noninteractive execution. The existing suite has empty
+stderr. The additional suite emits 31 expected numerical diagnostic/timing lines:
+rumble and pursuit comparisons, profile/decay/widening checks, PCM chirps and
+carrier-sine oracles, and one 2,000-frame raster timing. They are not assertion or
+exception reports. Inspect their values against the checks; the single timing
+does not establish a performance improvement.
+
+For direct `cl` usage, both fixtures now require `AudioAnalyzer.cpp`,
+`runtime/AnalysisStream.cpp`, `WaterfallRaster.cpp` and the three model sources
+`experimental/pitch/{PitchMotion,SpectralCorrelation,HarmonicCombProfile}.cpp`.
+Use consistent `/MT` Release or `/MTd` Debug settings throughout. The runner is the
+maintained command reference; the earlier three-source example is insufficient.
+
 Build the application using the repository's normal JUCE/Visual Studio workflow;
-rebuild the audio callback library with its consumers after the interface change.
+rebuild the audio callback library with its consumers after the observation-token
+header change. Its third opaque `requestSession` field prevents old in-flight PCM
+from entering a reopened display session; it does not alter routing or DSP.
+
+[Optional views and controls](VISUALIZATIONS.md) describes the experimental model
+limits. The versioned [GUI harness and runner](tests/ui/README.md) rebuild the
+actual widgets against explicitly supplied matching JUCE module objects. Scaled
+offscreen widget exports exercise real
+paint code at 100/175/200% export sizes; they do not establish native Windows peer
+DPI behavior or validate interactive menus/window teardown in the full app.
 
 ## Windows application build on develop/windows
 
@@ -187,7 +205,58 @@ Separate successful compilation and numerical tests from manual device, UI,
 shutdown, Windows 7 runtime and performance checks. List checks not performed;
 do not infer them from an older local or trial executable.
 
-## Validation of the narrowed PR (2026-11-25)
+## Optional visualization validation (2026-11-28)
+
+The optional-views work is based on spectrum-only commit `0c55538`. The following
+results cover the final versioned test fixtures, with all build products outside
+the checkout and no normal FxSound instance started:
+
+| Check | v145 / JUCE 9.0.5 | v143 / JUCE 6.1.6 |
+| --- | --- | --- |
+| Application x64 | Debug and Release passed | Debug and Release passed |
+| Existing portable analyzer suite | 158/158, Debug and Release | 158/158, Debug and Release |
+| Additional histories/models/request sessions | 384/384, Debug and Release | 384/384, Debug and Release |
+| Offscreen production-widget harness | 115/115, Debug and Release | 115/115, Debug and Release |
+
+The portable suites have no JUCE dependency; the SDK labels identify the matching
+application/harness toolchain, not a numerical dependency. Each GUI run exported
+24 PNGs at 100/175/200%, returned exit 0, reported zero unexpected assertions and
+had no unexpected diagnostic markers. The runner records module/configuration
+provenance and hashes. Readable representative images are included in
+[the view documentation](VISUALIZATIONS.md); they are synthetic widget exports.
+
+The final harness locally recompiles the genuine JUCE core with assertion logging
+enabled, leaving cached application objects unchanged. Its additional check
+proves receipt of one expected real JUCE assertion message in a separate log,
+before normal scenes and explicit GUI teardown. Unexpected diagnostics remain
+failures. Assertions already compiled out of other Release modules and static
+destruction after main are outside that diagnostic coverage.
+
+The v145 Release portable suites also passed all 158+384 checks under
+AddressSanitizer, with debug symbols and no sanitizer finding. Remaining compiler
+warnings were inspected: the portable strncpy deprecation and application warning
+sites are inherited from the spectrum-only base. Numerical/performance stderr
+observations are not an application CPU benchmark.
+
+Initial validation attempts exposed a missing real `gui_extra` module object in
+the harness link and a sparse-pixel sampling false negative in one compact export.
+The runner now links that genuine matching module, and the fixture scans actual
+pixels rather than an alias-prone grid. The render criterion was not reduced;
+these were test-only corrections. Earlier attempts remain in the validation
+record rather than being reported as successful runs.
+
+The raw short-FFT reference comparison and its unmatched-window exclusions are
+described in [the view documentation](VISUALIZATIONS.md). Its exact equality does
+not establish equal hybrid bars, model history, musical accuracy or audible
+behavior. In particular, the rich 150 Hz fixture's 0/13 near-fundamental recovery
+is a documented accuracy limitation, separate from its solver-validity checks.
+
+The GUI harness does not exercise the full application, menus, auxiliary-window
+interaction/teardown, actual Windows peer DPI, device changes or real playback.
+Those behaviors remain manual-validation boundaries; scaled exports and source
+review do not replace them.
+
+## Historical validation of the narrowed PR (2026-11-25)
 
 The following runs use the spectrum/indicator changes after restoring the
 upstream shutdown and device-notification implementation. Their base is

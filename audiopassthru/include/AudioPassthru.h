@@ -59,7 +59,9 @@ public:
 	virtual void onSoundDeviceChange(bool processing) = 0;
     // Borrowed post-effects PCM; valid only for this call on the audio thread.
     // Implementations may only perform bounded, non-blocking observation/copy.
-    struct AnalysisInput { std::uint64_t revision = 0, clipGeneration = 0; };
+    // Opaque observation epochs. They reject an in-flight block from a previous
+    // display session without changing playback or taking a producer lock.
+    struct AnalysisInput { std::uint64_t revision = 0, clipGeneration = 0, requestSession = 0; };
     virtual AnalysisInput beginAudioBlock() noexcept { return {}; }
     virtual void onAudioBlock(const float*, int, int, int, std::uint64_t, AnalysisInput) noexcept {}
 };

@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "../AudioAnalyzer.h"
 #include "../runtime/AnalysisStream.h"
+#include "TestDiagnostics.h"
 #include "../../fxsound/Source/GUI/FxClipIndicator.h"
 #include "../../dsp/include/LimiterActivity.h"
 #include <algorithm>
@@ -48,6 +49,7 @@ std::vector<float> tone(int count, double frequency, float rightGain = 1.0f, dou
 }
 int main()
 {
+    configureNonInteractiveDiagnostics();
     int failures = 0;
     bool comma = false;
     std::cout << "{\"tests\":[";

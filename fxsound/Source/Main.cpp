@@ -99,6 +99,9 @@ public:
         {
             FxController::getInstance().autoSaveModifiedPreset();
             FxController::getInstance().stopTimer();
+            // Auxiliary observers own native windows/providers. Close them on
+            // this GUI thread before UIA and COM teardown, without touching devices.
+            FxController::getInstance().shutdownVisualizationWindows();
 
             if (audio_passthru_ != nullptr) audio_passthru_->registerCallback(nullptr);
             audio_passthru_.reset();

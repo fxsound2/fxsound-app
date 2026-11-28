@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "FxController.h"
 #include "FxMainWindow.h"
+#include "FxVisualizationWindows.h"
 #include "FxSystemTrayView.h"
 #include "FxMessage.h"
 #include "FxLanguage.h"
@@ -212,6 +213,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 
 FxController::~FxController()
 {
+    shutdownVisualizationWindows();
 	if (powerNotify_ != nullptr && unregister_suspend_resume_notification_ != nullptr)
 	{
 		unregister_suspend_resume_notification_(powerNotify_);
@@ -1747,6 +1749,7 @@ void FxController::selectProcessingOutput(std::vector<SoundDevice>& sound_device
 		if (!dfx_enabled_)
 		{
 			stopTimer();
+            requestVisualizationRefresh();
 			if (!SysInfo::isRemoteSession())
 			{
 				main_window_->removeFromDesktop();
@@ -1899,6 +1902,7 @@ void FxController::powerOn(bool on)
 
 		audio_passthru_->restoreDefaultPlaybackDevice();
 	}
+    requestVisualizationRefresh();
 }
 
 float FxController::getEffectValue(FxEffects::EffectType effect)
@@ -2289,6 +2293,9 @@ void FxController::timerCallback()
 		}
 	}
 
+    // Auxiliary windows can remain open in Lite or while the main window is
+    // hidden. Their demand and snapshots follow output state independently.
+    refreshVisualizationRequests();
 	// Auto-save modified preset once per minute if there are unsaved changes
 	static constexpr int AUTO_SAVE_INTERVAL = 600; // 600 ticks * 100ms = 60 seconds
 	if (++auto_save_counter_ >= AUTO_SAVE_INTERVAL)
@@ -2991,7 +2998,7 @@ void FxController::getSpectrumBandValues(Array<float>& band_values)
 AudioPassthruCallback::AnalysisInput FxController::beginAudioBlock() noexcept
 {
     const auto input = analysis_stream_.beginInput();
-    return {input.revision, input.clips};
+    return {input.revision, input.clips, input.requestSession};
 }
 
 void FxController::onAudioBlock(const float* pcm, int frames, int channels, int sample_rate,
@@ -3002,7 +3009,7 @@ void FxController::onAudioBlock(const float* pcm, int frames, int channels, int 
     output_channels_.store(channels, std::memory_order_release);
     if (channels == 1 || channels == 2)
         analysis_stream_.push(pcm, frames, channels, sample_rate, first_sample,
-                              {input.revision, input.clipGeneration});
+                              {input.revision, input.clipGeneration, input.requestSession});
 }
 
 fxanalysis::ClipEvents FxController::consumeOutputClipEvents() noexcept
@@ -3026,11 +3033,131 @@ bool FxController::isOutputMuted() const noexcept
     return output_muted_.load(std::memory_order_acquire);
 }
 
-void FxController::setAnalysisEnabled(bool enabled)
+void FxController::setMainSpectrumRequested(bool requested)
 {
-    const ScopedLock analysis_lock(analysis_control_lock_);
-    analysis_stream_.setEnabled(enabled);
+    if (visualizations_shutting_down_) return;
+    main_analysis_requested_ = requested;
+    refreshVisualizationRequests();
     dfx_dsp_.discardLimiterActivity();
+}
+
+void FxController::setCompactIndicatorRequested(bool requested)
+{
+    if (visualizations_shutting_down_) return;
+    compact_indicator_requested_ = requested;
+    refreshVisualizationRequests();
+}
+
+void FxController::ensureVisualizationWindows()
+{
+    if (visualizations_shutting_down_ || visualization_windows_) return;
+    visualization_windows_ = std::make_unique<FxVisualizationWindows>(analysis_stream_,
+        [this] { refreshVisualizationRequests(); },
+        [this] { if (main_window_ != nullptr) main_window_->refreshVisualizationLayout(); },
+        [this](const String& message) { logMessage(message); });
+}
+
+FxCompactIndicator FxController::getCompactIndicator() const noexcept
+{
+    return visualization_windows_ ? visualization_windows_->compactIndicator() : FxCompactIndicator::none;
+}
+
+const fxanalysis::experimental::PitchMotionSettings& FxController::getPitchObservationSettings() const
+{
+    static const fxanalysis::experimental::PitchMotionSettings defaults;
+    return visualization_windows_ ? visualization_windows_->settings() : defaults;
+}
+
+void FxController::setCompactIndicator(FxCompactIndicator choice)
+{
+    if (visualizations_shutting_down_) return;
+    ensureVisualizationWindows();
+    visualization_windows_->setCompactIndicator(choice);
+}
+
+void FxController::showSpectrumHistory()
+{
+    if (visualizations_shutting_down_) return;
+    ensureVisualizationWindows();
+    visualization_windows_->showSpectrumHistory();
+    refreshVisualizationRequests();
+}
+
+void FxController::showCarrierHistory()
+{
+    if (visualizations_shutting_down_) return;
+    ensureVisualizationWindows();
+    visualization_windows_->showCarrierHistory();
+    refreshVisualizationRequests();
+}
+
+void FxController::showPitchExperiment()
+{
+    if (visualizations_shutting_down_) return;
+    ensureVisualizationWindows();
+    visualization_windows_->showPitchExperiment();
+    refreshVisualizationRequests();
+}
+
+void FxController::refreshVisualizationRequests()
+{
+    fxanalysis::AnalysisRequests requested;
+    const bool eligible = !visualizations_shutting_down_ && canAnalyzeOutput()
+        && isVisualizationProcessing() && !isOutputMuted();
+    if (visualization_windows_)
+    {
+        visualization_windows_->refreshClocks(eligible);
+        requested = visualization_windows_->requests();
+    }
+    requested.mainSpectrum = eligible && main_analysis_requested_;
+    const auto compact = getCompactIndicator();
+    requested.compactPitch = eligible && compact_indicator_requested_ && compact == FxCompactIndicator::pitch;
+    requested.compactCarriers = eligible && compact_indicator_requested_ && compact == FxCompactIndicator::carriers;
+    {
+        const ScopedLock analysis_lock(analysis_control_lock_);
+        analysis_stream_.setRequests(requested);
+    }
+    if (visualization_windows_) visualization_windows_->refreshSnapshots();
+}
+
+void FxController::requestVisualizationRefresh()
+{
+    // powerOn() may be reached from the legacy MMDevice callback. The new
+    // window ownership and request flags must remain on the message thread.
+    auto* messages = MessageManager::getInstanceWithoutCreating();
+    if (messages != nullptr && messages->isThisTheMessageThread()) handleAsyncUpdate();
+    else triggerAsyncUpdate();
+}
+
+void FxController::handleAsyncUpdate()
+{
+    if (visualizations_shutting_down_) return;
+    refreshVisualizationRequests();
+    if (main_window_ != nullptr) main_window_->refreshVisualizationLayout();
+}
+
+void FxController::shutdownVisualizationWindows()
+{
+    if (visualizations_shutting_down_) return;
+    visualizations_shutting_down_ = true;
+    cancelPendingUpdate();
+    main_analysis_requested_ = compact_indicator_requested_ = false;
+    if (visualization_windows_) visualization_windows_->shutdown();
+    visualization_windows_.reset();
+    const ScopedLock analysis_lock(analysis_control_lock_);
+    analysis_stream_.setRequests({});
+}
+
+bool FxController::getPitchMotion(fxanalysis::experimental::PitchMotionSnapshot& snapshot)
+{
+    return !visualizations_shutting_down_ && isAudioProcessing() && !isOutputMuted()
+        && analysis_stream_.latestPitchMotion(snapshot);
+}
+
+bool FxController::getHarmonicComb(fxanalysis::experimental::HarmonicCombSnapshot& snapshot)
+{
+    return !visualizations_shutting_down_ && isAudioProcessing() && !isOutputMuted()
+        && analysis_stream_.latestHarmonicComb(snapshot);
 }
 
 void FxController::muteOutput(bool muted)
@@ -3052,6 +3179,12 @@ void FxController::discardAnalyzedSpectrumPeaks()
 
 bool FxController::getAnalyzedSpectrumBands(fxanalysis::BarSnapshot& bars)
 {
+    fxanalysis::AxisSnapshot axis;
+    return getAnalyzedSpectrumBands(bars, axis);
+}
+
+bool FxController::getAnalyzedSpectrumBands(fxanalysis::BarSnapshot& bars, fxanalysis::AxisSnapshot& axis)
+{
     const auto result = analysis_stream_.lastResult();
     if (result != analysis_reported_result_)
     {
@@ -3072,7 +3205,7 @@ bool FxController::getAnalyzedSpectrumBands(fxanalysis::BarSnapshot& bars)
             analysis_failure_logged_ = false;
         }
     }
-    return analysis_stream_.consumeBars(bars) && audio_process_on_;
+    return analysis_stream_.consumeBars(bars, axis) && audio_process_on_;
 }
 
 String FxController::FormatString(const String& format, const String& arg)

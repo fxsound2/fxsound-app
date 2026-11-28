@@ -37,6 +37,9 @@ public:
 	void pauseVisualizer();
 
 	void update();
+	void refreshVisualizationLayout();
+	void refreshVisualizerState();
+	std::function<void()> onPreferredSizeChanged;
 
     void setLookAndFeel();
 

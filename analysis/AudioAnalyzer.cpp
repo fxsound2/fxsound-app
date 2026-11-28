@@ -67,9 +67,9 @@ double SpectrumFrame::centreTimeSeconds() const noexcept
 
 AnalysisResult AudioAnalyzer::prepare(const AnalyzerConfig& config)
 {
-    if (!std::isfinite(config.sampleRate) || config.sampleRate < 8000.0 || config.sampleRate > 384000.0
+    if (!std::isfinite(config.sampleRate) || config.sampleRate < AnalysisLimits::minimumSampleRate || config.sampleRate > AnalysisLimits::maximumSampleRate
         || (config.channels != 1 && config.channels != 2)
-        || config.fftSize < 64 || config.fftSize > 32768 || (config.fftSize & (config.fftSize - 1)) != 0
+        || config.fftSize < AnalysisLimits::minimumFftSize || config.fftSize > AnalysisLimits::maximumFftSize || (config.fftSize & (config.fftSize - 1)) != 0
         || config.hopSize < 1 || config.hopSize > config.fftSize)
         return AnalysisResult::invalidConfiguration;
 
