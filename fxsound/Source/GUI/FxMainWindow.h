@@ -39,6 +39,7 @@ public:
     void showLiteView();
     void showProView();
     void update();
+    void updateVisualizerVisibility();
     void startVisualizer();
     void pauseVisualizer();
 

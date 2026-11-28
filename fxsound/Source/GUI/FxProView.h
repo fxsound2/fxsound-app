@@ -37,12 +37,14 @@ public:
 	void pauseVisualizer();
 
 	void update();
+	void updateVisualizerVisibility();
 
     void setLookAndFeel();
 
 private:
 	static constexpr int WIDTH = 1040;
-	static constexpr int HEIGHT = 491;
+	static constexpr int HEIGHT = 511;
+	static constexpr int VISUALIZER_GAP = 20;
 	static constexpr int PRESET_LIST_X = 40;
 	static constexpr int OUTPUT_LIST_X = 530;
 	static constexpr int LIST_Y = 32;

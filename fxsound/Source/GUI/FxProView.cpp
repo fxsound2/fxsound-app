@@ -45,7 +45,10 @@ FxProView::FxProView() : tool_tip_(this)
 
 void FxProView::startVisualizer()
 {
-	visualizer_.start();
+	if (visualizer_.isVisible())
+	{
+		visualizer_.start();
+	}
 }
 
 void FxProView::pauseVisualizer()
@@ -58,18 +61,30 @@ void FxProView::update()
 	audio_controls_.update();
 	equalizer_.update();
 
-	visualizer_.calcGradient();
-
-    if (FxController::getInstance().isAudioProcessing())
-    {
-        visualizer_.reset();
-    }
-
-	visualizer_.setVisible(true);
-	setSize(WIDTH, HEIGHT + 20);
+	updateVisualizerVisibility();
 	// -------------------------- Values always visible since version 2.0 (otherwise they do not appear on touch screens)
 	equalizer_.showValues(true);
 	audio_controls_.showValues(true);
+}
+
+void FxProView::updateVisualizerVisibility()
+{
+	auto& controller = FxController::getInstance();
+	const auto visible = controller.isVisualizerVisible();
+	visualizer_.setVisible(visible);
+	if (visible && controller.isAudioProcessing())
+	{
+		visualizer_.start();
+	}
+	else
+	{
+		visualizer_.pause();
+	}
+
+	// Collapse the graph and its gap, keeping the controls and panel margins unchanged.
+	setSize(WIDTH, HEIGHT - (visible ? 0 : visualizer_.getHeight() + VISUALIZER_GAP));
+	resized();
+	repaint();
 }
 
 void FxProView::setLookAndFeel()
@@ -88,8 +103,8 @@ void FxProView::resized()
     auto visualizer_offset = 0;
     if (visualizer_.isVisible())
     {
-        visualizer_.setBounds(40, preset_list_.getBottom() + 20, visualizer_.getWidth(), visualizer_.getHeight());
-        visualizer_offset = visualizer_.getHeight() + 20;
+        visualizer_.setBounds(40, preset_list_.getBottom() + VISUALIZER_GAP, visualizer_.getWidth(), visualizer_.getHeight());
+        visualizer_offset = visualizer_.getHeight() + VISUALIZER_GAP;
     }
 
     auto bounds = getLocalBounds();
@@ -105,7 +120,7 @@ void FxProView::paint(Graphics& g)
     auto visualizer_offset = 0;
     if (visualizer_.isVisible())
     {
-        visualizer_offset = visualizer_.getHeight() + 20;
+        visualizer_offset = visualizer_.getHeight() + VISUALIZER_GAP;
     }
 
 	g.setFillType(FillType(theme.getCurrentColourScheme().getUIColour(LookAndFeel_V4::ColourScheme::windowBackground)));

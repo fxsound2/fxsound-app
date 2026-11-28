@@ -159,6 +159,9 @@ public:
 	bool isNotificationsHidden();
 	void setNotificationsHidden(bool status);
 
+	bool isVisualizerVisible();
+	void setVisualizerVisible(bool visible);
+
     String getLanguage() const;
     void setLanguage(String language_code);
 	int getMaxUserPresets() const;
