@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Mmdeviceapi.h>
 #include <vector> 
 #include <map>
+#include <atomic>
 
 class DspProcessingModule
 {
@@ -68,8 +69,8 @@ private:
 	bool b_no_valid_snd_device_dialog_shown_; /* Flag stating whether we have shown the user a message to select a valid snd device.  We only want it shown once per session. */
 	int debug_;
 	std::vector<SoundDevice> sound_devices_;
-	bool mute_;
+	std::atomic<bool> mute_{false};
 	DfxDsp *p_dfx_dsp_;
-	static AudioPassthruCallback *s_callback_;
+	static std::atomic<AudioPassthruCallback*> s_callback_;
 };
 

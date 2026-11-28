@@ -30,6 +30,7 @@ FxProView::FxProView() : tool_tip_(this)
 	addAndMakeVisible(audio_controls_);
 	addAndMakeVisible(equalizer_);
     addChildComponent(visualizer_);
+	visualizer_.onPreferredHeightChanged = [this] { refreshVisualizationLayout(); };
 
 	equalizer_.addMouseListener(this, true);
 	audio_controls_.addMouseListener(this, true);
@@ -66,7 +67,7 @@ void FxProView::update()
     }
 
 	visualizer_.setVisible(true);
-	setSize(WIDTH, HEIGHT + 20);
+	refreshVisualizationLayout();
 	// -------------------------- Values always visible since version 2.0 (otherwise they do not appear on touch screens)
 	equalizer_.showValues(true);
 	audio_controls_.showValues(true);
@@ -76,6 +77,21 @@ void FxProView::setLookAndFeel()
 {
 	audio_controls_.setLookAndFeel();
 }
+
+void FxProView::refreshVisualizationLayout()
+{
+	visualizer_.refreshState();
+	const int height = HEIGHT + 20 + visualizer_.preferredHeight() - 120;
+	if (getHeight() != height)
+	{
+		setSize(WIDTH, height);
+		if (onPreferredSizeChanged) onPreferredSizeChanged();
+	}
+	resized();
+	repaint();
+}
+
+void FxProView::refreshVisualizerState() { visualizer_.refreshState(); }
 
 void FxProView::resized()
 {

@@ -24,12 +24,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <JuceHeader.h>
 #include <functional>
 #include "FxModel.h"
+#include "FxVisualizationOptions.h"
 #include "FxTheme.h"
 #include "FxAudioControls.h"
 #include "../Source/Utils/Settings/Settings.h"
 #include "../Source/Utils/Settings/DeviceConfig.h"
 #include "AudioPassthru.h"
 #include "DfxDsp.h"
+#include "runtime/AnalysisStream.h"
 #include <wtsapi32.h>
 
 using namespace FxSound;
@@ -37,10 +39,11 @@ using namespace FxSound;
 class FxMainWindow;
 class FxWindow;
 class FxSystemTrayView;
+class FxVisualizationWindows;
 
 enum ViewType { Lite = 1, Pro = 2 };
 
-class FxController : public Timer, public DeletedAtShutdown, private AudioPassthruCallback
+class FxController : public Timer, public DeletedAtShutdown, private AudioPassthruCallback, private AsyncUpdater
 {
 public:
     static constexpr int NUM_SPECTRUM_BANDS = 10;
@@ -126,6 +129,29 @@ public:
 	float getEqBandBoostCut(int band_num);
 	void setEqBandBoostCut(int band_num, float boost);
     void getSpectrumBandValues(Array<float>& band_values);
+    // One consumer of the observation union; auxiliary views are independent.
+    void setMainSpectrumRequested(bool requested);
+    bool isVisualizationProcessing() noexcept { return isTimerRunning() && isAudioProcessing(); }
+    void setCompactIndicatorRequested(bool requested);
+    FxCompactIndicator getCompactIndicator() const noexcept;
+    void setCompactIndicator(FxCompactIndicator choice);
+    const fxanalysis::experimental::PitchMotionSettings& getPitchObservationSettings() const;
+    void showSpectrumHistory();
+    void showCarrierHistory();
+    void showPitchExperiment();
+    void shutdownVisualizationWindows(); // Main GUI thread, before UIA/COM teardown.
+    void muteOutput(bool muted);
+    bool canAnalyzeOutput() const noexcept;
+    bool isOutputMuted() const noexcept;
+    std::uint64_t outputObservationGeneration() const noexcept
+    { return output_observation_generation_.load(std::memory_order_acquire); }
+    bool getAnalyzedSpectrumBands(fxanalysis::BarSnapshot& bars);
+    bool getAnalyzedSpectrumBands(fxanalysis::BarSnapshot& bars, fxanalysis::AxisSnapshot& axis);
+    bool getPitchMotion(fxanalysis::experimental::PitchMotionSnapshot& snapshot);
+    bool getHarmonicComb(fxanalysis::experimental::HarmonicCombSnapshot& snapshot);
+    void discardAnalyzedSpectrumPeaks();
+    fxanalysis::ClipEvents consumeOutputClipEvents() noexcept;
+    fxdsp::LimiterLevels consumeLimiterActivity() noexcept;
 
 	void enableHotkeys(bool enable);
 	bool getHotkey(String cmdKey, int& mod, int& vk);
@@ -193,6 +219,10 @@ public:
 	FxSound::Settings& getSettings() { return settings_; }
 
 private:
+    void ensureVisualizationWindows();
+    void refreshVisualizationRequests(); // GUI thread: clocks, demand union, then snapshots.
+    void requestVisualizationRefresh(); // Coalesce non-GUI device/power notifications.
+    void handleAsyncUpdate() override;
 	class MessageWindow
 	{
 	public:
@@ -243,6 +273,9 @@ private:
 	static LRESULT CALLBACK eventCallback(HWND hwnd, const UINT message, const WPARAM w_param, const LPARAM l_param);
 	void timerCallback() override;
 	void onSoundDeviceChange(bool processing) override;
+    AnalysisInput beginAudioBlock() noexcept override;
+    void onAudioBlock(const float* pcm, int frames, int channels, int sample_rate,
+                      std::uint64_t first_sample, AnalysisInput input) noexcept override;
 	void onSystemSuspend();
 	void onSystemResume();
 	
@@ -278,7 +311,20 @@ private:
 	FxMainWindow* main_window_;
 	FxSystemTrayView* system_tray_view_;
 	AudioPassthru* audio_passthru_;
+    // Control-thread resets are serialized; the audio/UI observations are atomic.
+    CriticalSection analysis_control_lock_;
+    std::atomic<bool> output_muted_{false};
+    std::atomic<int> output_channels_{0};
+    // Mute/endpoint changes make the visualizer clear its held peaks and meters.
+    std::atomic<std::uint64_t> output_observation_generation_{0};
 	DfxDsp dfx_dsp_;
+    fxanalysis::AnalysisStream analysis_stream_;
+    std::unique_ptr<FxVisualizationWindows> visualization_windows_;
+    bool main_analysis_requested_ = false, compact_indicator_requested_ = false;
+    bool visualizations_shutting_down_ = false;
+    fxanalysis::AnalysisResult analysis_reported_result_ = fxanalysis::AnalysisResult::ok;
+    std::uint32_t analysis_last_log_ = 0;
+    bool analysis_has_logged_ = false, analysis_failure_logged_ = false;
 	FxSound::Settings settings_;
 	uint32_t device_count_;
 	std::unique_ptr<FileLogger> file_logger_;

@@ -6,6 +6,45 @@
               defines="UNICODE" postExportShellCommandWin="type %%1%%\ProjectWin7\status_icons.rc &gt;&gt; %%1%%\ProjectWin7\resources.rc"
               cppLanguageStandard="17">
   <MAINGROUP id="fy4sG5" name="FxSound">
+    <GROUP id="AnaGrp" name="Audio analysis">
+      <FILE id="b0ed3445" name="DisplayTiming.h" compile="0" resource="0" file="../analysis/DisplayTiming.h"/>
+      <FILE id="826c2389" name="WaterfallFrame.h" compile="0" resource="0" file="../analysis/WaterfallFrame.h"/>
+      <FILE id="8122a2e1" name="WaterfallRaster.h" compile="0" resource="0" file="../analysis/WaterfallRaster.h"/>
+      <FILE id="060e0470" name="WaterfallRaster.cpp" compile="1" resource="0" file="../analysis/WaterfallRaster.cpp"/>
+      <FILE id="dab533a8" name="WaterfallInbox.h" compile="0" resource="0" file="../analysis/runtime/WaterfallInbox.h"/>
+      <FILE id="b75b823d" name="WaterfallWindow.h" compile="0" resource="0" file="../analysis/ui/WaterfallWindow.h"/>
+      <FILE id="cc1c735a" name="WaterfallWindow.cpp" compile="1" resource="0" file="../analysis/ui/WaterfallWindow.cpp"/>
+      <FILE id="053b8068" name="PitchExperimentSettings.h" compile="0" resource="0" file="../analysis/experimental/pitch/PitchExperimentSettings.h"/>
+      <FILE id="83feeef1" name="SpectralWeighting.h" compile="0" resource="0" file="../analysis/experimental/pitch/SpectralWeighting.h"/>
+      <FILE id="c99c0815" name="PitchMotion.h" compile="0" resource="0" file="../analysis/experimental/pitch/PitchMotion.h"/>
+      <FILE id="ceb5e34d" name="PitchMotion.cpp" compile="1" resource="0" file="../analysis/experimental/pitch/PitchMotion.cpp"/>
+      <FILE id="30169340" name="SpectralCorrelation.h" compile="0" resource="0" file="../analysis/experimental/pitch/SpectralCorrelation.h"/>
+      <FILE id="1290d52a" name="SpectralCorrelation.cpp" compile="1" resource="0" file="../analysis/experimental/pitch/SpectralCorrelation.cpp"/>
+      <FILE id="a0e8a8a1" name="HarmonicCombProfile.h" compile="0" resource="0" file="../analysis/experimental/pitch/HarmonicCombProfile.h"/>
+      <FILE id="848180e6" name="HarmonicCombProfile.cpp" compile="1" resource="0" file="../analysis/experimental/pitch/HarmonicCombProfile.cpp"/>
+      <FILE id="d0992a2c" name="HarmonicCombSnapshot.h" compile="0" resource="0" file="../analysis/experimental/pitch/HarmonicCombSnapshot.h"/>
+      <FILE id="cf2c0f35" name="HarmonicCarrierDisplay.h" compile="0" resource="0" file="../analysis/experimental/pitch/HarmonicCarrierDisplay.h"/>
+      <FILE id="5e2a515b" name="PitchMotionIndicator.h" compile="0" resource="0" file="../analysis/experimental/pitch/ui/PitchMotionIndicator.h"/>
+      <FILE id="27abc4d9" name="PitchMotionIndicator.cpp" compile="1" resource="0" file="../analysis/experimental/pitch/ui/PitchMotionIndicator.cpp"/>
+      <FILE id="d63fe724" name="SpectralCorrelationIndicator.h" compile="0" resource="0" file="../analysis/experimental/pitch/ui/SpectralCorrelationIndicator.h"/>
+      <FILE id="7b3c0b18" name="SpectralCorrelationIndicator.cpp" compile="1" resource="0" file="../analysis/experimental/pitch/ui/SpectralCorrelationIndicator.cpp"/>
+      <FILE id="ff2627d7" name="HarmonicCombIndicator.h" compile="0" resource="0" file="../analysis/experimental/pitch/ui/HarmonicCombIndicator.h"/>
+      <FILE id="2598798f" name="HarmonicCombIndicator.cpp" compile="1" resource="0" file="../analysis/experimental/pitch/ui/HarmonicCombIndicator.cpp"/>
+      <FILE id="df33711d" name="PitchExperimentWindow.h" compile="0" resource="0" file="../analysis/experimental/pitch/ui/PitchExperimentWindow.h"/>
+      <FILE id="000010ab" name="PitchExperimentWindow.cpp" compile="1" resource="0" file="../analysis/experimental/pitch/ui/PitchExperimentWindow.cpp"/>
+      <FILE id="2a24991d" name="FxVisualizationOptions.h" compile="0" resource="0" file="Source/GUI/FxVisualizationOptions.h"/>
+      <FILE id="dcfe66fc" name="FxVisualizationWindows.h" compile="0" resource="0" file="Source/GUI/FxVisualizationWindows.h"/>
+      <FILE id="2a93a876" name="FxVisualizationWindows.cpp" compile="1" resource="0" file="Source/GUI/FxVisualizationWindows.cpp"/>
+      <FILE id="69c82a" name="AudioAnalyzer.cpp" compile="1" resource="0" file="../analysis/AudioAnalyzer.cpp"/>
+      <FILE id="2342ee" name="AudioAnalyzer.h" compile="0" resource="0" file="../analysis/AudioAnalyzer.h"/>
+      <FILE id="f16003" name="BarDynamics.h" compile="0" resource="0" file="../analysis/BarDynamics.h"/>
+      <FILE id="2cfcf8" name="FrequencyScale.h" compile="0" resource="0" file="../analysis/FrequencyScale.h"/>
+      <FILE id="82f6c1" name="BarPeakAccumulator.h" compile="0" resource="0" file="../analysis/BarPeakAccumulator.h"/>
+      <FILE id="a45d0d" name="AnalysisStream.cpp" compile="1" resource="0" file="../analysis/runtime/AnalysisStream.cpp"/>
+      <FILE id="4f0a6d" name="AnalysisStream.h" compile="0" resource="0" file="../analysis/runtime/AnalysisStream.h"/>
+      <FILE id="47d068" name="ClipDetector.h" compile="0" resource="0" file="../analysis/ClipDetector.h"/>
+      <FILE id="MtrUI1" name="FxClipIndicator.h" compile="0" resource="0" file="Source/GUI/FxClipIndicator.h"/>
+    </GROUP>
     <GROUP id="{9737D476-EEC4-7E5E-0B04-48E2783CC448}" name="Fonts">
       <FILE id="Z6Zv1m" name="Gilroy-Bold.ttf" compile="0" resource="1" file="Fonts/Gilroy-Bold.ttf"/>
       <FILE id="pxR00h" name="Gilroy-Regular.ttf" compile="0" resource="1"
@@ -279,9 +318,9 @@
             externalLibraries="crypt32.lib;Wtsapi32.lib" bigIcon="EFMcqw"
             windowsTargetPlatformVersion="Latest" smallIcon="KpuESS">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
+        <CONFIGURATION isDebug="1" name="Debug" headerPath="$(ProjectDir)..\..\analysis;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
                        useRuntimeLibDLL="0" winArchitecture="x64" targetName="FxSound"/>
-        <CONFIGURATION isDebug="0" name="Release" headerPath="$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
+        <CONFIGURATION isDebug="0" name="Release" headerPath="$(ProjectDir)..\..\analysis;$(SolutionDir)..\..\audiopassthru\include;$(SolutionDir)..\..\dsp\include;$(SolutionDir)..\Source\GUI"
                        useRuntimeLibDLL="0" alwaysGenerateDebugSymbols="1" postbuildCommand="copy $(TargetPath) ..\..\bin\$(PlatformTarget)\Win7\ /y&#10;copy $(TargetDir)$(TargetName).pdb ..\..\bin\$(PlatformTarget)\Win7\ /y"
                        optimisation="4" debugInformationFormat="ProgramDatabase" winArchitecture="x64"
                        targetName="FxSound"/>

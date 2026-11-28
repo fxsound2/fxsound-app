@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // but without doing this I was getting access violiation excpeiotn in MMDevApi.dll so 
 // there is some truth to it.
 sndDevicesHdlType AudioPassthruPrivate::s_sndDevices_;
-AudioPassthruCallback* AudioPassthruPrivate::s_callback_ = nullptr;
+std::atomic<AudioPassthruCallback*> AudioPassthruPrivate::s_callback_{nullptr};
 
 AudioPassthruPrivate::AudioPassthruPrivate()
 {
@@ -48,6 +48,7 @@ AudioPassthruPrivate::AudioPassthruPrivate()
 
 AudioPassthruPrivate::~AudioPassthruPrivate()
 {
+	registerCallback(nullptr);
 	int i_result_flag;
 	int i_timed_out;
 
@@ -241,9 +242,9 @@ void AudioPassthruPrivate::onDeviceChange()
 	// Clear the unavailability flag so processTimer() can retry after this device change.
 	s_sndDevices_.playbackDeviceIsUnavailable = FALSE;
 
-	if (s_callback_ != nullptr)
+	if (auto* callback = s_callback_.load(std::memory_order_acquire))
 	{
-		s_callback_->onSoundDeviceChange(false);
+		callback->onSoundDeviceChange(false);
 	}
 }
 
@@ -456,8 +457,8 @@ int AudioPassthruPrivate::processTimer()
 			hProcessingThread_ = INVALID_HANDLE_VALUE;
 		}
 
-		if (s_callback_ != nullptr)
-			s_callback_->onSoundDeviceChange(true);
+		if (auto* callback = s_callback_.load(std::memory_order_acquire))
+			callback->onSoundDeviceChange(true);
 
 		/* Check if a new playback device has been selected */
 		/*
@@ -475,6 +476,7 @@ int AudioPassthruPrivate::processTimer()
 */
 DWORD AudioPassthruPrivate::threadWorker(void)
 {
+	std::uint64_t samplePosition = 0;
 	float *fp_buffer;
 	int numSampleSets;
 	WAVEFORMATEX *pwfx;
@@ -519,6 +521,12 @@ DWORD AudioPassthruPrivate::threadWorker(void)
 
 		if (numSampleSets > 0)
 		{
+            // Capture observation generations before DSP so a concurrent reset
+            // cannot publish this block as a new attack on the spectrum/meters.
+            const bool muted = mute_.load(std::memory_order_acquire);
+            auto* callback = muted ? nullptr : s_callback_.load(std::memory_order_acquire);
+            const auto input = callback ? callback->beginAudioBlock() : AudioPassthruCallback::AnalysisInput{};
+            const auto limiterGeneration = p_dfx_dsp_->limiterGeneration();
 			/* Set additional processing settings */
 			i_valid_bits = pwfx->wBitsPerSample;
 			i_check_for_duplicate_buffers = IS_FALSE;
@@ -544,8 +552,15 @@ DWORD AudioPassthruPrivate::threadWorker(void)
 				// Apply DFX processing here using data and format vars above. Format will always be 32 bit floating point.
 			//	if (dfxpUniversalModifySamples(cast_handle->dfxp_hdl, (short int *)fp_buffer, (short int *)fp_buffer, numSampleSets, i_check_for_duplicate_buffers) != OKAY)
 				//	return(NOT_OKAY);
-				p_dfx_dsp_->processAudio((short int *)fp_buffer, (short int *)fp_buffer, numSampleSets, i_check_for_duplicate_buffers);
+				p_dfx_dsp_->processAudio((short int *)fp_buffer, (short int *)fp_buffer, numSampleSets, i_check_for_duplicate_buffers, !muted, limiterGeneration);
 			}
+
+            // Observe post-effects PCM before output conversion. The controller
+            // rejects a token invalidated by a mute or device change during DSP.
+            if (callback != nullptr && !mute_.load(std::memory_order_acquire))
+                callback->onAudioBlock(fp_buffer, numSampleSets, pwfx->nChannels, pwfx->nSamplesPerSec,
+                                       samplePosition, input);
+            samplePosition += static_cast<std::uint64_t>(numSampleSets);
 
 			/* Check if thread has been signaled to end */
 			if (i_kill_processing_thread_)
@@ -561,7 +576,7 @@ DWORD AudioPassthruPrivate::threadWorker(void)
 		* NOTE: This needs to outside of the if block so that unplayed buffers can still be played.
 		*       It is okay to call this even when all buffers have already been played.
 		*/
-		if (!mute_)
+		if (!mute_.load(std::memory_order_acquire))
 		{
 			if (sndDevicesDoPlayback(hp_sndDevices_, &resultFlag) != OKAY)
 				return(NOT_OKAY);
@@ -603,12 +618,12 @@ DWORD WINAPI AudioPassthruPrivate::processingThread(LPVOID lpParam)
 
 void AudioPassthruPrivate::mute(bool mute)
 {
-	mute_ = mute;
+	mute_.store(mute, std::memory_order_release);
 }
 
 void AudioPassthruPrivate::registerCallback(AudioPassthruCallback* callback)
 {
-	s_callback_ = callback;
+	s_callback_.store(callback, std::memory_order_release);
 }
 
 bool AudioPassthruPrivate::isPlaybackDeviceAvailable()

@@ -106,7 +106,18 @@ int COMSFTWR_DECL comSftwrWriteParam(PT_HANDLE *hp_comSftwr, long l_offset, long
  *  Currently only processes stereo to stereo or mono to mono signals.
  *
  */
-int COMSFTWR_DECL comSftwrProcessWaveBuffer(PT_HANDLE *hp_comSftwr, long *lp_data, long l_length, 
+int COMSFTWR_DECL comSftwrTakeLimiterActivity(PT_HANDLE *hp_comSftwr, float *left, float *right)
+{
+	struct comSftwrHdlType *handle = (struct comSftwrHdlType *)hp_comSftwr;
+	/* The host reports the error once, outside this meter transport. */
+	if (handle == NULL || left == NULL || right == NULL) return NOT_OKAY_NO_BREAK;
+	*left = handle->limiter_peak_ratio[0];
+	*right = handle->limiter_peak_ratio[1];
+	handle->limiter_peak_ratio[0] = handle->limiter_peak_ratio[1] = 0.0f;
+	return OKAY;
+}
+
+int COMSFTWR_DECL comSftwrProcessWaveBuffer(PT_HANDLE *hp_comSftwr, long *lp_data, long l_length,
                          int i_stereo_in_mode, int i_stereo_out_mode, 
 								 int i_buffer_type)
 {
@@ -131,6 +142,8 @@ int COMSFTWR_DECL comSftwrProcessWaveBuffer(PT_HANDLE *hp_comSftwr, long *lp_dat
    param_addr = &(cast_handle->dsp_params[0]);
 
    index = cast_handle->dsp_function_index;
+	cast_handle->ComSftwrMeterData.aux_vals[DFX_LIMITER_RATIO_LEFT] = 0.0f;
+	cast_handle->ComSftwrMeterData.aux_vals[DFX_LIMITER_RATIO_RIGHT] = 0.0f;
 
 #ifdef COMSFTWR_MESSAGE_BOXES
    if( (index < 0) || (index > 62) )
@@ -261,6 +274,11 @@ int COMSFTWR_DECL comSftwrProcessWaveBuffer(PT_HANDLE *hp_comSftwr, long *lp_dat
 #ifdef COMSFTWR_CHECK_OUT_DSP
    hutsyncCheckInDsp( (unsigned short)i_processor_index );
 #endif
+
+	if (cast_handle->ComSftwrMeterData.aux_vals[DFX_LIMITER_RATIO_LEFT] > cast_handle->limiter_peak_ratio[0])
+		cast_handle->limiter_peak_ratio[0] = cast_handle->ComSftwrMeterData.aux_vals[DFX_LIMITER_RATIO_LEFT];
+	if (cast_handle->ComSftwrMeterData.aux_vals[DFX_LIMITER_RATIO_RIGHT] > cast_handle->limiter_peak_ratio[1])
+		cast_handle->limiter_peak_ratio[1] = cast_handle->ComSftwrMeterData.aux_vals[DFX_LIMITER_RATIO_RIGHT];
 
    cast_handle->sample_count += l_length;
 

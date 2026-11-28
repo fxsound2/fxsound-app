@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "FxController.h"
 #include "FxMainWindow.h"
+#include "FxVisualizationWindows.h"
 #include "FxSystemTrayView.h"
 #include "FxMessage.h"
 #include "FxLanguage.h"
@@ -212,6 +213,7 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 
 FxController::~FxController()
 {
+    shutdownVisualizationWindows();
 	if (powerNotify_ != nullptr && unregister_suspend_resume_notification_ != nullptr)
 	{
 		unregister_suspend_resume_notification_(powerNotify_);
@@ -1180,7 +1182,7 @@ void FxController::setOutput(const String output_device_id, bool notify)
 
 	if (!output_found)
 	{
-		audio_passthru_->mute(true);
+		muteOutput(true);
 		powerOn(false);
 
 		FxModel::getModel().pushMessage(TRANS("Output Disconnected"));
@@ -1190,7 +1192,7 @@ void FxController::setOutput(const String output_device_id, bool notify)
 		if (FxModel::getModel().getPowerState())
 		{
 			powerOn(true);
-			audio_passthru_->mute(false);
+			muteOutput(false);
 		}
 	}
 
@@ -1725,7 +1727,7 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 	{
 		if (FxModel::getModel().getPowerState())
 		{
-			audio_passthru_->mute(true);
+			muteOutput(true);
 		}
 		return;
 	}
@@ -1747,6 +1749,7 @@ void FxController::selectProcessingOutput(std::vector<SoundDevice>& sound_device
 		if (!dfx_enabled_)
 		{
 			stopTimer();
+            requestVisualizationRefresh();
 			if (!SysInfo::isRemoteSession())
 			{
 				main_window_->removeFromDesktop();
@@ -1887,7 +1890,7 @@ void FxController::powerOn(bool on)
 
 			if (hdmi_reconnect_pending_)
 			{
-				audio_passthru_->mute(false);
+				muteOutput(false);
 				clearOutputRestore();
 			}
 		}
@@ -1899,6 +1902,7 @@ void FxController::powerOn(bool on)
 
 		audio_passthru_->restoreDefaultPlaybackDevice();
 	}
+    requestVisualizationRefresh();
 }
 
 float FxController::getEffectValue(FxEffects::EffectType effect)
@@ -2237,7 +2241,7 @@ void FxController::timerCallback()
 			// and an output is available (setOutput() keeps it muted when no output is available).
 			if (FxModel::getModel().getPowerState() && !active_output_devices_.empty())
 			{
-				audio_passthru_->mute(false);
+				muteOutput(false);
 			}
 		}
 	}
@@ -2289,6 +2293,9 @@ void FxController::timerCallback()
 		}
 	}
 
+    // Auxiliary windows can remain open in Lite or while the main window is
+    // hidden. Their demand and snapshots follow output state independently.
+    refreshVisualizationRequests();
 	// Auto-save modified preset once per minute if there are unsaved changes
 	static constexpr int AUTO_SAVE_INTERVAL = 600; // 600 ticks * 100ms = 60 seconds
 	if (++auto_save_counter_ >= AUTO_SAVE_INTERVAL)
@@ -2313,6 +2320,15 @@ void FxController::onSoundDeviceChange(bool processing)
 		return; // Ignore device changes on another user session
 
 	ScopedLock auto_lock(lock_);
+    // MMDevice callbacks and UI actions share this reset sequence. The audio
+    // producer only reads revision tokens and never takes this control lock.
+    {
+        const ScopedLock analysis_lock(analysis_control_lock_);
+        output_observation_generation_.fetch_add(1, std::memory_order_release);
+        output_channels_.store(0, std::memory_order_release);
+        analysis_stream_.resetInput();
+        dfx_dsp_.discardLimiterActivity();
+    }
 
 	if (isTimerRunning())
 	{
@@ -2345,7 +2361,7 @@ void FxController::onSystemSuspend()
 
 	if (FxModel::getModel().getPowerState())
 	{
-		audio_passthru_->mute(true);
+		muteOutput(true);
 	}
 }
 
@@ -2359,7 +2375,7 @@ void FxController::onSystemResume()
 
 	if (!hdmi_reconnect_pending_ && FxModel::getModel().getPowerState())
 	{
-		audio_passthru_->mute(false);
+		muteOutput(false);
 	}
 }
 
@@ -2977,6 +2993,219 @@ void FxController::getSpectrumBandValues(Array<float>& band_values)
 			band_values.set(i, 0.01f);
 		}
 	}
+}
+
+AudioPassthruCallback::AnalysisInput FxController::beginAudioBlock() noexcept
+{
+    const auto input = analysis_stream_.beginInput();
+    return {input.revision, input.clips, input.requestSession};
+}
+
+void FxController::onAudioBlock(const float* pcm, int frames, int channels, int sample_rate,
+                               std::uint64_t first_sample, AnalysisInput input) noexcept
+{
+    // Keep the format observation even when HighRes is disabled, so the UI can
+    // fall back for multichannel and resume the saved choice for mono/stereo.
+    output_channels_.store(channels, std::memory_order_release);
+    if (channels == 1 || channels == 2)
+        analysis_stream_.push(pcm, frames, channels, sample_rate, first_sample,
+                              {input.revision, input.clipGeneration, input.requestSession});
+}
+
+fxanalysis::ClipEvents FxController::consumeOutputClipEvents() noexcept
+{
+    return analysis_stream_.consumeClipEvents();
+}
+
+fxdsp::LimiterLevels FxController::consumeLimiterActivity() noexcept
+{
+    return dfx_dsp_.consumeLimiterActivity();
+}
+
+bool FxController::canAnalyzeOutput() const noexcept
+{
+    const int channels = output_channels_.load(std::memory_order_acquire);
+    return channels <= 2;
+}
+
+bool FxController::isOutputMuted() const noexcept
+{
+    return output_muted_.load(std::memory_order_acquire);
+}
+
+void FxController::setMainSpectrumRequested(bool requested)
+{
+    if (visualizations_shutting_down_) return;
+    main_analysis_requested_ = requested;
+    refreshVisualizationRequests();
+    dfx_dsp_.discardLimiterActivity();
+}
+
+void FxController::setCompactIndicatorRequested(bool requested)
+{
+    if (visualizations_shutting_down_) return;
+    compact_indicator_requested_ = requested;
+    refreshVisualizationRequests();
+}
+
+void FxController::ensureVisualizationWindows()
+{
+    if (visualizations_shutting_down_ || visualization_windows_) return;
+    visualization_windows_ = std::make_unique<FxVisualizationWindows>(analysis_stream_,
+        [this] { refreshVisualizationRequests(); },
+        [this] { if (main_window_ != nullptr) main_window_->refreshVisualizationLayout(); },
+        [this](const String& message) { logMessage(message); });
+}
+
+FxCompactIndicator FxController::getCompactIndicator() const noexcept
+{
+    return visualization_windows_ ? visualization_windows_->compactIndicator() : FxCompactIndicator::none;
+}
+
+const fxanalysis::experimental::PitchMotionSettings& FxController::getPitchObservationSettings() const
+{
+    static const fxanalysis::experimental::PitchMotionSettings defaults;
+    return visualization_windows_ ? visualization_windows_->settings() : defaults;
+}
+
+void FxController::setCompactIndicator(FxCompactIndicator choice)
+{
+    if (visualizations_shutting_down_) return;
+    ensureVisualizationWindows();
+    visualization_windows_->setCompactIndicator(choice);
+}
+
+void FxController::showSpectrumHistory()
+{
+    if (visualizations_shutting_down_) return;
+    ensureVisualizationWindows();
+    visualization_windows_->showSpectrumHistory();
+    refreshVisualizationRequests();
+}
+
+void FxController::showCarrierHistory()
+{
+    if (visualizations_shutting_down_) return;
+    ensureVisualizationWindows();
+    visualization_windows_->showCarrierHistory();
+    refreshVisualizationRequests();
+}
+
+void FxController::showPitchExperiment()
+{
+    if (visualizations_shutting_down_) return;
+    ensureVisualizationWindows();
+    visualization_windows_->showPitchExperiment();
+    refreshVisualizationRequests();
+}
+
+void FxController::refreshVisualizationRequests()
+{
+    fxanalysis::AnalysisRequests requested;
+    const bool eligible = !visualizations_shutting_down_ && canAnalyzeOutput()
+        && isVisualizationProcessing() && !isOutputMuted();
+    if (visualization_windows_)
+    {
+        visualization_windows_->refreshClocks(eligible);
+        requested = visualization_windows_->requests();
+    }
+    requested.mainSpectrum = eligible && main_analysis_requested_;
+    const auto compact = getCompactIndicator();
+    requested.compactPitch = eligible && compact_indicator_requested_ && compact == FxCompactIndicator::pitch;
+    requested.compactCarriers = eligible && compact_indicator_requested_ && compact == FxCompactIndicator::carriers;
+    {
+        const ScopedLock analysis_lock(analysis_control_lock_);
+        analysis_stream_.setRequests(requested);
+    }
+    if (visualization_windows_) visualization_windows_->refreshSnapshots();
+}
+
+void FxController::requestVisualizationRefresh()
+{
+    // powerOn() may be reached from the legacy MMDevice callback. The new
+    // window ownership and request flags must remain on the message thread.
+    auto* messages = MessageManager::getInstanceWithoutCreating();
+    if (messages != nullptr && messages->isThisTheMessageThread()) handleAsyncUpdate();
+    else triggerAsyncUpdate();
+}
+
+void FxController::handleAsyncUpdate()
+{
+    if (visualizations_shutting_down_) return;
+    refreshVisualizationRequests();
+    if (main_window_ != nullptr) main_window_->refreshVisualizationLayout();
+}
+
+void FxController::shutdownVisualizationWindows()
+{
+    if (visualizations_shutting_down_) return;
+    visualizations_shutting_down_ = true;
+    cancelPendingUpdate();
+    main_analysis_requested_ = compact_indicator_requested_ = false;
+    if (visualization_windows_) visualization_windows_->shutdown();
+    visualization_windows_.reset();
+    const ScopedLock analysis_lock(analysis_control_lock_);
+    analysis_stream_.setRequests({});
+}
+
+bool FxController::getPitchMotion(fxanalysis::experimental::PitchMotionSnapshot& snapshot)
+{
+    return !visualizations_shutting_down_ && isAudioProcessing() && !isOutputMuted()
+        && analysis_stream_.latestPitchMotion(snapshot);
+}
+
+bool FxController::getHarmonicComb(fxanalysis::experimental::HarmonicCombSnapshot& snapshot)
+{
+    return !visualizations_shutting_down_ && isAudioProcessing() && !isOutputMuted()
+        && analysis_stream_.latestHarmonicComb(snapshot);
+}
+
+void FxController::muteOutput(bool muted)
+{
+    const ScopedLock analysis_lock(analysis_control_lock_);
+    if (audio_passthru_ == nullptr || output_muted_.load(std::memory_order_relaxed) == muted) return;
+    output_observation_generation_.fetch_add(1, std::memory_order_release);
+    if (muted) audio_passthru_->mute(true);
+    analysis_stream_.resetInput();
+    dfx_dsp_.discardLimiterActivity();
+    output_muted_.store(muted, std::memory_order_release);
+    if (!muted) audio_passthru_->mute(false);
+}
+
+void FxController::discardAnalyzedSpectrumPeaks()
+{
+    analysis_stream_.discardBarPeaks();
+}
+
+bool FxController::getAnalyzedSpectrumBands(fxanalysis::BarSnapshot& bars)
+{
+    fxanalysis::AxisSnapshot axis;
+    return getAnalyzedSpectrumBands(bars, axis);
+}
+
+bool FxController::getAnalyzedSpectrumBands(fxanalysis::BarSnapshot& bars, fxanalysis::AxisSnapshot& axis)
+{
+    const auto result = analysis_stream_.lastResult();
+    if (result != analysis_reported_result_)
+    {
+        analysis_reported_result_ = result;
+        const auto now = Time::getMillisecondCounter();
+        if (result != fxanalysis::AnalysisResult::ok
+            && (!analysis_has_logged_ || now - analysis_last_log_ >= 5000))
+        {
+            logMessage(String("Audio analysis: ") + fxanalysis::describe(result) + " "
+                       + String(analysis_stream_.failureMessage()));
+            analysis_has_logged_ = true;
+            analysis_last_log_ = now;
+            analysis_failure_logged_ = true;
+        }
+        else if (result == fxanalysis::AnalysisResult::ok && analysis_failure_logged_)
+        {
+            logMessage("Audio analysis: recovered");
+            analysis_failure_logged_ = false;
+        }
+    }
+    return analysis_stream_.consumeBars(bars, axis) && audio_process_on_;
 }
 
 String FxController::FormatString(const String& format, const String& arg)

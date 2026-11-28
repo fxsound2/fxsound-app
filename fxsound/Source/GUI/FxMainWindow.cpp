@@ -177,6 +177,10 @@ private:
 FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"menuButton", DrawableButton::ButtonStyle::ImageFitted), resize_button_(L"resizeButton", DrawableButton::ButtonStyle::ImageFitted), donate_button_(L"donateButton", DrawableButton::ButtonStyle::ImageFitted), minimize_button_(L"minimizeButton", DrawableButton::ButtonStyle::ImageFitted)
 {
 	setName("FxSound");
+	pro_view_.onPreferredSizeChanged = [this]
+	{
+		if (pro_view_.getParentComponent() == this) setContent(&pro_view_);
+	};
 	setOpaque(false);
     enableShadow(false);
 
@@ -235,6 +239,7 @@ FxMainWindow::FxMainWindow() : power_button_(L"powerButton"), menu_button_(L"men
 
 FxMainWindow::~FxMainWindow()
 {
+    pro_view_.onPreferredSizeChanged = {};
 	help_bubble_.removeFromDesktop();
 	FxModel::getModel().removeListener(this);
 }
@@ -278,6 +283,10 @@ void FxMainWindow::showProView()
 {
     pro_view_.update();
 	setContent(&pro_view_);
+    if (FxController::getInstance().isAudioProcessing())
+        pro_view_.startVisualizer();
+    else
+        pro_view_.pauseVisualizer();
     setResizeImage();
 	setAlwaysOnTop(FxController::getInstance().isAlwaysOnTop());
 	
@@ -309,6 +318,12 @@ void FxMainWindow::showProView()
 void FxMainWindow::update()
 {
 	pro_view_.update();
+}
+
+void FxMainWindow::refreshVisualizationLayout()
+{
+	pro_view_.refreshVisualizationLayout();
+	if (pro_view_.getParentComponent() == this) setContent(&pro_view_);
 }
 
 void FxMainWindow::startVisualizer()
@@ -432,6 +447,7 @@ bool FxMainWindow::keyPressed(const KeyPress& key)
 
 void FxMainWindow::visibilityChanged()
 {
+	pro_view_.refreshVisualizerState();
 	auto* peer = getPeer();
 	if (peer)
 	{

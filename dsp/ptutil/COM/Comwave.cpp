@@ -86,7 +86,17 @@ int PT_DECLSPEC comProcessBuffer(PT_HANDLE *hp_com, long *lp_data, long l_length
  *  before processing and then upsample it after processing.
  *
  */
-int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, long *lp_data, float *rp_float, long l_length, 
+int PT_DECLSPEC comTakeLimiterActivity(PT_HANDLE *hp_com, float *left, float *right)
+{
+	struct comHdlType *handle = (struct comHdlType *)hp_com;
+	/* The caller reports telemetry failures; never open a dialog on the audio thread. */
+	if (handle == NULL || left == NULL || right == NULL) return NOT_OKAY_NO_BREAK;
+	*left = *right = 0.0f;
+	if (!handle->softdsp_mode) return OKAY;
+	return comSftwrTakeLimiterActivity(handle->comSftwr_hdl, left, right);
+}
+
+int PT_DECLSPEC comProcessWaveBuffer(PT_HANDLE *hp_com, long *lp_data, float *rp_float, long l_length,
                          int i_stereo_in_mode, int i_stereo_out_mode, int i_down_sample_ratio,
 								 int i_format_flag)
 {
