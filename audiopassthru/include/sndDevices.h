@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _SND_DEVICES_H_
 
 #include <Winbase.h>
+#include <atomic>
+#include "DeviceChangeQueue.h"
 #include <comdef.h>
 #include <mmreg.h>
 #include <Mmdeviceapi.h>
@@ -265,6 +267,7 @@ public:
 class CsndDevicesAudioEndpointVolumeCallbackCapture : public IAudioEndpointVolumeCallback
 {
 	LONG _cRef;
+    std::atomic<bool> registered_{false};
 
 public:
     CsndDevicesAudioEndpointVolumeCallbackCapture();
@@ -290,11 +293,13 @@ public:
 	 void SetPtHandle(PT_HANDLE *sndDevices_hdl);
 
 	 bool IsRegistered();
+     void SetRegistered(bool registered) noexcept { registered_.store(registered, std::memory_order_release); }
 };
 
 class CsndDevicesAudioEndpointVolumeCallbackPlayback : public IAudioEndpointVolumeCallback
 {
 	LONG _cRef;
+    std::atomic<bool> registered_{false};
 
 public:
     CsndDevicesAudioEndpointVolumeCallbackPlayback();
@@ -320,6 +325,7 @@ public:
 	 void SetPtHandle(PT_HANDLE *sndDevices_hdl);
 
 	 bool IsRegistered();
+     void SetRegistered(bool registered) noexcept { registered_.store(registered, std::memory_order_release); }
 };
 
 
@@ -402,7 +408,7 @@ struct sndDevicesHdlType {
 	float sigPower;
 	int bufferSizeMilliSecs;		// This is the average delay, actual internal buffers are twice this length.
 	//int playback_has_started;
-	int stopAudioCaptureAndPlaybackLoop;
+	std::atomic<int> stopAudioCaptureAndPlaybackLoop{0};
 	int dfxDeviceNum;	// The combo 44.1k and 48k hz. DFX device
 	//int dfx48DeviceNum;	// The 48k hz. DFX device
 	int defaultDeviceNum;
@@ -418,8 +424,8 @@ struct sndDevicesHdlType {
 	wchar_t lastDeviceAddCallbackGuid[PT_MAX_GENERIC_STRLEN]; // Contains the guid of the last device added or removed that generated a callback.
 	int totalCallbackCount;			// For debugging.
 	int totalReInitCalls;			// For debugging.
-	BOOL ignoreDeviceCallbacks;
-	BOOL ignoreVolumeCallbacks;
+	std::atomic<BOOL> ignoreDeviceCallbacks{FALSE};
+	std::atomic<BOOL> ignoreVolumeCallbacks{FALSE};
 	int initializationMode;		// Will be either SND_DEVICES_INIT_FOR_PROCESSING or SND_DEVICES_INIT_NO_PROCESSING
 	int playbackIsActive;		// Will be either SND_DEVICES_PLAYBACK_IS_STOPPED or SND_DEVICES_PLAYBACK_IS_ACTIVE.
 	int playbackStreamIsTemporarilyPaused;	// Used to turn off playback stream when no capture or playback is occuring.
@@ -432,7 +438,7 @@ struct sndDevicesHdlType {
 	// each other, so a change made through either one is the user's own, and putting an older value
 	// back would undo it.
 	wchar_t savedPlaybackDeviceID[PT_MAX_GENERIC_STRLEN];	// ID of the device this setting belongs to.
-	BOOL savedPlaybackMute;			// Its mute setting.
+	std::atomic<BOOL> savedPlaybackMute{FALSE};			// Its mute setting.
 	BOOL playbackSettingsAreSaved;	// TRUE when the two values above hold a valid setting.
 
 	int noBufferCount;			// This is a count of how many times no buffers were available in a DoRecording call.
@@ -444,7 +450,11 @@ struct sndDevicesHdlType {
 	// Module common status flag, set by functions that can't complete their requestion operation
 	int function_status;
 
-	void (*deviceChangeCallback)();
+	std::atomic<void (*)()> deviceChangeCallback{nullptr};
+    fxsounddevices::DeviceChangeQueue deviceChanges;
+    std::atomic<bool> deviceNotificationsClosed{false};
+    std::atomic<unsigned> deviceCallbacksInFlight{0};
+    IMMDeviceEnumerator* notificationEnumerator = nullptr;
 };
 
 _COM_SMARTPTR_TYPEDEF(IMMDevice, __uuidof(IMMDevice));
@@ -457,7 +467,8 @@ int PT_DECLSPEC sndDevicesFree(PT_HANDLE *);
 
 /* sndDevicesReInit.cpp */
 int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *, int, int *, int *, int *);
-int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE*, BOOL*);
+int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE*, BOOL*, bool checkDefault = false);
+int PT_DECLSPEC sndDevicesApplyDeviceChange(PT_HANDLE*, const fxsounddevices::DeviceChangeQueue::Event&, BOOL*);
 int PT_DECLSPEC sndDevices_GetAll(PT_HANDLE*, int*);
 
 /* sndDevicesGet.cpp */

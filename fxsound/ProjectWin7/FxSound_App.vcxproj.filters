@@ -1766,6 +1766,9 @@
     <ClInclude Include="..\Source\GUI\FxWindow.h">
       <Filter>FxSound\Source\GUI\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\GUI\OutputRecovery.h">
+      <Filter>FxSound\Source\GUI\Controller</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\GUI\FxController.h">
       <Filter>FxSound\Source\GUI\Controller</Filter>
     </ClInclude>

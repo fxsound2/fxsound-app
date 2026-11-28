@@ -28,7 +28,12 @@ AudioPassthru::AudioPassthru()
 
 AudioPassthru::~AudioPassthru()
 {
-	delete data_;
+    if (data_ == nullptr) return;
+    if (data_->shutdown(2500).safeToDestroy())
+        delete data_;
+    else
+        OutputDebugStringW(L"FxSound: retaining live audio runtime until process exit\n");
+    data_ = nullptr;
 }
 
 int AudioPassthru::init()
@@ -91,6 +96,31 @@ int AudioPassthru::processTimer()
 void AudioPassthru::mute(bool mute)
 {
 	data_->mute(mute);
+}
+
+void AudioPassthru::setDeviceNotificationWindow(HWND window) noexcept
+{
+    data_->setDeviceNotificationWindow(window);
+}
+
+void AudioPassthru::dispatchDeviceChange()
+{
+    data_->dispatchDeviceChange();
+}
+
+void AudioPassthru::requestStop() noexcept
+{
+    data_->requestStop();
+}
+
+DWORD AudioPassthru::pollStopped(DWORD& error) noexcept
+{
+    return data_->pollStopped(error);
+}
+
+fxaudio::ShutdownTask::Outcome AudioPassthru::shutdown(DWORD timeoutMs) noexcept
+{
+    return data_->shutdown(timeoutMs);
 }
 
 void AudioPassthru::registerCallback(AudioPassthruCallback* callback)

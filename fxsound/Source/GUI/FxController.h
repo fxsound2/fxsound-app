@@ -23,9 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <JuceHeader.h>
 #include <functional>
+#include <atomic>
 #include "FxModel.h"
 #include "FxTheme.h"
 #include "FxAudioControls.h"
+#include "OutputRecovery.h"
 #include "../Source/Utils/Settings/Settings.h"
 #include "../Source/Utils/Settings/DeviceConfig.h"
 #include "AudioPassthru.h"
@@ -40,7 +42,7 @@ class FxSystemTrayView;
 
 enum ViewType { Lite = 1, Pro = 2 };
 
-class FxController : public Timer, public DeletedAtShutdown, private AudioPassthruCallback
+class FxController : public Timer, private AudioPassthruCallback
 {
 public:
     static constexpr int NUM_SPECTRUM_BANDS = 10;
@@ -60,9 +62,16 @@ public:
 	
 	static FxController& getInstance()
 	{
-		static FxController* controller = new FxController();
-		return *controller;
+        auto& controller = instanceStorage();
+        if (controller == nullptr) controller = new FxController();
+        return *controller;
 	}
+    static FxController* existingInstance() noexcept { return instanceStorage(); }
+    // Call only on the UI thread after the audio coordinator reports safe teardown.
+    static void destroyInstance();
+    void beginAudioShutdown();
+    void detachAudioPassthru();
+    void prepareUiForExit();
 	~FxController();
 
 	FxController(const FxController&) = delete;
@@ -193,6 +202,9 @@ public:
 	FxSound::Settings& getSettings() { return settings_; }
 
 private:
+    static FxController*& instanceStorage() noexcept
+    { static FxController* instance = nullptr; return instance; }
+
 	class MessageWindow
 	{
 	public:
@@ -247,9 +259,11 @@ private:
 	void onSystemResume();
 	
     void initOutputs(std::vector<SoundDevice>& sound_devices);
-	void updateOutputs(std::vector<SoundDevice>& sound_devices);
+	void updateOutputs(std::vector<SoundDevice>& sound_devices, bool afterReinitialization = false);
 	void clearOutputRestore();
     void selectProcessingOutput(std::vector<SoundDevice>& sound_devices);
+    void applyOutputSelection(const String& id, bool notify, bool manual);
+    SoundDevice chooseRecoveryOutput(const SoundDevice& previous, SoundDevice preferred, bool afterReinitialization);
 	void syncPlaybackAvailability();
     void syncOutputWithSystemDefault(std::vector<SoundDevice>& sound_devices);
 
@@ -277,7 +291,9 @@ private:
 
 	FxMainWindow* main_window_;
 	FxSystemTrayView* system_tray_view_;
-	AudioPassthru* audio_passthru_;
+	AudioPassthru* audio_passthru_ = nullptr;
+    std::atomic<bool> audio_shutdown_requested_{false};
+    bool ui_exit_prepared_ = false; // UI thread only.
 	DfxDsp dfx_dsp_;
 	FxSound::Settings settings_;
 	uint32_t device_count_;
@@ -298,7 +314,9 @@ private:
 	// asleep) so HDMI also gets that time after wake. If HDMI is back in time it is reused, otherwise
 	// it is treated as a physical disconnect and the preferred output is selected.
 	static constexpr int HDMI_FAILOVER_INTERVAL = 30;	// 30 ticks * 100 ms = 3 s
-	String failover_output_name_;
+	OutputRecovery output_recovery_;
+    std::uint64_t output_catalogue_epoch_ = 0;
+    std::vector<std::wstring> active_output_ids_;
 	int hdmi_failover_counter_;
 	bool hdmi_reconnect_pending_;	// HDMI output lost, waiting for it to reconnect
 	std::vector<SoundDevice> active_output_devices_;

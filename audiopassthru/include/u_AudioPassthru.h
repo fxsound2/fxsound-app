@@ -25,6 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Mmdeviceapi.h>
 #include <vector> 
 #include <map>
+#include <atomic>
+#include <cstdint>
+#include <memory>
+#include "AudioShutdown.h"
+#include "EndpointRestore.h"
 
 class DspProcessingModule
 {
@@ -49,27 +54,61 @@ public:
 	DWORD threadWorker(void); // Needs to be public to be called from static thread starter function
 	int setTargetedRealPlaybackDevice(const std::wstring sound_device_guid);
 	void registerCallback(AudioPassthruCallback *callback);
+    void setDeviceNotificationWindow(HWND window) noexcept;
+    void dispatchDeviceChange();
+    void requestStop() noexcept;
+    fxaudio::ShutdownTask::Outcome shutdown(DWORD timeoutMs) noexcept;
+    DWORD pollStopped(DWORD& error) noexcept;
     bool isPlaybackDeviceAvailable();
 	bool checkDeviceChanges();
 	void restoreDefaultPlaybackDevice();
 
 private:
+    friend struct AudioPassthruTestPeer;
 	int sndDeviceHandleToSoundDevices(bool active_devices = true);
-	static void onDeviceChange();
+	static void onDeviceChange() noexcept;
+    void signalCaptureStop() noexcept;
+    DWORD captureAndPlay();
+    void applyDsp(float* pcm, int frames, const WAVEFORMATEX& format);
+    void refreshRestoreSnapshot() noexcept;
+    bool publishUsedEndpoints() noexcept;
+    bool refreshDeviceCatalogue();
+    bool refreshPendingCatalogue(bool notice);
+    bool drainDeviceChanges();
+    bool applyPendingOutput();
+    void overlayRouteFlags();
+    bool route_change_pending_ = false; // Owner only; catalogue events never set this implicitly.
+    std::wstring pending_output_id_, route_virtual_id_, route_capture_id_, route_output_id_;
+    std::uint64_t pending_output_generation_ = 0;
+    bool catalogue_dirty_ = false, catalogue_notice_pending_ = false;
+    ULONGLONG catalogue_retry_after_ = 0, catalogue_retry_until_ = 0;
+    static void CALLBACK retryDeviceNotice(PTP_CALLBACK_INSTANCE, void*, PTP_TIMER) noexcept;
+    static void armDeviceRetry() noexcept;
+    void closeDeviceRetry() noexcept;
+    std::shared_ptr<const fxaudio::EndpointRestoreSnapshot> restore_snapshot_;
+    fxaudio::ShutdownTask shutdown_task_;
+    bool initialization_started_ = false;
+    bool stopping_ = false; // Owner thread; prevents restart once shutdown begins.
 
 	PT_HANDLE *hp_sndDevices_;
-	static sndDevicesHdlType s_sndDevices_;
+	static sndDevicesHdlType& s_sndDevices_;
 
 	/* Processing Thread Info */
 	HANDLE hProcessingThread_;
 	DWORD ProcessingThreadID_;
-	int i_kill_processing_thread_; /* Flag set from the outside telling processing thread to end */
+	std::atomic<int> i_kill_processing_thread_; /* Flag set from the outside telling processing thread to end */
 	wchar_t wcp_playback_device_guid_[PT_MAX_GENERIC_STRLEN];
 	bool b_no_valid_snd_device_dialog_shown_; /* Flag stating whether we have shown the user a message to select a valid snd device.  We only want it shown once per session. */
 	int debug_;
 	std::vector<SoundDevice> sound_devices_;
-	bool mute_;
+	static constexpr unsigned mutedBit = 1;
+    // Low bit is mute; the remaining bits distinguish successive mute cycles.
+    std::atomic<unsigned> mute_state_{0};
 	DfxDsp *p_dfx_dsp_;
-	static AudioPassthruCallback *s_callback_;
+	static std::atomic<AudioPassthruCallback*> s_callback_;
+    static std::atomic<HWND> s_notification_window_;
+    static std::atomic<bool> s_device_change_pending_, s_device_message_posted_;
+    static PTP_TIMER s_device_retry_;
+    static std::atomic<bool> s_retry_armed_;
 };
 

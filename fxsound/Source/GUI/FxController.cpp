@@ -212,6 +212,14 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 
 FxController::~FxController()
 {
+    prepareUiForExit();
+}
+
+void FxController::prepareUiForExit()
+{
+    if (ui_exit_prepared_) return;
+    ui_exit_prepared_ = true;
+    beginAudioShutdown();
 	if (powerNotify_ != nullptr && unregister_suspend_resume_notification_ != nullptr)
 	{
 		unregister_suspend_resume_notification_(powerNotify_);
@@ -220,8 +228,17 @@ FxController::~FxController()
 	stopTimer();
 	WTSUnRegisterSessionNotification(message_window_.getHandle());
 	unregisterHotkeys();
+    SetWindowLongPtr(message_window_.getHandle(), GWLP_USERDATA, 0);
+    main_window_ = nullptr;
+    system_tray_view_ = nullptr;
 }
 
+void FxController::destroyInstance()
+{
+    auto*& controller = instanceStorage();
+    delete controller;
+    controller = nullptr;
+}
 
 void FxController::initConfig(const String& commandline)
 {
@@ -752,6 +769,7 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		}
 
 		audio_passthru_->registerCallback(this);
+        audio_passthru_->setDeviceNotificationWindow(message_window_.getHandle());
 
 		auto path = File(File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userApplicationDataDirectory).getFullPathName()) + L"FxSound\\Presets");
 		if (!path.exists())
@@ -1122,6 +1140,12 @@ bool FxController::setPreset(int selected_index, bool notify)
 
 void FxController::setOutput(const String output_device_id, bool notify)
 {
+    applyOutputSelection(output_device_id, notify, true);
+}
+
+void FxController::applyOutputSelection(const String& output_device_id, bool notify, bool manual)
+{
+    if (audio_shutdown_requested_.load(std::memory_order_acquire)) return;
 	std::vector<SoundDevice> sound_devices = audio_passthru_->getSoundDevices();
 
 	bool output_found = false;
@@ -1132,7 +1156,16 @@ void FxController::setOutput(const String output_device_id, bool notify)
 		{
 			if (output_device_id == sound_device.pwszID.c_str())
 			{
-				output_found = true;
+                output_found = true;
+                if (manual)
+                {
+                    output_recovery_.userSelected();
+                    hdmi_reconnect_pending_ = false;
+                    hdmi_failover_counter_ = 0;
+                    system_sleeping_ = false;
+                    // Replace an older queued restore BEFORE the same-ID shortcut.
+                    audio_passthru_->setAsPlaybackDevice(sound_device);
+                }
 				String message = TRANS("Output: ") + sound_device.deviceFriendlyName.c_str();
 
 				if (getOutputName() != sound_device.deviceFriendlyName.c_str())
@@ -1168,7 +1201,7 @@ void FxController::setOutput(const String output_device_id, bool notify)
 					}
 				}
 
-				audio_passthru_->setAsPlaybackDevice(sound_device);
+                if (!manual) audio_passthru_->setAsPlaybackDevice(sound_device);
 				output_changed_ = true;
 
 				FxModel::getModel().pushMessage(message);
@@ -1199,16 +1232,12 @@ void FxController::setOutput(const String output_device_id, bool notify)
 
 void FxController::setOutput(int output, bool notify)
 {
+    if (audio_shutdown_requested_.load(std::memory_order_acquire)) return;
 	auto output_devices = FxModel::getModel().getOutputDevices();
 
 	if (output < output_devices.size())
 	{
-		// Explicit user selection overrides any pending restore after sleep.
-		{
-			ScopedLock auto_lock(lock_);
-			clearOutputRestore();
-			system_sleeping_ = false;
-		}
+
 		setOutput(output_devices[output].pwszID.c_str(), notify);
 	}
 }
@@ -1585,206 +1614,115 @@ void FxController::initOutputs(std::vector<SoundDevice>& sound_devices)
 	}
 
 	FxModel::getModel().initOutputs(active_output_devices_);
-	setOutput(default_output.pwszID.c_str());
+	active_output_ids_.clear();
+    for (const auto& item : active_output_devices_) active_output_ids_.push_back(item.pwszID);
+    applyOutputSelection(default_output.pwszID.c_str(), true, false);
 }
 
-void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
+// Catalogue notices refresh the visible output list while audio may be playing.
+// Only the post-ReInit call may confirm a new backend route and finish recovery.
+void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices, bool afterReinitialization)
 {
-	auto prev_active_devices = active_output_devices_;
+    const SoundDevice previous = FxModel::getModel().getSelectedOutput();
+    active_output_devices_.clear();
+    for (const auto& item : sound_devices)
+        if (item.isActive && item.isRealDevice && item.deviceNumChannel >= 2) active_output_devices_.push_back(item);
+    sortByDeviceConfigPriority(active_output_devices_);
+    dfx_enabled_ = std::any_of(output_devices_.begin(), output_devices_.end(),
+        [](const SoundDevice& item) { return item.isDFXDevice && item.isActive; });
+    const auto find = [&](const std::wstring& id) -> const SoundDevice*
+    {
+        for (const auto& item : active_output_devices_) if (item.pwszID == id) return &item;
+        return nullptr;
+    };
+    const auto* current = find(previous.pwszID);
+    SoundDevice preferred = current ? *current : getPreferredOutput();
+    const bool available = audio_passthru_->isPlaybackDeviceAvailable();
+    if (afterReinitialization && available)
+        for (const auto& item : active_output_devices_) if (item.isTargetedRealPlaybackDevice) preferred = item;
 
-	active_output_devices_.clear();
+    // A known UNPLUGGED endpoint becoming ACTIVE is newly available too. Keep
+    // the established higher-priority preference, comparing eligible active IDs
+    // rather than total device count or the complete (including unplugged) list.
+    const auto configs = DeviceConfig::loadDeviceConfigs(settings_, "device_configs");
+    for (const auto& item : active_output_devices_)
+        if (std::find(active_output_ids_.begin(), active_output_ids_.end(), item.pwszID) == active_output_ids_.end()
+            && compareOutputDevicePriority(item.deviceFriendlyName.c_str(), preferred.deviceFriendlyName.c_str(), configs) < 0)
+        { preferred = item; break; }
+    active_output_ids_.clear();
+    for (const auto& item : active_output_devices_) active_output_ids_.push_back(item.pwszID);
 
-	for (auto sound_device : sound_devices)
-	{
-		if (sound_device.isActive && sound_device.isRealDevice && sound_device.deviceNumChannel >= 2)
-		{
-			active_output_devices_.push_back(sound_device);
-		}
-	}
+    preferred = chooseRecoveryOutput(previous, preferred, afterReinitialization);
+    FxModel::getModel().initOutputs(active_output_devices_);
+    if (hdmi_reconnect_pending_)
+    {
+        if (FxModel::getModel().getPowerState()) audio_passthru_->mute(true);
+        return;
+    }
+    applyOutputSelection(preferred.pwszID.c_str(), true, false);
+}
 
-	sortByDeviceConfigPriority(active_output_devices_);
+SoundDevice FxController::chooseRecoveryOutput(const SoundDevice& previous, SoundDevice preferred, bool afterReinitialization)
+{
+    const auto find = [&](const std::wstring& id) -> const SoundDevice*
+    {
+        for (const auto& item : active_output_devices_) if (item.pwszID == id) return &item;
+        return nullptr;
+    };
+    const bool available = audio_passthru_->isPlaybackDeviceAvailable();
+    const auto* current = find(previous.pwszID);
+    if (afterReinitialization && available)
+        for (const auto& item : active_output_devices_)
+            if (item.isTargetedRealPlaybackDevice) output_recovery_.committed(item.pwszID);
 
-	SoundDevice preferred_device;
+    if ((!current || (afterReinitialization && !available)) && !previous.pwszID.empty() && !output_recovery_.pending())
+    {
+        output_recovery_.rememberLost(previous.pwszID);
+        if (afterReinitialization && !available) output_recovery_.requestRestore(output_catalogue_epoch_);
+        if (previous.deviceFormFactor == L"HDMI")
+        {
+            hdmi_reconnect_pending_ = true;
+            hdmi_failover_counter_ = 0;
+        }
+    }
 
-	// New device is connected, find the preferred device if the new device has higher priority than the current output device
-	if (sound_devices.size() > device_count_)
-	{
-		auto device_configs = DeviceConfig::loadDeviceConfigs(settings_, "device_configs");
-
-		for (auto& sound_device : sound_devices)
-		{
-			if (!sound_device.isRealDevice || sound_device.deviceNumChannel < 2)
-				continue;
-
-			// Check if the device is a newly connected device
-			auto it = std::find_if(prev_active_devices.begin(), prev_active_devices.end(),
-				[&](const SoundDevice& existing) {
-					return existing.pwszID == sound_device.pwszID;
-				});
-
-			if (it == prev_active_devices.end())
-			{
-				// If the new device has higher priority, select it as output
-				if (compareOutputDevicePriority(sound_device.deviceFriendlyName.c_str(), getOutputName(), device_configs) < 0)
-				{
-					preferred_device = sound_device;
-					break;
-				}
-			}
-		}
-	}
-
-	// Output device is removed or a higher priority device is not connected.
-	// If the current output device is removed, select the preferred output device.
-	// Otherwise, keep the current output device.
-	if (preferred_device.pwszID.empty() && active_output_devices_.size() > 0)
-	{
-		bool found = false;
-		for (auto& output_device : active_output_devices_)
-		{
-			if (getOutputName() == output_device.deviceFriendlyName.c_str())
-			{
-				preferred_device = output_device;
-				found = true;
-				break;
-			}
-		}
-		if (!found)
-		{
-			preferred_device = getPreferredOutput();
-		}
-	}
-
-	auto previous_output_name = getOutputName();
-
-	// HDMI output handling around sleep. The HDMI removal is notified before the system suspend, so
-	// the failover is held (hdmi_reconnect_pending_) until HDMI_FAILOVER_INTERVAL ticks pass:
-	//  - HDMI reconnects in time (including after sleep): it is selected again.
-	//  - Not in time: physical disconnect, fail over as per the preferred output logic.
-	const SoundDevice* lost_hdmi = nullptr;
-	// Only the HDMI that was the selected output is restored.
-	if (failover_output_name_.isNotEmpty() && failover_output_name_ == previous_output_name)
-	{
-		for (auto& output_device : active_output_devices_)
-		{
-			if (output_device.deviceFormFactor == L"HDMI" &&
-				failover_output_name_ == output_device.deviceFriendlyName.c_str())
-			{
-				lost_hdmi = &output_device;
-				break;
-			}
-		}
-	}
-
-	if (hdmi_reconnect_pending_)
-	{
-		if (hdmi_failover_counter_ >= HDMI_FAILOVER_INTERVAL)
-		{
-			clearOutputRestore();
-		}
-		else if (lost_hdmi != nullptr)
-		{
-			preferred_device = *lost_hdmi;
-			clearOutputRestore();
-		}
-	}
-	else if (previous_output_name.isNotEmpty())
-	{
-		bool previous_still_active = false;
-		for (auto& output_device : active_output_devices_)
-		{
-			if (previous_output_name == output_device.deviceFriendlyName.c_str())
-			{
-				previous_still_active = true;
-				break;
-			}
-		}
-
-		if (!previous_still_active)
-		{
-			for (auto& prev_device : prev_active_devices)
-			{
-				if (prev_device.deviceFormFactor == L"HDMI" &&
-					previous_output_name == prev_device.deviceFriendlyName.c_str())
-				{
-					failover_output_name_ = previous_output_name;
-					hdmi_failover_counter_ = 0;
-					hdmi_reconnect_pending_ = true;
-					break;
-				}
-			}
-		}
-	}
-
-	// Initialize the model to update the output devices in the UI.
-	FxModel::getModel().initOutputs(active_output_devices_);
-
-	// Waiting for the lost HDMI output to reconnect: stay muted and keep the current selection.
-	// timerCallback() fails over when the wait ends.
-	if (hdmi_reconnect_pending_)
-	{
-		if (FxModel::getModel().getPowerState())
-		{
-			audio_passthru_->mute(true);
-		}
-		return;
-	}
-
-	// Set the output to select the new output and update the UI.
-	// If the output has not changed, still output has to be set to update the UI.
-	setOutput(preferred_device.pwszID.c_str());
+    if (output_recovery_.pending())
+    {
+        const auto* wanted = find(output_recovery_.wanted());
+        if (wanted && output_recovery_.requestRestore(output_catalogue_epoch_))
+        {
+            preferred = *wanted;
+            hdmi_reconnect_pending_ = false;
+            hdmi_failover_counter_ = 0;
+        }
+        else if (!available && preferred.pwszID == output_recovery_.wanted())
+        {
+            preferred = {};
+            for (const auto& item : active_output_devices_)
+                if (item.pwszID != output_recovery_.wanted()) { preferred = item; break; }
+        }
+    }
+    return preferred;
 }
 
 // Handled when FxSound processing is on
 void FxController::selectProcessingOutput(std::vector<SoundDevice>& sound_devices)
 {
-	// New device is added or removed, so update the output device list and select a preferred output device based on the updated device list.
-	if (sound_devices.size() != device_count_)
-	{
-		updateOutputs(sound_devices);
-		device_count_ = (uint32_t)sound_devices.size();
-
-		if (!dfx_enabled_)
-		{
-			stopTimer();
-			if (!SysInfo::isRemoteSession())
-			{
-				main_window_->removeFromDesktop();
-                auto* error_message = new FxDeviceErrorMessage();
-                error_message->enterModalState(true, ModalCallbackFunction::create([](int)
-                {
-                    JUCEApplication::getInstance()->systemRequestedQuit();
-                }), true);
-				return;
-			}
-		}
-	}
-	else
-	{
-		if (!hdmi_reconnect_pending_)
-		{
-			for (auto sound_device : sound_devices)
-			{
-				// If the selected output device is different from the output device selected in application UI, update the application UI.
-				if (sound_device.isRealDevice && sound_device.isTargetedRealPlaybackDevice && getOutputName() != sound_device.deviceFriendlyName.c_str())
-				{
-					setOutputName(sound_device.deviceFriendlyName.c_str());
-					FxModel::getModel().setSelectedOutput(sound_device);
-
-					auto device_config = DeviceConfig::getDeviceConfig(settings_, getOutputName());
-					if (device_config.preset.isNotEmpty())
-					{
-						setPreset(device_config.preset, false);
-					}
-
-					break;
-				}
-			}
-		}
-	}
-
-	// Sync after the outputs are updated, as the HDMI wait (if any) may have just ended.
-	syncPlaybackAvailability();
+    updateOutputs(sound_devices, true);
+    device_count_ = static_cast<uint32_t>(sound_devices.size());
+    if (!dfx_enabled_)
+    {
+        stopTimer();
+        if (!SysInfo::isRemoteSession())
+        {
+            main_window_->removeFromDesktop();
+            auto* error_message = new FxDeviceErrorMessage();
+            error_message->enterModalState(true, ModalCallbackFunction::create([](int)
+            { JUCEApplication::getInstance()->systemRequestedQuit(); }), true);
+            return;
+        }
+    }
+    syncPlaybackAvailability();
 }
 
 // Notify the UI when the playback device availability changes (available <-> unavailable).
@@ -1821,12 +1759,8 @@ void FxController::syncOutputWithSystemDefault(std::vector<SoundDevice>& sound_d
 	sortByDeviceConfigPriority(active_output_devices_);
 
 	// Update the configuration as per the change in active devices and update the output device list in UI
-	if (sound_devices.size() != device_count_)
-	{
-		FxModel::getModel().initOutputs(active_output_devices_);
-
-		device_count_ = (uint32_t)sound_devices.size();
-	}
+	FxModel::getModel().initOutputs(active_output_devices_);
+	device_count_ = static_cast<uint32_t>(sound_devices.size());
 
 	bool default_device_found = false;
 	for (auto& output_device : active_output_devices_)
@@ -1850,7 +1784,7 @@ void FxController::syncOutputWithSystemDefault(std::vector<SoundDevice>& sound_d
 
 	if (!default_device_found)
 	{
-		setOutput(getPreferredOutput().pwszID.c_str());
+		applyOutputSelection(getPreferredOutput().pwszID.c_str(), true, false);
 	}
 }
 
@@ -1869,6 +1803,7 @@ void FxController::sortByDeviceConfigPriority(std::vector<SoundDevice>& devices)
 
 void FxController::powerOn(bool on)
 {
+    if (audio_shutdown_requested_.load(std::memory_order_acquire)) return;
 	if (on)
 	{
 		dfx_dsp_.powerOn(true);
@@ -2080,9 +2015,22 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 {
 	static auto os = SystemStats::getOperatingSystemType();
 	FxController* controller = (FxController*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+    if (controller == nullptr || controller->audio_shutdown_requested_.load(std::memory_order_acquire))
+        return DefWindowProc(hwnd, message, w_param, l_param);
 
 	switch (message)
 	{
+    case AudioPassthru::deviceChangeMessage:
+        try
+        {
+            if (controller->audio_passthru_ != nullptr)
+                controller->audio_passthru_->dispatchDeviceChange();
+        }
+        catch (const std::exception& error)
+        {
+            controller->logMessage(String("Device notification failed: ") + error.what());
+        }
+        return 0;
 	case WM_HOTKEY:
 	{
 		if (w_param == CMD_ON_OFF)
@@ -2227,9 +2175,10 @@ void FxController::timerCallback()
 		ScopedLock auto_lock(lock_);
 		// The timer keeps running for a few seconds after the suspend notification, before the system
 		// actually sleeps. Don't count that time; the wait starts again on resume.
-		if (!system_sleeping_ && (hdmi_reconnect_pending_ && ++hdmi_failover_counter_ >= HDMI_FAILOVER_INTERVAL))
+		if (hdmi_reconnect_pending_ && OutputRecovery::holdExpired(system_sleeping_, hdmi_failover_counter_, HDMI_FAILOVER_INTERVAL))
 		{
-			clearOutputRestore();
+            hdmi_reconnect_pending_ = false;
+            hdmi_failover_counter_ = 0;
 			auto sound_devices = audio_passthru_->getSoundDevices(true);
 			updateOutputs(sound_devices);
 
@@ -2309,28 +2258,19 @@ void FxController::timerCallback()
 
 void FxController::onSoundDeviceChange(bool processing)
 {
-	if (session_id_ != WTSGetActiveConsoleSessionId())
-		return; // Ignore device changes on another user session
-
-	ScopedLock auto_lock(lock_);
-
-	if (isTimerRunning())
-	{
-		if (processing)
-		{
-			output_devices_ = audio_passthru_->getSoundDevices(false);
-			DeviceConfig::updateDeviceConfigs(settings_, output_devices_);
-			auto sound_devices = audio_passthru_->getSoundDevices(true);
-			selectProcessingOutput(sound_devices);
-		}
-	}
-	else
-	{
-		output_devices_ = audio_passthru_->getSoundDevices(false);
-		DeviceConfig::updateDeviceConfigs(settings_, output_devices_);
-		auto sound_devices = audio_passthru_->getSoundDevices(true);
-		syncOutputWithSystemDefault(sound_devices);
-	}
+    if (audio_shutdown_requested_.load(std::memory_order_acquire)) return;
+    if (session_id_ != WTSGetActiveConsoleSessionId()) return;
+    ScopedLock auto_lock(lock_);
+    output_devices_ = audio_passthru_->getSoundDevices(false);
+    DeviceConfig::updateDeviceConfigs(settings_, output_devices_);
+    auto sound_devices = audio_passthru_->getSoundDevices(true);
+    if (!processing) ++output_catalogue_epoch_;
+    if (isTimerRunning() || FxModel::getModel().getPowerState())
+    {
+        if (processing) selectProcessingOutput(sound_devices);
+        else updateOutputs(sound_devices);
+    }
+    else syncOutputWithSystemDefault(sound_devices);
 }
 
 void FxController::onSystemSuspend()
@@ -2365,7 +2305,7 @@ void FxController::onSystemResume()
 
 void FxController::clearOutputRestore()
 {
-	failover_output_name_ = String();
+	output_recovery_.clear();
 	hdmi_failover_counter_ = 0;
 	hdmi_reconnect_pending_ = false;
 }
@@ -2977,6 +2917,20 @@ void FxController::getSpectrumBandValues(Array<float>& band_values)
 			band_values.set(i, 0.01f);
 		}
 	}
+}
+
+void FxController::beginAudioShutdown()
+{
+    if (audio_shutdown_requested_.exchange(true, std::memory_order_acq_rel)) return;
+    stopTimer();
+}
+
+void FxController::detachAudioPassthru()
+{
+    if (audio_passthru_ == nullptr) return;
+    audio_passthru_->registerCallback(nullptr);
+    audio_passthru_->setDeviceNotificationWindow(nullptr);
+    audio_passthru_ = nullptr;
 }
 
 String FxController::FormatString(const String& format, const String& arg)
