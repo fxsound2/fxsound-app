@@ -95,12 +95,23 @@ public:
 
     void shutdown() override
     {
+        stopAudioForQuit();
+        auto* controller = FxController::existingInstance();
+        if (controller != nullptr)
+            controller->logMessage(String("Audio shutdown: finished=") + String(static_cast<int>(audio_shutdown_outcome_.finished))
+                + ", workerStopped=" + String(static_cast<int>(audio_shutdown_outcome_.workerStopped))
+                + ", cleanup=" + String(static_cast<int>(audio_shutdown_outcome_.cleanupCompleted))
+                + ", restore=" + String::toHexString(static_cast<int>(audio_shutdown_outcome_.restoreResult))
+                + ", error=" + String(static_cast<int>(audio_shutdown_outcome_.error))
+                + (audio_safe_to_destroy_ ? "" : "; retaining live runtime until process exit"));
+        if (controller != nullptr) controller->detachAudioPassthru();
+        if (audio_safe_to_destroy_) audio_passthru_.reset();
+        else (void)audio_passthru_.release(); // Live runtime retained until process exit.
         if (main_window_.get() != nullptr)
         {
-            FxController::getInstance().autoSaveModifiedPreset();
+            if (audio_safe_to_destroy_ && controller != nullptr) controller->autoSaveModifiedPreset();
             FxController::getInstance().stopTimer();
 
-            audio_passthru_.reset();
 
             // UIA holds COM references to AccessibilityNativeHandle objects for
             // desktop-resident components. Release those references before the
@@ -123,27 +134,47 @@ public:
             logRemainingDesktopComponents();
         }
 
+        if (controller != nullptr) controller->prepareUiForExit();
         LocalisedStrings::setCurrentMappings(nullptr);
         LookAndFeel::setDefaultLookAndFeel(nullptr);
 
+        // Do not let JUCE destroy a controller/DSP still reachable by audio.
+        if (audio_safe_to_destroy_) FxController::destroyInstance();
         CoUninitialize();
     }
 
     //==============================================================================
     void systemRequestedQuit() override
     {
-        // This is called when the app is being asked to quit: you can ignore this
-        // request and let the app carry on running, or call quit() to allow the app to close.
-        
+        // WM_QUERYENDSESSION expects quit() before this method returns. The
+        // bounded wait is synchronous for both a user quit and session ending.
+        stopAudioForQuit();
         quit();
     }
 
     void anotherInstanceStarted (const String& commandline) override
     {
-        FxController::getInstance().applyConfig(commandline);
+        if (!audio_stop_started_) FxController::getInstance().applyConfig(commandline);
     }
 
 private:
+    void stopAudioForQuit()
+    {
+        if (audio_stop_started_) return;
+        audio_stop_started_ = true;
+        auto* controller = FxController::existingInstance();
+        if (controller != nullptr) controller->beginAudioShutdown();
+        if (main_window_ != nullptr) main_window_->setEnabled(false);
+        if (audio_passthru_ == nullptr) return;
+
+        audio_shutdown_outcome_ = audio_passthru_->shutdown(2500);
+        audio_safe_to_destroy_ = audio_shutdown_outcome_.safeToDestroy();
+
+    }
+
+    fxaudio::ShutdownTask::Outcome audio_shutdown_outcome_;
+    bool audio_stop_started_ = false;
+    bool audio_safe_to_destroy_ = true;
     FxTheme theme_;
     static constexpr int MAX_FRAMES = 64;
     static constexpr ULONGLONG MIN_UPTIME_FOR_RELAUNCH_MS = 60 * 1000;

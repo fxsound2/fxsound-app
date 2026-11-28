@@ -103,6 +103,7 @@ int PT_DECLSPEC sndDevicesInitialSetupCaptureDevice(PT_HANDLE *hp_sndDevices, in
 
 		// Setup capture device volume control callback
 		hr = cast_handle->pEndptVolCapture->RegisterControlChangeNotify( (IAudioEndpointVolumeCallback*)&(cast_handle->EPVolEventsCapture) );
+        if (SUCCEEDED(hr)) cast_handle->EPVolEventsCapture.SetRegistered(true);
 		if (FAILED(hr))
 		{
 			cast_handle->pEndptVolCapture->Release();
@@ -347,6 +348,7 @@ int PT_DECLSPEC sndDevicesInitialSetupPlaybackDevice(PT_HANDLE *hp_sndDevices, i
 
 		// Setup playback device volume control callback
 		hr = cast_handle->pEndptVolPlayback->RegisterControlChangeNotify( (IAudioEndpointVolumeCallback*)&(cast_handle->EPVolEventsPlayback) );
+        if (SUCCEEDED(hr)) cast_handle->EPVolEventsPlayback.SetRegistered(true);
 		if (FAILED(hr))
 		{
 			cast_handle->pEndptVolPlayback->Release();

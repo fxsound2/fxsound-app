@@ -92,178 +92,58 @@ HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::QueryInterface(
 
 // Callback methods for device-event notifications.
 
+namespace
+{
+void recordDeviceChange(PT_HANDLE* opaque, fxsounddevices::DeviceChangeQueue::Kind kind,
+                        LPCWSTR id, DWORD state = 0) noexcept
+{
+    auto* handle = reinterpret_cast<sndDevicesHdlType*>(opaque);
+    if (handle == nullptr) return;
+    // Sequentially consistent entry/close makes a late callback harmless even
+    // when unregister races with a callback that has not entered its body yet.
+    fxsounddevices::DeviceCallbackScope scope(handle->deviceCallbacksInFlight, handle->deviceNotificationsClosed);
+    if (!scope) return;
+    if (handle->ignoreDeviceCallbacks.load()) return;
+    if (kind == fxsounddevices::DeviceChangeQueue::Kind::defaultChanged
+        && handle->deviceChanges.isVirtualDevice(id)) return;
+
+    if (kind == fxsounddevices::DeviceChangeQueue::Kind::stateChanged)
+    {
+        if (handle->deviceChanges.isRepeatedState(id, state)) return;
+    }
+    else handle->deviceChanges.invalidateStateCache();
+    // Stop immediately on MMDevice's thread; dispatching the UI may be delayed.
+    handle->stopAudioCaptureAndPlaybackLoop.store(1, std::memory_order_release);
+    handle->deviceChanges.enqueue(kind, id, state);
+    if (auto wake = handle->deviceChangeCallback.load(std::memory_order_acquire)) wake();
+}
+}
+
 HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDefaultDeviceChanged(
-                          EDataFlow flow, ERole role,
-                          LPCWSTR pwstrDeviceId)
-{  
-  struct sndDevicesHdlType *cast_handle;
-    
-  cast_handle = (struct sndDevicesHdlType *)g_sndDevicesCallbacks_hdl;
-
-  if (cast_handle == NULL)
-    return(S_OK);
-
-  if (cast_handle->dfxDeviceNum == SND_DEVICES_DEVICE_NOT_PRESENT)
-	return(S_OK);
-
-  if (pwstrDeviceId == NULL)
-	  return(S_OK);
-
-  SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDefaultDeviceChanged() enters");
-
-  if( (flow == eRender) && (role == eMultimedia) && (cast_handle->ignoreDeviceCallbacks == FALSE) )
-  {
-	  // If one of the DFX capture devices was set as the default and the default device has been changed, force a re-initialization.
-	  // Note- setting the flag only if a DFX device was the default is filtering out callbacks we want made.
-	  //if( (cast_handle->dfxDeviceNum == cast_handle->defaultDeviceNum) || (cast_handle->dfx48DeviceNum == cast_handle->defaultDeviceNum) )
-	  SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDefaultDeviceChanged() setting processing thread kill flag");
-
-	  // Don't think we need to kill process thread if DFX itself is selected as default from within our code
-	  if (cast_handle->pwszID[cast_handle->dfxDeviceNum] && wcscmp(pwstrDeviceId, cast_handle->pwszID[cast_handle->dfxDeviceNum]) == 0)
-		  return(S_OK);
-
-	  //std::wstring temp_string(pwstrDeviceId);
-	  /* Set the newly targeted playback device as the default.  It will then automatically become the targeted device */
-	  //if (sndDevicesSetDeviceType(g_sndDevicesCallbacks_hdl, SND_DEVICES_DEFAULT, &temp_string[0], &i_resultFlag) != OKAY)
-		//  return(NOT_OKAY);
-
-	  cast_handle->stopAudioCaptureAndPlaybackLoop = 1;
-  }
-
-  // Ignore the notification for the device selected in the application.
-  if (cast_handle->defaultDeviceNum != SND_DEVICES_DEVICE_NOT_PRESENT &&
-	  cast_handle->pwszID[cast_handle->defaultDeviceNum] &&
-	  wcscmp(pwstrDeviceId, cast_handle->pwszID[cast_handle->defaultDeviceNum]) == 0)
-  {
-	  return(S_OK);
-  }
-
-  cast_handle->defaultDeviceNum = SND_DEVICES_DEVICE_NOT_PRESENT;
-
-  for (int i = 0; i < cast_handle->totalNumDevices; i++)
-  {
-	  if (cast_handle->pwszID[i] && wcscmp(cast_handle->pwszID[i], pwstrDeviceId) == 0)
-	  {
-		  cast_handle->defaultDeviceNum = i;
-		  break;
-	  }
-  }
-
-  if (cast_handle->deviceChangeCallback != NULL)
-	  cast_handle->deviceChangeCallback();
-
-  return S_OK;
+    EDataFlow flow, ERole role, LPCWSTR id)
+{
+    if (flow == eRender && role == eMultimedia)
+        recordDeviceChange(g_sndDevicesCallbacks_hdl, fxsounddevices::DeviceChangeQueue::Kind::defaultChanged, id);
+    return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDeviceAdded(LPCWSTR pwstrDeviceId)
+HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDeviceAdded(LPCWSTR id)
 {
-  struct sndDevicesHdlType *cast_handle;
-    
-  cast_handle = (struct sndDevicesHdlType *)g_sndDevicesCallbacks_hdl;
-
-  if (cast_handle == NULL)
-    return(S_OK);
-	
-  SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDeviceAdded() enters");
-
-  // These callbacks only appear to get hit when a device is added that didn't already have a driver installed.
-  if( cast_handle->ignoreDeviceCallbacks == FALSE )
-  {
-	  SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDeviceAdded() setting processing thread kill flag");
-
-	  cast_handle->stopAudioCaptureAndPlaybackLoop = 1;
-  }
-
-  if (cast_handle->deviceChangeCallback != NULL)
-	  cast_handle->deviceChangeCallback();
-
-  return S_OK;
-};
-
-HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDeviceRemoved(LPCWSTR pwstrDeviceId)
-{
-  struct sndDevicesHdlType *cast_handle;
-    
-  cast_handle = (struct sndDevicesHdlType *)g_sndDevicesCallbacks_hdl;
-
-  if (cast_handle == NULL)
-    return(S_OK);
-
-  SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDeviceRemoved() enters");
-
-  // These callbacks only appear to get hit when a device is added that didn't already have a driver installed.
-  if( cast_handle->ignoreDeviceCallbacks == FALSE )
-  {
-	  SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDeviceRemoved() setting processing thread kill flag");
-
-	  cast_handle->stopAudioCaptureAndPlaybackLoop = 1;
-  }
-
-  if (cast_handle->deviceChangeCallback != NULL)
-	  cast_handle->deviceChangeCallback();
-
-  return S_OK;
+    recordDeviceChange(g_sndDevicesCallbacks_hdl, fxsounddevices::DeviceChangeQueue::Kind::added, id);
+    return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDeviceStateChanged(
-                          LPCWSTR pwstrDeviceId,
-                          DWORD dwNewState)
+HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDeviceRemoved(LPCWSTR id)
 {
-  struct sndDevicesHdlType *cast_handle;
-  int type;
-    
-  cast_handle = (struct sndDevicesHdlType *)g_sndDevicesCallbacks_hdl;
-
-  if (cast_handle == NULL)
-    return(S_OK);
-
-  //SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDeviceStateChanged() enters");
-
-  switch (dwNewState)
-  {
-  case DEVICE_STATE_ACTIVE:
-	   type = dwNewState;	// When connecting device, this gets hit around 10 times.
-      break;
-  case DEVICE_STATE_DISABLED:
-	   type = dwNewState;
-      break;
-  case DEVICE_STATE_NOTPRESENT:
-	   type = dwNewState;		// When disconnecting device, this gets hit around 12 times.
-      break;
-  case DEVICE_STATE_UNPLUGGED:
-	   type = dwNewState;
-      break;
-  }
-
-  // Ignore identical callbacks from the same guid. Since device must be disconnected after being connected,
-  // we should never miss a connect or disconnect event.
-  if( pwstrDeviceId != NULL )
-		if( (wcscmp(pwstrDeviceId, cast_handle->lastDeviceAddCallbackGuid) == 0) && ( dwNewState == cast_handle->lastDeviceAddCallbackGuidtype ) )
-		{
-			SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDeviceStateChanged() ignoring identical callback");
-		   return(S_OK);
-		}
-
-  if( pwstrDeviceId == NULL )
-		wcscpy(cast_handle->lastDeviceAddCallbackGuid, L"");
-  else
-	   wcscpy(cast_handle->lastDeviceAddCallbackGuid, pwstrDeviceId );
-
-  cast_handle->lastDeviceAddCallbackGuidtype = dwNewState;
-
-  if( cast_handle->ignoreDeviceCallbacks == FALSE )
-  {
-	  SLOUT_FIRST_LINE(L"CsndDevicesMMNotificationClient::OnDeviceStateChanged() setting processing thread kill flag");
-
-	  cast_handle->stopAudioCaptureAndPlaybackLoop = 1;
-  }
-
-  if (cast_handle->deviceChangeCallback != NULL)
-	  cast_handle->deviceChangeCallback();
-
-  return S_OK;
+    recordDeviceChange(g_sndDevicesCallbacks_hdl, fxsounddevices::DeviceChangeQueue::Kind::removed, id);
+    return S_OK;
 }
 
+HRESULT STDMETHODCALLTYPE CsndDevicesMMNotificationClient::OnDeviceStateChanged(LPCWSTR id, DWORD state)
+{
+    recordDeviceChange(g_sndDevicesCallbacks_hdl, fxsounddevices::DeviceChangeQueue::Kind::stateChanged, id, state);
+    return S_OK;
+}
 // NOTE - On Vista/Win7 this callback would only get hit when a legitmate "property" of a device changed,
 // such as samp freq, num channels. On Win8 this callback is getting hit when the mute setting is changed.
 // The thread stop set has been disabled to avoid Win8 mute problems as any change of these properties should

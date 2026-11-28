@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <JuceHeader.h>
 #include <functional>
+#include <atomic>
 #include "FxModel.h"
 #include "FxTheme.h"
 #include "FxAudioControls.h"
@@ -40,7 +41,7 @@ class FxSystemTrayView;
 
 enum ViewType { Lite = 1, Pro = 2 };
 
-class FxController : public Timer, public DeletedAtShutdown, private AudioPassthruCallback
+class FxController : public Timer, private AudioPassthruCallback
 {
 public:
     static constexpr int NUM_SPECTRUM_BANDS = 10;
@@ -60,9 +61,16 @@ public:
 	
 	static FxController& getInstance()
 	{
-		static FxController* controller = new FxController();
-		return *controller;
+        auto& controller = instanceStorage();
+        if (controller == nullptr) controller = new FxController();
+        return *controller;
 	}
+    static FxController* existingInstance() noexcept { return instanceStorage(); }
+    // Call only on the UI thread after the audio coordinator reports safe teardown.
+    static void destroyInstance();
+    void beginAudioShutdown();
+    void detachAudioPassthru();
+    void prepareUiForExit();
 	~FxController();
 
 	FxController(const FxController&) = delete;
@@ -193,6 +201,9 @@ public:
 	FxSound::Settings& getSettings() { return settings_; }
 
 private:
+    static FxController*& instanceStorage() noexcept
+    { static FxController* instance = nullptr; return instance; }
+
 	class MessageWindow
 	{
 	public:
@@ -277,7 +288,9 @@ private:
 
 	FxMainWindow* main_window_;
 	FxSystemTrayView* system_tray_view_;
-	AudioPassthru* audio_passthru_;
+	AudioPassthru* audio_passthru_ = nullptr;
+    std::atomic<bool> audio_shutdown_requested_{false};
+    bool ui_exit_prepared_ = false; // UI thread only.
 	DfxDsp dfx_dsp_;
 	FxSound::Settings settings_;
 	uint32_t device_count_;

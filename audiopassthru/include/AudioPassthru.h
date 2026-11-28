@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif //WIN32
 #include <Mmdeviceapi.h>
 #include <vector> 
+#include "AudioShutdown.h"
 #include "DfxDsp.h"
 
 struct SoundDevice {
@@ -72,6 +73,14 @@ public:
 	void setDspProcessingModule(DfxDsp* pDspProcessingModule);
 	void setAsPlaybackDevice(const SoundDevice sound_device);
 	void registerCallback(AudioPassthruCallback *callback);
+    static constexpr UINT deviceChangeMessage = WM_APP + 1;
+    void setDeviceNotificationWindow(HWND window) noexcept;
+    void dispatchDeviceChange();
+    void requestStop() noexcept;
+    // If safeToDestroy() is false, the host retains this object, DSP and callback
+    // owner until process exit. No wait in this function exceeds timeoutMs.
+    fxaudio::ShutdownTask::Outcome shutdown(DWORD timeoutMs = 2500) noexcept;
+    DWORD pollStopped(DWORD& error) noexcept;
     bool isPlaybackDeviceAvailable();
 	bool checkDeviceChanges();
 	void restoreDefaultPlaybackDevice();
