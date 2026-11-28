@@ -106,7 +106,8 @@ HRESULT STDMETHODCALLTYPE CsndDevicesAudioEndpointVolumeCallbackCapture::OnNotif
    if (cast_handle == NULL)
      return(S_FALSE);
 
-	if (cast_handle->ignoreVolumeCallbacks)
+	fxsounddevices::DeviceCallbackScope scope(cast_handle->deviceCallbacksInFlight, cast_handle->deviceNotificationsClosed);
+    if (!scope || cast_handle->ignoreVolumeCallbacks.load())
 		return(S_OK);
 
 	if (pNotify == NULL)
@@ -155,7 +156,7 @@ void CsndDevicesAudioEndpointVolumeCallbackCapture::SetPtHandle(PT_HANDLE *sndDe
 
 bool CsndDevicesAudioEndpointVolumeCallbackCapture::IsRegistered()
 {
-	return _cRef > 0;
+	return registered_.load(std::memory_order_acquire);
 }
 
 // Implementation of the Playback callback functions
@@ -214,7 +215,8 @@ HRESULT STDMETHODCALLTYPE CsndDevicesAudioEndpointVolumeCallbackPlayback::OnNoti
    if (cast_handle == NULL)
      return(S_FALSE);
 
-   if (cast_handle->ignoreVolumeCallbacks)
+   fxsounddevices::DeviceCallbackScope scope(cast_handle->deviceCallbacksInFlight, cast_handle->deviceNotificationsClosed);
+    if (!scope || cast_handle->ignoreVolumeCallbacks.load())
 		return(S_OK);
 
 	if (pNotify == NULL)
@@ -273,5 +275,5 @@ void CsndDevicesAudioEndpointVolumeCallbackPlayback::SetPtHandle(PT_HANDLE *sndD
 
 bool CsndDevicesAudioEndpointVolumeCallbackPlayback::IsRegistered()
 {
-	return _cRef > 0;
+	return registered_.load(std::memory_order_acquire);
 }

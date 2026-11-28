@@ -415,7 +415,7 @@ int PT_DECLSPEC sndDevicesStartStopCapture(PT_HANDLE *hp_sndDevices, int i_start
 
 	if( i_startStopFlag == SND_DEVICES_START_CAPTURE )
 	{
-		cast_handle->stopAudioCaptureAndPlaybackLoop = 0;
+		// Reinitialization clears the stop flag before the worker starts.
 		hr = cast_handle->pAudioClientCapture->Start(); // Start capturing, this starts filling of the internal capture buffers.
 		hr = cast_handle->pAudioClientPlayback->Start(); // Start playback, this starts filling of the internal playback buffers.
 	}

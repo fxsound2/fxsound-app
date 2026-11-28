@@ -212,6 +212,14 @@ FxController::FxController() : message_window_(L"FxSoundHotkeys", (WNDPROC)event
 
 FxController::~FxController()
 {
+    prepareUiForExit();
+}
+
+void FxController::prepareUiForExit()
+{
+    if (ui_exit_prepared_) return;
+    ui_exit_prepared_ = true;
+    beginAudioShutdown();
 	if (powerNotify_ != nullptr && unregister_suspend_resume_notification_ != nullptr)
 	{
 		unregister_suspend_resume_notification_(powerNotify_);
@@ -220,8 +228,17 @@ FxController::~FxController()
 	stopTimer();
 	WTSUnRegisterSessionNotification(message_window_.getHandle());
 	unregisterHotkeys();
+    SetWindowLongPtr(message_window_.getHandle(), GWLP_USERDATA, 0);
+    main_window_ = nullptr;
+    system_tray_view_ = nullptr;
 }
 
+void FxController::destroyInstance()
+{
+    auto*& controller = instanceStorage();
+    delete controller;
+    controller = nullptr;
+}
 
 void FxController::initConfig(const String& commandline)
 {
@@ -752,6 +769,7 @@ void FxController::init(FxMainWindow* main_window, FxSystemTrayView* system_tray
 		}
 
 		audio_passthru_->registerCallback(this);
+        audio_passthru_->setDeviceNotificationWindow(message_window_.getHandle());
 
 		auto path = File(File::addTrailingSeparator(File::getSpecialLocation(File::SpecialLocationType::userApplicationDataDirectory).getFullPathName()) + L"FxSound\\Presets");
 		if (!path.exists())
@@ -1122,6 +1140,7 @@ bool FxController::setPreset(int selected_index, bool notify)
 
 void FxController::setOutput(const String output_device_id, bool notify)
 {
+    if (audio_shutdown_requested_.load(std::memory_order_acquire)) return;
 	std::vector<SoundDevice> sound_devices = audio_passthru_->getSoundDevices();
 
 	bool output_found = false;
@@ -1199,6 +1218,7 @@ void FxController::setOutput(const String output_device_id, bool notify)
 
 void FxController::setOutput(int output, bool notify)
 {
+    if (audio_shutdown_requested_.load(std::memory_order_acquire)) return;
 	auto output_devices = FxModel::getModel().getOutputDevices();
 
 	if (output < output_devices.size())
@@ -1869,6 +1889,7 @@ void FxController::sortByDeviceConfigPriority(std::vector<SoundDevice>& devices)
 
 void FxController::powerOn(bool on)
 {
+    if (audio_shutdown_requested_.load(std::memory_order_acquire)) return;
 	if (on)
 	{
 		dfx_dsp_.powerOn(true);
@@ -2080,9 +2101,22 @@ LRESULT CALLBACK FxController::eventCallback(HWND hwnd, const UINT message, cons
 {
 	static auto os = SystemStats::getOperatingSystemType();
 	FxController* controller = (FxController*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+    if (controller == nullptr || controller->audio_shutdown_requested_.load(std::memory_order_acquire))
+        return DefWindowProc(hwnd, message, w_param, l_param);
 
 	switch (message)
 	{
+    case AudioPassthru::deviceChangeMessage:
+        try
+        {
+            if (controller->audio_passthru_ != nullptr)
+                controller->audio_passthru_->dispatchDeviceChange();
+        }
+        catch (const std::exception& error)
+        {
+            controller->logMessage(String("Device notification failed: ") + error.what());
+        }
+        return 0;
 	case WM_HOTKEY:
 	{
 		if (w_param == CMD_ON_OFF)
@@ -2309,6 +2343,7 @@ void FxController::timerCallback()
 
 void FxController::onSoundDeviceChange(bool processing)
 {
+    if (audio_shutdown_requested_.load(std::memory_order_acquire)) return;
 	if (session_id_ != WTSGetActiveConsoleSessionId())
 		return; // Ignore device changes on another user session
 
@@ -2977,6 +3012,20 @@ void FxController::getSpectrumBandValues(Array<float>& band_values)
 			band_values.set(i, 0.01f);
 		}
 	}
+}
+
+void FxController::beginAudioShutdown()
+{
+    if (audio_shutdown_requested_.exchange(true, std::memory_order_acq_rel)) return;
+    stopTimer();
+}
+
+void FxController::detachAudioPassthru()
+{
+    if (audio_passthru_ == nullptr) return;
+    audio_passthru_->registerCallback(nullptr);
+    audio_passthru_->setDeviceNotificationWindow(nullptr);
+    audio_passthru_ = nullptr;
 }
 
 String FxController::FormatString(const String& format, const String& arg)

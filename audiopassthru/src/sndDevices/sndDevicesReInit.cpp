@@ -105,6 +105,14 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 			if( sndDevices_GetAll( hp_sndDevices, &(cast_handle->totalNumDevices) ) != OKAY )
 				return(NOT_OKAY);
 
+            // Publish an immutable virtual identity before device rules select
+            // FxSound as default. MMDevice never reads the changing ID table.
+            const int virtualIndex = cast_handle->dfxDeviceNum;
+            const wchar_t* virtualId = virtualIndex >= 0 && virtualIndex < cast_handle->totalNumDevices
+                && virtualIndex < SND_DEVICES_MAX_NUM_DEVICES ? cast_handle->pwszID[virtualIndex] : nullptr;
+            if (!cast_handle->deviceChanges.setVirtualDeviceId(virtualId))
+                OutputDebugStringW(L"FxSound: unable to publish the virtual device identity\n");
+
 			*ipNumRealDevices = cast_handle->numRealDevices;
 
 			// When we can read the DFX name, its enabled.
@@ -146,7 +154,12 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 				SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_RULES_NOT_POSSIBLE);
 			}
 
-            sndDevices_ReleaseAllAudioObjects(hp_sndDevices);
+            if (sndDevices_ReleaseAllAudioObjects(hp_sndDevices) != OKAY)
+            {
+                *ipDfxDeviceEnabledFlag = IS_FALSE;
+                *ip_status = SND_DEVICES_REGISTER_FAILED;
+                return NOT_OKAY_NO_BREAK;
+            }
 
 			// Do the initial non-format dependent setup of capture and playback devices.
 			if (sndDevicesInitialSetupCaptureDevice(hp_sndDevices, &resultFlag) != OKAY)
@@ -334,7 +347,7 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 	return(OKAY);
 }
 
-int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE* hp_sndDevices, BOOL* bp_deviceChanged)
+int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE* hp_sndDevices, BOOL* bp_deviceChanged, bool checkDefault)
 {
 	struct sndDevicesHdlType* cast_handle;
 	IMMDeviceEnumeratorPtr pEnumerator = NULL;
@@ -388,9 +401,9 @@ int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE* hp_sndDevices, BOOL* bp_deviceC
 		}
 
 		deviceFound = FALSE;
-		for (j = 0; j < cast_handle->totalNumDevices; j++)
+		for (j = 0; j < cast_handle->totalNumDevices && j < SND_DEVICES_MAX_NUM_DEVICES; j++)
 		{
-			if (wcscmp(pID, cast_handle->pwszID[j]) == 0)
+			if (cast_handle->pwszID[j][0] != L'\0' && wcscmp(pID, cast_handle->pwszID[j]) == 0)
 			{
 				deviceFound = TRUE;
 
@@ -421,5 +434,66 @@ int PT_DECLSPEC sndCheckDeviceChanges(PT_HANDLE* hp_sndDevices, BOOL* bp_deviceC
 		}
 	}
 
+    // Endpoint IDs and states can stay unchanged when the default output changes.
+    // Ignore the virtual default selected by FxSound itself.
+    if (checkDefault)
+    {
+        IMMDevicePtr defaultPlayback;
+        hr = pEnumerator->GetDefaultAudioEndpoint(eRender, eMultimedia, &defaultPlayback);
+        if (SUCCEEDED(hr) && defaultPlayback != nullptr && SUCCEEDED(defaultPlayback->GetId(&pID)) && pID != nullptr)
+        {
+            for (int index = 0; index < cast_handle->totalNumDevices && index < SND_DEVICES_MAX_NUM_DEVICES; ++index)
+            {
+                if (cast_handle->pwszID[index][0] == L'\0' || wcscmp(pID, cast_handle->pwszID[index]) != 0) continue;
+                if (index != cast_handle->dfxDeviceNum && index != cast_handle->defaultDeviceNum)
+                {
+                    cast_handle->defaultDeviceNum = index;
+                    *bp_deviceChanged = TRUE;
+                    cast_handle->stopAudioCaptureAndPlaybackLoop = 1;
+                }
+                break;
+            }
+            CoTaskMemFree(pID);
+        }
+    }
+
 	return(OKAY);
+}
+
+// Owner-thread application of the copied event. No MMDevice callback mutates
+// defaultDeviceNum or walks endpoint arrays while enumeration replaces them.
+int PT_DECLSPEC sndDevicesApplyDeviceChange(PT_HANDLE* opaque,
+    const fxsounddevices::DeviceChangeQueue::Event& event, BOOL* changed)
+{
+    auto* handle = reinterpret_cast<sndDevicesHdlType*>(opaque);
+    if (handle == nullptr || changed == nullptr)
+    {
+        OutputDebugStringW(L"FxSound: invalid device notification application arguments\n" );
+        return NOT_OKAY_NO_BREAK;
+    }
+    *changed = FALSE;
+    if (handle->deviceNotificationsClosed.load()) return OKAY;
+    using Kind = fxsounddevices::DeviceChangeQueue::Kind;
+    if (event.kind == Kind::defaultChanged && handle->deviceChanges.isVirtualDevice(event.id)) return OKAY;
+    if (handle->deviceChanges.isDuplicate(event)) return OKAY;
+    if (event.kind == Kind::defaultChanged)
+    {
+        int selected = SND_DEVICES_DEVICE_NOT_PRESENT;
+        if (!event.missingId)
+        {
+            for (int index = 0; index < handle->totalNumDevices && index < SND_DEVICES_MAX_NUM_DEVICES; ++index)
+            {
+                if (handle->pwszID[index][0] != L'\0' && wcscmp(handle->pwszID[index], event.id) == 0)
+                {
+                    selected = index;
+                    break;
+                }
+            }
+        }
+        if (selected >= 0 && selected == handle->dfxDeviceNum) return OKAY;
+        if (selected >= 0 && selected == handle->defaultDeviceNum) return OKAY;
+        handle->defaultDeviceNum = selected;
+    }
+    *changed = TRUE;
+    return OKAY;
 }

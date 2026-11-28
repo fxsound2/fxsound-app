@@ -58,11 +58,7 @@ int PT_DECLSPEC sndDevicesInit(PT_HANDLE *hp_sndDevices, CSlout *hp_slout, int i
 	*ip_status_flag = SND_DEVICES_DEVICE_OPERATION_COMPLETED;
 
 
-	// CoInitialize must be called at least once in every thread that uses COM functions.
-	// Since this module may be used in a separate thread its called here.
-	// Its ok to make this call multiple times if it has already been called in other modules or the main.
-	// Apparently must be called before any variables are assigned.
-	hr = CoInitialize( NULL );
+	// The calling owner thread initializes COM; do not unbalance its apartment here.
 
 	/* Allocate the handle */
 	cast_handle = (struct sndDevicesHdlType *)hp_sndDevices;
@@ -73,6 +69,7 @@ int PT_DECLSPEC sndDevicesInit(PT_HANDLE *hp_sndDevices, CSlout *hp_slout, int i
 	cast_handle->i_trace_on = i_trace_on;
 	cast_handle->function_status = SND_DEVICES_DEVICE_OPERATION_COMPLETED;
 	cast_handle->deviceChangeCallback = NULL;
+    cast_handle->deviceNotificationsClosed.store(false);
 
 	SLOUT_FIRST_LINE(L"sndDevicesInit():: sndDevicesInit() enters");
 
@@ -153,6 +150,10 @@ int PT_DECLSPEC sndDevicesInit(PT_HANDLE *hp_sndDevices, CSlout *hp_slout, int i
 	hr = pEnumerator->RegisterEndpointNotificationCallback(&(cast_handle->DeviceEvents));
 	if (FAILED(hr)) SND_DEVICES_SET_STATUS_AND_RETURN_OK(SND_DEVICES_REGISTER_FAILED)
 
+    // Register does not AddRef the client. The process-lifetime handle owns it,
+    // and the same enumerator is retained until unregistration during cleanup.
+    cast_handle->notificationEnumerator = pEnumerator.Detach();
+
 	SLOUT_FIRST_LINE(L"sndDevicesInit():: Returns OKAY");
 
 	return(OKAY);
@@ -223,7 +224,6 @@ int PT_DECLSPEC sndDevices_FreeReuseableObjects(PT_HANDLE *hp_sndDevices)
 int PT_DECLSPEC sndDevicesFree(PT_HANDLE *hp_sndDevices)
 {
 	struct sndDevicesHdlType *cast_handle;
-	IMMDeviceEnumeratorPtr pEnumerator = NULL;
 	HRESULT hr;
 
 	cast_handle = (struct sndDevicesHdlType *)(hp_sndDevices);
@@ -231,7 +231,32 @@ int PT_DECLSPEC sndDevicesFree(PT_HANDLE *hp_sndDevices)
 	if (cast_handle == NULL)
 		return(OKAY);
 
-	sndDevices_ReleaseAllAudioObjects(hp_sndDevices);
+    cast_handle->deviceNotificationsClosed.store(true);
+    cast_handle->stopAudioCaptureAndPlaybackLoop.store(1, std::memory_order_release);
+    cast_handle->deviceChangeCallback.store(nullptr, std::memory_order_release);
+    if (cast_handle->notificationEnumerator != nullptr)
+    {
+        hr = cast_handle->notificationEnumerator->UnregisterEndpointNotificationCallback(&cast_handle->DeviceEvents);
+        if (FAILED(hr))
+        {
+            // New callbacks see closed and return immediately. Drain callbacks
+            // that passed the close check before the owner cancels its retry timer.
+            while (cast_handle->deviceCallbacksInFlight.load() != 0) Sleep(1);
+            OutputDebugStringW(L"FxSound: device notification unregister failed; retaining live audio state\n");
+            return NOT_OKAY_NO_BREAK;
+        }
+    }
+    // Cleanup runs outside MMDevice callbacks. The shutdown coordinator bounds
+    // its caller's wait; the backing state remains alive if a driver stalls here.
+    while (cast_handle->deviceCallbacksInFlight.load() != 0) Sleep(1);
+    if (cast_handle->notificationEnumerator != nullptr)
+    {
+        cast_handle->notificationEnumerator->Release();
+        cast_handle->notificationEnumerator = nullptr;
+    }
+
+	if (sndDevices_ReleaseAllAudioObjects(hp_sndDevices) != OKAY)
+        return NOT_OKAY_NO_BREAK;
 
 	// PTNOTE - trying to do a smart close of these in process recording files was causing problems.
 	// Close will be eliminated but the .tmp recording file will be cleaned up on next startup.
@@ -261,9 +286,7 @@ int PT_DECLSPEC sndDevicesFree(PT_HANDLE *hp_sndDevices)
 			free( cast_handle->fFilePlaybackBuf );
 	}
 	
-	hr = CoCreateInstance(cast_handle->CLSID_MMDeviceEnumerator, NULL, CLSCTX_ALL, cast_handle->IID_IMMDeviceEnumerator, (void**)&pEnumerator);
 
-	hr = pEnumerator->UnregisterEndpointNotificationCallback(&(cast_handle->DeviceEvents));
 
 	return(OKAY);
 }
@@ -281,36 +304,43 @@ int PT_DECLSPEC sndDevices_ReleaseAllAudioObjects(PT_HANDLE *hp_sndDevices)
 	if (cast_handle == NULL)
 		return(NOT_OKAY);
 
-	// Turn off capture device volume control callback
-	if(cast_handle->EPVolEventsCapture.IsRegistered())
-	{
-		if (cast_handle->pEndptVolCapture != NULL)
-		{
-			cast_handle->pEndptVolCapture->UnregisterControlChangeNotify((IAudioEndpointVolumeCallback*)&(cast_handle->EPVolEventsCapture));
-		}
-	}
-
-	if (cast_handle->pEndptVolCapture != NULL)
-	{
-		cast_handle->pEndptVolCapture->Release();
-		cast_handle->pEndptVolCapture = NULL;
-	}
-
-	// Turn off playback device volume control callback
-	if (cast_handle->EPVolEventsPlayback.IsRegistered())
-	{
-		if (cast_handle->pEndptVolPlayback != NULL)
-		{
-			cast_handle->pEndptVolPlayback->UnregisterControlChangeNotify((IAudioEndpointVolumeCallback*)&(cast_handle->EPVolEventsPlayback));
-		}
-	}
-
-	if (cast_handle->pEndptVolPlayback != NULL)
-	{
-		cast_handle->pEndptVolPlayback->Release();
-		cast_handle->pEndptVolPlayback = NULL;
-	}
-
+    // Confirm both registrations are retired before releasing either endpoint.
+    // On failure keep the graph intact: a late callback still has stable state.
+    HRESULT hr;
+    if (cast_handle->EPVolEventsCapture.IsRegistered() && cast_handle->pEndptVolCapture != nullptr)
+    {
+        hr = cast_handle->pEndptVolCapture->UnregisterControlChangeNotify(&cast_handle->EPVolEventsCapture);
+        if (FAILED(hr))
+        {
+            wchar_t message[128];
+            swprintf_s(message, L"FxSound: capture-volume unregister failed (0x%08lx); retaining endpoints\n", static_cast<unsigned long>(hr));
+            OutputDebugStringW(message);
+            return NOT_OKAY_NO_BREAK;
+        }
+        cast_handle->EPVolEventsCapture.SetRegistered(false);
+    }
+    if (cast_handle->EPVolEventsPlayback.IsRegistered() && cast_handle->pEndptVolPlayback != nullptr)
+    {
+        hr = cast_handle->pEndptVolPlayback->UnregisterControlChangeNotify(&cast_handle->EPVolEventsPlayback);
+        if (FAILED(hr))
+        {
+            wchar_t message[128];
+            swprintf_s(message, L"FxSound: playback-volume unregister failed (0x%08lx); retaining endpoints\n", static_cast<unsigned long>(hr));
+            OutputDebugStringW(message);
+            return NOT_OKAY_NO_BREAK;
+        }
+        cast_handle->EPVolEventsPlayback.SetRegistered(false);
+    }
+    if (cast_handle->pEndptVolCapture != nullptr)
+    {
+        cast_handle->pEndptVolCapture->Release();
+        cast_handle->pEndptVolCapture = nullptr;
+    }
+    if (cast_handle->pEndptVolPlayback != nullptr)
+    {
+        cast_handle->pEndptVolPlayback->Release();
+        cast_handle->pEndptVolPlayback = nullptr;
+    }
 	/*if (cast_handle->pAudioClientCapture != NULL)
 	{
 		hr = cast_handle->pAudioClientCapture->Release();
