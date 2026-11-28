@@ -390,10 +390,8 @@ namespace
                 if (post_gain_abs >= (effective_ceiling * kVolumeLevelingHeadroomNearCeilingThreshold))
                     ceiling_hit_count++;
 
-                if (rp_out_buf[index + channel] > effective_ceiling)
-                    rp_out_buf[index + channel] = effective_ceiling;
-                else if (rp_out_buf[index + channel] < -effective_ceiling)
-                    rp_out_buf[index + channel] = -effective_ceiling;
+                // Preserve floating-point headroom for downstream effects and output limiting.
+                // Clipping here would irreversibly flatten peaks before the final limiter.
             }
 
             index += i_num_channels;
