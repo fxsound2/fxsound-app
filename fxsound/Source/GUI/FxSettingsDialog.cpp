@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "FxSettingsDialog.h"
 #include "FxMessage.h"
 #include "../Utils/SysInfo/SysInfo.h"
+#include "PlaybackReserve.h"
 
 //==============================================================================
 FxSettingsDialog::FxSettingsDialog() : FxWindow("Settings"), tooltip_window_(this)
@@ -28,12 +29,20 @@ FxSettingsDialog::FxSettingsDialog() : FxWindow("Settings"), tooltip_window_(thi
 	centreWithSize(getWidth(), getHeight());
 	addToDesktop(0);
 	toFront(true);
+	settings_content_.refreshAudioSettingsClock();
 }
 
 void FxSettingsDialog::closeButtonPressed()
 {
 	exitModalState(0);
 	removeFromDesktop();
+	settings_content_.refreshAudioSettingsClock();
+}
+
+void FxSettingsDialog::visibilityChanged()
+{
+	// A pane's local visibility does not change when the whole dialog is hidden.
+	settings_content_.refreshAudioSettingsClock();
 }
 
 void FxSettingsDialog::paint(Graphics& g)
@@ -82,6 +91,7 @@ bool FxSettingsDialog::keyPressed(const KeyPress& key)
 	{
 		exitModalState(0);
 		removeFromDesktop();
+		settings_content_.refreshAudioSettingsClock();
 		return true;
 	}
 
@@ -188,6 +198,20 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 	prioritize_new_output_toggle_(TRANS("Prioritize new output devices")),
 	reset_presets_button_(TRANS("Reset presets to factory defaults"))
 {
+	reserve_slider_.setRange(0, fxsoundtiming::maxReserveMs, 1);
+	reserve_slider_.setSliderStyle(Slider::LinearHorizontal);
+	reserve_slider_.setTextBoxStyle(Slider::TextBoxRight, false, 62, 22);
+	reserve_slider_.setTextValueSuffix(" ms");
+	reserve_slider_.setDoubleClickReturnValue(true, fxsoundtiming::defaultReserveMs);
+	reserve_slider_.setWantsKeyboardFocus(true);
+	reserve_slider_.setValue(fxsoundtiming::playbackReserveControl().targetMs.load(), dontSendNotification);
+	reserve_slider_.onValueChange = [this] {
+		fxsoundtiming::playbackReserveControl().targetMs.store(static_cast<unsigned>(reserve_slider_.getValue()));
+	};
+	addAndMakeVisible(reserve_title_);
+	addAndMakeVisible(reserve_slider_);
+	timerCallback();
+
 	setFocusContainerType(FocusContainerType::keyboardFocusContainer);
 
 	output_preference_title_.setColour(Label::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
@@ -237,6 +261,33 @@ FxSettingsDialog::AudioSettingsPane::AudioSettingsPane() :
 
 FxSettingsDialog::AudioSettingsPane::~AudioSettingsPane()
 {
+	stopTimer();
+}
+
+void FxSettingsDialog::AudioSettingsPane::refreshClock()
+{
+	if (isShowing())
+	{
+		timerCallback();
+		startTimerHz(4);
+	}
+	else stopTimer();
+}
+
+void FxSettingsDialog::AudioSettingsPane::timerCallback()
+{
+	const auto& state = fxsoundtiming::playbackReserveControl();
+	const auto when = state.lastWriteTick.load(std::memory_order_acquire);
+	String status;
+	if (!when || GetTickCount64() - when > 750)
+		status = TRANS("waiting for playback");
+	else
+	{
+		if (state.transitioning.load()) status = TRANS("adjusting") + "; ";
+		status += TRANS("queued") + " " + String(state.observedMs.load()) + " ms; "
+			+ TRANS("applied target") + " " + String(state.appliedTargetMs.load()) + " ms";
+	}
+	reserve_title_.setText(TRANS("Output reserve") + ": " + status, dontSendNotification);
 }
 
 void FxSettingsDialog::AudioSettingsPane::resized()
@@ -258,8 +309,10 @@ void FxSettingsDialog::AudioSettingsPane::resized()
 	auto group_height = static_cast<float>(prioritize_new_output_toggle_.getBottom() - group_y + GROUP_MARGIN);
 	output_preference_bounds_ = juce::Rectangle<float>(group_x, group_y, group_width, group_height);
 
-	y = prioritize_new_output_toggle_.getBottom() + 30;
-	resizeResetButton(X_MARGIN, y);
+	y = prioritize_new_output_toggle_.getBottom() + 20;
+	reserve_title_.setBounds(X_MARGIN, y, width, 20);
+	reserve_slider_.setBounds(X_MARGIN, y + 22, width, 28);
+	resizeResetButton(X_MARGIN, reserve_slider_.getBottom() + 16);
 }
 
 void FxSettingsDialog::AudioSettingsPane::paint(Graphics& g)
@@ -282,6 +335,9 @@ void FxSettingsDialog::AudioSettingsPane::setText()
 	output_preference_title_.setText(TRANS("Output Device Preference"), NotificationType::dontSendNotification);
 
 	prioritize_new_output_toggle_.setButtonText(TRANS("Prioritize new output devices"));
+	reserve_title_.setFont(theme.getNormalFont().withHeight(13.0f));
+	reserve_slider_.setTitle(TRANS("FxSound output reserve"));
+	reserve_slider_.setTooltip(TRANS("Extra output buffering in milliseconds. More reserve adds latency. Double-click to reset to 90 ms."));
 
 	reset_presets_button_.setButtonText(TRANS("Reset presets to factory defaults"));
 	resizeResetButton(reset_presets_button_.getX(), reset_presets_button_.getY());
@@ -321,6 +377,7 @@ void FxSettingsDialog::AudioSettingsPane::visibilityChanged()
 	{
 		output_preference_.update();
     }
+	refreshClock();
 }
 
 void FxSettingsDialog::AudioSettingsPane::mouseEnter(const MouseEvent& mouse_event)

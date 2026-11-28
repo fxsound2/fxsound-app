@@ -51,16 +51,13 @@ int PT_DECLSPEC sndDevicesDoCapture(PT_HANDLE *hp_sndDevices, float **fpp_buffer
 	UINT32 packetLength = 0;
 	UINT32 numFramesQueuedUpToPlay;
 	UINT32 numFramesQueuedUpToCapture;
-	UINT32 numFramesQueuedUpToPlayReferencedToCapture; // Corrected for samp rate difference.
 	DWORD flags;
 	float *fptr;
 	UINT32 loopsize, index, offset;
 	UINT32 i;
 	int numCaptureChannels;
 	int numPlaybackChannels;
-	UINT32 numDesiredCaptureFrames;
-	UINT32 halfCaptureBufferSize;
-	UINT32 quarterCaptureBufferSize;
+
 	int i_playback_index;
 #ifdef _DEBUG
 	UINT64 DevicePosition;
@@ -84,6 +81,7 @@ int PT_DECLSPEC sndDevicesDoCapture(PT_HANDLE *hp_sndDevices, float **fpp_buffer
 	*ip_numSampleSets = 0;
 	*pp_wfxDfx = NULL;
 
+	const ULONGLONG waitingSince = GetTickCount64();
 	// Repeat this loop until we have enough frames to fill the specified playback buffer space.
 	do
 	{
@@ -117,154 +115,110 @@ int PT_DECLSPEC sndDevicesDoCapture(PT_HANDLE *hp_sndDevices, float **fpp_buffer
 		hr = cast_handle->pAudioClientPlayback->GetCurrentPadding(&numFramesQueuedUpToPlay);
 		if (FAILED(hr)) goto Exit;
 
-		numFramesQueuedUpToPlayReferencedToCapture = numFramesQueuedUpToPlay/cast_handle->upsampleRatio;
-
-		// Calculate the number of playback frames to fill, compensated for samp rate differences.
-		cast_handle->numPlaybackFramesAvailableToFill = cast_handle->bufferFrameSizeCapture - numFramesQueuedUpToPlayReferencedToCapture;
-
-		halfCaptureBufferSize = cast_handle->bufferFrameSizeCapture/2;
-		quarterCaptureBufferSize = cast_handle->bufferFrameSizeCapture/4;
-
-		// If playback buffer is totally empty, don't send more buffers to playback until we fill 1/2 the capture buffer.
-		if( numFramesQueuedUpToPlayReferencedToCapture == 0 )
-		{
-			numDesiredCaptureFrames = halfCaptureBufferSize;
-			cast_handle->playbackIsActive = SND_DEVICES_PLAYBACK_IS_STOPPED;
-			
-			if( cast_handle->playbackStreamIsTemporarilyPaused == 0 )
-			{
-				cast_handle->playbackStreamIsTemporarilyPaused = 1;
-				hr = cast_handle->pAudioClientPlayback->Stop(); // Stop playback to allow PC to sleep if no audio is playing.
-				if (FAILED(hr)) goto Exit;
-			}
-		}
-		else
-		{
-			cast_handle->playbackIsActive = SND_DEVICES_PLAYBACK_IS_ACTIVE;
-
-			if( cast_handle->playbackStreamIsTemporarilyPaused )
-			{
-				cast_handle->playbackStreamIsTemporarilyPaused = 0;
-				hr = cast_handle->pAudioClientPlayback->Start(); // Restart playback.
-			}
-
-			// If the playback buffer is already at least 1/2 full, don't grab anymore capture buffers.
-			if( cast_handle->numPlaybackFramesAvailableToFill < halfCaptureBufferSize )
-				numDesiredCaptureFrames = 0;
-			else
-				// If the playback buffer is less than 1/2 full, get what we need to make 1/2 full.
-				numDesiredCaptureFrames = cast_handle->numPlaybackFramesAvailableToFill - halfCaptureBufferSize;
-		}
-
-		if( numDesiredCaptureFrames == 0 )
-			goto DoneGrabbingFrames;
+        // Return one complete packet per DSP/tap call. Wait for data only while idle.
+        if (!numFramesQueuedUpToCapture && !numFramesQueuedUpToPlay &&
+            !cast_handle->playbackStreamIsTemporarilyPaused && GetTickCount64() - waitingSince >= 150)
+        {
+            hr = cast_handle->pAudioClientPlayback->Stop();
+            if (FAILED(hr)) goto Exit;
+            cast_handle->playbackStreamIsTemporarilyPaused = 1;
+        }
+        cast_handle->playbackIsActive = numFramesQueuedUpToPlay
+            ? SND_DEVICES_PLAYBACK_IS_ACTIVE : SND_DEVICES_PLAYBACK_IS_STOPPED;
 
 		// The audio is streamed in small "packets", a number of frames (sample sets). So far it appears that
 		// packets are always 10ms in duration, independent of sampling freq, so at 44.1k we get 441 sample sets/packet.
 		hr = cast_handle->pAudioCaptureLoopback->GetNextPacketSize(&packetLength); // The number of frames in the next packet.
 		if (FAILED(hr)) goto Exit;
 
-		do // Loop to read the small data packets to fill capture buffer up to available playback size.
+		if (packetLength > 0)
 		{
-			if( packetLength > 0 )
-			{
-				// Get the data in this packet.
-				hr = cast_handle->pAudioCaptureLoopback->GetBuffer(&(cast_handle->pDataPacketCapture), &(cast_handle->numCaptureFramesAvailable), &flags,
+                const UINT32 captureChannelsNeeded = cast_handle->upsampleRatio > 1
+                    ? max(numCaptureChannels, numPlaybackChannels) : numCaptureChannels;
+                if (captureChannelsNeeded == 0 || numPlaybackChannels <= 0 ||
+                    packetLength > static_cast<UINT32>(cast_handle->captureBufAllocSize) / captureChannelsNeeded ||
+                    packetLength > static_cast<UINT32>(cast_handle->playbackBufAllocSize)
+                        / numPlaybackChannels / cast_handle->upsampleRatio)
+                {
+                    OutputDebugStringW(L"FxSound: capture packet exceeds the negotiated scratch buffer.\n");
+                    hr = E_BOUNDS;
+                    goto Exit;
+                }
+			// Get the data in this packet.
+			hr = cast_handle->pAudioCaptureLoopback->GetBuffer(&(cast_handle->pDataPacketCapture), &(cast_handle->numCaptureFramesAvailable), &flags,
 #ifdef _DEBUG
-					&DevicePosition, &QPCPosition);
+				&DevicePosition, &QPCPosition);
 #else
-					NULL, NULL);
+				NULL, NULL);
 #endif
-				if (FAILED(hr)) goto Exit;
+			if (FAILED(hr)) goto Exit;
 
-				fptr = (float *)(cast_handle->pDataPacketCapture);
+			fptr = (float *)(cast_handle->pDataPacketCapture);
 
-				loopsize = cast_handle->numCaptureFramesAvailable * numCaptureChannels;
-				offset = cast_handle->capturedFramesCount * numCaptureChannels;
+			loopsize = cast_handle->numCaptureFramesAvailable * numCaptureChannels;
+			offset = cast_handle->capturedFramesCount * numCaptureChannels;
 
-				// Silent flag means to treat packet as containing all zeros, even though it may not.
-				if( flags & AUDCLNT_BUFFERFLAGS_SILENT )
-				{
-					cast_handle->playbackIsActive = SND_DEVICES_PLAYBACK_IS_STOPPED;
-					for(i=0; i<loopsize; i++)
-						cast_handle->fCaptureBuf[ offset + i ] = (float)0.0;
-				}
-				else
-				{
-					for(i=0; i<loopsize; i++)
-						cast_handle->fCaptureBuf[ offset + i ] = fptr[i];
-				}
+			// Silent flag means to treat packet as containing all zeros, even though it may not.
+			if( flags & AUDCLNT_BUFFERFLAGS_SILENT )
+			{
+				cast_handle->playbackIsActive = SND_DEVICES_PLAYBACK_IS_STOPPED;
+				for(i=0; i<loopsize; i++)
+					cast_handle->fCaptureBuf[ offset + i ] = (float)0.0;
+			}
+			else
+			{
+				for(i=0; i<loopsize; i++)
+					cast_handle->fCaptureBuf[ offset + i ] = fptr[i];
+			}
 
 // #define DO_BEEPS_ON_SONG_CHANGES
 #ifdef DO_BEEPS_ON_SONG_CHANGES
-				// The discontinuity flag gets set by WMP when clicking on different song selections but not on start/stop.
-				// In youtube the flag doesn't get set by start/stop or playing songs but does get set when capture
-				// buffer overflows, as does WMP.
-				static int discontinuity_count = 0;
-				static int silent_count = 0;
-				static int timestamp_error_count = 0;
-				int event_flag;
+			// The discontinuity flag gets set by WMP when clicking on different song selections but not on start/stop.
+			// In youtube the flag doesn't get set by start/stop or playing songs but does get set when capture
+			// buffer overflows, as does WMP.
+			static int discontinuity_count = 0;
+			static int silent_count = 0;
+			static int timestamp_error_count = 0;
+			int event_flag;
 
-				event_flag = 1;
+			event_flag = 1;
 
-				for(i=0; i<loopsize; i++ )
-					if( fabs(cast_handle->fCaptureBuf[ offset + i ]) > 0.001 )
-						event_flag = 0;
+			for(i=0; i<loopsize; i++ )
+				if( fabs(cast_handle->fCaptureBuf[ offset + i ]) > 0.001 )
+					event_flag = 0;
 
-				if( flags & AUDCLNT_BUFFERFLAGS_DATA_DISCONTINUITY )
-				{
+			if( flags & AUDCLNT_BUFFERFLAGS_DATA_DISCONTINUITY )
+			{
  					discontinuity_count++;
-					event_flag = 1;
-				}
-				if( flags & AUDCLNT_BUFFERFLAGS_SILENT )
-				{
-					silent_count++;
-					event_flag = 1;
-				}
-				if( flags & AUDCLNT_BUFFERFLAGS_TIMESTAMP_ERROR )
-				{
-					timestamp_error_count++;
-					event_flag = 1;
-				}
-
-				if( event_flag )
-					for(i=0; i<loopsize; i++)
-						if( (i % 100) == 0 )
-							cast_handle->fCaptureBuf[ offset + i ] = (float)0.95;
-						else
-							cast_handle->fCaptureBuf[ offset + i ] = (float)0.0;
-#endif
-
-				// This release call is to be called as soon as possible following the GetBuffer call.
-				hr = cast_handle->pAudioCaptureLoopback->ReleaseBuffer(cast_handle->numCaptureFramesAvailable);
-				if (FAILED(hr)) goto Exit;
-
-				cast_handle->capturedFramesCount += cast_handle->numCaptureFramesAvailable;
-
-				hr = cast_handle->pAudioCaptureLoopback->GetNextPacketSize(&packetLength);
-				if (FAILED(hr)) goto Exit;
+				event_flag = 1;
+			}
+			if( flags & AUDCLNT_BUFFERFLAGS_SILENT )
+			{
+				silent_count++;
+				event_flag = 1;
+			}
+			if( flags & AUDCLNT_BUFFERFLAGS_TIMESTAMP_ERROR )
+			{
+				timestamp_error_count++;
+				event_flag = 1;
 			}
 
-			// The audio is streamed in small "packets", a number of frames (sample sets). So far it appears that
-			// packets are always 10ms in duration, independent of sampling freq, so at 44.1k we get 441 sample sets/packet.
-			hr = cast_handle->pAudioCaptureLoopback->GetNextPacketSize(&packetLength); // The number of frames in the next packet.
+			if( event_flag )
+				for(i=0; i<loopsize; i++)
+					if( (i % 100) == 0 )
+						cast_handle->fCaptureBuf[ offset + i ] = (float)0.95;
+					else
+						cast_handle->fCaptureBuf[ offset + i ] = (float)0.0;
+#endif
+
+			// This release call is to be called as soon as possible following the GetBuffer call.
+			hr = cast_handle->pAudioCaptureLoopback->ReleaseBuffer(cast_handle->numCaptureFramesAvailable);
 			if (FAILED(hr)) goto Exit;
 
-		} while( (cast_handle->capturedFramesCount < numDesiredCaptureFrames ) // No sleep in this loop.
-			      && (packetLength > 0) );
+			cast_handle->capturedFramesCount += cast_handle->numCaptureFramesAvailable;
 
-		// Check to see if we are in the case where no more capture frames are coming in and we need to playout the rest of the playback buffer.
-		hr = cast_handle->pAudioClientPlayback->GetCurrentPadding(&numFramesQueuedUpToPlay);
-		if (FAILED(hr)) goto Exit;
-
-		// If we are not in startup mode (numFramesQueuedUpToPlay !=  0) and  playback buffer has shrunk to 1/4 or less desired size
-		// and no more capture buffers are coming in, transfer remaining capture buffers to playback.
-		if( (numFramesQueuedUpToPlay != 0) && (cast_handle->capturedFramesCount > 0) && (numFramesQueuedUpToPlay/cast_handle->upsampleRatio) <= quarterCaptureBufferSize )
-			goto DoneGrabbingFrames;
-
-	} while( cast_handle->capturedFramesCount < numDesiredCaptureFrames ); // This loop has a sleep to allow capture buffers to build up.
-
-DoneGrabbingFrames :
+        }
+    } while (cast_handle->capturedFramesCount == 0);
 
 	// Correct number of playback frame for sample rate difference.
 	cast_handle->playbackFrameCount = cast_handle->upsampleRatio * cast_handle->capturedFramesCount;
@@ -417,13 +371,32 @@ int PT_DECLSPEC sndDevicesStartStopCapture(PT_HANDLE *hp_sndDevices, int i_start
 	{
 		cast_handle->stopAudioCaptureAndPlaybackLoop = 0;
 		hr = cast_handle->pAudioClientCapture->Start(); // Start capturing, this starts filling of the internal capture buffers.
-		hr = cast_handle->pAudioClientPlayback->Start(); // Start playback, this starts filling of the internal playback buffers.
+		if (FAILED(hr))
+		{
+			cast_handle->stopAudioCaptureAndPlaybackLoop = 1;
+			wchar_t message[128];
+			swprintf_s(message, L"FxSound: capture Start failed (0x%08lx)\n", static_cast<unsigned long>(hr));
+			OutputDebugStringW(message);
+			return NOT_OKAY_NO_BREAK;
+		}
+        cast_handle->playbackStreamIsTemporarilyPaused = 1; // First captured packet primes and starts render.
 	}
 	else
 	{
-		hr = cast_handle->pAudioClientCapture->Stop();  // Stop capturing.
-		hr = cast_handle->pAudioClientPlayback->Stop(); // Stop playback.
+		// Stop is also requested by the control thread. Publish the request before
+		// either COM call, including when a driver cannot stop successfully.
 		cast_handle->stopAudioCaptureAndPlaybackLoop = 1;
+		hr = cast_handle->pAudioClientCapture->Stop();  // Stop capturing.
+		const HRESULT captureStop = hr;
+        hr = cast_handle->pAudioClientPlayback->Stop();
+		if (FAILED(captureStop) || FAILED(hr))
+		{
+			wchar_t message[160];
+			swprintf_s(message, L"FxSound: audio Stop failed (capture=0x%08lx, playback=0x%08lx)\n",
+				static_cast<unsigned long>(captureStop), static_cast<unsigned long>(hr));
+			OutputDebugStringW(message);
+			return NOT_OKAY_NO_BREAK;
+		}
 	}
 
 	return(OKAY);

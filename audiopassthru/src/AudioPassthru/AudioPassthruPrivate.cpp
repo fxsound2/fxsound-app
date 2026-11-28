@@ -285,11 +285,10 @@ int AudioPassthruPrivate::killProcessingThread(int *ip_timed_out)
 	/* Kill the thread */
 	if (b_need_to_kill_thread)
 	{
+		i_kill_processing_thread_ = IS_TRUE;
 		// Stop capture.  This will cause sndDevicesDoCapture() to exit and then the thread will die.
 		if (sndDevicesStartStopCapture(hp_sndDevices_, SND_DEVICES_STOP_CAPTURE) != OKAY)
-			return(NOT_OKAY);
-
-		i_kill_processing_thread_ = IS_TRUE;
+			OutputDebugStringW(L"FxSound: audio Stop reported failure; still waiting for the processing thread\n");
 
 		/* Wait until thread has died or we have timed out */
 		i_thread_has_died = IS_FALSE;
@@ -337,7 +336,7 @@ int AudioPassthruPrivate::setBufferLength(int i_buffer_length_msecs)
 
 	/* Kill the processing thread, so that the timer will then restart it with the new buffer setting */
 	if (killProcessingThread(&i_timed_out) != OKAY)
-		return(NOT_OKAY);
+		return NOT_OKAY_NO_BREAK;
 
 	/* If the killing of processing attempt timed out, then we can't do anything else */
 	if (i_timed_out)
@@ -490,7 +489,7 @@ DWORD AudioPassthruPrivate::threadWorker(void)
 
 	// Start capture.
 	if (sndDevicesStartStopCapture(hp_sndDevices_, SND_DEVICES_START_CAPTURE) != OKAY)
-		return(NOT_OKAY);
+		return NOT_OKAY_NO_BREAK;
 
 	/*
 	* Keep looping until a goto statement is reached to kill the thread
@@ -577,7 +576,7 @@ KillProcessingThread:
 
 	// Stop capture.
 	if (sndDevicesStartStopCapture(hp_sndDevices_, SND_DEVICES_STOP_CAPTURE) != OKAY)
-		return(NOT_OKAY);
+		return NOT_OKAY_NO_BREAK;
 
 	/* Simply returning from this function stops the thread */
 	return(OKAY);

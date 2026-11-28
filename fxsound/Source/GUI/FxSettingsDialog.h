@@ -41,6 +41,7 @@ public:
     ~FxSettingsDialog() = default;
 
 	void closeButtonPressed() override;
+	void visibilityChanged() override;
 
 	void paint(Graphics& g) override;
 
@@ -88,7 +89,7 @@ private:
 		String name_;
 	};
 
-	class AudioSettingsPane : public SettingsPane
+	class AudioSettingsPane : public SettingsPane, private Timer
 	{
 	public:
 		AudioSettingsPane();
@@ -96,12 +97,13 @@ private:
 
 		void resized() override;
 		void paint(Graphics& g) override;
+		void refreshClock();
 
 	private:
 		static constexpr int GROUP_MARGIN = 10;
 		static constexpr int ENDPOINT_Y = 50;
 		static constexpr int LABEL_WIDTH = 220;
-		static constexpr int OUTPUT_PREFERENCE_HEIGHT = 260;
+		static constexpr int OUTPUT_PREFERENCE_HEIGHT = 220;
 		static constexpr int LABEL_HEIGHT = 14;
 		static constexpr int TOGGLE_BUTTON_HEIGHT = 30;
 		static constexpr int RESET_PRESETS_BUTTON_WIDTH = 220;
@@ -110,11 +112,14 @@ private:
 
 		void setText();
 		void resizeResetButton(int x, int y);
+		void timerCallback() override;
 
 		void visibilityChanged() override;
 		void mouseEnter(const MouseEvent& mouse_event) override;
 		void mouseExit(const MouseEvent& mouse_event) override;
 
+		Label reserve_title_;
+		Slider reserve_slider_;
 		Label output_preference_title_;
 		FxOutputPreference output_preference_;
 		ToggleButton prioritize_new_output_toggle_;
@@ -194,6 +199,7 @@ private:
 
 		SettingsComponent();
         ~SettingsComponent() = default;
+		void refreshAudioSettingsClock() { audio_settings_pane_.refreshClock(); }
 
 		void resized() override;
 

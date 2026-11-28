@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "slout.h"
 #include "reg.h"
 #include "u_sndDevices.h"
+#include "PlaybackReserve.h"
 #include "sndDevices.h"
 
 /*
@@ -253,6 +254,10 @@ int PT_DECLSPEC sndDevicesReInit(PT_HANDLE *hp_sndDevices, int i_initType, int *
 			// NOTE bufferSizeMilliSecs is the average bulk delay, actual buffer length is twice this, so use 500 in denoms to correct.
 			cast_handle->hnsRequestedDurationCapture = (REFERENCE_TIME)((double)cast_handle->bufferSizeMilliSecs * (double)SND_DEVICES_REFTIMES_PER_SEC / 500.0);
 			cast_handle->hnsRequestedDurationPlayback = (REFERENCE_TIME)((double)cast_handle->bufferSizeMilliSecs * (double)SND_DEVICES_REFTIMES_PER_SEC / 500.0);
+
+            // Physical output needs the reserve plus headroom for an ordinary packet.
+            cast_handle->hnsRequestedDurationPlayback = max(cast_handle->hnsRequestedDurationPlayback,
+                static_cast<REFERENCE_TIME>(fxsoundtiming::defaultReserveMs) * 10000);
 
 			// PT-NOTE - in this non-dynamic version lock the allocation size to the max that would be needed
 			//captureAllocSize  = (int)(48000  * 8 * (double)SND_DEVICES_CAPTURE_BUFFER_MAX_SIZE_MILLI_SECS * 1.001/500.0);

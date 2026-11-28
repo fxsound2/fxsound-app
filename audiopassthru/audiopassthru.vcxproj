@@ -273,6 +273,7 @@
     <ClCompile Include="src\sndDevices\sndDevices_Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\PlaybackReserve.h" />
     <ClInclude Include="include\AudioPassthru.h" />
     <ClInclude Include="include\codedefs.h" />
     <ClInclude Include="include\File.h" />
