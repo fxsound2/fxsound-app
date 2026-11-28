@@ -311,6 +311,16 @@ void FxMainWindow::update()
 	pro_view_.update();
 }
 
+void FxMainWindow::updateVisualizerVisibility()
+{
+	pro_view_.updateVisualizerVisibility();
+	if (FxController::getInstance().getCurrentView() == ViewType::Pro)
+	{
+		// FxWindow sizes itself when content is assigned, not when a child changes size.
+		setContent(&pro_view_);
+	}
+}
+
 void FxMainWindow::startVisualizer()
 {
     pro_view_.startVisualizer();
@@ -432,6 +442,9 @@ bool FxMainWindow::keyPressed(const KeyPress& key)
 
 void FxMainWindow::visibilityChanged()
 {
+	// JUCE reports minimisation on the window, without changing child visibility flags.
+	pro_view_.updateVisualizerVisibility();
+
 	auto* peer = getPeer();
 	if (peer)
 	{

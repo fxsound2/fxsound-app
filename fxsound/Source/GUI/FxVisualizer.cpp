@@ -28,73 +28,89 @@ FxVisualizer::FxVisualizer()
     band_values_.resize(FxController::NUM_SPECTRUM_BANDS);
     band_graph_.resize(FxController::NUM_SPECTRUM_BANDS * NUM_BARS);
 
-#if JUCE_MAJOR_VERSION >= 8
-    start();
-#else
     calcGradient();
     reset();
-    setFramesPerSecond(10);
-#endif
 
     setOpaque(false);
     setSize(WIDTH, HEIGHT);
 }
 
+FxVisualizer::~FxVisualizer()
+{
+    stopAnimation();
+}
+
 void FxVisualizer::start()
-{    
+{
+    playback_active_ = true;
     calcGradient();
-
-#if JUCE_MAJOR_VERSION >= 8
-    if (vblank_listener_ == nullptr)
-    {
-        vblank_listener_ = std::make_unique<juce::VBlankAttachment>(
-            this,
-            [this](double timestamp)
-            {
-                if (!isShowing())
-                    return;
-
-                static double last_frame_time = 0.0;
-                constexpr double fps_interval = 1.0 / 30.0;
-
-                if (timestamp - last_frame_time >= fps_interval)
-                {
-                    last_frame_time = timestamp;
-                    if (FxController::getInstance().isAudioProcessing())
-                    {
-                        update();
-                        repaint();
-                    }
-                    else
-                    {
-                        reset();
-                        repaint();
-                        vblank_listener_.reset();
-                    }
-                }
-            });
-    }
-#else
-    setFramesPerSecond(30);
-#endif
+    updateAnimationState();
 }
 
 void FxVisualizer::pause()
 {
+    playback_active_ = false;
     calcGradient();
+    updateAnimationState();
+}
+
+void FxVisualizer::updateAnimationState()
+{
+    // Hiding Pro view, closing the window or disabling the graph must release its clock.
+    // Keep the playback request so returning to a visible, enabled graph can resume it.
+    if (!playback_active_ || !isEnabled() || !isShowing())
+    {
+        stopAnimation();
+        reset();
+        repaint();
+        return;
+    }
 
 #if JUCE_MAJOR_VERSION >= 8
-    reset();
-    repaint();
-
-    if (vblank_listener_ != nullptr)
+    if (vblank_listener_ == nullptr)
     {
-        vblank_listener_.reset();
+        reset();
+        last_frame_time_ = 0.0;
+        vblank_listener_ = std::make_unique<juce::VBlankAttachment>(
+            this,
+            [this](double timestamp)
+            {
+                constexpr double fps_interval = 1.0 / 30.0;
+
+                if (timestamp - last_frame_time_ >= fps_interval)
+                {
+                    last_frame_time_ = timestamp;
+                    update();
+                    repaint();
+                }
+            });
     }
 #else
-    setFramesPerSecond(10);
+    if (!isTimerRunning())
+    {
+        reset();
+        startTimerHz(30);
+    }
 #endif
 }
+
+void FxVisualizer::stopAnimation()
+{
+#if JUCE_MAJOR_VERSION >= 8
+    vblank_listener_.reset();
+    last_frame_time_ = 0.0;
+#else
+    stopTimer();
+#endif
+}
+
+#if JUCE_MAJOR_VERSION < 8
+void FxVisualizer::timerCallback()
+{
+    update();
+    repaint();
+}
+#endif
 
 void FxVisualizer::reset()
 {
@@ -106,7 +122,7 @@ void FxVisualizer::reset()
 
 void FxVisualizer::update()
 {
-    if (!isEnabled())
+    if (!playback_active_ || !isEnabled() || !isShowing())
         return;
 
     FxController::getInstance().getSpectrumBandValues(band_values_);
@@ -157,15 +173,18 @@ void FxVisualizer::paint(Graphics& g)
 
 void FxVisualizer::enablementChanged()
 {
-    if (isEnabled())
-    {
-        start();
-    }
-    else
-    {
-        pause();
-        reset();
-    }
+    calcGradient();
+    updateAnimationState();
+}
+
+void FxVisualizer::visibilityChanged()
+{
+    updateAnimationState();
+}
+
+void FxVisualizer::parentHierarchyChanged()
+{
+    updateAnimationState();
 }
 
 void FxVisualizer::lookAndFeelChanged()

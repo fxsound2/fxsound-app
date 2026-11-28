@@ -2533,6 +2533,20 @@ void FxController::setNotificationsHidden(bool status)
 	settings_.setBool("hide_notifications", status);
 }
 
+bool FxController::isVisualizerVisible()
+{
+	return settings_.getBool("show_visualizer", true);
+}
+
+void FxController::setVisualizerVisible(bool visible)
+{
+	settings_.setBool("show_visualizer", visible);
+	if (main_window_ != nullptr)
+	{
+		main_window_->updateVisualizerVisibility();
+	}
+}
+
 String FxController::getLanguage() const
 {
 	return language_;

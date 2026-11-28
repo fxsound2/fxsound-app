@@ -339,6 +339,7 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	hide_help_tips_toggle_(TRANS("Hide help tips for audio controls")),
 	hide_notifications_toggle_(TRANS("Hide notifications")),
 	gpu_render_toggle_(TRANS("Use hardware-accelerated graphics")),
+	show_visualizer_toggle_(TRANS("Show visualizer")),
 	hotkeys_toggle_(TRANS("Disable keyboard shortcuts"))
 {
 	StringArray hotKeySettingsKeys = { FxController::HK_CMD_ON_OFF, FxController::HK_CMD_OPEN_CLOSE, FxController::HK_CMD_NEXT_PRESET, FxController::HK_CMD_PREVIOUS_PRESET, FxController::HK_CMD_NEXT_OUTPUT };
@@ -364,6 +365,10 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	gpu_render_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	gpu_render_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	gpu_render_toggle_.setWantsKeyboardFocus(true);
+	show_visualizer_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
+	show_visualizer_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	show_visualizer_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
+	show_visualizer_toggle_.setWantsKeyboardFocus(true);
 	hotkeys_toggle_.setMouseCursor(MouseCursor::PointingHandCursor);
 	hotkeys_toggle_.setColour(ToggleButton::ColourIds::tickColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
 	hotkeys_toggle_.setColour(ToggleButton::ColourIds::textColourId, getLookAndFeel().findColour(TextButton::textColourOnId));
@@ -408,6 +413,9 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 	gpu_render_toggle_.setToggleState(FxController::getInstance().isGpuRenderingEnabled(), NotificationType::dontSendNotification);
 	gpu_render_toggle_.onClick = [this]() { onGpuRenderToggled(); };
 
+	show_visualizer_toggle_.setToggleState(FxController::getInstance().isVisualizerVisible(), NotificationType::dontSendNotification);
+	show_visualizer_toggle_.onClick = [this]() { FxController::getInstance().setVisualizerVisible(show_visualizer_toggle_.getToggleState()); };
+
 	language_switch_.setSelectedLanguage(FxController::getInstance().getLanguage());
 	language_switch_.onLanguageChanged = [](String language_code) { FxController::getInstance().setLanguage(language_code); };
 
@@ -424,6 +432,7 @@ FxSettingsDialog::GeneralSettingsPane::GeneralSettingsPane() :
 		addAndMakeVisible(&gpu_render_toggle_);
 	}
 	addAndMakeVisible(&hotkeys_toggle_);
+	addAndMakeVisible(&show_visualizer_toggle_);
 	addAndMakeVisible(&language_switch_);
 
 	setText();
@@ -459,6 +468,8 @@ void FxSettingsDialog::GeneralSettingsPane::resized()
 		y = gpu_render_toggle_.getBottom() + 10;
 	}
 
+	show_visualizer_toggle_.setBounds(X_MARGIN, y, getWidth() - X_MARGIN, TOGGLE_BUTTON_HEIGHT);
+	y = show_visualizer_toggle_.getBottom() + 10;
 	hotkeys_toggle_.setBounds(X_MARGIN, y, getWidth()-X_MARGIN, TOGGLE_BUTTON_HEIGHT);
 
 	y = hotkeys_toggle_.getBottom() + 5;
@@ -484,6 +495,7 @@ void FxSettingsDialog::GeneralSettingsPane::setText()
     hide_help_tips_toggle_.setButtonText(TRANS("Hide help tips for audio controls"));
 	hide_notifications_toggle_.setButtonText(TRANS("Hide notifications"));
 	gpu_render_toggle_.setButtonText(TRANS("Use hardware-accelerated graphics"));
+	show_visualizer_toggle_.setButtonText(TRANS("Show visualizer"));
 
     hotkeys_toggle_.setButtonText(TRANS("Disable keyboard shortcuts"));
 }

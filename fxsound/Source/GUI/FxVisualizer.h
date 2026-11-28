@@ -26,24 +26,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 /*
 */
-#if JUCE_MAJOR_VERSION >=8
+#if JUCE_MAJOR_VERSION >= 8
 class FxVisualizer : public Component
 #else
-class FxVisualizer : public AnimatedAppComponent
+class FxVisualizer : public Component, private Timer
 #endif
 {
 public:
     FxVisualizer();
+    ~FxVisualizer() override;
 
     void start();
     void pause();
 
     void reset();
-#if JUCE_MAJOR_VERSION >=8
     void update();
-#else
-	void update() override;
-#endif
 
     void calcGradient();
 
@@ -54,13 +51,22 @@ private:
 
     void paint(Graphics& g) override;
     void enablementChanged() override;
-	void lookAndFeelChanged() override;
+    void visibilityChanged() override;
+    void parentHierarchyChanged() override;
+    void lookAndFeelChanged() override;
+    void updateAnimationState();
+    void stopAnimation();
+#if JUCE_MAJOR_VERSION < 8
+    void timerCallback() override;
+#endif
 
     Array<float> band_values_;
     Array<float> band_graph_;
     ColourGradient gradient_;
+    bool playback_active_ = false;
 
-#if JUCE_MAJOR_VERSION >=8
+#if JUCE_MAJOR_VERSION >= 8
     std::unique_ptr<juce::VBlankAttachment> vblank_listener_;
+    double last_frame_time_ = 0.0;
 #endif
 };
