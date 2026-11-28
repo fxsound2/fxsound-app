@@ -58,7 +58,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
  
 /* Constant Defines */ 
-/* Functions */ 
+/* Functions */
+/* Audio thread only: consume peak limiter ratios accumulated across DSP blocks. */
+int COMSFTWR_DECL comSftwrTakeLimiterActivity(PT_HANDLE *, float *, float *);
 /* comSftwr.c */
 int COMSFTWR_DECL comSftwrInitDspAlgorithm(PT_HANDLE *hp_comSftwr, realtype r_sampling_freq, int i_init_flag);
 int COMSFTWR_DECL comSftwrZeroDspMemory(PT_HANDLE *hp_comSftwr);

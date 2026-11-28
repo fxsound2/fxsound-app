@@ -1180,7 +1180,7 @@ void FxController::setOutput(const String output_device_id, bool notify)
 
 	if (!output_found)
 	{
-		audio_passthru_->mute(true);
+		muteOutput(true);
 		powerOn(false);
 
 		FxModel::getModel().pushMessage(TRANS("Output Disconnected"));
@@ -1190,7 +1190,7 @@ void FxController::setOutput(const String output_device_id, bool notify)
 		if (FxModel::getModel().getPowerState())
 		{
 			powerOn(true);
-			audio_passthru_->mute(false);
+			muteOutput(false);
 		}
 	}
 
@@ -1725,7 +1725,7 @@ void FxController::updateOutputs(std::vector<SoundDevice>& sound_devices)
 	{
 		if (FxModel::getModel().getPowerState())
 		{
-			audio_passthru_->mute(true);
+			muteOutput(true);
 		}
 		return;
 	}
@@ -1887,7 +1887,7 @@ void FxController::powerOn(bool on)
 
 			if (hdmi_reconnect_pending_)
 			{
-				audio_passthru_->mute(false);
+				muteOutput(false);
 				clearOutputRestore();
 			}
 		}
@@ -2237,7 +2237,7 @@ void FxController::timerCallback()
 			// and an output is available (setOutput() keeps it muted when no output is available).
 			if (FxModel::getModel().getPowerState() && !active_output_devices_.empty())
 			{
-				audio_passthru_->mute(false);
+				muteOutput(false);
 			}
 		}
 	}
@@ -2313,6 +2313,15 @@ void FxController::onSoundDeviceChange(bool processing)
 		return; // Ignore device changes on another user session
 
 	ScopedLock auto_lock(lock_);
+    // MMDevice callbacks and UI actions share this reset sequence. The audio
+    // producer only reads revision tokens and never takes this control lock.
+    {
+        const ScopedLock analysis_lock(analysis_control_lock_);
+        output_observation_generation_.fetch_add(1, std::memory_order_release);
+        output_channels_.store(0, std::memory_order_release);
+        analysis_stream_.resetInput();
+        dfx_dsp_.discardLimiterActivity();
+    }
 
 	if (isTimerRunning())
 	{
@@ -2345,7 +2354,7 @@ void FxController::onSystemSuspend()
 
 	if (FxModel::getModel().getPowerState())
 	{
-		audio_passthru_->mute(true);
+		muteOutput(true);
 	}
 }
 
@@ -2359,7 +2368,7 @@ void FxController::onSystemResume()
 
 	if (!hdmi_reconnect_pending_ && FxModel::getModel().getPowerState())
 	{
-		audio_passthru_->mute(false);
+		muteOutput(false);
 	}
 }
 
@@ -2977,6 +2986,93 @@ void FxController::getSpectrumBandValues(Array<float>& band_values)
 			band_values.set(i, 0.01f);
 		}
 	}
+}
+
+AudioPassthruCallback::AnalysisInput FxController::beginAudioBlock() noexcept
+{
+    const auto input = analysis_stream_.beginInput();
+    return {input.revision, input.clips};
+}
+
+void FxController::onAudioBlock(const float* pcm, int frames, int channels, int sample_rate,
+                               std::uint64_t first_sample, AnalysisInput input) noexcept
+{
+    // Keep the format observation even when HighRes is disabled, so the UI can
+    // fall back for multichannel and resume the saved choice for mono/stereo.
+    output_channels_.store(channels, std::memory_order_release);
+    if (channels == 1 || channels == 2)
+        analysis_stream_.push(pcm, frames, channels, sample_rate, first_sample,
+                              {input.revision, input.clipGeneration});
+}
+
+fxanalysis::ClipEvents FxController::consumeOutputClipEvents() noexcept
+{
+    return analysis_stream_.consumeClipEvents();
+}
+
+fxdsp::LimiterLevels FxController::consumeLimiterActivity() noexcept
+{
+    return dfx_dsp_.consumeLimiterActivity();
+}
+
+bool FxController::canAnalyzeOutput() const noexcept
+{
+    const int channels = output_channels_.load(std::memory_order_acquire);
+    return channels <= 2;
+}
+
+bool FxController::isOutputMuted() const noexcept
+{
+    return output_muted_.load(std::memory_order_acquire);
+}
+
+void FxController::setAnalysisEnabled(bool enabled)
+{
+    const ScopedLock analysis_lock(analysis_control_lock_);
+    analysis_stream_.setEnabled(enabled);
+    dfx_dsp_.discardLimiterActivity();
+}
+
+void FxController::muteOutput(bool muted)
+{
+    const ScopedLock analysis_lock(analysis_control_lock_);
+    if (audio_passthru_ == nullptr || output_muted_.load(std::memory_order_relaxed) == muted) return;
+    output_observation_generation_.fetch_add(1, std::memory_order_release);
+    if (muted) audio_passthru_->mute(true);
+    analysis_stream_.resetInput();
+    dfx_dsp_.discardLimiterActivity();
+    output_muted_.store(muted, std::memory_order_release);
+    if (!muted) audio_passthru_->mute(false);
+}
+
+void FxController::discardAnalyzedSpectrumPeaks()
+{
+    analysis_stream_.discardBarPeaks();
+}
+
+bool FxController::getAnalyzedSpectrumBands(fxanalysis::BarSnapshot& bars)
+{
+    const auto result = analysis_stream_.lastResult();
+    if (result != analysis_reported_result_)
+    {
+        analysis_reported_result_ = result;
+        const auto now = Time::getMillisecondCounter();
+        if (result != fxanalysis::AnalysisResult::ok
+            && (!analysis_has_logged_ || now - analysis_last_log_ >= 5000))
+        {
+            logMessage(String("Audio analysis: ") + fxanalysis::describe(result) + " "
+                       + String(analysis_stream_.failureMessage()));
+            analysis_has_logged_ = true;
+            analysis_last_log_ = now;
+            analysis_failure_logged_ = true;
+        }
+        else if (result == fxanalysis::AnalysisResult::ok && analysis_failure_logged_)
+        {
+            logMessage("Audio analysis: recovered");
+            analysis_failure_logged_ = false;
+        }
+    }
+    return analysis_stream_.consumeBars(bars) && audio_process_on_;
 }
 
 String FxController::FormatString(const String& format, const String& arg)
