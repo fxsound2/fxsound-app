@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Mmdeviceapi.h>
 #include <vector> 
 #include <map>
+#include <atomic>
 
 class DspProcessingModule
 {
@@ -54,8 +55,17 @@ public:
 	void restoreDefaultPlaybackDevice();
 
 private:
+	friend struct ProcessingRetryTestPeer;
 	int sndDeviceHandleToSoundDevices(bool active_devices = true);
 	static void onDeviceChange();
+	void scheduleProcessingRetry(unsigned generation, bool thread_creation, int status);
+	static std::atomic<unsigned> s_device_change_generation_;
+	// The timer owns this failure state; MMDevice callbacks only advance the generation.
+	unsigned processing_retry_generation_ = 0;
+	ULONGLONG processing_retry_after_ = 0;
+	bool processing_retry_pending_ = false;
+	bool processing_retry_thread_creation_ = false;
+	int processing_retry_status_ = 0;
 
 	PT_HANDLE *hp_sndDevices_;
 	static sndDevicesHdlType s_sndDevices_;

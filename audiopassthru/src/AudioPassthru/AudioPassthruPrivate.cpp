@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // there is some truth to it.
 sndDevicesHdlType AudioPassthruPrivate::s_sndDevices_;
 AudioPassthruCallback* AudioPassthruPrivate::s_callback_ = nullptr;
+std::atomic<unsigned> AudioPassthruPrivate::s_device_change_generation_{0};
 
 AudioPassthruPrivate::AudioPassthruPrivate()
 {
@@ -238,6 +239,8 @@ int AudioPassthruPrivate::sndDeviceHandleToSoundDevices(bool active_devices)
 
 void AudioPassthruPrivate::onDeviceChange()
 {
+	// Only this generation crosses from the notification thread to the owner.
+	s_device_change_generation_.fetch_add(1, std::memory_order_release);
 	// Clear the unavailability flag so processTimer() can retry after this device change.
 	s_sndDevices_.playbackDeviceIsUnavailable = FALSE;
 
@@ -346,6 +349,25 @@ int AudioPassthruPrivate::setBufferLength(int i_buffer_length_msecs)
 	return(OKAY);
 }
 
+// Called only after an initialization/thread-creation error, never after success.
+void AudioPassthruPrivate::scheduleProcessingRetry(unsigned generation, bool thread_creation, int status)
+{
+	if (!processing_retry_pending_ || processing_retry_thread_creation_ != thread_creation || processing_retry_status_ != status)
+	{
+		wchar_t message[192];
+		swprintf_s(message, L"FxSound: %ls failed (status=0x%08x); retry after 1000 ms\n",
+			thread_creation ? L"CreateThread" : L"sndDevicesReInit", static_cast<unsigned>(status));
+		OutputDebugStringW(message);
+	}
+	processing_retry_pending_ = true;
+	processing_retry_thread_creation_ = thread_creation;
+	processing_retry_status_ = status;
+	// Keep the generation observed BEFORE the call, so a notification during the
+	// failed attempt permits an immediate retry. The delay starts after failure.
+	processing_retry_generation_ = generation;
+	processing_retry_after_ = GetTickCount64() + 1000;
+}
+
 /*
 * FUNCTION: processTimer()
 * DESCRIPTION:
@@ -390,12 +412,20 @@ int AudioPassthruPrivate::processTimer()
 
 	if (b_need_to_start_thread)
 	{
+		const unsigned generation = s_device_change_generation_.load(std::memory_order_acquire);
+		if (processing_retry_pending_ && generation == processing_retry_generation_
+			&& GetTickCount64() < processing_retry_after_)
+			return NOT_OKAY_NO_BREAK;
+
 		/* Initialize flag which can be set by the outside telling thread to end */
 		i_kill_processing_thread_ = IS_FALSE;
 
 		/* Reinit the sndDevices module */
 		if (sndDevicesReInit(hp_sndDevices_, SND_DEVICES_INIT_FOR_PROCESSING, &numRealDevices, &DfxDeviceEnabledFlag, &statusFlag) != OKAY)
-			return(NOT_OKAY);
+		{
+			scheduleProcessingRetry(generation, false, s_sndDevices_.function_status);
+			return NOT_OKAY_NO_BREAK;
+		}
 
 		if (statusFlag != SND_DEVICES_DEVICE_OPERATION_COMPLETED)
 		{
@@ -437,6 +467,11 @@ int AudioPassthruPrivate::processTimer()
 		if ((numRealDevices > 0) && (DfxDeviceEnabledFlag == IS_TRUE))
 		{
 			hProcessingThread_ = CreateThread(NULL, 0, processingThread, (LPVOID)this, 0L, &ProcessingThreadID_);
+			if (hProcessingThread_ == NULL)
+			{
+				scheduleProcessingRetry(generation, true, static_cast<int>(GetLastError()));
+				return NOT_OKAY_NO_BREAK;
+			}
 		}
 		else
 		{
@@ -456,6 +491,11 @@ int AudioPassthruPrivate::processTimer()
 			hProcessingThread_ = INVALID_HANDLE_VALUE;
 		}
 
+		if (processing_retry_pending_)
+		{
+			OutputDebugStringW(L"FxSound: audio initialization retry recovered\n");
+			processing_retry_pending_ = false;
+		}
 		if (s_callback_ != nullptr)
 			s_callback_->onSoundDeviceChange(true);
 
@@ -652,6 +692,8 @@ int AudioPassthruPrivate::setTargetedRealPlaybackDevice(const std::wstring sound
 	/* Set the newly targeted playback device as the default.  It will then automatically become the targeted device */
 	if (sndDevicesSetDeviceType(hp_sndDevices_, SND_DEVICES_DEFAULT, wcp_new_targeted_real_playback_guid, &i_resultFlag) != OKAY)
 		return(NOT_OKAY);
+	if (i_resultFlag == SND_DEVICES_DEVICE_OPERATION_COMPLETED)
+		s_device_change_generation_.fetch_add(1, std::memory_order_release);
 
 	return(OKAY);
 }
